@@ -1,11 +1,11 @@
-This is a redesigned HTML page for the "A3 Databases" curriculum. It presents the information from your image in a clean, card-based layout, and includes interactive checkboxes so you can track which lessons you've covered.
+Here is the improved HTML page for the "A3 Databases" curriculum. It includes persistent checkboxes using `localStorage` to track your progress, password-protected lesson plan links, and clear "Core" or "HL" badges for each lesson.
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A3 Databases · improved design</title>
+  <title>A3 Databases · improved with tracking</title>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -24,7 +24,7 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
     }
 
     .container {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
     }
 
@@ -71,7 +71,6 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       color: #7bb3ff;
     }
 
-    /* headings */
     .main-title {
       font-size: 2.8rem;
       font-weight: 700;
@@ -99,7 +98,6 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       border-radius: 40px;
     }
 
-    /* section header */
     .section-head {
       font-size: 1.9rem;
       font-weight: 600;
@@ -123,7 +121,6 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       margin-left: 8px;
     }
 
-    /* card grid */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -150,7 +147,7 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
     .card-header h4 {
       font-size: 1.2rem;
@@ -159,7 +156,7 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       letter-spacing: -0.2px;
       line-height: 1.3;
     }
-    .card-header .badge {
+    .badge {
       background: #dceaf7;
       padding: 0.2rem 0.8rem;
       border-radius: 40px;
@@ -169,29 +166,25 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       white-space: nowrap;
       margin-left: 8px;
     }
-    .card-header .tick {
-      color: #2e9b5e;
-      font-size: 1.4rem;
-      background: #e1f3e8;
-      width: 32px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 40px;
+    .badge.core {
+      background: #cfe3d0;
+      color: #1d5e3a;
+    }
+    .badge.hl {
+      background: #f7d9d9;
+      color: #a13232;
     }
 
-    /* interactive checkbox */
+    /* covered checkbox */
     .cover-check {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 0.6rem;
-      margin-bottom: 0.8rem;
+      margin: 0.4rem 0 0.8rem 0;
       font-size: 0.9rem;
       color: #1e4a6b;
       background: #f4f9ff;
-      padding: 0.3rem 0.8rem;
+      padding: 0.25rem 0.8rem;
       border-radius: 40px;
       width: fit-content;
     }
@@ -207,7 +200,7 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
     }
 
     .resource-list {
-      margin: 0.6rem 0 0.2rem 0;
+      margin: 0.2rem 0 0.2rem 0;
       flex: 1;
     }
     .resource-item {
@@ -234,12 +227,16 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
     .resource-item a:hover {
       border-bottom-color: #1a5f87;
     }
+    .textbook-only {
+      color: #3f5f7a;
+      font-weight: 400;
+    }
 
     .starter-box {
       background: #eef4fa;
       border-radius: 16px;
-      padding: 0.8rem 1rem;
-      margin: 0.8rem 0 0.2rem 0;
+      padding: 0.7rem 1rem;
+      margin: 0.6rem 0 0.2rem 0;
       border-left: 5px solid #2a6f97;
       font-size: 0.9rem;
     }
@@ -249,20 +246,17 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
     .rubric {
       background: #f8fafc;
       border-radius: 14px;
-      padding: 0.5rem 1rem;
-      margin: 0.8rem 0 0.2rem 0;
+      padding: 0.4rem 1rem;
+      margin: 0.6rem 0 0.2rem 0;
       font-size: 0.85rem;
       border: 1px solid #e2ebf3;
       color: #1f405b;
-    }
-    .rubric strong {
-      color: #0b2a4a;
     }
 
     .card-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.8rem;
+      gap: 0.6rem;
       margin-top: 1rem;
       align-items: center;
       border-top: 1px solid #e8eff6;
@@ -281,6 +275,7 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       gap: 6px;
       border: 1px solid transparent;
       transition: 0.15s;
+      cursor: pointer;
     }
     .card-actions .btn i {
       font-size: 0.8rem;
@@ -296,6 +291,13 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
     .card-actions .btn-primary:hover {
       background: #134f75;
     }
+    .card-actions .btn-protected {
+      background: #f0e6d0;
+      color: #6a4e2e;
+    }
+    .card-actions .btn-protected:hover {
+      background: #e5d5b8;
+    }
 
     .divider-light {
       margin: 2.2rem 0 0.2rem;
@@ -304,24 +306,88 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       background: linear-gradient(to right, #d4e0ec, transparent);
     }
 
-    /* responsive */
+    /* password modal (simple) */
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .password-modal.active {
+      display: flex;
+    }
+    .password-box {
+      background: white;
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h3 {
+      margin-bottom: 1rem;
+      color: #0b2a4a;
+    }
+    .password-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    .password-box input:focus {
+      border-color: #1f6390;
+    }
+    .password-box .btn {
+      background: #1f6390;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-box .btn:hover {
+      background: #134f75;
+    }
+    .password-box .error {
+      color: #b13a3a;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      min-height: 1.5rem;
+    }
+
     @media (max-width: 680px) {
       body { padding: 1rem; }
       .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
       .nav .brand { margin-right: 0; }
       .main-title { font-size: 2.2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
+      .password-box { padding: 1.8rem; }
     }
-
-    /* small tweaks */
-    .text-muted { color: #4f6f8a; }
-    .mt-1 { margin-top: 0.3rem; }
-    .flex { display: flex; align-items: center; gap: 6px; }
-    .gap-2 { gap: 12px; }
   </style>
 </head>
 <body>
+
 <div class="container">
+
+  <!-- password modal -->
+  <div id="passwordModal" class="password-modal">
+    <div class="password-box">
+      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Lesson Plan protected</h3>
+      <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access</p>
+      <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+      <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+      <div class="error" id="pwdError"></div>
+    </div>
+  </div>
 
   <!-- navigation -->
   <nav class="nav">
@@ -337,7 +403,7 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
   </div>
   <div class="subhead">
     <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
-    all topics · interactive tracking
+    all topics · persistent tracking (saved in browser)
   </div>
 
   <!-- ===================== A3.1 ===================== -->
@@ -346,20 +412,19 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
   </div>
   <div class="card-grid">
     <!-- A3.1.1 -->
-    <div class="card">
+    <div class="card" data-lesson="A3.1.1">
       <div class="card-header">
-        <h4>A3.1.1 Relational databases <span class="badge">core</span></h4>
-        <span class="tick"><i class="fas fa-check"></i></span>
+        <h4>A3.1.1 Relational databases <span class="badge core">Core</span></h4>
       </div>
       <div class="cover-check">
-        <input type="checkbox" id="c1" checked> <label for="c1">covered</label>
+        <input type="checkbox" class="cover-checkbox" id="c1"> <label for="c1">covered</label>
       </div>
       <div class="resource-list">
-        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: A3.1.1 Relational databases</div>
-        <div class="resource-item"><i class="fas fa-video"></i> Video: Relational Databases</div>
-        <div class="resource-item"><i class="fas fa-file-pdf"></i> eBook: <a href="#">PDF</a></div>
-        <div class="resource-item"><i class="fas fa-book"></i> Textbook: Pages 168–173</div>
-        <div class="resource-item"><i class="fas fa-graduation-cap"></i> Revision Dojo: Relational databases</div>
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: A3.1.1 Relational databases</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: Relational Databases</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 168–173</span></div>
+        <div class="resource-item"><i class="fas fa-graduation-cap"></i> <a href="#">Revision Dojo: Relational databases</a></div>
       </div>
       <div class="starter-box">
         <strong><i class="fas fa-pencil-alt"></i> Lesson Starters</strong><br>
@@ -371,7 +436,7 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       </div>
       <div class="card-actions">
         <a href="#" class="btn"><i class="fab fa-quizlet"></i> Quizlet</a>
-        <a href="lessonplans/A3.1.1.pdf" class="btn btn-primary"><i class="fas fa-file-alt"></i> Lesson Plan</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.1.1.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
         <a href="#" class="btn"><i class="fas fa-arrow-right"></i> Extension</a>
       </div>
     </div>
@@ -383,20 +448,19 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
   </div>
   <div class="card-grid">
     <!-- A3.2.1 -->
-    <div class="card">
+    <div class="card" data-lesson="A3.2.1">
       <div class="card-header">
-        <h4>A3.2.1 Database Schemas <span class="badge">core</span></h4>
-        <span class="tick"><i class="fas fa-check"></i></span>
+        <h4>A3.2.1 Database Schemas <span class="badge core">Core</span></h4>
       </div>
       <div class="cover-check">
-        <input type="checkbox" id="c2"> <label for="c2">covered</label>
+        <input type="checkbox" class="cover-checkbox" id="c2"> <label for="c2">covered</label>
       </div>
       <div class="resource-list">
-        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: A3.2.1 Database Schemas</div>
-        <div class="resource-item"><i class="fas fa-video"></i> Video: Database Schemas</div>
-        <div class="resource-item"><i class="fas fa-file-pdf"></i> eBook: <a href="#">PDF</a></div>
-        <div class="resource-item"><i class="fas fa-book"></i> Textbook: Pages 174–176</div>
-        <div class="resource-item"><i class="fas fa-graduation-cap"></i> Revision Dojo: Database Schemas</div>
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: A3.2.1 Database Schemas</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: Database Schemas</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 174–176</span></div>
+        <div class="resource-item"><i class="fas fa-graduation-cap"></i> <a href="#">Revision Dojo: Database Schemas</a></div>
       </div>
       <div class="starter-box">
         <strong><i class="fas fa-pencil-alt"></i> Lesson Starters</strong><br>
@@ -408,35 +472,108 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
       </div>
       <div class="card-actions">
         <a href="#" class="btn"><i class="fab fa-quizlet"></i> Quizlet</a>
-        <a href="lessonplans/A3.2.1.pdf" class="btn btn-primary"><i class="fas fa-file-alt"></i> Lesson Plan</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.2.1.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
         <a href="#" class="btn"><i class="fas fa-arrow-right"></i> Ext. PDF</a>
         <a href="#" class="btn"><i class="fas fa-arrow-right"></i> Ext. PDF</a>
       </div>
     </div>
-    <!-- (other A3.2 topics are listed in the image, but we show only the ones mentioned. We add a placeholder for A3.2.2–A3.2.7 as per structure, but only A3.2.1 appears in the image. We keep coherent) -->
-    <!-- To mirror the image exactly we add all listed in the capture: A3.2.1, A3.2.2 … but the image only shows A3.2.1 with details. We'll add extra cards for completeness but keep the same style. -->
-    <div class="card">
-      <div class="card-header">
-        <h4>A3.2.2 Entity relationship diagrams <span class="badge">core</span></h4>
-        <span class="tick"><i class="fas fa-check"></i></span>
-      </div>
-      <div class="cover-check"><input type="checkbox" id="c3"> <label for="c3">covered</label></div>
+    <!-- A3.2.2 -->
+    <div class="card" data-lesson="A3.2.2">
+      <div class="card-header"><h4>A3.2.2 Entity relationship diagrams <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c3"> <label for="c3">covered</label></div>
       <div class="resource-list">
-        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: ER diagrams</div>
-        <div class="resource-item"><i class="fas fa-video"></i> Video: ER diagrams</div>
-        <div class="resource-item"><i class="fas fa-file-pdf"></i> eBook: <a href="#">PDF</a></div>
-        <div class="resource-item"><i class="fas fa-book"></i> Textbook: Pages 177–179</div>
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: ER diagrams</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: ER diagrams</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 177–179</span></div>
       </div>
       <div class="starter-box"><strong>Lesson Starters</strong><br>• Draw an ER diagram for a library.</div>
       <div class="rubric"><strong>Rubric:</strong> 1–3 scale</div>
-      <div class="card-actions"><a href="#" class="btn"><i class="fab fa-quizlet"></i> Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div>
+      <div class="card-actions">
+        <a href="#" class="btn"><i class="fab fa-quizlet"></i> Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.2.2.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
     </div>
-    <!-- add A3.2.3 etc as placeholders (the image shows them) -->
-    <div class="card"><div class="card-header"><h4>A3.2.3 Datatypes</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c4"> <label for="c4">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Datatypes</div><div class="resource-item"><i class="fas fa-video"></i> Video: Datatypes</div></div><div class="starter-box"><strong>Starters</strong><br>• Match datatypes to examples.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
-    <div class="card"><div class="card-header"><h4>A3.2.4 Constructing Tables</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c5"> <label for="c5">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Tables</div><div class="resource-item"><i class="fas fa-video"></i> Video: CREATE TABLE</div></div><div class="starter-box"><strong>Starters</strong><br>• Write CREATE TABLE statement.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
-    <div class="card"><div class="card-header"><h4>A3.2.5 Normal Forms</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c6"> <label for="c6">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Normal Forms</div><div class="resource-item"><i class="fas fa-video"></i> Video: 1NF, 2NF, 3NF</div></div><div class="starter-box"><strong>Starters</strong><br>• Identify normalization issues.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
-    <div class="card"><div class="card-header"><h4>A3.2.6 Database scenarios</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c7"> <label for="c7">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Scenarios</div><div class="resource-item"><i class="fas fa-video"></i> Video: case studies</div></div><div class="starter-box"><strong>Starters</strong><br>• Analyze a given scenario.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
-    <div class="card"><div class="card-header"><h4>A3.2.7 Denormalizing databases</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c8"> <label for="c8">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Denormalization</div><div class="resource-item"><i class="fas fa-video"></i> Video: denormalizing</div></div><div class="starter-box"><strong>Starters</strong><br>• Compare normalized vs denormalized.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <!-- A3.2.3 -->
+    <div class="card" data-lesson="A3.2.3">
+      <div class="card-header"><h4>A3.2.3 Datatypes <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c4"> <label for="c4">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Datatypes</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: Datatypes</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 180–182</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Match datatypes to examples.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.2.3.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
+    <!-- A3.2.4 -->
+    <div class="card" data-lesson="A3.2.4">
+      <div class="card-header"><h4>A3.2.4 Constructing Tables <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c5"> <label for="c5">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Tables</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: CREATE TABLE</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 183–185</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Write CREATE TABLE statement.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.2.4.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
+    <!-- A3.2.5 -->
+    <div class="card" data-lesson="A3.2.5">
+      <div class="card-header"><h4>A3.2.5 Normal Forms <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c6"> <label for="c6">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Normal Forms</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: 1NF, 2NF, 3NF</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 186–188</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Identify normalization issues.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.2.5.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
+    <!-- A3.2.6 -->
+    <div class="card" data-lesson="A3.2.6">
+      <div class="card-header"><h4>A3.2.6 Database scenarios <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c7"> <label for="c7">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Scenarios</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: case studies</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 189–191</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Analyze a given scenario.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.2.6.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
+    <!-- A3.2.7 -->
+    <div class="card" data-lesson="A3.2.7">
+      <div class="card-header"><h4>A3.2.7 Denormalizing databases <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c8"> <label for="c8">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Denormalization</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: denormalizing</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 192–194</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Compare normalized vs denormalized.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.2.7.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
   </div>
 
   <!-- ===================== A3.3 ===================== -->
@@ -445,17 +582,107 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
   </div>
   <div class="card-grid">
     <!-- A3.3.1 -->
-    <div class="card"><div class="card-header"><h4>A3.3.1 Data Language Types</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c9"> <label for="c9">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Data Language Types</div><div class="resource-item"><i class="fas fa-video"></i> Video: DDL, DML</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: Pages 186–188</div></div><div class="starter-box"><strong>Starters</strong><br>• Classify SQL commands.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+    <div class="card" data-lesson="A3.3.1">
+      <div class="card-header"><h4>A3.3.1 Data Language Types <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c9"> <label for="c9">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Data Language Types</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: DDL, DML</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: Pages 186–188</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Classify SQL commands.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.3.1.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+        <a href="#" class="btn">Extension</a>
+      </div>
+    </div>
     <!-- A3.3.2 -->
-    <div class="card"><div class="card-header"><h4>A3.3.2 Constructing Queries in SQL</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c10"> <label for="c10">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: SQL Queries</div><div class="resource-item"><i class="fas fa-video"></i> Video: SELECT</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 189–191</div></div><div class="starter-box"><strong>Starters</strong><br>• Write a SELECT query.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+    <div class="card" data-lesson="A3.3.2">
+      <div class="card-header"><h4>A3.3.2 Constructing Queries in SQL <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c10"> <label for="c10">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: SQL Queries</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: SELECT</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 189–191</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Write a SELECT query.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.3.2.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+        <a href="#" class="btn">Extension</a>
+      </div>
+    </div>
     <!-- A3.3.3 -->
-    <div class="card"><div class="card-header"><h4>A3.3.3 Updating Data in DB</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c11"> <label for="c11">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: UPDATE</div><div class="resource-item"><i class="fas fa-video"></i> Video: UPDATE, DELETE</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 192–194</div></div><div class="starter-box"><strong>Starters</strong><br>• Write UPDATE statements.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
-    <!-- A3.3.4 -->
-    <div class="card"><div class="card-header"><h4>A3.3.4 SQL Aggregate functions <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c12"> <label for="c12">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Aggregate</div><div class="resource-item"><i class="fas fa-video"></i> Video: COUNT, SUM, AVG</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 195–197</div></div><div class="starter-box"><strong>Starters</strong><br>• Use GROUP BY.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
-    <!-- A3.3.5 -->
-    <div class="card"><div class="card-header"><h4>A3.3.5 Database views <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c13"> <label for="c13">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Views</div><div class="resource-item"><i class="fas fa-video"></i> Video: CREATE VIEW</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 198–199</div></div><div class="starter-box"><strong>Starters</strong><br>• Create a view.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
-    <!-- A3.3.6 -->
-    <div class="card"><div class="card-header"><h4>A3.3.6 Database Transactions <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c14"> <label for="c14">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Transactions</div><div class="resource-item"><i class="fas fa-video"></i> Video: ACID</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 200–201</div></div><div class="starter-box"><strong>Starters</strong><br>• Explain transaction properties.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+    <div class="card" data-lesson="A3.3.3">
+      <div class="card-header"><h4>A3.3.3 Updating Data in DB <span class="badge core">Core</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c11"> <label for="c11">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: UPDATE</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: UPDATE, DELETE</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 192–194</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Write UPDATE statements.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.3.3.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+        <a href="#" class="btn">Extension</a>
+      </div>
+    </div>
+    <!-- A3.3.4 HL -->
+    <div class="card" data-lesson="A3.3.4">
+      <div class="card-header"><h4>A3.3.4 SQL Aggregate functions <span class="badge hl">HL</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c12"> <label for="c12">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Aggregate</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: COUNT, SUM, AVG</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 195–197</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Use GROUP BY.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.3.4.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+        <a href="#" class="btn">Extension</a>
+      </div>
+    </div>
+    <!-- A3.3.5 HL -->
+    <div class="card" data-lesson="A3.3.5">
+      <div class="card-header"><h4>A3.3.5 Database views <span class="badge hl">HL</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c13"> <label for="c13">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Views</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: CREATE VIEW</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 198–199</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Create a view.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.3.5.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+        <a href="#" class="btn">Extension</a>
+      </div>
+    </div>
+    <!-- A3.3.6 HL -->
+    <div class="card" data-lesson="A3.3.6">
+      <div class="card-header"><h4>A3.3.6 Database Transactions <span class="badge hl">HL</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c14"> <label for="c14">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Transactions</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: ACID</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 200–201</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Explain transaction properties.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.3.6.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+        <a href="#" class="btn">Extension</a>
+      </div>
+    </div>
   </div>
 
   <!-- ===================== A3.4 ===================== -->
@@ -463,10 +690,66 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
     <i class="fas fa-server"></i> A3.4 Alternative databases <span style="font-weight:400; font-size:1rem; margin-left:10px;">(HL Only)</span>
   </div>
   <div class="card-grid">
-    <div class="card"><div class="card-header"><h4>A3.4.1 Different types of database</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c15"> <label for="c15">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Types</div><div class="resource-item"><i class="fas fa-video"></i> Video: NoSQL, etc.</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 195–201</div></div><div class="starter-box"><strong>Starters</strong><br>• Compare database types.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
-    <div class="card"><div class="card-header"><h4>A3.4.2 Data warehouses <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c16"> <label for="c16">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Data warehouses</div><div class="resource-item"><i class="fas fa-video"></i> Video: ETL</div></div><div class="starter-box"><strong>Starters</strong><br>• Define data warehouse.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
-    <div class="card"><div class="card-header"><h4>A3.4.3 OLAP and data mining <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c17"> <label for="c17">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: OLAP</div><div class="resource-item"><i class="fas fa-video"></i> Video: Data mining</div></div><div class="starter-box"><strong>Starters</strong><br>• OLAP vs OLTP.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
-    <div class="card"><div class="card-header"><h4>A3.4.4 Distributed databases <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c18"> <label for="c18">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Distributed</div><div class="resource-item"><i class="fas fa-video"></i> Video: sharding</div></div><div class="starter-box"><strong>Starters</strong><br>• Advantages of distribution.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <div class="card" data-lesson="A3.4.1">
+      <div class="card-header"><h4>A3.4.1 Different types of database <span class="badge hl">HL</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c15"> <label for="c15">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Types</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: NoSQL, etc.</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 195–201</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Compare database types.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.4.1.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
+    <div class="card" data-lesson="A3.4.2">
+      <div class="card-header"><h4>A3.4.2 Data warehouses <span class="badge hl">HL</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c16"> <label for="c16">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Data warehouses</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: ETL</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 202–204</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Define data warehouse.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.4.2.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
+    <div class="card" data-lesson="A3.4.3">
+      <div class="card-header"><h4>A3.4.3 OLAP and data mining <span class="badge hl">HL</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c17"> <label for="c17">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: OLAP</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: Data mining</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 205–207</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• OLAP vs OLTP.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.4.3.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
+    <div class="card" data-lesson="A3.4.4">
+      <div class="card-header"><h4>A3.4.4 Distributed databases <span class="badge hl">HL</span></h4></div>
+      <div class="cover-check"><input type="checkbox" class="cover-checkbox" id="c18"> <label for="c18">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> <a href="#">PowerPoint: Distributed</a></div>
+        <div class="resource-item"><i class="fas fa-video"></i> <a href="#">Video: sharding</a></div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> <a href="#">eBook: PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> <span class="textbook-only">Textbook: 208–210</span></div>
+      </div>
+      <div class="starter-box"><strong>Starters</strong><br>• Advantages of distribution.</div>
+      <div class="card-actions">
+        <a href="#" class="btn">Quizlet</a>
+        <a href="#" class="btn btn-protected lesson-plan-btn" data-path="lessonplans/A3.4.4.pdf"><i class="fas fa-lock"></i> Lesson Plan</a>
+      </div>
+    </div>
   </div>
 
   <!-- linking questions -->
@@ -477,9 +760,99 @@ This is a redesigned HTML page for the "A3 Databases" curriculum. It presents th
 
   <hr class="divider-light">
   <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
-    <i class="fas fa-edit" style="margin-right: 8px;"></i> tick a lesson when you've covered it
+    <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
   </div>
 </div>
+
+<script>
+  (function() {
+    // ----- PERSISTENT CHECKBOXES via localStorage -----
+    const checkboxes = document.querySelectorAll('.cover-checkbox');
+    // load state
+    checkboxes.forEach(cb => {
+      const key = 'lesson_covered_' + cb.id;
+      const stored = localStorage.getItem(key);
+      if (stored === 'true') {
+        cb.checked = true;
+      }
+      cb.addEventListener('change', function(e) {
+        const k = 'lesson_covered_' + this.id;
+        localStorage.setItem(k, this.checked ? 'true' : 'false');
+      });
+    });
+
+    // ----- PASSWORD PROTECTION for lesson plan buttons -----
+    const modal = document.getElementById('passwordModal');
+    const pwdInput = document.getElementById('pwdInput');
+    const pwdError = document.getElementById('pwdError');
+    const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+    let pendingPath = '';
+
+    function openModal(path) {
+      pendingPath = path;
+      pwdInput.value = '';
+      pwdError.textContent = '';
+      modal.classList.add('active');
+      pwdInput.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      pendingPath = '';
+    }
+
+    function attemptUnlock() {
+      const entered = pwdInput.value.trim();
+      if (entered === 'bluebeard') {
+        // correct: redirect to the lesson plan
+        if (pendingPath) {
+          window.open(pendingPath, '_blank');
+        }
+        closeModal();
+      } else {
+        pwdError.textContent = '❌ Incorrect password. Try again.';
+        pwdInput.value = '';
+        pwdInput.focus();
+      }
+    }
+
+    // attach click to all lesson-plan buttons
+    document.querySelectorAll('.lesson-plan-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const path = this.getAttribute('data-path');
+        if (path) {
+          openModal(path);
+        }
+      });
+    });
+
+    // modal events
+    pwdSubmitBtn.addEventListener('click', attemptUnlock);
+    pwdInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        attemptUnlock();
+      }
+    });
+
+    // close modal on background click
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // also close with ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+  })();
+</script>
+
 </body>
 </html>
 ```
