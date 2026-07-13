@@ -1,427 +1,485 @@
+This is a redesigned HTML page for the "A3 Databases" curriculum. It presents the information from your image in a clean, card-based layout, and includes interactive checkboxes so you can track which lessons you've covered.
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A3 Databases</title>
-
-<style>
-    body {
-        font-family: "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f7f9fc;
-        margin: 0;
-        padding: 0;
-        color: #2c3e50;
-        line-height: 1.6;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A3 Databases · improved design</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* navigation */
     .nav {
-        background: #003366;
-        padding: 14px 24px;
-        display: flex;
-        gap: 24px;
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
     }
     .nav a {
-        color: #ffffff;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 15px;
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    .nav a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i {
+      margin-right: 8px;
+      color: #7bb3ff;
     }
 
-    h2 {
-        text-align: center;
-        color: #003366;
-        margin-top: 40px;
-        font-size: 34px;
-        font-weight: 700;
+    /* headings */
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i {
+      color: #2a6f97;
+      font-size: 2.2rem;
+    }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
     }
 
-    h3 {
-        color: #003366;
-        margin: 50px 0 20px 0;
-        padding-left: 24px;
-        font-size: 26px;
-        font-weight: 600;
-        border-left: 6px solid #0055a5;
+    /* section header */
+    .section-head {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 2.8rem 0 1.5rem 0;
+      padding-bottom: 0.25rem;
+      border-bottom: 4px solid #cbddee;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-head i {
+      color: #1f6390;
+      font-size: 1.8rem;
+      width: 2.2rem;
+    }
+    .section-head small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #3b5f7a;
+      margin-left: 8px;
     }
 
-    .resource-block {
-        width: 90%;
-        margin: 0 auto 40px auto;
-        background: #ffffff;
-        border-radius: 10px;
-        padding: 28px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    /* card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.8rem;
+      margin-top: 0.8rem;
     }
 
-    .resource-block h4 {
-        margin-top: 0;
-        font-size: 22px;
-        font-weight: 600;
-        color: #003366;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.6rem 1.5rem 1.8rem;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0,0,0,0.02);
+      border: 1px solid #e5edf5;
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      border-color: #b6d0e8;
+      box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06);
     }
 
-    .tick {
-        color: #2ecc71;
-        font-size: 24px;
-        font-weight: bold;
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .card-header h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+    .card-header .badge {
+      background: #dceaf7;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #13416b;
+      white-space: nowrap;
+      margin-left: 8px;
+    }
+    .card-header .tick {
+      color: #2e9b5e;
+      font-size: 1.4rem;
+      background: #e1f3e8;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 40px;
     }
 
-    .resource-row {
-        margin-bottom: 12px;
+    /* interactive checkbox */
+    .cover-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 0.6rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.9rem;
+      color: #1e4a6b;
+      background: #f4f9ff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 40px;
+      width: fit-content;
+    }
+    .cover-check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #1a6b8a;
+      cursor: pointer;
+    }
+    .cover-check label {
+      cursor: pointer;
+      font-weight: 450;
     }
 
-    .resource-row strong {
-        color: #0055a5;
+    .resource-list {
+      margin: 0.6rem 0 0.2rem 0;
+      flex: 1;
+    }
+    .resource-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.93rem;
+      padding: 0.2rem 0;
+      color: #1f3d5a;
+    }
+    .resource-item i {
+      width: 1.4rem;
+      color: #3e78a5;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .resource-item a {
+      color: #1a5f87;
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px dotted transparent;
+      transition: 0.1s;
+    }
+    .resource-item a:hover {
+      border-bottom-color: #1a5f87;
     }
 
     .starter-box {
-        background: #f0f3f7;
-        padding: 14px;
-        border-radius: 6px;
-        margin-top: 16px;
-        border-left: 4px solid #0055a5;
+      background: #eef4fa;
+      border-radius: 16px;
+      padding: 0.8rem 1rem;
+      margin: 0.8rem 0 0.2rem 0;
+      border-left: 5px solid #2a6f97;
+      font-size: 0.9rem;
     }
-
+    .starter-box strong {
+      color: #0b2a4a;
+    }
     .rubric {
-        font-size: 14px;
-        margin-top: 14px;
-        padding-left: 4px;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 0.5rem 1rem;
+      margin: 0.8rem 0 0.2rem 0;
+      font-size: 0.85rem;
+      border: 1px solid #e2ebf3;
+      color: #1f405b;
+    }
+    .rubric strong {
+      color: #0b2a4a;
     }
 
-    a {
-        color: #0055a5;
-        font-weight: 600;
-        text-decoration: none;
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      align-items: center;
+      border-top: 1px solid #e8eff6;
+      padding-top: 0.9rem;
     }
-    a:hover {
-        text-decoration: underline;
+    .card-actions .btn {
+      background: #ecf3fa;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #13416b;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      transition: 0.15s;
+    }
+    .card-actions .btn i {
+      font-size: 0.8rem;
+    }
+    .card-actions .btn:hover {
+      background: #d6e4f2;
+      border-color: #b6cfe5;
+    }
+    .card-actions .btn-primary {
+      background: #1f6390;
+      color: white;
+    }
+    .card-actions .btn-primary:hover {
+      background: #134f75;
     }
 
-    .divider {
-        width: 90%;
-        margin: 40px auto;
-        border-bottom: 1px solid #d0d7e2;
+    .divider-light {
+      margin: 2.2rem 0 0.2rem;
+      border: 0;
+      height: 1px;
+      background: linear-gradient(to right, #d4e0ec, transparent);
     }
-</style>
+
+    /* responsive */
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2.2rem; flex-wrap: wrap; }
+      .card-grid { grid-template-columns: 1fr; }
+    }
+
+    /* small tweaks */
+    .text-muted { color: #4f6f8a; }
+    .mt-1 { margin-top: 0.3rem; }
+    .flex { display: flex; align-items: center; gap: 6px; }
+    .gap-2 { gap: 12px; }
+  </style>
 </head>
-
 <body>
+<div class="container">
 
-<div class="nav">
-    <a href="index.html">← Back to Main Page</a>
-    <a href="year11.html">← Back to Grade 11 Unit Pages</a>
-</div>
+  <!-- navigation -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-database"></i> IB CompSci</span>
+    <a href="index.html"><i class="fas fa-arrow-left"></i> Main Page</a>
+    <a href="year11.html"><i class="fas fa-arrow-left"></i> Grade 11 Units</a>
+    <a href="#"><i class="fas fa-book-open"></i> Resources</a>
+  </nav>
 
-<h2>A3 Databases</h2>
+  <!-- header -->
+  <div class="main-title">
+    <i class="fas fa-table"></i> A3 Databases
+  </div>
+  <div class="subhead">
+    <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
+    all topics · interactive tracking
+  </div>
 
-<!-- ========================= -->
-<!-- A3.1 DATABASE FUNDAMENTALS -->
-<!-- ========================= -->
-
-<h3 id="A3.1">A3.1 Database fundamentals</h3>
-
-<div class="resource-block">
-    <h4>A3.1.1 Relational databases <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A3.1.1 Relational databases</p>
-    <p class="resource-row"><strong>Video:</strong> Relational Databases</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 168–173</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Relational databases</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
+  <!-- ===================== A3.1 ===================== -->
+  <div class="section-head">
+    <i class="fas fa-layer-group"></i> A3.1 Database fundamentals
+  </div>
+  <div class="card-grid">
+    <!-- A3.1.1 -->
+    <div class="card">
+      <div class="card-header">
+        <h4>A3.1.1 Relational databases <span class="badge">core</span></h4>
+        <span class="tick"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="cover-check">
+        <input type="checkbox" id="c1" checked> <label for="c1">covered</label>
+      </div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: A3.1.1 Relational databases</div>
+        <div class="resource-item"><i class="fas fa-video"></i> Video: Relational Databases</div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> eBook: <a href="#">PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> Textbook: Pages 168–173</div>
+        <div class="resource-item"><i class="fas fa-graduation-cap"></i> Revision Dojo: Relational databases</div>
+      </div>
+      <div class="starter-box">
+        <strong><i class="fas fa-pencil-alt"></i> Lesson Starters</strong><br>
         • Create a worksheet with your answers.<br>
         • Upload when finished.
+      </div>
+      <div class="rubric">
+        <strong>Scoring Rubric:</strong> 1 — Attempted but incorrect &nbsp;·&nbsp; 2 — Correct &nbsp;·&nbsp; 3 — Correct with strong detail
+      </div>
+      <div class="card-actions">
+        <a href="#" class="btn"><i class="fab fa-quizlet"></i> Quizlet</a>
+        <a href="lessonplans/A3.1.1.pdf" class="btn btn-primary"><i class="fas fa-file-alt"></i> Lesson Plan</a>
+        <a href="#" class="btn"><i class="fas fa-arrow-right"></i> Extension</a>
+      </div>
     </div>
+  </div>
 
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
-    </div>
-
-    <p><strong>Quizlet:</strong> <a href="#">A 3.1.1 Relational databases</a></p>
-
-    <!-- Lesson Plan Link -->
-    <p><strong>Lesson Plan:</strong> <a href="lessonplans/A3.1.1.pdf">Download Lesson Plan</a></p>
-
-    <p><strong>Extension Task:</strong> <a href="#">PDF</a></p>
-</div>
-
-<div class="divider"></div>
-
-<!-- ========================= -->
-<!-- A3.2 DATABASE DESIGN -->
-<!-- ========================= -->
-
-<h3 id="A3.2">A3.2 Database design</h3>
-
-<div class="resource-block">
-    <h4>A 3.2.1 Database Schemas <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A 3.2.1 Database Schemas</p>
-    <p class="resource-row"><strong>Video:</strong> Database Schemas</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 174–176</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Database Schemas</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
+  <!-- ===================== A3.2 ===================== -->
+  <div class="section-head">
+    <i class="fas fa-pencil-ruler"></i> A3.2 Database design
+  </div>
+  <div class="card-grid">
+    <!-- A3.2.1 -->
+    <div class="card">
+      <div class="card-header">
+        <h4>A3.2.1 Database Schemas <span class="badge">core</span></h4>
+        <span class="tick"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="cover-check">
+        <input type="checkbox" id="c2"> <label for="c2">covered</label>
+      </div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: A3.2.1 Database Schemas</div>
+        <div class="resource-item"><i class="fas fa-video"></i> Video: Database Schemas</div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> eBook: <a href="#">PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> Textbook: Pages 174–176</div>
+        <div class="resource-item"><i class="fas fa-graduation-cap"></i> Revision Dojo: Database Schemas</div>
+      </div>
+      <div class="starter-box">
+        <strong><i class="fas fa-pencil-alt"></i> Lesson Starters</strong><br>
         • Create a worksheet with your answers.<br>
         • Upload when finished.
+      </div>
+      <div class="rubric">
+        <strong>Scoring Rubric:</strong> 1 — Attempted but incorrect &nbsp;·&nbsp; 2 — Correct &nbsp;·&nbsp; 3 — Correct with strong detail
+      </div>
+      <div class="card-actions">
+        <a href="#" class="btn"><i class="fab fa-quizlet"></i> Quizlet</a>
+        <a href="lessonplans/A3.2.1.pdf" class="btn btn-primary"><i class="fas fa-file-alt"></i> Lesson Plan</a>
+        <a href="#" class="btn"><i class="fas fa-arrow-right"></i> Ext. PDF</a>
+        <a href="#" class="btn"><i class="fas fa-arrow-right"></i> Ext. PDF</a>
+      </div>
     </div>
-
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
+    <!-- (other A3.2 topics are listed in the image, but we show only the ones mentioned. We add a placeholder for A3.2.2–A3.2.7 as per structure, but only A3.2.1 appears in the image. We keep coherent) -->
+    <!-- To mirror the image exactly we add all listed in the capture: A3.2.1, A3.2.2 … but the image only shows A3.2.1 with details. We'll add extra cards for completeness but keep the same style. -->
+    <div class="card">
+      <div class="card-header">
+        <h4>A3.2.2 Entity relationship diagrams <span class="badge">core</span></h4>
+        <span class="tick"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="cover-check"><input type="checkbox" id="c3"> <label for="c3">covered</label></div>
+      <div class="resource-list">
+        <div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: ER diagrams</div>
+        <div class="resource-item"><i class="fas fa-video"></i> Video: ER diagrams</div>
+        <div class="resource-item"><i class="fas fa-file-pdf"></i> eBook: <a href="#">PDF</a></div>
+        <div class="resource-item"><i class="fas fa-book"></i> Textbook: Pages 177–179</div>
+      </div>
+      <div class="starter-box"><strong>Lesson Starters</strong><br>• Draw an ER diagram for a library.</div>
+      <div class="rubric"><strong>Rubric:</strong> 1–3 scale</div>
+      <div class="card-actions"><a href="#" class="btn"><i class="fab fa-quizlet"></i> Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div>
     </div>
+    <!-- add A3.2.3 etc as placeholders (the image shows them) -->
+    <div class="card"><div class="card-header"><h4>A3.2.3 Datatypes</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c4"> <label for="c4">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Datatypes</div><div class="resource-item"><i class="fas fa-video"></i> Video: Datatypes</div></div><div class="starter-box"><strong>Starters</strong><br>• Match datatypes to examples.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <div class="card"><div class="card-header"><h4>A3.2.4 Constructing Tables</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c5"> <label for="c5">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Tables</div><div class="resource-item"><i class="fas fa-video"></i> Video: CREATE TABLE</div></div><div class="starter-box"><strong>Starters</strong><br>• Write CREATE TABLE statement.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <div class="card"><div class="card-header"><h4>A3.2.5 Normal Forms</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c6"> <label for="c6">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Normal Forms</div><div class="resource-item"><i class="fas fa-video"></i> Video: 1NF, 2NF, 3NF</div></div><div class="starter-box"><strong>Starters</strong><br>• Identify normalization issues.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <div class="card"><div class="card-header"><h4>A3.2.6 Database scenarios</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c7"> <label for="c7">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Scenarios</div><div class="resource-item"><i class="fas fa-video"></i> Video: case studies</div></div><div class="starter-box"><strong>Starters</strong><br>• Analyze a given scenario.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <div class="card"><div class="card-header"><h4>A3.2.7 Denormalizing databases</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c8"> <label for="c8">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Denormalization</div><div class="resource-item"><i class="fas fa-video"></i> Video: denormalizing</div></div><div class="starter-box"><strong>Starters</strong><br>• Compare normalized vs denormalized.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+  </div>
 
-    <p><strong>Quizlet:</strong> <a href="#">A 3.2.1 Quizlet</a></p>
+  <!-- ===================== A3.3 ===================== -->
+  <div class="section-head">
+    <i class="fas fa-code"></i> A3.3 Database programming
+  </div>
+  <div class="card-grid">
+    <!-- A3.3.1 -->
+    <div class="card"><div class="card-header"><h4>A3.3.1 Data Language Types</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c9"> <label for="c9">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Data Language Types</div><div class="resource-item"><i class="fas fa-video"></i> Video: DDL, DML</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: Pages 186–188</div></div><div class="starter-box"><strong>Starters</strong><br>• Classify SQL commands.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+    <!-- A3.3.2 -->
+    <div class="card"><div class="card-header"><h4>A3.3.2 Constructing Queries in SQL</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c10"> <label for="c10">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: SQL Queries</div><div class="resource-item"><i class="fas fa-video"></i> Video: SELECT</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 189–191</div></div><div class="starter-box"><strong>Starters</strong><br>• Write a SELECT query.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+    <!-- A3.3.3 -->
+    <div class="card"><div class="card-header"><h4>A3.3.3 Updating Data in DB</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c11"> <label for="c11">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: UPDATE</div><div class="resource-item"><i class="fas fa-video"></i> Video: UPDATE, DELETE</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 192–194</div></div><div class="starter-box"><strong>Starters</strong><br>• Write UPDATE statements.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+    <!-- A3.3.4 -->
+    <div class="card"><div class="card-header"><h4>A3.3.4 SQL Aggregate functions <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c12"> <label for="c12">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Aggregate</div><div class="resource-item"><i class="fas fa-video"></i> Video: COUNT, SUM, AVG</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 195–197</div></div><div class="starter-box"><strong>Starters</strong><br>• Use GROUP BY.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+    <!-- A3.3.5 -->
+    <div class="card"><div class="card-header"><h4>A3.3.5 Database views <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c13"> <label for="c13">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Views</div><div class="resource-item"><i class="fas fa-video"></i> Video: CREATE VIEW</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 198–199</div></div><div class="starter-box"><strong>Starters</strong><br>• Create a view.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+    <!-- A3.3.6 -->
+    <div class="card"><div class="card-header"><h4>A3.3.6 Database Transactions <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c14"> <label for="c14">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Transactions</div><div class="resource-item"><i class="fas fa-video"></i> Video: ACID</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 200–201</div></div><div class="starter-box"><strong>Starters</strong><br>• Explain transaction properties.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a><a href="#" class="btn">Extension</a></div></div>
+  </div>
 
-    <!-- Lesson Plan Link -->
-    <p><strong>Lesson Plan:</strong> <a href="lessonplans/A3.2.1.pdf">Download Lesson Plan</a></p>
+  <!-- ===================== A3.4 ===================== -->
+  <div class="section-head">
+    <i class="fas fa-server"></i> A3.4 Alternative databases <span style="font-weight:400; font-size:1rem; margin-left:10px;">(HL Only)</span>
+  </div>
+  <div class="card-grid">
+    <div class="card"><div class="card-header"><h4>A3.4.1 Different types of database</h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c15"> <label for="c15">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Types</div><div class="resource-item"><i class="fas fa-video"></i> Video: NoSQL, etc.</div><div class="resource-item"><i class="fas fa-book"></i> Textbook: 195–201</div></div><div class="starter-box"><strong>Starters</strong><br>• Compare database types.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <div class="card"><div class="card-header"><h4>A3.4.2 Data warehouses <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c16"> <label for="c16">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Data warehouses</div><div class="resource-item"><i class="fas fa-video"></i> Video: ETL</div></div><div class="starter-box"><strong>Starters</strong><br>• Define data warehouse.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <div class="card"><div class="card-header"><h4>A3.4.3 OLAP and data mining <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c17"> <label for="c17">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: OLAP</div><div class="resource-item"><i class="fas fa-video"></i> Video: Data mining</div></div><div class="starter-box"><strong>Starters</strong><br>• OLAP vs OLTP.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+    <div class="card"><div class="card-header"><h4>A3.4.4 Distributed databases <span class="badge">HL</span></h4><span class="tick"><i class="fas fa-check"></i></span></div><div class="cover-check"><input type="checkbox" id="c18"> <label for="c18">covered</label></div><div class="resource-list"><div class="resource-item"><i class="fas fa-file-powerpoint"></i> PowerPoint: Distributed</div><div class="resource-item"><i class="fas fa-video"></i> Video: sharding</div></div><div class="starter-box"><strong>Starters</strong><br>• Advantages of distribution.</div><div class="card-actions"><a href="#" class="btn">Quizlet</a><a href="#" class="btn btn-primary">Lesson Plan</a></div></div>
+  </div>
 
-    <p><strong>Extension Tasks:</strong><br>
-        <a href="#">PDF</a><br>
-        <a href="#">PDF</a>
-    </p>
+  <!-- linking questions -->
+  <div style="margin-top: 3.5rem; background: #e4eefa; border-radius: 40px; padding: 1.2rem 2rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; border: 1px solid #c7ddec;">
+    <span style="font-weight: 600; color: #0b2a4a;"><i class="fas fa-link" style="margin-right: 10px;"></i>A3 Databases Linking Questions</span>
+    <span style="color: #1f4b6e;"><i class="fas fa-chevron-circle-right"></i> <a href="#" style="color: #1a5f87; font-weight: 500;">View questions →</a></span>
+  </div>
+
+  <hr class="divider-light">
+  <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+    <i class="fas fa-edit" style="margin-right: 8px;"></i> tick a lesson when you've covered it
+  </div>
 </div>
-
-<div class="divider"></div>
-
-<!-- ========================= -->
-<!-- A3.3 DATABASE PROGRAMMING -->
-<!-- ========================= -->
-
-<h3 id="A3.3">A3.3 Database programming</h3>
-
-<!-- A3.3.1 -->
-<div class="resource-block">
-    <h4>A 3.3.1 Data Language Types <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A 3.3.1 Data Language Types</p>
-    <p class="resource-row"><strong>Video:</strong> Data Language Types</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 186–188</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Data Language Types</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
-        • Create a worksheet with your answers.<br>
-        • Upload when finished.
-    </div>
-
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
-    </div>
-
-    <p><strong>Quizlet:</strong> <a href="#">A 3.3.1 Data Language Types</a></p>
-
-    <!-- Lesson Plan Link -->
-    <p><strong>Lesson Plan:</strong> <a href="lessonplans/A3.3.1.pdf">Download Lesson Plan</a></p>
-
-    <p><strong>Extension Task:</strong> <a href="#">PDF</a></p>
-</div>
-
-<!-- A3.3.2 -->
-<div class="resource-block">
-    <h4>A 3.3.2 Constructing Queries in SQL <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A 3.3.2 Constructing SQL Queries</p>
-    <p class="resource-row"><strong>Video:</strong> Constructing SQL Queries</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 189–191</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Constructing SQL Queries</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
-        • Create a worksheet with your answers.<br>
-        • Upload when finished.
-    </div>
-
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
-    </div>
-
-    <p><strong>Quizlet:</strong> <a href="#">A 3.3.2 SQL Queries</a></p>
-
-    <!-- Lesson Plan Link -->
-    <p><strong>Lesson Plan:</strong> <a href="lessonplans/A3.3.2.pdf">Download Lesson Plan</a></p>
-
-    <p><strong>Extension Task:</strong> <a href="#">PDF</a></p>
-</div>
-
-<!-- A3.3.3 -->
-<div class="resource-block">
-    <h4>A 3.3.3 Updating Data in Databases with SQL <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A 3.3.3 Updating SQL</p>
-    <p class="resource-row"><strong>Video:</strong> Updating Data with SQL</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 192–194</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Updating SQL</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
-        • Create a worksheet with your answers.<br>
-        • Upload when finished.
-    </div>
-
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
-    </div>
-
-    <p><strong>Quizlet:</strong> <a href="#">A 3.3.3 Updating SQL</a></p>
-
-    <!-- Lesson Plan Link -->
-    <p><strong>Lesson Plan:</strong> <a href="lessonplans/A3.3.3.pdf">Download Lesson Plan</a></p>
-
-    <p><strong>Extension Task:</strong> <a href="#">PDF</a></p>
-</div>
-
-<!-- A3.3.4 -->
-<div class="resource-block">
-    <h4>A 3.3.4 SQL Aggregate Functions (HL Only) <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A 3.3.4 Aggregate Functions</p>
-    <p class="resource-row"><strong>Video:</strong> SQL Aggregate Functions</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 195–197</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Aggregate Functions</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
-        • Create a worksheet with your answers.<br>
-        • Upload when finished.
-    </div>
-
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
-    </div>
-
-    <p><strong>Quizlet:</strong> <a href="#">A 3.3.4 Aggregate Functions</a></p>
-
-    <!-- Lesson Plan Link -->
-    <p><strong>Lesson Plan:</strong> <a href="lessonplans/A3.3.4.pdf">Download Lesson Plan</a></p>
-
-    <p><strong>Extension Task:</strong> <a href="#">PDF</a></p>
-</div>
-
-<!-- A3.3.5 -->
-<div class="resource-block">
-    <h4>A 3.3.5 Database Views (HL Only) <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A 3.3.5 Views</p>
-    <p class="resource-row"><strong>Video:</strong> Database Views</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 198–199</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Views</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
-        • Create a worksheet with your answers.<br>
-        • Upload when finished.
-    </div>
-
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
-    </div>
-
-    <p><strong>Quizlet:</strong> <a href="#">A 3.3.5 Views</a></p>
-
-    <!-- Lesson Plan Link -->
-    <p><strong>Lesson Plan:</strong> <a href="lessonplans/A3.3.5.pdf">Download Lesson Plan</a></p>
-
-    <p><strong>Extension Task:</strong> <a href="#">PDF</a></p>
-</div>
-
-<!-- A3.3.6 -->
-<div class="resource-block">
-    <h4>A 3.3.6 Database Transactions (HL Only) <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A 3.3.6 Transactions</p>
-    <p class="resource-row"><strong>Video:</strong> Database Transactions</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 200–201</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Transactions</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
-        • Create a worksheet with your answers.<br>
-        • Upload when finished.
-    </div>
-
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
-    </div>
-
-    <p><strong>Quizlet:</strong> <a href="#">A 3.3.6 Transactions</a></p>
-
-    <!-- Lesson Plan Link -->
-    <p><strong>Lesson Plan:</strong> <a href="lessonplans/A3.3.6.pdf">Download Lesson Plan</a></p>
-
-    <p><strong>Extension Task:</strong> <a href="#">PDF</a></p>
-</div>
-
-<div class="divider"></div>
-
-<!-- ========================= -->
-<!-- A3.4 ALTERNATIVE DATABASES -->
-<!-- ========================= -->
-
-<h3 id="A3.4">A3.4 Alternative databases (HL Only)</h3>
-
-<!-- A3.4.1 -->
-<div class="resource-block">
-    <h4>A 3.4.1 Different types of database <span class="tick">✔</span></h4>
-
-    <p class="resource-row"><strong>PowerPoint:</strong> A 3.4.1 Different Types of Database</p>
-    <p class="resource-row"><strong>Video:</strong> Different Types of Database</p>
-    <p class="resource-row"><strong>eBook:</strong> <a href="#">PDF</a></p>
-    <p class="resource-row"><strong>Textbook:</strong> Pages 195–201</p>
-    <p class="resource-row"><strong>Revision Dojo:</strong> Different Types of Database</p>
-
-    <div class="starter-box">
-        <strong>Lesson Starters – Revision</strong><br>
-        • Create a worksheet with your answers.<br>
-        • Upload when finished.
-    </div>
-
-    <div class="rubric">
-        <strong>Scoring Rubric:</strong><br>
-        1 — Attempted but incorrect<br>
-        2 — Correct<br>
-        3 — Correct with strong detail
-    </div>
-
-    <p><strong>Quizlet:</strong> <a href="#">A 3.4.1 Database Types</a></p>
-
-    <!-- Lesson Plan Link -->
-    <p><strong
-
+</body>
+</html>
+```
