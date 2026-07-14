@@ -194,26 +194,6 @@
       cursor: pointer;
       font-weight: 450;
     }
-    .unit-card .cover-status .covered-text {
-      color: #1a6b8a;
-      font-weight: 500;
-    }
-
-    .unit-card .progress-bar {
-      width: 100%;
-      height: 3px;
-      background: #e5edf5;
-      border-radius: 4px;
-      margin-top: 0.6rem;
-      overflow: hidden;
-    }
-    .unit-card .progress-bar .fill {
-      height: 100%;
-      background: linear-gradient(to right, #2a6f97, #5a9fd4);
-      border-radius: 4px;
-      transition: width 0.4s ease;
-      width: 0%;
-    }
 
     .unit-card .arrow {
       margin-left: auto;
@@ -243,6 +223,8 @@
       background: linear-gradient(to right, #3e8fb8, #7ab8d4);
     }
     .ia-card h3 i { color: #3e8fb8; }
+
+    .divider-light { margin: 3rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
     @media (max-width: 680px) {
       body { padding: 1rem; }
@@ -292,7 +274,6 @@
         <label for="cover-A1">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-A1"></div></div>
     </a>
 
     <!-- A2 -->
@@ -303,7 +284,6 @@
         <label for="cover-A2">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-A2"></div></div>
     </a>
 
     <!-- A3 -->
@@ -314,7 +294,6 @@
         <label for="cover-A3">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-A3"></div></div>
     </a>
 
     <!-- A4 -->
@@ -325,7 +304,6 @@
         <label for="cover-A4">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-A4"></div></div>
     </a>
 
     <!-- B1 -->
@@ -336,7 +314,6 @@
         <label for="cover-B1">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-B1"></div></div>
     </a>
 
     <!-- B2 -->
@@ -347,7 +324,6 @@
         <label for="cover-B2">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-B2"></div></div>
     </a>
 
     <!-- B3 -->
@@ -358,7 +334,6 @@
         <label for="cover-B3">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-B3"></div></div>
     </a>
 
     <!-- B4 -->
@@ -369,7 +344,6 @@
         <label for="cover-B4">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-B4"></div></div>
     </a>
 
     <!-- Case Study -->
@@ -380,7 +354,6 @@
         <label for="cover-CaseStudy">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-CaseStudy"></div></div>
     </a>
 
     <!-- Internal Assessment -->
@@ -391,12 +364,11 @@
         <label for="cover-IA">covered</label>
         <span class="arrow"><i class="fas fa-chevron-right"></i></span>
       </div>
-      <div class="progress-bar"><div class="fill" id="progress-IA"></div></div>
     </a>
 
   </div>
 
-  <hr class="divider-light" style="margin: 3rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent);">
+  <hr class="divider-light">
   <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
     <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
   </div>
@@ -407,17 +379,6 @@
     // ----- PERSISTENT CHECKBOXES via localStorage (grade 12 specific) -----
     const checkboxes = document.querySelectorAll('.cover-checkbox');
     
-    // Function to update progress bar
-    function updateProgress(unit) {
-      const progressBar = document.getElementById('progress-' + unit);
-      if (!progressBar) return;
-      
-      const checkbox = document.querySelector(`.cover-checkbox[data-unit="${unit}"]`);
-      if (checkbox) {
-        progressBar.style.width = checkbox.checked ? '100%' : '0%';
-      }
-    }
-
     // Load state and update UI
     checkboxes.forEach(cb => {
       const key = 'g12_covered_' + cb.dataset.unit;
@@ -425,14 +386,11 @@
       if (stored === 'true') {
         cb.checked = true;
       }
-      // Update progress bar
-      updateProgress(cb.dataset.unit);
       
       cb.addEventListener('change', function(e) {
         const unit = this.dataset.unit;
         const key = 'g12_covered_' + unit;
         localStorage.setItem(key, this.checked ? 'true' : 'false');
-        updateProgress(unit);
       });
     });
 
@@ -443,14 +401,8 @@
         const checkbox = document.querySelector(`.cover-checkbox[data-unit="${unit}"]`);
         if (checkbox) {
           checkbox.checked = (e.newValue === 'true');
-          updateProgress(unit);
         }
       }
-    });
-
-    // Initial progress update for all units
-    document.querySelectorAll('.cover-checkbox').forEach(cb => {
-      updateProgress(cb.dataset.unit);
     });
   })();
 </script>
