@@ -1,23 +1,459 @@
-<nav class="back-link">
-    <a href="index.html">← Back to Main Page</a>
-</nav>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 12 · IB Computer Science</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
 
-<section class="unit-index">
-    <h2>Grade 12 Unit Pages</h2>
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
 
-    <div class="unit-grid">
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #2a6f97; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
 
-        <a class="unit-card" href="A1.html"><h3>A1 Computer fundamentals</h3></a>
-        <a class="unit-card" href="A2.html"><h3>A2 Networks</h3></a>
-        <a class="unit-card" href="A3.html"><h3>A3 Databases</h3></a>
-        <a class="unit-card" href="A4.html"><h3>A4 Machine learning</h3></a>
-        <a class="unit-card" href="B1.html"><h3>B1 Computational thinking</h3></a>
-        <a class="unit-card" href="B2.html"><h3>B2 Programming</h3></a>
-        <a class="unit-card" href="B3.html"><h3>B3 Object oriented programming</h3></a>
-        <a class="unit-card" href="B4.html"><h3>B4 Abstract data types (HL)</h3></a>
+    .grade-tabs {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 2.5rem;
+      background: white;
+      padding: 0.5rem;
+      border-radius: 60px;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      width: fit-content;
+    }
+    .grade-tabs a {
+      padding: 0.5rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #475569;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .grade-tabs a.active {
+      background: #0b2a4a;
+      color: white;
+      box-shadow: 0 4px 12px rgba(11,42,74,0.2);
+    }
+    .grade-tabs a:hover:not(.active) {
+      background: #eef4fa;
+    }
 
-        <a class="unit-card" href="CaseStudy.html"><h3>Case Study</h3></a>
-        <a class="unit-card" href="InternalAssessment.html"><h3>Internal Assessment</h3></a>
+    .unit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
 
-    </div>
-</section>
+    .unit-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem 1.5rem 1.5rem;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0,0,0,0.02);
+      border: 1px solid #e5edf5;
+      transition: 0.25s ease;
+      text-decoration: none;
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .unit-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(to right, #2a6f97, #7bb3ff);
+      opacity: 0;
+      transition: 0.3s;
+    }
+    .unit-card:hover {
+      border-color: #b6d0e8;
+      box-shadow: 0 12px 30px rgba(0, 32, 64, 0.08);
+      transform: translateY(-3px);
+    }
+    .unit-card:hover::before { opacity: 1; }
+
+    .unit-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .unit-card h3 i {
+      color: #2a6f97;
+      font-size: 1.1rem;
+      width: 1.6rem;
+    }
+    .unit-card .unit-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.15rem 0.7rem;
+      border-radius: 40px;
+      background: #dceaf7;
+      color: #13416b;
+      margin-left: 6px;
+    }
+    .unit-card .unit-badge.hl {
+      background: #f7d9d9;
+      color: #a13232;
+    }
+    .unit-card .unit-badge.core {
+      background: #cfe3d0;
+      color: #1d5e3a;
+    }
+
+    .unit-card .cover-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      color: #475569;
+      padding-top: 0.8rem;
+      border-top: 1px solid #eef2f6;
+    }
+    .unit-card .cover-status input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: #1a6b8a;
+      cursor: pointer;
+    }
+    .unit-card .cover-status label {
+      cursor: pointer;
+      font-weight: 450;
+    }
+    .unit-card .cover-status .covered-text {
+      color: #1a6b8a;
+      font-weight: 500;
+    }
+
+    .unit-card .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: #e5edf5;
+      border-radius: 4px;
+      margin-top: 0.6rem;
+      overflow: hidden;
+    }
+    .unit-card .progress-bar .fill {
+      height: 100%;
+      background: linear-gradient(to right, #2a6f97, #5a9fd4);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .unit-card .arrow {
+      margin-left: auto;
+      color: #b6cfe5;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    .unit-card:hover .arrow {
+      color: #2a6f97;
+      transform: translateX(3px);
+    }
+
+    .case-study-card {
+      background: linear-gradient(135deg, #f8f4ec, #f0ebe0);
+      border-color: #e8dfd0;
+    }
+    .case-study-card::before {
+      background: linear-gradient(to right, #b8943e, #d4b87a);
+    }
+    .case-study-card h3 i { color: #b8943e; }
+
+    .ia-card {
+      background: linear-gradient(135deg, #ecf4f8, #e0ebf0);
+      border-color: #d0dfe8;
+    }
+    .ia-card::before {
+      background: linear-gradient(to right, #3e8fb8, #7ab8d4);
+    }
+    .ia-card h3 i { color: #3e8fb8; }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .unit-grid { grid-template-columns: 1fr; }
+      .grade-tabs { width: 100%; justify-content: center; }
+      .grade-tabs a { padding: 0.4rem 1.2rem; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- navigation -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IB CompSci</span>
+    <a href="index.html"><i class="fas fa-arrow-left"></i> Main Page</a>
+    <a href="#"><i class="fas fa-book-open"></i> Resources</a>
+  </nav>
+
+  <!-- header -->
+  <div class="main-title">
+    <i class="fas fa-layer-group"></i> Grade 12 Units
+  </div>
+  <div class="subhead">
+    <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
+    track your progress across all units
+  </div>
+
+  <!-- Grade tabs -->
+  <div class="grade-tabs">
+    <a href="year11.html"><i class="fas fa-check-circle"></i> Grade 11</a>
+    <a href="year12.html" class="active"><i class="fas fa-check-circle"></i> Grade 12</a>
+  </div>
+
+  <!-- Unit Grid -->
+  <div class="unit-grid">
+
+    <!-- A1 -->
+    <a class="unit-card" href="A1.html">
+      <h3><i class="fas fa-microchip"></i> A1 Computer fundamentals <span class="unit-badge core">Core</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="A1" id="cover-A1">
+        <label for="cover-A1">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-A1"></div></div>
+    </a>
+
+    <!-- A2 -->
+    <a class="unit-card" href="A2.html">
+      <h3><i class="fas fa-network-wired"></i> A2 Networks <span class="unit-badge core">Core</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="A2" id="cover-A2">
+        <label for="cover-A2">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-A2"></div></div>
+    </a>
+
+    <!-- A3 -->
+    <a class="unit-card" href="A3.html">
+      <h3><i class="fas fa-table"></i> A3 Databases <span class="unit-badge core">Core</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="A3" id="cover-A3">
+        <label for="cover-A3">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-A3"></div></div>
+    </a>
+
+    <!-- A4 -->
+    <a class="unit-card" href="A4.html">
+      <h3><i class="fas fa-brain"></i> A4 Machine learning <span class="unit-badge core">Core</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="A4" id="cover-A4">
+        <label for="cover-A4">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-A4"></div></div>
+    </a>
+
+    <!-- B1 -->
+    <a class="unit-card" href="B1.html">
+      <h3><i class="fas fa-cogs"></i> B1 Computational thinking <span class="unit-badge core">Core</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="B1" id="cover-B1">
+        <label for="cover-B1">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-B1"></div></div>
+    </a>
+
+    <!-- B2 -->
+    <a class="unit-card" href="B2.html">
+      <h3><i class="fas fa-code"></i> B2 Programming <span class="unit-badge core">Core</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="B2" id="cover-B2">
+        <label for="cover-B2">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-B2"></div></div>
+    </a>
+
+    <!-- B3 -->
+    <a class="unit-card" href="B3.html">
+      <h3><i class="fas fa-cubes"></i> B3 Object oriented programming <span class="unit-badge core">Core</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="B3" id="cover-B3">
+        <label for="cover-B3">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-B3"></div></div>
+    </a>
+
+    <!-- B4 -->
+    <a class="unit-card" href="B4.html">
+      <h3><i class="fas fa-project-diagram"></i> B4 Abstract data types <span class="unit-badge hl">HL</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="B4" id="cover-B4">
+        <label for="cover-B4">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-B4"></div></div>
+    </a>
+
+    <!-- Case Study -->
+    <a class="unit-card case-study-card" href="CaseStudy.html">
+      <h3><i class="fas fa-search"></i> Case Study <span class="unit-badge">2026</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="CaseStudy" id="cover-CaseStudy">
+        <label for="cover-CaseStudy">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-CaseStudy"></div></div>
+    </a>
+
+    <!-- Internal Assessment -->
+    <a class="unit-card ia-card" href="InternalAssessment.html">
+      <h3><i class="fas fa-tasks"></i> Internal Assessment <span class="unit-badge">IA</span></h3>
+      <div class="cover-status">
+        <input type="checkbox" class="cover-checkbox" data-unit="IA" id="cover-IA">
+        <label for="cover-IA">covered</label>
+        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="progress-bar"><div class="fill" id="progress-IA"></div></div>
+    </a>
+
+  </div>
+
+  <hr class="divider-light" style="margin: 3rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent);">
+  <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+    <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- PERSISTENT CHECKBOXES via localStorage (grade 12 specific) -----
+    const checkboxes = document.querySelectorAll('.cover-checkbox');
+    
+    // Function to update progress bar
+    function updateProgress(unit) {
+      const progressBar = document.getElementById('progress-' + unit);
+      if (!progressBar) return;
+      
+      const checkbox = document.querySelector(`.cover-checkbox[data-unit="${unit}"]`);
+      if (checkbox) {
+        progressBar.style.width = checkbox.checked ? '100%' : '0%';
+      }
+    }
+
+    // Load state and update UI
+    checkboxes.forEach(cb => {
+      const key = 'g12_covered_' + cb.dataset.unit;
+      const stored = localStorage.getItem(key);
+      if (stored === 'true') {
+        cb.checked = true;
+      }
+      // Update progress bar
+      updateProgress(cb.dataset.unit);
+      
+      cb.addEventListener('change', function(e) {
+        const unit = this.dataset.unit;
+        const key = 'g12_covered_' + unit;
+        localStorage.setItem(key, this.checked ? 'true' : 'false');
+        updateProgress(unit);
+      });
+    });
+
+    // Also listen for changes from detail pages (via storage event)
+    window.addEventListener('storage', function(e) {
+      if (e.key && e.key.startsWith('g12_covered_')) {
+        const unit = e.key.replace('g12_covered_', '');
+        const checkbox = document.querySelector(`.cover-checkbox[data-unit="${unit}"]`);
+        if (checkbox) {
+          checkbox.checked = (e.newValue === 'true');
+          updateProgress(unit);
+        }
+      }
+    });
+
+    // Initial progress update for all units
+    document.querySelectorAll('.cover-checkbox').forEach(cb => {
+      updateProgress(cb.dataset.unit);
+    });
+  })();
+</script>
+
+</body>
+</html>
