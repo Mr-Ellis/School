@@ -129,6 +129,21 @@
             color: #0b2a4a;
             font-weight: 700;
         }
+        .checklist li.done::before {
+            content: "✓";
+            color: #1a7b4a;
+        }
+        .checklist input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0b2a4a;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+        .checklist label {
+            cursor: pointer;
+            flex: 1;
+        }
         a {
             color: #b21f1f;
             text-decoration: none;
@@ -229,8 +244,8 @@
                 <td><strong>1</strong></td>
                 <td><strong>Read the eBook</strong></td>
                 <td>
-                    Read 
-                    <a href="https://github.com/Mr-Ellis/School/blob/main/ebooks/DP%20Computer%20Science_%20B%201.1.1.pdf" target="_blank">DP Computer Science_ B 1.1.1.pdf</a> 
+                    Read
+                    <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20B%201.1.1.pdf" target="_blank">DP Computer Science_ B 1.1.1.pdf</a>
                     carefully. Take notes on the five key elements.
                 </td>
             </tr>
@@ -274,27 +289,27 @@
     <div class="extension-grid">
         <span class="label">1. Weak vs Strong Rewrite</span>
         <span class="desc">
-            Given weak problem statements, rewrite them as strong statements. 
+            Given weak problem statements, rewrite them as strong statements.
             See the <strong>eBook (Page 3)</strong> for examples.
         </span>
 
         <span class="label">2. Library Booking Deconstruction</span>
         <span class="desc">
-            Read the full worked example in the <strong>eBook (Pages 6-7)</strong> 
+            Read the full worked example in the <strong>eBook (Pages 6-7)</strong>
             and identify each of the five elements.
         </span>
 
         <span class="label">3. Lesson Presentation</span>
         <span class="desc">
-            Review the 
-            <a href="https://docs.google.com/presentation/d/e/2PACX-1vSesKc3fdrSFneRM4Vpnb2KGEQtltKDCMbuTh_LnSuyqbj50tchDvtcUR2gd0G5vrsWqwXYyoKpfRMQ/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">presentation slides</a> 
+            Review the
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vSesKc3fdrSFneRM4Vpnb2KGEQtltKDCMbuTh_LnSuyqbj50tchDvtcUR2gd0G5vrsWqwXYyoKpfRMQ/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">presentation slides</a>
             for additional examples and explanations.
         </span>
 
         <span class="label">4. Create Your Own</span>
         <span class="desc">
-            Think of a real-world problem (e.g., organising a school event, 
-            managing a sports team, or tracking homework). Write a full 
+            Think of a real-world problem (e.g., organising a school event,
+            managing a sports team, or tracking homework). Write a full
             problem specification for it using all five elements.
         </span>
     </div>
@@ -310,13 +325,28 @@
     <p><strong>Don't let this be you. Specify the problem before you solve it.</strong></p>
 
     <h2>📌 Checklist</h2>
-    <p><em>Have you completed everything?</em></p>
-    <ul class="checklist">
-        <li>Read the eBook</li>
-        <li>Answered the mild, medium and spicy questions from the Lesson Starter PowerPoint and kept answers for unit submission</li>
-        <li>Used <strong>RevisionDojo "Teach the AI"</strong> to explain the concepts</li>
-        <li>Practiced with <strong>Quizlet</strong> flashcards</li>
-        <li>Completed at least one <strong>Extension Activity</strong></li>
+    <p><em>Track your progress by checking off each task as you complete it:</em></p>
+    <ul class="checklist" id="progress-checklist">
+        <li>
+            <input type="checkbox" class="check-item" data-task="read-ebook" id="task-read-ebook">
+            <label for="task-read-ebook">Read the eBook</label>
+        </li>
+        <li>
+            <input type="checkbox" class="check-item" data-task="starter-activity" id="task-starter-activity">
+            <label for="task-starter-activity">Answered the mild, medium and spicy questions from the Lesson Starter PowerPoint and kept answers for unit submission</label>
+        </li>
+        <li>
+            <input type="checkbox" class="check-item" data-task="teach-ai" id="task-teach-ai">
+            <label for="task-teach-ai">Used <strong>RevisionDojo "Teach the AI"</strong> to explain the concepts</label>
+        </li>
+        <li>
+            <input type="checkbox" class="check-item" data-task="quizlet" id="task-quizlet">
+            <label for="task-quizlet">Practiced with <strong>Quizlet</strong> flashcards</label>
+        </li>
+        <li>
+            <input type="checkbox" class="check-item" data-task="extension" id="task-extension">
+            <label for="task-extension">Completed at least one <strong>Extension Activity</strong></label>
+        </li>
     </ul>
 
     <hr>
@@ -326,6 +356,28 @@
     </div>
 
 </div>
+
+<script>
+    (function() {
+        // Persistent checkboxes for the summary page checklist
+        const checkboxes = document.querySelectorAll('.check-item');
+
+        checkboxes.forEach(function(cb) {
+            const storageKey = 'summary_' + cb.dataset.task;
+
+            // Load saved state
+            const savedState = localStorage.getItem(storageKey);
+            if (savedState === 'true') {
+                cb.checked = true;
+            }
+
+            // Save state on change
+            cb.addEventListener('change', function() {
+                localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
+            });
+        });
+    })();
+</script>
 
 </body>
 </html>
