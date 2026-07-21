@@ -1,463 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grade 12 · IB Computer Science</title>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #f0f4fb;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      color: #1e293b;
-      padding: 2rem 1.5rem;
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-    .container { max-width: 1200px; margin: 0 auto; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1.1 Approaches to Computational Thinking (Grade 12)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f4fb; color: #1e293b; padding: 24px; line-height: 1.6; }
+        .container { max-width: 960px; margin: 0 auto; }
+        .header { background: #0b2a4a; color: #fff; padding: 30px 35px; border-radius: 12px 12px 0 0; }
+        .header h1 { font-size: 2rem; font-weight: 700; }
+        .header .subtitle { font-size: 1.1rem; opacity: 0.85; margin-top: 4px; }
+        .back-link { display: inline-block; margin-top: 12px; color: #7bb3ff; text-decoration: none; }
+        .back-link:hover { color: #fff; text-decoration: underline; }
+        .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 20px; border: 1px solid #e2e8f0; transition: background-color 0.4s ease; }
+        .card.covered { background: #e6f7e6; border-color: #2d8f2d; }
+        .card-header { background: #f1f4f9; padding: 16px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .card.covered .card-header { background: #d4edda; border-bottom-color: #b7d7b7; }
+        .card-header h2 { font-size: 1.2rem; color: #0b2a4a; }
+        .badge { background: #b21f1f; color: #fff; font-size: 0.7rem; font-weight: 600; padding: 2px 12px; border-radius: 20px; text-transform: uppercase; }
+        .badge.core { background: #1a7b4a; }
+        .card-body { padding: 24px 24px 20px; }
+        .button-group { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; }
+        .btn { display: inline-block; padding: 10px 24px; border-radius: 30px; font-weight: 600; text-decoration: none; font-size: 0.95rem; border: none; cursor: pointer; transition: background 0.2s; min-width: 200px; text-align: center; }
+        .btn-summary { background: #0b2a4a; color: #fff; }
+        .btn-summary:hover { background: #1a3f64; }
+        .btn-locked { background: #e2e8f0; color: #4a5568; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-locked:hover { background: #d5dce6; }
+        .cover-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .cover-section input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0b2a4a; cursor: default; pointer-events: none; opacity: 0.7; }
+        .cover-section label { cursor: default; font-weight: 500; color: #0b2a4a; }
+        .cover-section .teacher-edit { font-size: 0.75rem; color: #6b7f8f; background: #edf2f7; padding: 2px 10px; border-radius: 12px; cursor: pointer; user-select: none; transition: background 0.2s; margin-left: 6px; }
+        .cover-section .teacher-edit:hover { background: #d5dce6; }
+        .cover-section .teacher-badge { font-size: 0.65rem; background: #cbd5e1; color: #334155; padding: 1px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
 
-    .nav {
-      background: #0b2a4a;
-      padding: 0.9rem 2rem;
-      border-radius: 60px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 1.8rem;
-      margin-bottom: 2.8rem;
-      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
-    }
-    .nav a {
-      color: #e6edf5;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      letter-spacing: 0.3px;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .nav a i { font-size: 0.9rem; opacity: 0.7; }
-    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
-    .nav .brand {
-      margin-right: auto;
-      font-weight: 600;
-      color: white;
-      font-size: 1.1rem;
-    }
-    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
-
-    .main-title {
-      font-size: 2.8rem;
-      font-weight: 700;
-      color: #0b2a4a;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.2rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .main-title i { color: #2a6f97; font-size: 2.2rem; }
-    .subhead {
-      color: #475569;
-      font-size: 1rem;
-      margin-bottom: 2.5rem;
-      border-left: 4px solid #2a6f97;
-      padding-left: 1.2rem;
-      font-weight: 400;
-      background: #e9eff8;
-      display: inline-block;
-      padding: 0.4rem 1.4rem;
-      border-radius: 40px;
-    }
-
-    .grade-tabs {
-      display: flex;
-      gap: 0.8rem;
-      margin-bottom: 2.5rem;
-      background: white;
-      padding: 0.5rem;
-      border-radius: 60px;
-      border: 1px solid #e5edf5;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      width: fit-content;
-    }
-    .grade-tabs a {
-      padding: 0.5rem 1.8rem;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #475569;
-      text-decoration: none;
-      transition: 0.2s;
-    }
-    .grade-tabs a.active {
-      background: #0b2a4a;
-      color: white;
-      box-shadow: 0 4px 12px rgba(11,42,74,0.2);
-    }
-    .grade-tabs a:hover:not(.active) {
-      background: #eef4fa;
-    }
-
-    .unit-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .unit-card {
-      background: white;
-      border-radius: 24px;
-      padding: 1.8rem 1.5rem 1.5rem;
-      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0,0,0,0.02);
-      border: 1px solid #e5edf5;
-      transition: 0.25s ease;
-      text-decoration: none;
-      color: #1e293b;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-    }
-    .unit-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(to right, #2a6f97, #7bb3ff);
-      opacity: 0;
-      transition: 0.3s;
-    }
-    .unit-card:hover {
-      border-color: #b6d0e8;
-      box-shadow: 0 12px 30px rgba(0, 32, 64, 0.08);
-      transform: translateY(-3px);
-    }
-    .unit-card:hover::before { opacity: 1; }
-
-    /* --- COMPLETED UNIT STYLING --- */
-    .unit-card.completed {
-      background: #e6f7e6;
-      border-color: #2d8f2d;
-    }
-    .unit-card.completed::before {
-      background: linear-gradient(to right, #2d8f2d, #4caf50);
-      opacity: 1;
-    }
-    .unit-card.completed .cover-status label {
-      color: #2d8f2d;
-      font-weight: 600;
-    }
-    .unit-card.completed .cover-status .check-icon {
-      color: #2d8f2d;
-    }
-
-    .unit-card h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #0b2a4a;
-      margin-bottom: 0.4rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .unit-card h3 i {
-      color: #2a6f97;
-      font-size: 1.1rem;
-      width: 1.6rem;
-    }
-    .unit-card .unit-badge {
-      font-size: 0.65rem;
-      font-weight: 600;
-      padding: 0.15rem 0.7rem;
-      border-radius: 40px;
-      background: #dceaf7;
-      color: #13416b;
-      margin-left: 6px;
-    }
-    .unit-card .unit-badge.hl {
-      background: #f7d9d9;
-      color: #a13232;
-    }
-    .unit-card .unit-badge.core {
-      background: #cfe3d0;
-      color: #1d5e3a;
-    }
-
-    .unit-card .cover-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 0.8rem;
-      font-size: 0.85rem;
-      color: #475569;
-      padding-top: 0.8rem;
-      border-top: 1px solid #eef2f6;
-    }
-    .unit-card .cover-status .check-icon {
-      font-size: 1rem;
-      color: #b6cfe5;
-      transition: 0.2s;
-    }
-    .unit-card.completed .cover-status .check-icon {
-      color: #2d8f2d;
-    }
-
-    .unit-card .arrow {
-      margin-left: auto;
-      color: #b6cfe5;
-      transition: 0.2s;
-      font-size: 0.9rem;
-    }
-    .unit-card:hover .arrow {
-      color: #2a6f97;
-      transform: translateX(3px);
-    }
-    .unit-card.completed .arrow {
-      color: #2d8f2d;
-    }
-
-    .case-study-card {
-      background: linear-gradient(135deg, #f8f4ec, #f0ebe0);
-      border-color: #e8dfd0;
-    }
-    .case-study-card::before {
-      background: linear-gradient(to right, #b8943e, #d4b87a);
-    }
-    .case-study-card h3 i { color: #b8943e; }
-
-    .ia-card {
-      background: linear-gradient(135deg, #ecf4f8, #e0ebf0);
-      border-color: #d0dfe8;
-    }
-    .ia-card::before {
-      background: linear-gradient(to right, #3e8fb8, #7ab8d4);
-    }
-    .ia-card h3 i { color: #3e8fb8; }
-
-    .divider-light { margin: 3rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
-
-    @media (max-width: 680px) {
-      body { padding: 1rem; }
-      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
-      .nav .brand { margin-right: 0; }
-      .main-title { font-size: 2rem; flex-wrap: wrap; }
-      .unit-grid { grid-template-columns: 1fr; }
-      .grade-tabs { width: 100%; justify-content: center; }
-      .grade-tabs a { padding: 0.4rem 1.2rem; font-size: 0.85rem; }
-    }
-  </style>
+        @media (max-width: 600px) { body { padding: 12px; } .header { padding: 20px; } .card-header { flex-direction: column; align-items: flex-start; } .button-group { flex-direction: column; } .btn { min-width: unset; width: 100%; } }
+    </style>
 </head>
 <body>
 
 <div class="container">
 
-  <!-- navigation -->
-  <nav class="nav">
-    <span class="brand"><i class="fas fa-graduation-cap"></i> IB CompSci</span>
-    <a href="index.html"><i class="fas fa-arrow-left"></i> Main Page</a>
-    <a href="#"><i class="fas fa-book-open"></i> Resources</a>
-  </nav>
+    <div class="header">
+        <h1>B1.1 Approaches to Computational Thinking</h1>
+        <div class="subtitle">IB Computer Science • Core Topic</div>
+        <!-- FIXED: Now links to Grade 12 -->
+        <a class="back-link" href="../year12.html">← Back to Grade 12 Units</a>
+    </div>
 
-  <!-- header -->
-  <div class="main-title">
-    <i class="fas fa-layer-group"></i> Grade 12 Units
-  </div>
-  <div class="subhead">
-    <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
-    track your progress across all units
-  </div>
+    <!-- ============================================================ -->
+    <!-- LESSON 1.1.1 -->
+    <!-- ============================================================ -->
+    <div class="card" id="lessonCard-B1.1.1">
+        <div class="card-header">
+            <h2>B1.1.1 Problem Specification</h2>
+            <span class="badge core">Core</span>
+        </div>
+        <div class="card-body">
+            <div class="button-group">
+                <a class="btn btn-summary" href="b1-1-1-summary.html">📖 View Lesson Summary</a>
+                <button class="btn btn-locked" onclick="openLessonPlan('B1.1.1')">
+                    <span class="lock-icon">🔒</span> View Lesson Plan
+                </button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.1" id="cover-B1.1.1">
+                <label for="cover-B1.1.1">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="B1.1.1">(toggle)</span>
+            </div>
+        </div>
+    </div>
 
-  <!-- Grade tabs -->
-  <div class="grade-tabs">
-    <a href="year11.html"><i class="fas fa-check-circle"></i> Grade 11</a>
-    <a href="year12.html" class="active"><i class="fas fa-check-circle"></i> Grade 12</a>
-  </div>
+    <!-- ============================================================ -->
+    <!-- LESSON 1.1.2 -->
+    <!-- ============================================================ -->
+    <div class="card" id="lessonCard-B1.1.2">
+        <div class="card-header">
+            <h2>B1.1.2 Approaches to Computational Thinking</h2>
+            <span class="badge core">Core</span>
+        </div>
+        <div class="card-body">
+            <div class="button-group">
+                <a class="btn btn-summary" href="b1-1-2-summary.html">📖 View Lesson Summary</a>
+                <button class="btn btn-locked" onclick="openLessonPlan('B1.1.2')">
+                    <span class="lock-icon">🔒</span> View Lesson Plan
+                </button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.2" id="cover-B1.1.2">
+                <label for="cover-B1.1.2">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="B1.1.2">(toggle)</span>
+            </div>
+        </div>
+    </div>
 
-  <!-- Unit Grid -->
-  <div class="unit-grid">
+    <!-- ============================================================ -->
+    <!-- LESSON 1.1.3 -->
+    <!-- ============================================================ -->
+    <div class="card" id="lessonCard-B1.1.3">
+        <div class="card-header">
+            <h2>B1.1.3 Applying Computational Thinking</h2>
+            <span class="badge core">Core</span>
+        </div>
+        <div class="card-body">
+            <div class="button-group">
+                <a class="btn btn-summary" href="b1-1-3-summary.html">📖 View Lesson Summary</a>
+                <button class="btn btn-locked" onclick="openLessonPlan('B1.1.3')">
+                    <span class="lock-icon">🔒</span> View Lesson Plan
+                </button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.3" id="cover-B1.1.3">
+                <label for="cover-B1.1.3">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="B1.1.3">(toggle)</span>
+            </div>
+        </div>
+    </div>
 
-    <!-- A1 -->
-    <a class="unit-card" href="A1.html" data-unit="A1">
-      <h3><i class="fas fa-microchip"></i> A1 Computer fundamentals <span class="unit-badge core">Core</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
+    <!-- ============================================================ -->
+    <!-- LESSON 1.1.4 -->
+    <!-- ============================================================ -->
+    <div class="card" id="lessonCard-B1.1.4">
+        <div class="card-header">
+            <h2>B1.1.4 Flowcharts</h2>
+            <span class="badge core">Core</span>
+        </div>
+        <div class="card-body">
+            <div class="button-group">
+                <a class="btn btn-summary" href="b1-1-4-summary.html">📖 View Lesson Summary</a>
+                <button class="btn btn-locked" onclick="openLessonPlan('B1.1.4')">
+                    <span class="lock-icon">🔒</span> View Lesson Plan
+                </button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.4" id="cover-B1.1.4">
+                <label for="cover-B1.1.4">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="B1.1.4">(toggle)</span>
+            </div>
+        </div>
+    </div>
 
-    <!-- A2 -->
-    <a class="unit-card" href="A2.html" data-unit="A2">
-      <h3><i class="fas fa-network-wired"></i> A2 Networks <span class="unit-badge core">Core</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-    <!-- A3 -->
-    <a class="unit-card" href="A3.html" data-unit="A3">
-      <h3><i class="fas fa-table"></i> A3 Databases <span class="unit-badge core">Core</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-    <!-- A4 -->
-    <a class="unit-card" href="A4.html" data-unit="A4">
-      <h3><i class="fas fa-brain"></i> A4 Machine learning <span class="unit-badge core">Core</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-    <!-- B1 - YEAR 12 SPECIFIC LINK -->
-    <a class="unit-card" href="unit-b1-1-g12/index.html" data-unit="B1">
-      <h3><i class="fas fa-cogs"></i> B1 Computational thinking <span class="unit-badge core">Core</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-    <!-- B2 -->
-    <a class="unit-card" href="B2.html" data-unit="B2">
-      <h3><i class="fas fa-code"></i> B2 Programming <span class="unit-badge core">Core</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-    <!-- B3 -->
-    <a class="unit-card" href="B3.html" data-unit="B3">
-      <h3><i class="fas fa-cubes"></i> B3 Object oriented programming <span class="unit-badge core">Core</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-    <!-- B4 -->
-    <a class="unit-card" href="B4.html" data-unit="B4">
-      <h3><i class="fas fa-project-diagram"></i> B4 Abstract data types <span class="unit-badge hl">HL</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-    <!-- Case Study -->
-    <a class="unit-card case-study-card" href="CaseStudy.html" data-unit="CaseStudy">
-      <h3><i class="fas fa-search"></i> Case Study <span class="unit-badge">2026</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-    <!-- Internal Assessment -->
-    <a class="unit-card ia-card" href="InternalAssessment.html" data-unit="IA">
-      <h3><i class="fas fa-tasks"></i> Internal Assessment <span class="unit-badge">IA</span></h3>
-      <div class="cover-status">
-        <span class="check-icon"><i class="fas fa-circle"></i></span>
-        <label>Not started</label>
-        <span class="arrow"><i class="fas fa-chevron-right"></i></span>
-      </div>
-    </a>
-
-  </div>
-
-  <hr class="divider-light">
-  <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
-    <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
-  </div>
 </div>
 
+<!-- JAVASCRIPT -->
 <script>
-  (function() {
-    // --- UNIT COMPLETION CHECKER (Grade 12 specific) ---
-    const GRADE_PREFIX = 'g12_';
+    (function() {
+        // --- CONFIGURATION ---
+        const CORRECT_PASSWORD = 'bluebeard';
 
-    const unitLessonMap = {
-      'B1': ['B1.1.1', 'B1.1.2', 'B1.1.3', 'B1.1.4'],
-      'A1': ['A1.1.1', 'A1.1.2'],
-      'A2': ['A2.1.1', 'A2.1.2'],
-      'A3': ['A3.1.1', 'A3.1.2'],
-      'A4': ['A4.1.1', 'A4.1.2'],
-      'B2': ['B2.1.1', 'B2.1.2'],
-      'B3': ['B3.1.1', 'B3.1.2'],
-      'B4': ['B4.1.1', 'B4.1.2'],
-      'CaseStudy': ['CaseStudy'],
-      'IA': ['IA']
-    };
+        // --- LESSON PLAN URLS ---
+        const PDF_URLS = {
+            'B1.1.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.1.pdf',
+            'B1.1.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.2.pdf',
+            'B1.1.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.3.pdf',
+            'B1.1.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.4.pdf'
+        };
 
-    function checkUnitCompletion(unitKey) {
-      const lessonKeys = unitLessonMap[unitKey];
-      if (!lessonKeys || lessonKeys.length === 0) {
-        const unitCheckKey = GRADE_PREFIX + 'covered_' + unitKey;
-        return localStorage.getItem(unitCheckKey) === 'true';
-      }
-      
-      const allCovered = lessonKeys.every(function(lessonKey) {
-        const lessonStorageKey = GRADE_PREFIX + 'covered_' + lessonKey;
-        return localStorage.getItem(lessonStorageKey) === 'true';
-      });
-      
-      return allCovered;
-    }
-
-    function updateAllUnitCards() {
-      const unitCards = document.querySelectorAll('.unit-card');
-      
-      unitCards.forEach(function(card) {
-        const unitKey = card.getAttribute('data-unit');
-        if (!unitKey) return;
-        
-        const isComplete = checkUnitCompletion(unitKey);
-        const statusLabel = card.querySelector('.cover-status label');
-        const checkIcon = card.querySelector('.check-icon i');
-        
-        if (isComplete) {
-          card.classList.add('completed');
-          if (statusLabel) statusLabel.textContent = 'Completed ✓';
-          if (checkIcon) checkIcon.className = 'fas fa-check-circle';
-        } else {
-          card.classList.remove('completed');
-          if (statusLabel) statusLabel.textContent = 'Not started';
-          if (checkIcon) checkIcon.className = 'fas fa-circle';
+        // --- SIMPLE PASSWORD FUNCTION ---
+        function openLessonPlan(lessonKey) {
+            var password = prompt("Enter the password to view the lesson plan:");
+            
+            if (password === CORRECT_PASSWORD) {
+                var url = PDF_URLS[lessonKey];
+                if (url) {
+                    window.open(url, '_blank');
+                } else {
+                    alert('No PDF URL found for this lesson.');
+                }
+            } else if (password !== null) {
+                alert('Incorrect password. Please try again.');
+            }
         }
-      });
-    }
 
-    updateAllUnitCards();
+        window.openLessonPlan = openLessonPlan;
 
-    window.addEventListener('storage', function(e) {
-      if (e.key && e.key.startsWith(GRADE_PREFIX)) {
-        updateAllUnitCards();
-      }
-    });
+        // --- COVER CHECKBOXES (Teacher Only) - YEAR 12 SPECIFIC ---
+        const checkboxes = document.querySelectorAll('.cover-checkbox');
 
-    setInterval(updateAllUnitCards, 2000);
-  })();
+        checkboxes.forEach(function(cb) {
+            const lessonKey = cb.getAttribute('data-lesson');
+            // FIXED: Uses g12_ prefix so Year 12 page can read it
+            const storageKey = 'g12_covered_' + lessonKey;
+            const card = document.getElementById('lessonCard-' + lessonKey);
+
+            const savedState = localStorage.getItem(storageKey);
+            if (savedState === 'true') {
+                cb.checked = true;
+                if (card) card.classList.add('covered');
+            }
+
+            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
+            if (toggleSpan) {
+                toggleSpan.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.classList.add('covered');
+                        } else {
+                            card.classList.remove('covered');
+                        }
+                    }
+                });
+            }
+
+            const label = document.querySelector('label[for="' + cb.id + '"]');
+            if (label) {
+                label.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.classList.add('covered');
+                        } else {
+                            card.classList.remove('covered');
+                        }
+                    }
+                });
+            }
+
+            cb.addEventListener('keydown', function(e) {
+                e.preventDefault();
+            });
+        });
+    })();
 </script>
 
 </body>
