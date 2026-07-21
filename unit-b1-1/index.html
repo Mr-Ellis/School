@@ -90,7 +90,7 @@
             padding: 24px 24px 20px;
         }
 
-        /* --- BUTTONS --- */
+        /* --- BUTTONS - SAME SIZE --- */
         .button-group {
             display: flex;
             flex-wrap: wrap;
@@ -104,14 +104,15 @@
             font-weight: 600;
             text-decoration: none;
             font-size: 0.95rem;
-            transition: background 0.2s, transform 0.1s;
             border: none;
-            cursor: default;
+            cursor: pointer;
+            transition: background 0.2s;
+            min-width: 200px;
+            text-align: center;
         }
         .btn-summary {
             background: #0b2a4a;
             color: #fff;
-            cursor: pointer;
         }
         .btn-summary:hover {
             background: #1a3f64;
@@ -119,13 +120,100 @@
         .btn-locked {
             background: #e2e8f0;
             color: #4a5568;
-            cursor: not-allowed;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+        }
+        .btn-locked:hover {
+            background: #d5dce6;
         }
         .btn-locked .lock-icon {
             font-size: 1rem;
+        }
+
+        /* --- PASSWORD MODAL (hidden by default) --- */
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .password-modal.show {
+            display: flex;
+        }
+        .password-box {
+            background: #fff;
+            padding: 30px 35px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+        .password-box h3 {
+            margin-bottom: 8px;
+            color: #0b2a4a;
+        }
+        .password-box p {
+            font-size: 0.9rem;
+            color: #4a5568;
+            margin-bottom: 16px;
+        }
+        .password-box input[type="password"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            outline: none;
+        }
+        .password-box input[type="password"]:focus {
+            border-color: #0b2a4a;
+        }
+        .password-box .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .password-box .btn-row button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .password-box .btn-row .btn-cancel {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        .password-box .btn-row .btn-cancel:hover {
+            background: #d5dce6;
+        }
+        .password-box .btn-row .btn-submit {
+            background: #0b2a4a;
+            color: #fff;
+        }
+        .password-box .btn-row .btn-submit:hover {
+            background: #1a3f64;
+        }
+        .password-box .error-msg {
+            color: #b21f1f;
+            font-size: 0.85rem;
+            margin-top: -8px;
+            margin-bottom: 12px;
+            display: none;
+        }
+        .password-box .error-msg.show {
+            display: block;
         }
 
         /* --- COVER CHECKBOX (Teacher Only) --- */
@@ -143,7 +231,7 @@
             height: 18px;
             accent-color: #0b2a4a;
             cursor: default;
-            pointer-events: none; /* Prevents students from clicking */
+            pointer-events: none;
             opacity: 0.7;
         }
         .cover-section label {
@@ -165,7 +253,6 @@
         .cover-section .teacher-edit:hover {
             background: #d5dce6;
         }
-        /* Small indicator that this is teacher-only */
         .cover-section .teacher-badge {
             font-size: 0.65rem;
             background: #cbd5e1;
@@ -176,52 +263,13 @@
             letter-spacing: 0.3px;
         }
 
-        /* --- LOCKED RESOURCES --- */
-        .locked {
-            color: #4a5568;
-            font-size: 0.85rem;
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px dashed #e2e8f0;
-        }
-        .locked span {
-            background: #edf2f7;
-            padding: 1px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.8rem;
-        }
-
-        .footer {
-            background: #fff;
-            border-radius: 12px;
-            padding: 16px 24px;
-            margin-top: 20px;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px 32px;
-            align-items: center;
-        }
-        .footer a {
-            color: #b21f1f;
-            text-decoration: none;
-            border-bottom: 1px dotted #b21f1f;
-        }
-        .footer a:hover {
-            color: #0b2a4a;
-        }
-        .footer .label {
-            color: #4a5568;
-            font-weight: 600;
-        }
-
         @media (max-width: 600px) {
             body { padding: 12px; }
             .header { padding: 20px; }
             .card-header { flex-direction: column; align-items: flex-start; }
             .button-group { flex-direction: column; }
-            .btn { text-align: center; }
+            .btn { min-width: unset; width: 100%; }
+            .password-box { padding: 20px; }
         }
     </style>
 </head>
@@ -247,9 +295,9 @@
             <!-- BUTTONS -->
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-1-summary.html">📖 View Lesson Summary</a>
-                <span class="btn btn-locked">
+                <button class="btn btn-locked" id="unlockBtn">
                     <span class="lock-icon">🔒</span> View Lesson Plan
-                </span>
+                </button>
             </div>
 
             <!-- COVER CHECKBOX – TEACHER ONLY -->
@@ -260,74 +308,121 @@
                 <span class="teacher-edit" id="toggleCover">(toggle)</span>
             </div>
 
-            <!-- LOCKED RESOURCES -->
-            <div class="locked">
-                🔒 <strong>Locked Resources</strong> &nbsp;
-                Lesson Plan <span>Password A</span> &nbsp;|&nbsp;
-                Answer Key <span>Password B</span> &nbsp;|&nbsp;
-                Extension Answers <span>Password B</span>
-            </div>
         </div>
-    </div>
-
-    <!-- FOOTER -->
-    <div class="footer">
-        <span class="label">Quick Links:</span>
-        <a href="https://quizlet.com/pt/1012854081/b-111-construct-a-problem-specification-flash-cards/?funnelUUID=3a5e3597-428b-4cd7-a87e-9be138ae72df" target="_blank">Quizlet</a>
-        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">Revision Dojo</a>
-        <span style="color:#4a5568;font-size:0.85rem;margin-left:auto;">Last updated: 2026</span>
     </div>
 
 </div>
 
-<!-- PERSISTENT CHECKBOX + TEACHER TOGGLE -->
+<!-- PASSWORD MODAL -->
+<div class="password-modal" id="passwordModal">
+    <div class="password-box">
+        <h3>🔒 Lesson Plan Locked</h3>
+        <p>Enter the password to view the lesson plan.</p>
+        <input type="password" id="passwordInput" placeholder="Enter password...">
+        <div class="error-msg" id="errorMsg">Incorrect password. Please try again.</div>
+        <div class="btn-row">
+            <button class="btn-cancel" id="cancelBtn">Cancel</button>
+            <button class="btn-submit" id="submitBtn">Unlock</button>
+        </div>
+    </div>
+</div>
+
+<!-- PERSISTENT CHECKBOX + TEACHER TOGGLE + PASSWORD -->
 <script>
     (function() {
+        // --- COVER CHECKBOX ---
         const checkbox = document.getElementById('cover-B1.1.1');
         const card = document.getElementById('lessonCard');
         const toggleBtn = document.getElementById('toggleCover');
-        if (!checkbox || !card || !toggleBtn) return;
+        if (checkbox && card && toggleBtn) {
+            const storageKey = 'covered_' + checkbox.id;
 
-        const storageKey = 'covered_' + checkbox.id;
-
-        // Load saved state
-        const savedState = localStorage.getItem(storageKey);
-        if (savedState === 'true') {
-            checkbox.checked = true;
-            card.classList.add('covered');
-        }
-
-        // Toggle function (called by teacher via the (toggle) link)
-        function toggleCover() {
-            const isChecked = !checkbox.checked;
-            checkbox.checked = isChecked;
-            localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-            if (isChecked) {
+            const savedState = localStorage.getItem(storageKey);
+            if (savedState === 'true') {
+                checkbox.checked = true;
                 card.classList.add('covered');
-            } else {
-                card.classList.remove('covered');
             }
-        }
 
-        // Teacher toggle: click the "(toggle)" link
-        toggleBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleCover();
-        });
+            function toggleCover() {
+                const isChecked = !checkbox.checked;
+                checkbox.checked = isChecked;
+                localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                if (isChecked) {
+                    card.classList.add('covered');
+                } else {
+                    card.classList.remove('covered');
+                }
+            }
 
-        // Optional: double-click on the label also toggles (teacher convenience)
-        const label = document.querySelector('.cover-section label');
-        if (label) {
-            label.addEventListener('dblclick', function(e) {
+            toggleBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 toggleCover();
             });
+
+            const label = document.querySelector('.cover-section label');
+            if (label) {
+                label.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    toggleCover();
+                });
+            }
+
+            checkbox.addEventListener('keydown', function(e) {
+                e.preventDefault();
+            });
         }
 
-        // Students cannot click the checkbox directly (pointer-events: none)
-        // But we also prevent any accidental keyboard interaction
-        checkbox.addEventListener('keydown', function(e) {
-            e.preventDefault();
+        // --- PASSWORD MODAL ---
+        const modal = document.getElementById('passwordModal');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // Set your password here
+        const CORRECT_PASSWORD = 'teacher123'; // CHANGE THIS
+
+        function openModal() {
+            modal.classList.add('show');
+            passwordInput.value = '';
+            errorMsg.classList.remove('show');
+            passwordInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+        }
+
+        function checkPassword() {
+            const entered = passwordInput.value;
+            if (entered === CORRECT_PASSWORD) {
+                closeModal();
+                // Redirect to the lesson plan (update this URL)
+                window.open('../lessonplans/DP Computer Science_ B 1.1.1.pdf', '_blank');
+            } else {
+                errorMsg.classList.add('show');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        unlockBtn.addEventListener('click', openModal);
+        cancelBtn.addEventListener('click', closeModal);
+        submitBtn.addEventListener('click', checkPassword);
+
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkPassword();
+            }
+        });
+
+        // Close modal if user clicks outside the box
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
         });
     })();
 </script>
