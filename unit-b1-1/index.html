@@ -1,1 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1.1 Approaches to Computational Thinking</title>
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #b21f1f;
+            --accent: #fdbb2d;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1e2a3a;
+            --text-muted: #4a5568;
+            --border-light: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--light-bg);
+            color: var(--text-dark);
+            padding: 24px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .unit-header {
+            background: var(--primary);
+            color: #fff;
+            padding: 30px 35px;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .unit-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .unit-header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        /* Lesson Card */
+        .lesson-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .lesson-card:last-child {
+            margin-bottom: 20px;
+        }
+
+        .lesson-header {
+            background: #f1f4f9;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .lesson-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .lesson-header .badge {
+            background: var(--secondary);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lesson-body {
+            padding: 20px 24px 24px;
+        }
+
+        .lesson-body .summary-link {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: background 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .lesson-body .summary-link:hover {
+            background: #2d3f7a;
+        }
+
+        .lesson-body .summary-link i {
+            margin-right: 6px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 6px 24px;
+            background: #f7fafc;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 12px 0 16px;
+            font-size: 0.9rem;
+        }
+
+        .meta-grid .label {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .meta-grid .value {
+            color: var(--text-dark);
+        }
+
+        .meta-grid a {
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--secondary);
+        }
+
+        .meta-grid a:hover {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .activity-block {
+            background: #f7fafc;
+            border-left: 4px solid var(--accent);
+            padding: 14px 18px;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+        }
+
+        .activity-block strong {
+            color: var(--primary);
+        }
+
+        .activity-block a {
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--secondary);
+        }
+
+        .activity-block a:hover {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .rubric {
+            display: inline-block;
+            font-size: 0.8rem;
+            background: #ebf4ff;
+            padding: 2px 12px;
+            border-radius: 12px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .locked {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-light);
+        }
+
+        .locked span {
+            background: #edf2f7;
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        .footer-links {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 32px;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--secondary);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .footer-links .label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .unit-header { padding: 20px; }
+            .lesson-header { flex-direction: column; align-items: flex-start; }
+            .meta-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== UNIT HEADER ===== -->
+    <div class="unit-header">
+        <h1>B1.1 Approaches to Computational Thinking</h1>
+        <div class="subtitle">IB Computer Science &bull; Core Topic</div>
+    </div>
+
+    <!-- ===== LESSON 1.1.1 ===== -->
+    <div class="lesson-card">
+        <div class="lesson-header">
+            <h2>B1.1.1 Problem Specification</h2>
+            <span class="badge">Core</span>
+        </div>
+        <div class="lesson-body">
+
+            <!-- Summary Page Link -->
+            <a class="summary-link" href="b1-1-1-summary.html">📖 View Lesson Summary</a>
+
+            <!-- Resources -->
+            <div class="meta-grid">
+                <div>
+                    <span class="label">Presentation:</span>
+                    <span class="value"><a href="https://docs.google.com/presentation/d/e/2PACX-1vSesKc3fdrSFneRM4Vpnb2KGEQtltKDCMbuTh_LnSuyqbj50tchDvtcUR2gd0G5vrsWqwXYyoKpfRMQ/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">Slides</a></span>
+                </div>
+                <div>
+                    <span class="label">eBook:</span>
+                    <span class="value"><a href="#">DP Computer Science_ B 1.1.1.pdf</a></span>
+                </div>
+                <div>
+                    <span class="label">Lesson Plan:</span>
+                    <span class="value"><a href="#">DP Computer Science_ B 1.1.1.pdf</a></span>
+                </div>
+                <div>
+                    <span class="label">Video:</span>
+                    <span class="value"><a href="#">Problem Specification</a></span>
+                </div>
+            </div>
+
+            <!-- Activity -->
+            <div class="activity-block">
+                <strong>Activity:</strong> Starter: Problem Specification &bull;
+                <a href="https://docs.google.com/presentation/d/e/2PACX-1vT7J_af9SO-JYHly-q1LymBqDOunXvSprM3svIYHlb3DxCTXUYM4TOk87iGViFzDNp2dfGNkjW-QlnT/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>
+                <br>
+                <span class="rubric">Rubric: 1—Attempted &nbsp;|&nbsp; 2—Correct &nbsp;|&nbsp; 3—Correct + Detail</span>
+                <br>
+                <span style="font-size:0.9rem; color:var(--text-muted);">Submit to Schoolbox</span>
+            </div>
+
+            <!-- Locked Resources -->
+            <div class="locked">
+                🔒 <strong>Locked Resources</strong> &nbsp;
+                Lesson Plan <span>Password A</span> &nbsp;|&nbsp;
+                Answer Key <span>Password B</span> &nbsp;|&nbsp;
+                Extension Answers <span>Password B</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LESSON 1.1.2 ===== -->
+    <div class="lesson-card">
+        <div class="lesson-header">
+            <h2>B1.1.2 Approaches to Computational Thinking</h2>
+            <span class="badge">Core</span>
+        </div>
+        <div class="lesson-body">
+
+            <a class="summary-link" href="b1-1-2-summary.html">📖 View Lesson Summary</a>
+
+            <div class="meta-grid">
+                <div><span class="label">Slides:</span> <span class="value"><a href="#">PowerPoint</a></span></div>
+                <div><span class="label">eBook:</span> <span class="value"><a href="#">eBook Reference (PDF)</a></span></div>
+                <div><span class="label">Lesson Plan:</span> <span class="value"><a href="#">Lesson Plan</a></span></div>
+                <div><span class="label">Video:</span> <span class="value"><a href="#">Approaches to Computational Thinking</a></span></div>
+            </div>
+
+            <div class="activity-block">
+                <strong>Activity:</strong> PowerPoint with instructions
+                <br>
+                <span class="rubric">Rubric: 1—Attempted &nbsp;|&nbsp; 2—Correct &nbsp;|&nbsp; 3—Correct + Detail</span>
+                <br>
+                <span style="font-size:0.9rem; color:var(--text-muted);">Submit to Schoolbox</span>
+            </div>
+
+            <div class="locked">
+                🔒 <strong>Locked Resources</strong> &nbsp;
+                Lesson Plan <span>Password A</span> &nbsp;|&nbsp;
+                Answer Key <span>Password B</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LESSON 1.1.3 ===== -->
+    <div class="lesson-card">
+        <div class="lesson-header">
+            <h2>B1.1.3 Applying Computational Thinking</h2>
+            <span class="badge">Core</span>
+        </div>
+        <div class="lesson-body">
+
+            <a class="summary-link" href="b1-1-3-summary.html">📖 View Lesson Summary</a>
+
+            <div class="meta-grid">
+                <div><span class="label">Slides:</span> <span class="value"><a href="#">PowerPoint</a></span></div>
+                <div><span class="label">eBook:</span> <span class="value"><a href="#">eBook Reference (PDF)</a></span></div>
+                <div><span class="label">Lesson Plan:</span> <span class="value"><a href="#">Lesson Plan</a></span></div>
+                <div><span class="label">Video:</span> <span class="value"><a href="#">Applying Computational Thinking</a></span></div>
+            </div>
+
+            <div class="activity-block">
+                <strong>Activity:</strong> PowerPoint with instructions
+                <br>
+                <span class="rubric">Rubric: 1—Attempted &nbsp;|&nbsp; 2—Correct &nbsp;|&nbsp; 3—Correct + Detail</span>
+                <br>
+                <span style="font-size:0.9rem; color:var(--text-muted);">Submit to Schoolbox</span>
+            </div>
+
+            <div class="locked">
+                🔒 <strong>Locked Resources</strong> &nbsp;
+                Lesson Plan <span>Password A</span> &nbsp;|&nbsp;
+                Answer Key <span>Password B</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER LINKS ===== -->
+    <div class="footer-links">
+        <span class="label">Quick Links:</span>
+        <a href="#" target="_blank">Quizlet</a>
+        <a href="#" target="_blank">Extension Links</a>
+        <a href="#" target="_blank">Revision Dojo</a>
+        <span style="color:var(--text-muted);font-size:0.85rem;margin-left:auto;">Last updated: 2026</span>
+    </div>
+
+</div>
+
+</body>
+</html>
