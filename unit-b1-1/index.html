@@ -33,7 +33,25 @@
         .cover-section .teacher-edit { font-size: 0.75rem; color: #6b7f8f; background: #edf2f7; padding: 2px 10px; border-radius: 12px; cursor: pointer; user-select: none; transition: background 0.2s; margin-left: 6px; }
         .cover-section .teacher-edit:hover { background: #d5dce6; }
         .cover-section .teacher-badge { font-size: 0.65rem; background: #cbd5e1; color: #334155; padding: 1px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
-        @media (max-width: 600px) { body { padding: 12px; } .header { padding: 20px; } .card-header { flex-direction: column; align-items: flex-start; } .button-group { flex-direction: column; } .btn { min-width: unset; width: 100%; } }
+
+        /* --- PASSWORD MODAL (Simple, Hidden Input) --- */
+        .password-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
+        .password-modal.show { display: flex; }
+        .password-box { background: #fff; padding: 30px 35px; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 400px; width: 90%; }
+        .password-box h3 { margin-bottom: 8px; color: #0b2a4a; }
+        .password-box p { font-size: 0.9rem; color: #4a5568; margin-bottom: 16px; }
+        .password-box input[type="password"] { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; margin-bottom: 12px; outline: none; }
+        .password-box input[type="password"]:focus { border-color: #0b2a4a; }
+        .password-box .btn-row { display: flex; gap: 10px; justify-content: flex-end; }
+        .password-box .btn-row button { padding: 8px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        .password-box .btn-row .btn-cancel { background: #e2e8f0; color: #4a5568; }
+        .password-box .btn-row .btn-cancel:hover { background: #d5dce6; }
+        .password-box .btn-row .btn-submit { background: #0b2a4a; color: #fff; }
+        .password-box .btn-row .btn-submit:hover { background: #1a3f64; }
+        .password-box .error-msg { color: #b21f1f; font-size: 0.85rem; margin-top: -8px; margin-bottom: 12px; display: none; }
+        .password-box .error-msg.show { display: block; }
+
+        @media (max-width: 600px) { body { padding: 12px; } .header { padding: 20px; } .card-header { flex-direction: column; align-items: flex-start; } .button-group { flex-direction: column; } .btn { min-width: unset; width: 100%; } .password-box { padding: 20px; } }
     </style>
 </head>
 <body>
@@ -57,7 +75,7 @@
         <div class="card-body">
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-1-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked" onclick="openLessonPlan('B1.1.1')">
+                <button class="btn btn-locked unlock-btn" data-lesson="B1.1.1">
                     <span class="lock-icon">🔒</span> View Lesson Plan
                 </button>
             </div>
@@ -81,7 +99,7 @@
         <div class="card-body">
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-2-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked" onclick="openLessonPlan('B1.1.2')">
+                <button class="btn btn-locked unlock-btn" data-lesson="B1.1.2">
                     <span class="lock-icon">🔒</span> View Lesson Plan
                 </button>
             </div>
@@ -105,7 +123,7 @@
         <div class="card-body">
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-3-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked" onclick="openLessonPlan('B1.1.3')">
+                <button class="btn btn-locked unlock-btn" data-lesson="B1.1.3">
                     <span class="lock-icon">🔒</span> View Lesson Plan
                 </button>
             </div>
@@ -129,7 +147,7 @@
         <div class="card-body">
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-4-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked" onclick="openLessonPlan('B1.1.4')">
+                <button class="btn btn-locked unlock-btn" data-lesson="B1.1.4">
                     <span class="lock-icon">🔒</span> View Lesson Plan
                 </button>
             </div>
@@ -144,87 +162,165 @@
 
 </div>
 
+<!-- PASSWORD MODAL (Simple, with Hidden Input) -->
+<div class="password-modal" id="passwordModal">
+    <div class="password-box">
+        <h3>🔒 Lesson Plan Locked</h3>
+        <p>Enter the password to view the lesson plan.</p>
+        <input type="password" id="passwordInput" placeholder="Enter password...">
+        <div class="error-msg" id="errorMsg">Incorrect password. Please try again.</div>
+        <div class="btn-row">
+            <button class="btn-cancel" id="cancelBtn">Cancel</button>
+            <button class="btn-submit" id="submitBtn">Unlock</button>
+        </div>
+    </div>
+</div>
+
 <!-- JAVASCRIPT -->
 <script>
-    // --- CONFIGURATION ---
-    const CORRECT_PASSWORD = 'bluebeard';
+    (function() {
+        // --- CONFIGURATION ---
+        const CORRECT_PASSWORD = 'bluebeard';
 
-    // --- LESSON PLAN URLS (exact working links) ---
-    const PDF_URLS = {
-        'B1.1.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.1.pdf',
-        'B1.1.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.2.pdf',
-        'B1.1.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.3.pdf',
-        'B1.1.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.4.pdf'
-    };
+        // --- LESSON PLAN URLS (exact working links) ---
+        const PDF_URLS = {
+            'B1.1.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.1.pdf',
+            'B1.1.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.2.pdf',
+            'B1.1.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.3.pdf',
+            'B1.1.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.4.pdf'
+        };
 
-    // --- SIMPLE PASSWORD FUNCTION (uses prompt) ---
-    function openLessonPlan(lessonKey) {
-        var password = prompt("Enter the password to view the lesson plan:");
-        
-        if (password === CORRECT_PASSWORD) {
-            var url = PDF_URLS[lessonKey];
-            if (url) {
-                window.open(url, '_blank');
+        // --- MODAL ELEMENTS ---
+        const modal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMsg = document.getElementById('errorMsg');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        let pendingLessonKey = '';
+
+        // --- MODAL FUNCTIONS ---
+        function openModal(lessonKey) {
+            pendingLessonKey = lessonKey;
+            modal.classList.add('show');
+            passwordInput.value = '';
+            errorMsg.classList.remove('show');
+            passwordInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+            pendingLessonKey = '';
+        }
+
+        function checkPassword() {
+            const entered = passwordInput.value;
+            if (entered === CORRECT_PASSWORD) {
+                closeModal();
+                const url = PDF_URLS[pendingLessonKey];
+                if (url) {
+                    window.open(url, '_blank');
+                }
+                pendingLessonKey = '';
             } else {
-                alert('No PDF URL found for this lesson.');
+                errorMsg.classList.add('show');
+                passwordInput.value = '';
+                passwordInput.focus();
             }
-        } else if (password !== null) {
-            alert('Incorrect password. Please try again.');
-        }
-    }
-
-    // --- COVER CHECKBOXES (Teacher Only) ---
-    const checkboxes = document.querySelectorAll('.cover-checkbox');
-
-    checkboxes.forEach(function(cb) {
-        const lessonKey = cb.getAttribute('data-lesson');
-        const storageKey = 'covered_' + lessonKey;
-        const card = document.getElementById('lessonCard-' + lessonKey);
-
-        const savedState = localStorage.getItem(storageKey);
-        if (savedState === 'true') {
-            cb.checked = true;
-            if (card) card.classList.add('covered');
         }
 
-        const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
-        if (toggleSpan) {
-            toggleSpan.addEventListener('click', function(e) {
-                e.preventDefault();
-                const isChecked = !cb.checked;
-                cb.checked = isChecked;
-                localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                if (card) {
-                    if (isChecked) {
-                        card.classList.add('covered');
-                    } else {
-                        card.classList.remove('covered');
-                    }
-                }
+        // --- MODAL EVENT LISTENERS ---
+        function setupUnlockButtons() {
+            const unlockBtns = document.querySelectorAll('.unlock-btn');
+            unlockBtns.forEach(function(btn) {
+                btn.removeEventListener('click', btn._listener);
+                btn._listener = function(e) {
+                    const lesson = btn.getAttribute('data-lesson');
+                    openModal(lesson);
+                };
+                btn.addEventListener('click', btn._listener);
             });
         }
 
-        const label = document.querySelector('label[for="' + cb.id + '"]');
-        if (label) {
-            label.addEventListener('dblclick', function(e) {
-                e.preventDefault();
-                const isChecked = !cb.checked;
-                cb.checked = isChecked;
-                localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                if (card) {
-                    if (isChecked) {
-                        card.classList.add('covered');
-                    } else {
-                        card.classList.remove('covered');
-                    }
-                }
-            });
-        }
+        // Initial setup
+        setupUnlockButtons();
 
-        cb.addEventListener('keydown', function(e) {
-            e.preventDefault();
+        cancelBtn.addEventListener('click', closeModal);
+        submitBtn.addEventListener('click', checkPassword);
+
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkPassword();
+            }
         });
-    });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // --- COVER CHECKBOXES (Teacher Only) ---
+        const checkboxes = document.querySelectorAll('.cover-checkbox');
+
+        checkboxes.forEach(function(cb) {
+            const lessonKey = cb.getAttribute('data-lesson');
+            const storageKey = 'covered_' + lessonKey;
+            const card = document.getElementById('lessonCard-' + lessonKey);
+
+            const savedState = localStorage.getItem(storageKey);
+            if (savedState === 'true') {
+                cb.checked = true;
+                if (card) card.classList.add('covered');
+            }
+
+            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
+            if (toggleSpan) {
+                toggleSpan.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.classList.add('covered');
+                        } else {
+                            card.classList.remove('covered');
+                        }
+                    }
+                });
+            }
+
+            const label = document.querySelector('label[for="' + cb.id + '"]');
+            if (label) {
+                label.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.classList.add('covered');
+                        } else {
+                            card.classList.remove('covered');
+                        }
+                    }
+                });
+            }
+
+            cb.addEventListener('keydown', function(e) {
+                e.preventDefault();
+            });
+        });
+
+        // Re-attach unlock button listeners if DOM changes
+        const observer = new MutationObserver(function() {
+            setupUnlockButtons();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+    })();
 </script>
 
 </body>
