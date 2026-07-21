@@ -405,7 +405,19 @@
     (function() {
         // --- CONFIGURATION ---
         const CORRECT_PASSWORD = 'bluebeard';
-        const BASE_PDF_PATH = 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/';
+
+        // --- DYNAMIC BASE PATH DETECTION ---
+        // This automatically detects whether you're on GitHub Pages or localhost
+        function getBasePath() {
+            // Check if we're on GitHub Pages
+            if (window.location.hostname === 'mr-ellis.github.io') {
+                return 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/';
+            }
+            // Fallback for local development
+            return '../lessonplans/IB%20Computer%20Science/';
+        }
+
+        const BASE_PDF_PATH = getBasePath();
 
         // --- MODAL ELEMENTS ---
         const modal = document.getElementById('passwordModal');
@@ -435,6 +447,7 @@
             if (entered === CORRECT_PASSWORD) {
                 closeModal();
                 if (pendingPdfUrl) {
+                    console.log('Opening PDF:', pendingPdfUrl);
                     window.open(pendingPdfUrl, '_blank');
                     pendingPdfUrl = '';
                 }
@@ -453,7 +466,10 @@
                 btn.removeEventListener('click', btn._listener);
                 btn._listener = function(e) {
                     const pdf = btn.getAttribute('data-pdf');
-                    const pdfUrl = BASE_PDF_PATH + pdf;
+                    // Encode the PDF filename properly
+                    const encodedPdf = encodeURIComponent(pdf);
+                    const pdfUrl = BASE_PDF_PATH + encodedPdf;
+                    console.log('Attempting to open:', pdfUrl);
                     openModal(pdfUrl);
                 };
                 btn.addEventListener('click', btn._listener);
@@ -541,6 +557,9 @@
             setupUnlockButtons();
         });
         observer.observe(document.body, { childList: true, subtree: true });
+
+        // --- Log the base path for debugging ---
+        console.log('Base PDF path:', BASE_PDF_PATH);
 
     })();
 </script>
