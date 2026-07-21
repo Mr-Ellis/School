@@ -137,6 +137,25 @@
             color: #0b2a4a;
             font-weight: 500;
         }
+        .cover-status {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cover-status input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0b2a4a;
+            cursor: pointer;
+        }
+        .cover-status label {
+            cursor: pointer;
+            font-weight: 500;
+            color: #0b2a4a;
+        }
         .locked {
             color: #4a5568;
             font-size: 0.85rem;
@@ -208,7 +227,7 @@
                 </div>
                 <div>
                     <span class="label">eBook:</span>
-                    <a href="#">DP Computer Science_ B 1.1.1.pdf</a>
+                    <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20B%201.1.1.pdf" target="_blank">DP Computer Science_ B 1.1.1.pdf</a>
                 </div>
                 <div>
                     <span class="label">Video:</span>
@@ -223,6 +242,11 @@
                 <span class="rubric">Rubric: 1—Attempted | 2—Correct | 3—Correct + Detail</span>
                 <br>
                 <span style="font-size:0.9rem; color:#4a5568;">Submit to Schoolbox</span>
+
+                <div class="cover-status">
+                    <input type="checkbox" class="cover-checkbox" data-unit="B1.1.1" id="cover-B1.1.1">
+                    <label for="cover-B1.1.1">✓ Mark this lesson as covered</label>
+                </div>
             </div>
 
             <div class="locked">
@@ -242,6 +266,26 @@
     </div>
 
 </div>
+
+<script>
+    (function() {
+        const checkbox = document.querySelector('.cover-checkbox');
+        if (!checkbox) return;
+
+        const storageKey = 'covered_' + checkbox.dataset.unit;
+
+        // Load saved state
+        const savedState = localStorage.getItem(storageKey);
+        if (savedState === 'true') {
+            checkbox.checked = true;
+        }
+
+        // Save state on change
+        checkbox.addEventListener('change', function() {
+            localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
+        });
+    })();
+</script>
 
 </body>
 </html>
