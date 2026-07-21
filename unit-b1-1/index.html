@@ -299,7 +299,7 @@
         <div class="card-body">
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-1-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked unlock-btn" data-pdf="DP%20Computer%20Science_%20B%201.1.1.pdf">
+                <button class="btn btn-locked unlock-btn" data-pdf="DP%20Computer%20Science_B%201.1.1.pdf">
                     <span class="lock-icon">🔒</span> View Lesson Plan
                 </button>
             </div>
@@ -323,7 +323,7 @@
         <div class="card-body">
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-2-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked unlock-btn" data-pdf="DP%20Computer%20Science_%20B%201.1.2.pdf">
+                <button class="btn btn-locked unlock-btn" data-pdf="DP%20Computer%20Science_B%201.1.2.pdf">
                     <span class="lock-icon">🔒</span> View Lesson Plan
                 </button>
             </div>
@@ -347,7 +347,7 @@
         <div class="card-body">
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-3-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked unlock-btn" data-pdf="DP%20Computer%20Science_%20B%201.1.3.pdf">
+                <button class="btn btn-locked unlock-btn" data-pdf="DP%20Computer%20Science_B%201.1.3.pdf">
                     <span class="lock-icon">🔒</span> View Lesson Plan
                 </button>
             </div>
@@ -371,7 +371,7 @@
         <div class="card-body">
             <div class="button-group">
                 <a class="btn btn-summary" href="b1-1-4-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked unlock-btn" data-pdf="DP%20Computer%20Science_%20B%201.1.4.pdf">
+                <button class="btn btn-locked unlock-btn" data-pdf="DP%20Computer%20Science_B%201.1.4.pdf">
                     <span class="lock-icon">🔒</span> View Lesson Plan
                 </button>
             </div>
@@ -406,18 +406,9 @@
         // --- CONFIGURATION ---
         const CORRECT_PASSWORD = 'bluebeard';
 
-        // --- DYNAMIC BASE PATH DETECTION ---
-        // This automatically detects whether you're on GitHub Pages or localhost
-        function getBasePath() {
-            // Check if we're on GitHub Pages
-            if (window.location.hostname === 'mr-ellis.github.io') {
-                return 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/';
-            }
-            // Fallback for local development
-            return '../lessonplans/IB%20Computer%20Science/';
-        }
-
-        const BASE_PDF_PATH = getBasePath();
+        // --- BASE PATH: Files are in the root directory ---
+        // Your screenshot shows files like "DP Computer Science_B 1.1.1.pdf" in the root
+        const BASE_PDF_PATH = 'https://mr-ellis.github.io/School/';
 
         // --- MODAL ELEMENTS ---
         const modal = document.getElementById('passwordModal');
@@ -462,13 +453,10 @@
         function setupUnlockButtons() {
             const unlockBtns = document.querySelectorAll('.unlock-btn');
             unlockBtns.forEach(function(btn) {
-                // Remove old listener to avoid duplicates
                 btn.removeEventListener('click', btn._listener);
                 btn._listener = function(e) {
                     const pdf = btn.getAttribute('data-pdf');
-                    // Encode the PDF filename properly
-                    const encodedPdf = encodeURIComponent(pdf);
-                    const pdfUrl = BASE_PDF_PATH + encodedPdf;
+                    const pdfUrl = BASE_PDF_PATH + pdf;
                     console.log('Attempting to open:', pdfUrl);
                     openModal(pdfUrl);
                 };
@@ -503,14 +491,12 @@
             const storageKey = 'covered_' + lessonKey;
             const card = document.getElementById('lessonCard-' + lessonKey);
 
-            // Load saved state
             const savedState = localStorage.getItem(storageKey);
             if (savedState === 'true') {
                 cb.checked = true;
                 if (card) card.classList.add('covered');
             }
 
-            // Find the toggle link for this lesson
             const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
             if (toggleSpan) {
                 toggleSpan.addEventListener('click', function(e) {
@@ -528,7 +514,6 @@
                 });
             }
 
-            // Double-click on label toggles
             const label = document.querySelector('label[for="' + cb.id + '"]');
             if (label) {
                 label.addEventListener('dblclick', function(e) {
@@ -546,19 +531,16 @@
                 });
             }
 
-            // Prevent students from clicking the checkbox directly
             cb.addEventListener('keydown', function(e) {
                 e.preventDefault();
             });
         });
 
-        // --- Re-attach unlock button listeners if DOM changes ---
         const observer = new MutationObserver(function() {
             setupUnlockButtons();
         });
         observer.observe(document.body, { childList: true, subtree: true });
 
-        // --- Log the base path for debugging ---
         console.log('Base PDF path:', BASE_PDF_PATH);
 
     })();
