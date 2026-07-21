@@ -3,323 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B1.1 Approaches to Computational Thinking</title>
+    <title>B1.1.1 - Problem Specification</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f0f4fb; color: #1e293b; padding: 24px; line-height: 1.6; }
-        .container { max-width: 960px; margin: 0 auto; }
-        .header { background: #0b2a4a; color: #fff; padding: 30px 35px; border-radius: 12px 12px 0 0; }
-        .header h1 { font-size: 2rem; font-weight: 700; }
-        .header .subtitle { font-size: 1.1rem; opacity: 0.85; margin-top: 4px; }
-        .back-link { display: inline-block; margin-top: 12px; color: #7bb3ff; text-decoration: none; }
-        .back-link:hover { color: #fff; text-decoration: underline; }
-        .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 20px; border: 1px solid #e2e8f0; transition: background-color 0.4s ease; }
-        .card.covered { background: #e6f7e6; border-color: #2d8f2d; }
-        .card-header { background: #f1f4f9; padding: 16px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .card.covered .card-header { background: #d4edda; border-bottom-color: #b7d7b7; }
-        .card-header h2 { font-size: 1.2rem; color: #0b2a4a; }
-        .badge { background: #b21f1f; color: #fff; font-size: 0.7rem; font-weight: 600; padding: 2px 12px; border-radius: 20px; text-transform: uppercase; }
-        .badge.core { background: #1a7b4a; }
-        .card-body { padding: 24px 24px 20px; }
-        .button-group { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; }
-        .btn { display: inline-block; padding: 10px 24px; border-radius: 30px; font-weight: 600; text-decoration: none; font-size: 0.95rem; border: none; cursor: pointer; transition: background 0.2s; min-width: 200px; text-align: center; }
-        .btn-summary { background: #0b2a4a; color: #fff; }
-        .btn-summary:hover { background: #1a3f64; }
-        .btn-locked { background: #e2e8f0; color: #4a5568; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-locked:hover { background: #d5dce6; }
-        .cover-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .cover-section input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0b2a4a; cursor: default; pointer-events: none; opacity: 0.7; }
-        .cover-section label { cursor: default; font-weight: 500; color: #0b2a4a; }
-        .cover-section .teacher-edit { font-size: 0.75rem; color: #6b7f8f; background: #edf2f7; padding: 2px 10px; border-radius: 12px; cursor: pointer; user-select: none; transition: background 0.2s; margin-left: 6px; }
-        .cover-section .teacher-edit:hover { background: #d5dce6; }
-        .cover-section .teacher-badge { font-size: 0.65rem; background: #cbd5e1; color: #334155; padding: 1px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
-
-        /* --- PASSWORD MODAL (Simple, Hidden Input) --- */
-        .password-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
-        .password-modal.show { display: flex; }
-        .password-box { background: #fff; padding: 30px 35px; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 400px; width: 90%; }
-        .password-box h3 { margin-bottom: 8px; color: #0b2a4a; }
-        .password-box p { font-size: 0.9rem; color: #4a5568; margin-bottom: 16px; }
-        .password-box input[type="password"] { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; margin-bottom: 12px; outline: none; }
-        .password-box input[type="password"]:focus { border-color: #0b2a4a; }
-        .password-box .btn-row { display: flex; gap: 10px; justify-content: flex-end; }
-        .password-box .btn-row button { padding: 8px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
-        .password-box .btn-row .btn-cancel { background: #e2e8f0; color: #4a5568; }
-        .password-box .btn-row .btn-cancel:hover { background: #d5dce6; }
-        .password-box .btn-row .btn-submit { background: #0b2a4a; color: #fff; }
-        .password-box .btn-row .btn-submit:hover { background: #1a3f64; }
-        .password-box .error-msg { color: #b21f1f; font-size: 0.85rem; margin-top: -8px; margin-bottom: 12px; display: none; }
-        .password-box .error-msg.show { display: block; }
-
-        @media (max-width: 600px) { body { padding: 12px; } .header { padding: 20px; } .card-header { flex-direction: column; align-items: flex-start; } .button-group { flex-direction: column; } .btn { min-width: unset; width: 100%; } .password-box { padding: 20px; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        .task-table td:first-child {
+            font-weight: 600;
+            color: #0b2a4a;
+            white-space: nowrap;
+        }
+        .extension-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4px 15px;
+            background: #f7fafc;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .extension-grid .label {
+            font-weight: 600;
+            color: #0b2a4a;
+        }
+        .extension-grid .desc {
+            color: #1e293b;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .checklist li::before {
+            content: none;
+        }
+        .checklist input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0b2a4a;
+            cursor: pointer;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        .checklist label {
+            cursor: pointer;
+            flex: 1;
+        }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .symbol-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .symbol-card {
+            background: #f7fafc;
+            padding: 15px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .symbol-card .shape {
+            font-family: monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            min-width: 60px;
+            text-align: center;
+            background: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #0b2a4a;
+        }
+        .symbol-card .shape.oval {
+            border-radius: 30px;
+            padding: 8px 20px;
+        }
+        .symbol-card .shape.diamond {
+            transform: rotate(45deg);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+            padding: 0;
+        }
+        .symbol-card .shape.diamond span {
+            transform: rotate(-45deg);
+            font-size: 1.2rem;
+        }
+        .symbol-card .shape.parallelogram {
+            transform: skewX(-10deg);
+            border-radius: 4px;
+        }
+        .symbol-card .shape.parallelogram span {
+            display: inline-block;
+            transform: skewX(10deg);
+        }
+        .symbol-card .shape.circle {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+        .symbol-card .shape.arrow {
+            font-size: 2rem;
+            border: none;
+            background: transparent;
+        }
+        .symbol-card .info h4 {
+            color: #0b2a4a;
+            margin-bottom: 2px;
+        }
+        .symbol-card .info p {
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin: 0;
+        }
+        .domain-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .domain-card {
+            background: #f7fafc;
+            padding: 15px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #0b2a4a;
+        }
+        .domain-card h4 {
+            color: #0b2a4a;
+            margin-bottom: 6px;
+        }
+        .domain-card ul {
+            padding-left: 18px;
+            font-size: 0.9rem;
+        }
+        .domain-card ul li {
+            margin-bottom: 4px;
+        }
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table, .extension-grid { font-size: 0.85rem; }
+            .task-table td:first-child { white-space: normal; }
+            .extension-grid { grid-template-columns: 1fr; gap: 2px; }
+            .symbol-grid { grid-template-columns: 1fr; }
+            .symbol-card { flex-direction: column; text-align: center; }
+            .domain-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
 
-    <div class="header">
-        <h1>B1.1 Approaches to Computational Thinking</h1>
-        <div class="subtitle">IB Computer Science • Core Topic</div>
-        <a class="back-link" href="../year11.html">← Back to Grade 11 Units</a>
+    <a class="back-link" href="index.html">← Back to B1.1 Unit</a>
+
+    <h1>B1.1.1 – Problem Specification</h1>
+
+    <h2>📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to:</p>
+    <ul>
+        <li><strong>Define</strong> the five key elements of a problem specification</li>
+        <li><strong>Construct</strong> a complete problem specification for a given scenario</li>
+        <li><strong>Explain</strong> why problem specifications are essential for effective problem-solving</li>
+    </ul>
+
+    <h2>🎯 IB Command Term: <span class="badge">Construct</span></h2>
+    <div class="command-term">
+        <strong>Construct</strong> – <em>"Display information in a diagrammatic or logical form. For this topic, that means producing a complete, correctly structured specification for a given problem, not just naming the elements."</em>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- LESSON 1.1.1 -->
-    <!-- ============================================================ -->
-    <div class="card" id="lessonCard-B1.1.1">
-        <div class="card-header">
-            <h2>B1.1.1 Problem Specification</h2>
-            <span class="badge core">Core</span>
-        </div>
-        <div class="card-body">
-            <div class="button-group">
-                <a class="btn btn-summary" href="b1-1-1-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked unlock-btn" data-lesson="B1.1.1">
-                    <span class="lock-icon">🔒</span> View Lesson Plan
-                </button>
-            </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.1" id="cover-B1.1.1">
-                <label for="cover-B1.1.1">✓ Mark this lesson as covered</label>
-                <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="B1.1.1">(toggle)</span>
-            </div>
-        </div>
+    <h2>🔑 Key Terms</h2>
+    <table>
+        <thead>
+            <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Problem Specification</strong></td><td>A formal document that defines exactly what a system must do. It describes the problem and requirements for a solution, but <em>not</em> how it will be built.</td></tr>
+            <tr><td><strong>Problem Statement</strong></td><td>A clear and concise description of the problem to be solved. Describes the current situation, who is affected, and the consequences.</td></tr>
+            <tr><td><strong>Constraints</strong></td><td>Limitations or restrictions that must be considered (e.g., time, resources, rules). Fixed conditions the solution cannot change.</td></tr>
+            <tr><td><strong>Objectives / Goals</strong></td><td>The broad aims of the solution. Describe what the solution should achieve in general terms.</td></tr>
+            <tr><td><strong>Input Specifications</strong></td><td>Defines the data that the system will receive, including type, format, valid range, and source.</td></tr>
+            <tr><td><strong>Output Specifications</strong></td><td>Defines what the system must produce, including format and destination of results.</td></tr>
+            <tr><td><strong>Evaluation Criteria</strong></td><td>Specific, measurable, SMART standards used to test whether the solution succeeds.</td></tr>
+        </tbody>
+    </table>
+
+    <h2>📊 The Five Elements</h2>
+    <table>
+        <thead>
+            <tr><th>Element</th><th>Question It Answers</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Problem Statement</strong></td><td>What is the problem, and why does it matter?</td></tr>
+            <tr><td><strong>Constraints</strong></td><td>What are the unchangeable limits?</td></tr>
+            <tr><td><strong>Objectives &amp; Goals</strong></td><td>What is the broad purpose of the solution?</td></tr>
+            <tr><td><strong>Input / Output Specifications</strong></td><td>What data goes in, and what comes out?</td></tr>
+            <tr><td><strong>Evaluation Criteria</strong></td><td>How will we know if the solution works?</td></tr>
+        </tbody>
+    </table>
+
+    <h2>📖 Your Tasks (In Order)</h2>
+    <table class="task-table">
+        <thead>
+            <tr><th>Step</th><th>Task</th><th>What to Do</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1</strong></td>
+                <td><strong>Read the eBook</strong></td>
+                <td>
+                    Read
+                    <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20B%201.1.1.pdf" target="_blank">DP Computer Science_ B 1.1.1.pdf</a>
+                    carefully. Take notes on the five key elements.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>2</strong></td>
+                <td><strong>Complete the Starter Activity</strong></td>
+                <td>
+                    Answer the <strong>mild, medium and spicy</strong> questions from the
+                    <a href="https://docs.google.com/presentation/d/e/2PACX-1vT7J_af9SO-JYHly-q1LymBqDOunXvSprM3svIYHlb3DxCTXUYM4TOk87iGViFzDNp2dfGNkjW-QlnT/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.
+                    <br><strong>Keep your answers</strong> – you will submit all starter activity answers to <strong>Schoolbox</strong> at the end of the unit.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>3</strong></td>
+                <td><strong>Teach the AI</strong></td>
+                <td>
+                    Go to
+                    <a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">RevisionDojo "Teach the AI"</a>
+                    and explain what you've learned about problem specifications.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>4</strong></td>
+                <td><strong>Extension Activities</strong></td>
+                <td>Choose from the activities below if you finish early.</td>
+            </tr>
+            <tr>
+                <td><strong>5</strong></td>
+                <td><strong>Plenary</strong></td>
+                <td>
+                    Test yourself with the
+                    <a href="https://quizlet.com/pt/1012854081/b-111-construct-a-problem-specification-flash-cards/?funnelUUID=3a5e3597-428b-4cd7-a87e-9be138ae72df" target="_blank">Quizlet flashcards</a>.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>⭐ Extension Activities</h2>
+    <p><em>After completing all Core Tasks, choose one or more of these activities to deepen your understanding:</em></p>
+
+    <div class="extension-grid">
+        <span class="label">1. Weak vs Strong Rewrite</span>
+        <span class="desc">
+            Given weak problem statements, rewrite them as strong statements.
+            See the <strong>eBook (Page 3)</strong> for examples.
+        </span>
+
+        <span class="label">2. Library Booking Deconstruction</span>
+        <span class="desc">
+            Read the full worked example in the <strong>eBook (Pages 6-7)</strong>
+            and identify each of the five elements.
+        </span>
+
+        <span class="label">3. Lesson Presentation</span>
+        <span class="desc">
+            Review the
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vSesKc3fdrSFneRM4Vpnb2KGEQtltKDCMbuTh_LnSuyqbj50tchDvtcUR2gd0G5vrsWqwXYyoKpfRMQ/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">presentation slides</a>
+            for additional examples and explanations.
+        </span>
+
+        <span class="label">4. Create Your Own</span>
+        <span class="desc">
+            Think of a real-world problem (e.g., organising a school event,
+            managing a sports team, or tracking homework). Write a full
+            problem specification for it using all five elements.
+        </span>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- LESSON 1.1.2 -->
-    <!-- ============================================================ -->
-    <div class="card" id="lessonCard-B1.1.2">
-        <div class="card-header">
-            <h2>B1.1.2 Approaches to Computational Thinking</h2>
-            <span class="badge core">Core</span>
-        </div>
-        <div class="card-body">
-            <div class="button-group">
-                <a class="btn btn-summary" href="b1-1-2-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked unlock-btn" data-lesson="B1.1.2">
-                    <span class="lock-icon">🔒</span> View Lesson Plan
-                </button>
-            </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.2" id="cover-B1.1.2">
-                <label for="cover-B1.1.2">✓ Mark this lesson as covered</label>
-                <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="B1.1.2">(toggle)</span>
-            </div>
-        </div>
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"A well-defined problem specification is the foundation of an effective solution."</em></p>
     </div>
+    <p>
+        The failure of the <strong>Mars Climate Orbiter</strong> (1999) shows what happens when a problem specification is incomplete.
+        NASA lost a $125 million spacecraft because two engineering teams used different units and <strong>no one had formally specified what unit the data would be in</strong>.
+    </p>
+    <p><strong>Don't let this be you. Specify the problem before you solve it.</strong></p>
 
-    <!-- ============================================================ -->
-    <!-- LESSON 1.1.3 -->
-    <!-- ============================================================ -->
-    <div class="card" id="lessonCard-B1.1.3">
-        <div class="card-header">
-            <h2>B1.1.3 Applying Computational Thinking</h2>
-            <span class="badge core">Core</span>
-        </div>
-        <div class="card-body">
-            <div class="button-group">
-                <a class="btn btn-summary" href="b1-1-3-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked unlock-btn" data-lesson="B1.1.3">
-                    <span class="lock-icon">🔒</span> View Lesson Plan
-                </button>
-            </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.3" id="cover-B1.1.3">
-                <label for="cover-B1.1.3">✓ Mark this lesson as covered</label>
-                <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="B1.1.3">(toggle)</span>
-            </div>
-        </div>
-    </div>
+    <h2>📌 Checklist</h2>
+    <p><em>Track your progress by checking off each task as you complete it:</em></p>
+    <ul class="checklist" id="progress-checklist">
+        <li>
+            <input type="checkbox" class="check-item" data-task="read-ebook" id="task-read-ebook">
+            <label for="task-read-ebook">Read the eBook</label>
+        </li>
+        <li>
+            <input type="checkbox" class="check-item" data-task="starter-activity" id="task-starter-activity">
+            <label for="task-starter-activity">Answered the mild, medium and spicy questions from the Lesson Starter PowerPoint and kept answers for unit submission</label>
+        </li>
+        <li>
+            <input type="checkbox" class="check-item" data-task="teach-ai" id="task-teach-ai">
+            <label for="task-teach-ai">Used <strong>RevisionDojo "Teach the AI"</strong> to explain the concepts</label>
+        </li>
+        <li>
+            <input type="checkbox" class="check-item" data-task="quizlet" id="task-quizlet">
+            <label for="task-quizlet">Practiced with <strong>Quizlet</strong> flashcards</label>
+        </li>
+        <li>
+            <input type="checkbox" class="check-item" data-task="extension" id="task-extension">
+            <label for="task-extension">Completed at least one <strong>Extension Activity</strong></label>
+        </li>
+    </ul>
 
-    <!-- ============================================================ -->
-    <!-- LESSON 1.1.4 -->
-    <!-- ============================================================ -->
-    <div class="card" id="lessonCard-B1.1.4">
-        <div class="card-header">
-            <h2>B1.1.4 Flowcharts</h2>
-            <span class="badge core">Core</span>
-        </div>
-        <div class="card-body">
-            <div class="button-group">
-                <a class="btn btn-summary" href="b1-1-4-summary.html">📖 View Lesson Summary</a>
-                <button class="btn btn-locked unlock-btn" data-lesson="B1.1.4">
-                    <span class="lock-icon">🔒</span> View Lesson Plan
-                </button>
-            </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.4" id="cover-B1.1.4">
-                <label for="cover-B1.1.4">✓ Mark this lesson as covered</label>
-                <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="B1.1.4">(toggle)</span>
-            </div>
-        </div>
+    <hr>
+
+    <div class="footer-meta">
+        B1.1.1 – Problem Specification • IB Computer Science
     </div>
 
 </div>
 
-<!-- PASSWORD MODAL (Simple, with Hidden Input) -->
-<div class="password-modal" id="passwordModal">
-    <div class="password-box">
-        <h3>🔒 Lesson Plan Locked</h3>
-        <p>Enter the password to view the lesson plan.</p>
-        <input type="password" id="passwordInput" placeholder="Enter password...">
-        <div class="error-msg" id="errorMsg">Incorrect password. Please try again.</div>
-        <div class="btn-row">
-            <button class="btn-cancel" id="cancelBtn">Cancel</button>
-            <button class="btn-submit" id="submitBtn">Unlock</button>
-        </div>
-    </div>
-</div>
-
-<!-- JAVASCRIPT -->
 <script>
     (function() {
-        // --- CONFIGURATION ---
-        const CORRECT_PASSWORD = 'bluebeard';
-
-        // --- LESSON PLAN URLS (exact working links) ---
-        const PDF_URLS = {
-            'B1.1.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.1.pdf',
-            'B1.1.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.2.pdf',
-            'B1.1.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.3.pdf',
-            'B1.1.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.4.pdf'
-        };
-
-        // --- MODAL ELEMENTS ---
-        const modal = document.getElementById('passwordModal');
-        const passwordInput = document.getElementById('passwordInput');
-        const errorMsg = document.getElementById('errorMsg');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const submitBtn = document.getElementById('submitBtn');
-
-        let pendingLessonKey = '';
-
-        // --- MODAL FUNCTIONS ---
-        function openModal(lessonKey) {
-            pendingLessonKey = lessonKey;
-            modal.classList.add('show');
-            passwordInput.value = '';
-            errorMsg.classList.remove('show');
-            passwordInput.focus();
-        }
-
-        function closeModal() {
-            modal.classList.remove('show');
-            pendingLessonKey = '';
-        }
-
-        function checkPassword() {
-            const entered = passwordInput.value;
-            if (entered === CORRECT_PASSWORD) {
-                closeModal();
-                const url = PDF_URLS[pendingLessonKey];
-                if (url) {
-                    window.open(url, '_blank');
-                }
-                pendingLessonKey = '';
-            } else {
-                errorMsg.classList.add('show');
-                passwordInput.value = '';
-                passwordInput.focus();
-            }
-        }
-
-        // --- MODAL EVENT LISTENERS ---
-        function setupUnlockButtons() {
-            const unlockBtns = document.querySelectorAll('.unlock-btn');
-            unlockBtns.forEach(function(btn) {
-                btn.removeEventListener('click', btn._listener);
-                btn._listener = function(e) {
-                    const lesson = btn.getAttribute('data-lesson');
-                    openModal(lesson);
-                };
-                btn.addEventListener('click', btn._listener);
-            });
-        }
-
-        // Initial setup
-        setupUnlockButtons();
-
-        cancelBtn.addEventListener('click', closeModal);
-        submitBtn.addEventListener('click', checkPassword);
-
-        passwordInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                checkPassword();
-            }
-        });
-
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // --- COVER CHECKBOXES (Teacher Only) ---
-        const checkboxes = document.querySelectorAll('.cover-checkbox');
+        // Persistent checkboxes for the summary page checklist
+        const checkboxes = document.querySelectorAll('.check-item');
 
         checkboxes.forEach(function(cb) {
-            const lessonKey = cb.getAttribute('data-lesson');
-            const storageKey = 'covered_' + lessonKey;
-            const card = document.getElementById('lessonCard-' + lessonKey);
+            const storageKey = 'summary_' + cb.dataset.task;
 
+            // Load saved state
             const savedState = localStorage.getItem(storageKey);
             if (savedState === 'true') {
                 cb.checked = true;
-                if (card) card.classList.add('covered');
             }
 
-            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
-            if (toggleSpan) {
-                toggleSpan.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.classList.add('covered');
-                        } else {
-                            card.classList.remove('covered');
-                        }
-                    }
-                });
-            }
-
-            const label = document.querySelector('label[for="' + cb.id + '"]');
-            if (label) {
-                label.addEventListener('dblclick', function(e) {
-                    e.preventDefault();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.classList.add('covered');
-                        } else {
-                            card.classList.remove('covered');
-                        }
-                    }
-                });
-            }
-
-            cb.addEventListener('keydown', function(e) {
-                e.preventDefault();
+            // Save state on change
+            cb.addEventListener('change', function() {
+                localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
             });
         });
-
-        // Re-attach unlock button listeners if DOM changes
-        const observer = new MutationObserver(function() {
-            setupUnlockButtons();
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-
     })();
 </script>
 
