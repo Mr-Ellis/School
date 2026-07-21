@@ -46,12 +46,19 @@
             color: #fff;
             text-decoration: underline;
         }
+
+        /* --- CARD --- */
         .card {
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-top: 20px;
             border: 1px solid #e2e8f0;
+            transition: background-color 0.4s ease;
+        }
+        .card.covered {
+            background: #e6f7e6;
+            border-color: #2d8f2d;
         }
         .card-header {
             background: #f1f4f9;
@@ -61,6 +68,10 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+        }
+        .card.covered .card-header {
+            background: #d4edda;
+            border-bottom-color: #b7d7b7;
         }
         .card-header h2 {
             font-size: 1.2rem;
@@ -76,91 +87,101 @@
             text-transform: uppercase;
         }
         .card-body {
-            padding: 20px 24px 24px;
+            padding: 24px 24px 20px;
         }
-        .summary-link {
+
+        /* --- BUTTONS --- */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .btn {
             display: inline-block;
-            background: #0b2a4a;
-            color: #fff;
             padding: 10px 24px;
             border-radius: 30px;
             font-weight: 600;
             text-decoration: none;
-            margin-bottom: 16px;
+            font-size: 0.95rem;
+            transition: background 0.2s, transform 0.1s;
+            border: none;
+            cursor: default;
         }
-        .summary-link:hover {
+        .btn-summary {
+            background: #0b2a4a;
+            color: #fff;
+            cursor: pointer;
+        }
+        .btn-summary:hover {
             background: #1a3f64;
         }
-        .meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 6px 24px;
-            background: #f7fafc;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin: 12px 0 16px;
-            font-size: 0.9rem;
-        }
-        .meta-grid .label {
-            font-weight: 600;
+        .btn-locked {
+            background: #e2e8f0;
             color: #4a5568;
+            cursor: not-allowed;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-        .meta-grid a {
-            color: #b21f1f;
-            text-decoration: none;
-            border-bottom: 1px dotted #b21f1f;
+        .btn-locked .lock-icon {
+            font-size: 1rem;
         }
-        .meta-grid a:hover {
-            color: #0b2a4a;
-        }
-        .activity {
-            background: #f7fafc;
-            border-left: 4px solid #fdbb2d;
-            padding: 14px 18px;
-            border-radius: 0 8px 8px 0;
-            margin: 12px 0;
-        }
-        .activity a {
-            color: #b21f1f;
-            text-decoration: none;
-            border-bottom: 1px dotted #b21f1f;
-        }
-        .activity a:hover {
-            color: #0b2a4a;
-        }
-        .rubric {
-            display: inline-block;
-            font-size: 0.8rem;
-            background: #ebf4ff;
-            padding: 2px 12px;
-            border-radius: 12px;
-            color: #0b2a4a;
-            font-weight: 500;
-        }
-        .cover-status {
-            margin-top: 12px;
-            padding-top: 12px;
+
+        /* --- COVER CHECKBOX (Teacher Only) --- */
+        .cover-section {
+            margin-top: 16px;
+            padding-top: 16px;
             border-top: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
-        .cover-status input[type="checkbox"] {
+        .cover-section input[type="checkbox"] {
             width: 18px;
             height: 18px;
             accent-color: #0b2a4a;
-            cursor: pointer;
+            cursor: default;
+            pointer-events: none; /* Prevents students from clicking */
+            opacity: 0.7;
         }
-        .cover-status label {
-            cursor: pointer;
+        .cover-section label {
+            cursor: default;
             font-weight: 500;
             color: #0b2a4a;
         }
+        .cover-section .teacher-edit {
+            font-size: 0.75rem;
+            color: #6b7f8f;
+            background: #edf2f7;
+            padding: 2px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+            margin-left: 6px;
+        }
+        .cover-section .teacher-edit:hover {
+            background: #d5dce6;
+        }
+        /* Small indicator that this is teacher-only */
+        .cover-section .teacher-badge {
+            font-size: 0.65rem;
+            background: #cbd5e1;
+            color: #334155;
+            padding: 1px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* --- LOCKED RESOURCES --- */
         .locked {
             color: #4a5568;
             font-size: 0.85rem;
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: 16px;
+            padding-top: 14px;
             border-top: 1px dashed #e2e8f0;
         }
         .locked span {
@@ -170,6 +191,7 @@
             font-family: monospace;
             font-size: 0.8rem;
         }
+
         .footer {
             background: #fff;
             border-radius: 12px;
@@ -193,11 +215,13 @@
             color: #4a5568;
             font-weight: 600;
         }
+
         @media (max-width: 600px) {
             body { padding: 12px; }
             .header { padding: 20px; }
             .card-header { flex-direction: column; align-items: flex-start; }
-            .meta-grid { grid-template-columns: 1fr; }
+            .button-group { flex-direction: column; }
+            .btn { text-align: center; }
         }
     </style>
 </head>
@@ -205,50 +229,38 @@
 
 <div class="container">
 
+    <!-- HEADER -->
     <div class="header">
         <h1>B1.1 Approaches to Computational Thinking</h1>
         <div class="subtitle">IB Computer Science • Core Topic</div>
         <a class="back-link" href="../year11.html">← Back to Grade 11 Units</a>
     </div>
 
-    <div class="card">
+    <!-- CARD -->
+    <div class="card" id="lessonCard">
         <div class="card-header">
             <h2>B1.1.1 Problem Specification</h2>
             <span class="badge">Core</span>
         </div>
         <div class="card-body">
 
-            <a class="summary-link" href="b1-1-1-summary.html">📖 View Lesson Summary</a>
-
-            <div class="meta-grid">
-                <div>
-                    <span class="label">Presentation:</span>
-                    <a href="https://docs.google.com/presentation/d/e/2PACX-1vSesKc3fdrSFneRM4Vpnb2KGEQtltKDCMbuTh_LnSuyqbj50tchDvtcUR2gd0G5vrsWqwXYyoKpfRMQ/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">Slides</a>
-                </div>
-                <div>
-                    <span class="label">eBook:</span>
-                    <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20B%201.1.1.pdf" target="_blank">DP Computer Science_ B 1.1.1.pdf</a>
-                </div>
-                <div>
-                    <span class="label">Video:</span>
-                    <a href="#">Problem Specification</a>
-                </div>
+            <!-- BUTTONS -->
+            <div class="button-group">
+                <a class="btn btn-summary" href="b1-1-1-summary.html">📖 View Lesson Summary</a>
+                <span class="btn btn-locked">
+                    <span class="lock-icon">🔒</span> View Lesson Plan
+                </span>
             </div>
 
-            <div class="activity">
-                <strong>Activity:</strong> Starter: Problem Specification •
-                <a href="https://docs.google.com/presentation/d/e/2PACX-1vT7J_af9SO-JYHly-q1LymBqDOunXvSprM3svIYHlb3DxCTXUYM4TOk87iGViFzDNp2dfGNkjW-QlnT/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>
-                <br>
-                <span class="rubric">Rubric: 1—Attempted | 2—Correct | 3—Correct + Detail</span>
-                <br>
-                <span style="font-size:0.9rem; color:#4a5568;">Submit to Schoolbox</span>
-
-                <div class="cover-status">
-                    <input type="checkbox" class="cover-checkbox" data-unit="B1.1.1" id="cover-B1.1.1">
-                    <label for="cover-B1.1.1">✓ Mark this lesson as covered</label>
-                </div>
+            <!-- COVER CHECKBOX – TEACHER ONLY -->
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" id="cover-B1.1.1">
+                <label for="cover-B1.1.1">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit" id="toggleCover">(toggle)</span>
             </div>
 
+            <!-- LOCKED RESOURCES -->
             <div class="locked">
                 🔒 <strong>Locked Resources</strong> &nbsp;
                 Lesson Plan <span>Password A</span> &nbsp;|&nbsp;
@@ -258,6 +270,7 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
     <div class="footer">
         <span class="label">Quick Links:</span>
         <a href="https://quizlet.com/pt/1012854081/b-111-construct-a-problem-specification-flash-cards/?funnelUUID=3a5e3597-428b-4cd7-a87e-9be138ae72df" target="_blank">Quizlet</a>
@@ -267,22 +280,54 @@
 
 </div>
 
+<!-- PERSISTENT CHECKBOX + TEACHER TOGGLE -->
 <script>
     (function() {
-        const checkbox = document.querySelector('.cover-checkbox');
-        if (!checkbox) return;
+        const checkbox = document.getElementById('cover-B1.1.1');
+        const card = document.getElementById('lessonCard');
+        const toggleBtn = document.getElementById('toggleCover');
+        if (!checkbox || !card || !toggleBtn) return;
 
-        const storageKey = 'covered_' + checkbox.dataset.unit;
+        const storageKey = 'covered_' + checkbox.id;
 
         // Load saved state
         const savedState = localStorage.getItem(storageKey);
         if (savedState === 'true') {
             checkbox.checked = true;
+            card.classList.add('covered');
         }
 
-        // Save state on change
-        checkbox.addEventListener('change', function() {
-            localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
+        // Toggle function (called by teacher via the (toggle) link)
+        function toggleCover() {
+            const isChecked = !checkbox.checked;
+            checkbox.checked = isChecked;
+            localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+            if (isChecked) {
+                card.classList.add('covered');
+            } else {
+                card.classList.remove('covered');
+            }
+        }
+
+        // Teacher toggle: click the "(toggle)" link
+        toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleCover();
+        });
+
+        // Optional: double-click on the label also toggles (teacher convenience)
+        const label = document.querySelector('.cover-section label');
+        if (label) {
+            label.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+                toggleCover();
+            });
+        }
+
+        // Students cannot click the checkbox directly (pointer-events: none)
+        // But we also prevent any accidental keyboard interaction
+        checkbox.addEventListener('keydown', function(e) {
+            e.preventDefault();
         });
     })();
 </script>
