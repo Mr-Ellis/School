@@ -147,6 +147,7 @@
     .btn-locked {
       background: #e8dfd0 !important;
       color: #6a4e2e !important;
+      cursor: pointer;
     }
     .btn-locked i { color: #b8943e; }
 
@@ -196,18 +197,74 @@
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
+    /* password modal */
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .password-modal.active { display: flex; }
+    .password-box {
+      background: white;
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+    .password-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    .password-box input:focus { border-color: #1f6390; }
+    .password-box .btn {
+      background: #1f6390;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-box .btn:hover { background: #134f75; }
+    .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+
     @media (max-width: 680px) {
       body { padding: 1rem; }
       .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
       .nav .brand { margin-right: 0; }
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
+      .password-box { padding: 1.8rem; }
     }
   </style>
 </head>
 <body>
 
 <div class="container">
+
+  <!-- password modal -->
+  <div id="passwordModal" class="password-modal">
+    <div class="password-box">
+      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
+      <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access</p>
+      <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+      <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+      <div class="error" id="pwdError"></div>
+    </div>
+  </div>
 
   <nav class="nav">
     <span class="brand"><i class="fas fa-graduation-cap"></i> IB CompSci</span>
@@ -233,7 +290,7 @@
       </div>
       <div class="card-actions">
         <a href="B1/G11/b1-1-1-summary.html" target="_blank" class="btn"><i class="fas fa-book-open"></i> View Lesson Summary</a>
-        <button class="btn btn-locked"><i class="fas fa-lock"></i> View Lesson Plan</button>
+        <button class="btn btn-locked unlock-btn" data-lesson="B1.1.1"><i class="fas fa-lock"></i> View Lesson Plan</button>
       </div>
       <div class="cover-section">
         <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.1" id="cover-B1.1.1">
@@ -250,7 +307,7 @@
       </div>
       <div class="card-actions">
         <a href="B1/G11/b1-1-2-summary.html" target="_blank" class="btn"><i class="fas fa-book-open"></i> View Lesson Summary</a>
-        <button class="btn btn-locked"><i class="fas fa-lock"></i> View Lesson Plan</button>
+        <button class="btn btn-locked unlock-btn" data-lesson="B1.1.2"><i class="fas fa-lock"></i> View Lesson Plan</button>
       </div>
       <div class="cover-section">
         <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.2" id="cover-B1.1.2">
@@ -267,7 +324,7 @@
       </div>
       <div class="card-actions">
         <a href="B1/G11/b1-1-3-summary.html" target="_blank" class="btn"><i class="fas fa-book-open"></i> View Lesson Summary</a>
-        <button class="btn btn-locked"><i class="fas fa-lock"></i> View Lesson Plan</button>
+        <button class="btn btn-locked unlock-btn" data-lesson="B1.1.3"><i class="fas fa-lock"></i> View Lesson Plan</button>
       </div>
       <div class="cover-section">
         <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.3" id="cover-B1.1.3">
@@ -284,7 +341,7 @@
       </div>
       <div class="card-actions">
         <a href="B1/G11/b1-1-4-summary.html" target="_blank" class="btn"><i class="fas fa-book-open"></i> View Lesson Summary</a>
-        <button class="btn btn-locked"><i class="fas fa-lock"></i> View Lesson Plan</button>
+        <button class="btn btn-locked unlock-btn" data-lesson="B1.1.4"><i class="fas fa-lock"></i> View Lesson Plan</button>
       </div>
       <div class="cover-section">
         <input type="checkbox" class="cover-checkbox" data-lesson="B1.1.4" id="cover-B1.1.4">
@@ -355,6 +412,94 @@
       cb.addEventListener('keydown', function(e) {
         e.preventDefault();
       });
+    });
+
+    // ----- PASSWORD PROTECTION for locked resources -----
+    const modal = document.getElementById('passwordModal');
+    const pwdInput = document.getElementById('pwdInput');
+    const pwdError = document.getElementById('pwdError');
+    const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+    let pendingPath = '';
+    let pendingPasswordType = '';
+
+    // Lesson Plan URLs
+    const PDF_URLS = {
+      'B1.1.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.1.pdf',
+      'B1.1.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.2.pdf',
+      'B1.1.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.3.pdf',
+      'B1.1.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20B%201.1.4.pdf'
+    };
+
+    function openModal(path, type) {
+      pendingPath = path;
+      pendingPasswordType = type;
+      pwdInput.value = '';
+      pwdError.textContent = '';
+      modal.classList.add('active');
+      pwdInput.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      pendingPath = '';
+      pendingPasswordType = '';
+    }
+
+    function attemptUnlock() {
+      const entered = pwdInput.value.trim();
+      let correctPassword = false;
+      
+      if (pendingPasswordType === 'A') {
+        correctPassword = (entered === 'bluebeard');
+      } else if (pendingPasswordType === 'B') {
+        correctPassword = (entered === 'goldbeard');
+      }
+      
+      if (correctPassword) {
+        if (pendingPath) {
+          window.open(pendingPath, '_blank');
+        }
+        closeModal();
+      } else {
+        pwdError.textContent = '❌ Incorrect password. Try again.';
+        pwdInput.value = '';
+        pwdInput.focus();
+      }
+    }
+
+    // Click on locked resource items
+    document.querySelectorAll('.unlock-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const lesson = this.getAttribute('data-lesson');
+        const url = PDF_URLS[lesson];
+        if (url) {
+          // Use password A for lesson plans
+          openModal(url, 'A');
+        } else {
+          alert('No PDF URL found for this lesson.');
+        }
+      });
+    });
+
+    pwdSubmitBtn.addEventListener('click', attemptUnlock);
+    pwdInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        attemptUnlock();
+      }
+    });
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
     });
 
   })();
