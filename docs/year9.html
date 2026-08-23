@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grade 9 · IGCSE Computer Science</title>
+  <title>Year 9 · IGCSE Computer Science</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     /* ——— EXACT SAME STYLES AS YOUR IB PAGE ——— */
@@ -49,6 +49,74 @@
       font-size: 1.1rem;
     }
     .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    /* --- Password Overlay --- */
+    .password-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .password-overlay.hidden {
+      display: none;
+    }
+    .password-box {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem 3rem;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h2 {
+      color: #0b2a4a;
+      margin-bottom: 0.5rem;
+      font-size: 1.6rem;
+    }
+    .password-box p {
+      color: #475569;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .password-box input[type="password"] {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    .password-box input[type="password"]:focus {
+      border-color: #1f6390;
+    }
+    .password-box .btn {
+      background: #1f6390;
+      color: white;
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-box .btn:hover {
+      background: #134f75;
+    }
+    .password-box .error {
+      color: #b13a3a;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      min-height: 1.5rem;
+    }
 
     .main-title {
       font-size: 2.8rem;
@@ -234,12 +302,24 @@
       .unit-grid { grid-template-columns: 1fr; }
       .grade-tabs { width: 100%; justify-content: center; }
       .grade-tabs a { padding: 0.4rem 1.2rem; font-size: 0.85rem; }
+      .password-box { padding: 1.8rem; }
     }
   </style>
 </head>
 <body>
 
 <div class="container">
+
+    <!-- ========== PASSWORD OVERLAY ========== -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-box">
+            <h2>🔒 Protected Page</h2>
+            <p>Enter the password to access Year 9 resources.</p>
+            <input type="password" id="passwordInput" placeholder="Enter password...">
+            <button class="btn" id="unlockBtn">Unlock</button>
+            <div class="error" id="passwordError"></div>
+        </div>
+    </div>
 
   <nav class="nav">
     <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
@@ -256,8 +336,10 @@
   </div>
 
   <div class="grade-tabs">
-    <a href="grade9.html" class="active"><i class="fas fa-check-circle"></i> Grade 9</a>
-    <a href="grade10.html"><i class="fas fa-check-circle"></i> Grade 10</a>
+    <a href="year9.html" class="active"><i class="fas fa-check-circle"></i> Grade 9</a>
+    <a href="year10.html"><i class="fas fa-check-circle"></i> Grade 10</a>
+    <a href="year11.html"><i class="fas fa-check-circle"></i> IB Year 11</a>
+    <a href="year12.html"><i class="fas fa-check-circle"></i> IB Year 12</a>
   </div>
 
   <div class="unit-grid">
@@ -372,33 +454,69 @@
 
 <script>
   (function() {
-    // ——— UNIT COMPLETION CHECKER (IGCSE version) ———
+    // ========== PASSWORD PROTECTION ==========
+    // Set your password here
+    const CORRECT_PASSWORD = 'password123';
+
+    const overlay = document.getElementById('passwordOverlay');
+    const passwordInput = document.getElementById('passwordInput');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const errorMsg = document.getElementById('passwordError');
+
+    // Check if already unlocked in this session
+    if (sessionStorage.getItem('year9_unlocked') === 'true') {
+        overlay.classList.add('hidden');
+    }
+
+    function unlockPage() {
+        const entered = passwordInput.value.trim();
+        if (entered === CORRECT_PASSWORD) {
+            overlay.classList.add('hidden');
+            sessionStorage.setItem('year9_unlocked', 'true');
+            errorMsg.textContent = '';
+        } else {
+            errorMsg.textContent = '❌ Incorrect password. Please try again.';
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    }
+
+    unlockBtn.addEventListener('click', unlockPage);
+
+    passwordInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            unlockPage();
+        }
+    });
+
+    // Focus the password input when the page loads
+    if (!sessionStorage.getItem('year9_unlocked')) {
+        passwordInput.focus();
+    }
+
+    // ========== UNIT COMPLETION CHECKER (IGCSE version) ==========
     const GRADE_PREFIX = 'igcse_';  // different from IB to avoid conflicts
 
-    // Map each unit to the lesson keys that must be marked "covered" for the unit to be complete.
-    // Adjust these keys to match the actual lesson pages you create.
     const unitLessonMap = {
-      'DR':   ['DR1', 'DR2', 'DR3', 'DR4'],   // Binary, Hex, Data storage, Compression
-      'DT':   ['DT1', 'DT2'],                // Packet switching, Error detection
-      'HW':   ['HW1', 'HW2', 'HW3'],         // CPU, Memory, I/O
-      'SW':   ['SW1', 'SW2'],                // OS, Translators
-      'INT':  ['INT1', 'INT2', 'INT3'],      // Web, Cybersecurity, Cookies
-      'AET':  ['AET1', 'AET2'],              // AI, Robotics
-      'ALGO': ['ALGO1', 'ALGO2', 'ALGO3'],   // Computational thinking, Pseudocode, Flowcharts
-      'PROG': ['PROG1', 'PROG2', 'PROG3'],   // Variables, Selection, Iteration
-      'DB':   ['DB1', 'DB2'],                // SQL, Relational
-      'BOOL': ['BOOL1', 'BOOL2']             // Gates, Truth tables
+      'DR':   ['DR1', 'DR2', 'DR3', 'DR4'],
+      'DT':   ['DT1', 'DT2'],
+      'HW':   ['HW1', 'HW2', 'HW3'],
+      'SW':   ['SW1', 'SW2'],
+      'INT':  ['INT1', 'INT2', 'INT3'],
+      'AET':  ['AET1', 'AET2'],
+      'ALGO': ['ALGO1', 'ALGO2', 'ALGO3'],
+      'PROG': ['PROG1', 'PROG2', 'PROG3'],
+      'DB':   ['DB1', 'DB2'],
+      'BOOL': ['BOOL1', 'BOOL2']
     };
 
     function checkUnitCompletion(unitKey) {
       const lessonKeys = unitLessonMap[unitKey];
       if (!lessonKeys || lessonKeys.length === 0) {
-        // fallback: check a single flag
         const unitCheckKey = GRADE_PREFIX + 'covered_' + unitKey;
         return localStorage.getItem(unitCheckKey) === 'true';
       }
-      
-      // All lessons must be covered
       return lessonKeys.every(function(lessonKey) {
         const lessonStorageKey = GRADE_PREFIX + 'covered_' + lessonKey;
         return localStorage.getItem(lessonStorageKey) === 'true';
@@ -407,15 +525,12 @@
 
     function updateAllUnitCards() {
       const unitCards = document.querySelectorAll('.unit-card');
-      
       unitCards.forEach(function(card) {
         const unitKey = card.getAttribute('data-unit');
         if (!unitKey) return;
-        
         const isComplete = checkUnitCompletion(unitKey);
         const statusLabel = card.querySelector('.cover-status label');
         const checkIcon = card.querySelector('.check-icon i');
-        
         if (isComplete) {
           card.classList.add('completed');
           if (statusLabel) statusLabel.textContent = 'Completed ✓';
@@ -428,17 +543,14 @@
       });
     }
 
-    // Initial update
     updateAllUnitCards();
 
-    // Listen for changes in other tabs (same browser)
     window.addEventListener('storage', function(e) {
       if (e.key && e.key.startsWith(GRADE_PREFIX)) {
         updateAllUnitCards();
       }
     });
 
-    // Optional: periodic refresh (in case of manual changes)
     setInterval(updateAllUnitCards, 2000);
   })();
 </script>
