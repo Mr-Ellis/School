@@ -3,58 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Website – Index</title>
-
+    <title>School Website</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .navbar {
-            background-color: #003366;
-            overflow: hidden;
-            padding: 0 20px;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4fb;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .navbar a {
-            float: left;
-            display: block;
-            color: #ffffff;
+        /* ---- HERO SECTION ---- */
+        .hero {
+            background: linear-gradient(135deg, #0b2a4a 0%, #1a4a7a 100%);
+            padding: 4rem 2rem 3rem;
             text-align: center;
-            padding: 16px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #f0f4fb;
+            clip-path: ellipse(70% 100% at 50% 100%);
+        }
+
+        .hero h1 {
+            color: #ffffff;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 i {
+            color: #7bb3ff;
+            margin-right: 10px;
+        }
+
+        .hero p {
+            color: #c0d9f0;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero .sub-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(4px);
+            padding: 0.4rem 1.5rem;
+            border-radius: 40px;
+            color: #b3d4ff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .sub-badge i {
+            margin-right: 6px;
+        }
+
+        /* ---- YEAR GROUP GRID ---- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 3rem;
+            flex: 1;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin-top: 1rem;
+        }
+
+        .year-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 2rem 1.5rem 1.8rem;
+            box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e5edf5;
+            transition: 0.25s ease;
             text-decoration: none;
-            font-size: 16px;
+            color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .navbar a:hover {
-            background-color: #0055a5;
+        .year-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #2a6f97, #7bb3ff);
+            opacity: 0;
+            transition: 0.3s;
         }
 
-        .content {
-            padding: 40px;
+        .year-card:hover {
+            border-color: #b6d0e8;
+            box-shadow: 0 12px 30px rgba(0, 32, 64, 0.08);
+            transform: translateY(-4px);
         }
 
-        h1 {
-            color: #003366;
+        .year-card:hover::before {
+            opacity: 1;
+        }
+
+        .year-card .icon {
+            font-size: 2.8rem;
+            color: #2a6f97;
+            margin-bottom: 0.6rem;
+            transition: 0.2s;
+        }
+
+        .year-card:hover .icon {
+            transform: scale(1.05);
+        }
+
+        .year-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            margin-bottom: 0.2rem;
+        }
+
+        .year-card .label {
+            font-size: 0.85rem;
+            color: #4a6a85;
+            font-weight: 500;
+        }
+
+        .year-card .arrow {
+            margin-top: 0.8rem;
+            color: #b6cfe5;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .year-card:hover .arrow {
+            color: #2a6f97;
+            transform: translateX(3px);
+        }
+
+        /* ---- COLOUR ACCENTS FOR EACH CARD ---- */
+        .year-card:nth-child(1) .icon {
+            color: #d97706;
+        }
+        .year-card:nth-child(1)::before {
+            background: linear-gradient(to right, #d97706, #f59e0b);
+        }
+
+        .year-card:nth-child(2) .icon {
+            color: #059669;
+        }
+        .year-card:nth-child(2)::before {
+            background: linear-gradient(to right, #059669, #34d399);
+        }
+
+        .year-card:nth-child(3) .icon {
+            color: #2563eb;
+        }
+        .year-card:nth-child(3)::before {
+            background: linear-gradient(to right, #2563eb, #60a5fa);
+        }
+
+        .year-card:nth-child(4) .icon {
+            color: #7c3aed;
+        }
+        .year-card:nth-child(4)::before {
+            background: linear-gradient(to right, #7c3aed, #a78bfa);
+        }
+
+        .year-card:nth-child(5) .icon {
+            color: #dc2626;
+        }
+        .year-card:nth-child(5)::before {
+            background: linear-gradient(to right, #dc2626, #f87171);
+        }
+
+        .year-card:nth-child(6) .icon {
+            color: #0d9488;
+        }
+        .year-card:nth-child(6)::before {
+            background: linear-gradient(to right, #0d9488, #2dd4bf);
+        }
+
+        /* ---- FOOTER ---- */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #5d7f9a;
+            font-size: 0.85rem;
+            border-top: 1px solid #e2eaf2;
+            margin-top: auto;
+        }
+
+        .footer i {
+            margin: 0 4px;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 640px) {
+            .hero {
+                padding: 2.5rem 1.5rem 2rem;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                max-width: 380px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .year-card {
+                padding: 1.5rem 1rem;
+            }
         }
     </style>
 </head>
-
 <body>
 
-    <div class="navbar">
-        <a href="year7.html">Year 7</a>
-        <a href="year8.html">Year 8</a>
-        <a href="year9.html">Year 9</a>
-        <a href="year10.html">Year 10</a>
-        <a href="year11.html">Year 11</a>
-        <a href="year12.html">Year 12</a>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="sub-badge">
+            <i class="fas fa-graduation-cap"></i> IB &amp; IGCSE Computer Science
+        </div>
+        <h1>
+            <i class="fas fa-school"></i> Welcome
+        </h1>
+        <p>Explore resources, track your progress, and dive into Computer Science.</p>
+    </section>
+
+    <!-- ===== YEAR GROUP GRID ===== -->
+    <div class="container">
+        <div class="grid">
+
+            <a href="year7.html" class="year-card">
+                <div class="icon"><i class="fas fa-star"></i></div>
+                <h3>Year 7</h3>
+                <span class="label">Computing &amp; digital literacy</span>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+
+            <a href="year8.html" class="year-card">
+                <div class="icon"><i class="fas fa-rocket"></i></div>
+                <h3>Year 8</h3>
+                <span class="label">Building core skills</span>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+
+            <a href="year9.html" class="year-card">
+                <div class="icon"><i class="fas fa-code"></i></div>
+                <h3>Year 9</h3>
+                <span class="label">IGCSE Computer Science</span>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+
+            <a href="year10.html" class="year-card">
+                <div class="icon"><i class="fas fa-microchip"></i></div>
+                <h3>Year 10</h3>
+                <span class="label">IGCSE &amp; IB preparation</span>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+
+            <a href="year11.html" class="year-card">
+                <div class="icon"><i class="fas fa-cogs"></i></div>
+                <h3>Year 11</h3>
+                <span class="label">IB Diploma · Year 1</span>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+
+            <a href="year12.html" class="year-card">
+                <div class="icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Year 12</h3>
+                <span class="label">IB Diploma · Year 2</span>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+
+        </div>
     </div>
 
-    <div class="content">
-        <h1>Welcome to Our School Website</h1>
-        <p>Select a year group from the navigation bar above.</p>
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        <i class="fas fa-code"></i> made with <i class="fas fa-heart" style="color:#dc2626;"></i> for students
+        <span style="margin: 0 10px;">·</span>
+        <i class="fas fa-save"></i> progress saved locally
     </div>
 
 </body>
