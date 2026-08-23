@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School Website</title>
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -12,50 +11,40 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f0f4fb;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* ---- HERO SECTION ---- */
+        /* --- HERO --- */
         .hero {
             background: linear-gradient(135deg, #0b2a4a 0%, #1a4a7a 100%);
-            padding: 4rem 2rem 3rem;
+            padding: 3rem 2rem 2.5rem;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
-
         .hero::after {
             content: '';
             position: absolute;
             bottom: -2px;
             left: 0;
             right: 0;
-            height: 60px;
+            height: 50px;
             background: #f0f4fb;
             clip-path: ellipse(70% 100% at 50% 100%);
         }
-
         .hero h1 {
-            color: #ffffff;
-            font-size: 3.5rem;
+            color: #fff;
+            font-size: 3rem;
             font-weight: 700;
             letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             position: relative;
             z-index: 1;
         }
-
-        .hero h1 i {
-            color: #7bb3ff;
-            margin-right: 10px;
-        }
-
+        .hero h1 i { color: #7bb3ff; margin-right: 10px; }
         .hero p {
             color: #c0d9f0;
             font-size: 1.2rem;
@@ -64,260 +53,355 @@
             position: relative;
             z-index: 1;
         }
-
-        .hero .sub-badge {
+        .hero .badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255,255,255,0.12);
             backdrop-filter: blur(4px);
-            padding: 0.4rem 1.5rem;
+            padding: 0.3rem 1.5rem;
             border-radius: 40px;
             color: #b3d4ff;
             font-size: 0.85rem;
             font-weight: 500;
-            letter-spacing: 0.3px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.08);
             position: relative;
             z-index: 1;
             margin-bottom: 0.5rem;
         }
 
-        .hero .sub-badge i {
-            margin-right: 6px;
-        }
-
-        /* ---- YEAR GROUP GRID ---- */
+        /* --- CONTAINER --- */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem 1.5rem 3rem;
-            flex: 1;
+            padding: 1.5rem 1.5rem 2rem;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.8rem;
-            margin-top: 1rem;
-        }
-
-        .year-card {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 2rem 1.5rem 1.8rem;
-            box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-            border: 1px solid #e5edf5;
-            transition: 0.25s ease;
-            text-decoration: none;
-            color: #1e293b;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .year-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(to right, #2a6f97, #7bb3ff);
-            opacity: 0;
-            transition: 0.3s;
-        }
-
-        .year-card:hover {
-            border-color: #b6d0e8;
-            box-shadow: 0 12px 30px rgba(0, 32, 64, 0.08);
-            transform: translateY(-4px);
-        }
-
-        .year-card:hover::before {
-            opacity: 1;
-        }
-
-        .year-card .icon {
-            font-size: 2.8rem;
-            color: #2a6f97;
-            margin-bottom: 0.6rem;
-            transition: 0.2s;
-        }
-
-        .year-card:hover .icon {
-            transform: scale(1.05);
-        }
-
-        .year-card h3 {
-            font-size: 1.5rem;
+        /* --- YEAR GROUPS (HORIZONTAL ROW) --- */
+        .section-title {
+            font-size: 1.6rem;
             font-weight: 700;
             color: #0b2a4a;
             margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i { color: #2a6f97; }
+        .section-desc {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
         }
 
+        .year-scroll {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 1.2rem;
+            overflow-x: auto;
+            padding: 0.5rem 0.2rem 1rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .year-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+        .year-scroll::-webkit-scrollbar-track {
+            background: #e2eaf2;
+            border-radius: 10px;
+        }
+        .year-scroll::-webkit-scrollbar-thumb {
+            background: #2a6f97;
+            border-radius: 10px;
+        }
+
+        .year-card {
+            flex: 0 0 180px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.5rem 1rem 1.2rem;
+            border: 1px solid #e5edf5;
+            text-align: center;
+            text-decoration: none;
+            color: #1e293b;
+            transition: 0.25s ease;
+            scroll-snap-align: start;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .year-card:hover {
+            transform: translateY(-4px);
+            border-color: #b6d0e8;
+            box-shadow: 0 8px 24px rgba(0,32,64,0.08);
+        }
+        .year-card .icon {
+            font-size: 2rem;
+            color: #2a6f97;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+        .year-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            margin-bottom: 0.1rem;
+        }
         .year-card .label {
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             color: #4a6a85;
             font-weight: 500;
+            display: block;
         }
-
         .year-card .arrow {
-            margin-top: 0.8rem;
+            display: block;
+            margin-top: 0.5rem;
             color: #b6cfe5;
+            font-size: 0.8rem;
+        }
+        .year-card:hover .arrow { color: #2a6f97; }
+
+        /* individual card colours */
+        .year-card:nth-child(1) .icon { color: #d97706; }
+        .year-card:nth-child(2) .icon { color: #059669; }
+        .year-card:nth-child(3) .icon { color: #2563eb; }
+        .year-card:nth-child(4) .icon { color: #7c3aed; }
+        .year-card:nth-child(5) .icon { color: #dc2626; }
+        .year-card:nth-child(6) .icon { color: #0d9488; }
+
+        /* --- RESOURCE GRID --- */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-top: 0.5rem;
+        }
+        .resource-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.2rem 1.2rem 1rem;
+            border: 1px solid #e5edf5;
+            text-decoration: none;
+            color: #1e293b;
             transition: 0.2s;
-            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
-
-        .year-card:hover .arrow {
+        .resource-card:hover {
+            border-color: #b6d0e8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+        }
+        .resource-card .r-icon {
+            font-size: 1.6rem;
             color: #2a6f97;
-            transform: translateX(3px);
+            margin-bottom: 0.2rem;
+        }
+        .resource-card h5 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin-bottom: 0.1rem;
+        }
+        .resource-card p {
+            font-size: 0.8rem;
+            color: #4a6a85;
+            margin: 0.1rem 0 0.2rem;
+            line-height: 1.4;
+        }
+        .resource-card .r-tag {
+            font-size: 0.6rem;
+            background: #e9eff8;
+            padding: 0.1rem 0.7rem;
+            border-radius: 20px;
+            color: #1f6390;
+            font-weight: 500;
+            margin-top: 0.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
-        /* ---- COLOUR ACCENTS FOR EACH CARD ---- */
-        .year-card:nth-child(1) .icon {
-            color: #d97706;
-        }
-        .year-card:nth-child(1)::before {
-            background: linear-gradient(to right, #d97706, #f59e0b);
-        }
-
-        .year-card:nth-child(2) .icon {
-            color: #059669;
-        }
-        .year-card:nth-child(2)::before {
-            background: linear-gradient(to right, #059669, #34d399);
+        /* --- DIVIDER --- */
+        .divider {
+            border: 0;
+            height: 2px;
+            background: linear-gradient(to right, #d4e0ec, transparent);
+            margin: 2.2rem 0 1.5rem;
         }
 
-        .year-card:nth-child(3) .icon {
-            color: #2563eb;
-        }
-        .year-card:nth-child(3)::before {
-            background: linear-gradient(to right, #2563eb, #60a5fa);
-        }
-
-        .year-card:nth-child(4) .icon {
-            color: #7c3aed;
-        }
-        .year-card:nth-child(4)::before {
-            background: linear-gradient(to right, #7c3aed, #a78bfa);
-        }
-
-        .year-card:nth-child(5) .icon {
-            color: #dc2626;
-        }
-        .year-card:nth-child(5)::before {
-            background: linear-gradient(to right, #dc2626, #f87171);
-        }
-
-        .year-card:nth-child(6) .icon {
-            color: #0d9488;
-        }
-        .year-card:nth-child(6)::before {
-            background: linear-gradient(to right, #0d9488, #2dd4bf);
-        }
-
-        /* ---- FOOTER ---- */
+        /* --- FOOTER --- */
         .footer {
             text-align: center;
             padding: 1.5rem;
             color: #5d7f9a;
             font-size: 0.85rem;
             border-top: 1px solid #e2eaf2;
-            margin-top: auto;
+            margin-top: 1rem;
         }
+        .footer i { margin: 0 4px; }
 
-        .footer i {
-            margin: 0 4px;
-        }
-
-        /* ---- RESPONSIVE ---- */
-        @media (max-width: 640px) {
-            .hero {
-                padding: 2.5rem 1.5rem 2rem;
-            }
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .grid {
-                grid-template-columns: 1fr;
-                max-width: 380px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .year-card {
-                padding: 1.5rem 1rem;
-            }
+        @media (max-width: 680px) {
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .year-card { flex: 0 0 140px; padding: 1rem 0.8rem; }
+            .year-card .icon { font-size: 1.5rem; }
+            .year-card h4 { font-size: 0.95rem; }
+            .resource-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== HERO ===== -->
+    <!-- HERO -->
     <section class="hero">
-        <div class="sub-badge">
-            <i class="fas fa-graduation-cap"></i> IB &amp; IGCSE Computer Science
-        </div>
-        <h1>
-            <i class="fas fa-school"></i> Welcome
-        </h1>
+        <div class="badge"><i class="fas fa-graduation-cap"></i> IB &amp; IGCSE Computer Science</div>
+        <h1><i class="fas fa-school"></i> Welcome</h1>
         <p>Explore resources, track your progress, and dive into Computer Science.</p>
     </section>
 
-    <!-- ===== YEAR GROUP GRID ===== -->
     <div class="container">
-        <div class="grid">
 
+        <!-- ===== YEAR GROUPS (Horizontal Scroll) ===== -->
+        <div class="section-title">
+            <i class="fas fa-users"></i> Year Groups
+        </div>
+        <div class="section-desc">Select your year to access lessons and resources.</div>
+
+        <div class="year-scroll">
             <a href="year7.html" class="year-card">
-                <div class="icon"><i class="fas fa-star"></i></div>
-                <h3>Year 7</h3>
+                <span class="icon"><i class="fas fa-star"></i></span>
+                <h4>Year 7</h4>
                 <span class="label">Computing &amp; digital literacy</span>
                 <span class="arrow"><i class="fas fa-chevron-right"></i></span>
             </a>
-
             <a href="year8.html" class="year-card">
-                <div class="icon"><i class="fas fa-rocket"></i></div>
-                <h3>Year 8</h3>
+                <span class="icon"><i class="fas fa-rocket"></i></span>
+                <h4>Year 8</h4>
                 <span class="label">Building core skills</span>
                 <span class="arrow"><i class="fas fa-chevron-right"></i></span>
             </a>
-
             <a href="year9.html" class="year-card">
-                <div class="icon"><i class="fas fa-code"></i></div>
-                <h3>Year 9</h3>
+                <span class="icon"><i class="fas fa-code"></i></span>
+                <h4>Year 9</h4>
                 <span class="label">IGCSE Computer Science</span>
                 <span class="arrow"><i class="fas fa-chevron-right"></i></span>
             </a>
-
             <a href="year10.html" class="year-card">
-                <div class="icon"><i class="fas fa-microchip"></i></div>
-                <h3>Year 10</h3>
+                <span class="icon"><i class="fas fa-microchip"></i></span>
+                <h4>Year 10</h4>
                 <span class="label">IGCSE &amp; IB preparation</span>
                 <span class="arrow"><i class="fas fa-chevron-right"></i></span>
             </a>
-
             <a href="year11.html" class="year-card">
-                <div class="icon"><i class="fas fa-cogs"></i></div>
-                <h3>Year 11</h3>
+                <span class="icon"><i class="fas fa-cogs"></i></span>
+                <h4>Year 11</h4>
                 <span class="label">IB Diploma · Year 1</span>
                 <span class="arrow"><i class="fas fa-chevron-right"></i></span>
             </a>
-
             <a href="year12.html" class="year-card">
-                <div class="icon"><i class="fas fa-graduation-cap"></i></div>
-                <h3>Year 12</h3>
+                <span class="icon"><i class="fas fa-graduation-cap"></i></span>
+                <h4>Year 12</h4>
                 <span class="label">IB Diploma · Year 2</span>
                 <span class="arrow"><i class="fas fa-chevron-right"></i></span>
             </a>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ===== RESOURCES SECTION ===== -->
+        <div class="section-title">
+            <i class="fas fa-link"></i> Useful Resources
+        </div>
+        <div class="section-desc">Extra tools, challenges, and projects to support your learning.</div>
+
+        <div class="resource-grid">
+
+            <a href="https://jamesabela.github.io/jsfun/challenge_list.html" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-tasks"></i></span>
+                <h5>113 Python Challenges</h5>
+                <p>Interactive coding challenges from beginner to advanced.</p>
+                <span class="r-tag">Python · Practice</span>
+            </a>
+
+            <a href="https://projects.raspberrypi.org/en/" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-raspberry-pi"></i></span>
+                <h5>Raspberry Pi Projects</h5>
+                <p>Free step-by-step projects to make, code, and create.</p>
+                <span class="r-tag">Projects · Make</span>
+            </a>
+
+            <a href="https://mrdavekang.github.io/y8-python/python-practice-ks3.html" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-keyboard"></i></span>
+                <h5>KS3 Python Practice</h5>
+                <p>Fill-in-the-blank Python exercises for beginners.</p>
+                <span class="r-tag">Python · KS3</span>
+            </a>
+
+            <a href="https://learningkyodai.com/emoji-dojo/" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-laugh-beam"></i></span>
+                <h5>Emoji Dojo</h5>
+                <p>Free keyboard and mouse games for ages 4–12.</p>
+                <span class="r-tag">Games · Primary</span>
+            </a>
+
+            <a href="https://mailmerge.primary-apps.com/" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-id-card"></i></span>
+                <h5>Create Your Own Trading Cards</h5>
+                <p>Build a database, design a template, and print your own cards.</p>
+                <span class="r-tag">Database · Design</span>
+            </a>
+
+            <a href="https://whodunnit.primary-apps.com/whodunnit.html" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-search"></i></span>
+                <h5>Whodunnit?</h5>
+                <p>Solve mysteries using filters, clues, and deduction.</p>
+                <span class="r-tag">Databases · Logic</span>
+            </a>
+
+            <a href="https://www.ambercodes.com/" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-code-branch"></i></span>
+                <h5>Amber Codes</h5>
+                <p>Create. Think. Code. Visual blocks to Python/JS.</p>
+                <span class="r-tag">Coding · Blocks</span>
+            </a>
+
+            <a href="https://sethideclercq.com/tools/secretcodegen.html" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-user-secret"></i></span>
+                <h5>Secret Code Generator</h5>
+                <p>Create mysterious messages with secret symbols.</p>
+                <span class="r-tag">Cryptography · Fun</span>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1Z1fjaaatXpK52uattCu7nQWIFKIv0uHQPM0seq1aTps/template/preview" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-futbol"></i></span>
+                <h5>World Cup Dream Manager</h5>
+                <p>Google Slides template for a World Cup dream team project.</p>
+                <span class="r-tag">Template · Project</span>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/106HL_8yv4H_cpNCXixUWWhXIkldbjnSSJF_Y_gbtot4/template/preview" target="_blank" class="resource-card">
+                <span class="r-icon"><i class="fas fa-bug"></i></span>
+                <h5>Python Error Detectives</h5>
+                <p>Google Slides template for debugging and error-spotting.</p>
+                <span class="r-tag">Template · Debugging</span>
+            </a>
 
         </div>
+
+        <hr class="divider">
+
+        <!-- ===== EXTRA LINK: STUDENT RESOURCES ===== -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: #e9eff8; border-radius: 16px; padding: 0.8rem 1.5rem; margin-top: 0.5rem;">
+            <span style="font-weight: 600; color: #0b2a4a;">
+                <i class="fas fa-book-open" style="color: #2a6f97; margin-right: 8px;"></i> Student Resources
+            </span>
+            <span>
+                <a href="https://mr-ellis.github.io/School/docs/Resources/IB%20Computer%20Science/" style="color: #1a5f87; font-weight: 500; margin: 0 10px;">IB Resources</a>
+                <a href="https://mr-ellis.github.io/School/docs/Resources/IGCSE%20Computer%20Science/" style="color: #1a5f87; font-weight: 500; margin: 0 10px;">IGCSE Resources</a>
+            </span>
+        </div>
+
     </div>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- FOOTER -->
     <div class="footer">
         <i class="fas fa-code"></i> made with <i class="fas fa-heart" style="color:#dc2626;"></i> for students
         <span style="margin: 0 10px;">·</span>
