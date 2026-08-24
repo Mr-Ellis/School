@@ -49,6 +49,44 @@
     }
     .nav .brand i { margin-right: 8px; color: #7bb3ff; }
 
+    /* --- Password Overlay --- */
+    .password-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .password-overlay.hidden { display: none; }
+    .password-box {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem 3rem;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h2 { color: #0b2a4a; margin-bottom: 0.5rem; font-size: 1.6rem; }
+    .password-box p { color: #475569; font-size: 0.95rem; margin-bottom: 1.5rem; }
+    .password-box input[type="password"] {
+      width: 100%; padding: 0.8rem 1rem; border: 2px solid #d4e0ec; border-radius: 60px;
+      font-size: 1rem; margin-bottom: 1rem; outline: none;
+    }
+    .password-box input[type="password"]:focus { border-color: #1f6390; }
+    .password-box .btn {
+      background: #1f6390; color: white; border: none; padding: 0.7rem 2rem;
+      border-radius: 60px; font-size: 1rem; font-weight: 600; cursor: pointer;
+    }
+    .password-box .btn:hover { background: #134f75; }
+    .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+
     .main-title {
       font-size: 2.8rem;
       font-weight: 700;
@@ -270,6 +308,17 @@
 
 <div class="container">
 
+    <!-- ========== PASSWORD OVERLAY ========== -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-box">
+            <h2>🔒 Protected Page</h2>
+            <p>Enter the password to access Year 9 resources.</p>
+            <input type="password" id="passwordInput" placeholder="Enter password...">
+            <button class="btn" id="unlockBtn">Unlock</button>
+            <div class="error" id="passwordError"></div>
+        </div>
+    </div>
+
     <!-- ========== NAVIGATION ========== -->
     <nav class="nav">
         <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
@@ -403,6 +452,44 @@
 
 <script>
     (function() {
+        // ========== PASSWORD PROTECTION ==========
+        const CORRECT_PASSWORD = 'password123';
+
+        const overlay = document.getElementById('passwordOverlay');
+        const passwordInput = document.getElementById('passwordInput');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const errorMsg = document.getElementById('passwordError');
+
+        if (sessionStorage.getItem('year9_unlocked') === 'true') {
+            overlay.classList.add('hidden');
+        }
+
+        function unlockPage() {
+            const entered = passwordInput.value.trim();
+            if (entered === CORRECT_PASSWORD) {
+                overlay.classList.add('hidden');
+                sessionStorage.setItem('year9_unlocked', 'true');
+                errorMsg.textContent = '';
+            } else {
+                errorMsg.textContent = '❌ Incorrect password. Please try again.';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        unlockBtn.addEventListener('click', unlockPage);
+
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                unlockPage();
+            }
+        });
+
+        if (!sessionStorage.getItem('year9_unlocked')) {
+            passwordInput.focus();
+        }
+
         // ========== UNIT COMPLETION CHECKER ==========
         const GRADE_PREFIX = 'igcse_';
 
