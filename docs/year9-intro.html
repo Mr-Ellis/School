@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 9 · Course Breakdown</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ——— SAME BASE STYLES ——— */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #2a6f97; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
+
+    .section-head {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 2.8rem 0 1.5rem 0;
+      padding-bottom: 0.25rem;
+      border-bottom: 4px solid #cbddee;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-head i { color: #1f6390; font-size: 1.8rem; width: 2.2rem; }
+
+    .info-box {
+      background: white;
+      border-radius: 24px;
+      padding: 1.5rem 2rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+      margin-bottom: 2rem;
+    }
+    .info-box h3 {
+      color: #0b2a4a;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .info-box p { margin-bottom: 1rem; color: #334155; }
+
+    .table-container {
+      overflow-x: auto;
+      background: white;
+      border-radius: 24px;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th {
+      background: #0b2a4a;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+    }
+    td {
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid #eef2f6;
+      font-size: 0.95rem;
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background-color: #f8fbfe; }
+
+    .badge {
+      background: #dceaf7;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #13416b;
+      white-space: nowrap;
+      margin-left: 8px;
+    }
+    .badge.hl { background: #f7d9d9; color: #a13232; }
+    .badge.core { background: #cfe3d0; color: #1d5e3a; }
+    .badge.exam { background: #0b2a4a; color: #fff; }
+
+    .exam-section {
+      background: #e4eefa;
+      border-radius: 40px;
+      padding: 1.8rem 2.5rem;
+      margin-top: 3.5rem;
+      border: 1px solid #c7ddec;
+    }
+    .exam-section h3 {
+      color: #0b2a4a;
+      font-size: 1.6rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .exam-section ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+    .exam-section li {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 1.2rem;
+      border-radius: 20px;
+      border-left: 4px solid #0b2a4a;
+    }
+    .exam-section li strong { display: block; margin-bottom: 0.4rem; color: #0b2a4a; }
+
+    .back-to-class {
+      margin-top: 2rem;
+      display: inline-block;
+      background: #1a5f87;
+      color: white;
+      text-decoration: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+    .back-to-class:hover { background: #134f75; }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .table-container { border-radius: 0; border: none; box-shadow: none; }
+      th, td { padding: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- NAVIGATION -->
+    <nav class="nav">
+        <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+        <a href="index.html"><i class="fas fa-arrow-left"></i> Main Page</a>
+        <a href="year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9 Units</a>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="main-title">
+        <i class="fas fa-calendar-alt"></i> Year 9 Course Breakdown
+    </div>
+    <div class="subhead">
+        <i class="fas fa-clipboard-list" style="color:#1f7b4d; margin-right: 6px;"></i> 
+        Term 1, 2 & 3 · Full Syllabus Breakdown
+    </div>
+
+    <!-- OBJECTIVE -->
+    <div class="info-box">
+        <h3><i class="fas fa-bullseye"></i> Course Aims</h3>
+        <p>Students will develop confidence in computational thinking and programming. They will understand the main principles of solving problems using computers, the component parts of computer systems, the internet, and automated technologies.</p>
+        <p><strong>Duration:</strong> 38 Weeks (3 Terms)</p>
+    </div>
+
+    <!-- WEEKLY BREAKDOWN -->
+    <div class="section-head">
+        <i class="fas fa-table"></i> Weekly Breakdown
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Dates</th>
+                    <th>Topic</th>
+                    <th>Syllabus Content</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Term 1 -->
+                <tr style="background-color: #f0f8ff;"><td colspan="4" style="font-weight: 700; color: #0b2a4a;">TERM 1 (Weeks 1-12)</td></tr>
+                <tr><td>1</td><td>Aug 26-30</td><td>Binary Systems</td><td>Binary, bits/bytes, denary ↔ binary</td></tr>
+                <tr><td>2</td><td>Sep 2-6</td><td>Hexadecimal</td><td>Denary ↔ hex, binary ↔ hex</td></tr>
+                <tr><td>3</td><td>Sep 9-13</td><td>Binary Shifts & Two's Complement</td><td>Logical shifts, two's complement</td></tr>
+                <tr><td>4</td><td>Sep 16-20</td><td>ASCII & Unicode</td><td>Character sets, ASCII vs Unicode</td></tr>
+                <tr><td>5</td><td>Sep 23-27</td><td>Representing Sound</td><td>Sampling, sample rate, bit-depth</td></tr>
+                <tr><td>6</td><td>Sep 30-Oct 4</td><td>Representing Images</td><td>Pixels, resolution, colour depth</td></tr>
+                <tr><td>7</td><td>Oct 7-11</td><td>Data Compression & Revision</td><td>Lossy/lossless, RLE, review</td></tr>
+                <tr><td colspan="4" style="color: #64748b; font-style: italic; text-align: center;">Autumn Break - Oct 12-23</td></tr>
+                <tr><td>8</td><td>Oct 26-30</td><td>Data Packets</td><td>Packets, headers, payload</td></tr>
+                <tr><td>9</td><td>Nov 2-6</td><td>Transmission Methods</td><td>Serial/parallel, simplex/duplex</td></tr>
+                <tr><td>10</td><td>Nov 9-13</td><td>Error Detection</td><td>Parity, checksum, ARQ</td></tr>
+                <tr><td>11</td><td>Nov 16-20</td><td>Encryption</td><td>Symmetric/asymmetric encryption</td></tr>
+                <tr><td>12</td><td>Nov 23-27</td><td>Unit Revision</td><td>Review of Unit 2</td></tr>
+
+                <!-- Term 2 -->
+                <tr style="background-color: #f0f8ff;"><td colspan="4" style="font-weight: 700; color: #0b2a4a;">TERM 2 (Weeks 13-27)</td></tr>
+                <tr><td>13</td><td>Nov 30-Dec 4</td><td>CPU Architecture</td><td>FDE cycle, registers, ALU/CU</td></tr>
+                <tr><td>14</td><td>Dec 7-11</td><td>CPU Performance & Buses</td><td>Clock, cores, cache, buses</td></tr>
+                <tr><td>15</td><td>Dec 14-18</td><td>Embedded Systems</td><td>Microprocessors, microcontrollers</td></tr>
+                <tr><td colspan="4" style="color: #64748b; font-style: italic; text-align: center;">Winter Break - Dec 21-Jan 1</td></tr>
+                <tr><td>16</td><td>Jan 4-8</td><td>Memory</td><td>RAM/ROM, virtual memory</td></tr>
+                <tr><td>17</td><td>Jan 11-15</td><td>Secondary Storage</td><td>Magnetic/optical/solid-state</td></tr>
+                <tr><td>18</td><td>Jan 18-22</td><td>Cloud Storage</td><td>Cloud vs local storage</td></tr>
+                <tr><td>19</td><td>Jan 25-29</td><td>Unit Revision</td><td>Review of Unit 3</td></tr>
+                <tr><td>20</td><td>Feb 1-5</td><td>Input Devices</td><td>Keyboards, mice, touchscreens</td></tr>
+                <tr><td colspan="4" style="color: #64748b; font-style: italic; text-align: center;">Winter Break 2 - Feb 8-12</td></tr>
+                <tr><td>21</td><td>Feb 15-19</td><td>Scanners & Cameras</td><td>Image capture, OCR, barcode scanners</td></tr>
+                <tr><td>22</td><td>Feb 22-26</td><td>Output Devices</td><td>Monitors, printers, speakers, actuators</td></tr>
+                <tr><td>23</td><td>Mar 1-5</td><td>Sensors & Control</td><td>Analogue vs digital sensors, ADC/DAC</td></tr>
+                <tr><td>24</td><td>Mar 8-12</td><td>Types of Software</td><td>System vs application software</td></tr>
+                <tr><td>25</td><td>Mar 15-19</td><td>Operating Systems & Interrupts</td><td>OS functions, multitasking, interrupts</td></tr>
+                <tr><td>26</td><td>Mar 22-26</td><td>Languages & Translators</td><td>Compiler vs interpreter, low/high-level</td></tr>
+                <tr><td colspan="4" style="color: #64748b; font-style: italic; text-align: center;">Spring Break - Mar 29-Apr 2</td></tr>
+                <tr><td>27</td><td>Apr 5-9</td><td>IDEs & Revision</td><td>Editors, debugging, IDEs, review</td></tr>
+
+                <!-- Term 3 -->
+                <tr style="background-color: #f0f8ff;"><td colspan="4" style="font-weight: 700; color: #0b2a4a;">TERM 3 (Weeks 28-34)</td></tr>
+                <tr><td>28</td><td>Apr 12-16</td><td>Network Hardware</td><td>NIC, router, IP assignment</td></tr>
+                <tr><td>29</td><td>Apr 19-23</td><td>MAC & IP Addresses</td><td>IPv4/IPv6, MAC structure</td></tr>
+                <tr><td>30</td><td>Apr 26-30</td><td>Internet vs Web</td><td>HTTP/HTTPS, URLs, HTML</td></tr>
+                <tr><td>31</td><td>May 3-7</td><td>Web Technologies & Cookies</td><td>DNS, servers, cookies</td></tr>
+                <tr><td>32</td><td>May 10-14</td><td>Cyber Security Threats & Solutions</td><td>Malware, phishing, DDoS, Firewalls</td></tr>
+                <tr><td>33</td><td>May 17-21</td><td>Digital Currency</td><td>Cryptocurrency, wallets, blockchain</td></tr>
+                <tr><td>34</td><td>May 24-28</td><td>Unit Revision</td><td>Review of Unit 6</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- GAPS / NOT COVERED -->
+    <div class="info-box" style="margin-top: 2rem; border-color: #f7d9d9; background: #fff5f5;">
+        <h3 style="color: #a13232;"><i class="fas fa-exclamation-triangle"></i> Topics Not Covered in Year 9</h3>
+        <p>Based on the 2026-2028 syllabus, the following topics are <strong>not included</strong> in the Year 9 Course Plan and will need to be taught in later years:</p>
+        <ul style="list-style: disc; padding-left: 20px; margin-bottom: 0;">
+            <li><strong>Topic 6:</strong> Automated and Emerging Technologies (Robotics, AI, Expert Systems)</li>
+            <li><strong>Topic 7:</strong> Algorithm design and problem-solving</li>
+            <li><strong>Topic 8:</strong> Programming</li>
+            <li><strong>Topic 9:</strong> Databases</li>
+            <li><strong>Topic 10:</strong> Boolean logic</li>
+        </ul>
+    </div>
+
+    <!-- EXAM INFO -->
+    <div class="section-head">
+        <i class="fas fa-file-alt"></i> Exam Information (0478)
+    </div>
+    <div class="exam-section">
+        <h3><i class="fas fa-graduation-cap"></i> 2026-2028 Assessment Overview</h3>
+        <ul>
+            <li>
+                <strong>Paper 1 - Computer Systems</strong>
+                1 hour 45 mins | 75 marks (50%)<br>
+                <span style="font-size: 0.9rem;">Covers Topics 1-6 (Short-answer and structured questions).</span>
+            </li>
+            <li>
+                <strong>Paper 2 - Algorithms, Programming & Logic</strong>
+                1 hour 45 mins | 75 marks (50%)<br>
+                <span style="font-size: 0.9rem;">Covers Topics 7-10 (Includes a 15-mark scenario question).</span>
+            </li>
+            <li>
+                <strong>NO Calculators permitted</strong>
+                Candidates are expected to be able to perform binary and hex conversions manually.
+            </li>
+        </ul>
+    </div>
+
+    <a href="year9.html" class="back-to-class"><i class="fas fa-arrow-left"></i> Back to Year 9 Class Page</a>
+
+</div>
+
+</body>
+</html>
