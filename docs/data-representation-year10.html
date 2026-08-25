@@ -218,4 +218,385 @@
       padding: 2px 10px;
       border-radius: 12px;
       cursor: pointer;
-      user-select:
+      user-select: none;
+      transition: background 0.2s;
+      margin-left: 6px;
+    }
+    .cover-section .teacher-edit:hover { background: #d5dce6; }
+
+    .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    /* Password Modal */
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .password-modal.active { display: flex; }
+    .password-box {
+      background: white;
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+    .password-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    .password-box input:focus { border-color: #1f6390; }
+    .password-box .btn {
+      background: #1f6390;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-box .btn:hover { background: #134f75; }
+    .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .card-grid { grid-template-columns: 1fr; }
+      .password-box { padding: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+      <div class="password-box">
+        <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
+        <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access</p>
+        <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+        <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+        <div class="error" id="pwdError"></div>
+      </div>
+    </div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="nav">
+        <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+        <a href="year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
+    </nav>
+
+    <!-- ========== HEADER ========== -->
+    <div class="main-title">
+        <i class="fas fa-code"></i> Data Representation
+    </div>
+    <div class="subhead">
+        <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
+        Year 10 · Unit 1 · How computers store and process data
+    </div>
+
+    <!-- ========== LESSON GRID ========== -->
+    <div class="section-head">
+        <i class="fas fa-calculator"></i> Lessons
+    </div>
+
+    <div class="card-grid">
+
+        <!-- Lesson 1 -->
+        <a href="Data-representation/lesson1-binary-systems.html" class="card">
+            <div class="card-header">
+                <h4>Binary Systems <span class="week-badge">Week 1</span></h4>
+            </div>
+            <p>Binary, bits/bytes, denary ↔ binary</p>
+            <div class="card-actions">
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
+            </div>
+            <div class="cover-section" onclick="event.stopPropagation();">
+                <input type="checkbox" class="cover-checkbox" data-lesson="DR1" id="cover-DR1">
+                <label for="cover-DR1">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR1">(toggle)</span>
+            </div>
+        </a>
+
+        <!-- Lesson 2 -->
+        <div class="card">
+            <div class="card-header">
+                <h4>Hexadecimal <span class="week-badge">Week 2</span></h4>
+            </div>
+            <p>Denary ↔ hex, binary ↔ hex</p>
+            <div class="card-actions">
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR2-Hexadecimal.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <button class="btn btn-locked unlock-btn" data-lesson="DR2"><i class="fas fa-lock"></i> Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="DR2" id="cover-DR2">
+                <label for="cover-DR2">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR2">(toggle)</span>
+            </div>
+        </div>
+
+        <!-- Lesson 3 -->
+        <div class="card">
+            <div class="card-header">
+                <h4>Binary Shifts &amp; Two's Complement <span class="week-badge">Week 3</span></h4>
+            </div>
+            <p>Logical shifts, two's complement</p>
+            <div class="card-actions">
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR3-Binary-Shifts.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <button class="btn btn-locked unlock-btn" data-lesson="DR3"><i class="fas fa-lock"></i> Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="DR3" id="cover-DR3">
+                <label for="cover-DR3">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR3">(toggle)</span>
+            </div>
+        </div>
+
+        <!-- Lesson 4 -->
+        <div class="card">
+            <div class="card-header">
+                <h4>ASCII &amp; Unicode <span class="week-badge">Week 4</span></h4>
+            </div>
+            <p>Character sets, ASCII vs Unicode</p>
+            <div class="card-actions">
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <button class="btn btn-locked unlock-btn" data-lesson="DR4"><i class="fas fa-lock"></i> Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="DR4" id="cover-DR4">
+                <label for="cover-DR4">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle)</span>
+            </div>
+        </div>
+
+        <!-- Lesson 5 -->
+        <div class="card">
+            <div class="card-header">
+                <h4>Representing Sound <span class="week-badge">Week 5</span></h4>
+            </div>
+            <p>Sampling, sample rate, bit-depth</p>
+            <div class="card-actions">
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <button class="btn btn-locked unlock-btn" data-lesson="DR5"><i class="fas fa-lock"></i> Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="DR5" id="cover-DR5">
+                <label for="cover-DR5">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR5">(toggle)</span>
+            </div>
+        </div>
+
+        <!-- Lesson 6 -->
+        <div class="card">
+            <div class="card-header">
+                <h4>Representing Images <span class="week-badge">Week 6</span></h4>
+            </div>
+            <p>Pixels, resolution, colour depth</p>
+            <div class="card-actions">
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <button class="btn btn-locked unlock-btn" data-lesson="DR6"><i class="fas fa-lock"></i> Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="DR6" id="cover-DR6">
+                <label for="cover-DR6">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR6">(toggle)</span>
+            </div>
+        </div>
+
+        <!-- Lesson 7 -->
+        <div class="card">
+            <div class="card-header">
+                <h4>Data Compression &amp; Revision <span class="week-badge">Week 7</span></h4>
+            </div>
+            <p>Lossy/lossless, RLE, review</p>
+            <div class="card-actions">
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <button class="btn btn-locked unlock-btn" data-lesson="DR7"><i class="fas fa-lock"></i> Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="DR7" id="cover-DR7">
+                <label for="cover-DR7">✓ Mark this lesson as covered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR7">(toggle)</span>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="divider-light">
+    <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+        <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== YEAR 10 COVER CHECKBOXES ==========
+        const checkboxes = document.querySelectorAll('.cover-checkbox');
+        const GRADE_PREFIX = 'year10_';  // <-- CHANGED from 'igcse_' to 'year10_'
+
+        checkboxes.forEach(function(cb) {
+            const lessonKey = cb.getAttribute('data-lesson');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
+            const card = cb.closest('.card');
+
+            // Load saved state
+            if (localStorage.getItem(storageKey) === 'true') {
+                cb.checked = true;
+                if (card) card.style.background = '#e6f7e6';
+            }
+
+            // Toggle button for teacher
+            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
+            if (toggleSpan) {
+                toggleSpan.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.style.background = '#e6f7e6';
+                        } else {
+                            card.style.background = '';
+                        }
+                    }
+                });
+            }
+
+            // Double-click label to toggle
+            const label = document.querySelector('label[for="' + cb.id + '"]');
+            if (label) {
+                label.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.style.background = '#e6f7e6';
+                        } else {
+                            card.style.background = '';
+                        }
+                    }
+                });
+            }
+
+            // Normal checkbox change
+            cb.addEventListener('change', function() {
+                localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
+                if (card) {
+                    if (this.checked) {
+                        card.style.background = '#e6f7e6';
+                    } else {
+                        card.style.background = '';
+                    }
+                }
+            });
+        });
+
+        // ========== PASSWORD PROTECTION ==========
+        const modal = document.getElementById('passwordModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdError = document.getElementById('pwdError');
+        const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+        let pendingPath = '';
+
+        const PDF_URLS = {
+            'DR1': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR1-Binary-Systems.pdf',
+            'DR2': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR2-Hexadecimal.pdf',
+            'DR3': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR3-Binary-Shifts.pdf',
+            'DR4': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf',
+            'DR5': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf',
+            'DR6': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf',
+            'DR7': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf'
+        };
+
+        function openModal(path) {
+            pendingPath = path;
+            pwdInput.value = '';
+            pwdError.textContent = '';
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            pendingPath = '';
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === 'teacher') {
+                if (pendingPath) {
+                    window.open(pendingPath, '_blank');
+                }
+                closeModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const lesson = this.getAttribute('data-lesson');
+                const url = PDF_URLS[lesson];
+                if (url) {
+                    openModal(url);
+                } else {
+                    alert('No lesson plan found for this lesson.');
+                }
+            });
+        });
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>
