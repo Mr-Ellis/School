@@ -101,10 +101,13 @@
       transition: 0.2s ease;
       display: flex;
       flex-direction: column;
+      text-decoration: none;
+      color: inherit;
     }
     .card:hover {
       border-color: #b6d0e8;
       box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06);
+      transform: translateY(-2px);
     }
     .card-header {
       display: flex;
@@ -158,6 +161,7 @@
       border: 1px solid transparent;
       transition: 0.15s;
       cursor: pointer;
+      pointer-events: auto;
     }
     .card-actions .btn i { font-size: 0.8rem; }
     .card-actions .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
@@ -312,23 +316,23 @@
 
     <div class="card-grid">
 
-        <!-- Lesson 1 -->
-        <div class="card">
+        <!-- Lesson 1 - LINKED to lesson page -->
+        <a href="Data-representation/lesson1-binary-systems.html" class="card">
             <div class="card-header">
                 <h4>Binary Systems <span class="week-badge">Week 1</span></h4>
             </div>
             <p>Binary, bits/bytes, denary ↔ binary</p>
             <div class="card-actions">
-                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR1-Binary-Systems.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-                <button class="btn btn-locked unlock-btn" data-lesson="DR1"><i class="fas fa-lock"></i> Lesson Plan</button>
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
+                <span class="btn btn-locked" onclick="event.stopPropagation();"><i class="fas fa-lock"></i> Lesson Plan</span>
             </div>
-            <div class="cover-section">
+            <div class="cover-section" onclick="event.stopPropagation();">
                 <input type="checkbox" class="cover-checkbox" data-lesson="DR1" id="cover-DR1">
                 <label for="cover-DR1">✓ Mark this lesson as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="DR1">(toggle)</span>
             </div>
-        </div>
+        </a>
 
         <!-- Lesson 2 -->
         <div class="card">
@@ -468,6 +472,7 @@
             if (toggleSpan) {
                 toggleSpan.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     const isChecked = !cb.checked;
                     cb.checked = isChecked;
                     localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
@@ -486,6 +491,7 @@
             if (label) {
                 label.addEventListener('dblclick', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     const isChecked = !cb.checked;
                     cb.checked = isChecked;
                     localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
@@ -560,6 +566,7 @@
         document.querySelectorAll('.unlock-btn').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 const lesson = this.getAttribute('data-lesson');
                 const url = PDF_URLS[lesson];
                 if (url) {
