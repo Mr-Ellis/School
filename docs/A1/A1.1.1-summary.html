@@ -5,247 +5,307 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A1.1.1 · CPU Architecture</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background: #f0f4fb;
-            color: #1e293b;
-            padding: 24px;
-            line-height: 1.7;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f2f6fc;
+            color: #0b1e2e;
+            padding: 1.5rem 1rem;
+            line-height: 1.6;
         }
         .container {
-            max-width: 960px;
+            max-width: 1100px;
             margin: 0 auto;
-            background: #fff;
-            padding: 40px 50px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 28px;
+            padding: 2rem 2.2rem;
+            box-shadow: 0 12px 30px rgba(0, 20, 40, 0.06);
         }
         .back-link {
             display: inline-block;
-            margin-bottom: 20px;
-            color: #b21f1f;
+            margin-bottom: 1.2rem;
+            color: #a51c1c;
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #a51c1c;
         }
         .back-link:hover {
             color: #0b2a4a;
-            text-decoration: underline;
+            border-bottom: 2px solid #0b2a4a;
         }
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
+            font-weight: 700;
             color: #0b2a4a;
-            border-bottom: 4px solid #fdbb2d;
-            padding-bottom: 10px;
-            margin-bottom: 25px;
+            letter-spacing: -0.02em;
+            border-bottom: 4px solid #f5b342;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        h1 small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #3d5f7a;
+            background: #ecf3fa;
+            padding: 0.15rem 1rem;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
         }
         h2 {
             font-size: 1.5rem;
             color: #0b2a4a;
-            margin-top: 35px;
-            margin-bottom: 15px;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
             border-left: 5px solid #b21f1f;
-            padding-left: 15px;
+            padding-left: 1rem;
         }
         h3 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #0b2a4a;
-            margin-top: 25px;
-            margin-bottom: 10px;
+            margin: 1.5rem 0 0.5rem 0;
+            font-weight: 600;
         }
         .badge {
-            display: inline-block;
             background: #b21f1f;
-            color: #fff;
+            color: white;
             font-weight: 600;
-            font-size: 0.8rem;
-            padding: 2px 12px;
-            border-radius: 20px;
+            font-size: 0.7rem;
+            padding: 2px 14px;
+            border-radius: 40px;
             text-transform: uppercase;
+            letter-spacing: 0.4px;
         }
-        .command-term {
-            background: #ebf4ff;
+        .command-box {
+            background: #eef4fc;
             border-left: 5px solid #0b2a4a;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 15px 0;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            margin: 0.8rem 0 1.2rem 0;
             font-style: italic;
+            font-size: 0.95rem;
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 1.8rem;
+            margin: 1rem 0 1.5rem;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            margin: 0.8rem 0 1.5rem;
+            border-radius: 14px;
+            border: 1px solid #e2eaf2;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         th {
             background: #0b2a4a;
             color: #fff;
             font-weight: 600;
-            padding: 12px 15px;
+            padding: 10px 14px;
             text-align: left;
         }
         td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 10px 14px;
+            border-bottom: 1px solid #e8eef4;
             vertical-align: top;
         }
-        tr:nth-child(even) { background: #f7fafc; }
-        .task-table td:first-child { font-weight: 600; color: #0b2a4a; white-space: nowrap; }
-        .extension-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 4px 15px;
-            background: #f7fafc;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 15px 0;
+        tr:last-child td { border-bottom: none; }
+        .cpu-diagram {
+            background: #f8fafc;
+            border: 1px solid #dde6ef;
+            border-radius: 18px;
+            padding: 0.8rem 0.5rem;
+            margin: 1.2rem 0;
+            text-align: center;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            overflow-x: auto;
         }
-        .extension-grid .label { font-weight: 600; color: #0b2a4a; }
-        .extension-grid .desc { color: #1e293b; }
-        .checklist {
+        .cpu-diagram pre {
+            margin: 0;
+            display: inline-block;
+            text-align: left;
+            white-space: pre;
+        }
+        .exam-tip {
+            background: #fef8e7;
+            border-left: 4px solid #f5b342;
+            padding: 0.7rem 1.2rem;
+            border-radius: 12px;
+            margin: 1.2rem 0;
+            font-size: 0.9rem;
+        }
+        .task-block {
+            background: #f6f9fe;
+            border-radius: 18px;
+            padding: 1.2rem 1.6rem;
+            margin: 1.5rem 0;
+            border: 1px solid #dde6f0;
+        }
+        .task-block ul {
             list-style: none;
             padding: 0;
-            margin: 20px 0;
-        }
-        .checklist li {
-            padding: 8px 0;
-            border-bottom: 1px solid #e2e8f0;
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
+            flex-direction: column;
+            gap: 0.5rem;
         }
-        .checklist li::before { content: none; }
-        .checklist input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #0b2a4a;
-            cursor: pointer;
-            margin-top: 3px;
-            flex-shrink: 0;
+        .task-block li {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            border-bottom: 1px dashed #dce4ed;
+            padding: 0.4rem 0;
         }
-        .checklist label { cursor: pointer; flex: 1; }
-        a {
-            color: #b21f1f;
-            text-decoration: none;
-            border-bottom: 1px dotted #b21f1f;
-        }
-        a:hover {
+        .task-block li:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
             color: #0b2a4a;
-            border-bottom: 2px solid #0b2a4a;
-        }
-        hr {
-            border: 0;
-            border-top: 2px solid #e2e8f0;
-            margin: 30px 0;
-        }
-        .footer-meta {
-            margin-top: 30px;
-            font-size: 0.85rem;
-            color: #4a5568;
+            background: #dce8f5;
+            padding: 0 10px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
             text-align: center;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 20px;
         }
+        .task-block a {
+            color: #a51c1c;
+            text-decoration: none;
+            border-bottom: 1px dotted #a51c1c;
+        }
+        .task-block a:hover { color: #0b2a4a; border-bottom: 2px solid #0b2a4a; }
+        .ext-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem 1.8rem;
+            background: #f7fafd;
+            padding: 1.2rem 1.8rem;
+            border-radius: 18px;
+            margin: 1rem 0;
+        }
+        .ext-grid .label { font-weight: 600; color: #0b2a4a; }
+        .ext-grid .desc { color: #1f3a4f; }
         .key-takeaway {
-            background: #fefcbf;
-            border-left: 5px solid #fdbb2d;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 25px 0;
+            background: #fef6e0;
+            border-left: 5px solid #f5b342;
+            padding: 0.8rem 1.5rem;
+            border-radius: 14px;
+            margin: 1.8rem 0;
             font-weight: 500;
         }
         .lesson-nav {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
+            margin-top: 2rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #dde6ef;
             flex-wrap: wrap;
             gap: 10px;
         }
-        .lesson-nav a { border-bottom: none; font-weight: 500; }
-        .cpu-diagram {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
+        .lesson-nav a { 
+            font-weight: 500; 
+            border-bottom: none;
+            color: #0b2a4a;
+            text-decoration: none;
+            border-bottom: 1px dotted #0b2a4a;
+        }
+        .lesson-nav a:hover { border-bottom: 2px solid #0b2a4a; }
+        .footer-meta {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #4f6b82;
             text-align: center;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            overflow-x: auto;
+            border-top: 1px solid #e2eaf2;
+            padding-top: 1.2rem;
         }
-        .cpu-diagram pre {
-            margin: 0;
-            white-space: pre;
-            text-align: left;
+        .sim-btn {
             display: inline-block;
+            background: #1a5f87;
+            color: white;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 0.2rem;
+            border: 1px solid transparent;
+            transition: 0.15s;
         }
-        .exam-tip {
-            background: #fef9e7;
-            border-left: 4px solid #f5b342;
-            padding: 12px 18px;
-            border-radius: 8px;
-            margin: 15px 0;
+        .sim-btn:hover {
+            background: #134f75;
+            color: white;
         }
-        .exam-tip strong { color: #0b2a4a; }
-
-        @media (max-width: 640px) {
-            .container { padding: 20px; }
+        @media (max-width: 720px) {
+            .container { padding: 1.2rem; }
             h1 { font-size: 1.8rem; }
-            table, .extension-grid { font-size: 0.85rem; }
-            .task-table td:first-child { white-space: normal; }
-            .extension-grid { grid-template-columns: 1fr; gap: 2px; }
-            .cpu-diagram { font-size: 0.7rem; padding: 12px; }
+            .grid-2col { grid-template-columns: 1fr; }
+            .ext-grid { grid-template-columns: 1fr; padding: 1rem; }
+            .cpu-diagram { font-size: 0.6rem; }
         }
     </style>
 </head>
 <body>
-
 <div class="container">
 
     <a class="back-link" href="../A1.html">← Back to A1 Unit</a>
 
-    <h1>A1.1.1 – CPU Architecture</h1>
+    <h1>A1.1.1 – CPU Architecture <small>IB CS</small></h1>
 
-    <h2>📌 Learning Objective</h2>
-    <p>By the end of this lesson, you will be able to:</p>
-    <ul>
-        <li><strong>Describe</strong> the functions and interactions of the main CPU components</li>
-        <li><strong>Identify</strong> the roles of the ALU, CU, registers, and buses</li>
-        <li><strong>Explain</strong> the difference between single-core, multi-core and co-processors</li>
-        <li><strong>Draw and label</strong> a diagram showing the relationship between CPU components</li>
-    </ul>
-
-    <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
-    <div class="command-term">
-        <strong>Describe</strong> – <em>"Give a detailed account. For each component: state what it is, what it holds or does, and how it connects to the other components."</em>
+    <div class="command-box">
+        <span class="badge">Describe</span> <strong>IB command term:</strong> <em>“Give a detailed account. For each component: state what it is, what it holds or does, and how it connects.”</em>
     </div>
 
-    <h2>🔑 Key Terms</h2>
-    <table>
-        <thead><tr><th>Component</th><th>Function</th></tr></thead>
-        <tbody>
-            <tr><td><strong>ALU</strong></td><td>Performs arithmetic (add, subtract, multiply, divide) and logical operations (AND, OR, NOT, comparisons).</td></tr>
-            <tr><td><strong>Control Unit (CU)</strong></td><td>Fetches and decodes instructions; sends control signals directing other components. Processes no data itself.</td></tr>
-            <tr><td><strong>Program Counter (PC)</strong></td><td>Holds the address of the <em>next</em> instruction to be fetched.</td></tr>
-            <tr><td><strong>Instruction Register (IR)</strong></td><td>Holds the instruction currently being decoded and executed.</td></tr>
-            <tr><td><strong>Memory Address Register (MAR)</strong></td><td>Holds the memory address about to be accessed (where).</td></tr>
-            <tr><td><strong>Memory Data Register (MDR)</strong></td><td>Holds the data read from or being written to memory (what).</td></tr>
-            <tr><td><strong>Accumulator (AC)</strong></td><td>Holds intermediate results of ALU operations.</td></tr>
-            <tr><td><strong>Address Bus</strong></td><td>Carries addresses from CPU to memory. <strong>One direction.</strong></td></tr>
-            <tr><td><strong>Data Bus</strong></td><td>Carries data between CPU and memory. <strong>Both directions.</strong></td></tr>
-            <tr><td><strong>Control Bus</strong></td><td>Carries control and timing signals between CU and other components.</td></tr>
-            <tr><td><strong>Single-core</strong></td><td>One core; one instruction stream at a time.</td></tr>
-            <tr><td><strong>Multi-core</strong></td><td>Several cores on one chip; threads run in parallel.</td></tr>
-            <tr><td><strong>Co-processor</strong></td><td>Specialist (GPU, FPU) that offloads specific work from the main CPU.</td></tr>
-        </tbody>
-    </table>
+    <!-- two column layout: learning + key terms compact -->
+    <div class="grid-2col">
+        <div>
+            <h2 style="margin-top:0;">🎯 Learning Objective</h2>
+            <ul style="padding-left:1.2rem; margin-bottom:0.5rem;">
+                <li><strong>Describe</strong> functions &amp; interactions of ALU, CU, registers, buses</li>
+                <li><strong>Differentiate</strong> single-core, multi-core, co-processors</li>
+                <li><strong>Label</strong> a CPU diagram with direction of buses</li>
+            </ul>
+            <div style="background:#e3edf9; border-radius:14px; padding:0.8rem 1.2rem; margin-top:0.8rem;">
+                <span style="font-weight:600; color:#0b2a4a;">📘 eBook:</span> 
+                <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.1.1.pdf" target="_blank" style="color:#a51c1c; border-bottom:1px dotted #a51c1c;">A1.1.1 PDF</a>
+                <span style="margin-left:0.8rem;">•</span>
+                <span style="font-weight:600; color:#0b2a4a;">📋 Lesson Plan:</span> 
+                <a href="#" style="color:#a51c1c; border-bottom:1px dotted #a51c1c;" onclick="alert('Lesson plan document (teacher only) — contact your instructor.'); return false;">view</a>
+            </div>
+        </div>
+        <div>
+            <h2 style="margin-top:0;">🔑 Key Terms (quick)</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.2rem 1rem; font-size:0.9rem;">
+                <span><strong>ALU</strong> – arithmetic &amp; logic</span>
+                <span><strong>CU</strong> – decodes, controls</span>
+                <span><strong>PC</strong> – next instruction address</span>
+                <span><strong>IR</strong> – current instruction</span>
+                <span><strong>MAR</strong> – address (where)</span>
+                <span><strong>MDR</strong> – data (what)</span>
+                <span><strong>AC</strong> – ALU results</span>
+                <span><strong>Address bus</strong> → one way</span>
+                <span><strong>Data bus</strong> ↔ two way</span>
+                <span><strong>Control bus</strong> ↔ signals</span>
+            </div>
+        </div>
+    </div>
 
+    <!-- CPU DIAGRAM (compact) -->
     <h2>🧠 CPU Diagram</h2>
     <div class="cpu-diagram">
-<pre>
+<pre style="font-size:0.7rem; line-height:1.4;">
                       Central Processing Unit (CPU)
                     ┌──────────────────────────────────┐
                     │                                  │
@@ -253,8 +313,7 @@
                     │     │ Control Unit  │────────────┼───────────┐
                     │     └───────┬───────┘            │           │
                     │             │                    │           │ Control Bus
-                    │             │                    │           │ (bidirectional)
-                    │             │ Control signals    │           │
+                    │             │ Control signals    │           │ (bidirectional)
                     │     ┌───────▼────────┐           │           │
                     │     │ Arithmetic     │           │           │
                     │     │ Logic Unit     │           │           │
@@ -299,89 +358,67 @@
                         └───────────────────┘
 </pre>
     </div>
-
     <div class="exam-tip">
-        <strong>📌 EXAM TIP:</strong> When drawing the diagram, the directions of the buses are easy marks to gain or lose. The <strong>address bus</strong> arrow points one way only (CPU → RAM). The <strong>data bus</strong> and <strong>control bus</strong> arrows point both ways. A diagram with three identical double-headed arrows tells the examiner you have memorised a shape, not understood the system.
+        <strong>📌 EXAM TIP:</strong> Address bus → one way (CPU → RAM). Data &amp; control buses → both ways. A diagram with all double-headed arrows loses marks.
     </div>
 
-    <h2>📖 Your Tasks (In Order)</h2>
-    <table class="task-table">
-        <thead><tr><th>Step</th><th>Task</th><th>What to Do</th></tr></thead>
-        <tbody>
-            <tr>
-                <td><strong>1</strong></td>
-                <td><strong>Read the eBook</strong></td>
-                <td>
-                    Read <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.1.1.pdf" target="_blank">DP Computer Science_ A 1.1.1.pdf</a>
-                    carefully. Take notes on each component and how they interact.
-                </td>
-            </tr>
-            <tr>
-                <td><strong>2</strong></td>
-                <td><strong>Complete the Starter Activity</strong></td>
-                <td>
-                    Answer the <strong>mild, medium and spicy</strong> questions from the
-                    <a href="https://docs.google.com/presentation/d/e/2PACX-1vT7J_af9SO-JYHly-q1LymBqDOunXvSprM3svIYHlb3DxCTXUYM4TOk87iGViFzDNp2dfGNkjW-QlnT/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.
-                    <br><strong>Keep your answers</strong> – you will submit all starter activity answers to <strong>Schoolbox</strong> at the end of the unit.
-                </td>
-            </tr>
-            <tr>
-                <td><strong>3</strong></td>
-                <td><strong>Teach the AI</strong></td>
-                <td>
-                    Go to <a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">RevisionDojo "Teach the AI"</a>
-                    and explain what you've learned about CPU architecture.
-                </td>
-            </tr>
-            <tr>
-                <td><strong>4</strong></td>
-                <td><strong>Extension Activities</strong></td>
-                <td>Choose from the activities below if you finish early.</td>
-            </tr>
-            <tr>
-                <td><strong>5</strong></td>
-                <td><strong>Plenary</strong></td>
-                <td>
-                    Test yourself with the <a href="https://quizlet.com" target="_blank">Quizlet flashcards</a>.
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- TASKS (no checklist) -->
+    <h2>📖 Tasks</h2>
+    <div class="task-block">
+        <ul>
+            <li><span class="task-step">1</span> <span><strong>Read eBook</strong> — <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.1.1.pdf" target="_blank">A1.1.1 PDF</a> (take notes on each component &amp; interaction)</span></li>
+            <li><span class="task-step">2</span> <span><strong>Starter</strong> — answer mild/medium/spicy questions from <a href="https://docs.google.com/presentation/d/e/2PACX-1vT7J_af9SO-JYHly-q1LymBqDOunXvSprM3svIYHlb3DxCTXUYM4TOk87iGViFzDNp2dfGNkjW-QlnT/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter</a> (save answers for Schoolbox)</span></li>
+            <li><span class="task-step">3</span> <span><strong>Teach the AI</strong> — explain CPU architecture at <a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">RevisionDojo</a></span></li>
+            <li><span class="task-step">4</span> <span><strong>Plenary</strong> — test with <a href="https://quizlet.com" target="_blank">Quizlet</a> flashcards</span></li>
+        </ul>
+        <div style="margin-top:0.6rem; display:flex; gap:0.8rem; flex-wrap:wrap; align-items:center;">
+            <span style="font-weight:600; color:#0b2a4a;">🔧 Simulator:</span>
+            <a href="https://cpusimulator.tech/" target="_blank" class="sim-btn"><i>⚙️</i> CPU Simulator</a>
+            <span style="font-size:0.85rem; color:#3d5f7a;">visualise fetch-decode-execute</span>
+        </div>
+    </div>
 
-    <h2>⭐ Extension Activities</h2>
-    <p><em>After completing all Core Tasks, choose one or more of these activities to deepen your understanding:</em></p>
-
-    <div class="extension-grid">
-        <span class="label">1. CPU Diagram</span>
-        <span class="desc">Draw and label a diagram of a CPU showing ALU, CU, registers, and buses. Explain the data flow between them. Use the diagram above as a reference.</span>
-
-        <span class="label">2. Register Match</span>
-        <span class="desc">Create a quick matching quiz: match each register (PC, IR, MAR, MDR, AC) to its function. Challenge a partner to beat your time.</span>
-
+    <!-- Extension activities -->
+    <h2>⭐ Extension</h2>
+    <div class="ext-grid">
+        <span class="label">1. Diagram practice</span>
+        <span class="desc">Draw &amp; label CPU with ALU, CU, registers, buses. Explain data flow.</span>
+        <span class="label">2. Register match</span>
+        <span class="desc">Match each register (PC, IR, MAR, MDR, AC) to its function. Challenge a partner.</span>
         <span class="label">3. Research</span>
-        <span class="desc">Research the evolution of CPU architecture from single-core to multi-core processors. Summarise your findings in one paragraph.</span>
-
-        <span class="label">4. Read the CS Wiki</span>
-        <span class="desc">Read the <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.1-describe-the-functions-and-interactions-of-the-main-cpu-components" target="_blank">CS Wiki article</a> for additional explanations and examples.</span>
+        <span class="desc">Single-core → multi-core evolution. Summarise in one paragraph.</span>
+        <span class="label">4. CS Wiki</span>
+        <span class="desc"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.1-describe-the-functions-and-interactions-of-the-main-cpu-components" target="_blank" style="color:#a51c1c;">CS Wiki article</a> for extra examples.</span>
     </div>
 
-    <h2>💡 Key Takeaway</h2>
     <div class="key-takeaway">
-        <p><em>"The CPU is the brain of the computer – understanding its architecture is essential for understanding how software executes."</em></p>
+        <p>💡 <em>“The CPU is the brain of the computer – understanding its architecture is essential for understanding how software executes.”</em></p>
     </div>
 
-    <h2>📌 Checklist</h2>
-    <p><em>Track your progress by checking off each task as you complete it:</em></p>
-    <ul class="checklist" id="progress-checklist">
-        <li><input type="checkbox" class="check-item" data-task="read-ebook" id="task-read"><label for="task-read">Read the eBook</label></li>
-        <li><input type="checkbox" class="check-item" data-task="starter" id="task-starter"><label for="task-starter">Answered the mild, medium and spicy questions</label></li>
-        <li><input type="checkbox" class="check-item" data-task="teach-ai" id="task-teach"><label for="task-teach">Used <strong>RevisionDojo "Teach the AI"</strong> to explain concepts</label></li>
-        <li><input type="checkbox" class="check-item" data-task="quizlet" id="task-quizlet"><label for="task-quizlet">Practiced with <strong>Quizlet</strong> flashcards</label></li>
-        <li><input type="checkbox" class="check-item" data-task="extension" id="task-extension"><label for="task-extension">Completed at least one <strong>Extension Activity</strong></label></li>
-    </ul>
+    <!-- detailed table from ebook -->
+    <h2>📋 Component Reference (from eBook)</h2>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Component</th><th>Function</th></tr></thead>
+            <tbody>
+                <tr><td><strong>ALU</strong></td><td>Arithmetic (add, sub, mul, div) and logical (AND, OR, NOT, comparisons).</td></tr>
+                <tr><td><strong>Control Unit (CU)</strong></td><td>Fetches &amp; decodes instructions; sends control signals. Processes no data itself.</td></tr>
+                <tr><td><strong>Program Counter (PC)</strong></td><td>Holds address of <em>next</em> instruction to fetch.</td></tr>
+                <tr><td><strong>Instruction Register (IR)</strong></td><td>Holds instruction currently being decoded &amp; executed.</td></tr>
+                <tr><td><strong>Memory Address Register (MAR)</strong></td><td>Holds memory address about to be accessed (where).</td></tr>
+                <tr><td><strong>Memory Data Register (MDR)</strong></td><td>Holds data read from / written to memory (what).</td></tr>
+                <tr><td><strong>Accumulator (AC)</strong></td><td>Holds intermediate results of ALU operations.</td></tr>
+                <tr><td><strong>Address Bus</strong></td><td>Carries addresses CPU → memory. <strong>One direction.</strong></td></tr>
+                <tr><td><strong>Data Bus</strong></td><td>Carries data between CPU and memory. <strong>Both directions.</strong></td></tr>
+                <tr><td><strong>Control Bus</strong></td><td>Carries control/timing signals between CU and components.</td></tr>
+                <tr><td><strong>Single-core</strong></td><td>One core; one instruction stream at a time.</td></tr>
+                <tr><td><strong>Multi-core</strong></td><td>Several cores on one chip; threads run in parallel.</td></tr>
+                <tr><td><strong>Co-processor</strong></td><td>Specialist (GPU, FPU) offloads specific work from main CPU.</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-    <hr>
-
+    <!-- navigation -->
     <div class="lesson-nav">
         <span></span>
         <a href="A1.1.2.html">Next Lesson: GPU Architecture →</a>
@@ -390,21 +427,7 @@
     <div class="footer-meta">
         A1.1.1 – CPU Architecture • IB Computer Science • Year 12
     </div>
+
 </div>
-
-<script>
-    (function() {
-        const checkboxes = document.querySelectorAll('.check-item');
-        checkboxes.forEach(function(cb) {
-            const storageKey = 'a1_1_1_' + cb.dataset.task;
-            const saved = localStorage.getItem(storageKey);
-            if (saved === 'true') cb.checked = true;
-            cb.addEventListener('change', function() {
-                localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
-            });
-        });
-    })();
-</script>
-
 </body>
 </html>
