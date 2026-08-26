@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A1.1.1 - CPU Architecture</title>
+    <title>A1.1.1 · CPU Architecture</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -46,6 +46,12 @@
             margin-bottom: 15px;
             border-left: 5px solid #b21f1f;
             padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
         }
         .badge {
             display: inline-block;
@@ -157,16 +163,41 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .lesson-nav a {
-            border-bottom: none;
-            font-weight: 500;
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
+        .cpu-diagram {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
         }
+        .cpu-diagram pre {
+            margin: 0;
+            white-space: pre;
+            text-align: left;
+            display: inline-block;
+        }
+        .exam-tip {
+            background: #fef9e7;
+            border-left: 4px solid #f5b342;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .exam-tip strong { color: #0b2a4a; }
+
         @media (max-width: 640px) {
             .container { padding: 20px; }
             h1 { font-size: 1.8rem; }
             table, .extension-grid { font-size: 0.85rem; }
             .task-table td:first-child { white-space: normal; }
             .extension-grid { grid-template-columns: 1fr; gap: 2px; }
+            .cpu-diagram { font-size: 0.7rem; padding: 12px; }
         }
     </style>
 </head>
@@ -174,34 +205,104 @@
 
 <div class="container">
 
-    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+    <a class="back-link" href="../A1.html">← Back to A1 Unit</a>
 
     <h1>A1.1.1 – CPU Architecture</h1>
 
     <h2>📌 Learning Objective</h2>
     <p>By the end of this lesson, you will be able to:</p>
     <ul>
-        <li><strong>Describe</strong> the main components of a CPU (ALU, CU, registers, cache)</li>
-        <li><strong>Explain</strong> the role of registers in instruction execution</li>
-        <li><strong>Analyse</strong> how data is processed inside a CPU pipeline</li>
+        <li><strong>Describe</strong> the functions and interactions of the main CPU components</li>
+        <li><strong>Identify</strong> the roles of the ALU, CU, registers, and buses</li>
+        <li><strong>Explain</strong> the difference between single-core, multi-core and co-processors</li>
+        <li><strong>Draw and label</strong> a diagram showing the relationship between CPU components</li>
     </ul>
 
     <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
     <div class="command-term">
-        <strong>Describe</strong> – <em>"Give a detailed account or picture of a situation, event, pattern or process."</em>
+        <strong>Describe</strong> – <em>"Give a detailed account. For each component: state what it is, what it holds or does, and how it connects to the other components."</em>
     </div>
 
     <h2>🔑 Key Terms</h2>
     <table>
-        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <thead><tr><th>Component</th><th>Function</th></tr></thead>
         <tbody>
-            <tr><td><strong>ALU</strong></td><td>Arithmetic Logic Unit – performs arithmetic and logical operations.</td></tr>
-            <tr><td><strong>Control Unit (CU)</strong></td><td>Directs the operation of the processor by decoding instructions and controlling data flow.</td></tr>
-            <tr><td><strong>Registers</strong></td><td>Small, fast storage locations inside the CPU used to hold data and instructions during execution.</td></tr>
-            <tr><td><strong>Cache Memory</strong></td><td>Small, high-speed memory located close to the CPU to reduce access time to frequently used data.</td></tr>
-            <tr><td><strong>Pipeline</strong></td><td>A technique where multiple instructions are overlapped in execution to improve throughput.</td></tr>
+            <tr><td><strong>ALU</strong></td><td>Performs arithmetic (add, subtract, multiply, divide) and logical operations (AND, OR, NOT, comparisons).</td></tr>
+            <tr><td><strong>Control Unit (CU)</strong></td><td>Fetches and decodes instructions; sends control signals directing other components. Processes no data itself.</td></tr>
+            <tr><td><strong>Program Counter (PC)</strong></td><td>Holds the address of the <em>next</em> instruction to be fetched.</td></tr>
+            <tr><td><strong>Instruction Register (IR)</strong></td><td>Holds the instruction currently being decoded and executed.</td></tr>
+            <tr><td><strong>Memory Address Register (MAR)</strong></td><td>Holds the memory address about to be accessed (where).</td></tr>
+            <tr><td><strong>Memory Data Register (MDR)</strong></td><td>Holds the data read from or being written to memory (what).</td></tr>
+            <tr><td><strong>Accumulator (AC)</strong></td><td>Holds intermediate results of ALU operations.</td></tr>
+            <tr><td><strong>Address Bus</strong></td><td>Carries addresses from CPU to memory. <strong>One direction.</strong></td></tr>
+            <tr><td><strong>Data Bus</strong></td><td>Carries data between CPU and memory. <strong>Both directions.</strong></td></tr>
+            <tr><td><strong>Control Bus</strong></td><td>Carries control and timing signals between CU and other components.</td></tr>
+            <tr><td><strong>Single-core</strong></td><td>One core; one instruction stream at a time.</td></tr>
+            <tr><td><strong>Multi-core</strong></td><td>Several cores on one chip; threads run in parallel.</td></tr>
+            <tr><td><strong>Co-processor</strong></td><td>Specialist (GPU, FPU) that offloads specific work from the main CPU.</td></tr>
         </tbody>
     </table>
+
+    <h2>🧠 CPU Diagram</h2>
+    <div class="cpu-diagram">
+<pre>
+                      Central Processing Unit (CPU)
+                    ┌──────────────────────────────────┐
+                    │                                  │
+                    │     ┌───────────────┐            │
+                    │     │ Control Unit  │────────────┼───────────┐
+                    │     └───────┬───────┘            │           │
+                    │             │                    │           │ Control Bus
+                    │             │                    │           │ (bidirectional)
+                    │             │ Control signals    │           │
+                    │     ┌───────▼────────┐           │           │
+                    │     │ Arithmetic     │           │           │
+                    │     │ Logic Unit     │           │           │
+                    │     │    (ALU)       │           │           │
+                    │     └───────┬────────┘           │           │
+                    │             │                    │           │
+                    │     ┌───────▼────────┐           │           │
+                    │     │  Accumulator   │           │           │
+                    │     │     (AC)       │           │           │
+                    │     └───────┬────────┘           │           │
+                    │             │                    │           │
+                    │ ┌───────────▼───────────┐        │           │
+                    │ │                       │        │           │
+                    │ │  Internal Registers   │        │           │
+                    │ │ ┌────────┬──────────┐ │        │           │
+                    │ │ │   IR   │    PC    │ │        │           │
+                    │ │ └────────┴──────────┘ │        │           │
+                    │ │ ┌────────┬──────────┐ │        │           │
+                    │ │ │  MAR   │   MDR    │ │        │           │
+                    │ │ └────────┴──────────┘ │        │           │
+                    │ └───────────┬───────────┘        │           │
+                    └─────────────┼────────────────────┘           │
+                                  │                                │
+                                  │ Address Bus                    │
+                                  │ (unidirectional)               │
+                                  │                                │
+                                  │      ┌──────────────────┐      │
+                                  ├─────►│ Memory Controller│◄─────┤
+                                  │      └────────┬─────────┘      │
+                                  │               │                │
+                                  │ Data Bus      │                │
+                                  │ (bidirectional)                │
+                                  │               │                │
+                        ┌─────────▼─────────┐     │                │
+                        │ Primary Memory    │◄────┘                │
+                        │       (RAM)       │                      │
+                        └───────────────────┘                      │
+                                                                   │
+                        ┌───────────────────┐                      │
+                        │ Input / Output    │◄─────────────────────┘
+                        │     Devices       │
+                        └───────────────────┘
+</pre>
+    </div>
+
+    <div class="exam-tip">
+        <strong>📌 EXAM TIP:</strong> When drawing the diagram, the directions of the buses are easy marks to gain or lose. The <strong>address bus</strong> arrow points one way only (CPU → RAM). The <strong>data bus</strong> and <strong>control bus</strong> arrows point both ways. A diagram with three identical double-headed arrows tells the examiner you have memorised a shape, not understood the system.
+    </div>
 
     <h2>📖 Your Tasks (In Order)</h2>
     <table class="task-table">
@@ -212,7 +313,7 @@
                 <td><strong>Read the eBook</strong></td>
                 <td>
                     Read <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.1.1.pdf" target="_blank">DP Computer Science_ A 1.1.1.pdf</a>
-                    carefully. Take notes on CPU components and their functions.
+                    carefully. Take notes on each component and how they interact.
                 </td>
             </tr>
             <tr>
@@ -248,15 +349,20 @@
     </table>
 
     <h2>⭐ Extension Activities</h2>
+    <p><em>After completing all Core Tasks, choose one or more of these activities to deepen your understanding:</em></p>
+
     <div class="extension-grid">
         <span class="label">1. CPU Diagram</span>
-        <span class="desc">Draw and label a diagram of a CPU showing ALU, CU, registers, and cache. Explain the data flow between them.</span>
+        <span class="desc">Draw and label a diagram of a CPU showing ALU, CU, registers, and buses. Explain the data flow between them. Use the diagram above as a reference.</span>
 
-        <span class="label">2. Pipeline Simulation</span>
-        <span class="desc">Use a pipelining simulator to see how overlapping instructions improves throughput. Write a brief summary.</span>
+        <span class="label">2. Register Match</span>
+        <span class="desc">Create a quick matching quiz: match each register (PC, IR, MAR, MDR, AC) to its function. Challenge a partner to beat your time.</span>
 
         <span class="label">3. Research</span>
-        <span class="desc">Research the evolution of CPU architecture from single-core to multi-core processors. Summarise your findings.</span>
+        <span class="desc">Research the evolution of CPU architecture from single-core to multi-core processors. Summarise your findings in one paragraph.</span>
+
+        <span class="label">4. Read the CS Wiki</span>
+        <span class="desc">Read the <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.1-describe-the-functions-and-interactions-of-the-main-cpu-components" target="_blank">CS Wiki article</a> for additional explanations and examples.</span>
     </div>
 
     <h2>💡 Key Takeaway</h2>
@@ -265,6 +371,7 @@
     </div>
 
     <h2>📌 Checklist</h2>
+    <p><em>Track your progress by checking off each task as you complete it:</em></p>
     <ul class="checklist" id="progress-checklist">
         <li><input type="checkbox" class="check-item" data-task="read-ebook" id="task-read"><label for="task-read">Read the eBook</label></li>
         <li><input type="checkbox" class="check-item" data-task="starter" id="task-starter"><label for="task-starter">Answered the mild, medium and spicy questions</label></li>
@@ -298,5 +405,6 @@
         });
     })();
 </script>
+
 </body>
 </html>
