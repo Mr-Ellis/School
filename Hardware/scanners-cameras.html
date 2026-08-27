@@ -520,13 +520,6 @@
             <span style="display:block; font-size:0.6rem; color:#6b7f8f; margin-top:4px;">Left Guard · Manufacturer · Center Guard · Product · Right Guard</span>
         </div>
 
-        <!-- ===== BARCODE VIDEO ===== -->
-        <div class="activity-box" style="border-color: #b8943e;">
-            <strong>📺 Video – How Barcodes Work</strong>
-            <p>Watch this video to understand how barcode readers work and the difference between UPC-A and Code 128.</p>
-            <a href="https://www.youtube.com/watch?v=2rsbuYXf4s0" target="_blank" class="btn"><i class="fas fa-play"></i> Watch Video</a>
-        </div>
-
         <h5>Why Use Barcodes?</h5>
         <ul>
             <li>Faster to scan products than enter a price in to a till</li>
@@ -598,13 +591,6 @@
             </div>
         </div>
 
-        <!-- ===== 3D SCANNING VIDEO ===== -->
-        <div class="activity-box" style="border-color: #b8943e;">
-            <strong>📺 Video – 3D Scanning</strong>
-            <p>Watch this short video to see how 3D scanning works in practice, using a laser to create a digital model of an object.</p>
-            <a href="https://www.youtube.com/watch?v=K8n0H3VvZzI" target="_blank" class="btn"><i class="fas fa-play"></i> Watch Video</a>
-        </div>
-
         <h4>📷 Digital Cameras</h4>
         <p>Digital cameras focus light onto a <strong>CCD sensor</strong> (Charge-Coupled Device). The CCD breaks up the image into a grid of pixels.</p>
         <ol>
@@ -620,7 +606,6 @@
             <ul style="margin-bottom:0;">
                 <li><strong>Task 1:</strong> Barcode and QR code questions</li>
                 <li><strong>Task 2:</strong> Digital camera questions</li>
-                <li><strong>Task 3:</strong> Optional extension activity (ask your teacher)</li>
             </ul>
         </div>
 
@@ -628,10 +613,10 @@
         <h4>🔁 Plenary – Which Technology?</h4>
         <p>With a partner, give at least <strong>two</strong> reasons why the following input devices are used:</p>
         <ul>
-            <li><strong>2D and 3D scanners</strong> – 2D: to scan photos, to photocopy, to send a fax; 3D: MRI scan, scanning objects to create computer models</li>
-            <li><strong>Barcode scanners</strong> – checkouts, tracking packages</li>
-            <li><strong>QR code readers</strong> – restaurant menus, advertising, website links</li>
-            <li><strong>Digital cameras</strong> – photography, security cameras, video conferencing</li>
+            <li><strong>2D and 3D scanners</strong></li>
+            <li><strong>Barcode scanners</strong></li>
+            <li><strong>QR code readers</strong></li>
+            <li><strong>Digital cameras</strong></li>
         </ul>
         <p style="font-size:0.85rem; color:#475569; margin-top:0.5rem;"><i class="fas fa-lightbulb" style="color:#f5b342;"></i> <strong>Final question:</strong> Which technology do you think has most revolutionised our lives? There is no right or wrong answer – justify your choice!</p>
 
@@ -717,4 +702,130 @@
     </div>
 
     <hr class="divider-light">
-    <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 
+    <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+        <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== COVER CHECKBOXES ==========
+        const checkboxes = document.querySelectorAll('.cover-checkbox');
+        const GRADE_PREFIX = 'year10_';
+
+        checkboxes.forEach(function(cb) {
+            const lessonKey = cb.getAttribute('data-lesson');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
+            const card = cb.closest('.card');
+
+            if (localStorage.getItem(storageKey) === 'true') {
+                cb.checked = true;
+                if (card) card.style.background = '#e6f7e6';
+            }
+
+            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
+            if (toggleSpan) {
+                toggleSpan.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.style.background = '#e6f7e6';
+                        } else {
+                            card.style.background = '';
+                        }
+                    }
+                });
+            }
+
+            cb.addEventListener('change', function() {
+                localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
+                if (card) {
+                    if (this.checked) {
+                        card.style.background = '#e6f7e6';
+                    } else {
+                        card.style.background = '';
+                    }
+                }
+            });
+        });
+
+        // ========== PASSWORD PROTECTION ==========
+        const modal = document.getElementById('passwordModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdError = document.getElementById('pwdError');
+        const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+        let pendingPath = '';
+
+        const PDF_URLS = {
+            'HW2': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/4%20Inputs-outputs/Lesson%20Plan%202.docx'
+        };
+
+        function openModal(path) {
+            pendingPath = path;
+            pwdInput.value = '';
+            pwdError.textContent = '';
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            pendingPath = '';
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === 'teacher') {
+                if (pendingPath) {
+                    window.open(pendingPath, '_blank');
+                }
+                closeModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const lesson = this.getAttribute('data-lesson');
+                const url = PDF_URLS[lesson];
+                if (url) {
+                    openModal(url);
+                } else {
+                    alert('No lesson plan found for this lesson.');
+                }
+            });
+        });
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>
