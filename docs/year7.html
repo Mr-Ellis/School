@@ -1,11 +1,512 @@
-<nav class="back-link">
-    <a href="index.html">← Back to Main Page</a>
-</nav>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year 7 · IGCSE Computer Science</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
 
-<section class="unit-index">
-    <h2>Year 7 Unit Pages</h2>
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
 
-    <div class="unit-grid">
-        <!-- Add Year 7 subpages here later -->
+    /* --- Password Overlay --- */
+    .password-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .password-overlay.hidden { display: none; }
+    .password-box {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem 3rem;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h2 { color: #0b2a4a; margin-bottom: 0.5rem; font-size: 1.6rem; }
+    .password-box p { color: #475569; font-size: 0.95rem; margin-bottom: 1.5rem; }
+    .password-box input[type="password"] {
+      width: 100%; padding: 0.8rem 1rem; border: 2px solid #d4e0ec; border-radius: 60px;
+      font-size: 1rem; margin-bottom: 1rem; outline: none;
+    }
+    .password-box input[type="password"]:focus { border-color: #1f6390; }
+    .password-box .btn {
+      background: #1f6390; color: white; border: none; padding: 0.7rem 2rem;
+      border-radius: 60px; font-size: 1rem; font-weight: 600; cursor: pointer;
+    }
+    .password-box .btn:hover { background: #134f75; }
+    .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #2a6f97; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
+
+    /* ------ intro card (opens year7-intro.html) ------ */
+    .intro-card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.8rem 2.2rem;
+      margin-bottom: 2.5rem;
+      border: 1px solid #d4e3f0;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      transition: 0.25s ease;
+    }
+    .intro-card:hover {
+      border-color: #b0cbe2;
+      box-shadow: 0 10px 28px rgba(0, 32, 64, 0.08);
+    }
+    .intro-card .intro-text {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .intro-card .intro-text i {
+      font-size: 2.2rem;
+      color: #0b2a4a;
+      background: #e9eff8;
+      padding: 0.6rem;
+      border-radius: 60px;
+    }
+    .intro-card .intro-text h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #0b2a4a;
+    }
+    .intro-card .intro-text p {
+      color: #475569;
+      font-size: 0.95rem;
+      margin-top: 0.1rem;
+    }
+    .intro-card .intro-btn {
+      background: #1a5f87;
+      color: white;
+      padding: 0.6rem 1.6rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: 0.2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .intro-card .intro-btn:hover {
+      background: #134f75;
+      transform: translateY(-2px);
+    }
+
+    .unit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .unit-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem 1.5rem 1.5rem;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0,0,0,0.02);
+      border: 1px solid #e5edf5;
+      transition: 0.25s ease;
+      text-decoration: none;
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .unit-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(to right, #2a6f97, #7bb3ff);
+      opacity: 0;
+      transition: 0.3s;
+    }
+    .unit-card:hover {
+      border-color: #b6d0e8;
+      box-shadow: 0 12px 30px rgba(0, 32, 64, 0.08);
+      transform: translateY(-3px);
+    }
+    .unit-card:hover::before { opacity: 1; }
+
+    .unit-card.completed {
+      background: #e6f7e6;
+      border-color: #2d8f2d;
+    }
+    .unit-card.completed::before {
+      background: linear-gradient(to right, #2d8f2d, #4caf50);
+      opacity: 1;
+    }
+    .unit-card.completed .cover-status label {
+      color: #2d8f2d;
+      font-weight: 600;
+    }
+    .unit-card.completed .cover-status .check-icon {
+      color: #2d8f2d;
+    }
+
+    .unit-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .unit-card h3 i {
+      color: #2a6f97;
+      font-size: 1.1rem;
+      width: 1.6rem;
+    }
+    .unit-card .unit-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.15rem 0.7rem;
+      border-radius: 40px;
+      background: #dceaf7;
+      color: #13416b;
+      margin-left: 6px;
+    }
+    .unit-card .unit-badge.hl {
+      background: #f7d9d9;
+      color: #a13232;
+    }
+    .unit-card .unit-badge.core {
+      display: none;
+    }
+
+    .unit-card .cover-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      color: #475569;
+      padding-top: 0.8rem;
+      border-top: 1px solid #eef2f6;
+    }
+    .unit-card .cover-status .check-icon {
+      font-size: 1rem;
+      color: #b6cfe5;
+      transition: 0.2s;
+    }
+    .unit-card.completed .cover-status .check-icon {
+      color: #2d8f2d;
+    }
+
+    .unit-card .arrow {
+      margin-left: auto;
+      color: #b6cfe5;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    .unit-card:hover .arrow {
+      color: #2a6f97;
+      transform: translateX(3px);
+    }
+    .unit-card.completed .arrow {
+      color: #2d8f2d;
+    }
+
+    .divider-light { margin: 3rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .unit-grid { grid-template-columns: 1fr; }
+      .intro-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .intro-card .intro-btn { align-self: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ========== PASSWORD OVERLAY ========== -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-box">
+            <h2>🔒 Protected Page</h2>
+            <p>Enter the password to access Year 7 resources.</p>
+            <input type="password" id="passwordInput" placeholder="Enter password...">
+            <button class="btn" id="unlockBtn">Unlock</button>
+            <div class="error" id="passwordError"></div>
+        </div>
     </div>
-</section>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="nav">
+        <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+        <a href="index.html"><i class="fas fa-arrow-left"></i> Main Page</a>
+    </nav>
+
+    <!-- ========== HEADER ========== -->
+    <div class="main-title">
+        <i class="fas fa-layer-group"></i> Year 7 · Units
+    </div>
+    <div class="subhead">
+        <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
+        track your progress across all Year 7 topics
+    </div>
+
+    <!-- ========== INTRO CARD (opens year7-intro.html) ========== -->
+    <div class="intro-card">
+        <div class="intro-text">
+            <i class="fas fa-file-alt"></i>
+            <div>
+                <h2>📘 Year 7 Course Introduction</h2>
+                <p>Full syllabus breakdown, exam info, weekly topics &amp; more.</p>
+            </div>
+        </div>
+        <a href="year7-intro.html" class="intro-btn">
+            <i class="fas fa-arrow-right"></i> Open Intro
+        </a>
+    </div>
+
+    <!-- ========== UNIT GRID ========== -->
+    <div class="unit-grid">
+
+        <!-- Unit 1 - Block it out -->
+        <a class="unit-card" href="unit7-1-block-it-out.html" data-unit="Y7U1">
+            <h3><i class="fas fa-cubes"></i> Block it out</h3>
+            <div class="unit-badge">Moving from blocks to text</div>
+            <div class="cover-status">
+                <span class="check-icon"><i class="fas fa-circle"></i></span>
+                <label>Not started</label>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+        </a>
+
+        <!-- Unit 2 - Decomposing problems -->
+        <a class="unit-card" href="unit7-2-decomposing.html" data-unit="Y7U2">
+            <h3><i class="fas fa-puzzle-piece"></i> Decomposing problems</h3>
+            <div class="unit-badge">Creating a smart solution</div>
+            <div class="cover-status">
+                <span class="check-icon"><i class="fas fa-circle"></i></span>
+                <label>Not started</label>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+        </a>
+
+        <!-- Unit 3 - Connections are made -->
+        <a class="unit-card" href="unit7-3-connections.html" data-unit="Y7U3">
+            <h3><i class="fas fa-wifi"></i> Connections are made</h3>
+            <div class="unit-badge">Accessing the internet</div>
+            <div class="cover-status">
+                <span class="check-icon"><i class="fas fa-circle"></i></span>
+                <label>Not started</label>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+        </a>
+
+        <!-- Unit 4 - Power of data -->
+        <a class="unit-card" href="unit7-4-data-modelling.html" data-unit="Y7U4">
+            <h3><i class="fas fa-database"></i> The power of data</h3>
+            <div class="unit-badge">Using data modelling</div>
+            <div class="cover-status">
+                <span class="check-icon"><i class="fas fa-circle"></i></span>
+                <label>Not started</label>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+        </a>
+
+        <!-- Unit 5 - Living with AI -->
+        <a class="unit-card" href="unit7-5-living-with-ai.html" data-unit="Y7U5">
+            <h3><i class="fas fa-robot"></i> Living with AI</h3>
+            <div class="unit-badge">Digital data</div>
+            <div class="cover-status">
+                <span class="check-icon"><i class="fas fa-circle"></i></span>
+                <label>Not started</label>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+        </a>
+
+        <!-- Unit 6 - Sequencing & pattern recognition -->
+        <a class="unit-card" href="unit7-6-sequencing.html" data-unit="Y7U6">
+            <h3><i class="fas fa-stream"></i> Sequencing &amp; pattern</h3>
+            <div class="unit-badge">Getting the message across</div>
+            <div class="cover-status">
+                <span class="check-icon"><i class="fas fa-circle"></i></span>
+                <label>Not started</label>
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            </div>
+        </a>
+
+    </div>
+
+    <hr class="divider-light">
+    <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+        <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== PASSWORD PROTECTION ==========
+        const CORRECT_PASSWORD = 'password123';
+
+        const overlay = document.getElementById('passwordOverlay');
+        const passwordInput = document.getElementById('passwordInput');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const errorMsg = document.getElementById('passwordError');
+
+        if (sessionStorage.getItem('year7_unlocked') === 'true') {
+            overlay.classList.add('hidden');
+        }
+
+        function unlockPage() {
+            const entered = passwordInput.value.trim();
+            if (entered === CORRECT_PASSWORD) {
+                overlay.classList.add('hidden');
+                sessionStorage.setItem('year7_unlocked', 'true');
+                errorMsg.textContent = '';
+            } else {
+                errorMsg.textContent = '❌ Incorrect password. Please try again.';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        unlockBtn.addEventListener('click', unlockPage);
+
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                unlockPage();
+            }
+        });
+
+        if (!sessionStorage.getItem('year7_unlocked')) {
+            passwordInput.focus();
+        }
+
+        // ========== UNIT COMPLETION CHECKER ==========
+        const GRADE_PREFIX = 'year7_';
+
+        // For Year 7, we use a simple "unit covered" flag per unit.
+        // In a real scenario you could map lesson keys, but we keep it simple.
+        const unitKeys = ['Y7U1', 'Y7U2', 'Y7U3', 'Y7U4', 'Y7U5', 'Y7U6'];
+
+        function checkUnitCompletion(unitKey) {
+            const unitCheckKey = GRADE_PREFIX + 'covered_' + unitKey;
+            return localStorage.getItem(unitCheckKey) === 'true';
+        }
+
+        function updateAllUnitCards() {
+            const unitCards = document.querySelectorAll('.unit-card');
+            unitCards.forEach(function(card) {
+                const unitKey = card.getAttribute('data-unit');
+                if (!unitKey) return;
+                const isComplete = checkUnitCompletion(unitKey);
+                const statusLabel = card.querySelector('.cover-status label');
+                const checkIcon = card.querySelector('.check-icon i');
+                if (isComplete) {
+                    card.classList.add('completed');
+                    if (statusLabel) statusLabel.textContent = 'Completed ✓';
+                    if (checkIcon) checkIcon.className = 'fas fa-check-circle';
+                } else {
+                    card.classList.remove('completed');
+                    if (statusLabel) statusLabel.textContent = 'Not started';
+                    if (checkIcon) checkIcon.className = 'fas fa-circle';
+                }
+            });
+        }
+
+        updateAllUnitCards();
+
+        window.addEventListener('storage', function(e) {
+            if (e.key && e.key.startsWith(GRADE_PREFIX)) {
+                updateAllUnitCards();
+            }
+        });
+
+        setInterval(updateAllUnitCards, 2000);
+    })();
+</script>
+
+</body>
+</html>
