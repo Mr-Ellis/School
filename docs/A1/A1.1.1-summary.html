@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A1.1.2 - GPU Architecture</title>
+    <title>A1.1.1 · CPU Architecture</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -28,7 +28,10 @@
             text-decoration: none;
             font-weight: 500;
         }
-        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
         h1 {
             font-size: 2.2rem;
             color: #0b2a4a;
@@ -132,6 +135,14 @@
             gap: 10px;
         }
         .lesson-nav a { border-bottom: none; font-weight: 500; }
+        .exam-tip {
+            background: #fef9e7;
+            border-left: 4px solid #f5b342;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .exam-tip strong { color: #0b2a4a; }
         
         /* Blooket starter */
         .blooket-box {
@@ -161,7 +172,6 @@
         }
         .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
         
-        /* Task styles matching the image */
         .task-block {
             background: #f8fafc;
             border-radius: 14px;
@@ -191,7 +201,6 @@
         .task-row .task-desc { flex: 1; }
         .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
         
-        /* Task 2 – green background */
         .task-row.task-starter {
             background: #e6f5e6;
             border-left: 4px solid #2d7d46;
@@ -201,6 +210,21 @@
         .task-row.task-starter .task-desc strong {
             color: #1a6b33;
         }
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
         
         .task-1-resources {
             background: #f1f6fc;
@@ -234,21 +258,44 @@
         }
         .task-1-resources .teach-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
         
-        .code-lab-link {
-            background: #1a5f87;
+        .ebook-box {
+            background: #fef9e7;
+            border: 2px solid #fdbb2d;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 20px;
+        }
+        .ebook-box .ebook-btn {
+            background: #0b2a4a;
             color: white;
-            padding: 2px 14px;
+            padding: 6px 20px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             display: inline-block;
-            margin: 4px 0;
         }
-        .code-lab-link a {
+        .ebook-box .ebook-btn a {
             color: white;
-            border-bottom: 1px solid rgba(255,255,255,0.4);
+            border-bottom: none;
         }
-        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+        .ebook-box .ebook-btn a:hover { color: #fdbb2d; border-bottom: none; }
+        
+        .starter-icon {
+            background: #fdbb2d;
+            color: #0b2a4a;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
         
         @media (max-width: 640px) {
             .container { padding: 20px; }
@@ -257,6 +304,7 @@
             .extension-grid { grid-template-columns: 1fr; gap: 2px; }
             .task-1-resources { flex-direction: column; align-items: flex-start; }
             .blooket-box { flex-direction: column; align-items: flex-start; }
+            .ebook-box { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -264,107 +312,137 @@
 
 <div class="container">
 
-    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+    <a class="back-link" href="../A1.html">← Back to A1 Unit</a>
 
-    <h1>A1.1.2 – GPU Architecture</h1>
+    <h1>A1.1.1 – CPU Architecture</h1>
 
     <h2>📌 Learning Objective</h2>
     <p>By the end of this lesson, you will be able to:</p>
     <ul>
-        <li><strong>Explain</strong> the role and architecture of a GPU</li>
-        <li><strong>Compare</strong> GPUs with CPUs in terms of design and use cases</li>
-        <li><strong>Discuss</strong> how GPUs accelerate machine learning and graphics</li>
+        <li><strong>Describe</strong> the functions and interactions of the main CPU components</li>
+        <li><strong>Identify</strong> the roles of the ALU, CU, registers, and buses</li>
+        <li><strong>Explain</strong> the difference between single-core, multi-core and co-processors</li>
     </ul>
 
-    <h2>🎯 IB Command Term: <span class="badge">Explain</span></h2>
+    <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
     <div class="command-term">
-        <strong>Explain</strong> – <em>"Give a detailed account including reasons or causes."</em>
+        <strong>Describe</strong> – <em>"Give a detailed account. For each component: state what it is, what it holds or does, and how it connects to the other components."</em>
     </div>
 
     <!-- Blooket Starter Activity -->
     <div class="blooket-box">
-        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket Brawl</span>
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket Quiz</span>
         <span style="color:#3d5f7a;">Test your current knowledge before we begin!</span>
-        <span class="blooket-btn"><a href="https://play.blooket.com/host/brawl?id=698d9a86f09562df04f5c8ce" target="_blank">🚀 Launch Blooket</a></span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/hack?id=698d9a86f09562df04f5c8ce" target="_blank">🚀 Launch Blooket</a></span>
     </div>
 
     <h2>🔑 Key Terms</h2>
     <table>
-        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <thead><tr><th>Component</th><th>Function</th></tr></thead>
         <tbody>
-            <tr><td><strong>GPU</strong></td><td>Graphics Processing Unit – a specialised processor originally designed for rendering graphics, now used for parallel processing.</td></tr>
-            <tr><td><strong>CUDA Cores</strong></td><td>NVIDIA's parallel processing cores that handle many tasks simultaneously.</td></tr>
-            <tr><td><strong>Stream Processors</strong></td><td>AMD's equivalent to CUDA cores for parallel computation.</td></tr>
-            <tr><td><strong>VRAM</strong></td><td>Video RAM – dedicated memory on the GPU for storing textures and frame buffers.</td></tr>
-            <tr><td><strong>Parallel Processing</strong></td><td>Performing many operations simultaneously, which is the key strength of GPUs.</td></tr>
+            <tr><td><strong>ALU</strong></td><td>Performs arithmetic (add, subtract, multiply, divide) and logical operations (AND, OR, NOT, comparisons).</td></tr>
+            <tr><td><strong>Control Unit (CU)</strong></td><td>Fetches and decodes instructions; sends control signals directing other components. Processes no data itself.</td></tr>
+            <tr><td><strong>Program Counter (PC)</strong></td><td>Holds the address of the <em>next</em> instruction to be fetched.</td></tr>
+            <tr><td><strong>Instruction Register (IR)</strong></td><td>Holds the instruction currently being decoded and executed.</td></tr>
+            <tr><td><strong>Memory Address Register (MAR)</strong></td><td>Holds the memory address about to be accessed (where).</td></tr>
+            <tr><td><strong>Memory Data Register (MDR)</strong></td><td>Holds the data read from or being written to memory (what).</td></tr>
+            <tr><td><strong>Accumulator (AC)</strong></td><td>Holds intermediate results of ALU operations.</td></tr>
+            <tr><td><strong>Address Bus</strong></td><td>Carries addresses from CPU to memory. <strong>One direction.</strong></td></tr>
+            <tr><td><strong>Data Bus</strong></td><td>Carries data between CPU and memory. <strong>Both directions.</strong></td></tr>
+            <tr><td><strong>Control Bus</strong></td><td>Carries control and timing signals between CU and other components.</td></tr>
+            <tr><td><strong>Single-core</strong></td><td>One core; one instruction stream at a time.</td></tr>
+            <tr><td><strong>Multi-core</strong></td><td>Several cores on one chip; threads run in parallel.</td></tr>
+            <tr><td><strong>Co-processor</strong></td><td>Specialist (GPU, FPU) that offloads specific work from the main CPU.</td></tr>
         </tbody>
     </table>
 
-    <!-- Tasks matching the image layout -->
+    <div class="exam-tip">
+        <strong>📌 EXAM TIP:</strong> When drawing a diagram, the address bus arrow points one way only (CPU → RAM). The data bus and control bus arrows point both ways. A diagram with three identical double-headed arrows tells the examiner you have memorised a shape, not understood the system.
+    </div>
+
+    <!-- Tasks -->
     <h2>📖 Your Tasks</h2>
     <div class="task-block">
         <!-- Task 1 -->
         <div class="task-row">
             <span class="task-step">1</span>
             <span class="task-desc">
-                <strong>Read &amp; Teach</strong> — Use the resources below to learn about GPU architecture, then explain it to the AI.
+                <strong>Read &amp; Teach</strong> — Use the resources below to learn about CPU architecture, then explain it to the AI.
                 <div class="task-1-resources">
-                    <span class="pill"><a href="docs/ebooks/DP%20Computer%20Science_%20A%201.1.2.pdf" target="_blank">📖 eBook</a></span>
-                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.2-describe-the-role-of-a-gpu" target="_blank">🌐 CS Wiki</a></span>
-                    <span class="pill"><a href="https://belnetix.com/tools/cpu-gpu-explainer/" target="_blank">🔍 CPU/GPU Explainer</a></span>
-                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQ2UBYCDb-aOiFED6gnoZ2JhWeopjvsU-rXY8yx7YbtZ7AZGZG2PxUeO2LpLdqVNosgsaCFzg12c2sm/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.1.1.pdf" target="_blank">📖 eBook</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.1-describe-the-functions-and-interactions-of-the-main-cpu-components" target="_blank">🌐 CS Wiki</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQYFKCf6I3_J78N7Q0Um9IgKc0z2yJoUXEdJHNQrqbpsK7gkpe_zpCkt6xpEBZs9ckNbyFYBMZLnsUu/pub?start=false&loop=false&delayms=3000&slide=id.g309003bead8_0_286" target="_blank">📊 PowerPoint</a></span>
                     <span class="pill">📘 Textbook</span>
                     <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
                 </div>
-                <span style="font-size:0.9rem; color:#4a6a85;">Take notes on GPU architecture, its differences from CPU, and use cases.</span>
+                <span style="font-size:0.9rem; color:#4a6a85;">Take notes on each component and how they interact.</span>
             </span>
         </div>
-        <!-- Task 2 – green background -->
+
+        <!-- Task 2 – green background with Code Lab + Ebook -->
         <div class="task-row task-starter">
             <span class="task-step">2</span>
             <span class="task-desc">
-                <strong>Complete the Starter Activity</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQe-ehQDMGvfO9jdTB_vWqIUiJjH9-a_c_uJ0FbPY_IIcpDfdyqRnWTfUpIDGTCAAs42ocaOI9_jsMX/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                <strong>Complete the Starter Activity</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the ebook and Lesson Starter PowerPoint.
+                
+                <div class="ebook-box">
+                    <span style="font-weight:700; color:#0b2a4a;">📖 Ebook: A1.1.1 CPU Architecture</span>
+                    <span style="color:#3d5f7a;">Open the ebook to find the starter questions.</span>
+                    <span class="ebook-btn"><a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.1.1.pdf" target="_blank">📄 Open Ebook</a></span>
+                </div>
+
+                <div style="margin: 8px 0; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;">
+                    <span style="background:#f1f6fc; padding:2px 14px; border-radius:30px; border:1px solid #dce4ed; font-size:0.85rem;"><span class="starter-icon">🌶️</span> Spicy</span>
+                    <span style="background:#f1f6fc; padding:2px 14px; border-radius:30px; border:1px solid #dce4ed; font-size:0.85rem;"><span class="starter-icon">🌶️</span> Medium</span>
+                    <span style="background:#f1f6fc; padding:2px 14px; border-radius:30px; border:1px solid #dce4ed; font-size:0.85rem;"><span class="starter-icon">🌶️</span> Mild</span>
+                    <span style="background:#f1f6fc; padding:2px 14px; border-radius:30px; border:1px solid #dce4ed; font-size:0.85rem;"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQe-ehQDMGvfO9jdTB_vWqIUiJjH9-a_c_uJ0FbPY_IIcpDfdyqRnWTfUpIDGTCAAs42ocaOI9_jsMX/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">📊 Starter PowerPoint</a></span>
+                </div>
+
                 Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.<br>
                 <strong>📌 Important:</strong> Save your code as a <strong>.txt</strong> file. You will submit all starter activity answers to <strong>Schoolbox</strong> at the end of A1.1.9 Debugging Techniques.
             </span>
         </div>
-        <!-- Task 3 -->
+
         <div class="task-row">
             <span class="task-step">3</span>
             <span class="task-desc"><strong>Extension Activities</strong> — Choose from the activities below if you finish early.</span>
         </div>
-        <!-- Task 4 -->
         <div class="task-row">
             <span class="task-step">4</span>
-            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1065896391/a-112-describe-the-role-of-a-gpu-flash-cards/?funnelUUID=cd2a9d6a-1dca-4a42-8a75-c85066b530bf" target="_blank">Quizlet flashcards</a>.</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1007477462/a-111-cpu-components-and-interactions-diagram/?funnelUUID=4d72b39b-8aed-4d13-a051-fd3c60764a13" target="_blank">Quizlet flashcards</a>.</span>
         </div>
     </div>
 
     <h2>⭐ Extension Activities</h2>
+    <p><em>After completing all Core Tasks, choose one or more of these activities to deepen your understanding:</em></p>
+
     <div class="extension-grid">
-        <span class="label">1. GPU vs CPU</span>
-        <span class="desc">Create a comparison table showing the differences between GPU and CPU architectures in terms of cores, memory, and use cases.</span>
+        <span class="label">1. CPU Diagram</span>
+        <span class="desc">Draw and label a diagram of a CPU showing ALU, CU, registers, and buses. Explain the data flow between them.</span>
 
-        <span class="label">2. Real-World GPU Uses</span>
-        <span class="desc">Research three real-world applications where GPUs are used outside of gaming (e.g., AI training, scientific simulation, cryptocurrency mining).</span>
+        <span class="label">2. Register Match</span>
+        <span class="desc">Create a quick matching quiz: match each register (PC, IR, MAR, MDR, AC) to its function. Challenge a partner to beat your time.</span>
 
-        <span class="label">3. GPU Evolution</span>
-        <span class="desc">Trace the evolution of GPUs from early graphics cards to modern parallel processors. Create a timeline.</span>
+        <span class="label">3. Research</span>
+        <span class="desc">Research the evolution of CPU architecture from single-core to multi-core processors. Summarise your findings in one paragraph.</span>
+
+        <span class="label">4. Simulator</span>
+        <span class="desc">Use the <a href="https://cpusimulator.tech/" target="_blank">CPU Simulator</a> to step through the fetch-decode-execute cycle.</span>
     </div>
 
     <div class="key-takeaway">
-        <p><em>"GPUs are massively parallel processors that have become essential for machine learning, scientific computing, and modern graphics."</em></p>
+        <p><em>"The CPU is the brain of the computer – understanding its architecture is essential for understanding how software executes."</em></p>
     </div>
 
     <hr>
 
     <div class="lesson-nav">
-        <a href="A1.1.1.html">← Previous: CPU Architecture</a>
-        <a href="A1.1.3.html">Next Lesson: GPU (HL) →</a>
+        <span></span>
+        <a href="A1.1.2.html">Next Lesson: GPU Architecture →</a>
     </div>
 
     <div class="footer-meta">
-        A1.1.2 – GPU Architecture • IB Computer Science • Year 12
+        A1.1.1 – CPU Architecture • IB Computer Science • Year 12
     </div>
 </div>
 
