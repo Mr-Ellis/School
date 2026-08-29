@@ -143,15 +143,6 @@
       color: #475569;
       margin: 0;
     }
-    .lesson-content .device-card .sensor-explain {
-      display: block;
-      font-size: 0.75rem;
-      background: #f1f6fc;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      margin-top: 0.3rem;
-      color: #1f4b6e;
-    }
 
     .activity-box {
       background: #ffffff;
@@ -371,6 +362,35 @@
     .password-box .btn:hover { background: #134f75; }
     .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
 
+    .dropdown-answer {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      margin: 0.5rem 0 0.8rem 0;
+      border-left: 4px solid #2a6f97;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .dropdown-answer:hover { background: #eef4fa; }
+    .dropdown-answer .answer-content {
+      display: none;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #d4e0ec;
+      color: #1e293b;
+    }
+    .dropdown-answer.active .answer-content { display: block; }
+    .dropdown-answer .hint-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1f6390;
+      font-weight: 500;
+    }
+    .dropdown-answer .hint-text i { transition: transform 0.2s; }
+    .dropdown-answer.active .hint-text i { transform: rotate(180deg); }
+
     @media (max-width: 680px) {
       body { padding: 1rem; }
       .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
@@ -434,6 +454,17 @@
         <div class="activity-box">
             <strong>🎯 Starter Activity – Think-Pair-Share</strong>
             <p><strong>Think:</strong> What sensors do you use every day? List as many as you can. <strong>Share</strong> your ideas with a partner and then with the class.</p>
+            <div class="dropdown-answer" onclick="this.classList.toggle('active')">
+                <div class="hint-text"><i class="fas fa-chevron-down"></i> Click to reveal example answers</div>
+                <div class="answer-content">
+                    <ul style="margin:0; padding-left:1.2rem;">
+                        <li>Smartphone: proximity sensor (screen dims during calls), accelerometer (screen rotation), light sensor (auto-brightness)</li>
+                        <li>Smartwatch: heart rate monitor, accelerometer, temperature sensor</li>
+                        <li>Smart home: motion sensors (lights), temperature sensors (thermostats)</li>
+                        <li>Car: parking sensors, tyre pressure sensors, temperature sensors</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <!-- ===== ANALOGUE VS DIGITAL ===== -->
@@ -442,12 +473,12 @@
             <div class="device-card">
                 <h5>🔹 Analogue Sensors</h5>
                 <p>Produce a continuous signal (e.g., a varying voltage). Need an <strong>ADC</strong> (Analogue-to-Digital Converter) to convert the signal into digital data.</p>
-                <p style="font-size:0.85rem; color:#475569; margin-top:0.3rem;"><strong>Examples:</strong> Temperature sensors, light-dependent resistors (LDRs), potentiometers</p>
+                <p style="font-size:0.85rem; color:#475569; margin-top:0.3rem;"><strong>Examples:</strong> Temperature sensors, light sensors, volume controls (potentiometers)</p>
             </div>
             <div class="device-card">
                 <h5>🔸 Digital Sensors</h5>
                 <p>Produce a discrete signal (e.g., a 0 or 1). They do not need an ADC because the signal is already digital.</p>
-                <p style="font-size:0.85rem; color:#475569; margin-top:0.3rem;"><strong>Examples:</strong> Passive infrared (PIR) motion sensors, ultrasonic sensors, digital temperature sensors (DS18B20)</p>
+                <p style="font-size:0.85rem; color:#475569; margin-top:0.3rem;"><strong>Examples:</strong> Motion detectors (PIR), ultrasonic distance sensors, digital temperature sensors</p>
             </div>
         </div>
 
@@ -462,37 +493,49 @@
                 <h5>🌡️ Temperature</h5>
                 <p>Thermistor, thermocouple</p>
                 <p style="font-size:0.8rem; color:#475569;">Thermostats, weather stations, industrial control</p>
-                <span class="sensor-explain"><i class="fas fa-info-circle"></i> <strong>HVAC</strong> = Heating, Ventilation, and Air Conditioning systems</span>
+                <div style="font-size:0.75rem; background:#f1f6fc; padding:0.2rem 0.5rem; border-radius:4px; margin-top:0.3rem; color:#1f4b6e;">
+                    <i class="fas fa-info-circle"></i> <strong>Thermistor</strong> = resistance changes with temperature &bull; <strong>Thermocouple</strong> = two different metals produce voltage when heated
+                </div>
             </div>
             <div class="device-card" style="text-align:center;">
                 <h5>💡 Light</h5>
                 <p>LDR, photodiode</p>
                 <p style="font-size:0.8rem; color:#475569;">Automatic lighting, camera exposure, street lights</p>
-                <span class="sensor-explain"><i class="fas fa-info-circle"></i> <strong>LDR</strong> = Light-Dependent Resistor</span>
+                <div style="font-size:0.75rem; background:#f1f6fc; padding:0.2rem 0.5rem; border-radius:4px; margin-top:0.3rem; color:#1f4b6e;">
+                    <i class="fas fa-info-circle"></i> <strong>LDR</strong> = Light-Dependent Resistor &bull; <strong>Photodiode</strong> = converts light into current
+                </div>
             </div>
             <div class="device-card" style="text-align:center;">
                 <h5>📏 Pressure</h5>
                 <p>Piezoresistive, capacitive</p>
                 <p style="font-size:0.8rem; color:#475569;">Tyre pressure, medical devices, touchscreens</p>
-                <span class="sensor-explain"><i class="fas fa-info-circle"></i> <strong>Piezoresistive</strong> = changes resistance when pressure is applied</span>
+                <div style="font-size:0.75rem; background:#f1f6fc; padding:0.2rem 0.5rem; border-radius:4px; margin-top:0.3rem; color:#1f4b6e;">
+                    <i class="fas fa-info-circle"></i> <strong>Piezoresistive</strong> = changes resistance when pressure is applied
+                </div>
             </div>
             <div class="device-card" style="text-align:center;">
                 <h5>🚶 Motion</h5>
                 <p>PIR, accelerometer</p>
                 <p style="font-size:0.8rem; color:#475569;">Security systems, gaming controllers, smartwatches</p>
-                <span class="sensor-explain"><i class="fas fa-info-circle"></i> <strong>PIR</strong> = Passive Infra-Red (detects body heat)</span>
+                <div style="font-size:0.75rem; background:#f1f6fc; padding:0.2rem 0.5rem; border-radius:4px; margin-top:0.3rem; color:#1f4b6e;">
+                    <i class="fas fa-info-circle"></i> <strong>PIR</strong> = Passive Infra-Red (detects body heat)
+                </div>
             </div>
             <div class="device-card" style="text-align:center;">
                 <h5>📡 Proximity</h5>
                 <p>Ultrasonic, inductive</p>
                 <p style="font-size:0.8rem; color:#475569;">Parking sensors, robotics, phone screen dimming</p>
-                <span class="sensor-explain"><i class="fas fa-info-circle"></i> <strong>Ultrasonic</strong> = uses sound waves to measure distance</span>
+                <div style="font-size:0.75rem; background:#f1f6fc; padding:0.2rem 0.5rem; border-radius:4px; margin-top:0.3rem; color:#1f4b6e;">
+                    <i class="fas fa-info-circle"></i> <strong>Ultrasonic</strong> = uses sound waves to measure distance &bull; <strong>Inductive</strong> = detects metal objects
+                </div>
             </div>
             <div class="device-card" style="text-align:center;">
                 <h5>🌧️ Humidity</h5>
                 <p>Capacitive, resistive</p>
                 <p style="font-size:0.8rem; color:#475569;">Weather stations, agriculture, HVAC systems</p>
-                <span class="sensor-explain"><i class="fas fa-info-circle"></i> <strong>HVAC</strong> = Heating, Ventilation, and Air Conditioning</span>
+                <div style="font-size:0.75rem; background:#f1f6fc; padding:0.2rem 0.5rem; border-radius:4px; margin-top:0.3rem; color:#1f4b6e;">
+                    <i class="fas fa-info-circle"></i> <strong>HVAC</strong> = Heating, Ventilation, and Air Conditioning
+                </div>
             </div>
         </div>
 
@@ -505,13 +548,6 @@
             <li><strong>Transportation:</strong> Proximity sensors for parking, accelerometers for airbag deployment.</li>
             <li><strong>Agriculture:</strong> Moisture sensors for irrigation, temperature sensors for greenhouses.</li>
         </ul>
-
-        <!-- ===== INTERACTIVE SCAVENGER HUNT ===== -->
-        <div style="background: #f1f6fc; border-radius: 16px; padding: 1rem 1.5rem; margin: 0.5rem 0 1rem 0;">
-            <p><strong>🔍 Interactive Activity – Sensor Scavenger Hunt</strong><br>
-            In <strong>groups</strong>, you have <strong>5 minutes</strong> to find as many sensors as you can in the classroom or school. List the sensor, what it measures, and whether it is analogue or digital.</p>
-            <p style="font-size:0.9rem; color:#475569; margin-top:0.3rem;"><i class="fas fa-lightbulb" style="color:#f5b342;"></i> Hint: Look at temperature displays, security cameras, automatic doors, smartboards, and any device that responds to its environment.</p>
-        </div>
 
         <!-- ===== SCRATCH VIDEO SENSING ACTIVITY ===== -->
         <div style="background: #f1f6fc; border-radius: 16px; padding: 1rem 1.5rem; margin: 0.5rem 0 1rem 0; border: 2px solid #b8943e;">
@@ -538,6 +574,16 @@
                 <li>What physical quantity is being detected?</li>
                 <li>Would the computer need an ADC if the webcam produced an analogue signal?</li>
             </ul>
+            <div class="dropdown-answer" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                <div class="hint-text"><i class="fas fa-chevron-down"></i> Click to reveal discussion answers</div>
+                <div class="answer-content">
+                    <ul style="margin:0; padding-left:1.2rem;">
+                        <li><strong>Input or output?</strong> The webcam is an <strong>input device</strong> – it captures data (video) and sends it to the computer.</li>
+                        <li><strong>Physical quantity:</strong> <strong>Motion</strong> (changes in the video image over time).</li>
+                        <li><strong>ADC needed?</strong> Yes – if the webcam produced an analogue signal, an ADC would be needed to convert it to digital data that the computer can process.</li>
+                    </ul>
+                </div>
+            </div>
             <a href="https://scratch.mit.edu/projects/editor/?tutorial=getStarted" target="_blank" class="btn" style="margin-top: 0.5rem;"><i class="fab fa-scratch"></i> Open Scratch Editor</a>
         </div>
 
@@ -579,14 +625,15 @@
             <li>Give <strong>three</strong> examples of sensors used in everyday life and explain what they do.</li>
         </ol>
 
-        <div style="background: #edf7ed; border-left: 5px solid #4caf50; padding: 0.8rem 1.2rem; border-radius: 8px; margin: 0.8rem 0;">
-            <i class="fas fa-check-circle" style="color:#4caf50; margin-right:8px;"></i>
-            <strong>Suggested answers:</strong>
-            <ul>
-                <li><strong>Analogue vs Digital:</strong> Analogue sensors produce a continuous signal (varying voltage); digital sensors produce a discrete signal (0 or 1).</li>
-                <li><strong>ADC:</strong> An ADC is needed to convert the continuous analogue signal into digital data that the computer can process.</li>
-                <li><strong>Examples:</strong> Temperature sensor (thermostat), light sensor (street lights), motion sensor (security systems).</li>
-            </ul>
+        <div class="dropdown-answer" onclick="this.classList.toggle('active')">
+            <div class="hint-text"><i class="fas fa-chevron-down"></i> Click to reveal suggested answers</div>
+            <div class="answer-content">
+                <ul style="margin:0; padding-left:1.2rem;">
+                    <li><strong>Analogue vs Digital:</strong> Analogue sensors produce a continuous signal (varying voltage); digital sensors produce a discrete signal (0 or 1).</li>
+                    <li><strong>ADC:</strong> An ADC is needed to convert the continuous analogue signal into digital data that the computer can process.</li>
+                    <li><strong>Examples:</strong> Temperature sensor (thermostat), light sensor (street lights), motion sensor (security systems).</li>
+                </ul>
+            </div>
         </div>
 
         <!-- ===== KEYWORDS ===== -->
