@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.1.5 – Fetch, Decode, Execute Cycle</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        .highlight-row {
+            background: #fef9e7 !important;
+        }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
+
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong {
+            color: #1a6b33;
+        }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+        .warning-box {
+            background: #fef2f2;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #b21f1f;
+        }
+
+        .stage-diagram {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .stage-diagram .stage {
+            background: #0b2a4a;
+            color: #fff;
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-align: center;
+        }
+        .stage-diagram .stage .stage-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fdbb2d;
+        }
+        .stage-diagram .stage .stage-desc {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            margin-top: 4px;
+        }
+        .stage-diagram .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #b21f1f;
+        }
+
+        .bus-table {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: #e2e8f0;
+        }
+        .bus-table .bus-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1.5fr 2fr;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #2d3748;
+        }
+        .bus-table .bus-row:last-child { border-bottom: none; }
+        .bus-table .header {
+            font-weight: 600;
+            color: #fdbb2d;
+        }
+        .bus-table .bus-name { color: #66b3ff; font-weight: 600; }
+        .bus-table .bus-dir { color: #a3d9a5; }
+        .bus-table .bus-role { color: #f7c948; }
+
+        .simulator-box {
+            background: #0f1724;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: #e2e8f0;
+            border: 1px solid #2d3748;
+        }
+        .simulator-box .sim-title {
+            color: #fdbb2d;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .simulator-box .sim-link {
+            display: inline-block;
+            background: #1a5f87;
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            border-bottom: none;
+        }
+        .simulator-box .sim-link:hover {
+            background: #134f75;
+            color: #fff;
+            border-bottom: none;
+        }
+
+        .cycle-steps {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border: 1px solid #e2e8f0;
+        }
+        .cycle-steps .step {
+            padding: 6px 0;
+            border-bottom: 1px solid #e8eef4;
+            display: flex;
+            gap: 10px;
+        }
+        .cycle-steps .step:last-child { border-bottom: none; }
+        .cycle-steps .step-num {
+            font-weight: 700;
+            color: #b21f1f;
+            min-width: 24px;
+        }
+        .cycle-steps .step-desc { flex: 1; }
+        .cycle-steps .step-reg {
+            font-weight: 600;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .stage-diagram { grid-template-columns: 1fr; }
+            .stage-diagram .arrow { transform: rotate(90deg); }
+            .bus-table .bus-row { grid-template-columns: 1fr; gap: 2px; padding: 10px 0; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+
+    <h1>A1.1.5 – Fetch, Decode, Execute Cycle</h1>
+
+    <!-- ===== LEARNING OBJECTIVE ===== -->
+    <h2>📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to <strong>describe</strong>:</p>
+    <ul>
+        <li>The <strong>three stages</strong> of the cycle in the correct order</li>
+        <li>The registers (<strong>PC, MAR, MDR, IR, AC</strong>) and what each holds at the point it acts</li>
+        <li>The job and direction of the <strong>address, data, and control buses</strong> during the fetch and execute stages</li>
+        <li>A <strong>detailed account</strong> of one instruction passing through the full cycle from fetch to result</li>
+    </ul>
+
+    <!-- ===== COMMAND TERM ===== -->
+    <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
+    <div class="command-term">
+        <strong>Describe</strong> – <em>"Give a detailed account."</em><br><br>
+        For this topic, a describe question expects the <strong>three stages in the correct order</strong>, with the <strong>registers and buses named</strong> at the points where they act. Listing the stage names alone is an outline, not a description.
+    </div>
+
+    <!-- ===== BLOOKET STARTER ===== -->
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket Rush</span>
+        <span style="color:#3d5f7a;">Test your knowledge of the fetch-decode-execute cycle!</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/rush?id=68b03753ddff7a4868b8d256" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <!-- ===== KEY TERMS ===== -->
+    <h2>🔑 Key Terms</h2>
+    <table>
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Register</strong></td><td>A small, very fast store inside the CPU that holds one value at a time</td></tr>
+            <tr><td><strong>Program Counter (PC)</strong></td><td>Holds the memory address of the <em>next</em> instruction to fetch</td></tr>
+            <tr><td><strong>Memory Address Register (MAR)</strong></td><td>Holds the address of the memory location about to be accessed</td></tr>
+            <tr><td><strong>Memory Data Register (MDR)</strong></td><td>Holds the instruction or data just read from memory, or about to be written to it</td></tr>
+            <tr><td><strong>Instruction Register (IR)</strong></td><td>Holds the current instruction while it is decoded and executed</td></tr>
+            <tr><td><strong>Accumulator (AC)</strong></td><td>The working register for arithmetic and logic operations</td></tr>
+            <tr><td><strong>Opcode</strong></td><td>The part of a machine instruction that specifies the operation to perform</td></tr>
+            <tr><td><strong>Operand</strong></td><td>The part of a machine instruction that specifies the data or address to act on</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== THE THREE STAGES ===== -->
+    <h2>📊 The Three Stages</h2>
+
+    <div class="stage-diagram">
+        <div class="stage">
+            <div class="stage-name">1. Fetch</div>
+            <div class="stage-desc">Get the next instruction from main memory</div>
+        </div>
+        <div class="arrow">➜</div>
+        <div class="stage">
+            <div class="stage-name">2. Decode</div>
+            <div class="stage-desc">Work out what the instruction requires</div>
+        </div>
+        <div class="arrow">➜</div>
+        <div class="stage">
+            <div class="stage-name">3. Execute</div>
+            <div class="stage-desc">Carry out the operation and store the result</div>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>🔄 The cycle repeats:</strong> The moment one instruction completes, the cycle begins again with the next, and this continues until the program ends.</p>
+    </div>
+
+    <!-- ===== FETCH STAGE ===== -->
+    <h3>Stage 1: Fetch</h3>
+    <p>The fetch stage moves the next instruction from main memory into the CPU. It follows the same fixed sequence every time:</p>
+
+    <div class="cycle-steps">
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-desc">The address held in the <span class="step-reg">PC</span> is copied into the <span class="step-reg">MAR</span>.</span>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-desc">The address travels along the <strong>address bus</strong> to main memory, while the Control Unit sends a <strong>read signal</strong> along the <strong>control bus</strong>.</span>
+        </div>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-desc">Memory returns the instruction stored at that address along the <strong>data bus</strong>, and it is placed in the <span class="step-reg">MDR</span>.</span>
+        </div>
+        <div class="step">
+            <span class="step-num">4</span>
+            <span class="step-desc">The instruction is copied from the <span class="step-reg">MDR</span> into the <span class="step-reg">IR</span>.</span>
+        </div>
+        <div class="step">
+            <span class="step-num">5</span>
+            <span class="step-desc">The <span class="step-reg">PC</span> is <strong>incremented</strong> so that it points at the following instruction, ready for the next cycle.</span>
+        </div>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Common exam mistake:</strong> Students routinely swap the MAR and the MDR. The names tell you which is which: the <strong>Memory Address Register</strong> holds an <em>address</em> (where to look), and the <strong>Memory Data Register</strong> holds <em>data</em> (what was found there).</p>
+    </div>
+
+    <!-- ===== DECODE STAGE ===== -->
+    <h3>Stage 2: Decode</h3>
+    <p>Decoding happens entirely inside the CPU. The Control Unit examines the instruction now sitting in the <span class="step-reg">IR</span>.</p>
+
+    <div class="cycle-steps">
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-desc">The Control Unit identifies the <strong>opcode</strong> (the operation to perform) and any <strong>operands</strong> (the data or addresses the operation will use).</span>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-desc">The Control Unit generates <strong>control signals</strong> to activate the components needed during execution.</span>
+        </div>
+    </div>
+
+    <!-- ===== EXECUTE STAGE ===== -->
+    <h3>Stage 3: Execute</h3>
+    <p>The Control Unit now sends signals along the control bus to activate the components the instruction requires.</p>
+
+    <div class="cycle-steps">
+        <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-desc">Values are routed through the <strong>ALU</strong> (Arithmetic Logic Unit).</span>
+        </div>
+        <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-desc">The ALU performs the operation (e.g., addition, subtraction, comparison).</span>
+        </div>
+        <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-desc">The result is stored in the <span class="step-reg">accumulator</span> or written to memory.</span>
+        </div>
+    </div>
+
+    <!-- ===== BUSES ===== -->
+    <h2>🚌 The Three Buses</h2>
+    <p>A bus is a set of parallel wires carrying information between components. The cycle uses three, and each has a single, distinct job.</p>
+
+    <div class="bus-table">
+        <div class="bus-row header">
+            <span>Bus</span>
+            <span>What it carries</span>
+            <span>Direction</span>
+            <span>Role in the cycle</span>
+        </div>
+        <div class="bus-row">
+            <span class="bus-name">Address Bus</span>
+            <span>Memory addresses</span>
+            <span class="bus-dir">One way: CPU → Memory</span>
+            <span class="bus-role">Carries the address of the next instruction (fetch) or data location (execute)</span>
+        </div>
+        <div class="bus-row">
+            <span class="bus-name">Data Bus</span>
+            <span>Instructions and data</span>
+            <span class="bus-dir">Both ways</span>
+            <span class="bus-role">Carries the instruction from memory to the MDR (fetch); carries data between memory and registers (execute)</span>
+        </div>
+        <div class="bus-row">
+            <span class="bus-name">Control Bus</span>
+            <span>Control signals (read, write)</span>
+            <span class="bus-dir">Both ways</span>
+            <span class="bus-role">Coordinates every stage: a read signal triggers the fetch; further signals activate components during execution</span>
+        </div>
+    </div>
+
+    <!-- ===== CPU SIMULATOR ===== -->
+    <h2>💻 CPU Simulator</h2>
+    <div class="simulator-box">
+        <div class="sim-title">🔧 Brookebit CPU Simulator</div>
+        <p style="color:#94a3b8; margin:6px 0;">Follow the fetch-decode-execute cycle through on this simulator to see how the registers, buses, memory, control unit and ALU interact with simple programs.</p>
+        <a href="https://brookebit.com/cpus" target="_blank" class="sim-link">🚀 Launch CPU Simulator</a>
+    </div>
+
+    <!-- ===== TASKS ===== -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+
+        <!-- Task 1 -->
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Learn</strong> — Use the resources below to learn about the fetch-decode-execute cycle.
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.5.pdf" target="_blank">📖 Lesson Plan (A1.1.5)</a></span>
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.1.5.pdf" target="_blank">📘 eBook (A1.1.5)</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.5-describe-the-fetch-decode-and-execute-cycle" target="_blank">🌐 CS Wiki (A1.1.5)</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQkjuXG21_uHvE5Qwh4RY9XHuCgYemXOuhl5w62vr0PMXmk6SjMqoQurooo5xY9w1cX38_jpZ_om7vp/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85;">Take notes on the three stages, the registers involved, and the role of each bus.</span>
+            </span>
+        </div>
+
+        <!-- Task 2 – green background -->
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Starter Activity</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQe-ehQDMGvfO9jdTB_vWqIUiJjH9-a_c_uJ0FbPY_IIcpDfdyqRnWTfUpIDGTCAAs42ocaOI9_jsMX/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.<br>
+                <strong>📌 Important:</strong> Save your code as a <strong>.txt</strong> file. You will submit all starter activity answers to <strong>Schoolbox</strong> at the end of A1.1.9 Debugging Techniques.
+            </span>
+        </div>
+
+        <!-- Task 3 -->
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc">
+                <strong>Deliberate Practice</strong> — Write a <strong>Describe</strong> answer to this question:<br>
+                <em>"Describe the steps the CPU performs during the fetch stage of the fetch, decode and execute cycle."</em>
+                <div style="background:#ebf4ff; border-radius:8px; padding:12px 16px; margin-top:8px;">
+                    <strong>📝 Sentence Frame:</strong><br>
+                    <em>"During the fetch stage, the address in the <span style="font-weight:700;">___</span> is copied to the <span style="font-weight:700;">___</span>. The address travels along the <span style="font-weight:700;">___</span> bus while a <span style="font-weight:700;">___</span> signal is sent on the <span style="font-weight:700;">___</span> bus. The instruction returns along the <span style="font-weight:700;">___</span> bus into the <span style="font-weight:700;">___</span>, is copied into the <span style="font-weight:700;">___</span>, and the <span style="font-weight:700;">___</span> is incremented."</em>
+                </div>
+            </span>
+        </div>
+
+        <!-- Task 4 -->
+        <div class="task-row">
+            <span class="task-step">4</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1065896681/a-113-explain-the-differences-between-the-cpu-and-the-gpu-hl-only-flash-cards/?funnelUUID=0bac7dd0-abfd-4e21-9620-15450cc11c43" target="_blank">Quizlet flashcards</a>.</span>
+        </div>
+    </div>
+
+    <!-- ===== EXTENSION ===== -->
+    <h2>⭐ Extension Activities</h2>
+    <div style="background:#f1f6fc; border-radius:16px; padding:1.2rem 1.5rem; margin:0.8rem 0 0.5rem 0; border-left:4px solid #b21f1f;">
+        <h4 style="color:#0b2a4a; font-size:1rem; margin-bottom:0.3rem;">🔍 Deeper Exploration</h4>
+        <ul style="margin-left:18px;">
+            <li><strong>Trace a Memory Write:</strong> Trace an instruction that writes its result back to memory. Describe the data bus carrying in the other direction and all three buses acting in the execute stage.</li>
+            <li><strong>Trace Two Instructions:</strong> Describe how the incremented PC carries the order across multiple instructions.</li>
+            <li><strong>Simulator Challenge:</strong> Use the <a href="https://brookebit.com/cpus" target="_blank">Brookebit CPU Simulator</a> to step through a program and record the state of each register at every stage.</li>
+        </ul>
+    </div>
+
+    <!-- ===== KEY TAKEAWAY ===== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"Every program reaches the CPU as a sequence of machine language instructions, and the CPU handles each one in exactly the same way: it fetches the instruction from memory, decodes it to work out what is required, then executes it. This loop repeats millions of times a second for as long as the program runs."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.1.4.html">← Previous: A1.1.4 (Primary Memory)</a>
+        <a href="A1.1.6.html">Next: A1.1.6 (Pipelining) →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.1.5 – Fetch, Decode, Execute Cycle • IB Computer Science • Year 12
+    </div>
+
+</div>
+
+</body>
+</html>
