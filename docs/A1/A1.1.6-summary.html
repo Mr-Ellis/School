@@ -360,6 +360,58 @@
             font-weight: 500;
         }
 
+        /* Dropdown styling */
+        .dropdown-container {
+            margin-top: 12px;
+            border-radius: 8px;
+            border: 1px solid #dce4ed;
+            overflow: hidden;
+        }
+        .dropdown-header {
+            background: #f1f6fc;
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #0b2a4a;
+            user-select: none;
+        }
+        .dropdown-header:hover {
+            background: #e2eaf5;
+        }
+        .dropdown-header .arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+        .dropdown-header.open .arrow {
+            transform: rotate(180deg);
+        }
+        .dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 16px;
+            background: #ffffff;
+        }
+        .dropdown-content.open {
+            max-height: 500px;
+            padding: 16px;
+        }
+        .dropdown-content .example-answer {
+            background: #f7fafc;
+            border-left: 4px solid #2d7d46;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-style: italic;
+            color: #1e293b;
+        }
+        .dropdown-content .example-answer strong {
+            color: #0b2a4a;
+            font-style: normal;
+        }
+
         @media (max-width: 640px) {
             .container { padding: 20px; }
             h1 { font-size: 1.8rem; }
@@ -556,7 +608,6 @@ Cycles:        1   2   3   4   5   6</pre>
             <span class="task-desc">
                 <strong>Read &amp; Learn</strong> — Use the resources below to learn about pipelining and multi-core architectures.
                 <div class="task-1-resources">
-                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.6.pdf" target="_blank">📖 Lesson Plan (A1.1.6)</a></span>
                     <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.1.6.pdf" target="_blank">📘 eBook (A1.1.6)</a></span>
                     <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.6-describe-the-process-of-pipelining-in-multi-core-architectures-hl-only" target="_blank">🌐 CS Wiki (A1.1.6)</a></span>
                     <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vRqTpYyWQ-GAFhiUrebMRJ-30SMc4zv7S3Rfp1w6-vCn3egAuBP0z2W_pQmjJJUXEr8q8Y6k6ha2UCZ/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
@@ -584,6 +635,20 @@ Cycles:        1   2   3   4   5   6</pre>
                 <div style="background:#ebf4ff; border-radius:8px; padding:12px 16px; margin-top:8px;">
                     <strong>📝 Sentence Frame (use this to structure your answer):</strong><br>
                     <em>"Pipelining splits the execution of an instruction into four stages: fetch, decode, execute, and write-back. Because each stage uses ______ hardware, a core can ______ the stages of consecutive instructions, so several instructions are ______ at once. This raises ______ without reducing the ______ of any one instruction. In a multi-core processor, each core has its own ______, so the cores work ______ and in ______ on different tasks assigned by the ______."</em>
+                    
+                    <!-- Dropdown example answer -->
+                    <div class="dropdown-container">
+                        <div class="dropdown-header" onclick="toggleDropdown(this)">
+                            <span>📖 Click to reveal an example answer</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="dropdown-content">
+                            <div class="example-answer">
+                                <strong>Example answer:</strong><br>
+                                "Pipelining splits the execution of an instruction into four stages: fetch, decode, execute, and write-back. Because each stage uses <strong>separate</strong> hardware, a core can <strong>overlap</strong> the stages of consecutive instructions, so several instructions are <strong>in progress</strong> at once. This raises <strong>throughput</strong> without reducing the <strong>latency</strong> of any one instruction. In a multi-core processor, each core has its own <strong>pipeline</strong>, so the cores work <strong>independently</strong> and in <strong>parallel</strong> on different tasks assigned by the <strong>operating system</strong>."
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </span>
         </div>
@@ -592,43 +657,11 @@ Cycles:        1   2   3   4   5   6</pre>
         <div class="task-row">
             <span class="task-step">4</span>
             <span class="task-desc">
-                <strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1009146124/a-117-describe-internal-and-external-types-of-secondary-memory-storage-flash-cards/?new=" target="_blank">Quizlet flashcards</a>.
+                <strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1065925403/a-116-describe-the-process-of-pipelining-in-multi-core-architectures-hl-only-flash-cards/?funnelUUID=b8940484-4c4f-474d-a49e-ae51f4052d71" target="_blank">Quizlet flashcards</a>.
             </span>
         </div>
     </div>
 
     <!-- ===== EXTENSION ===== -->
     <h2>⭐ Extension Activity</h2>
-    <div class="extension-card">
-        <h4>🔍 Pipeline Hazards & Limits of Multi-Core</h4>
-        <p>Explore the limits of pipelining and multi-core processing:</p>
-        <ul style="margin-left:18px; margin-top:4px;">
-            <li><strong>Pipeline hazards:</strong> Why does a pipeline sometimes have to wait for data? (Bubbles/stalls)</li>
-            <li><strong>Limits of multi-core:</strong> A strictly sequential task cannot be split across cores; cores share resources like main memory</li>
-            <li><strong>Speedup limits:</strong> Why does a 4-core processor not always run 4× faster?</li>
-        </ul>
-        <p style="font-size:0.9rem; color:#475569; margin-top:6px;">Research these ideas and write a brief description of each, staying at the <strong>Describe</strong> level.</p>
-    </div>
-
-    <!-- ===== KEY TAKEAWAY ===== -->
-    <h2>💡 Key Takeaway</h2>
-    <div class="key-takeaway">
-        <p><em>"Pipelining overlaps the stages of instructions within a core to improve throughput without reducing latency. Multi-core processors multiply this effect — each core runs its own pipeline independently and in parallel, scheduled by the operating system. The two levels of concurrency (pipelining and parallel processing) are distinct and should be kept separate in exam answers."</em></p>
-    </div>
-
-    <hr>
-
-    <div class="lesson-nav">
-        <a href="A1.1.5.html">← Previous: A1.1.5</a>
-        <a href="A1.1.7.html">Next: A1.1.7 →</a>
-    </div>
-
-    <div class="footer-meta">
-        A1.1.6 – Pipelining in Multi-Core Architectures (HL Only) • IB Computer Science • Year 12
-    </div>
-
-</div>
-
-</body>
-</html>
-
+    <div
