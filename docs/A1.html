@@ -119,8 +119,8 @@
       display: none;
       position: absolute;
       inset: 0;
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(2px);
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(3px);
       border-radius: 24px;
       align-items: center;
       justify-content: center;
@@ -129,8 +129,15 @@
       color: #0b2a4a;
       gap: 10px;
       z-index: 2;
+      flex-direction: column;
     }
-    .card .lock-overlay i { font-size: 1.8rem; color: #b21f1f; }
+    .card .lock-overlay i { font-size: 2rem; color: #b21f1f; }
+    .card .lock-overlay .unlock-hint {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #475569;
+      margin-top: 4px;
+    }
     .card.fully-covered {
       background: #e6f7e6 !important;
       border-color: #2d7d46;
@@ -287,7 +294,12 @@
       transition: 0.2s;
     }
     .master-unlock-bar .btn-unlock:hover { background: #fcd34d; transform: scale(1.02); }
-    .master-unlock-bar .btn-unlock.locked { background: #6b7f8f; color: #e6edf5; cursor: not-allowed; }
+    .master-unlock-bar .btn-unlock:disabled { 
+      background: #6b7f8f; 
+      color: #e6edf5; 
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
     .master-unlock-bar .status-badge {
       font-size: 0.75rem;
       background: #1f4b6e;
@@ -299,6 +311,7 @@
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
+    /* Password Modals */
     .password-modal {
       display: none;
       position: fixed;
@@ -320,6 +333,7 @@
       text-align: center;
     }
     .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+    .password-box p { color: #3b5f7a; margin-bottom: 1.2rem; }
     .password-box input {
       width: 100%;
       padding: 0.8rem 1rem;
@@ -342,6 +356,16 @@
     .password-box .btn:hover { background: #134f75; }
     .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
 
+    .modal-type-badge {
+      display: inline-block;
+      background: #0b2a4a;
+      color: white;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
     @media (max-width: 680px) {
       body { padding: 1rem; }
       .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
@@ -357,11 +381,12 @@
 
 <div class="container">
 
-  <!-- password modal -->
+  <!-- Password Modal -->
   <div id="passwordModal" class="password-modal">
     <div class="password-box">
-      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Teacher Unlock</h3>
-      <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter the master password to unlock a lesson</p>
+      <div class="modal-type-badge" id="modalTypeBadge">🔓 Unlock Lesson</div>
+      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> <span id="modalTitle">Teacher Verification</span></h3>
+      <p id="modalDescription">Enter the master password to unlock this lesson for students.</p>
       <input type="password" id="pwdInput" placeholder="Enter password" autocomplete="off">
       <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
       <div class="error" id="pwdError"></div>
@@ -381,12 +406,12 @@
   </div>
   <div class="subhead">
     <i class="fas fa-check-circle" style="color:#1f7b4d;"></i> 
-    all topics · separate SL / HL tracking · per-lesson unlocks
+    all topics · separate SL / HL tracking · unlock lessons individually
   </div>
 
   <!-- MASTER UNLOCK BAR -->
-  <div class="master-unlock-bar" id="masterUnlockBar">
-    <span class="label"><i class="fas fa-unlock-alt"></i> Lesson Access</span>
+  <div class="master-unlock-bar">
+    <span class="label"><i class="fas fa-unlock-alt"></i> Student Access</span>
     <button class="btn-unlock" id="masterUnlockBtn">
       <i class="fas fa-unlock"></i> Unlock a Lesson
     </button>
@@ -403,17 +428,21 @@
   <div class="section-head">
     <i class="fas fa-cpu"></i> A1.1 Computer Architecture
   </div>
-  <div class="card-grid" id="lessonGrid">
+  <div class="card-grid">
 
     <!-- A1.1.1 -->
     <div class="card locked" data-lesson="A1.1.1">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.1 CPU Architecture <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="A1/A1.1.1-summary.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.1"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.1"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -431,13 +460,17 @@
 
     <!-- A1.1.2 -->
     <div class="card locked" data-lesson="A1.1.2">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.2 GPU Architecture <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="A1/A1.1.2-summary.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.2"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.2"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -453,15 +486,19 @@
       </div>
     </div>
 
-    <!-- A1.1.3 (HL only) -->
+    <!-- A1.1.3 -->
     <div class="card locked" data-lesson="A1.1.3">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.3 GPU (HL) <span class="badge hl">HL</span></h4>
       </div>
       <div class="card-actions">
         <a href="A1/A1.1.3-summary.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.3"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.3"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -475,13 +512,17 @@
 
     <!-- A1.1.4 -->
     <div class="card locked" data-lesson="A1.1.4">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.4 Primary Memory <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="A1/A1.1.4-summary.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.4"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.4"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -499,13 +540,17 @@
 
     <!-- A1.1.5 -->
     <div class="card locked" data-lesson="A1.1.5">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.5 Fetch-Decode-Execute <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="A1/A1.1.5-summary.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.5"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.5"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -521,15 +566,19 @@
       </div>
     </div>
 
-    <!-- A1.1.6 (HL only) -->
+    <!-- A1.1.6 -->
     <div class="card locked" data-lesson="A1.1.6">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.6 Pipelining (HL) <span class="badge hl">HL</span></h4>
       </div>
       <div class="card-actions">
         <a href="A1/A1.1.6-summary.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.6"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.6"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -543,13 +592,17 @@
 
     <!-- A1.1.7 -->
     <div class="card locked" data-lesson="A1.1.7">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.7 Secondary Memory <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="A1/A1.1.7-summary.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.7"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.7"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -567,13 +620,17 @@
 
     <!-- A1.1.8 -->
     <div class="card locked" data-lesson="A1.1.8">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.8 Data Compression <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.8"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.8"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -591,13 +648,17 @@
 
     <!-- A1.1.9 -->
     <div class="card locked" data-lesson="A1.1.9">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.9 Cloud Computing <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.1.9"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.9"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -622,13 +683,17 @@
 
     <!-- A1.2.1 -->
     <div class="card locked" data-lesson="A1.2.1">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.1 Data Representation 1 <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.2.1"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.1"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -646,13 +711,17 @@
 
     <!-- A1.2.2 -->
     <div class="card locked" data-lesson="A1.2.2">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.2 Data Representation 2 <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.2.2"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.2"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -670,13 +739,17 @@
 
     <!-- A1.2.3 -->
     <div class="card locked" data-lesson="A1.2.3">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.3 Logic Gates <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.2.3"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.3"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -694,13 +767,17 @@
 
     <!-- A1.2.4 -->
     <div class="card locked" data-lesson="A1.2.4">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.4 Truth Tables <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.2.4"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.4"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -718,13 +795,17 @@
 
     <!-- A1.2.5 -->
     <div class="card locked" data-lesson="A1.2.5">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.5 Logic Diagrams <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.2.5"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.5"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -749,13 +830,17 @@
 
     <!-- A1.3.1-5 -->
     <div class="card locked" data-lesson="A1.3.1">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.3.1–5 Operating Systems <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.3.1"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.3.1"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -773,13 +858,17 @@
 
     <!-- A1.3.6-7 -->
     <div class="card locked" data-lesson="A1.3.2">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.3.6–7 Control Systems <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.3.2"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.3.2"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -804,13 +893,17 @@
 
     <!-- A1.4.1 -->
     <div class="card locked" data-lesson="A1.4.1">
-      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
+      <div class="lock-overlay">
+        <i class="fas fa-lock"></i> 
+        <span>Locked for Students</span>
+        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+      </div>
       <div class="card-header">
         <h4>A1.4.1 Translation <span class="badge core">Core</span></h4>
       </div>
       <div class="card-actions">
         <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
-        <button class="btn btn-locked unlock-btn" data-lesson="A1.4.1"><i class="fas fa-lock"></i> Lesson Plan</button>
+        <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.4.1"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
         <div class="cover-item">
@@ -842,7 +935,9 @@
 
 <script>
   (function() {
-    // ---- LESSON UNLOCK SYSTEM ----
+    const MASTER_PASSWORD = 'bluebeard2026';
+    
+    // ---- All lessons ----
     const allLessons = [
       'A1.1.1', 'A1.1.2', 'A1.1.3', 'A1.1.4', 'A1.1.5', 'A1.1.6', 
       'A1.1.7', 'A1.1.8', 'A1.1.9',
@@ -852,10 +947,7 @@
     ];
     document.getElementById('totalLessons').textContent = allLessons.length;
 
-    const MASTER_PASSWORD = 'bluebeard2026';
-    let pendingLesson = null;
-
-    // Load unlocked state
+    // ---- Load unlocked state ----
     let unlockedLessons = JSON.parse(localStorage.getItem('a1_unlocked_lessons') || '[]');
 
     function updateUnlockUI() {
@@ -871,15 +963,11 @@
       document.getElementById('unlockedCount').textContent = unlockedLessons.length;
       const btn = document.getElementById('masterUnlockBtn');
       if (unlockedLessons.length === allLessons.length) {
-        btn.innerHTML = '<i class="fas fa-check-circle"></i> All Unlocked';
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> All Unlocked!';
         btn.disabled = true;
-        btn.style.opacity = '0.7';
-        btn.style.cursor = 'default';
       } else {
         btn.innerHTML = '<i class="fas fa-unlock"></i> Unlock a Lesson';
         btn.disabled = false;
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
       }
     }
 
@@ -889,7 +977,7 @@
       updateCoverUI();
     }
 
-    // ---- Master unlock button - opens modal for a specific lesson ----
+    // ---- Master unlock button ----
     document.getElementById('masterUnlockBtn').addEventListener('click', function() {
       if (unlockedLessons.length === allLessons.length) return;
       
@@ -897,23 +985,33 @@
       const locked = allLessons.filter(l => !unlockedLessons.includes(l));
       if (locked.length === 0) return;
       
-      pendingLesson = locked[0];
-      document.getElementById('passwordModal').classList.add('active');
+      // Show modal with the lesson name
+      const modal = document.getElementById('passwordModal');
+      document.getElementById('modalTypeBadge').textContent = '🔓 Unlock Lesson';
+      document.getElementById('modalTitle').textContent = 'Unlock: ' + locked[0];
+      document.getElementById('modalDescription').textContent = 'Enter the master password to unlock "' + locked[0] + '" for students.';
       document.getElementById('pwdInput').value = '';
       document.getElementById('pwdError').textContent = '';
+      modal.classList.add('active');
+      
+      // Store which lesson we're unlocking
+      modal.dataset.targetLesson = locked[0];
       document.getElementById('pwdInput').focus();
     });
 
-    // Password submission
-    function attemptMasterUnlock() {
+    // ---- Password submission ----
+    function attemptUnlock() {
+      const modal = document.getElementById('passwordModal');
       const entered = document.getElementById('pwdInput').value.trim();
+      const targetLesson = modal.dataset.targetLesson;
+      
       if (entered === MASTER_PASSWORD) {
-        if (pendingLesson && !unlockedLessons.includes(pendingLesson)) {
-          unlockedLessons.push(pendingLesson);
+        if (targetLesson && !unlockedLessons.includes(targetLesson)) {
+          unlockedLessons.push(targetLesson);
           saveUnlocked();
         }
-        document.getElementById('passwordModal').classList.remove('active');
-        pendingLesson = null;
+        modal.classList.remove('active');
+        modal.dataset.targetLesson = '';
       } else {
         document.getElementById('pwdError').textContent = '❌ Incorrect password. Try again.';
         document.getElementById('pwdInput').value = '';
@@ -921,23 +1019,105 @@
       }
     }
 
-    document.getElementById('pwdSubmitBtn').addEventListener('click', attemptMasterUnlock);
+    document.getElementById('pwdSubmitBtn').addEventListener('click', attemptUnlock);
     document.getElementById('pwdInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); attemptMasterUnlock(); }
+      if (e.key === 'Enter') { e.preventDefault(); attemptUnlock(); }
     });
     document.getElementById('passwordModal').addEventListener('click', function(e) {
-      if (e.target === this) this.classList.remove('active');
+      if (e.target === this) {
+        this.classList.remove('active');
+        this.dataset.targetLesson = '';
+      }
     });
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') document.getElementById('passwordModal').classList.remove('active');
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('passwordModal');
+        modal.classList.remove('active');
+        modal.dataset.targetLesson = '';
+      }
+    });
+
+    // ---- Lesson Plan buttons (Teacher Only - password protected) ----
+    const PDF_URLS = {
+      'A1.1.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.1.pdf',
+      'A1.1.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.2.pdf',
+      'A1.1.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.3.pdf',
+      'A1.1.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.4.pdf',
+      'A1.1.5': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.5.pdf',
+      'A1.1.6': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.6.pdf',
+      'A1.1.7': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.7.pdf',
+      'A1.1.8': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.8.pdf',
+      'A1.1.9': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.9.pdf',
+      'A1.2.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.1.pdf',
+      'A1.2.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.2.pdf',
+      'A1.2.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.3.pdf',
+      'A1.2.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.4.pdf',
+      'A1.2.5': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.5.pdf',
+      'A1.3.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.3.1-7.pdf',
+      'A1.3.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.3.1-7.pdf',
+      'A1.4.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.4.1.pdf'
+    };
+
+    document.querySelectorAll('.lesson-plan-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const lesson = this.getAttribute('data-lesson');
+        const url = PDF_URLS[lesson];
+        if (url) {
+          // Show password modal for lesson plan access
+          const modal = document.getElementById('passwordModal');
+          document.getElementById('modalTypeBadge').textContent = '📄 Teacher Resource';
+          document.getElementById('modalTitle').textContent = 'Access Lesson Plan';
+          document.getElementById('modalDescription').textContent = 'Enter the master password to access the lesson plan for ' + lesson + '.';
+          document.getElementById('pwdInput').value = '';
+          document.getElementById('pwdError').textContent = '';
+          modal.dataset.redirectUrl = url;
+          modal.classList.add('active');
+          document.getElementById('pwdInput').focus();
+        } else {
+          alert('No PDF URL found for this lesson.');
+        }
+      });
+    });
+
+    // Override password submission for lesson plan redirects
+    const originalAttempt = attemptUnlock;
+    attemptUnlock = function() {
+      const modal = document.getElementById('passwordModal');
+      const entered = document.getElementById('pwdInput').value.trim();
+      const targetLesson = modal.dataset.targetLesson;
+      const redirectUrl = modal.dataset.redirectUrl;
+      
+      if (entered === MASTER_PASSWORD) {
+        if (targetLesson && !unlockedLessons.includes(targetLesson)) {
+          unlockedLessons.push(targetLesson);
+          saveUnlocked();
+        }
+        if (redirectUrl) {
+          window.open(redirectUrl, '_blank');
+          modal.dataset.redirectUrl = '';
+        }
+        modal.classList.remove('active');
+        modal.dataset.targetLesson = '';
+      } else {
+        document.getElementById('pwdError').textContent = '❌ Incorrect password. Try again.';
+        document.getElementById('pwdInput').value = '';
+        document.getElementById('pwdInput').focus();
+      }
+    };
+
+    document.getElementById('pwdSubmitBtn').addEventListener('click', attemptUnlock);
+    document.getElementById('pwdInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); attemptUnlock(); }
     });
 
     // ---- COVER CHECKBOXES (SL / HL) ----
     function updateCoverUI() {
       document.querySelectorAll('.card[data-lesson]').forEach(card => {
         const checkboxes = card.querySelectorAll('.cover-checkbox');
+        if (checkboxes.length === 0) return;
         const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-        if (allChecked && checkboxes.length > 0) {
+        if (allChecked) {
           card.classList.add('fully-covered');
         } else {
           card.classList.remove('fully-covered');
@@ -986,7 +1166,7 @@
         });
       }
 
-      // Also handle change events (in case of direct interaction)
+      // Handle change events
       cb.addEventListener('change', function() {
         localStorage.setItem(storageKey, cb.checked ? 'true' : 'false');
         updateCoverUI();
@@ -996,40 +1176,6 @@
     // ---- INIT ----
     updateUnlockUI();
     updateCoverUI();
-
-    // ---- LESSON PLAN UNLOCK (existing) ----
-    const PDF_URLS = {
-      'A1.1.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.1.pdf',
-      'A1.1.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.2.pdf',
-      'A1.1.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.3.pdf',
-      'A1.1.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.4.pdf',
-      'A1.1.5': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.5.pdf',
-      'A1.1.6': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.6.pdf',
-      'A1.1.7': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.7.pdf',
-      'A1.1.8': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.8.pdf',
-      'A1.1.9': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.9.pdf',
-      'A1.2.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.1.pdf',
-      'A1.2.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.2.pdf',
-      'A1.2.3': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.3.pdf',
-      'A1.2.4': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.4.pdf',
-      'A1.2.5': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.5.pdf',
-      'A1.3.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.3.1-7.pdf',
-      'A1.3.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.3.1-7.pdf',
-      'A1.4.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.4.1.pdf'
-    };
-
-    document.querySelectorAll('.unlock-btn').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const lesson = this.getAttribute('data-lesson');
-        const url = PDF_URLS[lesson];
-        if (url) {
-          window.open(url, '_blank');
-        } else {
-          alert('No PDF URL found for this lesson.');
-        }
-      });
-    });
 
   })();
 </script>
