@@ -1,1 +1,283 @@
-rr
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Consultant Simulator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            border-radius: 24px;
+            padding: 35px 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border: 1px solid #e5edf5;
+        }
+        h1 {
+            color: #0b2a4a;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h1 i { color: #2a6f97; }
+        .subtitle {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            border-left: 4px solid #2a6f97;
+            padding-left: 14px;
+            background: #e9eff8;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        #score {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin-bottom: 16px;
+            background: #f1f6fc;
+            padding: 8px 18px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        .scenario {
+            background: #eef4ff;
+            padding: 20px 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border-left: 5px solid #2a6f97;
+        }
+        .scenario .customer-label {
+            font-weight: 600;
+            color: #0b2a4a;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .scenario .question {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #0b2a4a;
+            margin-top: 4px;
+        }
+        #options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        #options button {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 2px solid #dce4ed;
+            border-radius: 12px;
+            cursor: pointer;
+            background: white;
+            color: #0b2a4a;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        #options button:hover {
+            border-color: #2a6f97;
+            background: #eef4ff;
+            transform: translateY(-1px);
+        }
+        #options button:active {
+            transform: scale(0.97);
+        }
+        #feedback {
+            margin-top: 20px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            display: none;
+        }
+        #feedback.show { display: block; }
+        #feedback.correct {
+            background: #dcfce7;
+            color: #166534;
+            border-left: 4px solid #2d7d46;
+        }
+        #feedback.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #b21f1f;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #1f6390;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted #1f6390;
+        }
+        .back-link:hover { color: #0b2a4a; border-bottom: 2px solid #0b2a4a; }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            #options { grid-template-columns: 1fr; }
+            h1 { font-size: 1.6rem; }
+            .scenario .question { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fas fa-database"></i> Storage Consultant Simulator</h1>
+    <div class="subtitle"><i class="fas fa-briefcase"></i> IT Storage Consultant</div>
+
+    <p style="color:#475569; margin-bottom: 16px;">
+        Recommend the best storage device for each customer.
+    </p>
+
+    <div id="score">Score: 0 / 0</div>
+
+    <div class="scenario" id="scenario">
+        <div class="customer-label">👤 Customer</div>
+        <div class="question">Loading...</div>
+    </div>
+
+    <div id="options"></div>
+
+    <div id="feedback"></div>
+
+    <a class="back-link" href="A1.1.7-summary.html">← Back to A1.1.7 Summary</a>
+</div>
+
+<script>
+    (function() {
+        const scenarios = [
+            {
+                question: "A gamer needs a very fast drive to load games quickly.",
+                answer: "SSD",
+                reason: "SSDs have much faster read and write speeds than HDDs."
+            },
+            {
+                question: "A school needs cheap storage for thousands of files.",
+                answer: "HDD",
+                reason: "Hard drives provide large amounts of storage at low cost."
+            },
+            {
+                question: "A photographer needs portable storage for a camera.",
+                answer: "SD Card",
+                reason: "Most cameras use SD cards for portable image storage."
+            },
+            {
+                question: "A student wants to carry homework between school and home.",
+                answer: "USB Flash Drive",
+                reason: "USB drives are small, portable and easy to use."
+            },
+            {
+                question: "A company wants staff to access files from anywhere.",
+                answer: "Cloud Storage",
+                reason: "Cloud storage allows access over the internet from many devices."
+            },
+            {
+                question: "A museum wants long-term distribution of a video collection.",
+                answer: "Optical Disc",
+                reason: "Optical media can be useful for distributing read-only content."
+            }
+        ];
+
+        const choices = [
+            "SSD",
+            "HDD",
+            "USB Flash Drive",
+            "SD Card",
+            "Cloud Storage",
+            "Optical Disc"
+        ];
+
+        let current = 0;
+        let score = 0;
+
+        const scenarioEl = document.getElementById('scenario');
+        const optionsEl = document.getElementById('options');
+        const feedbackEl = document.getElementById('feedback');
+        const scoreEl = document.getElementById('score');
+
+        function loadScenario() {
+            feedbackEl.className = '';
+            feedbackEl.classList.remove('show', 'correct', 'incorrect');
+            feedbackEl.textContent = '';
+
+            if (current >= scenarios.length) {
+                scenarioEl.innerHTML = `
+                    <div style="text-align:center; padding: 10px 0;">
+                        <h2 style="color:#0b2a4a; margin-bottom:6px;">🎉 Simulation Complete!</h2>
+                        <p style="font-size:1.2rem; font-weight:600; color:#2a6f97;">
+                            You scored ${score} out of ${scenarios.length}
+                        </p>
+                        <p style="color:#475569; font-size:0.9rem; margin-top:4px;">
+                            ${score === scenarios.length ? '🌟 Perfect score! You\'re a storage expert!' : 'Good effort! Review the tables to improve.'}
+                        </p>
+                    </div>
+                `;
+                optionsEl.innerHTML = '';
+                scoreEl.textContent = `Final Score: ${score} / ${scenarios.length}`;
+                return;
+            }
+
+            scoreEl.textContent = `Score: ${score} / ${current}`;
+
+            scenarioEl.innerHTML = `
+                <div class="customer-label">👤 Customer ${current + 1} of ${scenarios.length}</div>
+                <div class="question">${scenarios[current].question}</div>
+            `;
+
+            let buttons = '';
+            choices.forEach(choice => {
+                buttons += `<button onclick="window.checkAnswer('${choice}')">${choice}</button>`;
+            });
+            optionsEl.innerHTML = buttons;
+        }
+
+        window.checkAnswer = function(choice) {
+            const scenario = scenarios[current];
+            feedbackEl.classList.remove('show', 'correct', 'incorrect');
+
+            if (choice === scenario.answer) {
+                score++;
+                feedbackEl.className = 'show correct';
+                feedbackEl.innerHTML = `✅ <strong>Correct!</strong><br>${scenario.reason}`;
+            } else {
+                feedbackEl.className = 'show incorrect';
+                feedbackEl.innerHTML = `
+                    ❌ <strong>Not the best choice.</strong><br>
+                    Correct answer: <strong>${scenario.answer}</strong><br>
+                    ${scenario.reason}
+                `;
+            }
+
+            current++;
+
+            setTimeout(loadScenario, 2500);
+        };
+
+        loadScenario();
+    })();
+</script>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</body>
+</html>
+
