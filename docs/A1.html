@@ -105,15 +105,11 @@
       display: flex;
       flex-direction: column;
       position: relative;
+      overflow: hidden;
     }
     .card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
 
-    /* Lock overlay - only covers the card-actions area, not the checkboxes */
-    .card.locked .card-actions {
-      opacity: 0.4;
-      pointer-events: none;
-      user-select: none;
-    }
+    /* Lock overlay - sits behind content but visible */
     .card.locked .lock-overlay {
       display: flex;
     }
@@ -124,8 +120,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(2px);
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(1.5px);
       border-radius: 24px;
       align-items: center;
       justify-content: center;
@@ -133,11 +129,11 @@
       font-weight: 600;
       color: #0b2a4a;
       gap: 10px;
-      z-index: 1;
+      z-index: 0;
       flex-direction: column;
       pointer-events: none;
     }
-    .card .lock-overlay i { font-size: 2rem; color: #b21f1f; }
+    .card .lock-overlay i { font-size: 2.2rem; color: #b21f1f; opacity: 0.7; }
     .card .lock-overlay .unlock-hint {
       font-size: 0.75rem;
       font-weight: 400;
@@ -145,10 +141,101 @@
       margin-top: 4px;
     }
 
-    /* Cover section stays above the overlay */
+    /* All content sits above the overlay */
+    .card-header,
+    .card-actions,
     .cover-section {
       position: relative;
-      z-index: 3;
+      z-index: 1;
+    }
+
+    /* Dim the action buttons when locked */
+    .card.locked .card-actions .btn {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .card.locked .card-actions .btn-theory {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    /* But keep lesson plan button clickable for teachers */
+    .card.locked .card-actions .lesson-plan-btn {
+      opacity: 0.6;
+      pointer-events: auto;
+    }
+    .card.locked .card-actions .lesson-plan-btn:hover {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .card-header h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+    .badge {
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge.core { background: #dceaf7; color: #13416b; }
+    .badge.hl { background: #f7d9d9; color: #a13232; }
+    .badge.both { background: #d9d9f7; color: #3a3a7c; }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+      align-items: center;
+      border-top: 1px solid #e8eff6;
+      padding-top: 0.9rem;
+    }
+    .card-actions .btn {
+      background: #ecf3fa;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #13416b;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .card-actions .btn i { font-size: 0.8rem; }
+    .card-actions .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
+
+    .btn-theory {
+      background: #1a5f87 !important;
+      color: #fff !important;
+    }
+    .btn-theory:hover {
+      background: #134f75 !important;
+    }
+
+    .btn-locked {
+      background: #e8dfd0 !important;
+      color: #6a4e2e !important;
+      cursor: pointer;
+    }
+    .btn-locked i { color: #b8943e; }
+
+    .cover-section {
       margin-top: 0.4rem;
       padding-top: 0.4rem;
       border-top: 1px solid #eef2f6;
@@ -156,8 +243,8 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 8px 14px;
-      background: transparent;
       pointer-events: auto;
+      background: transparent;
     }
     .cover-item {
       display: flex;
@@ -201,78 +288,6 @@
       letter-spacing: 0.3px;
     }
 
-    .card-actions {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 0.8rem;
-      align-items: center;
-      border-top: 1px solid #e8eff6;
-      padding-top: 0.9rem;
-    }
-    .card-actions .btn {
-      background: #ecf3fa;
-      padding: 0.4rem 1.2rem;
-      border-radius: 30px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #13416b;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border: 1px solid transparent;
-      transition: 0.15s;
-      cursor: pointer;
-    }
-    .card-actions .btn i { font-size: 0.8rem; }
-    .card-actions .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
-
-    .btn-theory {
-      background: #1a5f87 !important;
-      color: #fff !important;
-    }
-    .btn-theory:hover {
-      background: #134f75 !important;
-    }
-
-    .btn-locked {
-      background: #e8dfd0 !important;
-      color: #6a4e2e !important;
-      cursor: pointer;
-    }
-    .btn-locked i { color: #b8943e; }
-
-    .card-header {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .card-header h4 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #0b2a4a;
-      letter-spacing: -0.2px;
-      line-height: 1.3;
-    }
-    .badge {
-      padding: 0.2rem 0.8rem;
-      border-radius: 40px;
-      font-size: 0.65rem;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .badge.core { background: #dceaf7; color: #13416b; }
-    .badge.hl { background: #f7d9d9; color: #a13232; }
-    .badge.both { background: #d9d9f7; color: #3a3a7c; }
-
     .card.fully-covered {
       background: #e6f7e6 !important;
       border-color: #2d7d46;
@@ -280,10 +295,6 @@
     .card.partially-covered {
       background: #fff8e6 !important;
       border-color: #d4a843;
-    }
-    .card.locked .card-header,
-    .card.locked .cover-section {
-      opacity: 1;
     }
 
     /* Progress bar */
