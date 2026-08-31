@@ -142,6 +142,10 @@
       background: #e6f7e6 !important;
       border-color: #2d7d46;
     }
+    .card.partially-covered {
+      background: #fff8e6 !important;
+      border-color: #d4a843;
+    }
 
     .card-header {
       display: flex;
@@ -230,12 +234,11 @@
       width: 16px;
       height: 16px;
       accent-color: #0b2a4a;
-      cursor: default;
-      pointer-events: none;
-      opacity: 0.7;
+      cursor: pointer;
+      opacity: 1;
     }
     .cover-item label {
-      cursor: default;
+      cursor: pointer;
       font-weight: 500;
       color: #0b2a4a;
       font-size: 0.8rem;
@@ -263,8 +266,8 @@
       letter-spacing: 0.3px;
     }
 
-    /* Master unlock bar */
-    .master-unlock-bar {
+    /* Progress bar */
+    .progress-bar {
       background: #0b2a4a;
       border-radius: 60px;
       padding: 0.8rem 2rem;
@@ -275,43 +278,40 @@
       gap: 1rem 2rem;
       color: #e6edf5;
     }
-    .master-unlock-bar .label {
+    .progress-bar .label {
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .master-unlock-bar .label i { color: #fdbb2d; }
-    .master-unlock-bar .btn-unlock {
-      background: #fdbb2d;
-      color: #0b2a4a;
-      border: none;
-      padding: 0.4rem 1.4rem;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .master-unlock-bar .btn-unlock:hover { background: #fcd34d; transform: scale(1.02); }
-    .master-unlock-bar .btn-unlock:disabled { 
-      background: #6b7f8f; 
-      color: #e6edf5; 
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-    .master-unlock-bar .status-badge {
+    .progress-bar .label i { color: #fdbb2d; }
+    .progress-bar .status-badge {
       font-size: 0.75rem;
       background: #1f4b6e;
       padding: 0.2rem 1rem;
       border-radius: 30px;
       color: #b6d0e8;
     }
-    .master-unlock-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .progress-track {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: #1f4b6e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar .progress-fill {
+      height: 100%;
+      background: #fdbb2d;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
-    /* Password Modals */
+    /* Password Modal for Lesson Plans */
     .password-modal {
       display: none;
       position: fixed;
@@ -355,7 +355,6 @@
     }
     .password-box .btn:hover { background: #134f75; }
     .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
-
     .modal-type-badge {
       display: inline-block;
       background: #0b2a4a;
@@ -373,7 +372,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
-      .master-unlock-bar { flex-direction: column; align-items: stretch; text-align: center; }
+      .progress-bar { flex-direction: column; align-items: stretch; text-align: center; }
     }
   </style>
 </head>
@@ -381,14 +380,14 @@
 
 <div class="container">
 
-  <!-- Password Modal -->
+  <!-- Password Modal for Lesson Plans -->
   <div id="passwordModal" class="password-modal">
     <div class="password-box">
-      <div class="modal-type-badge" id="modalTypeBadge">🔓 Unlock Lesson</div>
-      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> <span id="modalTitle">Teacher Verification</span></h3>
-      <p id="modalDescription">Enter the master password to unlock this lesson for students.</p>
+      <div class="modal-type-badge">📄 Teacher Resource</div>
+      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Access Lesson Plan</h3>
+      <p>Enter the teacher password to access this lesson plan.</p>
       <input type="password" id="pwdInput" placeholder="Enter password" autocomplete="off">
-      <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+      <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Access</button>
       <div class="error" id="pwdError"></div>
     </div>
   </div>
@@ -406,21 +405,21 @@
   </div>
   <div class="subhead">
     <i class="fas fa-check-circle" style="color:#1f7b4d;"></i> 
-    all topics · separate SL / HL tracking · unlock lessons individually
+    all topics · separate SL / HL tracking · lessons unlock when covered
   </div>
 
-  <!-- MASTER UNLOCK BAR -->
-  <div class="master-unlock-bar">
-    <span class="label"><i class="fas fa-unlock-alt"></i> Student Access</span>
-    <button class="btn-unlock" id="masterUnlockBtn">
-      <i class="fas fa-unlock"></i> Unlock a Lesson
-    </button>
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar">
+    <span class="label"><i class="fas fa-chart-line"></i> Progress</span>
     <span class="status-badge">
       <i class="fas fa-graduation-cap"></i> 
       <span class="unlocked-count" id="unlockedCount">0</span> / <span id="totalLessons">0</span> lessons unlocked
     </span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
     <span style="font-size:0.75rem; color:#94a3b8; margin-left:auto;">
-      <i class="fas fa-info-circle"></i> Click "Unlock a Lesson" to grant student access
+      <i class="fas fa-info-circle"></i> Tick SL or HL to unlock a lesson
     </span>
   </div>
 
@@ -435,7 +434,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.1 CPU Architecture <span class="badge core">Core</span></h4>
@@ -463,7 +462,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.2 GPU Architecture <span class="badge core">Core</span></h4>
@@ -491,7 +490,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.3 GPU (HL) <span class="badge hl">HL</span></h4>
@@ -515,7 +514,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.4 Primary Memory <span class="badge core">Core</span></h4>
@@ -543,7 +542,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.5 Fetch-Decode-Execute <span class="badge core">Core</span></h4>
@@ -571,7 +570,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.6 Pipelining (HL) <span class="badge hl">HL</span></h4>
@@ -595,7 +594,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.7 Secondary Memory <span class="badge core">Core</span></h4>
@@ -623,7 +622,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.8 Data Compression <span class="badge core">Core</span></h4>
@@ -651,7 +650,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.1.9 Cloud Computing <span class="badge core">Core</span></h4>
@@ -686,7 +685,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.2.1 Data Representation 1 <span class="badge core">Core</span></h4>
@@ -714,7 +713,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.2.2 Data Representation 2 <span class="badge core">Core</span></h4>
@@ -742,7 +741,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.2.3 Logic Gates <span class="badge core">Core</span></h4>
@@ -770,7 +769,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.2.4 Truth Tables <span class="badge core">Core</span></h4>
@@ -798,7 +797,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.2.5 Logic Diagrams <span class="badge core">Core</span></h4>
@@ -833,7 +832,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.3.1–5 Operating Systems <span class="badge core">Core</span></h4>
@@ -861,7 +860,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.3.6–7 Control Systems <span class="badge core">Core</span></h4>
@@ -896,7 +895,7 @@
       <div class="lock-overlay">
         <i class="fas fa-lock"></i> 
         <span>Locked for Students</span>
-        <span class="unlock-hint">Teacher: click "Unlock a Lesson" above</span>
+        <span class="unlock-hint">Teacher: tick SL or HL below to unlock</span>
       </div>
       <div class="card-header">
         <h4>A1.4.1 Translation <span class="badge core">Core</span></h4>
@@ -929,13 +928,13 @@
   <hr class="divider-light">
   <div style="display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
     <span><i class="fas fa-save"></i> progress saved automatically in your browser</span>
-    <span><i class="fas fa-user-shield"></i> teacher controls: unlock individual lessons above</span>
+    <span><i class="fas fa-user-shield"></i> tick SL or HL to unlock lessons for students</span>
   </div>
 </div>
 
 <script>
   (function() {
-    const MASTER_PASSWORD = 'bluebeard2026';
+    const TEACHER_PASSWORD = 'bluebeard2026';
     
     // ---- All lessons ----
     const allLessons = [
@@ -947,94 +946,98 @@
     ];
     document.getElementById('totalLessons').textContent = allLessons.length;
 
-    // ---- Load unlocked state ----
-    let unlockedLessons = JSON.parse(localStorage.getItem('a1_unlocked_lessons') || '[]');
-
-    function updateUnlockUI() {
-      const cards = document.querySelectorAll('.card[data-lesson]');
-      cards.forEach(card => {
+    // ---- Track which lessons are unlocked (based on checkboxes) ----
+    function getUnlockedLessons() {
+      const unlocked = [];
+      document.querySelectorAll('.card[data-lesson]').forEach(card => {
         const lesson = card.getAttribute('data-lesson');
-        if (unlockedLessons.includes(lesson)) {
+        const checkboxes = card.querySelectorAll('.cover-checkbox');
+        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+        if (anyChecked) {
+          unlocked.push(lesson);
+        }
+      });
+      return unlocked;
+    }
+
+    function updateUI() {
+      const unlocked = getUnlockedLessons();
+      
+      // Update card lock states
+      document.querySelectorAll('.card[data-lesson]').forEach(card => {
+        const lesson = card.getAttribute('data-lesson');
+        const checkboxes = card.querySelectorAll('.cover-checkbox');
+        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+        const allChecked = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
+        
+        // Lock/unlock
+        if (anyChecked) {
           card.classList.remove('locked');
         } else {
           card.classList.add('locked');
         }
-      });
-      document.getElementById('unlockedCount').textContent = unlockedLessons.length;
-      const btn = document.getElementById('masterUnlockBtn');
-      if (unlockedLessons.length === allLessons.length) {
-        btn.innerHTML = '<i class="fas fa-check-circle"></i> All Unlocked!';
-        btn.disabled = true;
-      } else {
-        btn.innerHTML = '<i class="fas fa-unlock"></i> Unlock a Lesson';
-        btn.disabled = false;
-      }
-    }
-
-    function saveUnlocked() {
-      localStorage.setItem('a1_unlocked_lessons', JSON.stringify(unlockedLessons));
-      updateUnlockUI();
-      updateCoverUI();
-    }
-
-    // ---- Master unlock button ----
-    document.getElementById('masterUnlockBtn').addEventListener('click', function() {
-      if (unlockedLessons.length === allLessons.length) return;
-      
-      // Find first locked lesson
-      const locked = allLessons.filter(l => !unlockedLessons.includes(l));
-      if (locked.length === 0) return;
-      
-      // Show modal with the lesson name
-      const modal = document.getElementById('passwordModal');
-      document.getElementById('modalTypeBadge').textContent = '🔓 Unlock Lesson';
-      document.getElementById('modalTitle').textContent = 'Unlock: ' + locked[0];
-      document.getElementById('modalDescription').textContent = 'Enter the master password to unlock "' + locked[0] + '" for students.';
-      document.getElementById('pwdInput').value = '';
-      document.getElementById('pwdError').textContent = '';
-      modal.classList.add('active');
-      
-      // Store which lesson we're unlocking
-      modal.dataset.targetLesson = locked[0];
-      document.getElementById('pwdInput').focus();
-    });
-
-    // ---- Password submission ----
-    function attemptUnlock() {
-      const modal = document.getElementById('passwordModal');
-      const entered = document.getElementById('pwdInput').value.trim();
-      const targetLesson = modal.dataset.targetLesson;
-      
-      if (entered === MASTER_PASSWORD) {
-        if (targetLesson && !unlockedLessons.includes(targetLesson)) {
-          unlockedLessons.push(targetLesson);
-          saveUnlocked();
+        
+        // Color coding
+        card.classList.remove('fully-covered', 'partially-covered');
+        if (allChecked) {
+          card.classList.add('fully-covered');
+        } else if (anyChecked) {
+          card.classList.add('partially-covered');
         }
-        modal.classList.remove('active');
-        modal.dataset.targetLesson = '';
-      } else {
-        document.getElementById('pwdError').textContent = '❌ Incorrect password. Try again.';
-        document.getElementById('pwdInput').value = '';
-        document.getElementById('pwdInput').focus();
-      }
+      });
+      
+      // Update progress bar
+      const count = unlocked.length;
+      const total = allLessons.length;
+      document.getElementById('unlockedCount').textContent = count;
+      document.getElementById('progressFill').style.width = (count / total * 100) + '%';
     }
 
-    document.getElementById('pwdSubmitBtn').addEventListener('click', attemptUnlock);
-    document.getElementById('pwdInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); attemptUnlock(); }
-    });
-    document.getElementById('passwordModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        this.classList.remove('active');
-        this.dataset.targetLesson = '';
+    // ---- Handle checkbox changes ----
+    const checkboxes = document.querySelectorAll('.cover-checkbox');
+    checkboxes.forEach(function(cb) {
+      const lesson = cb.getAttribute('data-lesson');
+      const level = cb.getAttribute('data-level');
+      const storageKey = 'a1_cover_' + lesson + '_' + level;
+
+      // Restore saved state
+      const saved = localStorage.getItem(storageKey);
+      if (saved === 'true') {
+        cb.checked = true;
+      }
+
+      // Handle changes
+      cb.addEventListener('change', function() {
+        localStorage.setItem(storageKey, cb.checked ? 'true' : 'false');
+        updateUI();
+      });
+
+      // Double-click label to toggle
+      const label = document.querySelector('label[for="' + cb.id + '"]');
+      if (label) {
+        label.addEventListener('dblclick', function(e) {
+          e.preventDefault();
+          cb.checked = !cb.checked;
+          localStorage.setItem(storageKey, cb.checked ? 'true' : 'false');
+          updateUI();
+        });
       }
     });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const modal = document.getElementById('passwordModal');
-        modal.classList.remove('active');
-        modal.dataset.targetLesson = '';
-      }
+
+    // ---- "Toggle both" teacher edit ----
+    document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const lesson = this.getAttribute('data-lesson');
+        const cbs = document.querySelectorAll('.cover-checkbox[data-lesson="' + lesson + '"]');
+        const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
+        cbs.forEach(function(cb) {
+          cb.checked = anyUnchecked;
+          const key = 'a1_cover_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-level');
+          localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
+        });
+        updateUI();
+      });
     });
 
     // ---- Lesson Plan buttons (Teacher Only - password protected) ----
@@ -1058,20 +1061,18 @@
       'A1.4.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.4.1.pdf'
     };
 
+    let pendingLessonPlan = null;
+
     document.querySelectorAll('.lesson-plan-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
         const lesson = this.getAttribute('data-lesson');
         const url = PDF_URLS[lesson];
         if (url) {
-          // Show password modal for lesson plan access
+          pendingLessonPlan = url;
           const modal = document.getElementById('passwordModal');
-          document.getElementById('modalTypeBadge').textContent = '📄 Teacher Resource';
-          document.getElementById('modalTitle').textContent = 'Access Lesson Plan';
-          document.getElementById('modalDescription').textContent = 'Enter the master password to access the lesson plan for ' + lesson + '.';
           document.getElementById('pwdInput').value = '';
           document.getElementById('pwdError').textContent = '';
-          modal.dataset.redirectUrl = url;
           modal.classList.add('active');
           document.getElementById('pwdInput').focus();
         } else {
@@ -1080,102 +1081,45 @@
       });
     });
 
-    // Override password submission for lesson plan redirects
-    const originalAttempt = attemptUnlock;
-    attemptUnlock = function() {
-      const modal = document.getElementById('passwordModal');
+    // Password submission for lesson plans
+    document.getElementById('pwdSubmitBtn').addEventListener('click', function() {
       const entered = document.getElementById('pwdInput').value.trim();
-      const targetLesson = modal.dataset.targetLesson;
-      const redirectUrl = modal.dataset.redirectUrl;
-      
-      if (entered === MASTER_PASSWORD) {
-        if (targetLesson && !unlockedLessons.includes(targetLesson)) {
-          unlockedLessons.push(targetLesson);
-          saveUnlocked();
+      if (entered === TEACHER_PASSWORD) {
+        if (pendingLessonPlan) {
+          window.open(pendingLessonPlan, '_blank');
+          pendingLessonPlan = null;
         }
-        if (redirectUrl) {
-          window.open(redirectUrl, '_blank');
-          modal.dataset.redirectUrl = '';
-        }
-        modal.classList.remove('active');
-        modal.dataset.targetLesson = '';
+        document.getElementById('passwordModal').classList.remove('active');
       } else {
         document.getElementById('pwdError').textContent = '❌ Incorrect password. Try again.';
         document.getElementById('pwdInput').value = '';
         document.getElementById('pwdInput').focus();
       }
-    };
-
-    document.getElementById('pwdSubmitBtn').addEventListener('click', attemptUnlock);
-    document.getElementById('pwdInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); attemptUnlock(); }
     });
 
-    // ---- COVER CHECKBOXES (SL / HL) ----
-    function updateCoverUI() {
-      document.querySelectorAll('.card[data-lesson]').forEach(card => {
-        const checkboxes = card.querySelectorAll('.cover-checkbox');
-        if (checkboxes.length === 0) return;
-        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-        if (allChecked) {
-          card.classList.add('fully-covered');
-        } else {
-          card.classList.remove('fully-covered');
-        }
-      });
-    }
-
-    const checkboxes = document.querySelectorAll('.cover-checkbox');
-
-    checkboxes.forEach(function(cb) {
-      const lesson = cb.getAttribute('data-lesson');
-      const level = cb.getAttribute('data-level');
-      const storageKey = 'a1_cover_' + lesson + '_' + level;
-
-      // Restore state
-      const saved = localStorage.getItem(storageKey);
-      if (saved === 'true') {
-        cb.checked = true;
+    document.getElementById('pwdInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('pwdSubmitBtn').click();
       }
+    });
 
-      // Handle label double-click
-      const label = document.querySelector('label[for="' + cb.id + '"]');
-      if (label) {
-        label.addEventListener('dblclick', function(e) {
-          e.preventDefault();
-          cb.checked = !cb.checked;
-          localStorage.setItem(storageKey, cb.checked ? 'true' : 'false');
-          updateCoverUI();
-        });
+    document.getElementById('passwordModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('active');
+        pendingLessonPlan = null;
       }
+    });
 
-      // Handle "toggle both" teacher edit
-      const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lesson + '"]');
-      if (toggleSpan) {
-        toggleSpan.addEventListener('click', function(e) {
-          e.preventDefault();
-          const cbs = document.querySelectorAll('.cover-checkbox[data-lesson="' + lesson + '"]');
-          // If any are unchecked, check all; else uncheck all
-          const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
-          cbs.forEach(function(cb) {
-            cb.checked = anyUnchecked;
-            const key = 'a1_cover_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-level');
-            localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
-          });
-          updateCoverUI();
-        });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.getElementById('passwordModal').classList.remove('active');
+        pendingLessonPlan = null;
       }
-
-      // Handle change events
-      cb.addEventListener('change', function() {
-        localStorage.setItem(storageKey, cb.checked ? 'true' : 'false');
-        updateCoverUI();
-      });
     });
 
     // ---- INIT ----
-    updateUnlockUI();
-    updateCoverUI();
+    updateUI();
 
   })();
 </script>
