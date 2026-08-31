@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.1.4 – Primary Memory</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        .highlight-row {
+            background: #fef9e7 !important;
+        }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
+
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong {
+            color: #1a6b33;
+        }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+
+        .hierarchy-diagram {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 2;
+        }
+        .hierarchy-diagram .level {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #2d3748;
+            padding: 6px 0;
+        }
+        .hierarchy-diagram .level:last-child { border-bottom: none; }
+        .hierarchy-diagram .level-name { color: #f7c948; font-weight: 600; }
+        .hierarchy-diagram .level-speed { color: #a3d9a5; }
+        .hierarchy-diagram .level-size { color: #66b3ff; }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+        .comparison-grid .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        .comparison-grid .card h4 {
+            color: #0b2a4a;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+
+    <h1>A1.1.4 – Primary Memory</h1>
+
+    <!-- ===== LEARNING OBJECTIVE ===== -->
+    <h2>📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to <strong>explain</strong>:</p>
+    <ul>
+        <li>The purpose of each type of primary memory: <strong>RAM, ROM, cache (L1, L2, L3), and registers</strong></li>
+        <li>Why each type is designed the way it is (volatility, speed, capacity trade-offs)</li>
+        <li>How the CPU interacts with different memory types to <strong>optimise performance</strong></li>
+        <li>The meaning and relevance of <strong>cache hit</strong> and <strong>cache miss</strong></li>
+    </ul>
+
+    <!-- ===== COMMAND TERM ===== -->
+    <h2>🎯 IB Command Term: <span class="badge">Explain</span></h2>
+    <div class="command-term">
+        <strong>Explain</strong> – <em>"Give a detailed account including reasons or causes."</em><br><br>
+        Naming what each memory type stores is <strong>description</strong>; <strong>explaining</strong> <em>why</em> it is built that way (why RAM is volatile, why ROM is read-only, why cache exists at all) is what this statement assesses.
+    </div>
+
+    <!-- ===== BLOOKET STARTER ===== -->
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket Rush</span>
+        <span style="color:#3d5f7a;">Test your knowledge of primary memory types!</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/rush?id=68b03753ddff7a4868b8d256" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <!-- ===== KEY TERMS ===== -->
+    <h2>🔑 Key Terms</h2>
+    <table>
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+            <tr><td><strong>RAM</strong></td><td>Random-access memory — volatile working memory holding the OS, running programs, and current data</td></tr>
+            <tr><td><strong>ROM</strong></td><td>Read-only memory — non-volatile memory holding firmware and startup instructions (BIOS/UEFI)</td></tr>
+            <tr><td><strong>Cache</strong></td><td>Small, very fast memory between CPU and RAM, holding frequently used data and instructions</td></tr>
+            <tr><td><strong>Register</strong></td><td>Tiny, fastest storage inside the CPU holding operands, addresses, and intermediate results</td></tr>
+            <tr><td><strong>Volatile</strong></td><td>Memory that loses its contents when power is turned off (RAM, cache, registers)</td></tr>
+            <tr><td><strong>Non-volatile</strong></td><td>Memory that retains contents without power (ROM)</td></tr>
+            <tr><td><strong>Cache hit</strong></td><td>The CPU finds the required data in cache — fast access</td></tr>
+            <tr><td><strong>Cache miss</strong></td><td>The CPU does not find the data in cache — must fetch from RAM, causing a delay</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== THE FOUR TYPES ===== -->
+    <h2>📊 The Four Types of Primary Memory</h2>
+
+    <table>
+        <thead><tr><th>Type</th><th>Volatile?</th><th>Speed</th><th>Size (Typical)</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Registers</strong></td><td>Yes</td><td>Fastest (~1 cycle)</td><td>Bytes</td><td>Hold what the CPU is working on this instant: operands, addresses, intermediate results</td></tr>
+            <tr><td><strong>L1 Cache</strong></td><td>Yes</td><td>~1–2 cycles</td><td>~32 KB per core</td><td>Frequently accessed data; smallest and fastest cache level</td></tr>
+            <tr><td><strong>L2 Cache</strong></td><td>Yes</td><td>~3–14 cycles</td><td>~256 KB per core</td><td>Backup to L1; larger and slightly slower</td></tr>
+            <tr><td><strong>L3 Cache</strong></td><td>Yes</td><td>~30–50+ cycles</td><td>~8–32 MB shared</td><td>Largest cache level; shared across all cores</td></tr>
+            <tr><td><strong>RAM</strong></td><td>Yes</td><td>~100+ cycles</td><td>GBs</td><td>Working memory: OS, running programs, current data</td></tr>
+            <tr><td><strong>ROM</strong></td><td><strong>No</strong></td><td>Slow</td><td>MBs</td><td>Permanent startup instructions; firmware and BIOS</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== MEMORY HIERARCHY ===== -->
+    <h2>🏛️ The Memory Hierarchy</h2>
+    <p>The CPU searches for data in <strong>speed order</strong>: registers first, then L1, L2, L3 cache, then RAM. Each step down is <strong>larger but slower</strong>.</p>
+
+    <div class="hierarchy-diagram">
+        <div class="level">
+            <span class="level-name">Registers</span>
+            <span class="level-speed">~1 cycle</span>
+            <span class="level-size">Bytes</span>
+        </div>
+        <div class="level">
+            <span class="level-name">L1 Cache</span>
+            <span class="level-speed">~1–2 cycles</span>
+            <span class="level-size">~32 KB</span>
+        </div>
+        <div class="level">
+            <span class="level-name">L2 Cache</span>
+            <span class="level-speed">~3–14 cycles</span>
+            <span class="level-size">~256 KB</span>
+        </div>
+        <div class="level">
+            <span class="level-name">L3 Cache</span>
+            <span class="level-speed">~30–50+ cycles</span>
+            <span class="level-size">~8–32 MB</span>
+        </div>
+        <div class="level">
+            <span class="level-name">RAM</span>
+            <span class="level-speed">~100+ cycles</span>
+            <span class="level-size">GBs</span>
+        </div>
+        <div style="color:#94a3b8; font-size:0.8rem; margin-top:8px; border-top:1px solid #2d3748; padding-top:8px;">
+            ⬆ Faster, smaller, more expensive per byte &nbsp;|&nbsp; ⬇ Slower, larger, cheaper per byte
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>💡 Why not build everything out of registers?</strong> The catch is <strong>cost and physical size</strong>: the faster the memory, the more expensive it is per byte and the less of it can sit close to the CPU. The hierarchy balances speed, size, and cost.</p>
+    </div>
+
+    <!-- ===== CACHE HITS AND MISSES ===== -->
+    <h2>🎯 Cache Hits and Cache Misses</h2>
+
+    <div class="comparison-grid">
+        <div class="card">
+            <h4>✅ Cache Hit</h4>
+            <p>The CPU finds the data it needs in cache and proceeds almost immediately.</p>
+            <p style="color:#2d7d46; font-weight:600;">Fast access — a few CPU cycles</p>
+        </div>
+        <div class="card">
+            <h4>❌ Cache Miss</h4>
+            <p>The data is not in cache, forcing the CPU to fetch it from RAM, which takes much longer.</p>
+            <p style="color:#b21f1f; font-weight:600;">Slow access — hundreds of CPU cycles</p>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>⚠️ Common exam mistake:</strong> Writing that a cache miss means an error, crash, or data loss. A miss is a <strong>normal, frequent event</strong> — the CPU simply fetches from RAM and usually copies the data into cache so the next access hits. The cost of a miss is <strong>time</strong>, nothing else.</p>
+    </div>
+
+    <p><strong>Hit rate</strong> — the proportion of accesses that are hits — makes a big difference. A program whose data fits comfortably in cache runs dramatically faster than one that misses constantly, because every miss stalls the CPU for hundreds of cycles.</p>
+
+    <!-- ===== CPU-MEMORY INTERACTION ===== -->
+    <h2>🔄 How the CPU Works with Memory</h2>
+    <p>The CPU follows this order when it needs data:</p>
+    <ol style="margin-left: 20px;">
+        <li><strong>Check registers</strong> — fastest, but very small</li>
+        <li><strong>Check L1 cache</strong> — if not in registers</li>
+        <li><strong>Check L2 cache</strong> — if not in L1</li>
+        <li><strong>Check L3 cache</strong> — if not in L2</li>
+        <li><strong>Fetch from RAM</strong> — if not in any cache level</li>
+        <li><strong>Fetch from secondary storage</strong> — if not in RAM (paged out) — <em>very slow</em></li>
+    </ol>
+
+    <p>This layered design ensures the most frequently used data stays as close to the CPU as possible, minimising latency and maximising throughput.</p>
+
+    <!-- ===== TASKS ===== -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+
+        <!-- Task 1 -->
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Learn</strong> — Use the resources below to learn about primary memory.
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.1.4.pdf" target="_blank">📘 eBook (A1.1.4)</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.4-explain-the-purposes-of-different-types-of-primary-memory" target="_blank">🌐 CS Wiki (A1.1.4)</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQe-ehQDMGvfO9jdTB_vWqIUiJjH9-a_c_uJ0FbPY_IIcpDfdyqRnWTfUpIDGTCAAs42ocaOI9_jsMX/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">📊 Lesson Slides</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85;">Take notes on each memory type, why it is designed that way, and how the CPU interacts with them.</span>
+            </span>
+        </div>
+
+        <!-- Task 2 – green background -->
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Starter Activity</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQe-ehQDMGvfO9jdTB_vWqIUiJjH9-a_c_uJ0FbPY_IIcpDfdyqRnWTfUpIDGTCAAs42ocaOI9_jsMX/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.<br>
+                <strong>📌 Important:</strong> Save your code as a <strong>.txt</strong> file. You will submit all starter activity answers to <strong>Schoolbox</strong> at the end of A1.1.9 Debugging Techniques.
+            </span>
+        </div>
+
+        <!-- Task 3 -->
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc">
+                <strong>Deliberate Practice</strong> — Write an <strong>Explain</strong> answer to this question:<br>
+                <em>"Explain the purposes of different types of primary memory, including why each type is designed the way it is."</em>
+                <div style="background:#ebf4ff; border-radius:8px; padding:12px 16px; margin-top:8px;">
+                    <strong>📝 Sentence Frame:</strong><br>
+                    <em>"RAM is used for ______ because it is ______. This is suitable because ______. ROM is used for ______ because it is ______. This is necessary because ______. Cache exists because ______. Registers are the fastest memory because ______."</em>
+                </div>
+            </span>
+        </div>
+
+        <!-- Task 4 -->
+        <div class="task-row">
+            <span class="task-step">4</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1065896681/a-113-explain-the-differences-between-the-cpu-and-the-gpu-hl-only-flash-cards/?funnelUUID=0bac7dd0-abfd-4e21-9620-15450cc11c43" target="_blank">Quizlet flashcards</a>.</span>
+        </div>
+    </div>
+
+    <!-- ===== EXTENSION ===== -->
+    <h2>⭐ Extension Activities</h2>
+    <div style="background:#f1f6fc; border-radius:16px; padding:1.2rem 1.5rem; margin:0.8rem 0 0.5rem 0; border-left:4px solid #b21f1f;">
+        <h4 style="color:#0b2a4a; font-size:1rem; margin-bottom:0.3rem;">🔍 Deeper Exploration</h4>
+        <ul style="margin-left:18px;">
+            <li><strong>Cache Mapping:</strong> Research the three types of cache mapping (direct-mapped, set-associative, fully-associative) and explain how they affect hit rate.</li>
+            <li><strong>Write Policies:</strong> Investigate write-through vs. write-back cache policies. Explain the trade-offs of each.</li>
+            <li><strong>Register Categories:</strong> Research general-purpose vs. special-purpose registers. Give examples of each and their specific uses.</li>
+        </ul>
+        <p style="font-size:0.9rem; color:#475569; margin-top:6px;">Write a brief explanation of one of these topics to deepen your understanding.</p>
+    </div>
+
+    <!-- ===== KEY TAKEAWAY ===== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"Primary memory is not one thing but a hierarchy of types, each with a distinct purpose. Registers and cache prioritise speed and proximity to the CPU. RAM offers large capacity and flexibility. ROM ensures the system can boot reliably. The CPU searches from fastest to slowest, and the hit rate determines how often the CPU must wait."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.1.3.html">← Previous: A1.1.3 (GPU)</a>
+        <a href="A1.1.5.html">Next: A1.1.5 →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.1.4 – Primary Memory • IB Computer Science • Year 12
+    </div>
+
+</div>
+
+</body>
+</html>
