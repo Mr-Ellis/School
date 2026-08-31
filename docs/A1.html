@@ -72,6 +72,7 @@
       padding: 0.4rem 1.4rem;
       border-radius: 40px;
     }
+    .subhead i { margin-right: 6px; }
 
     .section-head {
       font-size: 1.9rem;
@@ -89,7 +90,7 @@
 
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 1.8rem;
       margin-top: 0.8rem;
     }
@@ -103,14 +104,41 @@
       transition: 0.2s ease;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
     .card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
+    .card.locked {
+      opacity: 0.55;
+      pointer-events: none;
+      user-select: none;
+    }
+    .card.locked .lock-overlay {
+      display: flex;
+    }
+    .card .lock-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(2px);
+      border-radius: 24px;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      gap: 10px;
+      z-index: 2;
+    }
+    .card .lock-overlay i { font-size: 1.8rem; color: #b21f1f; }
 
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 6px;
     }
     .card-header h4 {
       font-size: 1.1rem;
@@ -120,17 +148,15 @@
       line-height: 1.3;
     }
     .badge {
-      background: #dceaf7;
       padding: 0.2rem 0.8rem;
       border-radius: 40px;
       font-size: 0.65rem;
       font-weight: 600;
-      color: #13416b;
       white-space: nowrap;
-      margin-left: 8px;
     }
-    .badge.core { background: #cfe3d0; color: #1d5e3a; }
+    .badge.core { background: #dceaf7; color: #13416b; }
     .badge.hl { background: #f7d9d9; color: #a13232; }
+    .badge.both { background: #d9d9f7; color: #3a3a7c; }
 
     .card-actions {
       display: flex;
@@ -179,37 +205,45 @@
       padding-top: 0.4rem;
       border-top: 1px solid #eef2f6;
       display: flex;
-      align-items: center;
-      gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 14px;
     }
-    .cover-section input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
+    .cover-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .cover-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
       accent-color: #0b2a4a;
       cursor: default;
       pointer-events: none;
       opacity: 0.7;
     }
-    .cover-section label {
+    .cover-item label {
       cursor: default;
       font-weight: 500;
       color: #0b2a4a;
+      font-size: 0.8rem;
     }
-    .cover-section .teacher-edit {
-      font-size: 0.75rem;
+    .cover-item .sl-label { color: #1a5f87; }
+    .cover-item .hl-label { color: #a13232; }
+    .teacher-edit {
+      font-size: 0.65rem;
       color: #6b7f8f;
       background: #edf2f7;
-      padding: 2px 10px;
+      padding: 1px 10px;
       border-radius: 12px;
       cursor: pointer;
       user-select: none;
       transition: background 0.2s;
-      margin-left: 6px;
     }
-    .cover-section .teacher-edit:hover { background: #d5dce6; }
-    .cover-section .teacher-badge {
-      font-size: 0.65rem;
+    .teacher-edit:hover { background: #d5dce6; }
+    .teacher-badge {
+      font-size: 0.6rem;
       background: #cbd5e1;
       color: #334155;
       padding: 1px 8px;
@@ -217,6 +251,47 @@
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
+
+    /* Master unlock bar */
+    .master-unlock-bar {
+      background: #0b2a4a;
+      border-radius: 60px;
+      padding: 0.8rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 2rem;
+      color: #e6edf5;
+    }
+    .master-unlock-bar .label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .master-unlock-bar .label i { color: #fdbb2d; }
+    .master-unlock-bar .btn-unlock {
+      background: #fdbb2d;
+      color: #0b2a4a;
+      border: none;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .master-unlock-bar .btn-unlock:hover { background: #fcd34d; transform: scale(1.02); }
+    .master-unlock-bar .btn-unlock.locked { background: #6b7f8f; color: #e6edf5; cursor: not-allowed; }
+    .master-unlock-bar .status-badge {
+      font-size: 0.75rem;
+      background: #1f4b6e;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #b6d0e8;
+    }
+    .master-unlock-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
@@ -270,6 +345,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
+      .master-unlock-bar { flex-direction: column; align-items: stretch; text-align: center; }
     }
   </style>
 </head>
@@ -280,9 +356,9 @@
   <!-- password modal -->
   <div id="passwordModal" class="password-modal">
     <div class="password-box">
-      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
-      <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access</p>
-      <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Teacher Unlock</h3>
+      <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter the master password to unlock lessons</p>
+      <input type="password" id="pwdInput" placeholder="Enter password" autocomplete="off">
       <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
       <div class="error" id="pwdError"></div>
     </div>
@@ -300,18 +376,34 @@
     <i class="fas fa-microchip"></i> A1 Computer Fundamentals
   </div>
   <div class="subhead">
-    <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
-    all topics · persistent tracking (saved in browser)
+    <i class="fas fa-check-circle" style="color:#1f7b4d;"></i> 
+    all topics · separate SL / HL tracking · teacher-controlled unlocks
+  </div>
+
+  <!-- MASTER UNLOCK BAR -->
+  <div class="master-unlock-bar" id="masterUnlockBar">
+    <span class="label"><i class="fas fa-unlock-alt"></i> Lesson Access</span>
+    <button class="btn-unlock locked" id="masterUnlockBtn" disabled>
+      <i class="fas fa-lock"></i> Locked
+    </button>
+    <span class="status-badge">
+      <i class="fas fa-graduation-cap"></i> 
+      <span class="unlocked-count" id="unlockedCount">0</span> / <span id="totalLessons">0</span> lessons unlocked
+    </span>
+    <span style="font-size:0.75rem; color:#94a3b8; margin-left:auto;">
+      <i class="fas fa-info-circle"></i> Click "Unlock" to grant student access
+    </span>
   </div>
 
   <!-- ===================== A1.1 ===================== -->
   <div class="section-head">
     <i class="fas fa-cpu"></i> A1.1 Computer Architecture
   </div>
-  <div class="card-grid">
+  <div class="card-grid" id="lessonGrid">
 
     <!-- A1.1.1 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.1.1">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.1 CPU Architecture <span class="badge core">Core</span></h4>
       </div>
@@ -320,15 +412,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.1"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" id="cover-A1.1.1">
-        <label for="cover-A1.1.1">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" data-level="SL" id="cover-A1.1.1-SL">
+          <label for="cover-A1.1.1-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" data-level="HL" id="cover-A1.1.1-HL">
+          <label for="cover-A1.1.1-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.1">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.1">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.1.2 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.1.2">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.2 GPU Architecture <span class="badge core">Core</span></h4>
       </div>
@@ -337,15 +436,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.2"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" id="cover-A1.1.2">
-        <label for="cover-A1.1.2">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" data-level="SL" id="cover-A1.1.2-SL">
+          <label for="cover-A1.1.2-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" data-level="HL" id="cover-A1.1.2-HL">
+          <label for="cover-A1.1.2-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.2">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.2">(toggle both)</span>
       </div>
     </div>
 
-    <!-- A1.1.3 -->
-    <div class="card">
+    <!-- A1.1.3 (HL only) -->
+    <div class="card" data-lesson="A1.1.3">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.3 GPU (HL) <span class="badge hl">HL</span></h4>
       </div>
@@ -354,15 +460,18 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.3"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.3" id="cover-A1.1.3">
-        <label for="cover-A1.1.3">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.3" data-level="HL" id="cover-A1.1.3-HL">
+          <label for="cover-A1.1.3-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
         <span class="teacher-edit toggle-cover" data-lesson="A1.1.3">(toggle)</span>
       </div>
     </div>
 
     <!-- A1.1.4 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.1.4">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.4 Primary Memory <span class="badge core">Core</span></h4>
       </div>
@@ -371,15 +480,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.4"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" id="cover-A1.1.4">
-        <label for="cover-A1.1.4">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" data-level="SL" id="cover-A1.1.4-SL">
+          <label for="cover-A1.1.4-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" data-level="HL" id="cover-A1.1.4-HL">
+          <label for="cover-A1.1.4-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.4">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.4">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.1.5 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.1.5">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.5 Fetch-Decode-Execute <span class="badge core">Core</span></h4>
       </div>
@@ -388,15 +504,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.5"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" id="cover-A1.1.5">
-        <label for="cover-A1.1.5">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" data-level="SL" id="cover-A1.1.5-SL">
+          <label for="cover-A1.1.5-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" data-level="HL" id="cover-A1.1.5-HL">
+          <label for="cover-A1.1.5-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.5">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.5">(toggle both)</span>
       </div>
     </div>
 
-    <!-- A1.1.6 -->
-    <div class="card">
+    <!-- A1.1.6 (HL only) -->
+    <div class="card" data-lesson="A1.1.6">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.6 Pipelining (HL) <span class="badge hl">HL</span></h4>
       </div>
@@ -405,15 +528,18 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.6"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.6" id="cover-A1.1.6">
-        <label for="cover-A1.1.6">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.6" data-level="HL" id="cover-A1.1.6-HL">
+          <label for="cover-A1.1.6-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
         <span class="teacher-edit toggle-cover" data-lesson="A1.1.6">(toggle)</span>
       </div>
     </div>
 
     <!-- A1.1.7 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.1.7">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.7 Secondary Memory <span class="badge core">Core</span></h4>
       </div>
@@ -422,15 +548,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.7"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" id="cover-A1.1.7">
-        <label for="cover-A1.1.7">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" data-level="SL" id="cover-A1.1.7-SL">
+          <label for="cover-A1.1.7-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" data-level="HL" id="cover-A1.1.7-HL">
+          <label for="cover-A1.1.7-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.7">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.7">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.1.8 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.1.8">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.8 Data Compression <span class="badge core">Core</span></h4>
       </div>
@@ -439,15 +572,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.8"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" id="cover-A1.1.8">
-        <label for="cover-A1.1.8">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" data-level="SL" id="cover-A1.1.8-SL">
+          <label for="cover-A1.1.8-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" data-level="HL" id="cover-A1.1.8-HL">
+          <label for="cover-A1.1.8-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.8">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.8">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.1.9 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.1.9">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.1.9 Cloud Computing <span class="badge core">Core</span></h4>
       </div>
@@ -456,10 +596,16 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.1.9"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" id="cover-A1.1.9">
-        <label for="cover-A1.1.9">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" data-level="SL" id="cover-A1.1.9-SL">
+          <label for="cover-A1.1.9-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" data-level="HL" id="cover-A1.1.9-HL">
+          <label for="cover-A1.1.9-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.9">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.9">(toggle both)</span>
       </div>
     </div>
   </div>
@@ -471,7 +617,8 @@
   <div class="card-grid">
 
     <!-- A1.2.1 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.2.1">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.2.1 Data Representation 1 <span class="badge core">Core</span></h4>
       </div>
@@ -480,15 +627,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.2.1"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" id="cover-A1.2.1">
-        <label for="cover-A1.2.1">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" data-level="SL" id="cover-A1.2.1-SL">
+          <label for="cover-A1.2.1-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" data-level="HL" id="cover-A1.2.1-HL">
+          <label for="cover-A1.2.1-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.1">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.1">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.2.2 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.2.2">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.2.2 Data Representation 2 <span class="badge core">Core</span></h4>
       </div>
@@ -497,15 +651,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.2.2"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" id="cover-A1.2.2">
-        <label for="cover-A1.2.2">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" data-level="SL" id="cover-A1.2.2-SL">
+          <label for="cover-A1.2.2-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" data-level="HL" id="cover-A1.2.2-HL">
+          <label for="cover-A1.2.2-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.2">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.2">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.2.3 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.2.3">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.2.3 Logic Gates <span class="badge core">Core</span></h4>
       </div>
@@ -514,15 +675,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.2.3"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" id="cover-A1.2.3">
-        <label for="cover-A1.2.3">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" data-level="SL" id="cover-A1.2.3-SL">
+          <label for="cover-A1.2.3-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" data-level="HL" id="cover-A1.2.3-HL">
+          <label for="cover-A1.2.3-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.3">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.3">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.2.4 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.2.4">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.2.4 Truth Tables <span class="badge core">Core</span></h4>
       </div>
@@ -531,15 +699,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.2.4"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" id="cover-A1.2.4">
-        <label for="cover-A1.2.4">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" data-level="SL" id="cover-A1.2.4-SL">
+          <label for="cover-A1.2.4-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" data-level="HL" id="cover-A1.2.4-HL">
+          <label for="cover-A1.2.4-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.4">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.4">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.2.5 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.2.5">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.2.5 Logic Diagrams <span class="badge core">Core</span></h4>
       </div>
@@ -548,10 +723,16 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.2.5"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" id="cover-A1.2.5">
-        <label for="cover-A1.2.5">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" data-level="SL" id="cover-A1.2.5-SL">
+          <label for="cover-A1.2.5-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" data-level="HL" id="cover-A1.2.5-HL">
+          <label for="cover-A1.2.5-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.5">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.5">(toggle both)</span>
       </div>
     </div>
   </div>
@@ -563,7 +744,8 @@
   <div class="card-grid">
 
     <!-- A1.3.1-5 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.3.1">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.3.1–5 Operating Systems <span class="badge core">Core</span></h4>
       </div>
@@ -572,15 +754,22 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.3.1"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" id="cover-A1.3.1">
-        <label for="cover-A1.3.1">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" data-level="SL" id="cover-A1.3.1-SL">
+          <label for="cover-A1.3.1-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" data-level="HL" id="cover-A1.3.1-HL">
+          <label for="cover-A1.3.1-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.3.1">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.3.1">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.3.6-7 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.3.2">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.3.6–7 Control Systems <span class="badge core">Core</span></h4>
       </div>
@@ -589,10 +778,16 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.3.2"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" id="cover-A1.3.2">
-        <label for="cover-A1.3.2">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" data-level="SL" id="cover-A1.3.2-SL">
+          <label for="cover-A1.3.2-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" data-level="HL" id="cover-A1.3.2-HL">
+          <label for="cover-A1.3.2-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.3.2">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.3.2">(toggle both)</span>
       </div>
     </div>
   </div>
@@ -604,7 +799,8 @@
   <div class="card-grid">
 
     <!-- A1.4.1 -->
-    <div class="card">
+    <div class="card" data-lesson="A1.4.1">
+      <div class="lock-overlay"><i class="fas fa-lock"></i> Locked</div>
       <div class="card-header">
         <h4>A1.4.1 Translation <span class="badge core">Core</span></h4>
       </div>
@@ -613,10 +809,16 @@
         <button class="btn btn-locked unlock-btn" data-lesson="A1.4.1"><i class="fas fa-lock"></i> Lesson Plan</button>
       </div>
       <div class="cover-section">
-        <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" id="cover-A1.4.1">
-        <label for="cover-A1.4.1">✓ Mark this lesson as covered</label>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" data-level="SL" id="cover-A1.4.1-SL">
+          <label for="cover-A1.4.1-SL"><span class="sl-label">SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" data-level="HL" id="cover-A1.4.1-HL">
+          <label for="cover-A1.4.1-HL"><span class="hl-label">HL</span> covered</label>
+        </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.4.1">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.4.1">(toggle both)</span>
       </div>
     </div>
   </div>
@@ -628,44 +830,114 @@
   </div>
 
   <hr class="divider-light">
-  <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
-    <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
+  <div style="display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+    <span><i class="fas fa-save"></i> progress saved automatically in your browser</span>
+    <span><i class="fas fa-user-shield"></i> teacher controls: lock/unlock lessons above</span>
   </div>
 </div>
 
 <script>
   (function() {
-    // --- COVER CHECKBOXES (Teacher Only) ---
+    // ---- LESSON UNLOCK SYSTEM ----
+    // All lesson keys
+    const allLessons = [
+      'A1.1.1', 'A1.1.2', 'A1.1.3', 'A1.1.4', 'A1.1.5', 'A1.1.6', 
+      'A1.1.7', 'A1.1.8', 'A1.1.9',
+      'A1.2.1', 'A1.2.2', 'A1.2.3', 'A1.2.4', 'A1.2.5',
+      'A1.3.1', 'A1.3.2',
+      'A1.4.1'
+    ];
+    document.getElementById('totalLessons').textContent = allLessons.length;
+
+    // Master unlock state
+    let unlockedLessons = JSON.parse(localStorage.getItem('a1_unlocked_lessons') || '[]');
+    const MASTER_PASSWORD = 'bluebeard2026';
+
+    function updateUnlockUI() {
+      const cards = document.querySelectorAll('.card[data-lesson]');
+      cards.forEach(card => {
+        const lesson = card.getAttribute('data-lesson');
+        if (unlockedLessons.includes(lesson)) {
+          card.classList.remove('locked');
+        } else {
+          card.classList.add('locked');
+        }
+      });
+      document.getElementById('unlockedCount').textContent = unlockedLessons.length;
+      const btn = document.getElementById('masterUnlockBtn');
+      if (unlockedLessons.length === allLessons.length) {
+        btn.textContent = '✓ All Unlocked';
+        btn.classList.remove('locked');
+        btn.disabled = true;
+      } else if (unlockedLessons.length > 0) {
+        btn.innerHTML = '<i class="fas fa-unlock"></i> Unlock More';
+        btn.classList.remove('locked');
+        btn.disabled = false;
+      } else {
+        btn.innerHTML = '<i class="fas fa-lock"></i> Locked';
+        btn.classList.add('locked');
+        btn.disabled = false;
+      }
+    }
+
+    function saveUnlocked() {
+      localStorage.setItem('a1_unlocked_lessons', JSON.stringify(unlockedLessons));
+      updateUnlockUI();
+    }
+
+    // Master unlock button - opens password modal
+    document.getElementById('masterUnlockBtn').addEventListener('click', function() {
+      if (unlockedLessons.length === allLessons.length) return;
+      document.getElementById('passwordModal').classList.add('active');
+      document.getElementById('pwdInput').value = '';
+      document.getElementById('pwdError').textContent = '';
+      document.getElementById('pwdInput').focus();
+    });
+
+    // Password submission
+    function attemptMasterUnlock() {
+      const entered = document.getElementById('pwdInput').value.trim();
+      if (entered === MASTER_PASSWORD) {
+        // Unlock ALL lessons
+        unlockedLessons = [...allLessons];
+        saveUnlocked();
+        document.getElementById('passwordModal').classList.remove('active');
+      } else {
+        document.getElementById('pwdError').textContent = '❌ Incorrect password. Try again.';
+        document.getElementById('pwdInput').value = '';
+        document.getElementById('pwdInput').focus();
+      }
+    }
+
+    document.getElementById('pwdSubmitBtn').addEventListener('click', attemptMasterUnlock);
+    document.getElementById('pwdInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); attemptMasterUnlock(); }
+    });
+    document.getElementById('passwordModal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('active');
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') document.getElementById('passwordModal').classList.remove('active');
+    });
+
+    // ---- COVER CHECKBOXES (SL / HL) ----
     const checkboxes = document.querySelectorAll('.cover-checkbox');
 
     checkboxes.forEach(function(cb) {
-      const lessonKey = cb.getAttribute('data-lesson');
-      const storageKey = 'g12_covered_' + lessonKey;
+      const lesson = cb.getAttribute('data-lesson');
+      const level = cb.getAttribute('data-level');
+      const storageKey = 'a1_cover_' + lesson + '_' + level;
       const card = cb.closest('.card');
 
-      const savedState = localStorage.getItem(storageKey);
-      if (savedState === 'true') {
+      // Restore state
+      const saved = localStorage.getItem(storageKey);
+      if (saved === 'true') {
         cb.checked = true;
         if (card) card.style.background = '#e6f7e6';
       }
 
-      const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
-      if (toggleSpan) {
-        toggleSpan.addEventListener('click', function(e) {
-          e.preventDefault();
-          const isChecked = !cb.checked;
-          cb.checked = isChecked;
-          localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-          if (card) {
-            if (isChecked) {
-              card.style.background = '#e6f7e6';
-            } else {
-              card.style.background = '';
-            }
-          }
-        });
-      }
-
+      // The checkbox is pointer-events:none, but we handle via toggle links
+      // Also support double-click on the label
       const label = document.querySelector('label[for="' + cb.id + '"]');
       if (label) {
         label.addEventListener('dblclick', function(e) {
@@ -674,29 +946,50 @@
           cb.checked = isChecked;
           localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
           if (card) {
-            if (isChecked) {
-              card.style.background = '#e6f7e6';
-            } else {
-              card.style.background = '';
-            }
+            // Check if any checkbox in this card is checked
+            const anyChecked = card.querySelectorAll('.cover-checkbox:checked').length > 0;
+            card.style.background = anyChecked ? '#e6f7e6' : '';
           }
         });
       }
 
-      cb.addEventListener('keydown', function(e) {
-        e.preventDefault();
-      });
+      // Also handle the "toggle both" teacher edit
+      const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lesson + '"]');
+      if (toggleSpan) {
+        toggleSpan.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Toggle all checkboxes for this lesson
+          const cbs = document.querySelectorAll('.cover-checkbox[data-lesson="' + lesson + '"]');
+          // If any are unchecked, check all; else uncheck all
+          const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
+          cbs.forEach(function(cb) {
+            cb.checked = anyUnchecked;
+            const key = 'a1_cover_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-level');
+            localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
+          });
+          const card = document.querySelector('.card[data-lesson="' + lesson + '"]');
+          if (card) {
+            const anyChecked = card.querySelectorAll('.cover-checkbox:checked').length > 0;
+            card.style.background = anyChecked ? '#e6f7e6' : '';
+          }
+        });
+      }
     });
 
-    // ----- PASSWORD PROTECTION for locked resources -----
-    const modal = document.getElementById('passwordModal');
-    const pwdInput = document.getElementById('pwdInput');
-    const pwdError = document.getElementById('pwdError');
-    const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
-    let pendingPath = '';
-    let pendingPasswordType = '';
+    // ---- INIT ----
+    updateUnlockUI();
 
-    // Lesson Plan URLs for A1
+    // Re-check card backgrounds on load
+    document.querySelectorAll('.card[data-lesson]').forEach(card => {
+      const anyChecked = card.querySelectorAll('.cover-checkbox:checked').length > 0;
+      if (anyChecked) card.style.background = '#e6f7e6';
+    });
+
+    // Also update background when any checkbox changes via localStorage (on page load)
+    // We handle this in the label double-click and toggle-cover click
+
+    // ---- LESSON PLAN UNLOCK (existing) ----
+    // Reuse the same password modal for lesson plans? We'll keep it separate.
     const PDF_URLS = {
       'A1.1.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.1.pdf',
       'A1.1.2': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.1.2.pdf',
@@ -717,75 +1010,17 @@
       'A1.4.1': 'https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.4.1.pdf'
     };
 
-    function openModal(path, type) {
-      pendingPath = path;
-      pendingPasswordType = type;
-      pwdInput.value = '';
-      pwdError.textContent = '';
-      modal.classList.add('active');
-      pwdInput.focus();
-    }
-
-    function closeModal() {
-      modal.classList.remove('active');
-      pendingPath = '';
-      pendingPasswordType = '';
-    }
-
-    function attemptUnlock() {
-      const entered = pwdInput.value.trim();
-      let correctPassword = false;
-      
-      if (pendingPasswordType === 'A') {
-        correctPassword = (entered === 'bluebeard');
-      } else if (pendingPasswordType === 'B') {
-        correctPassword = (entered === 'goldbeard');
-      }
-      
-      if (correctPassword) {
-        if (pendingPath) {
-          window.open(pendingPath, '_blank');
-        }
-        closeModal();
-      } else {
-        pwdError.textContent = '❌ Incorrect password. Try again.';
-        pwdInput.value = '';
-        pwdInput.focus();
-      }
-    }
-
-    // Click on unlock buttons
     document.querySelectorAll('.unlock-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
         const lesson = this.getAttribute('data-lesson');
         const url = PDF_URLS[lesson];
         if (url) {
-          openModal(url, 'A');
+          window.open(url, '_blank');
         } else {
           alert('No PDF URL found for this lesson.');
         }
       });
-    });
-
-    pwdSubmitBtn.addEventListener('click', attemptUnlock);
-    pwdInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        attemptUnlock();
-      }
-    });
-
-    modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && modal.classList.contains('active')) {
-        closeModal();
-      }
     });
 
   })();
