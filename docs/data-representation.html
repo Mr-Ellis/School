@@ -285,6 +285,11 @@
       display: flex;
     }
 
+    /* Fully Covered background only if ALL classes checked */
+    .card.fully-covered {
+      background: #e6f7e6 !important;
+    }
+
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
     .password-modal {
@@ -643,13 +648,19 @@
             const lesson = card.getAttribute('data-lesson');
             const checkboxes = card.querySelectorAll('.cover-checkbox');
             const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            const allChecked = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
             
+            // Lock/unlock
             if (anyChecked) {
               card.classList.remove('locked');
-              card.style.background = '#e6f7e6'; // Green if covered
             } else {
               card.classList.add('locked');
-              card.style.background = ''; // Reset
+            }
+            
+            // Color coding: Only green if ALL classes checked
+            card.classList.remove('fully-covered');
+            if (allChecked) {
+              card.classList.add('fully-covered');
             }
           });
           
