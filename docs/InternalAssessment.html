@@ -1,47 +1,777 @@
-<nav class="back-link">
-    <a href="year11.html">← Back to Grade 11 Unit Pages</a>
-</nav>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IB Computer Science IA · Ultimate Resource Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
 
-<section class="unit">
-    <h2>Internal Assessment</h2>
+    /* ===== NAV ===== */
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
 
-    <h3>Activities</h3>
-    <ul>
-        <li>Project planning</li>
-        <li>Criterion A documentation</li>
-        <li>Criterion B development</li>
-        <li>Criterion C evaluation</li>
-    </ul>
+    /* ===== HEADER ===== */
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #2a6f97; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
+    .subhead i { margin-right: 6px; }
 
-    <h3>Teaching & Resources</h3>
-    <ul>
-        <li>IA Guide</li>
-        <li>PowerPoints</li>
-        <li>Videos</li>
-        <li>eBook</li>
-        <li>Textbook</li>
-        <li>Revision Dojo</li>
-        <li>Online Exercises and other resources</li>
-    </ul>
+    /* ===== CRITERIA BADGES ===== */
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+      margin: 2rem 0 1.5rem;
+    }
+    .criteria-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem 1.8rem 1.8rem;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+      border: 1px solid #e5edf5;
+      transition: 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .criteria-card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
+    .criteria-card .criteria-letter {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 3rem;
+      font-weight: 800;
+      opacity: 0.08;
+      color: #0b2a4a;
+      pointer-events: none;
+    }
+    .criteria-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .criteria-card h3 .badge {
+      font-size: 0.6rem;
+      background: #dceaf7;
+      color: #13416b;
+      padding: 0.15rem 0.7rem;
+      border-radius: 30px;
+      font-weight: 600;
+    }
+    .criteria-card p {
+      color: #475569;
+      font-size: 0.9rem;
+      margin: 0.3rem 0 0.8rem;
+    }
+    .criteria-card .weight {
+      font-size: 0.75rem;
+      color: #6b7f8f;
+      background: #edf2f7;
+      padding: 0.1rem 0.8rem;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 0.6rem;
+    }
+    .criteria-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0;
+    }
+    .criteria-card ul li {
+      padding: 0.25rem 0;
+      font-size: 0.85rem;
+      color: #334155;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .criteria-card ul li i {
+      color: #2a6f97;
+      font-size: 0.7rem;
+      margin-top: 0.25rem;
+      min-width: 16px;
+    }
+    .criteria-card .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+      border-top: 1px solid #e8eff6;
+      padding-top: 0.9rem;
+    }
+    .criteria-card .btn-row .btn {
+      background: #ecf3fa;
+      padding: 0.35rem 1.1rem;
+      border-radius: 30px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #13416b;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid transparent;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .criteria-card .btn-row .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
+    .criteria-card .btn-row .btn-primary {
+      background: #1a5f87;
+      color: #fff;
+    }
+    .criteria-card .btn-row .btn-primary:hover { background: #134f75; }
 
-    <h3>IA Structure</h3>
-    <p><strong>Criterion A:</strong> Planning</p>
-    <p><strong>Criterion B:</strong> Development</p>
-    <p><strong>Criterion C:</strong> Evaluation</p>
+    /* ===== SECTION HEAD ===== */
+    .section-head {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 2.8rem 0 1.5rem 0;
+      padding-bottom: 0.25rem;
+      border-bottom: 4px solid #cbddee;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-head i { color: #1f6390; font-size: 1.8rem; width: 2.2rem; }
+    .section-head small { font-size: 0.9rem; font-weight: 400; color: #3b5f7a; margin-left: 8px; }
 
-    <h3>Worksheet instructions</h3>
-    <p>Upload drafts and final versions of each IA section.</p>
+    /* ===== TOOL CARDS ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.8rem;
+      margin-top: 0.8rem;
+    }
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.6rem 1.5rem 1.8rem;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+      border: 1px solid #e5edf5;
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
+    .card .tool-icon {
+      font-size: 1.6rem;
+      color: #1a5f87;
+      margin-bottom: 0.2rem;
+    }
+    .card h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin-bottom: 0.15rem;
+    }
+    .card .desc {
+      font-size: 0.85rem;
+      color: #475569;
+      margin: 0.2rem 0 0.5rem;
+      flex: 1;
+    }
+    .card .tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      padding: 0.1rem 0.7rem;
+      border-radius: 30px;
+      background: #e9eff8;
+      color: #13416b;
+      margin-right: 4px;
+    }
+    .card .tag.green { background: #e3f5e9; color: #1f6b3a; }
+    .card .tag.yellow { background: #fcf3d4; color: #8a6d1b; }
+    .card .tag.pink { background: #fdeaea; color: #a13232; }
+    .card .tag.purple { background: #e8e0f5; color: #4a2d7a; }
+    .card .tag.blue { background: #dceaf7; color: #13416b; }
 
-    <h3>Scoring rubric</h3>
-    <ul>
-        <li><strong>1:</strong> Attempted but incomplete</li>
-        <li><strong>2:</strong> Meets expectations</li>
-        <li><strong>3:</strong> Excellent detail and justification</li>
-    </ul>
+    .card .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      border-top: 1px solid #e8eff6;
+      padding-top: 0.8rem;
+    }
+    .card .btn-row .btn {
+      background: #ecf3fa;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #13416b;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid transparent;
+      transition: 0.15s;
+    }
+    .card .btn-row .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
+    .card .btn-row .btn-primary {
+      background: #1a5f87;
+      color: #fff;
+    }
+    .card .btn-row .btn-primary:hover { background: #134f75; }
 
-    <h3>Online practice</h3>
-    <ul>
-        <li>IA exemplars</li>
-        <li>PDF templates</li>
-    </ul>
-</section>
+    /* ===== CHEAT SHEET BOX ===== */
+    .cheat-box {
+      background: #0b2a4a;
+      border-radius: 24px;
+      padding: 1.8rem 2.2rem;
+      margin: 2rem 0 0.5rem;
+      color: #e6edf5;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .cheat-box h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cheat-box h3 i { color: #fdbb2d; }
+    .cheat-box .btn {
+      background: #fdbb2d;
+      padding: 0.5rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 700;
+      color: #0b2a4a;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .cheat-box .btn:hover { background: #fcd15a; transform: scale(1.02); }
+
+    /* ===== DIVIDER ===== */
+    .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .card-grid { grid-template-columns: 1fr; }
+      .criteria-grid { grid-template-columns: 1fr; }
+      .cheat-box { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-microchip"></i> IB CompSci</span>
+    <a href="year11.html"><i class="fas fa-arrow-left"></i> Year 11</a>
+    <a href="year12.html"><i class="fas fa-arrow-left"></i> Year 12</a>
+    <a href="ia-resources.html"><i class="fas fa-tasks"></i> IA Hub</a>
+  </nav>
+
+  <!-- ===== HEADER ===== -->
+  <div class="main-title">
+    <i class="fas fa-tasks"></i> IA Success Hub
+  </div>
+  <div class="subhead">
+    <i class="fas fa-check-circle" style="color:#1f7b4d;"></i> 
+    Everything you need to ace your Computer Science Internal Assessment
+  </div>
+
+  <!-- ===== CRITERIA OVERVIEW ===== -->
+  <div class="criteria-grid">
+    <!-- Criterion A -->
+    <div class="criteria-card">
+      <span class="criteria-letter">A</span>
+      <h3>📋 Criterion A <span class="badge">Planning</span></h3>
+      <span class="weight">6 marks · 12%</span>
+      <p>Define the problem, consult client, and identify success criteria.</p>
+      <ul>
+        <li><i class="fas fa-check-circle"></i> Client consultation &amp; approval form</li>
+        <li><i class="fas fa-check-circle"></i> Clear success criteria (6–10 measurable points)</li>
+        <li><i class="fas fa-check-circle"></i> Justification of solution feasibility</li>
+      </ul>
+      <div class="btn-row">
+        <a href="#a-tools" class="btn btn-primary"><i class="fas fa-wrench"></i> Tools</a>
+        <a href="https://thinkib.net/computerscience/page/20600/internal-assessment-student-guide" target="_blank" class="btn"><i class="fas fa-book"></i> Guide</a>
+        <a href="https://faq.computersciencewiki.org/index.php/home/c/internal-assessment" target="_blank" class="btn"><i class="fas fa-graduation-cap"></i> FAQ</a>
+      </div>
+    </div>
+
+    <!-- Criterion B -->
+    <div class="criteria-card">
+      <span class="criteria-letter">B</span>
+      <h3>📐 Criterion B <span class="badge">Design</span></h3>
+      <span class="weight">6 marks · 12%</span>
+      <p>System models, data structures, and a clear solution design.</p>
+      <ul>
+        <li><i class="fas fa-check-circle"></i> UML diagrams (class, use-case, sequence)</li>
+        <li><i class="fas fa-check-circle"></i> Data structures &amp; algorithms planning</li>
+        <li><i class="fas fa-check-circle"></i> UI mockups &amp; data flow diagrams</li>
+      </ul>
+      <div class="btn-row">
+        <a href="#b-tools" class="btn btn-primary"><i class="fas fa-wrench"></i> Tools</a>
+        <a href="https://thinkib.net/computerscience/page/20599/internal-assessment-teacher-guide" target="_blank" class="btn"><i class="fas fa-book"></i> Guide</a>
+        <a href="https://www.diagrams.net" target="_blank" class="btn"><i class="fas fa-vector-square"></i> draw.io</a>
+      </div>
+    </div>
+
+    <!-- Criterion C -->
+    <div class="criteria-card">
+      <span class="criteria-letter">C</span>
+      <h3>💻 Criterion C <span class="badge">Development</span></h3>
+      <span class="weight">12 marks · 25%</span>
+      <p>Functional code with modularity, algorithms, and effective data handling.</p>
+      <ul>
+        <li><i class="fas fa-check-circle"></i> Clean, commented code with evidence</li>
+        <li><i class="fas fa-check-circle"></i> Use of data structures &amp; algorithms</li>
+        <li><i class="fas fa-check-circle"></i> Modular design &amp; version control</li>
+      </ul>
+      <div class="btn-row">
+        <a href="#c-tools" class="btn btn-primary"><i class="fas fa-wrench"></i> Tools</a>
+        <a href="https://pythontutor.com" target="_blank" class="btn"><i class="fas fa-eye"></i> Python Tutor</a>
+        <a href="https://github.com" target="_blank" class="btn"><i class="fab fa-github"></i> GitHub</a>
+      </div>
+    </div>
+
+    <!-- Criterion D -->
+    <div class="criteria-card">
+      <span class="criteria-letter">D</span>
+      <h3>🎥 Criterion D <span class="badge">Video</span></h3>
+      <span class="weight">4 marks · 8%</span>
+      <p>A 5-minute video walkthrough showing your product in action.</p>
+      <ul>
+        <li><i class="fas fa-check-circle"></i> Clear narration of key features</li>
+        <li><i class="fas fa-check-circle"></i> Evidence of data persistence (if applicable)</li>
+        <li><i class="fas fa-check-circle"></i> Demonstrate error handling &amp; validation</li>
+      </ul>
+      <div class="btn-row">
+        <a href="#d-tools" class="btn btn-primary"><i class="fas fa-wrench"></i> Tools</a>
+        <a href="https://obsproject.com" target="_blank" class="btn"><i class="fas fa-video"></i> OBS</a>
+        <a href="https://www.kapwing.com" target="_blank" class="btn"><i class="fas fa-cut"></i> Kapwing</a>
+      </div>
+    </div>
+
+    <!-- Criterion E -->
+    <div class="criteria-card">
+      <span class="criteria-letter">E</span>
+      <h3>📄 Criterion E <span class="badge">Evaluation</span></h3>
+      <span class="weight">4 marks · 8%</span>
+      <p>Evaluate your product against success criteria and suggest improvements.</p>
+      <ul>
+        <li><i class="fas fa-check-circle"></i> Systematic testing table with results</li>
+        <li><i class="fas fa-check-circle"></i> Evaluation against each success criterion</li>
+        <li><i class="fas fa-check-circle"></i> Limitations &amp; future improvements</li>
+      </ul>
+      <div class="btn-row">
+        <a href="#e-tools" class="btn btn-primary"><i class="fas fa-wrench"></i> Tools</a>
+        <a href="https://docs.google.com" target="_blank" class="btn"><i class="fas fa-table"></i> Sheets</a>
+        <a href="https://thinkib.net/computerscience/page/65233/internal-assessment-sample-submission" target="_blank" class="btn"><i class="fas fa-book"></i> Sample</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOOLS SECTION ===== -->
+  
+  <!-- A - Planning -->
+  <div class="section-head" id="a-tools">
+    <i class="fas fa-clipboard-list"></i> Criterion A · Planning Tools
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-file-alt"></i></div>
+      <h4>Client Consultation Form</h4>
+      <div class="desc">Template for recording client interviews, requirements, and approval.</div>
+      <div><span class="tag blue">Template</span></div>
+      <div class="btn-row">
+        <a href="#" class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-check-double"></i></div>
+      <h4>Success Criteria Builder</h4>
+      <div class="desc">Smart tool to help you write measurable, testable success criteria.</div>
+      <div><span class="tag green">Generator</span></div>
+      <div class="btn-row">
+        <a href="#" class="btn btn-primary"><i class="fas fa-magic"></i> Generate</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-google"></i></div>
+      <h4>Google Docs · Planning</h4>
+      <div class="desc">Collaborative document for planning, client notes, and criteria tables.</div>
+      <div><span class="tag blue">Docs</span></div>
+      <div class="btn-row">
+        <a href="https://docs.google.com" target="_blank" class="btn"><i class="fas fa-external-link-alt"></i> Open</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- B - Design -->
+  <div class="section-head" id="b-tools">
+    <i class="fas fa-drafting-compass"></i> Criterion B · Design &amp; Modeling Tools
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-project-diagram"></i></div>
+      <h4>draw.io (diagrams.net)</h4>
+      <div class="desc">The best free tool for UML class diagrams, flowcharts, ERDs, and system models.</div>
+      <div><span class="tag green">Free</span> <span class="tag blue">UML</span></div>
+      <div class="btn-row">
+        <a href="https://www.diagrams.net" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-pen-fancy"></i></div>
+      <h4>Figma</h4>
+      <div class="desc">Professional UI mockups with annotated screens showing data flow and error states.</div>
+      <div><span class="tag purple">Free Tier</span> <span class="tag blue">UI</span></div>
+      <div class="btn-row">
+        <a href="https://www.figma.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-code"></i></div>
+      <h4>PlantUML</h4>
+      <div class="desc">Generate UML diagrams from simple text code — perfect for version-controlled design.</div>
+      <div><span class="tag green">Free</span> <span class="tag purple">Code</span></div>
+      <div class="btn-row">
+        <a href="https://plantuml.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-calendar-alt"></i></div>
+      <h4>GanttProject</h4>
+      <div class="desc">Free Gantt chart software for Criterion B chronology and task dependencies.</div>
+      <div><span class="tag green">Free</span> <span class="tag yellow">Planning</span></div>
+      <div class="btn-row">
+        <a href="https://www.ganttproject.biz" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Download</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-brain"></i></div>
+      <h4>Miro</h4>
+      <div class="desc">Collaborative whiteboard for brainstorming, decomposition, and component mapping.</div>
+      <div><span class="tag purple">Free Tier</span></div>
+      <div class="btn-row">
+        <a href="https://miro.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- C - Development -->
+  <div class="section-head" id="c-tools">
+    <i class="fas fa-laptop-code"></i> Criterion C · Development &amp; Coding Tools
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+      <h4>Replit</h4>
+      <div class="desc">Online IDE with Python and Java support — excellent for collaborative coding.</div>
+      <div><span class="tag green">Free</span> <span class="tag blue">Online</span></div>
+      <div class="btn-row">
+        <a href="https://replit.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fab fa-python"></i></div>
+      <h4>Python Tutor</h4>
+      <div class="desc">Visualize step-by-step execution of algorithms — essential for recursion and DP.</div>
+      <div><span class="tag green">Free</span> <span class="tag purple">Visual</span></div>
+      <div class="btn-row">
+        <a href="https://pythontutor.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fab fa-github"></i></div>
+      <h4>GitHub</h4>
+      <div class="desc">Version control and code backup — demonstrates modularity and clean structure.</div>
+      <div><span class="tag green">Free</span> <span class="tag blue">Version</span></div>
+      <div class="btn-row">
+        <a href="https://github.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-book"></i></div>
+      <h4>pbaumgarten Python Notes</h4>
+      <div class="desc">Clear, IA-friendly Python explanations — perfect for quick reference.</div>
+      <div><span class="tag green">Free</span> <span class="tag blue">Docs</span></div>
+      <div class="btn-row">
+        <a href="https://pbaumgarten.com/docs/python/" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Visit</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-graduation-cap"></i></div>
+      <h4>Time2Code Python Course</h4>
+      <div class="desc">Beginner → intermediate progression — great for algorithm design practice.</div>
+      <div><span class="tag green">Free</span> <span class="tag yellow">Course</span></div>
+      <div class="btn-row">
+        <a href="https://time2code.today/python-course" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Visit</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-database"></i></div>
+      <h4>DB Browser for SQLite</h4>
+      <div class="desc">Free, simple GUI for SQLite — perfect for IA-scale database projects.</div>
+      <div><span class="tag green">Free</span> <span class="tag blue">Database</span></div>
+      <div class="btn-row">
+        <a href="https://sqlitebrowser.org" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- D - Video -->
+  <div class="section-head" id="d-tools">
+    <i class="fas fa-video"></i> Criterion D · Video &amp; Evidence Tools
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-record-vinyl"></i></div>
+      <h4>OBS Studio</h4>
+      <div class="desc">Free, open-source screen recorder — high-quality video for your IA walkthrough.</div>
+      <div><span class="tag green">Free</span> <span class="tag blue">Record</span></div>
+      <div class="btn-row">
+        <a href="https://obsproject.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Download</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-cut"></i></div>
+      <h4>Kapwing</h4>
+      <div class="desc">Browser-based video editing — trim clips under 5 minutes easily.</div>
+      <div><span class="tag purple">Free Tier</span> <span class="tag yellow">Edit</span></div>
+      <div class="btn-row">
+        <a href="https://www.kapwing.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-play"></i></div>
+      <h4>VLC Media Player</h4>
+      <div class="desc">Trim and convert clips — simple, reliable, and free.</div>
+      <div><span class="tag green">Free</span> <span class="tag blue">Media</span></div>
+      <div class="btn-row">
+        <a href="https://www.videolan.org" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Download</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-chrome"></i></div>
+      <h4>Browser DevTools</h4>
+      <div class="desc">Network, console, and performance testing — demonstrate internal state changes.</div>
+      <div><span class="tag green">Built-in</span> <span class="tag blue">Debug</span></div>
+      <div class="btn-row">
+        <a href="#" class="btn"><i class="fas fa-info-circle"></i> Learn More</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- E - Evaluation -->
+  <div class="section-head" id="e-tools">
+    <i class="fas fa-clipboard-check"></i> Criterion E · Evaluation &amp; Testing Tools
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-table"></i></div>
+      <h4>Google Sheets · Testing</h4>
+      <div class="desc">Create systematic testing tables with test data, expected/actual results.</div>
+      <div><span class="tag blue">Sheets</span></div>
+      <div class="btn-row">
+        <a href="https://docs.google.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-check-double"></i></div>
+      <h4>Regex101</h4>
+      <div class="desc">Test and validate regular expressions for input validation (Criterion C).</div>
+      <div><span class="tag green">Free</span> <span class="tag purple">Validation</span></div>
+      <div class="btn-row">
+        <a href="https://regex101.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-vial"></i></div>
+      <h4>Mockaroo</h4>
+      <div class="desc">Generate realistic sample test data for your structural testing tables.</div>
+      <div><span class="tag purple">Free Tier</span> <span class="tag yellow">Data</span></div>
+      <div class="btn-row">
+        <a href="https://mockaroo.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-code"></i></div>
+      <h4>JSONLint</h4>
+      <div class="desc">Validate JSON inputs/outputs — essential for API-based projects.</div>
+      <div><span class="tag green">Free</span> <span class="tag blue">JSON</span></div>
+      <div class="btn-row">
+        <a href="https://jsonlint.com" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Launch</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ESSENTIAL GUIDES & RESOURCES ===== -->
+  <div class="section-head">
+    <i class="fas fa-graduation-cap"></i> Essential IA Resources
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-book-open"></i></div>
+      <h4>ThinkIB IA Student Guide</h4>
+      <div class="desc">Comprehensive step-by-step guide through the entire IA process.</div>
+      <div class="btn-row">
+        <a href="https://thinkib.net/computerscience/page/20600/internal-assessment-student-guide" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Visit</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-robot"></i></div>
+      <h4>IB Use of AI Scenarios</h4>
+      <div class="desc">Official IB guidance on the ethical use of AI in your IA.</div>
+      <div class="btn-row">
+        <a href="#" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> View PDF</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
+      <h4>Assessed Student Samples</h4>
+      <div class="desc">Real IA submissions with examiner feedback and grades.</div>
+      <div class="btn-row">
+        <a href="#" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> View Samples</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-question-circle"></i></div>
+      <h4>CS Wiki IA FAQ</h4>
+      <div class="desc">Community-driven FAQ covering all IA criteria and common issues.</div>
+      <div class="btn-row">
+        <a href="https://faq.computersciencewiki.org/index.php/home/c/internal-assessment" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Visit</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+      <h4>ThinkIB Teacher Guide</h4>
+      <div class="desc">Understand what teachers are looking for — valuable insight.</div>
+      <div class="btn-row">
+        <a href="https://thinkib.net/computerscience/page/20599/internal-assessment-teacher-guide" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Visit</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tool-icon"><i class="fas fa-user-graduate"></i></div>
+      <h4>educs.me IA Hub</h4>
+      <div class="desc">Tips and resources specifically for IB Computer Science students.</div>
+      <div class="btn-row">
+        <a href="https://educs.me/topics/IBCS/IA/" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Visit</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHEAT SHEET ===== -->
+  <div class="cheat-box">
+    <h3><i class="fas fa-file-alt"></i> IA Quick Reference</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem 2rem; font-size: 0.9rem;">
+      <span><strong>A</strong> · Planning (6 marks)</span>
+      <span><strong>B</strong> · Design (6 marks)</span>
+      <span><strong>C</strong> · Development (12 marks)</span>
+      <span><strong>D</strong> · Video (4 marks)</span>
+      <span><strong>E</strong> · Evaluation (4 marks)</span>
+    </div>
+    <a href="#" class="btn"><i class="fas fa-download"></i> Checklist</a>
+  </div>
+
+  <hr class="divider-light">
+  <div style="display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+    <span><i class="fas fa-sync-alt"></i> always free · IA aligned</span>
+    <span><i class="fas fa-heart" style="color: #c44545;"></i> Good luck! You've got this.</span>
+  </div>
+
+</div>
+
+<script>
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === "#") return;
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Store last visit in localStorage
+  localStorage.setItem('iaHubLastVisit', new Date().toLocaleDateString());
+</script>
+
+</body>
+</html>
