@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 3 · Hardware · Year 10</title>
+  <title>Unit 1 · Data Representation (Year 9)</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -73,6 +73,49 @@
       border-radius: 40px;
     }
 
+    /* Progress Bar */
+    .progress-bar {
+      background: #0b2a4a;
+      border-radius: 60px;
+      padding: 0.8rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 2rem;
+      color: #e6edf5;
+    }
+    .progress-bar .label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-bar .label i { color: #fdbb2d; }
+    .progress-bar .status-badge {
+      font-size: 0.75rem;
+      background: #1f4b6e;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #b6d0e8;
+    }
+    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .progress-track {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: #1f4b6e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar .progress-fill {
+      height: 100%;
+      background: #fdbb2d;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
     .section-head {
       font-size: 1.9rem;
       font-weight: 600;
@@ -103,7 +146,7 @@
       flex-direction: column;
       text-decoration: none;
       color: inherit;
-      position: relative; /* For lock positioning */
+      position: relative;
     }
     .card:hover {
       border-color: #b6d0e8;
@@ -196,18 +239,25 @@
       position: relative;
       z-index: 2;
     }
-    .teacher-controls input[type="checkbox"] {
+    .cover-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .cover-item input[type="checkbox"] {
       width: 18px;
       height: 18px;
       accent-color: #0b2a4a;
       cursor: pointer;
     }
-    .teacher-controls label {
+    .cover-item label {
       cursor: pointer;
       font-weight: 500;
       color: #0b2a4a;
       font-size: 0.8rem;
     }
+    .cover-item .class-label { color: #1a5f87; font-weight: 700; }
     .teacher-controls .teacher-badge {
       font-size: 0.65rem;
       background: #cbd5e1;
@@ -233,6 +283,11 @@
     /* When Teacher Mode is active */
     body.is-teacher .teacher-controls {
       display: flex;
+    }
+
+    /* Fully Covered background only if ALL classes checked */
+    .card.fully-covered {
+      background: #e6f7e6 !important;
     }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
@@ -296,6 +351,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
+      .progress-bar { flex-direction: column; align-items: stretch; text-align: center; }
     }
   </style>
 </head>
@@ -318,231 +374,235 @@
     <!-- ========== NAVIGATION ========== -->
     <nav class="nav">
         <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
-        <a href="https://mr-ellis.github.io/School/year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
+        <a href="year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9</a>
     </nav>
 
     <!-- ========== HEADER ========== -->
     <div class="main-title">
-        <i class="fas fa-microchip"></i> Hardware
+        <i class="fas fa-code"></i> Data Representation
     </div>
     <div class="subhead">
         <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
-        Year 10 · Unit 3 · Architecture, memory, storage, inputs and outputs
+        Year 9 · Unit 1 · How computers store and process data
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar">
+      <span class="label"><i class="fas fa-chart-line"></i> Progress</span>
+      <span class="status-badge">
+        <i class="fas fa-graduation-cap"></i> 
+        <span class="unlocked-count" id="unlockedCount">0</span> / <span id="totalLessons">0</span> lessons unlocked
+      </span>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span style="font-size:0.75rem; color:#94a3b8; margin-left:auto;">
+        <i class="fas fa-info-circle"></i> Tick 9A, 9B or 9C to unlock a lesson
+      </span>
     </div>
 
     <!-- ========== LESSON GRID ========== -->
     <div class="section-head">
-        <i class="fas fa-cpu"></i> Architecture &amp; Storage
+        <i class="fas fa-calculator"></i> Lessons
     </div>
 
     <div class="card-grid">
 
-        <!-- Lesson 1 -->
-        <div class="card locked" data-lesson="HW1">
+        <!-- Lesson 1 - Binary Systems -->
+        <a href="Data-representation/lesson1-binary-systems.html" class="card locked" data-lesson="DR1">
             <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
-                <h4>CPU Architecture</h4>
+                <h4>Binary Systems</h4>
             </div>
-            <p>Von Neumann architecture, ALU, CU, registers, FDE cycle</p>
+            <p>Binary, bits/bytes, denary ↔ binary</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW1" id="cover-HW1">
-                <label for="cover-HW1">✓ Mark as covered</label>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="9A" id="cover-DR1-9A">
+                  <label for="cover-DR1-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="9B" id="cover-DR1-9B">
+                  <label for="cover-DR1-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="9C" id="cover-DR1-9C">
+                  <label for="cover-DR1-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW1">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR1">(toggle all)</span>
             </div>
-        </div>
+        </a>
 
-        <!-- Lesson 2 -->
-        <div class="card locked" data-lesson="HW2">
+        <!-- Lesson 2 - Hexadecimal -->
+        <a href="Data-representation/lesson2-hexadecimal.html" class="card locked" data-lesson="DR2">
             <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
-                <h4>CPU Performance &amp; Buses</h4>
+                <h4>Hexadecimal</h4>
             </div>
-            <p>Clock speed, cores, cache, address/data/control buses</p>
+            <p>Denary ↔ hex, binary ↔ hex</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW2" id="cover-HW2">
-                <label for="cover-HW2">✓ Mark as covered</label>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="9A" id="cover-DR2-9A">
+                  <label for="cover-DR2-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="9B" id="cover-DR2-9B">
+                  <label for="cover-DR2-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="9C" id="cover-DR2-9C">
+                  <label for="cover-DR2-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW2">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR2">(toggle all)</span>
             </div>
-        </div>
+        </a>
 
-        <!-- Lesson 3 -->
-        <div class="card locked" data-lesson="HW3">
+        <!-- Lesson 3 - Binary Shifts & Two's Complement (LINKED) -->
+        <a href="Data-representation/lesson3-binary-shifts.html" class="card locked" data-lesson="DR3">
             <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
-                <h4>Embedded Systems &amp; Instruction Sets</h4>
+                <h4>Binary Shifts &amp; Two's Complement</h4>
             </div>
-            <p>Microprocessors, microcontrollers, instruction sets</p>
+            <p>Logical shifts, two's complement</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW3" id="cover-HW3">
-                <label for="cover-HW3">✓ Mark as covered</label>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="9A" id="cover-DR3-9A">
+                  <label for="cover-DR3-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="9B" id="cover-DR3-9B">
+                  <label for="cover-DR3-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="9C" id="cover-DR3-9C">
+                  <label for="cover-DR3-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW3">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR3">(toggle all)</span>
             </div>
-        </div>
+        </a>
 
         <!-- Lesson 4 -->
-        <div class="card locked" data-lesson="HW4">
+        <div class="card locked" data-lesson="DR4">
             <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
-                <h4>Memory</h4>
+                <h4>ASCII &amp; Unicode</h4>
             </div>
-            <p>RAM, ROM, virtual memory, primary storage</p>
+            <p>Character sets, ASCII vs Unicode</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW4" id="cover-HW4">
-                <label for="cover-HW4">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="9A" id="cover-DR4-9A">
+                  <label for="cover-DR4-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="9B" id="cover-DR4-9B">
+                  <label for="cover-DR4-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="9C" id="cover-DR4-9C">
+                  <label for="cover-DR4-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW4">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle all)</span>
             </div>
         </div>
 
         <!-- Lesson 5 -->
-        <div class="card locked" data-lesson="HW5">
+        <div class="card locked" data-lesson="DR5">
             <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
-                <h4>Secondary Storage</h4>
+                <h4>Representing Sound</h4>
             </div>
-            <p>Magnetic, optical, solid-state (flash memory) storage</p>
+            <p>Sampling, sample rate, bit-depth</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW5" id="cover-HW5">
-                <label for="cover-HW5">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="9A" id="cover-DR5-9A">
+                  <label for="cover-DR5-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="9B" id="cover-DR5-9B">
+                  <label for="cover-DR5-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="9C" id="cover-DR5-9C">
+                  <label for="cover-DR5-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW5">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR5">(toggle all)</span>
             </div>
         </div>
 
         <!-- Lesson 6 -->
-        <div class="card locked" data-lesson="HW6">
+        <div class="card locked" data-lesson="DR6">
             <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
-                <h4>Cloud Storage</h4>
+                <h4>Representing Images</h4>
             </div>
-            <p>Cloud vs local storage, advantages and disadvantages</p>
+            <p>Pixels, resolution, colour depth</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW6" id="cover-HW6">
-                <label for="cover-HW6">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="9A" id="cover-DR6-9A">
+                  <label for="cover-DR6-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="9B" id="cover-DR6-9B">
+                  <label for="cover-DR6-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="9C" id="cover-DR6-9C">
+                  <label for="cover-DR6-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW6">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR6">(toggle all)</span>
             </div>
         </div>
 
-    </div>
-
-    <!-- ========== INPUTS & OUTPUTS ========== -->
-    <div class="section-head">
-        <i class="fas fa-keyboard"></i> Inputs &amp; Outputs
-    </div>
-
-    <div class="card-grid">
-
-        <!-- Lesson 7 - Input Devices -->
-        <a href="https://mr-ellis.github.io/School/Hardware/input-devices.html" class="card locked" data-lesson="HW7">
+        <!-- Lesson 7 -->
+        <div class="card locked" data-lesson="DR7">
             <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
-                <h4>Input Devices</h4>
+                <h4>Data Compression &amp; Revision</h4>
             </div>
-            <p>Keyboards, mice, touchscreens, barcode scanners, QR code scanners</p>
+            <p>Lossy/lossless, RLE, review</p>
             <div class="card-actions">
-                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
+                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW7" id="cover-HW7">
-                <label for="cover-HW7">✓ Mark as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="9A" id="cover-DR7-9A">
+                  <label for="cover-DR7-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="9B" id="cover-DR7-9B">
+                  <label for="cover-DR7-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="9C" id="cover-DR7-9C">
+                  <label for="cover-DR7-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW7">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR7">(toggle all)</span>
             </div>
-        </a>
-
-        <!-- Lesson 8 - Scanners & Cameras -->
-        <a href="https://mr-ellis.github.io/School/Hardware/scanners-cameras.html" class="card locked" data-lesson="HW8">
-            <i class="fas fa-lock corner-lock"></i>
-            <div class="card-header">
-                <h4>Scanners &amp; Cameras</h4>
-            </div>
-            <p>2D/3D scanners, digital cameras, OCR, image capture</p>
-            <div class="card-actions">
-                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
-            </div>
-            <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW8" id="cover-HW8">
-                <label for="cover-HW8">✓ Mark as covered</label>
-                <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW8">(toggle)</span>
-            </div>
-        </a>
-
-        <!-- Lesson 9 - Sensors (LINKED) -->
-        <a href="https://mr-ellis.github.io/School/Hardware/sensors.html" class="card locked" data-lesson="HW9">
-            <i class="fas fa-lock corner-lock"></i>
-            <div class="card-header">
-                <h4>Sensors</h4>
-            </div>
-            <p>Analogue vs digital sensors, ADC/DAC, common sensors (temperature, pressure, etc.)</p>
-            <div class="card-actions">
-                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
-            </div>
-            <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW9" id="cover-HW9">
-                <label for="cover-HW9">✓ Mark as covered</label>
-                <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW9">(toggle)</span>
-            </div>
-        </a>
-
-        <!-- Lesson 10 - Output Devices -->
-        <a href="https://mr-ellis.github.io/School/Hardware/output-devices.html" class="card locked" data-lesson="HW10">
-            <i class="fas fa-lock corner-lock"></i>
-            <div class="card-header">
-                <h4>Output Devices</h4>
-            </div>
-            <p>Monitors, speakers, actuators, LED/LCD screens, projectors</p>
-            <div class="card-actions">
-                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
-            </div>
-            <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW10" id="cover-HW10">
-                <label for="cover-HW10">✓ Mark as covered</label>
-                <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW10">(toggle)</span>
-            </div>
-        </a>
-
-        <!-- Lesson 11 - Printers (LINKED) -->
-        <a href="https://mr-ellis.github.io/School/Hardware/printers.html" class="card locked" data-lesson="HW11">
-            <i class="fas fa-lock corner-lock"></i>
-            <div class="card-header">
-                <h4>Printers</h4>
-            </div>
-            <p>Inkjet, laser, 3D printers, actuators</p>
-            <div class="card-actions">
-                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
-            </div>
-            <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW11" id="cover-HW11">
-                <label for="cover-HW11">✓ Mark as covered</label>
-                <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW11">(toggle)</span>
-            </div>
-        </a>
+        </div>
 
     </div>
 
@@ -558,11 +618,15 @@
         const TEACHER_PASSWORD = 'Password262026';
         
         const checkboxes = document.querySelectorAll('.cover-checkbox');
-        const GRADE_PREFIX = 'year10_';
+        const GRADE_PREFIX = 'year9_';
         let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
         let pendingPath = '';
 
-        // ---- Track which lessons are unlocked (based on checkboxes) ----
+        // ---- All lessons ----
+        const allLessons = ['DR1', 'DR2', 'DR3', 'DR4', 'DR5', 'DR6', 'DR7'];
+        document.getElementById('totalLessons').textContent = allLessons.length;
+
+        // ---- Track which lessons are unlocked (based on 9A/9B/9C checkboxes) ----
         function getUnlockedLessons() {
           const unlocked = [];
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
@@ -577,26 +641,41 @@
         }
 
         function updateUI() {
+          const unlocked = getUnlockedLessons();
+          
           // Update card lock states
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
             const lesson = card.getAttribute('data-lesson');
             const checkboxes = card.querySelectorAll('.cover-checkbox');
             const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            const allChecked = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
             
+            // Lock/unlock
             if (anyChecked) {
               card.classList.remove('locked');
-              card.style.background = '#e6f7e6'; // Green if covered
             } else {
               card.classList.add('locked');
-              card.style.background = ''; // Reset
+            }
+            
+            // Color coding: Only green if ALL classes checked
+            card.classList.remove('fully-covered');
+            if (allChecked) {
+              card.classList.add('fully-covered');
             }
           });
+          
+          // Update progress bar
+          const count = unlocked.length;
+          const total = allLessons.length;
+          document.getElementById('unlockedCount').textContent = count;
+          document.getElementById('progressFill').style.width = (count / total * 100) + '%';
         }
 
         // Restore checked states on load
         checkboxes.forEach(function(cb) {
             const lessonKey = cb.getAttribute('data-lesson');
-            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
+            const classKey = cb.getAttribute('data-class');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey + '_' + classKey;
 
             if (localStorage.getItem(storageKey) === 'true') {
                 cb.checked = true;
@@ -609,7 +688,7 @@
             });
         });
 
-        // ---- "Toggle" teacher edit ----
+        // ---- "Toggle all" teacher edit ----
         document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
           toggle.addEventListener('click', function(e) {
             e.preventDefault();
@@ -619,7 +698,7 @@
             const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
             cbs.forEach(function(cb) {
               cb.checked = anyUnchecked;
-              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson');
+              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-class');
               localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
             });
             updateUI();
@@ -638,17 +717,13 @@
         const modalText = document.getElementById('modalText');
 
         const PDF_URLS = {
-            'HW1': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/3%20Architecture-storage/Lesson%20Plan%201.docx',
-            'HW2': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/3%20Architecture-storage/Lesson%20Plan%202.docx',
-            'HW3': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/3%20Architecture-storage/Lesson%20Plan%203.docx',
-            'HW4': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/3%20Architecture-storage/Lesson%20Plan%204.docx',
-            'HW5': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/3%20Architecture-storage/Lesson%20Plan%205.docx',
-            'HW6': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/3%20Architecture-storage/Lesson%20Plan%206.docx',
-            'HW7': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/4%20Inputs-outputs/Lesson%20Plan%201.docx',
-            'HW8': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/4%20Inputs-outputs/Lesson%20Plan%202.docx',
-            'HW9': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/4%20Inputs-outputs/Lesson%20Plan%203.docx',
-            'HW10': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/4%20Inputs-outputs/Lesson%20Plan%204.docx',
-            'HW11': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/4%20Inputs-outputs/Lesson%20Plan%205.docx'
+            'DR1': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR1-Binary-Systems.pdf',
+            'DR2': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR2-Hexadecimal.pdf',
+            'DR3': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR3-Binary-Shifts.pdf',
+            'DR4': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf',
+            'DR5': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf',
+            'DR6': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf',
+            'DR7': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf'
         };
 
         function openModal(mode, path) {
