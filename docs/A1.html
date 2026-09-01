@@ -109,18 +109,36 @@
     }
     .card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
 
-    /* NEW: Top Right Lock Icon */
-    .corner-lock {
+    /* NEW: Two Separate Locks (Year 11 Blue, Year 12 Red) */
+    .lock-icons {
       position: absolute;
       top: 15px;
       right: 15px;
-      font-size: 1.2rem;
-      color: #b21f1f;
+      display: flex;
+      gap: 8px;
       z-index: 10;
     }
-    .card:not(.locked) .corner-lock {
-      color: #2d7d46; /* Green when unlocked */
+    .lock-icon {
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 8px;
     }
+    .lock-y11 {
+      color: #1a5f87;
+      background: #e3f2fd;
+    }
+    .lock-y12 {
+      color: #a13232;
+      background: #fdeaea;
+    }
+    /* Green when unlocked */
+    .card:not(.is-y11-locked) .lock-y11 { color: #2d7d46; background: #e6f7e6; }
+    .card:not(.is-y12-locked) .lock-y12 { color: #2d7d46; background: #e6f7e6; }
 
     /* Card Content */
     .card-header {
@@ -139,7 +157,7 @@
       color: #0b2a4a;
       letter-spacing: -0.2px;
       line-height: 1.3;
-      margin-right: 30px; /* Space for the lock */
+      margin-right: 120px; /* Space for the two locks */
     }
     .badge {
       padding: 0.2rem 0.8rem;
@@ -208,12 +226,6 @@
       position: relative;
       z-index: 2;
     }
-    
-    /* TEACHER ONLY LESSON PLAN BUTTON */
-    .teacher-controls .btn-locked {
-      margin-bottom: 0.4rem;
-    }
-
     .cover-item {
       display: flex;
       align-items: center;
@@ -389,8 +401,8 @@
   <!-- navigation -->
   <nav class="nav">
     <span class="brand"><i class="fas fa-microchip"></i> IB CompSci</span>
-    <a href="index.html"><i class="fas fa-arrow-left"></i> Main Page</a>
-    <a href="year12.html"><i class="fas fa-arrow-left"></i> Grade 12 Units</a>
+    <a href="year11.html"><i class="fas fa-arrow-left"></i> Back to Year 11</a>
+    <a href="year12.html"><i class="fas fa-arrow-left"></i> Back to Year 12</a>
   </nav>
 
   <!-- header -->
@@ -399,7 +411,7 @@
   </div>
   <div class="subhead">
     <i class="fas fa-check-circle" style="color:#1f7b4d;"></i> 
-    all topics · separate SL / HL tracking · lessons unlock when covered
+    Track Year 11 & Year 12 · lessons unlock when covered
   </div>
 
   <!-- PROGRESS BAR -->
@@ -413,7 +425,7 @@
       <div class="progress-fill" id="progressFill"></div>
     </div>
     <span style="font-size:0.75rem; color:#94a3b8; margin-left:auto;">
-      <i class="fas fa-info-circle"></i> Tick SL or HL to unlock a lesson
+      <i class="fas fa-info-circle"></i> Tick Year 11 or Year 12 to unlock
     </span>
   </div>
 
@@ -424,8 +436,11 @@
   <div class="card-grid">
 
     <!-- A1.1.1 -->
-    <div class="card locked" data-lesson="A1.1.1">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.1">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.1 CPU Architecture <span class="badge core">Core</span></h4>
       </div>
@@ -434,22 +449,35 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.1"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" data-level="SL" id="cover-A1.1.1-SL">
-          <label for="cover-A1.1.1-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" data-class="Y11SL" id="cover-A1.1.1-Y11SL">
+          <label for="cover-A1.1.1-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" data-level="HL" id="cover-A1.1.1-HL">
-          <label for="cover-A1.1.1-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" data-class="Y11HL" id="cover-A1.1.1-Y11HL">
+          <label for="cover-A1.1.1-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" data-class="Y12SL" id="cover-A1.1.1-Y12SL">
+          <label for="cover-A1.1.1-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.1" data-class="Y12HL" id="cover-A1.1.1-Y12HL">
+          <label for="cover-A1.1.1-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.1">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.1">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.1.2 -->
-    <div class="card locked" data-lesson="A1.1.2">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.2">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.2 GPU Architecture <span class="badge core">Core</span></h4>
       </div>
@@ -458,22 +486,35 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.2"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" data-level="SL" id="cover-A1.1.2-SL">
-          <label for="cover-A1.1.2-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" data-class="Y11SL" id="cover-A1.1.2-Y11SL">
+          <label for="cover-A1.1.2-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" data-level="HL" id="cover-A1.1.2-HL">
-          <label for="cover-A1.1.2-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" data-class="Y11HL" id="cover-A1.1.2-Y11HL">
+          <label for="cover-A1.1.2-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" data-class="Y12SL" id="cover-A1.1.2-Y12SL">
+          <label for="cover-A1.1.2-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.2" data-class="Y12HL" id="cover-A1.1.2-Y12HL">
+          <label for="cover-A1.1.2-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.2">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.2">(toggle all)</span>
       </div>
     </div>
 
-    <!-- A1.1.3 -->
-    <div class="card locked" data-lesson="A1.1.3">
-      <i class="fas fa-lock corner-lock"></i>
+    <!-- A1.1.3 (HL Only) -->
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.3">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.3 GPU (HL) <span class="badge hl">HL</span></h4>
       </div>
@@ -482,18 +523,27 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.3"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.3" data-level="HL" id="cover-A1.1.3-HL">
-          <label for="cover-A1.1.3-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.3" data-class="Y11HL" id="cover-A1.1.3-Y11HL">
+          <label for="cover-A1.1.3-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.3" data-class="Y12HL" id="cover-A1.1.3-Y12HL">
+          <label for="cover-A1.1.3-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.3">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.3">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.1.4 -->
-    <div class="card locked" data-lesson="A1.1.4">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.4">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.4 Primary Memory <span class="badge core">Core</span></h4>
       </div>
@@ -502,22 +552,35 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.4"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" data-level="SL" id="cover-A1.1.4-SL">
-          <label for="cover-A1.1.4-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" data-class="Y11SL" id="cover-A1.1.4-Y11SL">
+          <label for="cover-A1.1.4-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" data-level="HL" id="cover-A1.1.4-HL">
-          <label for="cover-A1.1.4-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" data-class="Y11HL" id="cover-A1.1.4-Y11HL">
+          <label for="cover-A1.1.4-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" data-class="Y12SL" id="cover-A1.1.4-Y12SL">
+          <label for="cover-A1.1.4-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.4" data-class="Y12HL" id="cover-A1.1.4-Y12HL">
+          <label for="cover-A1.1.4-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.4">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.4">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.1.5 -->
-    <div class="card locked" data-lesson="A1.1.5">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.5">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.5 Fetch-Decode-Execute <span class="badge core">Core</span></h4>
       </div>
@@ -526,22 +589,35 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.5"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" data-level="SL" id="cover-A1.1.5-SL">
-          <label for="cover-A1.1.5-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" data-class="Y11SL" id="cover-A1.1.5-Y11SL">
+          <label for="cover-A1.1.5-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" data-level="HL" id="cover-A1.1.5-HL">
-          <label for="cover-A1.1.5-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" data-class="Y11HL" id="cover-A1.1.5-Y11HL">
+          <label for="cover-A1.1.5-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" data-class="Y12SL" id="cover-A1.1.5-Y12SL">
+          <label for="cover-A1.1.5-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.5" data-class="Y12HL" id="cover-A1.1.5-Y12HL">
+          <label for="cover-A1.1.5-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.5">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.5">(toggle all)</span>
       </div>
     </div>
 
-    <!-- A1.1.6 -->
-    <div class="card locked" data-lesson="A1.1.6">
-      <i class="fas fa-lock corner-lock"></i>
+    <!-- A1.1.6 (HL Only) -->
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.6">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.6 Pipelining (HL) <span class="badge hl">HL</span></h4>
       </div>
@@ -550,18 +626,27 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.6"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.6" data-level="HL" id="cover-A1.1.6-HL">
-          <label for="cover-A1.1.6-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.6" data-class="Y11HL" id="cover-A1.1.6-Y11HL">
+          <label for="cover-A1.1.6-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.6" data-class="Y12HL" id="cover-A1.1.6-Y12HL">
+          <label for="cover-A1.1.6-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.6">(toggle)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.6">(toggle both)</span>
       </div>
     </div>
 
     <!-- A1.1.7 -->
-    <div class="card locked" data-lesson="A1.1.7">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.7">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.7 Secondary Memory <span class="badge core">Core</span></h4>
       </div>
@@ -570,22 +655,35 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.7"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" data-level="SL" id="cover-A1.1.7-SL">
-          <label for="cover-A1.1.7-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" data-class="Y11SL" id="cover-A1.1.7-Y11SL">
+          <label for="cover-A1.1.7-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" data-level="HL" id="cover-A1.1.7-HL">
-          <label for="cover-A1.1.7-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" data-class="Y11HL" id="cover-A1.1.7-Y11HL">
+          <label for="cover-A1.1.7-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" data-class="Y12SL" id="cover-A1.1.7-Y12SL">
+          <label for="cover-A1.1.7-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.7" data-class="Y12HL" id="cover-A1.1.7-Y12HL">
+          <label for="cover-A1.1.7-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.7">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.7">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.1.8 -->
-    <div class="card locked" data-lesson="A1.1.8">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.8">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.8 Data Compression <span class="badge core">Core</span></h4>
       </div>
@@ -594,22 +692,35 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.8"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" data-level="SL" id="cover-A1.1.8-SL">
-          <label for="cover-A1.1.8-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" data-class="Y11SL" id="cover-A1.1.8-Y11SL">
+          <label for="cover-A1.1.8-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" data-level="HL" id="cover-A1.1.8-HL">
-          <label for="cover-A1.1.8-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" data-class="Y11HL" id="cover-A1.1.8-Y11HL">
+          <label for="cover-A1.1.8-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" data-class="Y12SL" id="cover-A1.1.8-Y12SL">
+          <label for="cover-A1.1.8-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.8" data-class="Y12HL" id="cover-A1.1.8-Y12HL">
+          <label for="cover-A1.1.8-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.8">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.8">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.1.9 -->
-    <div class="card locked" data-lesson="A1.1.9">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.1.9">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.1.9 Cloud Computing <span class="badge core">Core</span></h4>
       </div>
@@ -618,16 +729,26 @@
       </div>
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.1.9"><i class="fas fa-lock"></i> Lesson Plan</button>
+        
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" data-level="SL" id="cover-A1.1.9-SL">
-          <label for="cover-A1.1.9-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" data-class="Y11SL" id="cover-A1.1.9-Y11SL">
+          <label for="cover-A1.1.9-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" data-level="HL" id="cover-A1.1.9-HL">
-          <label for="cover-A1.1.9-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" data-class="Y11HL" id="cover-A1.1.9-Y11HL">
+          <label for="cover-A1.1.9-Y11HL"><span class="hl-label">11 HL</span> covered</label>
         </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" data-class="Y12SL" id="cover-A1.1.9-Y12SL">
+          <label for="cover-A1.1.9-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.1.9" data-class="Y12HL" id="cover-A1.1.9-Y12HL">
+          <label for="cover-A1.1.9-Y12HL"><span class="hl-label">12 HL</span> covered</label>
+        </div>
+        
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.1.9">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.1.9">(toggle all)</span>
       </div>
     </div>
   </div>
@@ -639,8 +760,11 @@
   <div class="card-grid">
 
     <!-- A1.2.1 -->
-    <div class="card locked" data-lesson="A1.2.1">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.2.1">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.1 Data Representation 1 <span class="badge core">Core</span></h4>
       </div>
@@ -650,21 +774,32 @@
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.1"><i class="fas fa-lock"></i> Lesson Plan</button>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" data-level="SL" id="cover-A1.2.1-SL">
-          <label for="cover-A1.2.1-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" data-class="Y11SL" id="cover-A1.2.1-Y11SL">
+          <label for="cover-A1.2.1-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" data-level="HL" id="cover-A1.2.1-HL">
-          <label for="cover-A1.2.1-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" data-class="Y11HL" id="cover-A1.2.1-Y11HL">
+          <label for="cover-A1.2.1-Y11HL"><span class="hl-label">11 HL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" data-class="Y12SL" id="cover-A1.2.1-Y12SL">
+          <label for="cover-A1.2.1-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.1" data-class="Y12HL" id="cover-A1.2.1-Y12HL">
+          <label for="cover-A1.2.1-Y12HL"><span class="hl-label">12 HL</span> covered</label>
         </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.1">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.1">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.2.2 -->
-    <div class="card locked" data-lesson="A1.2.2">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.2.2">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.2 Data Representation 2 <span class="badge core">Core</span></h4>
       </div>
@@ -674,21 +809,32 @@
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.2"><i class="fas fa-lock"></i> Lesson Plan</button>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" data-level="SL" id="cover-A1.2.2-SL">
-          <label for="cover-A1.2.2-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" data-class="Y11SL" id="cover-A1.2.2-Y11SL">
+          <label for="cover-A1.2.2-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" data-level="HL" id="cover-A1.2.2-HL">
-          <label for="cover-A1.2.2-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" data-class="Y11HL" id="cover-A1.2.2-Y11HL">
+          <label for="cover-A1.2.2-Y11HL"><span class="hl-label">11 HL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" data-class="Y12SL" id="cover-A1.2.2-Y12SL">
+          <label for="cover-A1.2.2-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.2" data-class="Y12HL" id="cover-A1.2.2-Y12HL">
+          <label for="cover-A1.2.2-Y12HL"><span class="hl-label">12 HL</span> covered</label>
         </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.2">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.2">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.2.3 -->
-    <div class="card locked" data-lesson="A1.2.3">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.2.3">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.3 Logic Gates <span class="badge core">Core</span></h4>
       </div>
@@ -698,21 +844,32 @@
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.3"><i class="fas fa-lock"></i> Lesson Plan</button>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" data-level="SL" id="cover-A1.2.3-SL">
-          <label for="cover-A1.2.3-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" data-class="Y11SL" id="cover-A1.2.3-Y11SL">
+          <label for="cover-A1.2.3-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" data-level="HL" id="cover-A1.2.3-HL">
-          <label for="cover-A1.2.3-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" data-class="Y11HL" id="cover-A1.2.3-Y11HL">
+          <label for="cover-A1.2.3-Y11HL"><span class="hl-label">11 HL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" data-class="Y12SL" id="cover-A1.2.3-Y12SL">
+          <label for="cover-A1.2.3-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.3" data-class="Y12HL" id="cover-A1.2.3-Y12HL">
+          <label for="cover-A1.2.3-Y12HL"><span class="hl-label">12 HL</span> covered</label>
         </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.3">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.3">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.2.4 -->
-    <div class="card locked" data-lesson="A1.2.4">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.2.4">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.4 Truth Tables <span class="badge core">Core</span></h4>
       </div>
@@ -722,21 +879,32 @@
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.4"><i class="fas fa-lock"></i> Lesson Plan</button>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" data-level="SL" id="cover-A1.2.4-SL">
-          <label for="cover-A1.2.4-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" data-class="Y11SL" id="cover-A1.2.4-Y11SL">
+          <label for="cover-A1.2.4-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" data-level="HL" id="cover-A1.2.4-HL">
-          <label for="cover-A1.2.4-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" data-class="Y11HL" id="cover-A1.2.4-Y11HL">
+          <label for="cover-A1.2.4-Y11HL"><span class="hl-label">11 HL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" data-class="Y12SL" id="cover-A1.2.4-Y12SL">
+          <label for="cover-A1.2.4-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.4" data-class="Y12HL" id="cover-A1.2.4-Y12HL">
+          <label for="cover-A1.2.4-Y12HL"><span class="hl-label">12 HL</span> covered</label>
         </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.4">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.4">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.2.5 -->
-    <div class="card locked" data-lesson="A1.2.5">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.2.5">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.2.5 Logic Diagrams <span class="badge core">Core</span></h4>
       </div>
@@ -746,15 +914,23 @@
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.2.5"><i class="fas fa-lock"></i> Lesson Plan</button>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" data-level="SL" id="cover-A1.2.5-SL">
-          <label for="cover-A1.2.5-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" data-class="Y11SL" id="cover-A1.2.5-Y11SL">
+          <label for="cover-A1.2.5-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" data-level="HL" id="cover-A1.2.5-HL">
-          <label for="cover-A1.2.5-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" data-class="Y11HL" id="cover-A1.2.5-Y11HL">
+          <label for="cover-A1.2.5-Y11HL"><span class="hl-label">11 HL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" data-class="Y12SL" id="cover-A1.2.5-Y12SL">
+          <label for="cover-A1.2.5-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.2.5" data-class="Y12HL" id="cover-A1.2.5-Y12HL">
+          <label for="cover-A1.2.5-Y12HL"><span class="hl-label">12 HL</span> covered</label>
         </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.2.5">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.2.5">(toggle all)</span>
       </div>
     </div>
   </div>
@@ -766,8 +942,11 @@
   <div class="card-grid">
 
     <!-- A1.3.1-5 -->
-    <div class="card locked" data-lesson="A1.3.1">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.3.1">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.3.1–5 Operating Systems <span class="badge core">Core</span></h4>
       </div>
@@ -777,21 +956,32 @@
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.3.1"><i class="fas fa-lock"></i> Lesson Plan</button>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" data-level="SL" id="cover-A1.3.1-SL">
-          <label for="cover-A1.3.1-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" data-class="Y11SL" id="cover-A1.3.1-Y11SL">
+          <label for="cover-A1.3.1-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" data-level="HL" id="cover-A1.3.1-HL">
-          <label for="cover-A1.3.1-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" data-class="Y11HL" id="cover-A1.3.1-Y11HL">
+          <label for="cover-A1.3.1-Y11HL"><span class="hl-label">11 HL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" data-class="Y12SL" id="cover-A1.3.1-Y12SL">
+          <label for="cover-A1.3.1-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.1" data-class="Y12HL" id="cover-A1.3.1-Y12HL">
+          <label for="cover-A1.3.1-Y12HL"><span class="hl-label">12 HL</span> covered</label>
         </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.3.1">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.3.1">(toggle all)</span>
       </div>
     </div>
 
     <!-- A1.3.6-7 -->
-    <div class="card locked" data-lesson="A1.3.2">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.3.2">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.3.6–7 Control Systems <span class="badge core">Core</span></h4>
       </div>
@@ -801,15 +991,23 @@
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.3.2"><i class="fas fa-lock"></i> Lesson Plan</button>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" data-level="SL" id="cover-A1.3.2-SL">
-          <label for="cover-A1.3.2-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" data-class="Y11SL" id="cover-A1.3.2-Y11SL">
+          <label for="cover-A1.3.2-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" data-level="HL" id="cover-A1.3.2-HL">
-          <label for="cover-A1.3.2-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" data-class="Y11HL" id="cover-A1.3.2-Y11HL">
+          <label for="cover-A1.3.2-Y11HL"><span class="hl-label">11 HL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" data-class="Y12SL" id="cover-A1.3.2-Y12SL">
+          <label for="cover-A1.3.2-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.3.2" data-class="Y12HL" id="cover-A1.3.2-Y12HL">
+          <label for="cover-A1.3.2-Y12HL"><span class="hl-label">12 HL</span> covered</label>
         </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.3.2">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.3.2">(toggle all)</span>
       </div>
     </div>
   </div>
@@ -821,8 +1019,11 @@
   <div class="card-grid">
 
     <!-- A1.4.1 -->
-    <div class="card locked" data-lesson="A1.4.1">
-      <i class="fas fa-lock corner-lock"></i>
+    <div class="card locked is-y11-locked is-y12-locked" data-lesson="A1.4.1">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <div class="card-header">
         <h4>A1.4.1 Translation <span class="badge core">Core</span></h4>
       </div>
@@ -832,15 +1033,23 @@
       <div class="teacher-controls">
         <button class="btn btn-locked lesson-plan-btn" data-lesson="A1.4.1"><i class="fas fa-lock"></i> Lesson Plan</button>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" data-level="SL" id="cover-A1.4.1-SL">
-          <label for="cover-A1.4.1-SL"><span class="sl-label">SL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" data-class="Y11SL" id="cover-A1.4.1-Y11SL">
+          <label for="cover-A1.4.1-Y11SL"><span class="sl-label">11 SL</span> covered</label>
         </div>
         <div class="cover-item">
-          <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" data-level="HL" id="cover-A1.4.1-HL">
-          <label for="cover-A1.4.1-HL"><span class="hl-label">HL</span> covered</label>
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" data-class="Y11HL" id="cover-A1.4.1-Y11HL">
+          <label for="cover-A1.4.1-Y11HL"><span class="hl-label">11 HL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" data-class="Y12SL" id="cover-A1.4.1-Y12SL">
+          <label for="cover-A1.4.1-Y12SL"><span class="sl-label">12 SL</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="A1.4.1" data-class="Y12HL" id="cover-A1.4.1-Y12HL">
+          <label for="cover-A1.4.1-Y12HL"><span class="hl-label">12 HL</span> covered</label>
         </div>
         <span class="teacher-badge">Teacher only</span>
-        <span class="teacher-edit toggle-cover" data-lesson="A1.4.1">(toggle both)</span>
+        <span class="teacher-edit toggle-cover" data-lesson="A1.4.1">(toggle all)</span>
       </div>
     </div>
   </div>
@@ -854,7 +1063,7 @@
   <hr class="divider-light">
   <div style="display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
     <span><i class="fas fa-save"></i> progress saved automatically in your browser</span>
-    <span><i class="fas fa-user-shield"></i> tick SL or HL to unlock lessons for students</span>
+    <span><i class="fas fa-user-shield"></i> tick Year 11 or 12 SL/HL to unlock lessons</span>
   </div>
 </div>
 
@@ -894,10 +1103,30 @@
       document.querySelectorAll('.card[data-lesson]').forEach(card => {
         const lesson = card.getAttribute('data-lesson');
         const checkboxes = card.querySelectorAll('.cover-checkbox');
-        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-        const allChecked = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
         
-        // Lock/unlock
+        // Determine which are checked
+        const y11sl = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y11SL' && cb.checked);
+        const y11hl = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y11HL' && cb.checked);
+        const y12sl = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y12SL' && cb.checked);
+        const y12hl = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y12HL' && cb.checked);
+        
+        // Update the Y11 and Y12 lock states
+        if (y11sl || y11hl) {
+          card.classList.remove('is-y11-locked');
+        } else {
+          card.classList.add('is-y11-locked');
+        }
+        
+        if (y12sl || y12hl) {
+          card.classList.remove('is-y12-locked');
+        } else {
+          card.classList.add('is-y12-locked');
+        }
+        
+        const anyChecked = y11sl || y11hl || y12sl || y12hl;
+        const allChecked = (y11sl && y11hl && y12sl && y12hl); // Fully complete only if ALL SL & HL done for both years
+        
+        // Lock/unlock the main card
         if (anyChecked) {
           card.classList.remove('locked');
         } else {
@@ -924,8 +1153,8 @@
     const checkboxes = document.querySelectorAll('.cover-checkbox');
     checkboxes.forEach(function(cb) {
       const lesson = cb.getAttribute('data-lesson');
-      const level = cb.getAttribute('data-level');
-      const storageKey = 'a1_cover_' + lesson + '_' + level;
+      const className = cb.getAttribute('data-class');
+      const storageKey = 'a1_cover_' + lesson + '_' + className;
 
       // Restore saved state
       const saved = localStorage.getItem(storageKey);
@@ -951,7 +1180,7 @@
       }
     });
 
-    // ---- "Toggle both" teacher edit ----
+    // ---- "Toggle all" teacher edit ----
     document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
       toggle.addEventListener('click', function(e) {
         e.preventDefault();
@@ -960,7 +1189,7 @@
         const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
         cbs.forEach(function(cb) {
           cb.checked = anyUnchecked;
-          const key = 'a1_cover_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-level');
+          const key = 'a1_cover_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-class');
           localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
         });
         updateUI();
