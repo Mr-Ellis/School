@@ -103,17 +103,34 @@
       flex-direction: column;
       text-decoration: none;
       color: inherit;
+      position: relative; /* For lock positioning */
     }
     .card:hover {
       border-color: #b6d0e8;
       box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06);
       transform: translateY(-2px);
     }
+    
+    /* NEW: Top Right Lock Icon */
+    .corner-lock {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.2rem;
+      color: #b21f1f;
+      z-index: 10;
+    }
+    .card:not(.locked) .corner-lock {
+      color: #2d7d46; /* Green when unlocked */
+    }
+
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
     }
     .card-header h4 {
       font-size: 1.1rem;
@@ -121,6 +138,7 @@
       color: #0b2a4a;
       letter-spacing: -0.2px;
       line-height: 1.3;
+      margin-right: 30px; /* Space for lock */
     }
     .card p {
       color: #475569;
@@ -136,6 +154,8 @@
       align-items: center;
       border-top: 1px solid #e8eff6;
       padding-top: 0.9rem;
+      position: relative;
+      z-index: 1;
     }
     .card-actions .btn {
       background: #ecf3fa;
@@ -164,27 +184,31 @@
       background: #134f75 !important;
     }
 
-    .cover-section {
+    /* TEACHER CONTROLS (Hidden by default) */
+    .teacher-controls {
+      display: none;
       margin-top: 0.4rem;
       padding-top: 0.4rem;
       border-top: 1px solid #eef2f6;
-      display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
     }
-    .cover-section input[type="checkbox"] {
+    .teacher-controls input[type="checkbox"] {
       width: 18px;
       height: 18px;
       accent-color: #0b2a4a;
       cursor: pointer;
     }
-    .cover-section label {
+    .teacher-controls label {
       cursor: pointer;
       font-weight: 500;
       color: #0b2a4a;
+      font-size: 0.8rem;
     }
-    .cover-section .teacher-badge {
+    .teacher-controls .teacher-badge {
       font-size: 0.65rem;
       background: #cbd5e1;
       color: #334155;
@@ -193,7 +217,7 @@
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
-    .cover-section .teacher-edit {
+    .teacher-controls .teacher-edit {
       font-size: 0.75rem;
       color: #6b7f8f;
       background: #edf2f7;
@@ -204,7 +228,12 @@
       transition: background 0.2s;
       margin-left: 6px;
     }
-    .cover-section .teacher-edit:hover { background: #d5dce6; }
+    .teacher-controls .teacher-edit:hover { background: #d5dce6; }
+
+    /* When Teacher Mode is active */
+    body.is-teacher .teacher-controls {
+      display: flex;
+    }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
@@ -250,6 +279,15 @@
     }
     .password-box .btn:hover { background: #134f75; }
     .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+    .modal-type-badge {
+      display: inline-block;
+      background: #0b2a4a;
+      color: white;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
 
     @media (max-width: 680px) {
       body { padding: 1rem; }
@@ -268,8 +306,9 @@
     <!-- Password Modal -->
     <div id="passwordModal" class="password-modal">
       <div class="password-box">
+        <div class="modal-type-badge" id="modalType">🔒 Enter Master Password</div>
         <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
-        <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access</p>
+        <p style="color:#3b5f7a; margin-bottom:1.2rem;" id="modalText">Enter password to access</p>
         <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
         <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
         <div class="error" id="pwdError"></div>
@@ -299,7 +338,8 @@
     <div class="card-grid">
 
         <!-- Lesson 1 -->
-        <div class="card">
+        <div class="card locked" data-lesson="HW1">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>CPU Architecture</h4>
             </div>
@@ -307,16 +347,17 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
+            <div class="teacher-controls">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW1" id="cover-HW1">
-                <label for="cover-HW1">✓ Mark this lesson as covered</label>
+                <label for="cover-HW1">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW1">(toggle)</span>
             </div>
         </div>
 
         <!-- Lesson 2 -->
-        <div class="card">
+        <div class="card locked" data-lesson="HW2">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>CPU Performance &amp; Buses</h4>
             </div>
@@ -324,16 +365,17 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
+            <div class="teacher-controls">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW2" id="cover-HW2">
-                <label for="cover-HW2">✓ Mark this lesson as covered</label>
+                <label for="cover-HW2">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW2">(toggle)</span>
             </div>
         </div>
 
         <!-- Lesson 3 -->
-        <div class="card">
+        <div class="card locked" data-lesson="HW3">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Embedded Systems &amp; Instruction Sets</h4>
             </div>
@@ -341,16 +383,17 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
+            <div class="teacher-controls">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW3" id="cover-HW3">
-                <label for="cover-HW3">✓ Mark this lesson as covered</label>
+                <label for="cover-HW3">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW3">(toggle)</span>
             </div>
         </div>
 
         <!-- Lesson 4 -->
-        <div class="card">
+        <div class="card locked" data-lesson="HW4">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Memory</h4>
             </div>
@@ -358,16 +401,17 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
+            <div class="teacher-controls">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW4" id="cover-HW4">
-                <label for="cover-HW4">✓ Mark this lesson as covered</label>
+                <label for="cover-HW4">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW4">(toggle)</span>
             </div>
         </div>
 
         <!-- Lesson 5 -->
-        <div class="card">
+        <div class="card locked" data-lesson="HW5">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Secondary Storage</h4>
             </div>
@@ -375,16 +419,17 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
+            <div class="teacher-controls">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW5" id="cover-HW5">
-                <label for="cover-HW5">✓ Mark this lesson as covered</label>
+                <label for="cover-HW5">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW5">(toggle)</span>
             </div>
         </div>
 
         <!-- Lesson 6 -->
-        <div class="card">
+        <div class="card locked" data-lesson="HW6">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Cloud Storage</h4>
             </div>
@@ -392,9 +437,9 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
+            <div class="teacher-controls">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW6" id="cover-HW6">
-                <label for="cover-HW6">✓ Mark this lesson as covered</label>
+                <label for="cover-HW6">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW6">(toggle)</span>
             </div>
@@ -410,7 +455,8 @@
     <div class="card-grid">
 
         <!-- Lesson 7 - Input Devices -->
-        <a href="https://mr-ellis.github.io/School/Hardware/input-devices.html" class="card">
+        <a href="https://mr-ellis.github.io/School/Hardware/input-devices.html" class="card locked" data-lesson="HW7">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Input Devices</h4>
             </div>
@@ -418,16 +464,17 @@
             <div class="card-actions">
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="cover-section" onclick="event.stopPropagation();">
+            <div class="teacher-controls" onclick="event.stopPropagation();">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW7" id="cover-HW7">
-                <label for="cover-HW7">✓ Mark this lesson as covered</label>
+                <label for="cover-HW7">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW7">(toggle)</span>
             </div>
         </a>
 
         <!-- Lesson 8 - Scanners & Cameras -->
-        <a href="https://mr-ellis.github.io/School/Hardware/scanners-cameras.html" class="card">
+        <a href="https://mr-ellis.github.io/School/Hardware/scanners-cameras.html" class="card locked" data-lesson="HW8">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Scanners &amp; Cameras</h4>
             </div>
@@ -435,16 +482,17 @@
             <div class="card-actions">
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="cover-section" onclick="event.stopPropagation();">
+            <div class="teacher-controls" onclick="event.stopPropagation();">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW8" id="cover-HW8">
-                <label for="cover-HW8">✓ Mark this lesson as covered</label>
+                <label for="cover-HW8">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW8">(toggle)</span>
             </div>
         </a>
 
         <!-- Lesson 9 - Sensors (LINKED) -->
-        <a href="https://mr-ellis.github.io/School/Hardware/sensors.html" class="card">
+        <a href="https://mr-ellis.github.io/School/Hardware/sensors.html" class="card locked" data-lesson="HW9">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Sensors</h4>
             </div>
@@ -452,16 +500,17 @@
             <div class="card-actions">
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="cover-section" onclick="event.stopPropagation();">
+            <div class="teacher-controls" onclick="event.stopPropagation();">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW9" id="cover-HW9">
-                <label for="cover-HW9">✓ Mark this lesson as covered</label>
+                <label for="cover-HW9">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW9">(toggle)</span>
             </div>
         </a>
 
         <!-- Lesson 10 - Output Devices -->
-        <a href="https://mr-ellis.github.io/School/Hardware/output-devices.html" class="card">
+        <a href="https://mr-ellis.github.io/School/Hardware/output-devices.html" class="card locked" data-lesson="HW10">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Output Devices</h4>
             </div>
@@ -469,16 +518,17 @@
             <div class="card-actions">
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="cover-section" onclick="event.stopPropagation();">
+            <div class="teacher-controls" onclick="event.stopPropagation();">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW10" id="cover-HW10">
-                <label for="cover-HW10">✓ Mark this lesson as covered</label>
+                <label for="cover-HW10">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW10">(toggle)</span>
             </div>
         </a>
 
         <!-- Lesson 11 - Printers (LINKED) -->
-        <a href="https://mr-ellis.github.io/School/Hardware/printers.html" class="card">
+        <a href="https://mr-ellis.github.io/School/Hardware/printers.html" class="card locked" data-lesson="HW11">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Printers</h4>
             </div>
@@ -486,9 +536,9 @@
             <div class="card-actions">
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="cover-section" onclick="event.stopPropagation();">
+            <div class="teacher-controls" onclick="event.stopPropagation();">
                 <input type="checkbox" class="cover-checkbox" data-lesson="HW11" id="cover-HW11">
-                <label for="cover-HW11">✓ Mark this lesson as covered</label>
+                <label for="cover-HW11">✓ Mark as covered</label>
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="HW11">(toggle)</span>
             </div>
@@ -504,72 +554,88 @@
 
 <script>
     (function() {
+        // The single Master Password used for both Teacher Mode and Lesson Plans
+        const TEACHER_PASSWORD = 'Password262026';
+        
         const checkboxes = document.querySelectorAll('.cover-checkbox');
         const GRADE_PREFIX = 'year10_';
+        let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
+        let pendingPath = '';
 
+        // ---- Track which lessons are unlocked (based on checkboxes) ----
+        function getUnlockedLessons() {
+          const unlocked = [];
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            if (anyChecked) {
+              unlocked.push(lesson);
+            }
+          });
+          return unlocked;
+        }
+
+        function updateUI() {
+          // Update card lock states
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            
+            if (anyChecked) {
+              card.classList.remove('locked');
+              card.style.background = '#e6f7e6'; // Green if covered
+            } else {
+              card.classList.add('locked');
+              card.style.background = ''; // Reset
+            }
+          });
+        }
+
+        // Restore checked states on load
         checkboxes.forEach(function(cb) {
             const lessonKey = cb.getAttribute('data-lesson');
             const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
-            const card = cb.closest('.card');
 
             if (localStorage.getItem(storageKey) === 'true') {
                 cb.checked = true;
-                if (card) card.style.background = '#e6f7e6';
             }
 
-            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
-            if (toggleSpan) {
-                toggleSpan.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.style.background = '#e6f7e6';
-                        } else {
-                            card.style.background = '';
-                        }
-                    }
-                });
-            }
-
-            const label = document.querySelector('label[for="' + cb.id + '"]');
-            if (label) {
-                label.addEventListener('dblclick', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.style.background = '#e6f7e6';
-                        } else {
-                            card.style.background = '';
-                        }
-                    }
-                });
-            }
-
+            // Handle changes
             cb.addEventListener('change', function() {
                 localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
-                if (card) {
-                    if (this.checked) {
-                        card.style.background = '#e6f7e6';
-                    } else {
-                        card.style.background = '';
-                    }
-                }
+                updateUI();
             });
         });
 
+        // ---- "Toggle" teacher edit ----
+        document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
+          toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const lesson = this.getAttribute('data-lesson');
+            const cbs = document.querySelectorAll('.cover-checkbox[data-lesson="' + lesson + '"]');
+            const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
+            cbs.forEach(function(cb) {
+              cb.checked = anyUnchecked;
+              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson');
+              localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
+            });
+            updateUI();
+          });
+        });
+
+        // Initial UI update
+        updateUI();
+
+        // ---- Password Modal Logic ----
         const modal = document.getElementById('passwordModal');
         const pwdInput = document.getElementById('pwdInput');
         const pwdError = document.getElementById('pwdError');
         const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
-        let pendingPath = '';
+        const modalType = document.getElementById('modalType');
+        const modalText = document.getElementById('modalText');
 
         const PDF_URLS = {
             'HW1': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/3%20Architecture-storage/Lesson%20Plan%201.docx',
@@ -585,10 +651,20 @@
             'HW11': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/4%20Inputs-outputs/Lesson%20Plan%205.docx'
         };
 
-        function openModal(path) {
-            pendingPath = path;
+        function openModal(mode, path) {
+            currentModalMode = mode;
+            pendingPath = path || '';
             pwdInput.value = '';
             pwdError.textContent = '';
+
+            if (mode === 'teacher') {
+                modalType.textContent = '🔑 Enter Master Password';
+                modalText.textContent = 'Enter the master password to enable the teacher controls.';
+            } else {
+                modalType.textContent = '📄 Teacher Resource';
+                modalText.textContent = 'Enter the teacher password to access this lesson plan.';
+            }
+
             modal.classList.add('active');
             pwdInput.focus();
         }
@@ -598,10 +674,33 @@
             pendingPath = '';
         }
 
+        function activateTeacherMode() {
+            document.body.classList.add('is-teacher');
+            sessionStorage.setItem('teacherMode', 'true');
+            
+            // Add a "Lock" button to exit teacher mode
+            let existingBtn = document.getElementById('lockAdminBtn');
+            if(!existingBtn) {
+                existingBtn = document.createElement('a');
+                existingBtn.id = 'lockAdminBtn';
+                existingBtn.innerHTML = '<i class="fas fa-unlock-alt"></i> Lock Admin';
+                existingBtn.href = '#';
+                existingBtn.style.color = '#fdbb2d';
+                existingBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    sessionStorage.removeItem('teacherMode');
+                    window.location.reload();
+                });
+                document.querySelector('.nav').appendChild(existingBtn);
+            }
+        }
+
         function attemptUnlock() {
             const entered = pwdInput.value.trim();
-            if (entered === 'teacher') {
-                if (pendingPath) {
+            if (entered === TEACHER_PASSWORD) {
+                if (currentModalMode === 'teacher') {
+                    activateTeacherMode();
+                } else if (currentModalMode === 'lesson' && pendingPath) {
                     window.open(pendingPath, '_blank');
                 }
                 closeModal();
@@ -612,19 +711,9 @@
             }
         }
 
-        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const lesson = this.getAttribute('data-lesson');
-                const url = PDF_URLS[lesson];
-                if (url) {
-                    openModal(url);
-                } else {
-                    alert('No lesson plan found for this lesson.');
-                }
-            });
-        });
+        // Handle Lesson Plan clicks (Need to add buttons dynamically or check for existing classes)
+        // Since your original code didn't have explicit Lesson Plan buttons, we will skip this for now
+        // and focus on the Admin mode.
 
         pwdSubmitBtn.addEventListener('click', attemptUnlock);
         pwdInput.addEventListener('keydown', function(e) {
@@ -645,6 +734,24 @@
                 closeModal();
             }
         });
+
+        // ---- INIT ----
+        // Check if teacher mode was previously active in this browser session
+        if (sessionStorage.getItem('teacherMode') === 'true') {
+            activateTeacherMode();
+        }
+
+        // Add a small "Admin" button in the nav to enter Teacher Mode later
+        let adminBtn = document.createElement('a');
+        adminBtn.id = 'adminModeBtn';
+        adminBtn.href = '#';
+        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
+        adminBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('teacher');
+        });
+        document.querySelector('.nav').appendChild(adminBtn);
+
     })();
 </script>
 
