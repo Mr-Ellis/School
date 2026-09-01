@@ -73,6 +73,49 @@
       border-radius: 40px;
     }
 
+    /* Progress Bar */
+    .progress-bar {
+      background: #0b2a4a;
+      border-radius: 60px;
+      padding: 0.8rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 2rem;
+      color: #e6edf5;
+    }
+    .progress-bar .label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-bar .label i { color: #fdbb2d; }
+    .progress-bar .status-badge {
+      font-size: 0.75rem;
+      background: #1f4b6e;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #b6d0e8;
+    }
+    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .progress-track {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: #1f4b6e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar .progress-fill {
+      height: 100%;
+      background: #fdbb2d;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
     .section-head {
       font-size: 1.9rem;
       font-weight: 600;
@@ -103,6 +146,7 @@
       flex-direction: column;
       text-decoration: none;
       color: inherit;
+      position: relative;
     }
     .card:hover {
       border-color: #b6d0e8;
@@ -114,6 +158,8 @@
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
     }
     .card-header h4 {
       font-size: 1.1rem;
@@ -121,6 +167,7 @@
       color: #0b2a4a;
       letter-spacing: -0.2px;
       line-height: 1.3;
+      margin-right: 30px;
     }
     .card-header .week-badge {
       background: #dceaf7;
@@ -146,6 +193,8 @@
       align-items: center;
       border-top: 1px solid #e8eff6;
       padding-top: 0.9rem;
+      position: relative;
+      z-index: 1;
     }
     .card-actions .btn {
       background: #ecf3fa;
@@ -174,27 +223,51 @@
       background: #134f75 !important;
     }
 
-    .cover-section {
+    /* NEW: Top Right Lock Icon */
+    .corner-lock {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.2rem;
+      color: #b21f1f;
+      z-index: 10;
+    }
+    .card:not(.locked) .corner-lock {
+      color: #2d7d46;
+    }
+
+    /* TEACHER CONTROLS (Hidden by default) */
+    .teacher-controls {
+      display: none;
       margin-top: 0.4rem;
       padding-top: 0.4rem;
       border-top: 1px solid #eef2f6;
-      display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
     }
-    .cover-section input[type="checkbox"] {
+    .cover-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .cover-item input[type="checkbox"] {
       width: 18px;
       height: 18px;
       accent-color: #0b2a4a;
       cursor: pointer;
     }
-    .cover-section label {
+    .cover-item label {
       cursor: pointer;
       font-weight: 500;
       color: #0b2a4a;
+      font-size: 0.8rem;
     }
-    .cover-section .teacher-badge {
+    .cover-item .class-label { color: #1a5f87; font-weight: 700; }
+    .teacher-controls .teacher-badge {
       font-size: 0.65rem;
       background: #cbd5e1;
       color: #334155;
@@ -203,7 +276,7 @@
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
-    .cover-section .teacher-edit {
+    .teacher-controls .teacher-edit {
       font-size: 0.75rem;
       color: #6b7f8f;
       background: #edf2f7;
@@ -214,7 +287,17 @@
       transition: background 0.2s;
       margin-left: 6px;
     }
-    .cover-section .teacher-edit:hover { background: #d5dce6; }
+    .teacher-controls .teacher-edit:hover { background: #d5dce6; }
+
+    /* When Teacher Mode is active */
+    body.is-teacher .teacher-controls {
+      display: flex;
+    }
+
+    /* Fully Covered background only if ALL classes checked */
+    .card.fully-covered {
+      background: #e6f7e6 !important;
+    }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
@@ -260,6 +343,15 @@
     }
     .password-box .btn:hover { background: #134f75; }
     .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+    .modal-type-badge {
+      display: inline-block;
+      background: #0b2a4a;
+      color: white;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
 
     @media (max-width: 680px) {
       body { padding: 1rem; }
@@ -268,6 +360,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
+      .progress-bar { flex-direction: column; align-items: stretch; text-align: center; }
     }
   </style>
 </head>
@@ -278,8 +371,9 @@
     <!-- Password Modal -->
     <div id="passwordModal" class="password-modal">
       <div class="password-box">
+        <div class="modal-type-badge" id="modalType">🔒 Enter Master Password</div>
         <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
-        <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access</p>
+        <p style="color:#3b5f7a; margin-bottom:1.2rem;" id="modalText">Enter password to access</p>
         <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
         <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
         <div class="error" id="pwdError"></div>
@@ -301,6 +395,21 @@
         Year 10 · Unit 1 · How computers store and process data
     </div>
 
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar">
+      <span class="label"><i class="fas fa-chart-line"></i> Progress</span>
+      <span class="status-badge">
+        <i class="fas fa-graduation-cap"></i> 
+        <span class="unlocked-count" id="unlockedCount">0</span> / <span id="totalLessons">0</span> lessons unlocked
+      </span>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span style="font-size:0.75rem; color:#94a3b8; margin-left:auto;">
+        <i class="fas fa-info-circle"></i> Tick 10A, 10B or 10C to unlock a lesson
+      </span>
+    </div>
+
     <!-- ========== LESSON GRID ========== -->
     <div class="section-head">
         <i class="fas fa-calculator"></i> Lessons
@@ -309,7 +418,8 @@
     <div class="card-grid">
 
         <!-- Lesson 1 - Binary Systems -->
-        <a href="Data-representation/lesson1-binary-systems.html" class="card">
+        <a href="Data-representation/lesson1-binary-systems.html" class="card locked" data-lesson="DR1">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Binary Systems</h4>
             </div>
@@ -317,16 +427,27 @@
             <div class="card-actions">
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="cover-section" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR1" id="cover-DR1">
-                <label for="cover-DR1">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="10A" id="cover-DR1-10A">
+                  <label for="cover-DR1-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="10B" id="cover-DR1-10B">
+                  <label for="cover-DR1-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="10C" id="cover-DR1-10C">
+                  <label for="cover-DR1-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR1">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR1">(toggle all)</span>
             </div>
         </a>
 
         <!-- Lesson 2 - Hexadecimal (LINKED) -->
-        <a href="Data-representation/lesson2-hexadecimal.html" class="card">
+        <a href="Data-representation/lesson2-hexadecimal.html" class="card locked" data-lesson="DR2">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Hexadecimal</h4>
             </div>
@@ -334,16 +455,27 @@
             <div class="card-actions">
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="cover-section" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR2" id="cover-DR2">
-                <label for="cover-DR2">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="10A" id="cover-DR2-10A">
+                  <label for="cover-DR2-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="10B" id="cover-DR2-10B">
+                  <label for="cover-DR2-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="10C" id="cover-DR2-10C">
+                  <label for="cover-DR2-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR2">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR2">(toggle all)</span>
             </div>
         </a>
 
         <!-- Lesson 3 -->
-        <div class="card">
+        <div class="card locked" data-lesson="DR3">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Binary Shifts &amp; Two's Complement</h4>
             </div>
@@ -351,16 +483,27 @@
             <div class="card-actions">
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR3-Binary-Shifts.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR3" id="cover-DR3">
-                <label for="cover-DR3">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="10A" id="cover-DR3-10A">
+                  <label for="cover-DR3-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="10B" id="cover-DR3-10B">
+                  <label for="cover-DR3-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="10C" id="cover-DR3-10C">
+                  <label for="cover-DR3-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR3">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR3">(toggle all)</span>
             </div>
         </div>
 
         <!-- Lesson 4 -->
-        <div class="card">
+        <div class="card locked" data-lesson="DR4">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>ASCII &amp; Unicode</h4>
             </div>
@@ -368,16 +511,27 @@
             <div class="card-actions">
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR4" id="cover-DR4">
-                <label for="cover-DR4">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="10A" id="cover-DR4-10A">
+                  <label for="cover-DR4-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="10B" id="cover-DR4-10B">
+                  <label for="cover-DR4-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="10C" id="cover-DR4-10C">
+                  <label for="cover-DR4-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle all)</span>
             </div>
         </div>
 
         <!-- Lesson 5 -->
-        <div class="card">
+        <div class="card locked" data-lesson="DR5">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Representing Sound</h4>
             </div>
@@ -385,16 +539,27 @@
             <div class="card-actions">
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR5" id="cover-DR5">
-                <label for="cover-DR5">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="10A" id="cover-DR5-10A">
+                  <label for="cover-DR5-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="10B" id="cover-DR5-10B">
+                  <label for="cover-DR5-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="10C" id="cover-DR5-10C">
+                  <label for="cover-DR5-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR5">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR5">(toggle all)</span>
             </div>
         </div>
 
         <!-- Lesson 6 -->
-        <div class="card">
+        <div class="card locked" data-lesson="DR6">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Representing Images</h4>
             </div>
@@ -402,16 +567,27 @@
             <div class="card-actions">
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR6" id="cover-DR6">
-                <label for="cover-DR6">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="10A" id="cover-DR6-10A">
+                  <label for="cover-DR6-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="10B" id="cover-DR6-10B">
+                  <label for="cover-DR6-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="10C" id="cover-DR6-10C">
+                  <label for="cover-DR6-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR6">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR6">(toggle all)</span>
             </div>
         </div>
 
         <!-- Lesson 7 -->
-        <div class="card">
+        <div class="card locked" data-lesson="DR7">
+            <i class="fas fa-lock corner-lock"></i>
             <div class="card-header">
                 <h4>Data Compression &amp; Revision</h4>
             </div>
@@ -419,11 +595,21 @@
             <div class="card-actions">
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR7" id="cover-DR7">
-                <label for="cover-DR7">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="10A" id="cover-DR7-10A">
+                  <label for="cover-DR7-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="10B" id="cover-DR7-10B">
+                  <label for="cover-DR7-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="10C" id="cover-DR7-10C">
+                  <label for="cover-DR7-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR7">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR7">(toggle all)</span>
             </div>
         </div>
 
@@ -437,72 +623,107 @@
 
 <script>
     (function() {
+        // The single Master Password used for both Teacher Mode and Lesson Plans
+        const TEACHER_PASSWORD = 'Password262026';
+        
         const checkboxes = document.querySelectorAll('.cover-checkbox');
         const GRADE_PREFIX = 'year10_';
+        let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
+        let pendingPath = '';
 
+        // ---- All lessons ----
+        const allLessons = ['DR1', 'DR2', 'DR3', 'DR4', 'DR5', 'DR6', 'DR7'];
+        document.getElementById('totalLessons').textContent = allLessons.length;
+
+        // ---- Track which lessons are unlocked (based on 10A/10B/10C checkboxes) ----
+        function getUnlockedLessons() {
+          const unlocked = [];
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            if (anyChecked) {
+              unlocked.push(lesson);
+            }
+          });
+          return unlocked;
+        }
+
+        function updateUI() {
+          const unlocked = getUnlockedLessons();
+          
+          // Update card lock states
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            const allChecked = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
+            
+            // Lock/unlock
+            if (anyChecked) {
+              card.classList.remove('locked');
+            } else {
+              card.classList.add('locked');
+            }
+            
+            // Color coding: Only green if ALL classes checked
+            card.classList.remove('fully-covered');
+            if (allChecked) {
+              card.classList.add('fully-covered');
+            }
+          });
+          
+          // Update progress bar
+          const count = unlocked.length;
+          const total = allLessons.length;
+          document.getElementById('unlockedCount').textContent = count;
+          document.getElementById('progressFill').style.width = (count / total * 100) + '%';
+        }
+
+        // Restore checked states on load
         checkboxes.forEach(function(cb) {
             const lessonKey = cb.getAttribute('data-lesson');
-            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
-            const card = cb.closest('.card');
+            const classKey = cb.getAttribute('data-class');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey + '_' + classKey;
 
             if (localStorage.getItem(storageKey) === 'true') {
                 cb.checked = true;
-                if (card) card.style.background = '#e6f7e6';
             }
 
-            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
-            if (toggleSpan) {
-                toggleSpan.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.style.background = '#e6f7e6';
-                        } else {
-                            card.style.background = '';
-                        }
-                    }
-                });
-            }
-
-            const label = document.querySelector('label[for="' + cb.id + '"]');
-            if (label) {
-                label.addEventListener('dblclick', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.style.background = '#e6f7e6';
-                        } else {
-                            card.style.background = '';
-                        }
-                    }
-                });
-            }
-
+            // Handle changes
             cb.addEventListener('change', function() {
                 localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
-                if (card) {
-                    if (this.checked) {
-                        card.style.background = '#e6f7e6';
-                    } else {
-                        card.style.background = '';
-                    }
-                }
+                updateUI();
             });
         });
 
+        // ---- "Toggle all" teacher edit ----
+        document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
+          toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const lesson = this.getAttribute('data-lesson');
+            const cbs = document.querySelectorAll('.cover-checkbox[data-lesson="' + lesson + '"]');
+            const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
+            cbs.forEach(function(cb) {
+              cb.checked = anyUnchecked;
+              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-class');
+              localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
+            });
+            updateUI();
+          });
+        });
+
+        // Initial UI update
+        updateUI();
+
+        // ---- Password Modal Logic ----
         const modal = document.getElementById('passwordModal');
         const pwdInput = document.getElementById('pwdInput');
         const pwdError = document.getElementById('pwdError');
         const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
-        let pendingPath = '';
+        const modalType = document.getElementById('modalType');
+        const modalText = document.getElementById('modalText');
 
         const PDF_URLS = {
             'DR1': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR1-Binary-Systems.pdf',
@@ -514,10 +735,20 @@
             'DR7': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf'
         };
 
-        function openModal(path) {
-            pendingPath = path;
+        function openModal(mode, path) {
+            currentModalMode = mode;
+            pendingPath = path || '';
             pwdInput.value = '';
             pwdError.textContent = '';
+
+            if (mode === 'teacher') {
+                modalType.textContent = '🔑 Enter Master Password';
+                modalText.textContent = 'Enter the master password to enable the teacher controls.';
+            } else {
+                modalType.textContent = '📄 Teacher Resource';
+                modalText.textContent = 'Enter the teacher password to access this lesson plan.';
+            }
+
             modal.classList.add('active');
             pwdInput.focus();
         }
@@ -527,10 +758,33 @@
             pendingPath = '';
         }
 
+        function activateTeacherMode() {
+            document.body.classList.add('is-teacher');
+            sessionStorage.setItem('teacherMode', 'true');
+            
+            // Add a "Lock" button to exit teacher mode
+            let existingBtn = document.getElementById('lockAdminBtn');
+            if(!existingBtn) {
+                existingBtn = document.createElement('a');
+                existingBtn.id = 'lockAdminBtn';
+                existingBtn.innerHTML = '<i class="fas fa-unlock-alt"></i> Lock Admin';
+                existingBtn.href = '#';
+                existingBtn.style.color = '#fdbb2d';
+                existingBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    sessionStorage.removeItem('teacherMode');
+                    window.location.reload();
+                });
+                document.querySelector('.nav').appendChild(existingBtn);
+            }
+        }
+
         function attemptUnlock() {
             const entered = pwdInput.value.trim();
-            if (entered === 'teacher') {
-                if (pendingPath) {
+            if (entered === TEACHER_PASSWORD) {
+                if (currentModalMode === 'teacher') {
+                    activateTeacherMode();
+                } else if (currentModalMode === 'lesson' && pendingPath) {
                     window.open(pendingPath, '_blank');
                 }
                 closeModal();
@@ -540,20 +794,6 @@
                 pwdInput.focus();
             }
         }
-
-        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const lesson = this.getAttribute('data-lesson');
-                const url = PDF_URLS[lesson];
-                if (url) {
-                    openModal(url);
-                } else {
-                    alert('No lesson plan found for this lesson.');
-                }
-            });
-        });
 
         pwdSubmitBtn.addEventListener('click', attemptUnlock);
         pwdInput.addEventListener('keydown', function(e) {
@@ -574,6 +814,24 @@
                 closeModal();
             }
         });
+
+        // ---- INIT ----
+        // Check if teacher mode was previously active in this browser session
+        if (sessionStorage.getItem('teacherMode') === 'true') {
+            activateTeacherMode();
+        }
+
+        // Add a small "Admin" button in the nav to enter Teacher Mode later
+        let adminBtn = document.createElement('a');
+        adminBtn.id = 'adminModeBtn';
+        adminBtn.href = '#';
+        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
+        adminBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('teacher');
+        });
+        document.querySelector('.nav').appendChild(adminBtn);
+
     })();
 </script>
 
