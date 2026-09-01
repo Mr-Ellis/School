@@ -122,6 +122,16 @@
       transform: translateY(-2px);
     }
     .folder-link i { color: #1a5f87; font-size: 0.9rem; }
+    .folder-link .year-badge {
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 0.05rem 0.5rem;
+      border-radius: 30px;
+      background: #dceaf7;
+      color: #13416b;
+      margin-left: 4px;
+    }
+    .folder-link .year-badge.y12 { background: #fdeaea; color: #a13232; }
 
     /* ===== CRITERIA LAUNCH CARDS ===== */
     .criteria-grid {
@@ -153,20 +163,21 @@
       position: absolute;
       top: 12px;
       right: 16px;
-      font-size: 3rem;
+      font-size: 2.8rem;
       font-weight: 800;
       opacity: 0.08;
       color: #0b2a4a;
       pointer-events: none;
     }
     .criteria-card h3 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #0b2a4a;
       margin-bottom: 0.2rem;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
     .criteria-card h3 .badge {
       font-size: 0.6rem;
@@ -175,6 +186,7 @@
       padding: 0.15rem 0.7rem;
       border-radius: 30px;
       font-weight: 600;
+      white-space: nowrap;
     }
     .criteria-card p {
       color: #475569;
@@ -196,8 +208,8 @@
       margin: 0.5rem 0 0;
     }
     .criteria-card ul li {
-      padding: 0.25rem 0;
-      font-size: 0.85rem;
+      padding: 0.2rem 0;
+      font-size: 0.82rem;
       color: #334155;
       display: flex;
       align-items: flex-start;
@@ -206,9 +218,41 @@
     .criteria-card ul li i {
       color: #2a6f97;
       font-size: 0.7rem;
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
       min-width: 16px;
     }
+
+    /* ===== LOCK ICONS ===== */
+    .lock-icons {
+      position: absolute;
+      top: 12px;
+      right: 70px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+    .lock-icon {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+    .lock-y11 {
+      color: #1a5f87;
+      background: #e3f2fd;
+    }
+    .lock-y12 {
+      color: #a13232;
+      background: #fdeaea;
+    }
+    .card:not(.is-y11-locked) .lock-y11 { color: #2d7d46; background: #e6f7e6; }
+    .card:not(.is-y12-locked) .lock-y12 { color: #2d7d46; background: #e6f7e6; }
+    .criteria-card .criteria-letter.large { font-size: 2.2rem; }
+
+    /* ===== CARD ACTIONS ===== */
     .criteria-card .btn-row {
       display: flex;
       flex-wrap: wrap;
@@ -218,6 +262,8 @@
       padding-top: 0.9rem;
       justify-content: space-between;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
     .criteria-card .btn-row .btn {
       background: #ecf3fa;
@@ -247,6 +293,60 @@
     }
     .criteria-card:hover .launch-arrow { transform: translateX(4px); }
 
+    /* ===== TEACHER CONTROLS ===== */
+    .teacher-controls {
+      display: none;
+      margin-top: 0.4rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid #eef2f6;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 14px;
+      position: relative;
+      z-index: 2;
+    }
+    .cover-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+    .cover-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #0b2a4a;
+      cursor: pointer;
+    }
+    .cover-item label {
+      cursor: pointer;
+      font-weight: 500;
+      color: #0b2a4a;
+      font-size: 0.75rem;
+    }
+    .cover-item .y11-label { color: #1a5f87; }
+    .cover-item .y12-label { color: #a13232; }
+    .teacher-edit {
+      font-size: 0.6rem;
+      color: #6b7f8f;
+      background: #edf2f7;
+      padding: 1px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .teacher-edit:hover { background: #d5dce6; }
+    .teacher-badge {
+      font-size: 0.55rem;
+      background: #cbd5e1;
+      color: #334155;
+      padding: 1px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    body.is-teacher .teacher-controls { display: flex; }
+
     /* ===== TIMELINE SECTION ===== */
     .section-head {
       font-size: 1.9rem;
@@ -264,7 +364,7 @@
 
     .timeline-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       margin-top: 0.8rem;
     }
@@ -320,7 +420,7 @@
     }
     .timeline-item .desc ul li {
       padding: 0.15rem 0;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       display: flex;
       align-items: flex-start;
       gap: 6px;
@@ -328,7 +428,7 @@
     .timeline-item .desc ul li i {
       color: #1a5f87;
       font-size: 0.6rem;
-      margin-top: 0.3rem;
+      margin-top: 0.25rem;
       min-width: 14px;
     }
 
@@ -370,6 +470,60 @@
     /* ===== DIVIDER ===== */
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
+    /* ===== PASSWORD MODAL ===== */
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .password-modal.active { display: flex; }
+    .password-box {
+      background: white;
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+    .password-box p { color: #3b5f7a; margin-bottom: 1.2rem; }
+    .password-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    .password-box input:focus { border-color: #1f6390; }
+    .password-box .btn {
+      background: #1f6390;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-box .btn:hover { background: #134f75; }
+    .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+    .modal-type-badge {
+      display: inline-block;
+      background: #0b2a4a;
+      color: white;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 680px) {
       body { padding: 1rem; }
@@ -380,12 +534,27 @@
       .timeline-grid { grid-template-columns: 1fr; }
       .cheat-box { flex-direction: column; text-align: center; }
       .folder-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+      .lock-icons { right: 50px; }
+      .lock-icons .lock-icon { font-size: 0.5rem; padding: 1px 4px; }
+      .criteria-card .criteria-letter { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
 
 <div class="container">
+
+  <!-- ===== PASSWORD MODAL ===== -->
+  <div id="passwordModal" class="password-modal">
+    <div class="password-box">
+      <div class="modal-type-badge" id="modalType">🔒 Enter Password</div>
+      <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Teacher Access</h3>
+      <p>Enter the password to enable teacher controls.</p>
+      <input type="password" id="pwdInput" placeholder="Enter password" autocomplete="off">
+      <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Access</button>
+      <div class="error" id="pwdError"></div>
+    </div>
+  </div>
 
   <!-- ===== NAV ===== -->
   <nav class="nav">
@@ -409,21 +578,29 @@
     <h3><i class="fas fa-folder-open"></i> 📁 Your IA Documents</h3>
     <p style="color: #475569; font-size: 0.9rem; margin-bottom: 1rem;">Click on your name to access your personal IA SharePoint folder.</p>
     <div class="folder-grid">
-      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Ben?d=w7db207229e33491aa2f427ea5b52b4b5&csf=1&web=1&e=YSBmAk" target="_blank" class="folder-link"><i class="fas fa-user"></i> Ben</a>
-      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Demir?d=w0b9fed18c64c4f03b58dc7def9dc7558&csf=1&web=1&e=cM1bAr" target="_blank" class="folder-link"><i class="fas fa-user"></i> Demir</a>
-      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Derinsu?d=wa938497a88d54200ad0908da4d1403b2&csf=1&web=1&e=KbkJqZ" target="_blank" class="folder-link"><i class="fas fa-user"></i> Derinsu</a>
-      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Lamees?d=w36bff2dc8a3a46ca85b43ac305d3cffd&csf=1&web=1&e=XvRiVq" target="_blank" class="folder-link"><i class="fas fa-user"></i> Lamees</a>
-      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Lucas?d=w71fb69bd16f348719e29cd426c5d7cc9&csf=1&web=1&e=VWkEMY" target="_blank" class="folder-link"><i class="fas fa-user"></i> Lucas</a>
-      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Oscar?d=we21c76c4b8b74c42b407c5b27b3ea518&csf=1&web=1&e=j85gaR" target="_blank" class="folder-link"><i class="fas fa-user"></i> Oscar</a>
-      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Sara?d=w6ab50040f7a14476ab8370c5907ed4b2&csf=1&web=1&e=V4fQYo" target="_blank" class="folder-link"><i class="fas fa-user"></i> Sara</a>
-      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Shunya?d=w273598f30afd45bbb0854378561eb44c&csf=1&web=1&e=0BUQQ5" target="_blank" class="folder-link"><i class="fas fa-user"></i> Shunya</a>
+      <!-- Grade 12 Students -->
+      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Ben?d=w7db207229e33491aa2f427ea5b52b4b5&csf=1&web=1&e=YSBmAk" target="_blank" class="folder-link"><i class="fas fa-user"></i> Ben <span class="year-badge y12">Y12</span></a>
+      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Demir?d=w0b9fed18c64c4f03b58dc7def9dc7558&csf=1&web=1&e=cM1bAr" target="_blank" class="folder-link"><i class="fas fa-user"></i> Demir <span class="year-badge y12">Y12</span></a>
+      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Derinsu?d=wa938497a88d54200ad0908da4d1403b2&csf=1&web=1&e=KbkJqZ" target="_blank" class="folder-link"><i class="fas fa-user"></i> Derinsu <span class="year-badge y12">Y12</span></a>
+      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Lamees?d=w36bff2dc8a3a46ca85b43ac305d3cffd&csf=1&web=1&e=XvRiVq" target="_blank" class="folder-link"><i class="fas fa-user"></i> Lamees <span class="year-badge y12">Y12</span></a>
+      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Lucas?d=w71fb69bd16f348719e29cd426c5d7cc9&csf=1&web=1&e=VWkEMY" target="_blank" class="folder-link"><i class="fas fa-user"></i> Lucas <span class="year-badge y12">Y12</span></a>
+      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Oscar?d=we21c76c4b8b74c42b407c5b27b3ea518&csf=1&web=1&e=j85gaR" target="_blank" class="folder-link"><i class="fas fa-user"></i> Oscar <span class="year-badge y12">Y12</span></a>
+      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Sara?d=w6ab50040f7a14476ab8370c5907ed4b2&csf=1&web=1&e=V4fQYo" target="_blank" class="folder-link"><i class="fas fa-user"></i> Sara <span class="year-badge y12">Y12</span></a>
+      <a href="https://isrschool-my.sharepoint.com/:f:/r/personal/craig_ellis_isr-school_de/Documents/2027%20IAs/Shunya?d=w273598f30afd45bbb0854378561eb44c&csf=1&web=1&e=0BUQQ5" target="_blank" class="folder-link"><i class="fas fa-user"></i> Shunya <span class="year-badge y12">Y12</span></a>
+    </div>
+    <div style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid #e5edf5;">
+      <p style="font-size: 0.85rem; color: #6b7f8f;"><i class="fas fa-info-circle"></i> Grade 11 student folders will appear here when IA work begins.</p>
     </div>
   </div>
 
   <!-- ===== CRITERIA LAUNCH CARDS ===== -->
   <div class="criteria-grid">
     <!-- Criterion A -->
-    <a href="docs/ebooks/CriterionA.pdf" target="_blank" class="criteria-card">
+    <div class="criteria-card is-y11-locked is-y12-locked" data-lesson="CriterionA">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <span class="criteria-letter">A</span>
       <h3>📋 Criterion A <span class="badge">Problem Specification</span></h3>
       <span class="weight">4 marks · 300 words</span>
@@ -434,13 +611,29 @@
         <li><i class="fas fa-check-circle"></i> <strong>Explain</strong> the choice of computational context</li>
       </ul>
       <div class="btn-row">
-        <span class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</span>
+        <a href="docs/ebooks/CriterionA.pdf" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</a>
         <span class="launch-arrow"><i class="fas fa-arrow-right"></i></span>
       </div>
-    </a>
+      <div class="teacher-controls">
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionA" data-class="Y11" id="cover-CriterionA-Y11">
+          <label for="cover-CriterionA-Y11"><span class="y11-label">Year 11</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionA" data-class="Y12" id="cover-CriterionA-Y12">
+          <label for="cover-CriterionA-Y12"><span class="y12-label">Year 12</span> covered</label>
+        </div>
+        <span class="teacher-badge">Teacher only</span>
+        <span class="teacher-edit toggle-cover" data-lesson="CriterionA">(toggle both)</span>
+      </div>
+    </div>
 
     <!-- Criterion B -->
-    <a href="docs/ebooks/CriterionB.pdf" target="_blank" class="criteria-card">
+    <div class="criteria-card is-y11-locked is-y12-locked" data-lesson="CriterionB">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <span class="criteria-letter">B</span>
       <h3>📐 Criterion B <span class="badge">Planning</span></h3>
       <span class="weight">4 marks · 150 words</span>
@@ -451,13 +644,29 @@
         <li><i class="fas fa-check-circle"></i> Plan must be consistent with Criterion A</li>
       </ul>
       <div class="btn-row">
-        <span class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</span>
+        <a href="docs/ebooks/CriterionB.pdf" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</a>
         <span class="launch-arrow"><i class="fas fa-arrow-right"></i></span>
       </div>
-    </a>
+      <div class="teacher-controls">
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionB" data-class="Y11" id="cover-CriterionB-Y11">
+          <label for="cover-CriterionB-Y11"><span class="y11-label">Year 11</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionB" data-class="Y12" id="cover-CriterionB-Y12">
+          <label for="cover-CriterionB-Y12"><span class="y12-label">Year 12</span> covered</label>
+        </div>
+        <span class="teacher-badge">Teacher only</span>
+        <span class="teacher-edit toggle-cover" data-lesson="CriterionB">(toggle both)</span>
+      </div>
+    </div>
 
     <!-- Criterion C -->
-    <a href="docs/ebooks/CriterionC.pdf" target="_blank" class="criteria-card">
+    <div class="criteria-card is-y11-locked is-y12-locked" data-lesson="CriterionC">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <span class="criteria-letter">C</span>
       <h3>🧩 Criterion C <span class="badge">System Overview</span></h3>
       <span class="weight">6 marks · 150 words</span>
@@ -468,13 +677,29 @@
         <li><i class="fas fa-check-circle"></i> <strong>Describe</strong> a testing strategy aligned with success criteria</li>
       </ul>
       <div class="btn-row">
-        <span class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</span>
+        <a href="docs/ebooks/CriterionC.pdf" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</a>
         <span class="launch-arrow"><i class="fas fa-arrow-right"></i></span>
       </div>
-    </a>
+      <div class="teacher-controls">
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionC" data-class="Y11" id="cover-CriterionC-Y11">
+          <label for="cover-CriterionC-Y11"><span class="y11-label">Year 11</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionC" data-class="Y12" id="cover-CriterionC-Y12">
+          <label for="cover-CriterionC-Y12"><span class="y12-label">Year 12</span> covered</label>
+        </div>
+        <span class="teacher-badge">Teacher only</span>
+        <span class="teacher-edit toggle-cover" data-lesson="CriterionC">(toggle both)</span>
+      </div>
+    </div>
 
     <!-- Criterion D -->
-    <a href="docs/ebooks/CriterionD.pdf" target="_blank" class="criteria-card">
+    <div class="criteria-card is-y11-locked is-y12-locked" data-lesson="CriterionD">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <span class="criteria-letter">D</span>
       <h3>💻 Criterion D <span class="badge">Development</span></h3>
       <span class="weight">12 marks · 1,000 words</span>
@@ -485,13 +710,29 @@
         <li><i class="fas fa-check-circle"></i> <strong>Evaluate</strong> and <strong>justify</strong> implementation choices &amp; testing strategy</li>
       </ul>
       <div class="btn-row">
-        <span class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</span>
+        <a href="docs/ebooks/CriterionD.pdf" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</a>
         <span class="launch-arrow"><i class="fas fa-arrow-right"></i></span>
       </div>
-    </a>
+      <div class="teacher-controls">
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionD" data-class="Y11" id="cover-CriterionD-Y11">
+          <label for="cover-CriterionD-Y11"><span class="y11-label">Year 11</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionD" data-class="Y12" id="cover-CriterionD-Y12">
+          <label for="cover-CriterionD-Y12"><span class="y12-label">Year 12</span> covered</label>
+        </div>
+        <span class="teacher-badge">Teacher only</span>
+        <span class="teacher-edit toggle-cover" data-lesson="CriterionD">(toggle both)</span>
+      </div>
+    </div>
 
     <!-- Criterion E -->
-    <a href="docs/ebooks/CriterionE.pdf" target="_blank" class="criteria-card">
+    <div class="criteria-card is-y11-locked is-y12-locked" data-lesson="CriterionE">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
       <span class="criteria-letter">E</span>
       <h3>📄 Criterion E <span class="badge">Evaluation</span></h3>
       <span class="weight">4 marks · 400 words</span>
@@ -502,44 +743,56 @@
         <li><i class="fas fa-check-circle"></i> Must be consistent with Criterion A</li>
       </ul>
       <div class="btn-row">
-        <span class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</span>
+        <a href="docs/ebooks/CriterionE.pdf" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Guide</a>
         <span class="launch-arrow"><i class="fas fa-arrow-right"></i></span>
       </div>
-    </a>
+      <div class="teacher-controls">
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionE" data-class="Y11" id="cover-CriterionE-Y11">
+          <label for="cover-CriterionE-Y11"><span class="y11-label">Year 11</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="CriterionE" data-class="Y12" id="cover-CriterionE-Y12">
+          <label for="cover-CriterionE-Y12"><span class="y12-label">Year 12</span> covered</label>
+        </div>
+        <span class="teacher-badge">Teacher only</span>
+        <span class="teacher-edit toggle-cover" data-lesson="CriterionE">(toggle both)</span>
+      </div>
+    </div>
 
-    <!-- Unpacking the IA -->
-    <a href="docs/ebooks/UnpackingTheIA.pdf" target="_blank" class="criteria-card">
-      <span class="criteria-letter" style="font-size: 2rem;">📘</span>
-      <h3>📘 Unpacking the IA <span class="badge" style="background: #e8e0f5; color: #4a2d7a;">Guide</span></h3>
+    <!-- COMBINED: Unpacking the IA & Examples -->
+    <div class="criteria-card is-y11-locked is-y12-locked" data-lesson="UnpackingExamples">
+      <div class="lock-icons">
+        <span class="lock-icon lock-y11"><i class="fas fa-lock"></i> Y11</span>
+        <span class="lock-icon lock-y12"><i class="fas fa-lock"></i> Y12</span>
+      </div>
+      <span class="criteria-letter large">📚</span>
+      <h3>📚 IA Guides &amp; Samples <span class="badge" style="background: #e8e0f5; color: #4a2d7a;">Reference</span></h3>
       <span class="weight">Essential reading</span>
-      <p>A comprehensive guide that breaks down the entire IA process, explaining what examiners are looking for in each criterion.</p>
+      <p>Unpack the IA process and see real student examples with examiner feedback.</p>
       <ul>
         <li><i class="fas fa-check-circle"></i> Understand the <strong>big picture</strong> of the IA</li>
-        <li><i class="fas fa-check-circle"></i> See how criteria <strong>connect</strong> to each other</li>
-        <li><i class="fas fa-check-circle"></i> Clarify <strong>expectations</strong> for top marks</li>
+        <li><i class="fas fa-check-circle"></i> <strong>8 complete examples</strong> with videos &amp; examiner comments</li>
+        <li><i class="fas fa-check-circle"></i> See what a <strong>top-scoring IA</strong> looks like</li>
       </ul>
       <div class="btn-row">
-        <span class="btn btn-primary"><i class="fas fa-rocket"></i> Open Guide</span>
+        <a href="docs/ebooks/UnpackingTheIA.pdf" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Unpacking Guide</a>
+        <a href="docs/ebooks/Examples.pdf" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> View Examples</a>
         <span class="launch-arrow"><i class="fas fa-arrow-right"></i></span>
       </div>
-    </a>
-
-    <!-- Examples from IBO -->
-    <a href="docs/ebooks/Examples.pdf" target="_blank" class="criteria-card">
-      <span class="criteria-letter" style="font-size: 2rem;">📑</span>
-      <h3>📑 Examples from IBO <span class="badge" style="background: #fdeac8; color: #a8691b;">Samples</span></h3>
-      <span class="weight">Official assessed work</span>
-      <p>Real student IA submissions with examiner comments. See what a top-scoring IA looks like.</p>
-      <ul>
-        <li><i class="fas fa-check-circle"></i> <strong>8 complete examples</strong> with videos</li>
-        <li><i class="fas fa-check-circle"></i> <strong>Examiner feedback</strong> for each criterion</li>
-        <li><i class="fas fa-check-circle"></i> Understand the <strong>standard expected</strong></li>
-      </ul>
-      <div class="btn-row">
-        <span class="btn btn-primary"><i class="fas fa-rocket"></i> View Examples</span>
-        <span class="launch-arrow"><i class="fas fa-arrow-right"></i></span>
+      <div class="teacher-controls">
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="UnpackingExamples" data-class="Y11" id="cover-UnpackingExamples-Y11">
+          <label for="cover-UnpackingExamples-Y11"><span class="y11-label">Year 11</span> covered</label>
+        </div>
+        <div class="cover-item">
+          <input type="checkbox" class="cover-checkbox" data-lesson="UnpackingExamples" data-class="Y12" id="cover-UnpackingExamples-Y12">
+          <label for="cover-UnpackingExamples-Y12"><span class="y12-label">Year 12</span> covered</label>
+        </div>
+        <span class="teacher-badge">Teacher only</span>
+        <span class="teacher-edit toggle-cover" data-lesson="UnpackingExamples">(toggle both)</span>
       </div>
-    </a>
+    </div>
   </div>
 
   <!-- ===== TIMELINE & MILESTONES ===== -->
@@ -549,10 +802,9 @@
   </div>
 
   <div class="timeline-grid">
-    <!-- Milestone 1 (Sept) -->
     <div class="timeline-item">
       <span class="milestone orange">90% Complete</span>
-      <h4>🎬 90% Submission & Screen Recording</h4>
+      <h4>🎬 90% Submission &amp; Screen Recording</h4>
       <div class="due"><i class="fas fa-flag"></i> End of September</div>
       <div class="desc">
         <ul>
@@ -563,7 +815,6 @@
       </div>
     </div>
 
-    <!-- Milestone 2 (Oct) -->
     <div class="timeline-item">
       <span class="milestone red">Criterion D</span>
       <h4>📝 Criterion D Outline</h4>
@@ -577,10 +828,9 @@
       </div>
     </div>
 
-    <!-- Milestone 3 (Oct) -->
     <div class="timeline-item">
       <span class="milestone red">Criterion E</span>
-      <h4>📋 Criterion E & Formal Draft</h4>
+      <h4>📋 Criterion E &amp; Formal Draft</h4>
       <div class="due"><i class="fas fa-flag"></i> End of October</div>
       <div class="desc">
         <ul>
@@ -592,7 +842,6 @@
       </div>
     </div>
 
-    <!-- Milestone 4 (Winter) -->
     <div class="timeline-item">
       <span class="milestone green">Final Submission</span>
       <h4>✅ Full IA – Final Submission</h4>
@@ -600,32 +849,13 @@
       <div class="desc">
         <ul>
           <li><i class="fas fa-check"></i> All criteria complete (A–E)</li>
-          <li><i class="fas fa-check"></i> Video recorded & edited</li>
-          <li><i class="fas fa-check"></i> Final proofread & submission</li>
+          <li><i class="fas fa-check"></i> Video recorded &amp; edited</li>
+          <li><i class="fas fa-check"></i> Final proofread &amp; submission</li>
           <li><i class="fas fa-check"></i> <strong>Celebrate!</strong> 🎉</li>
         </ul>
       </div>
     </div>
   </div>
-
-  <!-- ===== JAVASCRIPT ===== -->
-  <script>
-    // --- Smooth scroll for anchor links ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href === "#") return;
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-
-    // --- Store last visit ---
-    localStorage.setItem('iaHubLastVisit', new Date().toLocaleDateString());
-  </script>
 
   <!-- ===== CHEAT SHEET ===== -->
   <div class="cheat-box">
@@ -647,6 +877,147 @@
   </div>
 
 </div>
+
+<script>
+  (function() {
+    const TEACHER_PASSWORD = 'Password262026';
+
+    // ---- All lessons ----
+    const allLessons = ['CriterionA', 'CriterionB', 'CriterionC', 'CriterionD', 'CriterionE', 'UnpackingExamples'];
+
+    // ---- Track which lessons are unlocked ----
+    function getUnlockedLessons(year) {
+      const unlocked = [];
+      document.querySelectorAll('.criteria-card[data-lesson]').forEach(card => {
+        const lesson = card.getAttribute('data-lesson');
+        const checkboxes = card.querySelectorAll('.cover-checkbox');
+        const anyChecked = Array.from(checkboxes).some(cb => cb.dataset.class === year && cb.checked);
+        if (anyChecked) unlocked.push(lesson);
+      });
+      return unlocked;
+    }
+
+    function updateUI() {
+      const y11Unlocked = getUnlockedLessons('Y11');
+      const y12Unlocked = getUnlockedLessons('Y12');
+
+      document.querySelectorAll('.criteria-card[data-lesson]').forEach(card => {
+        const checkboxes = card.querySelectorAll('.cover-checkbox');
+        const y11Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y11' && cb.checked);
+        const y12Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y12' && cb.checked);
+
+        if (y11Checked) card.classList.remove('is-y11-locked');
+        else card.classList.add('is-y11-locked');
+
+        if (y12Checked) card.classList.remove('is-y12-locked');
+        else card.classList.add('is-y12-locked');
+
+        const anyChecked = y11Checked || y12Checked;
+        if (anyChecked) card.classList.remove('locked');
+        else card.classList.add('locked');
+      });
+    }
+
+    // ---- Handle checkbox changes ----
+    document.querySelectorAll('.cover-checkbox').forEach(function(cb) {
+      const lesson = cb.getAttribute('data-lesson');
+      const className = cb.getAttribute('data-class');
+      const storageKey = 'ia_cover_' + lesson + '_' + className;
+
+      const saved = localStorage.getItem(storageKey);
+      if (saved === 'true') cb.checked = true;
+
+      cb.addEventListener('change', function() {
+        localStorage.setItem(storageKey, cb.checked ? 'true' : 'false');
+        updateUI();
+      });
+    });
+
+    // ---- "Toggle all" teacher edit ----
+    document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const lesson = this.getAttribute('data-lesson');
+        const cbs = document.querySelectorAll('.cover-checkbox[data-lesson="' + lesson + '"]');
+        const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
+        cbs.forEach(function(cb) {
+          cb.checked = anyUnchecked;
+          const key = 'ia_cover_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-class');
+          localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
+        });
+        updateUI();
+      });
+    });
+
+    // ---- Password Modal ----
+    const modal = document.getElementById('passwordModal');
+    const pwdInput = document.getElementById('pwdInput');
+    const pwdError = document.getElementById('pwdError');
+    const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+
+    function openModal() {
+      modal.classList.add('active');
+      pwdInput.value = '';
+      pwdError.textContent = '';
+      pwdInput.focus();
+    }
+
+    function closeModal() { modal.classList.remove('active'); }
+
+    function activateTeacherMode() {
+      document.body.classList.add('is-teacher');
+      sessionStorage.setItem('teacherMode', 'true');
+      let lockBtn = document.getElementById('lockAdminBtn');
+      if (!lockBtn) {
+        lockBtn = document.createElement('a');
+        lockBtn.id = 'lockAdminBtn';
+        lockBtn.innerHTML = '<i class="fas fa-unlock-alt"></i> Lock Admin';
+        lockBtn.href = '#';
+        lockBtn.style.color = '#fdbb2d';
+        lockBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          sessionStorage.removeItem('teacherMode');
+          window.location.reload();
+        });
+        document.querySelector('.nav').appendChild(lockBtn);
+      }
+    }
+
+    pwdSubmitBtn.addEventListener('click', function() {
+      const entered = pwdInput.value.trim();
+      if (entered === TEACHER_PASSWORD) {
+        activateTeacherMode();
+        closeModal();
+      } else {
+        pwdError.textContent = '❌ Incorrect password. Try again.';
+        pwdInput.value = '';
+        pwdInput.focus();
+      }
+    });
+
+    pwdInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); pwdSubmitBtn.click(); }
+    });
+
+    modal.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+    // ---- Admin button ----
+    let adminBtn = document.createElement('a');
+    adminBtn.id = 'adminModeBtn';
+    adminBtn.href = '#';
+    adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
+    adminBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openModal();
+    });
+    document.querySelector('.nav').appendChild(adminBtn);
+
+    // ---- Init ----
+    updateUI();
+    if (sessionStorage.getItem('teacherMode') === 'true') activateTeacherMode();
+  })();
+</script>
 
 </body>
 </html>
