@@ -73,6 +73,49 @@
       border-radius: 40px;
     }
 
+    /* Progress Bar */
+    .progress-bar {
+      background: #0b2a4a;
+      border-radius: 60px;
+      padding: 0.8rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 2rem;
+      color: #e6edf5;
+    }
+    .progress-bar .label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-bar .label i { color: #fdbb2d; }
+    .progress-bar .status-badge {
+      font-size: 0.75rem;
+      background: #1f4b6e;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #b6d0e8;
+    }
+    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .progress-track {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: #1f4b6e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar .progress-fill {
+      height: 100%;
+      background: #fdbb2d;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
     .section-head {
       font-size: 1.9rem;
       font-weight: 600;
@@ -103,7 +146,7 @@
       flex-direction: column;
       text-decoration: none;
       color: inherit;
-      position: relative; /* For lock positioning */
+      position: relative;
     }
     .card:hover {
       border-color: #b6d0e8;
@@ -196,18 +239,25 @@
       position: relative;
       z-index: 2;
     }
-    .teacher-controls input[type="checkbox"] {
+    .cover-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .cover-item input[type="checkbox"] {
       width: 18px;
       height: 18px;
       accent-color: #0b2a4a;
       cursor: pointer;
     }
-    .teacher-controls label {
+    .cover-item label {
       cursor: pointer;
       font-weight: 500;
       color: #0b2a4a;
       font-size: 0.8rem;
     }
+    .cover-item .class-label { color: #1a5f87; font-weight: 700; }
     .teacher-controls .teacher-badge {
       font-size: 0.65rem;
       background: #cbd5e1;
@@ -233,6 +283,11 @@
     /* When Teacher Mode is active */
     body.is-teacher .teacher-controls {
       display: flex;
+    }
+
+    /* Fully Covered background only if ALL classes checked */
+    .card.fully-covered {
+      background: #e6f7e6 !important;
     }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
@@ -296,6 +351,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
+      .progress-bar { flex-direction: column; align-items: stretch; text-align: center; }
     }
   </style>
 </head>
@@ -330,6 +386,21 @@
         Year 10 · Unit 3 · Architecture, memory, storage, inputs and outputs
     </div>
 
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar">
+      <span class="label"><i class="fas fa-chart-line"></i> Progress</span>
+      <span class="status-badge">
+        <i class="fas fa-graduation-cap"></i> 
+        <span class="unlocked-count" id="unlockedCount">0</span> / <span id="totalLessons">0</span> lessons unlocked
+      </span>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span style="font-size:0.75rem; color:#94a3b8; margin-left:auto;">
+        <i class="fas fa-info-circle"></i> Tick 10A, 10B or 10C to unlock a lesson
+      </span>
+    </div>
+
     <!-- ========== LESSON GRID ========== -->
     <div class="section-head">
         <i class="fas fa-cpu"></i> Architecture &amp; Storage
@@ -348,10 +419,20 @@
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW1" id="cover-HW1">
-                <label for="cover-HW1">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW1" data-class="10A" id="cover-HW1-10A">
+                  <label for="cover-HW1-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW1" data-class="10B" id="cover-HW1-10B">
+                  <label for="cover-HW1-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW1" data-class="10C" id="cover-HW1-10C">
+                  <label for="cover-HW1-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW1">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW1">(toggle all)</span>
             </div>
         </div>
 
@@ -366,10 +447,20 @@
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW2" id="cover-HW2">
-                <label for="cover-HW2">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW2" data-class="10A" id="cover-HW2-10A">
+                  <label for="cover-HW2-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW2" data-class="10B" id="cover-HW2-10B">
+                  <label for="cover-HW2-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW2" data-class="10C" id="cover-HW2-10C">
+                  <label for="cover-HW2-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW2">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW2">(toggle all)</span>
             </div>
         </div>
 
@@ -384,10 +475,20 @@
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW3" id="cover-HW3">
-                <label for="cover-HW3">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW3" data-class="10A" id="cover-HW3-10A">
+                  <label for="cover-HW3-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW3" data-class="10B" id="cover-HW3-10B">
+                  <label for="cover-HW3-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW3" data-class="10C" id="cover-HW3-10C">
+                  <label for="cover-HW3-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW3">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW3">(toggle all)</span>
             </div>
         </div>
 
@@ -402,10 +503,20 @@
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW4" id="cover-HW4">
-                <label for="cover-HW4">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW4" data-class="10A" id="cover-HW4-10A">
+                  <label for="cover-HW4-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW4" data-class="10B" id="cover-HW4-10B">
+                  <label for="cover-HW4-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW4" data-class="10C" id="cover-HW4-10C">
+                  <label for="cover-HW4-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW4">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW4">(toggle all)</span>
             </div>
         </div>
 
@@ -420,10 +531,20 @@
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW5" id="cover-HW5">
-                <label for="cover-HW5">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW5" data-class="10A" id="cover-HW5-10A">
+                  <label for="cover-HW5-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW5" data-class="10B" id="cover-HW5-10B">
+                  <label for="cover-HW5-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW5" data-class="10C" id="cover-HW5-10C">
+                  <label for="cover-HW5-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW5">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW5">(toggle all)</span>
             </div>
         </div>
 
@@ -438,10 +559,20 @@
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW6" id="cover-HW6">
-                <label for="cover-HW6">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW6" data-class="10A" id="cover-HW6-10A">
+                  <label for="cover-HW6-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW6" data-class="10B" id="cover-HW6-10B">
+                  <label for="cover-HW6-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW6" data-class="10C" id="cover-HW6-10C">
+                  <label for="cover-HW6-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW6">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW6">(toggle all)</span>
             </div>
         </div>
 
@@ -465,10 +596,20 @@
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW7" id="cover-HW7">
-                <label for="cover-HW7">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW7" data-class="10A" id="cover-HW7-10A">
+                  <label for="cover-HW7-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW7" data-class="10B" id="cover-HW7-10B">
+                  <label for="cover-HW7-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW7" data-class="10C" id="cover-HW7-10C">
+                  <label for="cover-HW7-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW7">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW7">(toggle all)</span>
             </div>
         </a>
 
@@ -483,10 +624,20 @@
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW8" id="cover-HW8">
-                <label for="cover-HW8">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW8" data-class="10A" id="cover-HW8-10A">
+                  <label for="cover-HW8-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW8" data-class="10B" id="cover-HW8-10B">
+                  <label for="cover-HW8-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW8" data-class="10C" id="cover-HW8-10C">
+                  <label for="cover-HW8-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW8">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW8">(toggle all)</span>
             </div>
         </a>
 
@@ -501,10 +652,20 @@
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW9" id="cover-HW9">
-                <label for="cover-HW9">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW9" data-class="10A" id="cover-HW9-10A">
+                  <label for="cover-HW9-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW9" data-class="10B" id="cover-HW9-10B">
+                  <label for="cover-HW9-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW9" data-class="10C" id="cover-HW9-10C">
+                  <label for="cover-HW9-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW9">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW9">(toggle all)</span>
             </div>
         </a>
 
@@ -519,10 +680,20 @@
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW10" id="cover-HW10">
-                <label for="cover-HW10">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW10" data-class="10A" id="cover-HW10-10A">
+                  <label for="cover-HW10-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW10" data-class="10B" id="cover-HW10-10B">
+                  <label for="cover-HW10-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW10" data-class="10C" id="cover-HW10-10C">
+                  <label for="cover-HW10-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW10">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW10">(toggle all)</span>
             </div>
         </a>
 
@@ -537,10 +708,20 @@
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="HW11" id="cover-HW11">
-                <label for="cover-HW11">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW11" data-class="10A" id="cover-HW11-10A">
+                  <label for="cover-HW11-10A"><span class="class-label">10A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW11" data-class="10B" id="cover-HW11-10B">
+                  <label for="cover-HW11-10B"><span class="class-label">10B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW11" data-class="10C" id="cover-HW11-10C">
+                  <label for="cover-HW11-10C"><span class="class-label">10C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW11">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW11">(toggle all)</span>
             </div>
         </a>
 
@@ -562,6 +743,10 @@
         let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
         let pendingPath = '';
 
+        // ---- All lessons ----
+        const allLessons = ['HW1', 'HW2', 'HW3', 'HW4', 'HW5', 'HW6', 'HW7', 'HW8', 'HW9', 'HW10', 'HW11'];
+        document.getElementById('totalLessons').textContent = allLessons.length;
+
         // ---- Track which lessons are unlocked (based on checkboxes) ----
         function getUnlockedLessons() {
           const unlocked = [];
@@ -577,26 +762,41 @@
         }
 
         function updateUI() {
+          const unlocked = getUnlockedLessons();
+          
           // Update card lock states
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
             const lesson = card.getAttribute('data-lesson');
             const checkboxes = card.querySelectorAll('.cover-checkbox');
             const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            const allChecked = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
             
+            // Lock/unlock
             if (anyChecked) {
               card.classList.remove('locked');
-              card.style.background = '#e6f7e6'; // Green if covered
             } else {
               card.classList.add('locked');
-              card.style.background = ''; // Reset
+            }
+            
+            // Color coding: Only green if ALL classes checked
+            card.classList.remove('fully-covered');
+            if (allChecked) {
+              card.classList.add('fully-covered');
             }
           });
+          
+          // Update progress bar
+          const count = unlocked.length;
+          const total = allLessons.length;
+          document.getElementById('unlockedCount').textContent = count;
+          document.getElementById('progressFill').style.width = (count / total * 100) + '%';
         }
 
         // Restore checked states on load
         checkboxes.forEach(function(cb) {
             const lessonKey = cb.getAttribute('data-lesson');
-            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
+            const classKey = cb.getAttribute('data-class');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey + '_' + classKey;
 
             if (localStorage.getItem(storageKey) === 'true') {
                 cb.checked = true;
@@ -609,7 +809,7 @@
             });
         });
 
-        // ---- "Toggle" teacher edit ----
+        // ---- "Toggle all" teacher edit ----
         document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
           toggle.addEventListener('click', function(e) {
             e.preventDefault();
@@ -619,7 +819,7 @@
             const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
             cbs.forEach(function(cb) {
               cb.checked = anyUnchecked;
-              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson');
+              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-class');
               localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
             });
             updateUI();
@@ -710,10 +910,6 @@
                 pwdInput.focus();
             }
         }
-
-        // Handle Lesson Plan clicks (Need to add buttons dynamically or check for existing classes)
-        // Since your original code didn't have explicit Lesson Plan buttons, we will skip this for now
-        // and focus on the Admin mode.
 
         pwdSubmitBtn.addEventListener('click', attemptUnlock);
         pwdInput.addEventListener('keydown', function(e) {
