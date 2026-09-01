@@ -73,6 +73,49 @@
       border-radius: 40px;
     }
 
+    /* Progress Bar */
+    .progress-bar {
+      background: #0b2a4a;
+      border-radius: 60px;
+      padding: 0.8rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 2rem;
+      color: #e6edf5;
+    }
+    .progress-bar .label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-bar .label i { color: #fdbb2d; }
+    .progress-bar .status-badge {
+      font-size: 0.75rem;
+      background: #1f4b6e;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #b6d0e8;
+    }
+    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .progress-track {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: #1f4b6e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar .progress-fill {
+      height: 100%;
+      background: #fdbb2d;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
     .section-head {
       font-size: 1.9rem;
       font-weight: 600;
@@ -196,18 +239,25 @@
       position: relative;
       z-index: 2;
     }
-    .teacher-controls input[type="checkbox"] {
+    .cover-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .cover-item input[type="checkbox"] {
       width: 18px;
       height: 18px;
       accent-color: #0b2a4a;
       cursor: pointer;
     }
-    .teacher-controls label {
+    .cover-item label {
       cursor: pointer;
       font-weight: 500;
       color: #0b2a4a;
       font-size: 0.8rem;
     }
+    .cover-item .class-label { color: #1a5f87; font-weight: 700; }
     .teacher-controls .teacher-badge {
       font-size: 0.65rem;
       background: #cbd5e1;
@@ -296,6 +346,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
+      .progress-bar { flex-direction: column; align-items: stretch; text-align: center; }
     }
   </style>
 </head>
@@ -330,6 +381,21 @@
         Year 9 · Unit 1 · How computers store and process data
     </div>
 
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar">
+      <span class="label"><i class="fas fa-chart-line"></i> Progress</span>
+      <span class="status-badge">
+        <i class="fas fa-graduation-cap"></i> 
+        <span class="unlocked-count" id="unlockedCount">0</span> / <span id="totalLessons">0</span> lessons unlocked
+      </span>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span style="font-size:0.75rem; color:#94a3b8; margin-left:auto;">
+        <i class="fas fa-info-circle"></i> Tick 9A, 9B or 9C to unlock a lesson
+      </span>
+    </div>
+
     <!-- ========== LESSON GRID ========== -->
     <div class="section-head">
         <i class="fas fa-calculator"></i> Lessons
@@ -348,10 +414,20 @@
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR1" id="cover-DR1">
-                <label for="cover-DR1">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="9A" id="cover-DR1-9A">
+                  <label for="cover-DR1-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="9B" id="cover-DR1-9B">
+                  <label for="cover-DR1-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="9C" id="cover-DR1-9C">
+                  <label for="cover-DR1-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR1">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR1">(toggle all)</span>
             </div>
         </a>
 
@@ -366,10 +442,20 @@
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR2" id="cover-DR2">
-                <label for="cover-DR2">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="9A" id="cover-DR2-9A">
+                  <label for="cover-DR2-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="9B" id="cover-DR2-9B">
+                  <label for="cover-DR2-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="9C" id="cover-DR2-9C">
+                  <label for="cover-DR2-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR2">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR2">(toggle all)</span>
             </div>
         </a>
 
@@ -384,10 +470,20 @@
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR3" id="cover-DR3">
-                <label for="cover-DR3">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="9A" id="cover-DR3-9A">
+                  <label for="cover-DR3-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="9B" id="cover-DR3-9B">
+                  <label for="cover-DR3-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="9C" id="cover-DR3-9C">
+                  <label for="cover-DR3-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR3">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR3">(toggle all)</span>
             </div>
         </a>
 
@@ -402,10 +498,20 @@
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR4" id="cover-DR4">
-                <label for="cover-DR4">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="9A" id="cover-DR4-9A">
+                  <label for="cover-DR4-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="9B" id="cover-DR4-9B">
+                  <label for="cover-DR4-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="9C" id="cover-DR4-9C">
+                  <label for="cover-DR4-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle all)</span>
             </div>
         </div>
 
@@ -420,10 +526,20 @@
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR5" id="cover-DR5">
-                <label for="cover-DR5">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="9A" id="cover-DR5-9A">
+                  <label for="cover-DR5-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="9B" id="cover-DR5-9B">
+                  <label for="cover-DR5-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="9C" id="cover-DR5-9C">
+                  <label for="cover-DR5-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR5">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR5">(toggle all)</span>
             </div>
         </div>
 
@@ -438,10 +554,20 @@
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR6" id="cover-DR6">
-                <label for="cover-DR6">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="9A" id="cover-DR6-9A">
+                  <label for="cover-DR6-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="9B" id="cover-DR6-9B">
+                  <label for="cover-DR6-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="9C" id="cover-DR6-9C">
+                  <label for="cover-DR6-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR6">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR6">(toggle all)</span>
             </div>
         </div>
 
@@ -456,10 +582,20 @@
                 <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR7" id="cover-DR7">
-                <label for="cover-DR7">✓ Mark as covered</label>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="9A" id="cover-DR7-9A">
+                  <label for="cover-DR7-9A"><span class="class-label">9A</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="9B" id="cover-DR7-9B">
+                  <label for="cover-DR7-9B"><span class="class-label">9B</span></label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="9C" id="cover-DR7-9C">
+                  <label for="cover-DR7-9C"><span class="class-label">9C</span></label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR7">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR7">(toggle all)</span>
             </div>
         </div>
 
@@ -481,8 +617,28 @@
         let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
         let pendingPath = '';
 
-        // ---- Track which lessons are unlocked (based on checkboxes) ----
+        // ---- All lessons ----
+        const allLessons = ['DR1', 'DR2', 'DR3', 'DR4', 'DR5', 'DR6', 'DR7'];
+        document.getElementById('totalLessons').textContent = allLessons.length;
+
+        // ---- Track which lessons are unlocked (based on 9A/9B/9C checkboxes) ----
+        function getUnlockedLessons() {
+          const unlocked = [];
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            if (anyChecked) {
+              unlocked.push(lesson);
+            }
+          });
+          return unlocked;
+        }
+
         function updateUI() {
+          const unlocked = getUnlockedLessons();
+          
+          // Update card lock states
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
             const lesson = card.getAttribute('data-lesson');
             const checkboxes = card.querySelectorAll('.cover-checkbox');
@@ -496,12 +652,19 @@
               card.style.background = ''; // Reset
             }
           });
+          
+          // Update progress bar
+          const count = unlocked.length;
+          const total = allLessons.length;
+          document.getElementById('unlockedCount').textContent = count;
+          document.getElementById('progressFill').style.width = (count / total * 100) + '%';
         }
 
         // Restore checked states on load
         checkboxes.forEach(function(cb) {
             const lessonKey = cb.getAttribute('data-lesson');
-            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
+            const classKey = cb.getAttribute('data-class');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey + '_' + classKey;
 
             if (localStorage.getItem(storageKey) === 'true') {
                 cb.checked = true;
@@ -514,7 +677,7 @@
             });
         });
 
-        // ---- "Toggle" teacher edit ----
+        // ---- "Toggle all" teacher edit ----
         document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
           toggle.addEventListener('click', function(e) {
             e.preventDefault();
@@ -524,7 +687,7 @@
             const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
             cbs.forEach(function(cb) {
               cb.checked = anyUnchecked;
-              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson');
+              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-class');
               localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
             });
             updateUI();
