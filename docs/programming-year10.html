@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 9 · Programming · Year 10</title>
+  <title>Programming · Year 9 & Year 10</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -72,6 +72,7 @@
       padding: 0.4rem 1.4rem;
       border-radius: 40px;
     }
+    .subhead i { margin-right: 6px; }
 
     .section-head {
       font-size: 1.9rem;
@@ -103,17 +104,51 @@
       flex-direction: column;
       text-decoration: none;
       color: inherit;
+      position: relative;
     }
     .card:hover {
       border-color: #b6d0e8;
       box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06);
       transform: translateY(-2px);
     }
+    
+    /* NEW: Separate Locks (Y9 Blue, Y10 Red) */
+    .lock-icons {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .lock-icon {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 8px;
+    }
+    .lock-y9 {
+      color: #1a5f87;
+      background: #e3f2fd;
+    }
+    .lock-y10 {
+      color: #a13232;
+      background: #fdeaea;
+    }
+    /* Green when unlocked */
+    .card:not(.is-y9-locked) .lock-y9 { color: #2d7d46; background: #e6f7e6; }
+    .card:not(.is-y10-locked) .lock-y10 { color: #2d7d46; background: #e6f7e6; }
+
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
     }
     .card-header h4 {
       font-size: 1.1rem;
@@ -121,6 +156,7 @@
       color: #0b2a4a;
       letter-spacing: -0.2px;
       line-height: 1.3;
+      margin-right: 110px; /* Space for the locks */
     }
     .card p {
       color: #475569;
@@ -136,6 +172,8 @@
       align-items: center;
       border-top: 1px solid #e8eff6;
       padding-top: 0.9rem;
+      position: relative;
+      z-index: 1;
     }
     .card-actions .btn {
       background: #ecf3fa;
@@ -164,27 +202,39 @@
       background: #134f75 !important;
     }
 
-    .cover-section {
+    /* TEACHER CONTROLS (Hidden by default) */
+    .teacher-controls {
+      display: none;
       margin-top: 0.4rem;
       padding-top: 0.4rem;
       border-top: 1px solid #eef2f6;
-      display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
     }
-    .cover-section input[type="checkbox"] {
+    .cover-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .cover-item input[type="checkbox"] {
       width: 18px;
       height: 18px;
       accent-color: #0b2a4a;
       cursor: pointer;
     }
-    .cover-section label {
+    .cover-item label {
       cursor: pointer;
       font-weight: 500;
       color: #0b2a4a;
+      font-size: 0.8rem;
     }
-    .cover-section .teacher-badge {
+    .cover-item .y9-label { color: #1a5f87; }
+    .cover-item .y10-label { color: #a13232; }
+    .teacher-controls .teacher-badge {
       font-size: 0.65rem;
       background: #cbd5e1;
       color: #334155;
@@ -193,7 +243,7 @@
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
-    .cover-section .teacher-edit {
+    .teacher-controls .teacher-edit {
       font-size: 0.75rem;
       color: #6b7f8f;
       background: #edf2f7;
@@ -204,7 +254,62 @@
       transition: background 0.2s;
       margin-left: 6px;
     }
-    .cover-section .teacher-edit:hover { background: #d5dce6; }
+    .teacher-controls .teacher-edit:hover { background: #d5dce6; }
+
+    /* When Teacher Mode is active */
+    body.is-teacher .teacher-controls {
+      display: flex;
+    }
+
+    /* Progress bars */
+    .progress-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .progress-bar {
+      flex: 1;
+      min-width: 300px;
+      background: #0b2a4a;
+      border-radius: 60px;
+      padding: 0.8rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 1rem;
+      color: #e6edf5;
+    }
+    .progress-bar .label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-bar .label i { color: #fdbb2d; }
+    .progress-bar .status-badge {
+      font-size: 0.75rem;
+      background: #1f4b6e;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #b6d0e8;
+    }
+    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .progress-track {
+      flex: 1;
+      min-width: 100px;
+      height: 8px;
+      background: #1f4b6e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar .progress-fill {
+      height: 100%;
+      background: #fdbb2d;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
@@ -250,6 +355,15 @@
     }
     .password-box .btn:hover { background: #134f75; }
     .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+    .modal-type-badge {
+      display: inline-block;
+      background: #0b2a4a;
+      color: white;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
 
     @media (max-width: 680px) {
       body { padding: 1rem; }
@@ -258,6 +372,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
+      .progress-section { flex-direction: column; }
     }
   </style>
 </head>
@@ -268,8 +383,9 @@
     <!-- Password Modal -->
     <div id="passwordModal" class="password-modal">
       <div class="password-box">
+        <div class="modal-type-badge" id="modalType">🔒 Enter Master Password</div>
         <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
-        <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access</p>
+        <p style="color:#3b5f7a; margin-bottom:1.2rem;" id="modalText">Enter password to access</p>
         <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
         <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
         <div class="error" id="pwdError"></div>
@@ -279,6 +395,7 @@
     <!-- ========== NAVIGATION ========== -->
     <nav class="nav">
         <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+        <a href="year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9</a>
         <a href="year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
     </nav>
 
@@ -288,7 +405,25 @@
     </div>
     <div class="subhead">
         <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
-        Year 10 · Unit 9 · Programming concepts, data types, sequence, selection, iteration, arrays, procedures, file handling and maintainable programs
+        Year 9 & Year 10 · Programming concepts, data types, sequence, selection, iteration, arrays, procedures, file handling and maintainable programs
+    </div>
+
+    <!-- PROGRESS BARS -->
+    <div class="progress-section">
+      <div class="progress-bar">
+        <span class="label"><i class="fas fa-graduation-cap"></i> Year 9</span>
+        <span class="status-badge"><span class="unlocked-count" id="y9UnlockedCount">0</span> / <span id="y9TotalLessons">0</span> lessons</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="y9ProgressFill"></div>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <span class="label"><i class="fas fa-graduation-cap"></i> Year 10</span>
+        <span class="status-badge"><span class="unlocked-count" id="y10UnlockedCount">0</span> / <span id="y10TotalLessons">0</span> lessons</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="y10ProgressFill"></div>
+        </div>
+      </div>
     </div>
 
     <!-- ========== LESSON GRID ========== -->
@@ -299,7 +434,11 @@
     <div class="card-grid">
 
         <!-- Lesson 1 -->
-        <div class="card">
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="PROG1">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Data Types and Operations</h4>
             </div>
@@ -307,16 +446,26 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="PROG1" id="cover-PROG1">
-                <label for="cover-PROG1">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG1" data-class="Y9" id="cover-PROG1-Y9">
+                  <label for="cover-PROG1-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG1" data-class="Y10" id="cover-PROG1-Y10">
+                  <label for="cover-PROG1-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="PROG1">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="PROG1">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 2 -->
-        <div class="card">
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="PROG2">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Sequence and Selection</h4>
             </div>
@@ -324,16 +473,26 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="PROG2" id="cover-PROG2">
-                <label for="cover-PROG2">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG2" data-class="Y9" id="cover-PROG2-Y9">
+                  <label for="cover-PROG2-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG2" data-class="Y10" id="cover-PROG2-Y10">
+                  <label for="cover-PROG2-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="PROG2">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="PROG2">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 3 -->
-        <div class="card">
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="PROG3">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Iteration</h4>
             </div>
@@ -341,16 +500,26 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="PROG3" id="cover-PROG3">
-                <label for="cover-PROG3">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG3" data-class="Y9" id="cover-PROG3-Y9">
+                  <label for="cover-PROG3-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG3" data-class="Y10" id="cover-PROG3-Y10">
+                  <label for="cover-PROG3-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="PROG3">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="PROG3">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 4 -->
-        <div class="card">
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="PROG4">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Arrays</h4>
             </div>
@@ -358,16 +527,26 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="PROG4" id="cover-PROG4">
-                <label for="cover-PROG4">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG4" data-class="Y9" id="cover-PROG4-Y9">
+                  <label for="cover-PROG4-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG4" data-class="Y10" id="cover-PROG4-Y10">
+                  <label for="cover-PROG4-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="PROG4">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="PROG4">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 5 -->
-        <div class="card">
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="PROG5">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Library Routines</h4>
             </div>
@@ -375,16 +554,26 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="PROG5" id="cover-PROG5">
-                <label for="cover-PROG5">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG5" data-class="Y9" id="cover-PROG5-Y9">
+                  <label for="cover-PROG5-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG5" data-class="Y10" id="cover-PROG5-Y10">
+                  <label for="cover-PROG5-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="PROG5">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="PROG5">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 6 - NEW: Procedures and Functions -->
-        <div class="card">
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="PROG6">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Procedures and Functions</h4>
             </div>
@@ -392,16 +581,26 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="PROG6" id="cover-PROG6">
-                <label for="cover-PROG6">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG6" data-class="Y9" id="cover-PROG6-Y9">
+                  <label for="cover-PROG6-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG6" data-class="Y10" id="cover-PROG6-Y10">
+                  <label for="cover-PROG6-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="PROG6">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="PROG6">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 7 - NEW: File Handling -->
-        <div class="card">
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="PROG7">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>File Handling</h4>
             </div>
@@ -409,16 +608,26 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="PROG7" id="cover-PROG7">
-                <label for="cover-PROG7">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG7" data-class="Y9" id="cover-PROG7-Y9">
+                  <label for="cover-PROG7-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG7" data-class="Y10" id="cover-PROG7-Y10">
+                  <label for="cover-PROG7-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="PROG7">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="PROG7">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 8 - NEW: Maintainable Programs -->
-        <div class="card">
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="PROG8">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Maintainable Programs</h4>
             </div>
@@ -426,11 +635,17 @@
             <div class="card-actions">
                 <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="PROG8" id="cover-PROG8">
-                <label for="cover-PROG8">✓ Mark this lesson as covered</label>
+            <div class="teacher-controls">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG8" data-class="Y9" id="cover-PROG8-Y9">
+                  <label for="cover-PROG8-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="PROG8" data-class="Y10" id="cover-PROG8-Y10">
+                  <label for="cover-PROG8-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="PROG8">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="PROG8">(toggle both)</span>
             </div>
         </div>
 
@@ -444,85 +659,153 @@
 
 <script>
     (function() {
+        // The single Master Password used for both Teacher Mode and Lesson Plans
+        const TEACHER_PASSWORD = 'Password262026';
+        
         const checkboxes = document.querySelectorAll('.cover-checkbox');
-        const GRADE_PREFIX = 'year10_';
+        const GRADE_PREFIX = 'prog_'; // Shared prefix for the single file
+        let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
+        let pendingPath = '';
 
+        // ---- All lessons ----
+        const allLessons = ['PROG1', 'PROG2', 'PROG3', 'PROG4', 'PROG5', 'PROG6', 'PROG7', 'PROG8'];
+        document.getElementById('y9TotalLessons').textContent = allLessons.length;
+        document.getElementById('y10TotalLessons').textContent = allLessons.length;
+
+        // ---- Track which lessons are unlocked (based on checkboxes) ----
+        function getUnlockedLessons(year) {
+          const unlocked = [];
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            const anyChecked = Array.from(checkboxes).some(cb => cb.dataset.class === year && cb.checked);
+            if (anyChecked) {
+              unlocked.push(lesson);
+            }
+          });
+          return unlocked;
+        }
+
+        function updateUI() {
+          const y9Unlocked = getUnlockedLessons('Y9');
+          const y10Unlocked = getUnlockedLessons('Y10');
+          
+          // Update card lock states
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            
+            const y9Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y9' && cb.checked);
+            const y10Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y10' && cb.checked);
+            
+            // Update the Y9 and Y10 lock states
+            if (y9Checked) {
+              card.classList.remove('is-y9-locked');
+            } else {
+              card.classList.add('is-y9-locked');
+            }
+            
+            if (y10Checked) {
+              card.classList.remove('is-y10-locked');
+            } else {
+              card.classList.add('is-y10-locked');
+            }
+            
+            const anyChecked = y9Checked || y10Checked;
+
+            // Lock/unlock the main card
+            if (anyChecked) {
+              card.classList.remove('locked');
+            } else {
+              card.classList.add('locked');
+            }
+            
+            // Color coding
+            card.classList.remove('fully-covered', 'partially-covered');
+            if (y9Checked && y10Checked) {
+              card.classList.add('fully-covered'); // Green if both years done
+            } else if (anyChecked) {
+              card.classList.add('partially-covered'); // Yellow-ish if one year done
+            }
+          });
+          
+          // Update progress bars
+          document.getElementById('y9UnlockedCount').textContent = y9Unlocked.length;
+          document.getElementById('y10UnlockedCount').textContent = y10Unlocked.length;
+          document.getElementById('y9ProgressFill').style.width = (y9Unlocked.length / allLessons.length * 100) + '%';
+          document.getElementById('y10ProgressFill').style.width = (y10Unlocked.length / allLessons.length * 100) + '%';
+        }
+
+        // Restore checked states on load
         checkboxes.forEach(function(cb) {
             const lessonKey = cb.getAttribute('data-lesson');
-            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
-            const card = cb.closest('.card');
+            const classKey = cb.getAttribute('data-class');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey + '_' + classKey;
 
             if (localStorage.getItem(storageKey) === 'true') {
                 cb.checked = true;
-                if (card) card.style.background = '#e6f7e6';
             }
 
-            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
-            if (toggleSpan) {
-                toggleSpan.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.style.background = '#e6f7e6';
-                        } else {
-                            card.style.background = '';
-                        }
-                    }
-                });
-            }
-
-            const label = document.querySelector('label[for="' + cb.id + '"]');
-            if (label) {
-                label.addEventListener('dblclick', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.style.background = '#e6f7e6';
-                        } else {
-                            card.style.background = '';
-                        }
-                    }
-                });
-            }
-
+            // Handle changes
             cb.addEventListener('change', function() {
                 localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
-                if (card) {
-                    if (this.checked) {
-                        card.style.background = '#e6f7e6';
-                    } else {
-                        card.style.background = '';
-                    }
-                }
+                updateUI();
             });
         });
 
+        // ---- "Toggle all" teacher edit ----
+        document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
+          toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const lesson = this.getAttribute('data-lesson');
+            const cbs = document.querySelectorAll('.cover-checkbox[data-lesson="' + lesson + '"]');
+            const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
+            cbs.forEach(function(cb) {
+              cb.checked = anyUnchecked;
+              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-class');
+              localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
+            });
+            updateUI();
+          });
+        });
+
+        // Initial UI update
+        updateUI();
+
+        // ---- Password Modal Logic ----
         const modal = document.getElementById('passwordModal');
         const pwdInput = document.getElementById('pwdInput');
         const pwdError = document.getElementById('pwdError');
         const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
-        let pendingPath = '';
+        const modalType = document.getElementById('modalType');
+        const modalText = document.getElementById('modalText');
 
         const PDF_URLS = {
             'PROG1': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/Python%20programs/Lesson%20Plan%201.docx',
             'PROG2': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/Python%20programs/Lesson%20Plan%202.docx',
             'PROG3': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/Python%20programs/Lesson%20Plan%203.docx',
             'PROG4': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/Python%20programs/Lesson%20Plan%204.docx',
-            'PROG5': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/Python%20programs/Lesson%20Plan%205.docx'
+            'PROG5': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/Python%20programs/Lesson%20Plan%205.docx',
+            'PROG6': '',
+            'PROG7': '',
+            'PROG8': ''
         };
 
-        function openModal(path) {
-            pendingPath = path;
+        function openModal(mode, path) {
+            currentModalMode = mode;
+            pendingPath = path || '';
             pwdInput.value = '';
             pwdError.textContent = '';
+
+            if (mode === 'teacher') {
+                modalType.textContent = '🔑 Enter Master Password';
+                modalText.textContent = 'Enter the master password to enable the teacher controls.';
+            } else {
+                modalType.textContent = '📄 Teacher Resource';
+                modalText.textContent = 'Enter the teacher password to access this lesson plan.';
+            }
+
             modal.classList.add('active');
             pwdInput.focus();
         }
@@ -532,10 +815,33 @@
             pendingPath = '';
         }
 
+        function activateTeacherMode() {
+            document.body.classList.add('is-teacher');
+            sessionStorage.setItem('teacherMode', 'true');
+            
+            // Add a "Lock" button to exit teacher mode
+            let existingBtn = document.getElementById('lockAdminBtn');
+            if(!existingBtn) {
+                existingBtn = document.createElement('a');
+                existingBtn.id = 'lockAdminBtn';
+                existingBtn.innerHTML = '<i class="fas fa-unlock-alt"></i> Lock Admin';
+                existingBtn.href = '#';
+                existingBtn.style.color = '#fdbb2d';
+                existingBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    sessionStorage.removeItem('teacherMode');
+                    window.location.reload();
+                });
+                document.querySelector('.nav').appendChild(existingBtn);
+            }
+        }
+
         function attemptUnlock() {
             const entered = pwdInput.value.trim();
-            if (entered === 'teacher') {
-                if (pendingPath) {
+            if (entered === TEACHER_PASSWORD) {
+                if (currentModalMode === 'teacher') {
+                    activateTeacherMode();
+                } else if (currentModalMode === 'lesson' && pendingPath) {
                     window.open(pendingPath, '_blank');
                 }
                 closeModal();
@@ -545,20 +851,6 @@
                 pwdInput.focus();
             }
         }
-
-        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const lesson = this.getAttribute('data-lesson');
-                const url = PDF_URLS[lesson];
-                if (url) {
-                    openModal(url);
-                } else {
-                    alert('No lesson plan found for this lesson.');
-                }
-            });
-        });
 
         pwdSubmitBtn.addEventListener('click', attemptUnlock);
         pwdInput.addEventListener('keydown', function(e) {
@@ -579,6 +871,24 @@
                 closeModal();
             }
         });
+
+        // ---- INIT ----
+        // Check if teacher mode was previously active in this browser session
+        if (sessionStorage.getItem('teacherMode') === 'true') {
+            activateTeacherMode();
+        }
+
+        // Add a small "Admin" button in the nav to enter Teacher Mode later
+        let adminBtn = document.createElement('a');
+        adminBtn.id = 'adminModeBtn';
+        adminBtn.href = '#';
+        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
+        adminBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('teacher');
+        });
+        document.querySelector('.nav').appendChild(adminBtn);
+
     })();
 </script>
 
