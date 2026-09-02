@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 3 · Hardware · Year 10</title>
+  <title>Hardware · Year 9 & Year 10</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -72,49 +72,7 @@
       padding: 0.4rem 1.4rem;
       border-radius: 40px;
     }
-
-    /* Progress Bar */
-    .progress-bar {
-      background: #0b2a4a;
-      border-radius: 60px;
-      padding: 0.8rem 2rem;
-      margin-bottom: 2rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 1rem 2rem;
-      color: #e6edf5;
-    }
-    .progress-bar .label {
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .progress-bar .label i { color: #fdbb2d; }
-    .progress-bar .status-badge {
-      font-size: 0.75rem;
-      background: #1f4b6e;
-      padding: 0.2rem 1rem;
-      border-radius: 30px;
-      color: #b6d0e8;
-    }
-    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
-    .progress-bar .progress-track {
-      flex: 1;
-      min-width: 120px;
-      height: 8px;
-      background: #1f4b6e;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .progress-bar .progress-fill {
-      height: 100%;
-      background: #fdbb2d;
-      border-radius: 10px;
-      transition: width 0.4s ease;
-      width: 0%;
-    }
+    .subhead i { margin-right: 6px; }
 
     .section-head {
       font-size: 1.9rem;
@@ -154,18 +112,35 @@
       transform: translateY(-2px);
     }
     
-    /* NEW: Top Right Lock Icon */
-    .corner-lock {
+    /* NEW: Separate Locks (Y9 Blue, Y10 Red) */
+    .lock-icons {
       position: absolute;
       top: 15px;
       right: 15px;
-      font-size: 1.2rem;
-      color: #b21f1f;
+      display: flex;
+      gap: 8px;
       z-index: 10;
     }
-    .card:not(.locked) .corner-lock {
-      color: #2d7d46; /* Green when unlocked */
+    .lock-icon {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 8px;
     }
+    .lock-y9 {
+      color: #1a5f87;
+      background: #e3f2fd;
+    }
+    .lock-y10 {
+      color: #a13232;
+      background: #fdeaea;
+    }
+    /* Green when unlocked */
+    .card:not(.is-y9-locked) .lock-y9 { color: #2d7d46; background: #e6f7e6; }
+    .card:not(.is-y10-locked) .lock-y10 { color: #2d7d46; background: #e6f7e6; }
 
     .card-header {
       display: flex;
@@ -181,7 +156,7 @@
       color: #0b2a4a;
       letter-spacing: -0.2px;
       line-height: 1.3;
-      margin-right: 30px; /* Space for lock */
+      margin-right: 110px; /* Space for the locks */
     }
     .card p {
       color: #475569;
@@ -257,7 +232,8 @@
       color: #0b2a4a;
       font-size: 0.8rem;
     }
-    .cover-item .class-label { color: #1a5f87; font-weight: 700; }
+    .cover-item .y9-label { color: #1a5f87; }
+    .cover-item .y10-label { color: #a13232; }
     .teacher-controls .teacher-badge {
       font-size: 0.65rem;
       background: #cbd5e1;
@@ -285,9 +261,54 @@
       display: flex;
     }
 
-    /* Fully Covered background only if ALL classes checked */
-    .card.fully-covered {
-      background: #e6f7e6 !important;
+    /* Progress bars */
+    .progress-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .progress-bar {
+      flex: 1;
+      min-width: 300px;
+      background: #0b2a4a;
+      border-radius: 60px;
+      padding: 0.8rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 1rem;
+      color: #e6edf5;
+    }
+    .progress-bar .label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-bar .label i { color: #fdbb2d; }
+    .progress-bar .status-badge {
+      font-size: 0.75rem;
+      background: #1f4b6e;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #b6d0e8;
+    }
+    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .progress-track {
+      flex: 1;
+      min-width: 100px;
+      height: 8px;
+      background: #1f4b6e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar .progress-fill {
+      height: 100%;
+      background: #fdbb2d;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
     }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
@@ -351,7 +372,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
-      .progress-bar { flex-direction: column; align-items: stretch; text-align: center; }
+      .progress-section { flex-direction: column; }
     }
   </style>
 </head>
@@ -374,7 +395,8 @@
     <!-- ========== NAVIGATION ========== -->
     <nav class="nav">
         <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
-        <a href="https://mr-ellis.github.io/School/year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
+        <a href="year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9</a>
+        <a href="year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
     </nav>
 
     <!-- ========== HEADER ========== -->
@@ -383,22 +405,25 @@
     </div>
     <div class="subhead">
         <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
-        Year 10 · Unit 3 · Architecture, memory, storage, inputs and outputs
+        Year 9 & Year 10 · Architecture, memory, storage, inputs and outputs
     </div>
 
-    <!-- PROGRESS BAR -->
-    <div class="progress-bar">
-      <span class="label"><i class="fas fa-chart-line"></i> Progress</span>
-      <span class="status-badge">
-        <i class="fas fa-graduation-cap"></i> 
-        <span class="unlocked-count" id="unlockedCount">0</span> / <span id="totalLessons">0</span> lessons unlocked
-      </span>
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill"></div>
+    <!-- PROGRESS BARS -->
+    <div class="progress-section">
+      <div class="progress-bar">
+        <span class="label"><i class="fas fa-graduation-cap"></i> Year 9</span>
+        <span class="status-badge"><span class="unlocked-count" id="y9UnlockedCount">0</span> / <span id="y9TotalLessons">0</span> lessons</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="y9ProgressFill"></div>
+        </div>
       </div>
-      <span style="font-size:0.75rem; color:#94a3b8; margin-left:auto;">
-        <i class="fas fa-info-circle"></i> Tick 10A, 10B or 10C to unlock a lesson
-      </span>
+      <div class="progress-bar">
+        <span class="label"><i class="fas fa-graduation-cap"></i> Year 10</span>
+        <span class="status-badge"><span class="unlocked-count" id="y10UnlockedCount">0</span> / <span id="y10TotalLessons">0</span> lessons</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="y10ProgressFill"></div>
+        </div>
+      </div>
     </div>
 
     <!-- ========== LESSON GRID ========== -->
@@ -409,8 +434,11 @@
     <div class="card-grid">
 
         <!-- Lesson 1 -->
-        <div class="card locked" data-lesson="HW1">
-            <i class="fas fa-lock corner-lock"></i>
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="HW1">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>CPU Architecture</h4>
             </div>
@@ -420,25 +448,24 @@
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW1" data-class="10A" id="cover-HW1-10A">
-                  <label for="cover-HW1-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW1" data-class="Y9" id="cover-HW1-Y9">
+                  <label for="cover-HW1-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW1" data-class="10B" id="cover-HW1-10B">
-                  <label for="cover-HW1-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW1" data-class="10C" id="cover-HW1-10C">
-                  <label for="cover-HW1-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW1" data-class="Y10" id="cover-HW1-Y10">
+                  <label for="cover-HW1-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW1">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW1">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 2 -->
-        <div class="card locked" data-lesson="HW2">
-            <i class="fas fa-lock corner-lock"></i>
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="HW2">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>CPU Performance &amp; Buses</h4>
             </div>
@@ -448,25 +475,24 @@
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW2" data-class="10A" id="cover-HW2-10A">
-                  <label for="cover-HW2-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW2" data-class="Y9" id="cover-HW2-Y9">
+                  <label for="cover-HW2-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW2" data-class="10B" id="cover-HW2-10B">
-                  <label for="cover-HW2-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW2" data-class="10C" id="cover-HW2-10C">
-                  <label for="cover-HW2-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW2" data-class="Y10" id="cover-HW2-Y10">
+                  <label for="cover-HW2-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW2">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW2">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 3 -->
-        <div class="card locked" data-lesson="HW3">
-            <i class="fas fa-lock corner-lock"></i>
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="HW3">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Embedded Systems &amp; Instruction Sets</h4>
             </div>
@@ -476,25 +502,24 @@
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW3" data-class="10A" id="cover-HW3-10A">
-                  <label for="cover-HW3-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW3" data-class="Y9" id="cover-HW3-Y9">
+                  <label for="cover-HW3-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW3" data-class="10B" id="cover-HW3-10B">
-                  <label for="cover-HW3-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW3" data-class="10C" id="cover-HW3-10C">
-                  <label for="cover-HW3-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW3" data-class="Y10" id="cover-HW3-Y10">
+                  <label for="cover-HW3-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW3">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW3">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 4 -->
-        <div class="card locked" data-lesson="HW4">
-            <i class="fas fa-lock corner-lock"></i>
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="HW4">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Memory</h4>
             </div>
@@ -504,25 +529,24 @@
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW4" data-class="10A" id="cover-HW4-10A">
-                  <label for="cover-HW4-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW4" data-class="Y9" id="cover-HW4-Y9">
+                  <label for="cover-HW4-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW4" data-class="10B" id="cover-HW4-10B">
-                  <label for="cover-HW4-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW4" data-class="10C" id="cover-HW4-10C">
-                  <label for="cover-HW4-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW4" data-class="Y10" id="cover-HW4-Y10">
+                  <label for="cover-HW4-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW4">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW4">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 5 -->
-        <div class="card locked" data-lesson="HW5">
-            <i class="fas fa-lock corner-lock"></i>
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="HW5">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Secondary Storage</h4>
             </div>
@@ -532,25 +556,24 @@
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW5" data-class="10A" id="cover-HW5-10A">
-                  <label for="cover-HW5-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW5" data-class="Y9" id="cover-HW5-Y9">
+                  <label for="cover-HW5-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW5" data-class="10B" id="cover-HW5-10B">
-                  <label for="cover-HW5-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW5" data-class="10C" id="cover-HW5-10C">
-                  <label for="cover-HW5-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW5" data-class="Y10" id="cover-HW5-Y10">
+                  <label for="cover-HW5-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW5">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW5">(toggle both)</span>
             </div>
         </div>
 
         <!-- Lesson 6 -->
-        <div class="card locked" data-lesson="HW6">
-            <i class="fas fa-lock corner-lock"></i>
+        <div class="card locked is-y9-locked is-y10-locked" data-lesson="HW6">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Cloud Storage</h4>
             </div>
@@ -560,19 +583,15 @@
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW6" data-class="10A" id="cover-HW6-10A">
-                  <label for="cover-HW6-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW6" data-class="Y9" id="cover-HW6-Y9">
+                  <label for="cover-HW6-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW6" data-class="10B" id="cover-HW6-10B">
-                  <label for="cover-HW6-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW6" data-class="10C" id="cover-HW6-10C">
-                  <label for="cover-HW6-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW6" data-class="Y10" id="cover-HW6-Y10">
+                  <label for="cover-HW6-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW6">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW6">(toggle both)</span>
             </div>
         </div>
 
@@ -586,8 +605,11 @@
     <div class="card-grid">
 
         <!-- Lesson 7 - Input Devices -->
-        <a href="https://mr-ellis.github.io/School/Hardware/input-devices.html" class="card locked" data-lesson="HW7">
-            <i class="fas fa-lock corner-lock"></i>
+        <a href="https://mr-ellis.github.io/School/Hardware/input-devices.html" class="card locked is-y9-locked is-y10-locked" data-lesson="HW7">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Input Devices</h4>
             </div>
@@ -597,25 +619,24 @@
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW7" data-class="10A" id="cover-HW7-10A">
-                  <label for="cover-HW7-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW7" data-class="Y9" id="cover-HW7-Y9">
+                  <label for="cover-HW7-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW7" data-class="10B" id="cover-HW7-10B">
-                  <label for="cover-HW7-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW7" data-class="10C" id="cover-HW7-10C">
-                  <label for="cover-HW7-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW7" data-class="Y10" id="cover-HW7-Y10">
+                  <label for="cover-HW7-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW7">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW7">(toggle both)</span>
             </div>
         </a>
 
         <!-- Lesson 8 - Scanners & Cameras -->
-        <a href="https://mr-ellis.github.io/School/Hardware/scanners-cameras.html" class="card locked" data-lesson="HW8">
-            <i class="fas fa-lock corner-lock"></i>
+        <a href="https://mr-ellis.github.io/School/Hardware/scanners-cameras.html" class="card locked is-y9-locked is-y10-locked" data-lesson="HW8">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Scanners &amp; Cameras</h4>
             </div>
@@ -625,25 +646,24 @@
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW8" data-class="10A" id="cover-HW8-10A">
-                  <label for="cover-HW8-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW8" data-class="Y9" id="cover-HW8-Y9">
+                  <label for="cover-HW8-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW8" data-class="10B" id="cover-HW8-10B">
-                  <label for="cover-HW8-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW8" data-class="10C" id="cover-HW8-10C">
-                  <label for="cover-HW8-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW8" data-class="Y10" id="cover-HW8-Y10">
+                  <label for="cover-HW8-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW8">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW8">(toggle both)</span>
             </div>
         </a>
 
         <!-- Lesson 9 - Sensors (LINKED) -->
-        <a href="https://mr-ellis.github.io/School/Hardware/sensors.html" class="card locked" data-lesson="HW9">
-            <i class="fas fa-lock corner-lock"></i>
+        <a href="https://mr-ellis.github.io/School/Hardware/sensors.html" class="card locked is-y9-locked is-y10-locked" data-lesson="HW9">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Sensors</h4>
             </div>
@@ -653,25 +673,24 @@
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW9" data-class="10A" id="cover-HW9-10A">
-                  <label for="cover-HW9-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW9" data-class="Y9" id="cover-HW9-Y9">
+                  <label for="cover-HW9-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW9" data-class="10B" id="cover-HW9-10B">
-                  <label for="cover-HW9-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW9" data-class="10C" id="cover-HW9-10C">
-                  <label for="cover-HW9-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW9" data-class="Y10" id="cover-HW9-Y10">
+                  <label for="cover-HW9-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW9">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW9">(toggle both)</span>
             </div>
         </a>
 
         <!-- Lesson 10 - Output Devices -->
-        <a href="https://mr-ellis.github.io/School/Hardware/output-devices.html" class="card locked" data-lesson="HW10">
-            <i class="fas fa-lock corner-lock"></i>
+        <a href="https://mr-ellis.github.io/School/Hardware/output-devices.html" class="card locked is-y9-locked is-y10-locked" data-lesson="HW10">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Output Devices</h4>
             </div>
@@ -681,25 +700,24 @@
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW10" data-class="10A" id="cover-HW10-10A">
-                  <label for="cover-HW10-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW10" data-class="Y9" id="cover-HW10-Y9">
+                  <label for="cover-HW10-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW10" data-class="10B" id="cover-HW10-10B">
-                  <label for="cover-HW10-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW10" data-class="10C" id="cover-HW10-10C">
-                  <label for="cover-HW10-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW10" data-class="Y10" id="cover-HW10-Y10">
+                  <label for="cover-HW10-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW10">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW10">(toggle both)</span>
             </div>
         </a>
 
         <!-- Lesson 11 - Printers (LINKED) -->
-        <a href="https://mr-ellis.github.io/School/Hardware/printers.html" class="card locked" data-lesson="HW11">
-            <i class="fas fa-lock corner-lock"></i>
+        <a href="https://mr-ellis.github.io/School/Hardware/printers.html" class="card locked is-y9-locked is-y10-locked" data-lesson="HW11">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
                 <h4>Printers</h4>
             </div>
@@ -709,19 +727,15 @@
             </div>
             <div class="teacher-controls" onclick="event.stopPropagation();">
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW11" data-class="10A" id="cover-HW11-10A">
-                  <label for="cover-HW11-10A"><span class="class-label">10A</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW11" data-class="Y9" id="cover-HW11-Y9">
+                  <label for="cover-HW11-Y9"><span class="y9-label">Year 9</span> covered</label>
                 </div>
                 <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW11" data-class="10B" id="cover-HW11-10B">
-                  <label for="cover-HW11-10B"><span class="class-label">10B</span></label>
-                </div>
-                <div class="cover-item">
-                  <input type="checkbox" class="cover-checkbox" data-lesson="HW11" data-class="10C" id="cover-HW11-10C">
-                  <label for="cover-HW11-10C"><span class="class-label">10C</span></label>
+                  <input type="checkbox" class="cover-checkbox" data-lesson="HW11" data-class="Y10" id="cover-HW11-Y10">
+                  <label for="cover-HW11-Y10"><span class="y10-label">Year 10</span> covered</label>
                 </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="HW11">(toggle all)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="HW11">(toggle both)</span>
             </div>
         </a>
 
@@ -739,21 +753,22 @@
         const TEACHER_PASSWORD = 'Password262026';
         
         const checkboxes = document.querySelectorAll('.cover-checkbox');
-        const GRADE_PREFIX = 'year10_';
+        const GRADE_PREFIX = 'hardware_'; // Shared prefix for the single file
         let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
         let pendingPath = '';
 
         // ---- All lessons ----
         const allLessons = ['HW1', 'HW2', 'HW3', 'HW4', 'HW5', 'HW6', 'HW7', 'HW8', 'HW9', 'HW10', 'HW11'];
-        document.getElementById('totalLessons').textContent = allLessons.length;
+        document.getElementById('y9TotalLessons').textContent = allLessons.length;
+        document.getElementById('y10TotalLessons').textContent = allLessons.length;
 
         // ---- Track which lessons are unlocked (based on checkboxes) ----
-        function getUnlockedLessons() {
+        function getUnlockedLessons(year) {
           const unlocked = [];
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
             const lesson = card.getAttribute('data-lesson');
             const checkboxes = card.querySelectorAll('.cover-checkbox');
-            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            const anyChecked = Array.from(checkboxes).some(cb => cb.dataset.class === year && cb.checked);
             if (anyChecked) {
               unlocked.push(lesson);
             }
@@ -762,34 +777,53 @@
         }
 
         function updateUI() {
-          const unlocked = getUnlockedLessons();
+          const y9Unlocked = getUnlockedLessons('Y9');
+          const y10Unlocked = getUnlockedLessons('Y10');
           
           // Update card lock states
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
             const lesson = card.getAttribute('data-lesson');
             const checkboxes = card.querySelectorAll('.cover-checkbox');
-            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-            const allChecked = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
             
-            // Lock/unlock
+            const y9Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y9' && cb.checked);
+            const y10Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y10' && cb.checked);
+            
+            // Update the Y9 and Y10 lock states
+            if (y9Checked) {
+              card.classList.remove('is-y9-locked');
+            } else {
+              card.classList.add('is-y9-locked');
+            }
+            
+            if (y10Checked) {
+              card.classList.remove('is-y10-locked');
+            } else {
+              card.classList.add('is-y10-locked');
+            }
+            
+            const anyChecked = y9Checked || y10Checked;
+
+            // Lock/unlock the main card
             if (anyChecked) {
               card.classList.remove('locked');
             } else {
               card.classList.add('locked');
             }
             
-            // Color coding: Only green if ALL classes checked
-            card.classList.remove('fully-covered');
-            if (allChecked) {
-              card.classList.add('fully-covered');
+            // Color coding
+            card.classList.remove('fully-covered', 'partially-covered');
+            if (y9Checked && y10Checked) {
+              card.classList.add('fully-covered'); // Green if both years done
+            } else if (anyChecked) {
+              card.classList.add('partially-covered'); // Yellow-ish if one year done
             }
           });
           
-          // Update progress bar
-          const count = unlocked.length;
-          const total = allLessons.length;
-          document.getElementById('unlockedCount').textContent = count;
-          document.getElementById('progressFill').style.width = (count / total * 100) + '%';
+          // Update progress bars
+          document.getElementById('y9UnlockedCount').textContent = y9Unlocked.length;
+          document.getElementById('y10UnlockedCount').textContent = y10Unlocked.length;
+          document.getElementById('y9ProgressFill').style.width = (y9Unlocked.length / allLessons.length * 100) + '%';
+          document.getElementById('y10ProgressFill').style.width = (y10Unlocked.length / allLessons.length * 100) + '%';
         }
 
         // Restore checked states on load
