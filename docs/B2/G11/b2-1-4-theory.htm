@@ -1,1 +1,560 @@
-rff
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2.1.4 - Debugging Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        h4 {
+            color: #0b2a4a;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge.theory {
+            background: #1a5f87;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre;
+        }
+        .comment { color: #6b8c9e; }
+        .keyword { color: #f7c948; }
+        .string { color: #a3d9a5; }
+        .function { color: #66b3ff; }
+        .error { color: #f87171; }
+
+        .code-output {
+            background: #0f1724;
+            color: #f7c948;
+            padding: 10px 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-top: 1px solid #2d3748;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .task-box {
+            background: #f7fafc;
+            border-left: 4px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .starter-box {
+            background: #ebf4ff;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .plenary-box {
+            background: #f0f7ee;
+            border-left: 5px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .challenge-box {
+            background: #fef3e8;
+            border-left: 5px solid #b8943e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: #0b2a4a;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: none !important;
+            transition: background 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+        .btn-link:hover {
+            background: #1a3f64;
+            color: #fff !important;
+            border-bottom: none !important;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .principle-box {
+            background: #0b2a4a;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .principle-box .highlight {
+            color: #fdbb2d;
+        }
+
+        .footnote {
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-top: 4px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .trace-table {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 16px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .trace-table .row {
+            display: flex;
+            gap: 20px;
+            padding: 4px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .trace-table .row:last-child {
+            border-bottom: none;
+        }
+        .trace-table .header {
+            font-weight: 600;
+            color: #0b2a4a;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .btn-group { flex-direction: column; }
+            .btn-link { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="#" onclick="goBack(); return false;">← Back to B2 Programming</a>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '../B2.html';
+            }
+        }
+    </script>
+
+    <h1>B2.1.4 – Debugging Techniques <span class="badge theory">Theory</span></h1>
+
+    <!-- ==================== STARTER ==================== -->
+    <h2>🎯 Starter Activity</h2>
+    <div class="starter-box">
+        <p><strong>🧠 Think-Pair-Share</strong></p>
+        <p>Discuss with a partner: Have you ever spent hours trying to find a bug in your code? What strategies did you use to find it? What made it difficult?</p>
+        <p>Then, watch this short video introduction to debugging techniques.</p>
+        <div class="btn-group">
+            <a href="https://www.youtube.com/watch?v=slLhC8_teiI" target="_blank" class="btn-link">▶ Watch: Debugging Techniques</a>
+        </div>
+    </div>
+
+    <!-- ==================== LESSON CONTENT ==================== -->
+    <h2>📖 Lesson Content</h2>
+
+    <h3>The Big Idea</h3>
+    <p><strong>Debugging</strong> is the process of identifying, isolating, and fixing faults (also known as bugs) in a program. It is an essential part of the software development lifecycle. Even well-written code often fails the first time it runs due to incorrect logic, typos, unexpected input, or edge cases.</p>
+    <p>The goal of debugging is not just to fix errors, but to <strong>understand why they happen</strong>. This understanding helps developers improve their reasoning, prevent future mistakes, and write more reliable code.</p>
+
+    <h3>Types of Errors That Need Debugging</h3>
+    <p>Before diving into techniques, it's helpful to distinguish between types of errors:</p>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Syntax errors:</strong> Violations of the rules of the programming language (e.g. missing parentheses).</li>
+        <li><strong>Runtime errors:</strong> Errors that occur during program execution (e.g. division by zero).</li>
+        <li><strong>Logical errors:</strong> Code runs without crashing, but produces incorrect results (e.g. wrong formula).</li>
+    </ul>
+    <p><strong>Logical errors</strong> are the hardest to catch and require careful debugging techniques.</p>
+
+    <h3>Common Debugging Techniques</h3>
+    <p>Let's examine four widely used debugging strategies, suitable for students and professional developers alike.</p>
+
+    <h4>1. Trace Tables</h4>
+    <p>A <strong>trace table</strong> is a manual tool used to track how variables change as the program runs, especially inside loops and conditionals.</p>
+    <p><strong>When to use:</strong></p>
+    <ul style="margin-left: 20px; margin-bottom: 10px;">
+        <li>To understand how a piece of code executes line by line.</li>
+        <li>To simulate what the computer "sees" during execution.</li>
+    </ul>
+
+    <h4>Example (Python):</h4>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">total</span> = <span class="number">0</span>
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">3</span>):
+    <span class="keyword">total</span> += i
+<span class="function">print</span>(<span class="keyword">total</span>)
+</code></pre>
+    </div>
+
+    <h4>Trace Table:</h4>
+    <div class="trace-table">
+        <div class="row header">
+            <span>i</span>
+            <span>total</span>
+        </div>
+        <div class="row">
+            <span>0</span>
+            <span>0</span>
+        </div>
+        <div class="row">
+            <span>1</span>
+            <span>0</span>
+        </div>
+        <div class="row">
+            <span>1</span>
+            <span>1</span>
+        </div>
+        <div class="row">
+            <span>2</span>
+            <span>1</span>
+        </div>
+        <div class="row">
+            <span>2</span>
+            <span>3</span>
+        </div>
+        <div class="row">
+            <span>—</span>
+            <span>3</span>
+        </div>
+    </div>
+    <div class="footnote">💡 <strong>Tip:</strong> Use trace tables when learning or analyzing algorithms manually. They're also useful for designing test cases.</div>
+
+    <h4>2. Print Statements</h4>
+    <p>Using <code>print()</code> in Python or <code>System.out.println()</code> in Java is the most common and beginner-friendly debugging method.</p>
+    <p><strong>When to use:</strong></p>
+    <ul style="margin-left: 20px; margin-bottom: 10px;">
+        <li>To check values of variables at specific points.</li>
+        <li>To verify if a function is being called.</li>
+        <li>To trace the execution flow.</li>
+    </ul>
+
+    <h4>Example:</h4>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">divide</span>(x, y):
+    <span class="function">print</span>(<span class="string">"x:"</span>, x, <span class="string">"y:"</span>, y)  <span class="comment"># debug print</span>
+    <span class="keyword">return</span> x / y
+
+<span class="keyword">result</span> = <span class="function">divide</span>(10, 0)  <span class="comment"># Will show values before crashing</span>
+</code></pre>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Pros & Cons:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li><strong>✅ Pros:</strong> Easy to use. Works in all environments.</li>
+            <li><strong>❌ Cons:</strong> Not scalable in large programs. May clutter output and must be removed later.</li>
+        </ul>
+        <p><strong>Best practice:</strong> Use clear debug messages and print variable names along with values.</p>
+    </div>
+
+    <h4>3. Breakpoint Debugging</h4>
+    <p><strong>Breakpoints</strong> are markers that pause execution at specific lines so you can inspect the program state.</p>
+    <p><strong>How it works:</strong></p>
+    <ol style="margin-left: 20px; margin-bottom: 10px;">
+        <li>Set a breakpoint in an IDE (e.g. Thonny, PyCharm, VS Code for Python; Eclipse, IntelliJ for Java).</li>
+        <li>Run the program in debug mode.</li>
+        <li>When the program hits the breakpoint, it pauses.</li>
+        <li>You can inspect variable values, step line-by-line, and observe branching logic.</li>
+    </ol>
+
+    <div class="info-box">
+        <p><strong>📌 Advantages:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li>Visual and interactive.</li>
+            <li>Excellent for understanding how control flows through branches and loops.</li>
+            <li>Doesn't require modifying code (unlike <code>print</code> statements).</li>
+        </ul>
+    </div>
+
+    <h4>4. Step-by-Step Execution (Stepping)</h4>
+    <p><strong>Stepping</strong> through code allows you to execute one line at a time and watch what happens at each step.</p>
+    <p><strong>Two main types:</strong></p>
+    <ul style="margin-left: 20px; margin-bottom: 10px;">
+        <li><strong>Step Over:</strong> Executes the current line and moves to the next (useful in loops).</li>
+        <li><strong>Step Into:</strong> Enters into the function being called (useful for checking nested function behavior).</li>
+        <li><strong>Step Out:</strong> Finishes the current function and returns to the caller.</li>
+    </ul>
+    <p><strong>When to use:</strong></p>
+    <ul style="margin-left: 20px; margin-bottom: 10px;">
+        <li>To follow logic precisely.</li>
+        <li>To debug nested or recursive functions.</li>
+        <li>To find where the flow deviates from expectations.</li>
+    </ul>
+
+    <h3>Example: Combining Techniques</h3>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">compute_total</span>(items):
+    <span class="keyword">total</span> = <span class="number">0</span>
+    <span class="keyword">for</span> price <span class="keyword">in</span> items:
+        <span class="keyword">total</span> += price
+        <span class="function">print</span>(<span class="string">"Running total:"</span>, total)  <span class="comment"># print-based debug</span>
+    <span class="keyword">return</span> total
+
+<span class="keyword">prices</span> = [10, 20, <span class="string">"30"</span>, 40]
+<span class="function">compute_total</span>(prices)
+</code></pre>
+    </div>
+    <p><strong>Problem:</strong> A <code>TypeError</code> occurs when trying to add an integer to a string.</p>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Trace table</strong> helps see at which iteration it fails.</li>
+        <li><strong>Print statements</strong> show partial output.</li>
+        <li><strong>Breakpoint debugger</strong> reveals the exact error type and location.</li>
+        <li><strong>Stepping</strong> pinpoints when the program moves from working to broken state.</li>
+    </ul>
+
+    <h3>Summary Table</h3>
+    <table>
+        <thead>
+            <tr><th>Technique</th><th>Best For</th><th>Tools Needed</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Trace Table</strong></td><td>Manual variable tracking in loops</td><td>Pen and paper / IDE</td></tr>
+            <tr><td><strong>Print Statements</strong></td><td>Fast inspection of values or function calls</td><td>Any editor</td></tr>
+            <tr><td><strong>Breakpoint Debugging</strong></td><td>Interactive variable and flow inspection</td><td>IDE with debugger</td></tr>
+            <tr><td><strong>Step-by-Step</strong></td><td>Understanding control flow and function calls</td><td>IDE with debugger</td></tr>
+        </tbody>
+    </table>
+
+    <div class="principle-box">
+        <p><span class="highlight">🔑 Key Principle:</span> A skilled programmer does not write perfect code on the first try. Instead, they build tools and habits that let them understand and fix their mistakes quickly and thoughtfully. Debugging is how that process becomes both repeatable and reliable.</p>
+    </div>
+
+    <!-- ==================== TASK 1 ==================== -->
+    <h2>📝 Task 1: Understanding</h2>
+    <div class="task-box">
+        <div class="task-title">📖 Read & Understand</div>
+        <div class="task-desc">Read through the detailed explanations of debugging techniques—trace tables, print statements, breakpoints, and step-by-step execution—on the Computer Science Wiki.</div>
+        <div class="btn-group">
+            <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.1.4-construct-and-use-common-debugging-techniques" target="_blank" class="btn-link">📄 Debugging Techniques Wiki</a>
+            <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.1.pdf" target="_blank" class="btn-link">📄 B2.1 eBook (Reference)</a>
+        </div>
+    </div>
+
+    <!-- ==================== TASK 2 ==================== -->
+    <h2>🤖 Task 2: Teach the AI</h2>
+    <div class="task-box">
+        <div class="task-title">🧠 RevisionDojo "Teach the AI"</div>
+        <div class="task-desc">Explain what you've learned about debugging techniques—including trace tables, print statements, breakpoints, and step-by-step execution—to the AI.</div>
+        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=292&classroomId=7d9d7fc0-cf13-42eb-a277-77d2b675cb6a" target="_blank" class="btn-link">🤖 Teach the AI</a>
+    </div>
+
+    <!-- ==================== TASK 3 ==================== -->
+    <h2>💻 Task 3: Assessment</h2>
+    <div class="task-box">
+        <div class="task-title">📊 Code Practice & Assessment</div>
+        <div class="task-desc">Complete the following debugging exercises. Write your code using the online Python IDE.</div>
+
+        <p style="margin-top: 10px;"><strong>Exercise 1: Trace Table Practice</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Write a Python program with a loop and conditionals.</li>
+            <li>Create a trace table manually to track variable changes.</li>
+            <li>Compare your trace table with the program's actual output.</li>
+        </ul>
+
+        <p><strong>Exercise 2: Print Statement Debugging</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Given a buggy program, add <code>print()</code> statements to identify the error.</li>
+            <li>Fix the bug and remove the debug statements.</li>
+        </ul>
+
+        <p><strong>Exercise 3: Debugger Practice</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Set breakpoints in your code.</li>
+            <li>Use Step Over and Step Into to trace execution.</li>
+            <li>Inspect variable values at each step.</li>
+        </ul>
+
+        <div class="btn-group">
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vTDtqDYBuZGEnTj02RIgIfZU3OJg4OuTRH_CuVpYqUh0OPhn71IpppwF-wHtvFRsHtXw_AAIm_rYvLJ/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" class="btn-link">📄 View Questions (Presentation)</a>
+            <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" class="btn-link">💻 Online Python IDE</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Important:</strong> Save your code as a .txt file. You will submit all work to <strong>Schoolbox</strong> at the end of <strong>B2.1.4 Debugging Techniques</strong>.</p>
+    </div>
+
+    <!-- ==================== CHALLENGE ==================== -->
+    <h2>⭐ Challenge Task</h2>
+    <div class="challenge-box">
+        <p><strong>🚀 Advanced: Combining Debugging Techniques</strong></p>
+        <p>Create a complete program that:</p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Contains at least two logical errors.</li>
+            <li>Use a <strong>trace table</strong> to identify where the logic breaks.</li>
+            <li>Use <strong>print statements</strong> to confirm variable values.</li>
+            <li>Use <strong>breakpoint debugging</strong> to step through the code.</li>
+            <li>Document each technique you used and what you learned from it.</li>
+        </ul>
+        <p><strong>Hint:</strong> Refer to the "Combining Techniques" example in the lesson content.</p>
+    </div>
+
+    <!-- ==================== PLENARY ==================== -->
+    <h2>🎯 Plenary</h2>
+    <div class="plenary-box">
+        <p><strong>🎮 Plenary Activity</strong></p>
+        <p>Test your understanding of debugging techniques with this Blooket quiz.</p>
+        <a href="https://play.blooket.com/host/brawl?id=68b039b160411a31861db0c0" target="_blank" class="btn-link">▶ Blooket</a>
+    </div>
+
+    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"Learning how to debug systematically is as important as learning how to write code. Good debugging helps you build confidence, reduce frustration, and approach problems analytically. A skilled programmer does not write perfect code on the first try—instead, they build tools and habits that let them understand and fix their mistakes quickly and thoughtfully."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="footer-meta">
+        B2.1.4 – Debugging Techniques (Theory) • IB Computer Science
+    </div>
+
+</div>
+
+</body>
+</html>
