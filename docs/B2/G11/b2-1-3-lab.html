@@ -1,1 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2.1.3 - Exception Handling (Lab)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        h4 {
+            color: #0b2a4a;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge.lab {
+            background: #2d8f2d;
+        }
 
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre;
+        }
+        .comment { color: #6b8c9e; }
+        .keyword { color: #f7c948; }
+        .string { color: #a3d9a5; }
+        .function { color: #66b3ff; }
+        .error { color: #f87171; }
+
+        .code-output {
+            background: #0f1724;
+            color: #f7c948;
+            padding: 10px 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-top: 1px solid #2d3748;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .task-box {
+            background: #f7fafc;
+            border-left: 4px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .starter-box {
+            background: #ebf4ff;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .plenary-box {
+            background: #f0f7ee;
+            border-left: 5px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .challenge-box {
+            background: #fef3e8;
+            border-left: 5px solid #b8943e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: #0b2a4a;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: none !important;
+            transition: background 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+        .btn-link:hover {
+            background: #1a3f64;
+            color: #fff !important;
+            border-bottom: none !important;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .footnote {
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-top: 4px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .btn-group { flex-direction: column; }
+            .btn-link { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="#" onclick="goBack(); return false;">← Back to B2 Programming</a>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '../B2.html';
+            }
+        }
+    </script>
+
+    <h1>B2.1.3 – Exception Handling <span class="badge lab">Lab Session</span></h1>
+
+    <!-- ==================== STARTER ==================== -->
+    <h2>🎯 Starter Activity</h2>
+    <div class="starter-box">
+        <p><strong>🧠 Think-Pair-Share</strong></p>
+        <p>Discuss with a partner: What do you think happens when a program encounters an error like dividing by zero or trying to open a file that doesn't exist? How could we make the program handle this gracefully?</p>
+        <p>Then, watch this short video introduction to exception handling.</p>
+        <div class="btn-group">
+            <a href="https://www.youtube.com/watch?v=NIWwJbo-9lg" target="_blank" class="btn-link">▶ Watch: Intro to Exception Handling</a>
+        </div>
+    </div>
+
+    <!-- ==================== LESSON CONTENT ==================== -->
+    <h2>📖 Lesson Content</h2>
+
+    <h3>What is Error Handling?</h3>
+    <p>Error handling in Python allows your programs to <strong>gracefully manage unexpected situations</strong> and continue running instead of crashing. Using <code>try/except</code> blocks, you can catch errors, provide helpful feedback to users, and maintain application stability even when things go wrong.</p>
+    <p>Think of error handling as your program's safety net - it catches problems before they crash your application and provides meaningful responses that help users understand what happened and how to fix it.</p>
+
+    <h3>Basic try-except Structure</h3>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">safe_divide</span>(a, b):
+    <span class="keyword">try</span>:
+        <span class="keyword">result</span> = a / b
+        <span class="keyword">return</span> result
+    <span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:
+        <span class="keyword">return</span> <span class="string">"Error: Cannot divide by zero"</span>
+    <span class="keyword">except</span> <span class="error">TypeError</span>:
+        <span class="keyword">return</span> <span class="string">"Error: Please provide numbers only"</span>
+
+<span class="comment"># Testing</span>
+<span class="function">print</span>(<span class="function">safe_divide</span>(10, 2))    <span class="comment"># Returns 5.0</span>
+<span class="function">print</span>(<span class="function">safe_divide</span>(10, 0))    <span class="comment"># Returns error message</span>
+<span class="function">print</span>(<span class="function">safe_divide</span>(<span class="string">"10"</span>, 2))  <span class="comment"># Returns error message</span>
+</code></pre>
+    </div>
+    <div class="code-output">▶ Output: 5.0<br>▶ Output: Error: Cannot divide by zero<br>▶ Output: Error: Please provide numbers only</div>
+
+    <h3>Multiple Exception Handling</h3>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">safe_file_operation</span>(filename):
+    <span class="keyword">try</span>:
+        <span class="keyword">with</span> <span class="function">open</span>(filename, <span class="string">'r'</span>) <span class="keyword">as</span> file:
+            <span class="keyword">content</span> = file.<span class="function">read</span>()
+            <span class="keyword">return</span> <span class="function">len</span>(content)
+    <span class="keyword">except</span> <span class="error">FileNotFoundError</span>:
+        <span class="function">print</span>(<span class="string">f"File '{filename}' not found"</span>)
+    <span class="keyword">except</span> <span class="error">PermissionError</span>:
+        <span class="function">print</span>(<span class="string">f"Permission denied accessing '{filename}'"</span>)
+    <span class="keyword">except</span> <span class="error">Exception</span> <span class="keyword">as</span> e:
+        <span class="function">print</span>(<span class="string">f"Unexpected error: {e}"</span>)
+    <span class="keyword">return</span> <span class="keyword">None</span>
+</code></pre>
+    </div>
+
+    <h3>Understanding Python Exceptions</h3>
+    <p>Python's exception hierarchy provides systematic error categorization that enables precise error handling and debugging strategies.</p>
+
+    <h4>Common Exception Categories</h4>
+    <table>
+        <thead>
+            <tr><th>Category</th><th>Exception</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>System</strong></td><td><code>SystemExit</code></td><td>Raised by <code>sys.exit()</code> function</td></tr>
+            <tr><td></td><td><code>KeyboardInterrupt</code></td><td>User interruption (Ctrl+C)</td></tr>
+            <tr><td><strong>Logic</strong></td><td><code>AttributeError</code></td><td>Invalid attribute access</td></tr>
+            <tr><td></td><td><code>NameError</code></td><td>Undefined variable reference</td></tr>
+            <tr><td></td><td><code>TypeError</code></td><td>Wrong data type operations</td></tr>
+            <tr><td></td><td><code>ValueError</code></td><td>Wrong value for correct type</td></tr>
+            <tr><td><strong>Runtime</strong></td><td><code>IndexError</code></td><td>List/string index out of range</td></tr>
+            <tr><td></td><td><code>KeyError</code></td><td>Dictionary key not found</td></tr>
+            <tr><td></td><td><code>FileNotFoundError</code></td><td>File operations on missing files</td></tr>
+            <tr><td></td><td><code>ZeroDivisionError</code></td><td>Division by zero operations</td></tr>
+            <tr><td><strong>I/O</strong></td><td><code>IOError</code></td><td>Input/output operation failures</td></tr>
+            <tr><td></td><td><code>PermissionError</code></td><td>Insufficient file permissions</td></tr>
+            <tr><td></td><td><code>ConnectionError</code></td><td>Network connection problems</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Input Validation with Error Handling</h3>
+    <p>Input validation prevents invalid data from causing errors and provides immediate feedback for correction.</p>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">validate_user_input</span>(data_type, prompt):
+    <span class="comment"># Simulate user input for demonstration</span>
+    test_inputs = {
+        <span class="string">"int"</span>: [<span class="string">"25"</span>, <span class="string">"-5"</span>, <span class="string">"abc"</span>, <span class="string">"100"</span>],
+        <span class="string">"email"</span>: [<span class="string">"user@example.com"</span>, <span class="string">"invalid-email"</span>, <span class="string">"test@test.com"</span>],
+        <span class="string">"age"</span>: [<span class="string">"25"</span>, <span class="string">"150"</span>, <span class="string">"-5"</span>, <span class="string">"abc"</span>]
+    }
+
+    inputs = test_inputs.<span class="function">get</span>(data_type, [<span class="string">"25"</span>])
+
+    <span class="keyword">for</span> user_input <span class="keyword">in</span> inputs:
+        <span class="keyword">try</span>:
+            <span class="function">print</span>(<span class="string">f"\nTesting input: '{user_input}' for {data_type}"</span>)
+
+            <span class="keyword">if</span> data_type == <span class="string">"int"</span>:
+                <span class="keyword">value</span> = <span class="function">int</span>(user_input)
+                <span class="keyword">if</span> value < <span class="number">0</span>:
+                    <span class="keyword">raise</span> <span class="error">ValueError</span>(<span class="string">"Number must be non-negative"</span>)
+                <span class="function">print</span>(<span class="string">f"✅ Valid integer: {value}"</span>)
+
+            <span class="keyword">elif</span> data_type == <span class="string">"email"</span>:
+                <span class="keyword">if</span> <span class="string">"@"</span> <span class="keyword">not in</span> user_input <span class="keyword">or</span> <span class="string">"."</span> <span class="keyword">not in</span> user_input:
+                    <span class="keyword">raise</span> <span class="error">ValueError</span>(<span class="string">"Invalid email format"</span>)
+                <span class="function">print</span>(<span class="string">f"✅ Valid email: {user_input}"</span>)
+
+            <span class="keyword">elif</span> data_type == <span class="string">"age"</span>:
+                <span class="keyword">age</span> = <span class="function">int</span>(user_input)
+                <span class="keyword">if</span> <span class="keyword">not</span> <span class="number">0</span> <= age <= <span class="number">150</span>:
+                    <span class="keyword">raise</span> <span class="error">ValueError</span>(<span class="string">"Age must be between 0 and 150"</span>)
+                <span class="function">print</span>(<span class="string">f"✅ Valid age: {age}"</span>)
+
+        <span class="keyword">except</span> <span class="error">ValueError</span> <span class="keyword">as</span> e:
+            <span class="function">print</span>(<span class="string">f"❌ Invalid input: {e}"</span>)
+        <span class="keyword">except</span> <span class="error">Exception</span> <span class="keyword">as</span> e:
+            <span class="function">print</span>(<span class="string">f"❌ Unexpected error: {e}"</span>)
+</code></pre>
+    </div>
+
+    <h3>Error Handling Patterns</h3>
+
+    <h4>Graceful Degradation and Recovery</h4>
+    <p>Implement error handling that maintains functionality even when some features fail.</p>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">import</span> json
+<span class="keyword">import</span> logging
+
+<span class="keyword">class</span> <span class="function">ConfigurationManager</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, config_file=<span class="string">"app_config.json"</span>):
+        self.config_file = config_file
+        self.config = {}
+        self.<span class="function">load_config</span>()
+
+    <span class="keyword">def</span> <span class="function">load_config</span>(self):
+        <span class="keyword">try</span>:
+            <span class="keyword">with</span> <span class="function">open</span>(self.config_file, <span class="string">'r'</span>) <span class="keyword">as</span> file:
+                self.config = json.<span class="function">load</span>(file)
+                <span class="function">print</span>(<span class="string">f"✅ Configuration loaded from {self.config_file}"</span>)
+        <span class="keyword">except</span> <span class="error">FileNotFoundError</span>:
+            <span class="function">print</span>(<span class="string">f"⚠️ Config file not found. Using defaults."</span>)
+            self.config = self.<span class="function">get_default_config</span>()
+        <span class="keyword">except</span> <span class="error">json.JSONDecodeError</span> <span class="keyword">as</span> e:
+            <span class="function">print</span>(<span class="string">f"⚠️ Invalid JSON in config file: {e}"</span>)
+            self.config = self.<span class="function">get_default_config</span>()
+        <span class="keyword">except</span> <span class="error">Exception</span> <span class="keyword">as</span> e:
+            <span class="function">print</span>(<span class="string">f"⚠️ Unexpected error loading config: {e}"</span>)
+            self.config = self.<span class="function">get_default_config</span>()
+
+    <span class="keyword">def</span> <span class="function">get_default_config</span>(self):
+        <span class="keyword">return</span> {
+            <span class="string">"database"</span>: {<span class="string">"host"</span>: <span class="string">"localhost"</span>, <span class="string">"port"</span>: <span class="number">5432</span>},
+            <span class="string">"cache"</span>: {<span class="string">"enabled"</span>: <span class="keyword">True</span>, <span class="string">"timeout"</span>: <span class="number">300</span>},
+            <span class="string">"logging"</span>: {<span class="string">"level"</span>: <span class="string">"INFO"</span>, <span class="string">"file"</span>: <span class="string">"app.log"</span>}
+        }
+</code></pre>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Best Practices:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li><strong>Catch specific exceptions</strong> before generic ones</li>
+            <li>Always provide <strong>meaningful error messages</strong> to users</li>
+            <li><strong>Log errors</strong> with sufficient context for debugging</li>
+            <li>Use <strong>custom exceptions</strong> for application-specific errors</li>
+            <li><strong>Never expose</strong> internal error details to end users</li>
+        </ul>
+    </div>
+
+    <!-- ==================== TASK 1 ==================== -->
+    <h2>📝 Task 1: Understanding</h2>
+    <div class="task-box">
+        <div class="task-title">📖 Read & Understand</div>
+        <div class="task-desc">Read through the detailed explanations of error handling, try/except blocks, and common exception types on the Online Python tutorial.</div>
+        <div class="btn-group">
+            <a href="https://learn.online-python.com/python/error-handling" target="_blank" class="btn-link">📄 Online Python: Error Handling</a>
+            <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.1.3-describe-how-programs-use-common-exception-handling-techniques" target="_blank" class="btn-link">📄 Computer Science Wiki</a>
+        </div>
+    </div>
+
+    <!-- ==================== TASK 2 ==================== -->
+    <h2>🤖 Task 2: Teach the AI</h2>
+    <div class="task-box">
+        <div class="task-title">🧠 RevisionDojo "Teach the AI"</div>
+        <div class="task-desc">Explain what you've learned about exception handling—including the try/except/finally structure, best practices, and common exception types—to the AI.</div>
+        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=292&classroomId=7d9d7fc0-cf13-42eb-a277-77d2b675cb6a" target="_blank" class="btn-link">🤖 Teach the AI</a>
+    </div>
+
+    <!-- ==================== TASK 3 ==================== -->
+    <h2>💻 Task 3: Lab Exercises</h2>
+    <div class="task-box">
+        <div class="task-title">🧪 Hands-on Coding Practice</div>
+        <div class="task-desc">Complete the following lab exercises. Write your code in the Online Python IDE.</div>
+
+        <p style="margin-top: 10px;"><strong>Exercise 1: Basic Exception Handling</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Write a function called <code>safe_divide()</code> that takes two numbers and divides them.</li>
+            <li>Handle <code>ZeroDivisionError</code> and <code>TypeError</code>.</li>
+            <li>Test with valid inputs, zero, and non-numeric inputs.</li>
+        </ul>
+
+        <p><strong>Exercise 2: Multiple Exception Types</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Write a function called <code>process_list()</code> that takes a list and an index.</li>
+            <li>Handle <code>IndexError</code> (out of range) and <code>TypeError</code> (non-list input).</li>
+            <li>Test with valid inputs, out-of-range indices, and invalid types.</li>
+        </ul>
+
+        <p><strong>Exercise 3: Input Validation</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Write a function called <code>get_valid_age()</code> that asks the user for their age.</li>
+            <li>Handle <code>ValueError</code> for non-numeric input.</li>
+            <li>Check that the age is between 0 and 150.</li>
+            <li>Keep asking until valid input is received.</li>
+        </ul>
+
+        <p><strong>Exercise 4: File Handling with Exceptions</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Write a function called <code>read_file_safely()</code> that takes a filename.</li>
+            <li>Handle <code>FileNotFoundError</code> and <code>PermissionError</code>.</li>
+            <li>Use a <code>finally</code> block to ensure proper cleanup.</li>
+        </ul>
+
+        <div class="btn-group">
+            <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" class="btn-link">💻 Online Python IDE</a>
+            <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/4/quizId/explore&class=intro-python&unitNumber=3&topicNumber=4&quizNumber=2?tab=curriculum" target="_blank" class="btn-link">🧩 JuiceMind Practice</a>
+        </div>
+    </div>
+
+    <!-- ==================== CHALLENGE ==================== -->
+    <h2>⭐ Challenge Task</h2>
+    <div class="challenge-box">
+        <p><strong>🚀 Advanced: Custom Exception & Logging</strong></p>
+        <p>Create a complete program that:</p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Defines a custom exception class called <code>ValidationError</code>.</li>
+            <li>Uses a <code>try/except/finally</code> structure with logging.</li>
+            <li>Implements a configuration manager that gracefully handles missing files.</li>
+            <li>Includes a <code>finally</code> block for resource cleanup.</li>
+        </ul>
+        <p><strong>Hint:</strong> Refer to the "Production Error Handling" section in the Online Python tutorial.</p>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Important:</strong> Save your code as a .txt file. You will submit all lab work to <strong>Schoolbox</strong> at the end of <strong>B2.1.4 Debugging Techniques</strong>.</p>
+    </div>
+
+    <!-- ==================== PLENARY ==================== -->
+    <h2>🎯 Plenary</h2>
+    <div class="plenary-box">
+        <p><strong>🎮 Plenary Activity</strong></p>
+        <p>Test your understanding of exception handling with these final activities.</p>
+        <div class="btn-group">
+            <a href="https://play.blooket.com/host/brawl?id=68b039b160411a31861db0c0" target="_blank" class="btn-link">▶ Blooket</a>
+            <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/4/quizId/explore&class=intro-python&unitNumber=3&topicNumber=4&quizNumber=2?tab=curriculum" target="_blank" class="btn-link">🧩 JuiceMind Quiz</a>
+        </div>
+    </div>
+
+    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"Error handling is your program's safety net—it catches problems before they crash your application and provides meaningful responses that help users understand what happened and how to fix it. By mastering <code>try/except</code> blocks, input validation, and graceful degradation, you can build robust, user-friendly programs that handle the unexpected with confidence."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="footer-meta">
+        B2.1.3 – Exception Handling (Lab Session) • IB Computer Science
+    </div>
+
+</div>
+
+</body>
+</html>
