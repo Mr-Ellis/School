@@ -1,1 +1,482 @@
-ww
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2.1.3 - Exception Handling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        h4 {
+            color: #0b2a4a;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge.theory {
+            background: #1a5f87;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre;
+        }
+        .comment { color: #6b8c9e; }
+        .keyword { color: #f7c948; }
+        .string { color: #a3d9a5; }
+        .function { color: #66b3ff; }
+        .error { color: #f87171; }
+
+        .code-output {
+            background: #0f1724;
+            color: #f7c948;
+            padding: 10px 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-top: 1px solid #2d3748;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .task-box {
+            background: #f7fafc;
+            border-left: 4px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .starter-box {
+            background: #ebf4ff;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .plenary-box {
+            background: #f0f7ee;
+            border-left: 5px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .scope-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: #0b2a4a;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: none !important;
+            transition: background 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+        .btn-link:hover {
+            background: #1a3f64;
+            color: #fff !important;
+            border-bottom: none !important;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .principle-box {
+            background: #0b2a4a;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .principle-box .highlight {
+            color: #fdbb2d;
+        }
+
+        .footnote {
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-top: 4px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .btn-group { flex-direction: column; }
+            .btn-link { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="#" onclick="goBack(); return false;">← Back to B2 Programming</a>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '../B2.html';
+            }
+        }
+    </script>
+
+    <h1>B2.1.3 – Exception Handling <span class="badge theory">Theory</span></h1>
+
+    <!-- ==================== STARTER ==================== -->
+    <h2>🎯 Starter Activity</h2>
+    <div class="starter-box">
+        <p><strong>🧠 Think-Pair-Share</strong></p>
+        <p>Discuss with a partner: What do you think happens when a program encounters an error like dividing by zero or trying to open a file that doesn't exist? How could we make the program handle this gracefully?</p>
+        <p>Then, watch this short video introduction to exception handling.</p>
+        <div class="btn-group">
+            <a href="https://www.youtube.com/watch?v=NIWwJbo-9lg" target="_blank" class="btn-link">▶ Watch: Intro to Exception Handling</a>
+        </div>
+    </div>
+
+    <!-- ==================== LESSON CONTENT ==================== -->
+    <h2>📖 Lesson Content</h2>
+
+    <h3>The Big Idea</h3>
+    <p>In real-world programming, not all code runs smoothly. Users may enter invalid data, files may not be found, networks may go down, or bugs may lead to logic errors. These unpredictable or faulty situations are called <strong>exceptions</strong>.</p>
+    <p><strong>Exception handling</strong> is a structured way for programs to detect, respond to, and recover from such failures—without crashing. It is a vital component of robust software design and plays a central role in error management.</p>
+
+    <h3>Why Exception Handling Matters</h3>
+    <p>Instead of halting a program when an error occurs, a program with exception handling can:</p>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Detect</strong> errors automatically at runtime,</li>
+        <li><strong>Respond</strong> in a controlled, predefined manner,</li>
+        <li><strong>Recover</strong> gracefully or safely terminate.</li>
+    </ul>
+    <p>This improves the <strong>stability, security, and usability</strong> of software.</p>
+
+    <h3>Points of Failure in Programs</h3>
+    <p>Programs are vulnerable at several predictable locations. These include:</p>
+
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Unexpected Inputs:</strong>
+            <ul>
+                <li>A user enters text instead of a number.</li>
+                <li>A string is too short for the expected slicing operation.</li>
+            </ul>
+        </li>
+        <li><strong>Resource Unavailability:</strong>
+            <ul>
+                <li>A file does not exist when trying to read.</li>
+                <li>A web request fails due to no network.</li>
+                <li>A database connection times out.</li>
+            </ul>
+        </li>
+        <li><strong>Logic Errors:</strong>
+            <ul>
+                <li>Dividing by zero.</li>
+                <li>Accessing an element outside the bounds of a list or array.</li>
+                <li>Infinite recursion or missing base case in recursion.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>Exception Handling Techniques</h3>
+
+    <h4>🐍 Python: try / except / finally</h4>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">try</span>:
+    <span class="keyword">number</span> = <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter a number: "</span>))
+    <span class="keyword">result</span> = <span class="number">10</span> / <span class="keyword">number</span>
+<span class="keyword">except</span> <span class="error">ValueError</span>:
+    <span class="function">print</span>(<span class="string">"Invalid input. Please enter an integer."</span>)
+<span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:
+    <span class="function">print</span>(<span class="string">"Cannot divide by zero."</span>)
+<span class="keyword">finally</span>:
+    <span class="function">print</span>(<span class="string">"This block always runs."</span>)
+</code></pre>
+    </div>
+    <div class="code-output">▶ Output: This block always runs.</div>
+
+    <div class="info-box">
+        <p><strong>📌 Explanation:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li><code>try</code>: Contains code that might raise an exception.</li>
+            <li><code>except</code>: Catches and handles specific types of errors.</li>
+            <li><code>finally</code>: Executes code no matter what—whether an exception was raised or not. Common for cleanup (closing files, etc.).</li>
+        </ul>
+    </div>
+
+    <h4>☕ Java: try / catch / finally</h4>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">import</span> java.util.Scanner;
+
+<span class="keyword">public class</span> Example {
+    <span class="keyword">public static void</span> <span class="function">main</span>(String[] args) {
+        Scanner sc = <span class="keyword">new</span> Scanner(System.in);
+        <span class="keyword">try</span> {
+            <span class="keyword">int</span> number = Integer.<span class="function">parseInt</span>(sc.<span class="function">nextLine</span>());
+            <span class="keyword">int</span> result = <span class="number">10</span> / number;
+            System.out.<span class="function">println</span>(<span class="string">"Result: "</span> + result);
+        } <span class="keyword">catch</span> (NumberFormatException e) {
+            System.out.<span class="function">println</span>(<span class="string">"Invalid input. Please enter an integer."</span>);
+        } <span class="keyword">catch</span> (ArithmeticException e) {
+            System.out.<span class="function">println</span>(<span class="string">"Cannot divide by zero."</span>);
+        } <span class="keyword">finally</span> {
+            System.out.<span class="function">println</span>(<span class="string">"This block always runs."</span>);
+            sc.<span class="function">close</span>();
+        }
+    }
+}
+</code></pre>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Notes:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li>Java requires specifying the type of exception caught.</li>
+            <li><code>finally</code> is often used to release resources like closing files or database connections.</li>
+        </ul>
+    </div>
+
+    <div class="principle-box">
+        <p><span class="highlight">🔑 Key Principle:</span> The <code>finally</code> block <strong>always executes</strong>, whether an exception was thrown or not. This makes it ideal for cleanup operations (closing files, releasing network resources).</p>
+    </div>
+
+    <h3>Best Practices</h3>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Catch specific exceptions</strong> rather than using a general <code>except:</code> (Python) or <code>catch(Exception e)</code> (Java).</li>
+        <li>Use <code>finally</code> to <strong>release resources</strong>: close files, network connections, or database links.</li>
+        <li><strong>Avoid silent failures</strong>: log exceptions or inform the user clearly.</li>
+        <li>Use exception handling to <strong>separate error-handling logic from regular code</strong>, improving readability.</li>
+    </ul>
+
+    <h3>Real-World Use Cases</h3>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Web server</strong>: If a request fails, respond with an error page, not a crash.</li>
+        <li><strong>Data parser</strong>: Skip corrupt data rows and continue processing.</li>
+        <li><strong>File handling tool</strong>: Gracefully inform the user if a file is missing or locked.</li>
+        <li><strong>Financial app</strong>: Log and recover from a failed transaction without duplicating it.</li>
+    </ul>
+
+    <h3>Common Python Exceptions (catchable)</h3>
+    <table>
+        <thead>
+            <tr><th>Exception</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>ZeroDivisionError</strong></td><td>Division or modulo by zero (<code>x/0</code>, <code>x%0</code>).</td></tr>
+            <tr><td><strong>ValueError</strong></td><td>Argument is the correct type but invalid value (<code>int("abc")</code>).</td></tr>
+            <tr><td><strong>TypeError</strong></td><td>Wrong type passed to a function (<code>len(5)</code> or <code>"a" + 1</code>).</td></tr>
+            <tr><td><strong>IndexError</strong></td><td>Accessing a list/tuple/string index out of range.</td></tr>
+            <tr><td><strong>KeyError</strong></td><td>Accessing a dictionary with a missing key.</td></tr>
+            <tr><td><strong>FileNotFoundError</strong></td><td>Opening a non-existent file.</td></tr>
+            <tr><td><strong>ImportError</strong></td><td>When import fails.</td></tr>
+            <tr><td><strong>AttributeError</strong></td><td>Accessing an undefined attribute (<code>obj.no_such_attr</code>).</td></tr>
+            <tr><td><strong>NameError</strong></td><td>Referring to a variable that is not defined.</td></tr>
+            <tr><td><strong>AssertionError</strong></td><td>When an <code>assert</code> statement fails.</td></tr>
+            <tr><td><strong>RuntimeError</strong></td><td>Generic error when no more specific category applies.</td></tr>
+            <tr><td><strong>RecursionError</strong></td><td>When maximum recursion depth is exceeded.</td></tr>
+        </tbody>
+    </table>
+    <div class="footnote">✅ <strong>Best practice:</strong> Catch specific exceptions first, then optionally fall back to <code>Exception</code> for safety nets.</div>
+
+    <!-- ==================== TASK 1 ==================== -->
+    <h2>📝 Task 1: Understanding</h2>
+    <div class="task-box">
+        <div class="task-title">📖 Read & Understand</div>
+        <div class="task-desc">Read through the detailed explanations of exception handling, points of failure, and try/except constructs on the Computer Science Wiki.</div>
+        <div class="btn-group">
+            <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.1.3-describe-how-programs-use-common-exception-handling-techniques" target="_blank" class="btn-link">📄 Exception Handling Wiki</a>
+            <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.1.pdf" target="_blank" class="btn-link">📄 B2.1 eBook (Reference)</a>
+        </div>
+    </div>
+
+    <!-- ==================== TASK 2 ==================== -->
+    <h2>🤖 Task 2: Teach the AI</h2>
+    <div class="task-box">
+        <div class="task-title">🧠 RevisionDojo "Teach the AI"</div>
+        <div class="task-desc">Explain what you've learned about exception handling—including points of failure, the try/except/finally structure, and best practices—to the AI.</div>
+        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=292&classroomId=7d9d7fc0-cf13-42eb-a277-77d2b675cb6a" target="_blank" class="btn-link">🤖 Teach the AI</a>
+    </div>
+
+    <!-- ==================== TASK 3 ==================== -->
+    <h2>💻 Task 3: Assessment</h2>
+    <div class="task-box">
+        <div class="task-title">📊 Code Practice & Assessment</div>
+        <div class="task-desc">Write Python programs that demonstrate exception handling for the scenarios below. Use the online Python IDE to test your code.</div>
+
+        <p style="margin-top: 10px;"><strong>Scenarios to implement:</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Ask the user for two numbers and divide them. Handle <code>ZeroDivisionError</code> and <code>ValueError</code>.</li>
+            <li>Ask the user for a filename and try to open it. Handle <code>FileNotFoundError</code>.</li>
+            <li>Ask the user for an index and access a list element. Handle <code>IndexError</code>.</li>
+            <li>Ask the user for a dictionary key and access the value. Handle <code>KeyError</code>.</li>
+        </ul>
+
+        <div class="btn-group">
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vTDtqDYBuZGEnTj02RIgIfZU3OJg4OuTRH_CuVpYqUh0OPhn71IpppwF-wHtvFRsHtXw_AAIm_rYvLJ/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" class="btn-link">📄 View Questions (Presentation)</a>
+            <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" class="btn-link">💻 Online Python IDE</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Important:</strong> Save your code as a .txt file. You will submit all starter activity answers to <strong>Schoolbox</strong> at the end of <strong>B2.1.4 Debugging Techniques</strong>.</p>
+    </div>
+
+    <!-- ==================== PLENARY ==================== -->
+    <h2>🎯 Plenary</h2>
+    <div class="plenary-box">
+        <p><strong>🎮 Plenary Activity</strong></p>
+        <p>Test your understanding of exception handling with this Blooket quiz.</p>
+        <a href="https://play.blooket.com/host/brawl?id=68b039b160411a31861db0c0" target="_blank" class="btn-link">▶ Blooket</a>
+    </div>
+
+    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"Exception handling is a core technique that allows programs to deal with the unexpected. By using constructs like <code>try</code>/<code>except</code> (Python) or <code>try</code>/<code>catch</code> (Java), and always <code>finally</code>, developers can write software that is reliable and user-friendly, even under failure conditions. Robust programs are those that anticipate errors and respond intelligently—not just hope that things never go wrong."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="footer-meta">
+        B2.1.3 – Exception Handling (Theory) • IB Computer Science
+    </div>
+
+</div>
+
+</body>
+</html>
