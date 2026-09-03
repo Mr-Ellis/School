@@ -1,1 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8.1 Lesson 2 · Transmitting Data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f4fb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            padding: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            background: #0b2a4a;
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .nav a {
+            color: #e6edf5;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .nav .brand {
+            margin-right: auto;
+            font-weight: 600;
+            color: white;
+        }
+        .nav .brand i {
+            margin-right: 8px;
+            color: #7bb3ff;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        .page-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .page-header h1 i {
+            color: #2a6f97;
+        }
+        .page-header .sub {
+            color: #475569;
+            background: #e9eff8;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        /* ===== RESOURCE BAR ===== */
+        .resource-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            background: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 60px;
+            border: 1px solid #d4e3f0;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+        .resource-bar .label {
+            font-weight: 600;
+            color: #0b2a4a;
+            font-size: 0.85rem;
+        }
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .tool-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .tool-link.blooket {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-color: #81c784;
+        }
+        .tool-link.blooket:hover {
+            background: #c8e6c9;
+        }
+        .tool-link .badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.05rem 0.5rem;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.8rem 2rem;
+            border: 1px solid #e5edf5;
+            box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+            margin-bottom: 2rem;
+        }
+
+        .lesson-card h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin: 1.4rem 0 0.6rem 0;
+            border-left: 5px solid #2a6f97;
+            padding-left: 14px;
+        }
+        .lesson-card h2:first-of-type {
+            margin-top: 0;
+        }
+        .lesson-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin: 1rem 0 0.3rem 0;
+        }
+        .lesson-card p {
+            margin-bottom: 0.5rem;
+        }
+        .lesson-card ul,
+        .lesson-card ol {
+            padding-left: 1.4rem;
+            margin: 0.3rem 0 0.8rem 0;
+        }
+        .lesson-card li {
+            margin-bottom: 0.2rem;
+        }
+
+        .objectives-box {
+            background: #eef6fc;
+            border-radius: 14px;
+            padding: 0.7rem 1.2rem;
+            border-left: 4px solid #2a6f97;
+            margin-bottom: 1rem;
+        }
+        .objectives-box strong {
+            color: #0b2a4a;
+        }
+        .objectives-box ul {
+            margin: 0.2rem 0 0 1.2rem;
+        }
+
+        .highlight-box {
+            background: #eef6fc;
+            padding: 0.8rem 1.4rem;
+            border-radius: 14px;
+            border-left: 5px solid #2a6f97;
+            margin: 0.8rem 0;
+        }
+        .highlight-box.orange {
+            border-left-color: #e67e22;
+            background: #fef6ed;
+        }
+        .highlight-box.green {
+            border-left-color: #4caf50;
+            background: #edf7ed;
+        }
+        .highlight-box.red {
+            border-left-color: #d9534f;
+            background: #fdf0ef;
+        }
+
+        /* ===== Q&A ===== */
+        .qa-block {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1rem 1.4rem;
+            border: 1px solid #dceaf7;
+            margin: 1rem 0;
+        }
+        .qa-block .question {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .qa-block .question i {
+            color: #2a6f97;
+        }
+        .qa-block .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.2rem;
+            margin: 0.5rem 0 0.3rem 0;
+        }
+        .qa-block .options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            transition: 0.15s;
+        }
+        .qa-block .options label:hover {
+            background: #e9eff8;
+        }
+        .qa-block .options input[type="radio"] {
+            accent-color: #0b2a4a;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .qa-block .feedback {
+            margin-top: 0.4rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .qa-block .feedback.show {
+            display: block;
+        }
+        .qa-block .feedback.correct {
+            background: #dff0d8;
+            color: #2d6a2d;
+            border-left: 4px solid #4caf50;
+        }
+        .qa-block .feedback.incorrect {
+            background: #f8e0e0;
+            color: #8a3a3a;
+            border-left: 4px solid #d9534f;
+        }
+
+        .btn-check {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.3rem;
+        }
+        .btn-check:hover {
+            background: #1a3f62;
+        }
+
+        /* ===== Drag & Drop ===== */
+        .flow-order {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 0.8rem 0;
+            padding: 0.8rem 1rem;
+            background: #f6faff;
+            border-radius: 14px;
+            border: 2px dashed #cbddee;
+            min-height: 120px;
+        }
+        .flow-step {
+            background: white;
+            padding: 0.4rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #d4e3f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: grab;
+            transition: 0.15s;
+        }
+        .flow-step:hover {
+            border-color: #2a6f97;
+            background: #f0f7ff;
+        }
+        .flow-step .num {
+            font-weight: 600;
+            color: #2a6f97;
+            min-width: 24px;
+        }
+        .flow-step .drag-icon {
+            color: #94a3b8;
+            margin-left: auto;
+            font-size: 0.8rem;
+        }
+
+        .flow-target {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin: 0.8rem 0;
+            padding: 0.8rem 1rem;
+            background: #f6faff;
+            border-radius: 14px;
+            border: 2px solid #dceaf7;
+            min-height: 120px;
+        }
+        .flow-target .empty-msg {
+            color: #94a3b8;
+            text-align: center;
+            padding: 0.5rem;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .flow-target .flow-step {
+            cursor: default;
+        }
+        .flow-target .flow-step .drag-icon {
+            display: none;
+        }
+
+        .btn-reset {
+            background: #e9eff8;
+            border: none;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #0b2a4a;
+            font-weight: 500;
+            transition: 0.15s;
+        }
+        .btn-reset:hover {
+            background: #d4e3f0;
+        }
+
+        .btn-check-order {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 0.3rem 1.4rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .btn-check-order:hover {
+            background: #1a3f62;
+        }
+
+        .order-feedback {
+            margin-top: 0.3rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .order-feedback.correct {
+            color: #2d6a2d;
+        }
+        .order-feedback.incorrect {
+            color: #8a3a3a;
+        }
+
+        .ascii-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+        .ascii-table th {
+            background: #0b2a4a;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            text-align: left;
+        }
+        .ascii-table td,
+        .ascii-table th {
+            border: 1px solid #d4e3f0;
+            padding: 0.4rem 0.8rem;
+        }
+        .ascii-table tr:nth-child(even) {
+            background: #f6faff;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 0.8rem 0;
+        }
+        .comparison-card {
+            background: #f6faff;
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            border: 1px solid #dceaf7;
+        }
+        .comparison-card h4 {
+            color: #0b2a4a;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .comparison-card h4 i {
+            color: #2a6f97;
+        }
+        .comparison-card ul {
+            padding-left: 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .worksheet-box {
+            background: #fff8e7;
+            border: 2px solid #f0d080;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .worksheet-box h3 {
+            color: #8a6d2b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .worksheet-box h3 i {
+            color: #e6a800;
+        }
+
+        .challenge-box {
+            background: #e8f5e9;
+            border: 2px solid #81c784;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .challenge-box h3 {
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .challenge-box h3 i {
+            color: #4caf50;
+        }
+        .challenge-box .page-ref {
+            background: #c8e6c9;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #1b5e20;
+            display: inline-block;
+        }
+
+        .divider {
+            margin: 2rem 0 0.5rem;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, #d4e0ec, transparent);
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 0.8rem;
+            }
+            .lesson-card {
+                padding: 1.2rem;
+            }
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+            .resource-bar {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 24px;
+            }
+            .tool-link {
+                justify-content: center;
+            }
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- NAV -->
+        <nav class="nav">
+            <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+            <a href="unit8.1-Networks.html"><i class="fas fa-arrow-left"></i> Back to 8.1</a>
+        </nav>
+
+        <!-- HEADER -->
+        <div class="page-header">
+            <h1><i class="fas fa-satellite-dish"></i> Lesson 2 · Transmitting Data</h1>
+            <div class="sub"><i class="fas fa-book-open" style="margin-right:6px;"></i> Student's Book pages 18–23</div>
+        </div>
+
+        <!-- ===== RESOURCE BAR ===== -->
+        <div class="resource-bar">
+            <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+            <a href="https://play.blooket.com/host/brawl?id=68b6cbdb30da7735edf9f6ef" target="_blank" class="tool-link blooket">
+                <i class="fas fa-gamepad"></i> Blooket Starter <span class="badge">⭐</span>
+            </a>
+        </div>
+
+        <!-- LESSON CONTENT -->
+        <div class="lesson-card">
+
+            <!-- Objectives -->
+            <div class="objectives-box">
+                <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+                <ul>
+                    <li>Understand how binary data is transmitted over networks.</li>
+                    <li>Explain how ASCII is used to represent characters.</li>
+                    <li>Compare serial and parallel transmission methods.</li>
+                    <li>Understand how echo checking detects transmission errors.</li>
+                    <li>Identify common network security threats.</li>
+                </ul>
+            </div>
+
+            <!-- INTRO -->
+            <h2>📡 Transmitting Data in Networks</h2>
+            <p>Let's explore how computers send messages to each other — and how they keep those messages safe and accurate!</p>
+
+            <!-- BINARY -->
+            <h2>🔢 Binary Data: The Language of Computers</h2>
+            <ul>
+                <li>Computers don't speak English — they speak <strong>binary</strong>, a language made of just <strong>0s and 1s</strong>.</li>
+                <li>Each number is called a <strong>bit</strong>, and it's the smallest piece of data.</li>
+                <li>Everything you see on a screen — text, pictures, videos — is made from bits!</li>
+            </ul>
+
+            <!-- ASCII -->
+            <h2>🔤 ASCII: Turning Letters into Binary</h2>
+            <p><strong>ASCII</strong> is a special code that turns letters, numbers, and symbols into binary. Each character has its own binary number.</p>
+
+            <table class="ascii-table">
+                <thead><tr><th>Character</th><th>Binary</th></tr></thead>
+                <tbody>
+                    <tr><td>'A'</td><td>01000001</td></tr>
+                    <tr><td>'B'</td><td>01000010</td></tr>
+                    <tr><td>'C'</td><td>01000011</td></tr>
+                </tbody>
+            </table>
+            <p>This is how your keyboard talks to your computer!</p>
+
+            <!-- SERIAL VS PARALLEL -->
+            <h2>🚚 How Data Travels: Serial vs. Parallel</h2>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4><i class="fas fa-arrow-right"></i> Serial Transmission</h4>
+                    <ul>
+                        <li>Sends <strong>one bit at a time</strong> through a single wire or channel.</li>
+                        <li>Slower, but great for long distances and wireless communication.</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h4><i class="fas fa-arrows-left-right"></i> Parallel Transmission</h4>
+                    <ul>
+                        <li>Sends <strong>8 bits (a byte)</strong> at once using multiple wires.</li>
+                        <li>Much faster, but only works well over short distances (like inside a computer).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TRANSMISSION ERRORS -->
+            <h2>⚠️ Transmission Errors: What Can Go Wrong?</h2>
+            <p>Sometimes data gets messed up while traveling. Here's why:</p>
+            <ul>
+                <li><strong>Interference</strong> from other signals or devices</li>
+                <li><strong>Power surges</strong> that mess with the signal</li>
+                <li><strong>Long distances</strong> that weaken the signal</li>
+            </ul>
+            <p>This can flip bits from 0 to 1 or vice versa — like sending the wrong message!</p>
+
+            <!-- ECHO CHECKING -->
+            <h2>🔍 Error Detection: Echo Checking</h2>
+            <p>To make sure data arrives safely, networks use <strong>echo checking</strong>:</p>
+            <ol>
+                <li>The receiver sends the data back to the sender.</li>
+                <li>The sender compares it with the original.</li>
+                <ul>
+                    <li>If it <strong>matches</strong>, all good!</li>
+                    <li>If it <strong>doesn't</strong>, the data is sent again.</li>
+                </ul>
+            </ol>
+            <div class="highlight-box orange">
+                <i class="fas fa-exclamation-triangle" style="color:#b45309; margin-right:8px;"></i>
+                <strong>Note:</strong> Echo checking doesn't show where the error happened, and it uses extra data, which can slow things down.
+            </div>
+
+            <!-- INTERACTIVE: Echo Check Flowchart Order -->
+            <h3>🧩 Challenge: Order the Echo Check Steps</h3>
+            <p>Drag these steps into the correct order for an <strong>echo check</strong>.</p>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.2rem;">
+                <div>
+                    <p style="font-weight:500; margin-bottom:0.3rem;"><i class="fas fa-arrow-right" style="color:#2a6f97;"></i> Steps (drag from here):</p>
+                    <div class="flow-order" id="flowSourceEcho">
+                        <div class="flow-step" draggable="true" data-step="1"><span class="num">1.</span> Sender compares both sets of data <span class="drag-icon"><i class="fas fa-grip-vertical"></i></span></div>
+                        <div class="flow-step" draggable="true" data-step="2"><span class="num">2.</span> Receiver sends data back to sender <span class="drag-icon"><i class="fas fa-grip-vertical"></i></span></div>
+                        <div class="flow-step" draggable="true" data-step="3"><span class="num">3.</span> If they match, transmission is successful <span class="drag-icon"><i class="fas fa-grip-vertical"></i></span></div>
+                        <div class="flow-step" draggable="true" data-step="4"><span class="num">4.</span> If they don't match, data is sent again <span class="drag-icon"><i class="fas fa-grip-vertical"></i></span></div>
+                        <div class="flow-step" draggable="true" data-step="5"><span class="num">5.</span> Sender transmits data to receiver <span class="drag-icon"><i class="fas fa-grip-vertical"></i></span></div>
+                    </div>
+                </div>
+                <div>
+                    <p style="font-weight:500; margin-bottom:0.3rem;"><i class="fas fa-arrow-right" style="color:#2a6f97;"></i> Correct order here:</p>
+                    <div class="flow-target" id="flowTargetEcho">
+                        <div class="empty-msg">Drop steps here in the correct order...</div>
+                    </div>
+                    <div style="display:flex; gap:0.8rem; margin-top:0.5rem; flex-wrap:wrap;">
+                        <button class="btn-check-order" onclick="checkEchoOrder()"><i class="fas fa-check"></i> Check order</button>
+                        <button class="btn-reset" onclick="resetEchoOrder()"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
+                    <div class="order-feedback" id="echoFeedback"></div>
+                </div>
+            </div>
+
+            <!-- SECURITY THREATS -->
+            <h2>🛡️ Network Security Threats</h2>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin:0.8rem 0;">
+                <div style="background:#fdf0ef; border-radius:14px; padding:0.8rem 1rem; border-left:4px solid #d9534f;">
+                    <h4 style="color:#b71c1c;"><i class="fas fa-biohazard"></i> Viruses</h4>
+                    <p style="font-size:0.9rem;">Bad software that spreads and damages files or systems.</p>
+                </div>
+                <div style="background:#fff3cd; border-radius:14px; padding:0.8rem 1rem; border-left:4px solid #f0ad4e;">
+                    <h4 style="color:#856404;"><i class="fas fa-lock"></i> Ransomware</h4>
+                    <p style="font-size:0.9rem;">Locks your files and asks for money to unlock them.</p>
+                </div>
+                <div style="background:#e8daef; border-radius:14px; padding:0.8rem 1rem; border-left:4px solid #8e24aa;">
+                    <h4 style="color:#6c3483;"><i class="fas fa-eye"></i> Spyware</h4>
+                    <p style="font-size:0.9rem;">Secretly collects your personal info without permission.</p>
+                </div>
+                <div style="background:#d1ecf1; border-radius:14px; padding:0.8rem 1rem; border-left:4px solid #17a2b8;">
+                    <h4 style="color:#0c5460;"><i class="fas fa-user-secret"></i> Social Engineering</h4>
+                    <p style="font-size:0.9rem;">Tricks people into giving away passwords or private info.</p>
+                </div>
+            </div>
+
+            <!-- PASSWORD CRACKING -->
+            <h2>🔓 Password Cracking & Cyber Attacks</h2>
+            <div class="highlight-box red">
+                <i class="fas fa-exclamation-triangle" style="color:#b71c1c; margin-right:8px;"></i>
+                <strong>Brute Force Attack:</strong> Tries every possible password until it finds the right one.
+                <p style="margin-top:0.3rem; font-size:0.9rem;"><strong>Weak passwords</strong> (like "1234" or "password") are easy to crack!</p>
+            </div>
+
+            <!-- INTERACTIVE Q&A -->
+            <h2>❓ Check Your Understanding</h2>
+
+            <div class="qa-block" id="qa1">
+                <div class="question"><i class="fas fa-question-circle"></i> What is the smallest piece of data in binary?</div>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="byte"> Byte</label>
+                    <label><input type="radio" name="q1" value="bit"> Bit</label>
+                    <label><input type="radio" name="q1" value="kilobyte"> Kilobyte</label>
+                    <label><input type="radio" name="q1" value="nibble"> Nibble</label>
+                </div>
+                <button class="btn-check" onclick="checkQA('qa1', 'bit')">Check answer</button>
+                <div class="feedback" id="fb-qa1"></div>
+            </div>
+
+            <div class="qa-block" id="qa2">
+                <div class="question"><i class="fas fa-question-circle"></i> Which transmission method sends one bit at a time?</div>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="parallel"> Parallel</label>
+                    <label><input type="radio" name="q2" value="serial"> Serial</label>
+                    <label><input type="radio" name="q2" value="wireless"> Wireless</label>
+                    <label><input type="radio" name="q2" value="fibre"> Fibre optic</label>
+                </div>
+                <button class="btn-check" onclick="checkQA('qa2', 'serial')">Check answer</button>
+                <div class="feedback" id="fb-qa2"></div>
+            </div>
+
+            <div class="qa-block" id="qa3">
+                <div class="question"><i class="fas fa-question-circle"></i> What does echo checking do when data doesn't match?</div>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="ignore"> Ignores the error</label>
+                    <label><input type="radio" name="q3" value="resend"> Resends the data</label>
+                    <label><input type="radio" name="q3" value="delete"> Deletes the data</label>
+                    <label><input type="radio" name="q3" value="encrypt"> Encrypts the data</label>
+                </div>
+                <button class="btn-check" onclick="checkQA('qa3', 'resend')">Check answer</button>
+                <div class="feedback" id="fb-qa3"></div>
+            </div>
+
+            <!-- ===== MAIN TASK: 8.1 Worksheet 2 ===== -->
+            <div class="worksheet-box">
+                <h3><i class="fas fa-file-alt"></i> Main Task: 8.1 Worksheet 2</h3>
+                <p><strong>Complete Worksheet 2 on Schoolbox.</strong></p>
+                <ol style="margin-top:0.5rem;">
+                    <li><strong>Security advantages and disadvantages:</strong> Compare wired and wireless networks.</li>
+                    <li><strong>Security paragraph:</strong> Write about viruses, ransomware, spyware and unauthorised access.</li>
+                </ol>
+                <p style="margin-top:0.5rem; background:#f0f0e0; padding:0.3rem 0.8rem; border-radius:8px; display:inline-block;">
+                    <i class="fas fa-cloud-upload-alt" style="color:#8a6d2b;"></i> Submit your completed worksheet on <strong>Schoolbox</strong> when finished.
+                </p>
+                <p style="margin-top:0.3rem; font-size:0.85rem; color:#6d5a2b;">
+                    <i class="fas fa-book"></i> See Student's Book pages 18–23 for help with transmission and security.
+                </p>
+            </div>
+
+            <!-- ===== CHALLENGE ===== -->
+            <div class="challenge-box">
+                <h3><i class="fas fa-star"></i> Challenge: Be Internet Awesome</h3>
+                <p>Learn how to be safe, smart, and kind online with this interactive game from Google.</p>
+                <p style="margin-top:0.3rem;">🛡️ Practice protecting your personal info, spotting scams, and being a good digital citizen!</p>
+                <p style="margin-top:0.5rem; font-size:0.9rem;">
+                    <i class="fas fa-link" style="color:#2e7d32;"></i> <a href="https://beinternetawesome.withgoogle.com/" target="_blank" style="color:#1f6390;">Play Be Internet Awesome</a>
+                </p>
+                <p style="margin-top:0.5rem; font-size:0.9rem;">
+                    <i class="fas fa-lightbulb" style="color:#f57c00;"></i> <strong>Bonus:</strong> Test your password strength at <a href="https://www.security.org/how-secure-is-my-password/" target="_blank" style="color:#1f6390;">How Secure Is My Password?</a>
+                </p>
+            </div>
+
+            <div class="divider"></div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#5d7f9a; padding:0.3rem 0; flex-wrap:wrap; gap:0.5rem;">
+                <span><i class="fas fa-arrow-left" style="margin-right:6px;"></i><a href="unit8.1-Networks.html" style="color:#1f6390; text-decoration:none;">Back to 8.1 Building Networks</a></span>
+                <span>8.1 Lesson 2 · Transmitting Data</span>
+            </div>
+
+        </div><!-- /lesson-card -->
+
+    </div><!-- /container -->
+
+    <script>
+        // ===== Q&A CHECK =====
+        function checkQA(questionId, correctValue) {
+            const qaBlock = document.getElementById(questionId);
+            const selected = qaBlock.querySelector('input[type="radio"]:checked');
+            const feedback = document.getElementById('fb-' + questionId);
+
+            if (!selected) {
+                feedback.textContent = '⚠️ Please select an answer first.';
+                feedback.className = 'feedback show incorrect';
+                return;
+            }
+
+            if (selected.value === correctValue) {
+                feedback.textContent = '✅ Correct! Well done!';
+                feedback.className = 'feedback show correct';
+            } else {
+                feedback.textContent = '❌ Not quite. Try again!';
+                feedback.className = 'feedback show incorrect';
+            }
+        }
+
+        // ===== DRAG & DROP =====
+        let draggedElementEcho = null;
+
+        document.addEventListener('dragstart', function(e) {
+            const step = e.target.closest('.flow-step');
+            if (!step) return;
+            draggedElementEcho = step;
+            e.dataTransfer.setData('text/plain', step.dataset.step);
+            step.style.opacity = '0.5';
+        });
+
+        document.addEventListener('dragend', function(e) {
+            const step = e.target.closest('.flow-step');
+            if (step) step.style.opacity = '1';
+        });
+
+        document.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            const target = e.target.closest('.flow-target, .flow-order');
+            if (target) target.style.borderColor = '#2a6f97';
+        });
+
+        document.addEventListener('dragleave', function(e) {
+            const target = e.target.closest('.flow-target, .flow-order');
+            if (target) target.style.borderColor = '';
+        });
+
+        document.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const target = e.target.closest('.flow-target');
+            const source = e.target.closest('.flow-order');
+            const container = target || source;
+
+            if (container) container.style.borderColor = '';
+
+            if (!target) return;
+            if (!draggedElementEcho) return;
+
+            const emptyMsg = target.querySelector('.empty-msg');
+            if (emptyMsg) emptyMsg.remove();
+
+            const clone = draggedElementEcho.cloneNode(true);
+            clone.draggable = false;
+            clone.style.opacity = '1';
+            const dragIcon = clone.querySelector('.drag-icon');
+            if (dragIcon) dragIcon.remove();
+
+            draggedElementEcho.remove();
+            draggedElementEcho = null;
+
+            target.appendChild(clone);
+        });
+
+        function checkEchoOrder() {
+            const target = document.getElementById('flowTargetEcho');
+            const steps = target.querySelectorAll('.flow-step');
+            const feedback = document.getElementById('echoFeedback');
+
+            if (steps.length === 0) {
+                feedback.textContent = '⚠️ Drop some steps into the order first!';
+                feedback.className = 'order-feedback incorrect';
+                return;
+            }
+
+            const correctOrder = ['5', '2', '1', '3', '4'];
+            const userOrder = [];
+            steps.forEach(step => userOrder.push(step.dataset.step));
+
+            if (userOrder.length !== correctOrder.length) {
+                feedback.textContent = '⚠️ You need all 5 steps in order!';
+                feedback.className = 'order-feedback incorrect';
+                return;
+            }
+
+            let isCorrect = true;
+            for (let i = 0; i < correctOrder.length; i++) {
+                if (userOrder[i] !== correctOrder[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+            if (isCorrect) {
+                feedback.textContent = '✅ Perfect! Sender transmits → Receiver sends back → Sender compares → If match → If no match, resend';
+                feedback.className = 'order-feedback correct';
+            } else {
+                feedback.textContent = '❌ Not quite. Remember: Sender transmits → Receiver sends back → Sender compares → If match → If no match, resend';
+                feedback.className = 'order-feedback incorrect';
+            }
+        }
+
+        function resetEchoOrder() {
+            const target = document.getElementById('flowTargetEcho');
+            const source = document.getElementById('flowSourceEcho');
+            const feedback = document.getElementById('echoFeedback');
+
+            target.innerHTML = '<div class="empty-msg">Drop steps here in the correct order...</div>';
+
+            const steps = [
+                { step: '1', text: 'Sender compares both sets of data' },
+                { step: '2', text: 'Receiver sends data back to sender' },
+                { step: '3', text: 'If they match, transmission is successful' },
+                { step: '4', text: 'If they don\'t match, data is sent again' },
+                { step: '5', text: 'Sender transmits data to receiver' }
+            ];
+
+            source.innerHTML = '';
+            steps.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'flow-step';
+                div.draggable = true;
+                div.dataset.step = s.step;
+                div.innerHTML =
+                    `<span class="num">${s.step}.</span> ${s.text} <span class="drag-icon"><i class="fas fa-grip-vertical"></i></span>`;
+                source.appendChild(div);
+            });
+
+            feedback.textContent = '';
+            feedback.className = 'order-feedback';
+        }
+    </script>
+
+</body>
+</html>
 
