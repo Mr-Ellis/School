@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4 · Character Sets & Data Storage</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #2a6f97; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
+
+    .section-head {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 2.8rem 0 1.5rem 0;
+      padding-bottom: 0.25rem;
+      border-bottom: 4px solid #cbddee;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-head i { color: #1f6390; font-size: 1.8rem; width: 2.2rem; }
+
+    .lesson-content {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2.2rem;
+      margin-top: 1.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h3 {
+      color: #0b2a4a;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lesson-content h3 i { color: #1f6390; }
+    .lesson-content h4 {
+      color: #1f6390;
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.5rem 0;
+    }
+    .lesson-content .key-point {
+      background: #e9eff8;
+      border-left: 4px solid #1f6390;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      margin: 0.8rem 0;
+    }
+    .lesson-content .key-point strong { color: #0b2a4a; }
+    .lesson-content ul {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content ul li { margin-bottom: 0.3rem; }
+    .lesson-content ol {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content ol li { margin-bottom: 0.3rem; }
+
+    .activity-box {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border: 2px solid #1f6390;
+      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.06);
+    }
+    .activity-box strong { color: #0b2a4a; }
+    .activity-box .btn {
+      display: inline-block;
+      background: #1a5f87;
+      color: white;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 0.3rem;
+    }
+    .activity-box .btn:hover { background: #134f75; }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.6rem 1.5rem 1.8rem;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0,0,0,0.02);
+      border: 1px solid #e5edf5;
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    .card-header h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+
+    .card p {
+      color: #475569;
+      font-size: 0.9rem;
+      margin: 0.4rem 0 0.6rem 0;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+      align-items: center;
+      border-top: 1px solid #e8eff6;
+      padding-top: 0.9rem;
+    }
+    .card-actions .btn {
+      background: #ecf3fa;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #13416b;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .card-actions .btn i { font-size: 0.8rem; }
+    .card-actions .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
+
+    .btn-theory {
+      background: #1a5f87 !important;
+      color: #fff !important;
+    }
+    .btn-theory:hover {
+      background: #134f75 !important;
+    }
+
+    .btn-locked {
+      background: #e8dfd0 !important;
+      color: #6a4e2e !important;
+      cursor: pointer;
+    }
+    .btn-locked i { color: #b8943e; }
+
+    .btn-green {
+      background: #2d7d46 !important;
+      color: #fff !important;
+    }
+    .btn-green:hover {
+      background: #1f5f34 !important;
+    }
+
+    .card-highlight {
+      border: 2px solid #f5b342;
+      background: #ffffff;
+      position: relative;
+    }
+    .card-highlight::after {
+      content: "⭐ Key Tool";
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: #f5b342;
+      color: #0b2a4a;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    .card-highlight:hover { border-color: #e09d2a; }
+
+    .cover-section {
+      margin-top: 0.4rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid #eef2f6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .cover-section input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #0b2a4a;
+      cursor: pointer;
+    }
+    .cover-section label {
+      cursor: pointer;
+      font-weight: 500;
+      color: #0b2a4a;
+    }
+    .cover-section .teacher-badge {
+      font-size: 0.65rem;
+      background: #cbd5e1;
+      color: #334155;
+      padding: 1px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .cover-section .teacher-edit {
+      font-size: 0.75rem;
+      color: #6b7f8f;
+      background: #edf2f7;
+      padding: 2px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+      margin-left: 6px;
+    }
+    .cover-section .teacher-edit:hover { background: #d5dce6; }
+
+    .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .password-modal.active { display: flex; }
+    .password-box {
+      background: white;
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+    .password-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    .password-box input:focus { border-color: #1f6390; }
+    .password-box .btn {
+      background: #1f6390;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-box .btn:hover { background: #134f75; }
+    .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+
+    .file-download {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 0.8rem 1.2rem;
+      margin: 0.5rem 0;
+      border-left: 4px solid #2d7d46;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .file-download i { color: #2d7d46; font-size: 1.2rem; }
+    .file-download .btn-small {
+      background: #e9eff8;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .file-download .btn-small:hover { background: #d6e4f2; }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .card-grid { grid-template-columns: 1fr; }
+      .password-box { padding: 1.8rem; }
+      .lesson-content { padding: 1.2rem; }
+      .activity-box { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+      <div class="password-box">
+        <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
+        <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access lesson plan</p>
+        <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+        <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+        <div class="error" id="pwdError"></div>
+      </div>
+    </div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="nav">
+        <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+        <a href="../data-representation.html"><i class="fas fa-arrow-left"></i> Back to Unit 1</a>
+        <a href="../year9.html"><i class="fas fa-arrow-left"></i> Year 9</a>
+    </nav>
+
+    <!-- ========== HEADER ========== -->
+    <div class="main-title">
+        <i class="fas fa-font"></i> Character Sets &amp; Data Storage
+    </div>
+    <div class="subhead">
+        <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
+        Lesson 4 · ASCII, Unicode, and how data is stored
+    </div>
+
+    <!-- ========== LESSON CONTENT ========== -->
+    <div class="lesson-content">
+
+        <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
+        <ul>
+            <li>Understand the purpose of character sets (ASCII and Unicode)</li>
+            <li>Explain the differences between ASCII and Unicode</li>
+            <li>Describe the relationship between bits, bytes, and data storage units (KiB, MiB, etc.)</li>
+            <li>Understand the need for data compression (lossy and lossless)</li>
+        </ul>
+
+        <div class="key-point">
+            <strong>💡 Key Fact:</strong> ASCII uses 7 or 8 bits per character, while Unicode uses 16 or 32 bits to represent characters from all languages. Unicode is backwards compatible with ASCII.
+        </div>
+
+        <h4>🔤 Character Sets</h4>
+        <p>A <strong>character set</strong> is a list of characters and the unique binary codes used to represent them.</p>
+        
+        <h4>📟 ASCII</h4>
+        <ul>
+            <li><strong>Size:</strong> Originally 7-bit (128 characters), commonly 8-bit (Extended ASCII)</li>
+            <li><strong>Reach:</strong> Only English letters, numbers, and basic symbols</li>
+            <li><strong>Advantage:</strong> Very small storage space (1 byte per character)</li>
+            <li><strong>Limitation:</strong> Cannot represent emojis or non-English characters</li>
+        </ul>
+
+        <h4>🌐 Unicode</h4>
+        <ul>
+            <li><strong>Size:</strong> Usually 16-bit or 32-bit per character</li>
+            <li><strong>Reach:</strong> Every character in every language, plus emojis</li>
+            <li><strong>Advantage:</strong> Universal – works on any computer in any country</li>
+            <li><strong>Disadvantage:</strong> Larger file sizes than ASCII</li>
+        </ul>
+
+        <div class="key-point">
+            <strong>🔗 Compatibility:</strong> Unicode is <strong>backwards compatible</strong> with ASCII – the first 128 codes are identical.
+        </div>
+
+        <h4>💾 Data Storage Units</h4>
+        <p>Computers use binary to store data. The hierarchy of units (using base-2, powers of 1024):</p>
+        <ul>
+            <li><strong>Bit (b):</strong> 1 or 0</li>
+            <li><strong>Byte (B):</strong> 8 bits</li>
+            <li><strong>KiB (Kibibyte):</strong> 1024 Bytes</li>
+            <li><strong>MiB (Mebibyte):</strong> 1024 KiB</li>
+            <li><strong>GiB (Gibibyte):</strong> 1024 MiB</li>
+            <li><strong>TiB (Tebibyte):</strong> 1024 GiB</li>
+        </ul>
+        <p style="font-size:0.85rem; color:#475569;"><i class="fas fa-exclamation-triangle" style="color:#f5b342;"></i> <strong>Exam Tip:</strong> In the IGCSE exam, use the binary (IEC) system with 1024, not 1000. The only exception is converting between bits and bytes (multiply/divide by 8).</p>
+
+        <h4>📦 Data Compression</h4>
+        <p>Compression reduces file sizes to save storage and speed up transmission.</p>
+        
+        <p><strong>Lossy Compression</strong></p>
+        <ul>
+            <li>Permanently deletes some data (based on human perception)</li>
+            <li>Pros: Dramatically reduces file size</li>
+            <li>Cons: Quality is lost; original data cannot be recovered</li>
+            <li>Examples: MP3, JPEG, MP4</li>
+        </ul>
+        
+        <p><strong>Lossless Compression</strong></p>
+        <ul>
+            <li>Finds patterns in data without losing information</li>
+            <li>Pros: No quality loss; file can be restored</li>
+            <li>Cons: Less reduction than lossy</li>
+            <li>Examples: PNG, ZIP, FLAC, PDF</li>
+            <li><strong>RLE (Run Length Encoding):</strong> Stores repeated patterns (e.g., "4 x Red")</li>
+        </ul>
+
+        <!-- ===== STARTER ACTIVITY (Blooket) ===== -->
+        <div class="activity-box">
+            <strong>🎯 Starter Activity – Character Sets Blooket</strong>
+            <p>Test your knowledge of ASCII, Unicode, and data storage!</p>
+            <a href="https://play.blooket.com/host/hack?id=63d2acb4d78a1906e8f6cad4" target="_blank" class="btn"><i class="fas fa-rocket"></i> Launch Blooket Quiz</a>
+        </div>
+
+        <!-- ===== DEMONSTRATION ===== -->
+        <div class="activity-box" style="border-color: #b8943e;">
+            <strong>👨‍🏫 Teacher Demonstration – Character Sets</strong>
+            <p>Your teacher will demonstrate how ASCII and Unicode work.</p>
+            <a href="https://www.thecomputersciencelab.com/chapter-1-data-representation" target="_blank" class="btn"><i class="fas fa-chalkboard-teacher"></i> Open Reference Material</a>
+        </div>
+
+        <!-- ===== WORKSHEET FILES ===== -->
+        <h4>📝 Worksheets</h4>
+        <div class="file-download">
+            <i class="fas fa-file-code"></i>
+            <span><strong>Worksheet 4:</strong> ASCII and Unicode (Python)</span>
+            <a href="https://raw.githubusercontent.com/Mr-Ellis/School/refs/heads/main/docs/Resources/IGCSE%20Computer%20Science/1%20Data-representation/Worksheet%204%20ASCII%20and%20Unicode.py" target="_blank" class="btn-small"><i class="fas fa-download"></i> Open</a>
+        </div>
+        <div class="file-download">
+            <i class="fas fa-file-code"></i>
+            <span><strong>Worksheet 4:</strong> Unicode Characters (Python)</span>
+            <a href="https://raw.githubusercontent.com/Mr-Ellis/School/refs/heads/main/docs/Resources/IGCSE%20Computer%20Science/1%20Data-representation/Worksheet%204%20Unicode%20characters.py" target="_blank" class="btn-small"><i class="fas fa-download"></i> Open</a>
+        </div>
+        <p style="font-size:0.85rem; color:#475569; margin-top:0.3rem;"><i class="fas fa-info-circle"></i> Download or copy the Python files to complete the activities.</p>
+
+    </div>
+
+    <!-- ========== KEY TOOLS CARDS ========== -->
+    <div class="card-grid" style="margin-top: 0.5rem;">
+
+        <!-- Lesson Presentation – KEY TOOL -->
+        <div class="card card-highlight">
+            <div class="card-header">
+                <h4>📊 Lesson Presentation</h4>
+            </div>
+            <p>Slides for the lesson – T4 ASCII and Unicode.</p>
+            <div class="card-actions">
+                <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F1%2520Data-representation%2FT4%2520ASCII%2520and%2520Unicode.pptx&wdOrigin=BROWSELINK" target="_blank" class="btn btn-theory"><i class="fas fa-desktop"></i> Open Slides</a>
+            </div>
+        </div>
+
+        <!-- AI Guide – KEY TOOL -->
+        <div class="card card-highlight">
+            <div class="card-header">
+                <h4>🤖 AI Guide</h4>
+            </div>
+            <p><strong>Your personal tutor!</strong> Ask the AI any question about character sets, data storage, or compression.</p>
+            <div class="card-actions">
+                <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" class="btn btn-theory"><i class="fas fa-robot"></i> Open AI Guide</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== WORKSHEET & EXTENSIONS ========== -->
+    <div class="lesson-content" style="margin-top: 1.5rem;">
+
+        <!-- ===== EXTENSION TASKS ===== -->
+        <h4>⭐ Extension Tasks</h4>
+        <ul>
+            <li>Complete the Python worksheet activities on <strong>Schoolbox</strong> once the main task is finished.</li>
+            <li>Check that previous worksheets have also been submitted.</li>
+            <li><strong>Research task:</strong> Find out how many characters Unicode can represent using 32 bits.</li>
+        </ul>
+
+        <!-- ===== PLENARY ===== -->
+        <h4>🔁 Plenary – Quick Quiz</h4>
+        <ol>
+            <li>How many bits does ASCII use per character?</li>
+            <li>What is the main advantage of Unicode over ASCII?</li>
+            <li>How many bytes are in a MiB?</li>
+            <li>What is the difference between lossy and lossless compression?</li>
+        </ol>
+        <p style="font-size:0.85rem; color:#475569; margin-top:0.3rem;"><i class="fas fa-lightbulb" style="color:#f5b342;"></i> Discuss your answers with a partner, then check using the reference material.</p>
+
+    </div>
+
+    <!-- ========== ADDITIONAL RESOURCES ========== -->
+    <div class="section-head">
+        <i class="fas fa-tools"></i> Additional Resources
+    </div>
+
+    <div class="card-grid">
+
+        <!-- Lesson Plan (Teacher only) -->
+        <div class="card">
+            <div class="card-header">
+                <h4>📋 Lesson Plan <span style="font-size:0.7rem; color:#6b7f8f; font-weight:400;">(Teacher only)</span></h4>
+            </div>
+            <p>Full lesson plan with starter, activities, and plenary.</p>
+            <div class="card-actions">
+                <button class="btn btn-locked unlock-btn" data-lesson="DR4"><i class="fas fa-lock"></i> Open Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="DR4" id="cover-DR4">
+                <label for="cover-DR4">✓ Lesson delivered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle)</span>
+            </div>
+        </div>
+
+        <!-- Reference Material -->
+        <div class="card">
+            <div class="card-header">
+                <h4>📖 Reference Material</h4>
+            </div>
+            <p>Comprehensive guide to data representation from The Computer Science Lab.</p>
+            <div class="card-actions">
+                <a href="https://www.thecomputersciencelab.com/chapter-1-data-representation" target="_blank" class="btn btn-green"><i class="fas fa-book"></i> Open Reference</a>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="divider-light">
+    <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+        <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== COVER CHECKBOXES ==========
+        const checkboxes = document.querySelectorAll('.cover-checkbox');
+        const GRADE_PREFIX = 'igcse_';
+
+        checkboxes.forEach(function(cb) {
+            const lessonKey = cb.getAttribute('data-lesson');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
+            const card = cb.closest('.card');
+
+            if (localStorage.getItem(storageKey) === 'true') {
+                cb.checked = true;
+                if (card) card.style.background = '#e6f7e6';
+            }
+
+            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
+            if (toggleSpan) {
+                toggleSpan.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.style.background = '#e6f7e6';
+                        } else {
+                            card.style.background = '';
+                        }
+                    }
+                });
+            }
+
+            cb.addEventListener('change', function() {
+                localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
+                if (card) {
+                    if (this.checked) {
+                        card.style.background = '#e6f7e6';
+                    } else {
+                        card.style.background = '';
+                    }
+                }
+            });
+        });
+
+        // ========== PASSWORD PROTECTION ==========
+        const modal = document.getElementById('passwordModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdError = document.getElementById('pwdError');
+        const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+        let pendingPath = '';
+
+        const PDF_URLS = {
+            'DR4': 'https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F1%2520Data-representation%2FLesson%2520Plan%25204.docx&wdOrigin=BROWSELINK'
+        };
+
+        function openModal(path) {
+            pendingPath = path;
+            pwdInput.value = '';
+            pwdError.textContent = '';
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            pendingPath = '';
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === 'teacher') {
+                if (pendingPath) {
+                    window.open(pendingPath, '_blank');
+                }
+                closeModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const lesson = this.getAttribute('data-lesson');
+                const url = PDF_URLS[lesson];
+                if (url) {
+                    openModal(url);
+                } else {
+                    alert('No lesson plan found.');
+                }
+            });
+        });
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>
