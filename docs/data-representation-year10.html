@@ -755,4 +755,114 @@
         const modalText = document.getElementById('modalText');
 
         const PDF_URLS = {
-           
+            'DR1': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR1-Binary-Systems.pdf',
+            'DR2': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR2-Hexadecimal.pdf',
+            'DR3': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR3-Binary-Shifts.pdf',
+            'DR4': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf',
+            'DR5': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf',
+            'DR6': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf',
+            'DR7': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf'
+        };
+
+        function openModal(mode, path) {
+            currentModalMode = mode;
+            pendingPath = path || '';
+            pwdInput.value = '';
+            pwdError.textContent = '';
+
+            if (mode === 'teacher') {
+                modalType.textContent = '🔑 Enter Master Password';
+                modalText.textContent = 'Enter the master password to enable the teacher controls.';
+            } else {
+                modalType.textContent = '📄 Teacher Resource';
+                modalText.textContent = 'Enter the teacher password to access this lesson plan.';
+            }
+
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            pendingPath = '';
+        }
+
+        function activateTeacherMode() {
+            document.body.classList.add('is-teacher');
+            sessionStorage.setItem('teacherMode', 'true');
+            
+            // Add a "Lock" button to exit teacher mode
+            let existingBtn = document.getElementById('lockAdminBtn');
+            if(!existingBtn) {
+                existingBtn = document.createElement('a');
+                existingBtn.id = 'lockAdminBtn';
+                existingBtn.innerHTML = '<i class="fas fa-unlock-alt"></i> Lock Admin';
+                existingBtn.href = '#';
+                existingBtn.style.color = '#fdbb2d';
+                existingBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    sessionStorage.removeItem('teacherMode');
+                    window.location.reload();
+                });
+                document.querySelector('.nav').appendChild(existingBtn);
+            }
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === TEACHER_PASSWORD) {
+                if (currentModalMode === 'teacher') {
+                    activateTeacherMode();
+                } else if (currentModalMode === 'lesson' && pendingPath) {
+                    window.open(pendingPath, '_blank');
+                }
+                closeModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // ---- INIT ----
+        // Check if teacher mode was previously active in this browser session
+        if (sessionStorage.getItem('teacherMode') === 'true') {
+            activateTeacherMode();
+        }
+
+        // Add a small "Admin" button in the nav to enter Teacher Mode later
+        let adminBtn = document.createElement('a');
+        adminBtn.id = 'adminModeBtn';
+        adminBtn.href = '#';
+        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
+        adminBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('teacher');
+        });
+        document.querySelector('.nav').appendChild(adminBtn);
+
+    })();
+</script>
+
+</body>
+</html>
