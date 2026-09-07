@@ -112,7 +112,7 @@
       transform: translateY(-2px);
     }
     
-    /* NEW: Separate Locks (Y9 Blue, Y10 Red) */
+    /* Separate Locks (Y9 Blue, Y10 Red) */
     .lock-icons {
       position: absolute;
       top: 15px;
@@ -487,7 +487,7 @@
             </div>
         </a>
 
-        <!-- Lesson 3 - Binary Shifts & Two's Complement (LINKED) -->
+        <!-- Lesson 3 - Binary Shifts & Two's Complement -->
         <a href="Data-representation/lesson3-binary-shifts.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR3">
             <div class="lock-icons">
                 <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
@@ -514,8 +514,8 @@
             </div>
         </a>
 
-        <!-- Lesson 4 -->
-        <div class="card locked is-y9-locked is-y10-locked" data-lesson="DR4">
+        <!-- Lesson 4 - ASCII & Unicode (LINKED to lesson4-character-sets.html) -->
+        <a href="Data-representation/lesson4-character-sets.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR4">
             <div class="lock-icons">
                 <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
                 <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
@@ -525,9 +525,9 @@
             </div>
             <p>Character sets, ASCII vs Unicode</p>
             <div class="card-actions">
-                <a href="https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="teacher-controls">
+            <div class="teacher-controls" onclick="event.stopPropagation();">
                 <div class="cover-item">
                   <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="Y9" id="cover-DR4-Y9">
                   <label for="cover-DR4-Y9"><span class="y9-label">Year 9</span> covered</label>
@@ -539,9 +539,9 @@
                 <span class="teacher-badge">Teacher only</span>
                 <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle both)</span>
             </div>
-        </div>
+        </a>
 
-        <!-- Lesson 5 -->
+        <!-- Lesson 5 - Representing Sound -->
         <div class="card locked is-y9-locked is-y10-locked" data-lesson="DR5">
             <div class="lock-icons">
                 <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
@@ -568,7 +568,7 @@
             </div>
         </div>
 
-        <!-- Lesson 6 -->
+        <!-- Lesson 6 - Representing Images -->
         <div class="card locked is-y9-locked is-y10-locked" data-lesson="DR6">
             <div class="lock-icons">
                 <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
@@ -595,7 +595,7 @@
             </div>
         </div>
 
-        <!-- Lesson 7 -->
+        <!-- Lesson 7 - Data Compression & Revision -->
         <div class="card locked is-y9-locked is-y10-locked" data-lesson="DR7">
             <div class="lock-icons">
                 <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
@@ -755,114 +755,4 @@
         const modalText = document.getElementById('modalText');
 
         const PDF_URLS = {
-            'DR1': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR1-Binary-Systems.pdf',
-            'DR2': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR2-Hexadecimal.pdf',
-            'DR3': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR3-Binary-Shifts.pdf',
-            'DR4': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf',
-            'DR5': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf',
-            'DR6': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf',
-            'DR7': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf'
-        };
-
-        function openModal(mode, path) {
-            currentModalMode = mode;
-            pendingPath = path || '';
-            pwdInput.value = '';
-            pwdError.textContent = '';
-
-            if (mode === 'teacher') {
-                modalType.textContent = '🔑 Enter Master Password';
-                modalText.textContent = 'Enter the master password to enable the teacher controls.';
-            } else {
-                modalType.textContent = '📄 Teacher Resource';
-                modalText.textContent = 'Enter the teacher password to access this lesson plan.';
-            }
-
-            modal.classList.add('active');
-            pwdInput.focus();
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-            pendingPath = '';
-        }
-
-        function activateTeacherMode() {
-            document.body.classList.add('is-teacher');
-            sessionStorage.setItem('teacherMode', 'true');
-            
-            // Add a "Lock" button to exit teacher mode
-            let existingBtn = document.getElementById('lockAdminBtn');
-            if(!existingBtn) {
-                existingBtn = document.createElement('a');
-                existingBtn.id = 'lockAdminBtn';
-                existingBtn.innerHTML = '<i class="fas fa-unlock-alt"></i> Lock Admin';
-                existingBtn.href = '#';
-                existingBtn.style.color = '#fdbb2d';
-                existingBtn.addEventListener('click', function(e){
-                    e.preventDefault();
-                    sessionStorage.removeItem('teacherMode');
-                    window.location.reload();
-                });
-                document.querySelector('.nav').appendChild(existingBtn);
-            }
-        }
-
-        function attemptUnlock() {
-            const entered = pwdInput.value.trim();
-            if (entered === TEACHER_PASSWORD) {
-                if (currentModalMode === 'teacher') {
-                    activateTeacherMode();
-                } else if (currentModalMode === 'lesson' && pendingPath) {
-                    window.open(pendingPath, '_blank');
-                }
-                closeModal();
-            } else {
-                pwdError.textContent = '❌ Incorrect password. Try again.';
-                pwdInput.value = '';
-                pwdInput.focus();
-            }
-        }
-
-        pwdSubmitBtn.addEventListener('click', attemptUnlock);
-        pwdInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                attemptUnlock();
-            }
-        });
-
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeModal();
-            }
-        });
-
-        // ---- INIT ----
-        // Check if teacher mode was previously active in this browser session
-        if (sessionStorage.getItem('teacherMode') === 'true') {
-            activateTeacherMode();
-        }
-
-        // Add a small "Admin" button in the nav to enter Teacher Mode later
-        let adminBtn = document.createElement('a');
-        adminBtn.id = 'adminModeBtn';
-        adminBtn.href = '#';
-        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
-        adminBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            openModal('teacher');
-        });
-        document.querySelector('.nav').appendChild(adminBtn);
-
-    })();
-</script>
-
-</body>
-</html>
+           
