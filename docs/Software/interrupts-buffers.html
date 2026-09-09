@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interrupts & Buffers · Lesson 3</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #2a6f97; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
+
+    .section-head {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 2.8rem 0 1.5rem 0;
+      padding-bottom: 0.25rem;
+      border-bottom: 4px solid #cbddee;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-head i { color: #1f6390; font-size: 1.8rem; width: 2.2rem; }
+
+    .lesson-content {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2.2rem;
+      margin-top: 1.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h3 {
+      color: #0b2a4a;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lesson-content h3 i { color: #1f6390; }
+    .lesson-content h4 {
+      color: #1f6390;
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.5rem 0;
+    }
+    .lesson-content .key-point {
+      background: #e9eff8;
+      border-left: 4px solid #1f6390;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      margin: 0.8rem 0;
+    }
+    .lesson-content .key-point strong { color: #0b2a4a; }
+    .lesson-content ul {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content ul li { margin-bottom: 0.3rem; }
+    .lesson-content .device-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 1rem 0;
+    }
+    .lesson-content .device-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e5edf5;
+    }
+    .lesson-content .device-card h5 {
+      color: #0b2a4a;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+    .lesson-content .device-card p {
+      font-size: 0.9rem;
+      color: #475569;
+      margin: 0;
+    }
+
+    .activity-box {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border: 2px solid #1f6390;
+      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.06);
+    }
+    .activity-box strong { color: #0b2a4a; }
+    .activity-box .btn {
+      display: inline-block;
+      background: #1a5f87;
+      color: white;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 0.3rem;
+    }
+    .activity-box .btn:hover { background: #134f75; }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.6rem 1.5rem 1.8rem;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0,0,0,0.02);
+      border: 1px solid #e5edf5;
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    .card-header h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+    .card p {
+      color: #475569;
+      font-size: 0.9rem;
+      margin: 0.4rem 0 0.6rem 0;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+      align-items: center;
+      border-top: 1px solid #e8eff6;
+      padding-top: 0.9rem;
+    }
+    .card-actions .btn {
+      background: #ecf3fa;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #13416b;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .card-actions .btn i { font-size: 0.8rem; }
+    .card-actions .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
+
+    .btn-theory {
+      background: #1a5f87 !important;
+      color: #fff !important;
+    }
+    .btn-theory:hover {
+      background: #134f75 !important;
+    }
+    .btn-green {
+      background: #2d7d46 !important;
+      color: #fff !important;
+    }
+    .btn-green:hover {
+      background: #1f5f34 !important;
+    }
+    .btn-locked {
+      background: #e8dfd0 !important;
+      color: #6a4e2e !important;
+      cursor: pointer;
+    }
+    .btn-locked i { color: #b8943e; }
+
+    .cover-section {
+      margin-top: 0.4rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid #eef2f6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .cover-section input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #0b2a4a;
+      cursor: pointer;
+    }
+    .cover-section label {
+      cursor: pointer;
+      font-weight: 500;
+      color: #0b2a4a;
+    }
+    .cover-section .teacher-badge {
+      font-size: 0.65rem;
+      background: #cbd5e1;
+      color: #334155;
+      padding: 1px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .cover-section .teacher-edit {
+      font-size: 0.75rem;
+      color: #6b7f8f;
+      background: #edf2f7;
+      padding: 2px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+      margin-left: 6px;
+    }
+    .cover-section .teacher-edit:hover { background: #d5dce6; }
+
+    .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .password-modal.active { display: flex; }
+    .password-box {
+      background: white;
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+    .password-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    .password-box input:focus { border-color: #1f6390; }
+    .password-box .btn {
+      background: #1f6390;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-box .btn:hover { background: #134f75; }
+    .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+
+    .dropdown-answer {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      margin: 0.5rem 0 0.8rem 0;
+      border-left: 4px solid #2a6f97;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .dropdown-answer:hover { background: #eef4fa; }
+    .dropdown-answer .answer-content {
+      display: none;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #d4e0ec;
+      color: #1e293b;
+    }
+    .dropdown-answer.active .answer-content { display: block; }
+    .dropdown-answer .hint-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1f6390;
+      font-weight: 500;
+    }
+    .dropdown-answer .hint-text i { transition: transform 0.2s; }
+    .dropdown-answer.active .hint-text i { transform: rotate(180deg); }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.2rem;
+      margin: 1rem 0;
+    }
+    .resource-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e5edf5;
+      text-align: center;
+    }
+    .resource-card h5 {
+      color: #0b2a4a;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+    .resource-card p {
+      font-size: 0.85rem;
+      color: #475569;
+      margin-bottom: 0.5rem;
+    }
+    .resource-card .btn {
+      background: #1a5f87;
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .resource-card .btn:hover { background: #134f75; }
+    .resource-card .btn-green { background: #2d7d46; }
+    .resource-card .btn-green:hover { background: #1f5f34; }
+
+    .key-tool-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      border: 2px solid #f5b342;
+      position: relative;
+    }
+    .key-tool-card .badge {
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: #f5b342;
+      color: #0b2a4a;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    .key-tool-card h5 {
+      margin-bottom: 0.3rem;
+      color: #0b2a4a;
+    }
+    .key-tool-card p {
+      font-size: 0.9rem;
+      color: #475569;
+      margin-bottom: 0.5rem;
+    }
+
+    .interrupt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .interrupt-card {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      border: 1px solid #e2ebf3;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .interrupt-card:hover { background: #eef4fa; }
+    .interrupt-card .scenario {
+      font-weight: 600;
+      color: #0b2a4a;
+    }
+    .interrupt-card .function-answer {
+      display: none;
+      margin-top: 0.3rem;
+      padding-top: 0.3rem;
+      border-top: 1px dashed #b6cfe5;
+      color: #1a5f87;
+      font-weight: 500;
+    }
+    .interrupt-card.active .function-answer { display: block; }
+    .interrupt-card .click-hint {
+      font-size: 0.7rem;
+      color: #6b7f8f;
+    }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .card-grid { grid-template-columns: 1fr; }
+      .password-box { padding: 1.8rem; }
+      .lesson-content { padding: 1.2rem; }
+      .activity-box { padding: 1rem; }
+      .lesson-content .device-grid { grid-template-columns: 1fr; }
+      .interrupt-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+      <div class="password-box">
+        <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
+        <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access lesson plan</p>
+        <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+        <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+        <div class="error" id="pwdError"></div>
+      </div>
+    </div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="nav">
+        <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+        <a href="https://mr-ellis.github.io/School/Software/software-year10.html"><i class="fas fa-arrow-left"></i> Back to Software</a>
+    </nav>
+
+    <!-- ========== HEADER ========== -->
+    <div class="main-title">
+        <i class="fas fa-microchip"></i> Lesson 3 · Interrupts & Buffers
+    </div>
+    <div class="subhead">
+        <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
+        Year 10 · Software · Interrupts, buffers, and the fetch-decode-execute cycle
+    </div>
+
+    <!-- ========== LESSON CONTENT ========== -->
+    <div class="lesson-content">
+
+        <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
+        <ul>
+            <li>Explain what an interrupt is and why it is used</li>
+            <li>Describe the role of buffers in managing data transfer</li>
+            <li>Understand how interrupts and buffers improve system performance</li>
+            <li>Explain the interrupt priority scheme</li>
+        </ul>
+
+        <div class="key-point">
+            <strong>💡 Key Fact:</strong> An interrupt is a signal sent to the processor that temporarily stops the current program execution to handle a high-priority task. Buffers are temporary storage areas that hold data during transfer between devices.
+        </div>
+
+        <!-- ===== STARTER ===== -->
+        <div class="activity-box">
+            <strong>🎯 Starter Activity – Think-Pair-Share</strong>
+            <p><strong>Think:</strong> What happens when you press a key on your keyboard? <strong>Share:</strong> Discuss with a partner how the computer knows to display the letter on screen.</p>
+            <div class="dropdown-answer" onclick="this.classList.toggle('active')">
+                <div class="hint-text"><i class="fas fa-chevron-down"></i> Click to reveal example answers</div>
+                <div class="answer-content">
+                    <ul style="margin:0; padding-left:1.2rem;">
+                        <li>When a key is pressed, the keyboard sends a signal to the computer.</li>
+                        <li>This signal is an <strong>interrupt</strong> that tells the CPU to stop what it's doing.</li>
+                        <li>The CPU processes the keyboard input and displays the character.</li>
+                        <li>Without interrupts, the computer would need to constantly check for key presses.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== WHAT IS AN INTERRUPT? ===== -->
+        <h4>⚡ What is an Interrupt?</h4>
+        <div class="device-grid">
+            <div class="device-card">
+                <h5>🔔 Definition</h5>
+                <p>An interrupt is a signal to the processor that a high-priority event requires immediate attention. The processor stops what it is doing and handles the interrupt.</p>
+            </div>
+            <div class="device-card">
+                <h5>🔄 Fetch-Execute Cycle</h5>
+                <p>During the <strong>fetch-execute cycle</strong>, the processor checks for interrupts. If an interrupt is detected, the CPU completes the current instruction, saves its state, and jumps to an interrupt service routine (ISR).</p>
+            </div>
+            <div class="device-card">
+                <h5>📋 Types of Interrupts</h5>
+                <p><strong>Hardware interrupts</strong> – from devices like keyboards, mice, printers.<br>
+                <strong>Software interrupts</strong> – from programs or system calls.<br>
+                <strong>Timer interrupts</strong> – from internal system timers.</p>
+            </div>
+        </div>
+
+        <!-- ===== BUFFERS ===== -->
+        <h4>💾 Buffers and Their Role</h4>
+        <div class="device-grid">
+            <div class="device-card">
+                <h5>📦 What is a Buffer?</h5>
+                <p>A <strong>buffer</strong> is a temporary storage area in memory that holds data during transfer between devices or between a device and the processor.</p>
+            </div>
+            <div class="device-card">
+                <h5>⚡ Why Buffers are Important</h5>
+                <p>Buffers allow devices with different speeds to communicate efficiently. For example, a printer is slower than the CPU. The buffer stores data and sends it to the printer at its own speed, freeing the CPU to do other tasks.</p>
+            </div>
+            <div class="device-card">
+                <h5>🔄 How Buffers Work</h5>
+                <p>Data is written to the buffer. The CPU doesn't wait for the device; it continues processing. The device reads data from the buffer when it's ready. This improves overall system performance.</p>
+            </div>
+        </div>
+
+        <!-- ===== INTERACTIVE: INTERRUPT SCENARIOS ===== -->
+        <h4>🕵️ Interactive: Interrupt or Not?</h4>
+        <p><strong>Click each scenario card to reveal whether it involves an interrupt.</strong></p>
+        <div class="interrupt-grid">
+            <div class="interrupt-card" onclick="this.classList.toggle('active')">
+                <div class="scenario">⌨️ Pressing a key on the keyboard</div>
+                <div class="click-hint">Click to reveal</div>
+                <div class="function-answer"><strong>Hardware interrupt</strong> – The keyboard sends an interrupt to the CPU to process the key press.</div>
+            </div>
+            <div class="interrupt-card" onclick="this.classList.toggle('active')">
+                <div class="scenario">🖨️ Sending a document to a printer</div>
+                <div class="click-hint">Click to reveal</div>
+                <div class="function-answer"><strong>Hardware interrupt</strong> – The printer generates an interrupt when it needs data or when it finishes a job.</div>
+            </div>
+            <div class="interrupt-card" onclick="this.classList.toggle('active')">
+                <div class="scenario">🕒 Timer reaching a set interval</div>
+                <div class="click-hint">Click to reveal</div>
+                <div class="function-answer"><strong>Timer interrupt</strong> – The system timer generates an interrupt at regular intervals for tasks like multitasking.</div>
+            </div>
+            <div class="interrupt-card" onclick="this.classList.toggle('active')">
+                <div class="scenario">📁 Opening a file</div>
+                <div class="click-hint">Click to reveal</div>
+                <div class="function-answer"><strong>Software interrupt</strong> – The program makes a system call to request the file from the operating system.</div>
+            </div>
+            <div class="interrupt-card" onclick="this.classList.toggle('active')">
+                <div class="scenario">🔋 Low battery warning</div>
+                <div class="click-hint">Click to reveal</div>
+                <div class="function-answer"><strong>Hardware interrupt</strong> – The power management system sends an interrupt to warn the user and save data.</div>
+            </div>
+            <div class="interrupt-card" onclick="this.classList.toggle('active')">
+                <div class="scenario">🎵 Playing music from a streaming service</div>
+                <div class="click-hint">Click to reveal</div>
+                <div class="function-answer"><strong>Buffer and interrupt</strong> – The sound card uses a buffer for smooth playback and may use interrupts to request more data.</div>
+            </div>
+        </div>
+
+        <!-- ===== KEY TOOLS ===== -->
+        <h4>⭐ Key Tools</h4>
+        <div style="margin: 1rem 0 1rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+            <div class="key-tool-card">
+                <div class="badge">⭐ Key Tool</div>
+                <h5>📊 Lesson Presentation</h5>
+                <p>Slides for the lesson – T3 Interrupts.</p>
+                <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F6%2520Software%2FT3%2520Interrupts.pptx&wdOrigin=BROWSELINK" target="_blank" class="btn" style="background: #1a5f87; color: white; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.75rem; font-weight: 600; text-decoration: none; display: inline-block;"><i class="fas fa-desktop"></i> Open Slides</a>
+            </div>
+            <div class="key-tool-card">
+                <div class="badge">⭐ Key Tool</div>
+                <h5>🤖 AI Guide</h5>
+                <p><strong>Your personal tutor!</strong> Ask the AI any question about interrupts, buffers, or computer science.</p>
+                <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" class="btn" style="background: #1a5f87; color: white; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.75rem; font-weight: 600; text-decoration: none; display: inline-block;"><i class="fas fa-robot"></i> Open AI Guide</a>
+            </div>
+        </div>
+
+        <!-- ===== TEACHER DEMONSTRATION ===== -->
+        <h4>👨‍🏫 Teacher Demonstration</h4>
+        <div class="activity-box" style="border-color: #f5b342;">
+            <strong>The Computer Science Lab – Interactive Software Concepts</strong>
+            <p>Use this interactive demonstration to explore interrupts and buffers with the class.</p>
+            <a href="https://www.thecomputersciencelab.com/chapter-4-software" target="_blank" class="btn" style="background: #f5b342; color: #0b2a4a;"><i class="fas fa-flask"></i> Open The Computer Science Lab</a>
+        </div>
+
+        <!-- ===== WORKSHEETS ===== -->
+        <h4>📝 Worksheets</h4>
+        <div class="activity-box" style="border-color: #2d7d46;">
+            <strong>T3 Interrupts – Worksheet</strong>
+            <p>Open <strong>T3 Worksheet 3</strong> on Schoolbox, complete it, and submit.</p>
+            <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F6%2520Software%2FT3%2520Worksheet%25203.docx&wdOrigin=BROWSELINK" target="_blank" class="btn" style="background: #2d7d46;"><i class="fas fa-file-alt"></i> Open Worksheet</a>
+            <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F6%2520Software%2FT3%2520Worksheet%25203%2520Answers.docx&wdOrigin=BROWSELINK" target="_blank" class="btn" style="background: #1f6390;"><i class="fas fa-check"></i> Answers</a>
+        </div>
+        <div class="activity-box" style="border-color: #f5b342;">
+            <strong>⭐ Homework Task</strong>
+            <p>Open <strong>T3 Homework 3</strong> on Schoolbox and complete it.</p>
+            <a href="https://github.com/Mr-Ellis/School/blob/main/docs/Resources/IGCSE%20Computer%20Science/6%20Software/T3%20Homework%203.docx" target="_blank" class="btn" style="background: #f5b342; color: #0b2a4a;"><i class="fas fa-home"></i> Open Homework</a>
+            <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F6%2520Software%2FT3%2520Homework%25203%2520Answers.docx&wdOrigin=BROWSELINK" target="_blank" class="btn" style="background: #1f6390;"><i class="fas fa-check"></i> Answers</a>
+        </div>
+
+        <!-- ===== INTERACTIVE ACTIVITIES ===== -->
+        <h4>🎮 Interactive Activities</h4>
+        <div class="resources-grid">
+            <div class="resource-card">
+                <h5><i class="fas fa-futbol"></i> Penalty Shootout</h5>
+                <p>Definition game for software concepts, including interrupts and buffers.</p>
+                <a href="https://jamesabela.github.io/reading/penalties.html?set=editor/samples/igcse-computing-software.json" target="_blank" class="btn btn-green"><i class="fas fa-gamepad"></i> Play Game</a>
+            </div>
+            <div class="resource-card">
+                <h5><i class="fas fa-play"></i> Blooket</h5>
+                <p>Play the Interrupts & Buffers Blooket. Join with the code from your teacher.</p>
+                <a href="https://play.blooket.com/host/factory?id=63d2ad7b41c1f366e33ff1bc" target="_blank" class="btn btn-green"><i class="fas fa-play"></i> Play Blooket</a>
+            </div>
+        </div>
+
+        <!-- ===== PLENARY ===== -->
+        <h4>🔁 Plenary – Interrupts & Buffers</h4>
+        <p><strong>In pairs, answer these questions:</strong></p>
+        <div class="dropdown-answer" onclick="this.classList.toggle('active')">
+            <div class="hint-text"><i class="fas fa-chevron-down"></i> Click to reveal answers</div>
+            <div class="answer-content">
+                <ul style="margin:0; padding-left:1.2rem;">
+                    <li><strong>What is an interrupt?</strong> A signal to the processor that a high-priority event requires immediate attention.</li>
+                    <li><strong>What is a buffer?</strong> A temporary storage area in memory that holds data during transfer between devices.</li>
+                    <li><strong>Why are interrupts important?</strong> They allow the CPU to respond to events without constantly checking for them.</li>
+                    <li><strong>Why are buffers important?</strong> They allow devices with different speeds to communicate efficiently.</li>
+                    <li><strong>What is the difference between hardware and software interrupts?</strong> Hardware interrupts come from devices; software interrupts come from programs or system calls.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===== KEYWORDS ===== -->
+        <h4>🔑 Keywords</h4>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; background: #f1f6fc; padding: 0.8rem 1.2rem; border-radius: 12px; margin: 0.5rem 0 1rem 0;">
+            <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;">interrupt</span>
+            <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;">buffer</span>
+            <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;">hardware interrupt</span>
+            <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;">software interrupt</span>
+            <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;">timer interrupt</span>
+            <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;">ISR</span>
+            <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;">priority</span>
+            <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;">fetch-execute cycle</span>
+        </div>
+
+    </div>
+
+    <!-- ========== ADDITIONAL RESOURCES ========== -->
+    <div class="section-head">
+        <i class="fas fa-tools"></i> Additional Resources
+    </div>
+
+    <div class="card-grid">
+
+        <!-- Lesson Plan -->
+        <div class="card">
+            <div class="card-header">
+                <h4>📋 Lesson Plan <span style="font-size:0.7rem; color:#6b7f8f; font-weight:400;">(Teacher only)</span></h4>
+            </div>
+            <p>Full lesson plan with starter, main activities, and plenary.</p>
+            <div class="card-actions">
+                <button class="btn btn-locked unlock-btn" data-lesson="T3"><i class="fas fa-lock"></i> Open Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="T3" id="cover-T3">
+                <label for="cover-T3">✓ Lesson delivered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="T3">(toggle)</span>
+            </div>
+        </div>
+
+        <!-- Penalty Shootout -->
+        <div class="card">
+            <div class="card-header">
+                <h4>⚽ Penalty Shootout</h4>
+            </div>
+            <p>Definition game for software concepts, including interrupts and buffers.</p>
+            <div class="card-actions">
+                <a href="https://jamesabela.github.io/reading/penalties.html?set=editor/samples/igcse-computing-software.json" target="_blank" class="btn btn-green"><i class="fas fa-gamepad"></i> Play Game</a>
+            </div>
+        </div>
+
+        <!-- Blooket -->
+        <div class="card">
+            <div class="card-header">
+                <h4>📊 Blooket</h4>
+            </div>
+            <p>Play the Interrupts & Buffers Blooket. Join with the code from your teacher.</p>
+            <div class="card-actions">
+                <a href="https://play.blooket.com/host/factory?id=63d2ad7b41c1f366e33ff1bc" target="_blank" class="btn btn-green"><i class="fas fa-play"></i> Play Blooket</a>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="divider-light">
+    <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+        <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== COVER CHECKBOXES ==========
+        const checkboxes = document.querySelectorAll('.cover-checkbox');
+        const GRADE_PREFIX = 'year10_';
+
+        checkboxes.forEach(function(cb) {
+            const lessonKey = cb.getAttribute('data-lesson');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
+            const card = cb.closest('.card');
+
+            if (localStorage.getItem(storageKey) === 'true') {
+                cb.checked = true;
+                if (card) card.style.background = '#e6f7e6';
+            }
+
+            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
+            if (toggleSpan) {
+                toggleSpan.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.style.background = '#e6f7e6';
+                        } else {
+                            card.style.background = '';
+                        }
+                    }
+                });
+            }
+
+            const label = document.querySelector('label[for="' + cb.id + '"]');
+            if (label) {
+                label.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.style.background = '#e6f7e6';
+                        } else {
+                            card.style.background = '';
+                        }
+                    }
+                });
+            }
+
+            cb.addEventListener('change', function() {
+                localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
+                if (card) {
+                    if (this.checked) {
+                        card.style.background = '#e6f7e6';
+                    } else {
+                        card.style.background = '';
+                    }
+                }
+            });
+        });
+
+        // ========== PASSWORD PROTECTION ==========
+        const modal = document.getElementById('passwordModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdError = document.getElementById('pwdError');
+        const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+        let pendingPath = '';
+
+        const PDF_URLS = {
+            'T3': 'https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F6%2520Software%2FLesson%2520Plan%25203.docx&wdOrigin=BROWSELINK'
+        };
+
+        function openModal(path) {
+            pendingPath = path;
+            pwdInput.value = '';
+            pwdError.textContent = '';
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            pendingPath = '';
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === 'teacher') {
+                if (pendingPath) {
+                    window.open(pendingPath, '_blank');
+                }
+                closeModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const lesson = this.getAttribute('data-lesson');
+                const url = PDF_URLS[lesson];
+                if (url) {
+                    openModal(url);
+                } else {
+                    alert('No lesson plan found.');
+                }
+            });
+        });
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>
