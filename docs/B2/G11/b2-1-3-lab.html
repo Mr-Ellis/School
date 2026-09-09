@@ -96,6 +96,7 @@
         .string { color: #a3d9a5; }
         .function { color: #66b3ff; }
         .error { color: #f87171; }
+        .number { color: #f7c948; }
 
         .code-output {
             background: #0f1724;
@@ -255,49 +256,80 @@
     <h3>Basic try-except Structure</h3>
     <div class="code-block">
 <pre><code>
-<span class="keyword">def</span> <span class="function">safe_divide</span>(a, b):
-    <span class="keyword">try</span>:
-        <span class="keyword">result</span> = a / b
-        <span class="keyword">return</span> result
-    <span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:
-        <span class="keyword">return</span> <span class="string">"Error: Cannot divide by zero"</span>
-    <span class="keyword">except</span> <span class="error">TypeError</span>:
-        <span class="keyword">return</span> <span class="string">"Error: Please provide numbers only"</span>
+<span class="keyword">try</span>:
+    <span class="keyword">number</span> = <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter a number: "</span>))
+    <span class="keyword">result</span> = <span class="number">10</span> / number
+    <span class="function">print</span>(result)
 
-<span class="comment"># Testing</span>
-<span class="function">print</span>(<span class="function">safe_divide</span>(10, 2))    <span class="comment"># Returns 5.0</span>
-<span class="function">print</span>(<span class="function">safe_divide</span>(10, 0))    <span class="comment"># Returns error message</span>
-<span class="function">print</span>(<span class="function">safe_divide</span>(<span class="string">"10"</span>, 2))  <span class="comment"># Returns error message</span>
+<span class="keyword">except</span> <span class="error">ValueError</span>:
+    <span class="function">print</span>(<span class="string">"Please enter a valid integer."</span>)
+
+<span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:
+    <span class="function">print</span>(<span class="string">"You cannot divide by zero."</span>)
+
+<span class="keyword">except</span> <span class="error">Exception</span> <span class="keyword">as</span> e:
+    <span class="function">print</span>(<span class="string">f"An unexpected error occurred: {e}"</span>)
 </code></pre>
     </div>
-    <div class="code-output">▶ Output: 5.0<br>▶ Output: Error: Cannot divide by zero<br>▶ Output: Error: Please provide numbers only</div>
+    <div class="code-output">▶ Output (if input is "abc"): Please enter a valid integer.<br>▶ Output (if input is "0"): You cannot divide by zero.<br>▶ Output (if input is "5"): 2.0</div>
     <div class="btn-group">
-        <a href="https://pythontutor.com/visualize.html#code=def%20safe_divide%28a,%20b%29%3A%0A%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20result%20%3D%20a%20/%20b%0A%20%20%20%20%20%20%20%20return%20result%0A%20%20%20%20except%20ZeroDivisionError%3A%0A%20%20%20%20%20%20%20%20return%20%22Error%3A%20Cannot%20divide%20by%20zero%22%0A%20%20%20%20except%20TypeError%3A%0A%20%20%20%20%20%20%20%20return%20%22Error%3A%20Please%20provide%20numbers%20only%22%0A%0Aprint%28safe_divide%2810,%202%29%29%0Aprint%28safe_divide%2810,%200%29%29%0Aprint%28safe_divide%28%2210%22,%202%29%29&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false" target="_blank" class="btn-link try-link">▶ Try it now (PythonTutor)</a>
+        <a href="https://pythontutor.com/visualize.html#code=try%3A%0A%20%20%20%20number%20%3D%20int%28input%28%22Enter%20a%20number%3A%20%22%29%29%0A%20%20%20%20result%20%3D%2010%20/%20number%0A%20%20%20%20print%28result%29%0Aexcept%20ValueError%3A%0A%20%20%20%20print%28%22Please%20enter%20a%20valid%20integer.%22%29%0Aexcept%20ZeroDivisionError%3A%0A%20%20%20%20print%28%22You%20cannot%20divide%20by%20zero.%22%29%0Aexcept%20Exception%20as%20e%3A%0A%20%20%20%20print%28f%22An%20unexpected%20error%20occurred%3A%20%7Be%7D%22%29&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%22abc%22%5D&textReferences=false" target="_blank" class="btn-link try-link">▶ Try it now (PythonTutor)</a>
     </div>
 
-    <h3>Multiple Exception Handling</h3>
+    <h3>Understanding Exception Order</h3>
+    <div class="info-box">
+        <p><strong>⚠️ Why order matters:</strong></p>
+        <p><strong>✅ Correct:</strong> Specific exceptions first, general <code>Exception</code> last</p>
+        <div class="code-block" style="margin: 10px 0;">
+<pre><code>
+<span class="keyword">try</span>:
+    <span class="comment"># code that might cause an error</span>
+<span class="keyword">except</span> <span class="error">ValueError</span>:
+    <span class="comment"># handle value errors</span>
+<span class="keyword">except</span> <span class="error">Exception</span>:
+    <span class="comment"># handle everything else</span>
+</code></pre>
+        </div>
+        <p><strong>❌ Incorrect:</strong> General <code>Exception</code> catches everything first</p>
+        <div class="code-block" style="margin: 10px 0;">
+<pre><code>
+<span class="keyword">try</span>:
+    <span class="comment"># code that might cause an error</span>
+<span class="keyword">except</span> <span class="error">Exception</span>:
+    <span class="comment"># this catches EVERYTHING!</span>
+<span class="keyword">except</span> <span class="error">ValueError</span>:
+    <span class="comment"># this will NEVER run</span>
+</code></pre>
+        </div>
+        <p><strong>Rule of thumb:</strong> Catch the most specific exceptions first (<code>ValueError</code>, <code>TypeError</code>, <code>FileNotFoundError</code>, etc.), and put <code>except Exception</code> last as a general safety net.</p>
+    </div>
+
+    <h3>Using finally for Cleanup</h3>
     <div class="code-block">
 <pre><code>
-<span class="keyword">def</span> <span class="function">safe_file_operation</span>(filename):
-    <span class="keyword">try</span>:
-        <span class="keyword">with</span> <span class="function">open</span>(filename, <span class="string">'r'</span>) <span class="keyword">as</span> file:
-            <span class="keyword">content</span> = file.<span class="function">read</span>()
-            <span class="keyword">return</span> <span class="function">len</span>(content)
-    <span class="keyword">except</span> <span class="error">FileNotFoundError</span>:
-        <span class="function">print</span>(<span class="string">f"File '{filename}' not found"</span>)
-    <span class="keyword">except</span> <span class="error">PermissionError</span>:
-        <span class="function">print</span>(<span class="string">f"Permission denied accessing '{filename}'"</span>)
-    <span class="keyword">except</span> <span class="error">Exception</span> <span class="keyword">as</span> e:
-        <span class="function">print</span>(<span class="string">f"Unexpected error: {e}"</span>)
-    <span class="keyword">return</span> <span class="keyword">None</span>
-
-<span class="comment"># Test the function</span>
-<span class="function">safe_file_operation</span>(<span class="string">"nonexistent.txt"</span>)
+<span class="keyword">try</span>:
+    <span class="keyword">number</span> = <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter a number: "</span>))
+    <span class="keyword">result</span> = <span class="number">10</span> / number
+<span class="keyword">except</span> <span class="error">ValueError</span>:
+    <span class="function">print</span>(<span class="string">"Invalid input. Please enter an integer."</span>)
+<span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:
+    <span class="function">print</span>(<span class="string">"Cannot divide by zero."</span>)
+<span class="keyword">finally</span>:
+    <span class="function">print</span>(<span class="string">"This block always runs."</span>)
 </code></pre>
     </div>
-    <div class="code-output">▶ Output: File 'nonexistent.txt' not found</div>
+    <div class="code-output">▶ Output: This block always runs.</div>
+    <div class="info-box">
+        <p><strong>📌 Explanation:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li><strong>try:</strong> Contains code that might raise an exception.</li>
+            <li><strong>except:</strong> Catches and handles specific types of errors.</li>
+            <li><strong>finally:</strong> Executes code no matter what—whether an exception was raised or not. Common for cleanup (closing files, releasing network resources, etc.).</li>
+        </ul>
+        <p><strong>🔑 Key Principle:</strong> The <code>finally</code> block always executes, whether an exception was thrown or not. This makes it ideal for cleanup operations.</p>
+    </div>
     <div class="btn-group">
-        <a href="https://pythontutor.com/visualize.html#code=def%20safe_file_operation%28filename%29%3A%0A%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20with%20open%28filename,%20'r'%29%20as%20file%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20content%20%3D%20file.read%28%29%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20len%28content%29%0A%20%20%20%20except%20FileNotFoundError%3A%0A%20%20%20%20%20%20%20%20print%28f%22File%20'%7Bfilename%7D'%20not%20found%22%29%0A%20%20%20%20except%20PermissionError%3A%0A%20%20%20%20%20%20%20%20print%28f%22Permission%20denied%20accessing%20'%7Bfilename%7D'%22%29%0A%20%20%20%20except%20Exception%20as%20e%3A%0A%20%20%20%20%20%20%20%20print%28f%22Unexpected%20error%3A%20%7Be%7D%22%29%0A%20%20%20%20return%20None%0A%0Asafe_file_operation%28%22nonexistent.txt%22%29&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false" target="_blank" class="btn-link try-link">▶ Try it now (PythonTutor)</a>
+        <a href="https://pythontutor.com/visualize.html#code=try%3A%0A%20%20%20%20number%20%3D%20int%28input%28%22Enter%20a%20number%3A%20%22%29%29%0A%20%20%20%20result%20%3D%2010%20/%20number%0Aexcept%20ValueError%3A%0A%20%20%20%20print%28%22Invalid%20input.%20Please%20enter%20an%20integer.%22%29%0Aexcept%20ZeroDivisionError%3A%0A%20%20%20%20print%28%22Cannot%20divide%20by%20zero.%22%29%0Afinally%3A%0A%20%20%20%20print%28%22This%20block%20always%20runs.%22%29&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%225%22%5D&textReferences=false" target="_blank" class="btn-link try-link">▶ Try it now (PythonTutor)</a>
     </div>
 
     <h3>Understanding Python Exceptions</h3>
