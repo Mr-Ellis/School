@@ -116,26 +116,6 @@
       box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
       border: 1px solid #e5edf5;
     }
-    .controls .search-box {
-      flex: 1;
-      min-width: 220px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #f0f4fb;
-      border-radius: 40px;
-      padding: 0.5rem 1.2rem;
-    }
-    .controls .search-box i { color: #5d7f9a; }
-    .controls .search-box input {
-      border: none;
-      background: transparent;
-      outline: none;
-      font-size: 0.95rem;
-      width: 100%;
-      color: #1e293b;
-      font-family: inherit;
-    }
     .controls .toggle-btn {
       background: #1a5f87;
       color: white;
@@ -155,11 +135,107 @@
     .controls .toggle-btn.reveal-mode { background: #2d8f2d; }
     .controls .toggle-btn.reveal-mode:hover { background: #1f6b1f; }
 
+    /* ===== Timer controls ===== */
+    .timer-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f0f4fb;
+      padding: 0.4rem 0.6rem 0.4rem 1rem;
+      border-radius: 40px;
+      border: 1px solid #dce8f5;
+    }
+    .timer-group .timer-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1a5f87;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .timer-btn {
+      background: white;
+      border: 1px solid #d4e0ec;
+      color: #1a5f87;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .timer-btn:hover { background: #e9eff8; }
+    .timer-btn.active {
+      background: #1a5f87;
+      color: white;
+      border-color: #1a5f87;
+    }
+    .timer-display {
+      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      min-width: 60px;
+      text-align: center;
+      background: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #d4e0ec;
+    }
+    .timer-display.warning { color: #b8943e; border-color: #f0dfa8; background: #fdf3d8; }
+    .timer-display.danger  { color: #a13232; border-color: #f2c4c4; background: #fdeaea; }
+
     .term-count {
       font-size: 0.85rem;
       color: #5d7f9a;
       font-weight: 500;
     }
+
+    /* ===== Progress ===== */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      background: white;
+      border-radius: 20px;
+      padding: 0.9rem 1.5rem;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+      border: 1px solid #e5edf5;
+    }
+    .progress-row .progress-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      white-space: nowrap;
+    }
+    .progress-row .progress-track {
+      flex: 1;
+      height: 10px;
+      background: #e5edf5;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-row .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #2d8f2d, #4caf50);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    .progress-row .reset-btn {
+      background: #eef3f8;
+      border: 1px solid #d4e0ec;
+      color: #1a5f87;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.9rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .progress-row .reset-btn:hover { background: #dce8f5; }
 
     /* ===== Term cards ===== */
     .term-grid {
@@ -221,7 +297,7 @@
       margin-top: 0;
     }
     .term-card.open .term-body {
-      max-height: 400px;
+      max-height: 500px;
       margin-top: 1rem;
       opacity: 1;
     }
@@ -244,11 +320,40 @@
       display: flex;
       gap: 8px;
       align-items: flex-start;
+      margin-bottom: 0.8rem;
     }
     .term-card .expectation i {
       color: #1f6390;
       margin-top: 3px;
       flex-shrink: 0;
+    }
+
+    /* ===== Self-check tick button ===== */
+    .term-card .check-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: #e6f7e6;
+      color: #1f6b1f;
+      border: 1.5px solid #b8e0b8;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .term-card .check-btn:hover {
+      background: #d4ebd8;
+      border-color: #2d8f2d;
+    }
+    .term-card .check-btn.done {
+      background: #2d8f2d;
+      color: white;
+      border-color: #2d8f2d;
     }
 
     .term-card .click-hint {
@@ -262,14 +367,39 @@
     }
     .term-card.open .click-hint { opacity: 0; }
 
-    /* Self-test mode: hide definitions until clicked */
+    /* ===== Completed state — card fades and turns green ===== */
+    .term-card.mastered {
+      background: linear-gradient(135deg, #e6f7e6, #d4ebd8);
+      border-color: #2d8f2d;
+      border-left-color: #2d8f2d;
+      opacity: 0.55;
+      transition: 0.5s ease;
+    }
+    .term-card.mastered .term-name { color: #1f6b1f; text-decoration: line-through; }
+    .term-card.mastered .weight-badge { background: #2d8f2d; color: white; }
+    .term-card.mastered .term-body { max-height: 0; margin-top: 0; opacity: 0; }
+    .term-card.mastered .click-hint { opacity: 0; }
+    .term-card.mastered::after {
+      content: "\f00c";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      font-size: 1.8rem;
+      color: #2d8f2d;
+      opacity: 0.5;
+    }
+
+    /* Self-test mode */
     body.self-test .term-card .term-body {
       max-height: 0;
       margin-top: 0;
       opacity: 0;
     }
     body.self-test .term-card.open .term-body {
-      max-height: 400px;
+      max-height: 500px;
       margin-top: 1rem;
       opacity: 1;
     }
@@ -288,6 +418,60 @@
       font-size: 1rem;
     }
     .no-results i { font-size: 2.5rem; display: block; margin-bottom: 1rem; color: #b6cfe5; }
+
+    /* Timer finished overlay */
+    .timer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 42, 74, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .timer-overlay.active { display: flex; }
+    .timer-overlay .time-up-box {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem 3rem;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+      max-width: 420px;
+      width: 90%;
+    }
+    .timer-overlay .time-up-box i {
+      font-size: 3rem;
+      color: #b21f1f;
+      margin-bottom: 1rem;
+    }
+    .timer-overlay .time-up-box h2 {
+      color: #0b2a4a;
+      margin-bottom: 0.5rem;
+    }
+    .timer-overlay .time-up-box p {
+      color: #475569;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .timer-overlay .time-up-box .final-score {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2d8f2d;
+      margin-bottom: 1.5rem;
+    }
+    .timer-overlay .time-up-box .btn {
+      background: #1a5f87;
+      color: white;
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .timer-overlay .time-up-box .btn:hover { background: #134f75; }
 
     /* Footer */
     .divider-light {
@@ -312,6 +496,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .term-grid { grid-template-columns: 1fr; }
       .controls { flex-direction: column; align-items: stretch; }
+      .timer-group { justify-content: center; flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -319,7 +504,6 @@
 
 <div class="container">
 
-  <!-- navigation -->
   <nav class="nav">
     <span class="brand"><i class="fas fa-graduation-cap"></i> IB CompSci</span>
     <a href="index.html"><i class="fas fa-arrow-left"></i> Main Page</a>
@@ -327,7 +511,6 @@
     <a href="year12.html"><i class="fas fa-arrow-left"></i> Grade 12 Units</a>
   </nav>
 
-  <!-- header -->
   <div class="main-title">
     <i class="fas fa-tasks"></i> Command Terms
   </div>
@@ -351,24 +534,38 @@
 
   <!-- controls -->
   <div class="controls">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input type="text" id="searchInput" placeholder="Search command terms…" autocomplete="off">
-    </div>
     <button class="toggle-btn" id="selfTestBtn">
       <i class="fas fa-eye-slash"></i> Self-test mode
     </button>
+
+    <div class="timer-group">
+      <span class="timer-label"><i class="fas fa-stopwatch"></i> Timer</span>
+      <button class="timer-btn" data-minutes="1">1 min</button>
+      <button class="timer-btn" data-minutes="3">3 min</button>
+      <button class="timer-btn" data-minutes="5">5 min</button>
+      <div class="timer-display" id="timerDisplay">--:--</div>
+      <button class="timer-btn" id="timerStopBtn" style="display:none;">Stop</button>
+    </div>
+
     <button class="toggle-btn" id="toggleAllBtn">
       <i class="fas fa-expand-alt"></i> Open all
     </button>
-    <span class="term-count" id="termCount">17 terms</span>
+  </div>
+
+  <!-- progress -->
+  <div class="progress-row">
+    <span class="progress-text"><i class="fas fa-check-circle" style="color:#2d8f2d;"></i> Mastered: <span id="masteredCount">0</span> / <span id="totalCount">17</span></span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <button class="reset-btn" id="resetBtn"><i class="fas fa-redo"></i> Reset</button>
   </div>
 
   <!-- term grid -->
   <div class="term-grid" id="termGrid">
 
     <!-- ===== Weight 1 ===== -->
-    <div class="term-card w1" data-weight="1">
+    <div class="term-card w1" data-weight="1" data-term="Define">
       <div class="term-header">
         <span class="term-name">Define</span>
         <span class="weight-badge">Weight 1</span>
@@ -376,11 +573,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Give the precise meaning of a word, phrase, concept or physical quantity.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> One clear sentence. No examples required. Be exact — this is a recall term.</div>
+        <button class="check-btn" data-check="Define"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w1" data-weight="1">
+    <div class="term-card w1" data-weight="1" data-term="Label">
       <div class="term-header">
         <span class="term-name">Label</span>
         <span class="weight-badge">Weight 1</span>
@@ -388,11 +586,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Add labels to a diagram.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Short, accurate labels. No explanation or description needed.</div>
+        <button class="check-btn" data-check="Label"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w1" data-weight="1">
+    <div class="term-card w1" data-weight="1" data-term="List">
       <div class="term-header">
         <span class="term-name">List</span>
         <span class="weight-badge">Weight 1</span>
@@ -400,11 +599,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Give a sequence of brief answers with no explanation.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Bullet points or a short list. One word or phrase per item. No elaboration.</div>
+        <button class="check-btn" data-check="List"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w1" data-weight="1">
+    <div class="term-card w1" data-weight="1" data-term="State">
       <div class="term-header">
         <span class="term-name">State</span>
         <span class="weight-badge">Weight 1</span>
@@ -412,12 +612,13 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Give a specific name, value or other brief answer without explanation or calculation.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> A single fact, name, or value. No working, no justification.</div>
+        <button class="check-btn" data-check="State"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
     <!-- ===== Weight 2 ===== -->
-    <div class="term-card w2" data-weight="2">
+    <div class="term-card w2" data-weight="2" data-term="Calculate">
       <div class="term-header">
         <span class="term-name">Calculate</span>
         <span class="weight-badge">Weight 2</span>
@@ -425,11 +626,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Obtain a numerical answer showing the relevant stages in the working.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Show your working. A correct answer alone may not gain full marks — the stages matter.</div>
+        <button class="check-btn" data-check="Calculate"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w2" data-weight="2">
+    <div class="term-card w2" data-weight="2" data-term="Describe">
       <div class="term-header">
         <span class="term-name">Describe</span>
         <span class="weight-badge">Weight 2</span>
@@ -437,11 +639,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Give a detailed account.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Say what it is and how it works, in detail. More than a list — full sentences with relevant facts.</div>
+        <button class="check-btn" data-check="Describe"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w2" data-weight="2">
+    <div class="term-card w2" data-weight="2" data-term="Distinguish">
       <div class="term-header">
         <span class="term-name">Distinguish</span>
         <span class="weight-badge">Weight 2</span>
@@ -449,11 +652,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Make clear the differences between two or more concepts or items.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Focus on differences. Mention both items throughout, not one at a time.</div>
+        <button class="check-btn" data-check="Distinguish"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w2" data-weight="2">
+    <div class="term-card w2" data-weight="2" data-term="Estimate">
       <div class="term-header">
         <span class="term-name">Estimate</span>
         <span class="weight-badge">Weight 2</span>
@@ -461,11 +665,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Obtain an approximate value.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> A reasonable value with brief justification. Not an exact calculation.</div>
+        <button class="check-btn" data-check="Estimate"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w2" data-weight="2">
+    <div class="term-card w2" data-weight="2" data-term="Identify">
       <div class="term-header">
         <span class="term-name">Identify</span>
         <span class="weight-badge">Weight 2</span>
@@ -473,11 +678,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Provide an answer from a number of possibilities.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Pick the correct item from what is given. Brief — often a word or phrase.</div>
+        <button class="check-btn" data-check="Identify"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w2" data-weight="2">
+    <div class="term-card w2" data-weight="2" data-term="Outline">
       <div class="term-header">
         <span class="term-name">Outline</span>
         <span class="weight-badge">Weight 2</span>
@@ -485,11 +691,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Give a brief account or summary.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Main points only. Less detail than "describe" — no need for full explanation.</div>
+        <button class="check-btn" data-check="Outline"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w2" data-weight="2">
+    <div class="term-card w2" data-weight="2" data-term="Trace">
       <div class="term-header">
         <span class="term-name">Trace</span>
         <span class="weight-badge">Weight 2</span>
@@ -497,12 +704,13 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Follow and record the actions of an algorithm.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Show each step. A trace table is often the best format — record values as they change.</div>
+        <button class="check-btn" data-check="Trace"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
     <!-- ===== Weight 3 ===== -->
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Compare">
       <div class="term-header">
         <span class="term-name">Compare</span>
         <span class="weight-badge">Weight 3</span>
@@ -510,11 +718,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Give an account of the similarities between two (or more) items or situations, referring to both (all) of them throughout.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Focus on similarities. Refer to both items in each point — do not describe them separately.</div>
+        <button class="check-btn" data-check="Compare"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Construct">
       <div class="term-header">
         <span class="term-name">Construct</span>
         <span class="weight-badge">Weight 3</span>
@@ -522,11 +731,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Display information in a diagrammatic or logical form.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Build the diagram, table, or structure. Accuracy and completeness of the form matter.</div>
+        <button class="check-btn" data-check="Construct"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Deduce">
       <div class="term-header">
         <span class="term-name">Deduce</span>
         <span class="weight-badge">Weight 3</span>
@@ -534,11 +744,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Reach a conclusion from the information given.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Use the evidence provided to draw a logical conclusion. Show the reasoning.</div>
+        <button class="check-btn" data-check="Deduce"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Discuss">
       <div class="term-header">
         <span class="term-name">Discuss</span>
         <span class="weight-badge">Weight 3</span>
@@ -546,11 +757,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Offer a considered and balanced review that includes a range of arguments, factors or hypotheses. Opinions or conclusions should be presented clearly and supported by appropriate evidence.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Both sides. Balanced arguments. A clear conclusion supported by evidence.</div>
+        <button class="check-btn" data-check="Discuss"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Evaluate">
       <div class="term-header">
         <span class="term-name">Evaluate</span>
         <span class="weight-badge">Weight 3</span>
@@ -558,11 +770,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Make an appraisal by weighing up the strengths and limitations.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Strengths <em>and</em> limitations. A judgement or conclusion at the end.</div>
+        <button class="check-btn" data-check="Evaluate"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Explain">
       <div class="term-header">
         <span class="term-name">Explain</span>
         <span class="weight-badge">Weight 3</span>
@@ -570,11 +783,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Give a detailed account including reasons or causes.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Say <em>why</em> or <em>how</em>, not just <em>what</em>. Use "because…" to link cause and effect.</div>
+        <button class="check-btn" data-check="Explain"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Justify">
       <div class="term-header">
         <span class="term-name">Justify</span>
         <span class="weight-badge">Weight 3</span>
@@ -582,11 +796,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Give valid reasons or evidence to support an answer or conclusion.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Reasons must be valid and relevant. Support your answer with evidence — not just opinion.</div>
+        <button class="check-btn" data-check="Justify"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Sketch">
       <div class="term-header">
         <span class="term-name">Sketch</span>
         <span class="weight-badge">Weight 3</span>
@@ -594,11 +809,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Represent by means of a diagram or graph (labelled as appropriate). The sketch should give a general idea of the required shape or relationship, and should include relevant features.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> General shape and key features. Label the important parts. Not a precise scale drawing.</div>
+        <button class="check-btn" data-check="Sketch"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="Suggest">
       <div class="term-header">
         <span class="term-name">Suggest</span>
         <span class="weight-badge">Weight 3</span>
@@ -606,11 +822,12 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Propose a solution, hypothesis or other possible answer.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Offer a plausible answer. There may be more than one valid response — support your choice.</div>
+        <button class="check-btn" data-check="Suggest"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
 
-    <div class="term-card w3" data-weight="3">
+    <div class="term-card w3" data-weight="3" data-term="To what extent">
       <div class="term-header">
         <span class="term-name">To what extent</span>
         <span class="weight-badge">Weight 3</span>
@@ -618,6 +835,7 @@
       <div class="term-body">
         <div class="definition"><strong>Definition:</strong> Consider the merits or otherwise of an argument or concept. Opinions and conclusions should be presented clearly and supported with appropriate evidence and sound argument.</div>
         <div class="expectation"><i class="fas fa-lightbulb"></i> Weigh both sides. Reach a qualified conclusion — often "to a large extent…" or "to a limited extent…".</div>
+        <button class="check-btn" data-check="To what extent"><i class="fas fa-check"></i> I got this right</button>
       </div>
       <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
     </div>
@@ -626,7 +844,7 @@
 
   <div class="no-results hidden" id="noResults">
     <i class="fas fa-search-minus"></i>
-    No command terms match your search.
+    No command terms match your filter.
   </div>
 
   <hr class="divider-light">
@@ -637,28 +855,115 @@
 
 </div>
 
+<!-- Timer finished overlay -->
+<div class="timer-overlay" id="timerOverlay">
+  <div class="time-up-box">
+    <i class="fas fa-hourglass-end"></i>
+    <h2>Time's up!</h2>
+    <p>Well done — here's how you did:</p>
+    <div class="final-score" id="finalScore">0 / 17 mastered</div>
+    <button class="btn" id="timerCloseBtn">Close</button>
+  </div>
+</div>
+
 <script>
   (function() {
     const cards = document.querySelectorAll('.term-card');
-    const searchInput = document.getElementById('searchInput');
     const selfTestBtn = document.getElementById('selfTestBtn');
     const toggleAllBtn = document.getElementById('toggleAllBtn');
-    const termCount = document.getElementById('termCount');
-    const noResults = document.getElementById('noResults');
     const legendPills = document.querySelectorAll('.weight-pill');
+    const checkBtns = document.querySelectorAll('.check-btn');
+    const masteredCountEl = document.getElementById('masteredCount');
+    const totalCountEl = document.getElementById('totalCount');
+    const progressFill = document.getElementById('progressFill');
+    const resetBtn = document.getElementById('resetBtn');
+    const timerBtns = document.querySelectorAll('.timer-btn[data-minutes]');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerStopBtn = document.getElementById('timerStopBtn');
+    const timerOverlay = document.getElementById('timerOverlay');
+    const timerCloseBtn = document.getElementById('timerCloseBtn');
+    const finalScoreEl = document.getElementById('finalScore');
 
-    let activeWeightFilter = null; // null = all
+    const STORAGE_KEY = 'commandTerms_mastered';
+    const TOTAL = cards.length;
+    totalCountEl.textContent = TOTAL;
 
-    // ---- Click a card to open/close ----
+    let activeWeightFilter = null;
+    let timerInterval = null;
+
+    // ===== Load saved mastery =====
+    function getMasteredSet() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? new Set(JSON.parse(raw)) : new Set();
+      } catch (e) {
+        return new Set();
+      }
+    }
+
+    function saveMasteredSet(set) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(set)));
+    }
+
+    function applyMasteredState() {
+      const mastered = getMasteredSet();
+      cards.forEach(card => {
+        const term = card.getAttribute('data-term');
+        if (mastered.has(term)) {
+          card.classList.add('mastered');
+          card.querySelector('.check-btn').classList.add('done');
+          card.querySelector('.check-btn').innerHTML = '<i class="fas fa-check-circle"></i> Mastered';
+        } else {
+          card.classList.remove('mastered');
+          card.querySelector('.check-btn').classList.remove('done');
+          card.querySelector('.check-btn').innerHTML = '<i class="fas fa-check"></i> I got this right';
+        }
+      });
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const masteredCount = document.querySelectorAll('.term-card.mastered').length;
+      masteredCountEl.textContent = masteredCount;
+      progressFill.style.width = (masteredCount / TOTAL * 100) + '%';
+    }
+
+    // ===== Click a card to open/close (ignore clicks on the check button) =====
     cards.forEach(card => {
       card.addEventListener('click', function(e) {
-        // Don't toggle if clicking a link inside
-        if (e.target.tagName === 'A') return;
+        if (e.target.closest('.check-btn')) return;
+        if (card.classList.contains('mastered')) return;
         this.classList.toggle('open');
       });
     });
 
-    // ---- Self-test mode ----
+    // ===== Check button =====
+    checkBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const card = this.closest('.term-card');
+        const term = card.getAttribute('data-term');
+        const mastered = getMasteredSet();
+
+        if (mastered.has(term)) {
+          mastered.delete(term);
+        } else {
+          mastered.add(term);
+        }
+        saveMasteredSet(mastered);
+        applyMasteredState();
+      });
+    });
+
+    // ===== Reset =====
+    resetBtn.addEventListener('click', function() {
+      if (confirm('Reset all mastery progress?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        applyMasteredState();
+      }
+    });
+
+    // ===== Self-test mode =====
     selfTestBtn.addEventListener('click', function() {
       document.body.classList.toggle('self-test');
       const isSelfTest = document.body.classList.contains('self-test');
@@ -666,7 +971,6 @@
       if (isSelfTest) {
         selfTestBtn.innerHTML = '<i class="fas fa-eye"></i> Exit self-test';
         selfTestBtn.classList.add('reveal-mode');
-        // Close all cards when entering self-test
         cards.forEach(c => c.classList.remove('open'));
       } else {
         selfTestBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Self-test mode';
@@ -674,11 +978,11 @@
       }
     });
 
-    // ---- Toggle all open/close ----
+    // ===== Toggle all open/close =====
     toggleAllBtn.addEventListener('click', function() {
-      const anyClosed = Array.from(cards).some(c => !c.classList.contains('open') && !c.classList.contains('hidden'));
-      cards.forEach(c => {
-        if (c.classList.contains('hidden')) return;
+      const visibleCards = Array.from(cards).filter(c => !c.classList.contains('hidden') && !c.classList.contains('mastered'));
+      const anyClosed = visibleCards.some(c => !c.classList.contains('open'));
+      visibleCards.forEach(c => {
         if (anyClosed) c.classList.add('open');
         else c.classList.remove('open');
       });
@@ -687,12 +991,7 @@
         : '<i class="fas fa-expand-alt"></i> Open all';
     });
 
-    // ---- Search filter ----
-    searchInput.addEventListener('input', function() {
-      applyFilters();
-    });
-
-    // ---- Weight legend filter ----
+    // ===== Weight legend filter =====
     legendPills.forEach(pill => {
       pill.addEventListener('click', function() {
         const w = this.getAttribute('data-filter');
@@ -709,18 +1008,12 @@
     });
 
     function applyFilters() {
-      const query = searchInput.value.trim().toLowerCase();
       let visibleCount = 0;
-
       cards.forEach(card => {
-        const name = card.querySelector('.term-name').textContent.toLowerCase();
-        const def = card.querySelector('.definition').textContent.toLowerCase();
         const weight = card.getAttribute('data-weight');
-
-        const matchesSearch = query === '' || name.includes(query) || def.includes(query);
         const matchesWeight = activeWeightFilter === null || weight === activeWeightFilter;
 
-        if (matchesSearch && matchesWeight) {
+        if (matchesWeight) {
           card.classList.remove('hidden');
           visibleCount++;
         } else {
@@ -728,12 +1021,78 @@
           card.classList.remove('open');
         }
       });
-
-      termCount.textContent = visibleCount + (visibleCount === 1 ? ' term' : ' terms');
-      noResults.classList.toggle('hidden', visibleCount > 0);
+      document.getElementById('noResults').classList.toggle('hidden', visibleCount > 0);
     }
 
-    // ---- Init ----
+    // ===== TIMER =====
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return m + ':' + String(s).padStart(2, '0');
+    }
+
+    function startTimer(minutes) {
+      stopTimer();
+      let remaining = minutes * 60;
+      timerDisplay.textContent = formatTime(remaining);
+      timerDisplay.classList.remove('warning', 'danger');
+      timerStopBtn.style.display = 'inline-flex';
+
+      timerInterval = setInterval(function() {
+        remaining--;
+        timerDisplay.textContent = formatTime(remaining);
+
+        if (remaining <= 30) {
+          timerDisplay.classList.add('danger');
+        } else if (remaining <= 60) {
+          timerDisplay.classList.add('warning');
+        }
+
+        if (remaining <= 0) {
+          stopTimer();
+          showTimeUp();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerStopBtn.style.display = 'none';
+      timerBtns.forEach(b => b.classList.remove('active'));
+    }
+
+    function showTimeUp() {
+      const masteredCount = document.querySelectorAll('.term-card.mastered').length;
+      finalScoreEl.textContent = masteredCount + ' / ' + TOTAL + ' mastered';
+      timerOverlay.classList.add('active');
+    }
+
+    timerBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const mins = parseInt(this.getAttribute('data-minutes'), 10);
+        timerBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        startTimer(mins);
+      });
+    });
+
+    timerStopBtn.addEventListener('click', function() {
+      stopTimer();
+      timerDisplay.textContent = '--:--';
+      timerDisplay.classList.remove('warning', 'danger');
+    });
+
+    timerCloseBtn.addEventListener('click', function() {
+      timerOverlay.classList.remove('active');
+      timerDisplay.textContent = '--:--';
+      timerDisplay.classList.remove('warning', 'danger');
+    });
+
+    // ===== INIT =====
+    applyMasteredState();
     applyFilters();
   })();
 </script>
