@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Command Terms · IB Computer Science</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.6;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #2a6f97; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
+
+    /* ===== Weight legend ===== */
+    .weight-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .weight-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.45rem 1.1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.15s;
+      user-select: none;
+    }
+    .weight-pill.w1 { background: #e6f7e6; color: #1f6b1f; border-color: #b8e0b8; }
+    .weight-pill.w2 { background: #fdf3d8; color: #8a6a1a; border-color: #f0dfa8; }
+    .weight-pill.w3 { background: #fdeaea; color: #a13232; border-color: #f2c4c4; }
+    .weight-pill.active { box-shadow: 0 0 0 3px rgba(11,42,74,0.2); }
+    .weight-pill .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .weight-pill.w1 .dot { background: #2d8f2d; }
+    .weight-pill.w2 .dot { background: #d4a843; }
+    .weight-pill.w3 .dot { background: #b21f1f; }
+
+    /* ===== Controls ===== */
+    .controls {
+      background: white;
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+      border: 1px solid #e5edf5;
+    }
+    .controls .search-box {
+      flex: 1;
+      min-width: 220px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f0f4fb;
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+    }
+    .controls .search-box i { color: #5d7f9a; }
+    .controls .search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.95rem;
+      width: 100%;
+      color: #1e293b;
+      font-family: inherit;
+    }
+    .controls .toggle-btn {
+      background: #1a5f87;
+      color: white;
+      border: none;
+      padding: 0.55rem 1.4rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .controls .toggle-btn:hover { background: #134f75; }
+    .controls .toggle-btn.reveal-mode { background: #2d8f2d; }
+    .controls .toggle-btn.reveal-mode:hover { background: #1f6b1f; }
+
+    .term-count {
+      font-size: 0.85rem;
+      color: #5d7f9a;
+      font-weight: 500;
+    }
+
+    /* ===== Term cards ===== */
+    .term-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .term-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.3rem 1.5rem 1.4rem;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+      border: 1px solid #e5edf5;
+      cursor: pointer;
+      transition: 0.18s ease;
+      position: relative;
+      border-left: 6px solid #ccc;
+    }
+    .term-card.w1 { border-left-color: #2d8f2d; }
+    .term-card.w2 { border-left-color: #d4a843; }
+    .term-card.w3 { border-left-color: #b21f1f; }
+
+    .term-card:hover {
+      box-shadow: 0 10px 24px rgba(0, 32, 64, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .term-card .term-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .term-card .term-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.01em;
+    }
+    .term-card .weight-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .term-card.w1 .weight-badge { background: #e6f7e6; color: #1f6b1f; }
+    .term-card.w2 .weight-badge { background: #fdf3d8; color: #8a6a1a; }
+    .term-card.w3 .weight-badge { background: #fdeaea; color: #a13232; }
+
+    .term-card .term-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, margin-top 0.35s ease, opacity 0.3s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+    .term-card.open .term-body {
+      max-height: 400px;
+      margin-top: 1rem;
+      opacity: 1;
+    }
+
+    .term-card .definition {
+      font-size: 0.92rem;
+      color: #334155;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px dashed #d4e0ec;
+    }
+    .term-card .definition strong { color: #0b2a4a; }
+
+    .term-card .expectation {
+      font-size: 0.82rem;
+      background: #f0f4fb;
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      color: #3b5f7a;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .term-card .expectation i {
+      color: #1f6390;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .term-card .click-hint {
+      font-size: 0.72rem;
+      color: #8aa2b8;
+      margin-top: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .term-card.open .click-hint { opacity: 0; }
+
+    /* Self-test mode: hide definitions until clicked */
+    body.self-test .term-card .term-body {
+      max-height: 0;
+      margin-top: 0;
+      opacity: 0;
+    }
+    body.self-test .term-card.open .term-body {
+      max-height: 400px;
+      margin-top: 1rem;
+      opacity: 1;
+    }
+    body.self-test .term-card .click-hint::after {
+      content: " — tap to reveal";
+      color: #b21f1f;
+      font-weight: 600;
+    }
+
+    .hidden { display: none !important; }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #5d7f9a;
+      font-size: 1rem;
+    }
+    .no-results i { font-size: 2.5rem; display: block; margin-bottom: 1rem; color: #b6cfe5; }
+
+    /* Footer */
+    .divider-light {
+      margin: 2.2rem 0 0.2rem;
+      border: 0;
+      height: 1px;
+      background: linear-gradient(to right, #d4e0ec, transparent);
+    }
+    .footer-note {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: #5d7f9a;
+      padding: 0.8rem 0;
+    }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .term-grid { grid-template-columns: 1fr; }
+      .controls { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- navigation -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IB CompSci</span>
+    <a href="index.html"><i class="fas fa-arrow-left"></i> Main Page</a>
+    <a href="year11.html"><i class="fas fa-arrow-left"></i> Grade 11 Units</a>
+    <a href="year12.html"><i class="fas fa-arrow-left"></i> Grade 12 Units</a>
+  </nav>
+
+  <!-- header -->
+  <div class="main-title">
+    <i class="fas fa-tasks"></i> Command Terms
+  </div>
+  <div class="subhead">
+    <i class="fas fa-weight-hanging" style="color:#1f7b4d; margin-right: 6px;"></i>
+    Understand the weight · Know the definition · Answer with confidence
+  </div>
+
+  <!-- weight legend -->
+  <div class="weight-legend">
+    <div class="weight-pill w1" data-filter="1">
+      <span class="dot"></span> Weight 1 — Low demand
+    </div>
+    <div class="weight-pill w2" data-filter="2">
+      <span class="dot"></span> Weight 2 — Medium demand
+    </div>
+    <div class="weight-pill w3" data-filter="3">
+      <span class="dot"></span> Weight 3 — High demand
+    </div>
+  </div>
+
+  <!-- controls -->
+  <div class="controls">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search command terms…" autocomplete="off">
+    </div>
+    <button class="toggle-btn" id="selfTestBtn">
+      <i class="fas fa-eye-slash"></i> Self-test mode
+    </button>
+    <button class="toggle-btn" id="toggleAllBtn">
+      <i class="fas fa-expand-alt"></i> Open all
+    </button>
+    <span class="term-count" id="termCount">17 terms</span>
+  </div>
+
+  <!-- term grid -->
+  <div class="term-grid" id="termGrid">
+
+    <!-- ===== Weight 1 ===== -->
+    <div class="term-card w1" data-weight="1">
+      <div class="term-header">
+        <span class="term-name">Define</span>
+        <span class="weight-badge">Weight 1</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Give the precise meaning of a word, phrase, concept or physical quantity.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> One clear sentence. No examples required. Be exact — this is a recall term.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w1" data-weight="1">
+      <div class="term-header">
+        <span class="term-name">Label</span>
+        <span class="weight-badge">Weight 1</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Add labels to a diagram.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Short, accurate labels. No explanation or description needed.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w1" data-weight="1">
+      <div class="term-header">
+        <span class="term-name">List</span>
+        <span class="weight-badge">Weight 1</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Give a sequence of brief answers with no explanation.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Bullet points or a short list. One word or phrase per item. No elaboration.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w1" data-weight="1">
+      <div class="term-header">
+        <span class="term-name">State</span>
+        <span class="weight-badge">Weight 1</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Give a specific name, value or other brief answer without explanation or calculation.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> A single fact, name, or value. No working, no justification.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <!-- ===== Weight 2 ===== -->
+    <div class="term-card w2" data-weight="2">
+      <div class="term-header">
+        <span class="term-name">Calculate</span>
+        <span class="weight-badge">Weight 2</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Obtain a numerical answer showing the relevant stages in the working.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Show your working. A correct answer alone may not gain full marks — the stages matter.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w2" data-weight="2">
+      <div class="term-header">
+        <span class="term-name">Describe</span>
+        <span class="weight-badge">Weight 2</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Give a detailed account.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Say what it is and how it works, in detail. More than a list — full sentences with relevant facts.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w2" data-weight="2">
+      <div class="term-header">
+        <span class="term-name">Distinguish</span>
+        <span class="weight-badge">Weight 2</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Make clear the differences between two or more concepts or items.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Focus on differences. Mention both items throughout, not one at a time.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w2" data-weight="2">
+      <div class="term-header">
+        <span class="term-name">Estimate</span>
+        <span class="weight-badge">Weight 2</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Obtain an approximate value.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> A reasonable value with brief justification. Not an exact calculation.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w2" data-weight="2">
+      <div class="term-header">
+        <span class="term-name">Identify</span>
+        <span class="weight-badge">Weight 2</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Provide an answer from a number of possibilities.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Pick the correct item from what is given. Brief — often a word or phrase.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w2" data-weight="2">
+      <div class="term-header">
+        <span class="term-name">Outline</span>
+        <span class="weight-badge">Weight 2</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Give a brief account or summary.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Main points only. Less detail than "describe" — no need for full explanation.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w2" data-weight="2">
+      <div class="term-header">
+        <span class="term-name">Trace</span>
+        <span class="weight-badge">Weight 2</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Follow and record the actions of an algorithm.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Show each step. A trace table is often the best format — record values as they change.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <!-- ===== Weight 3 ===== -->
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Compare</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Give an account of the similarities between two (or more) items or situations, referring to both (all) of them throughout.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Focus on similarities. Refer to both items in each point — do not describe them separately.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Construct</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Display information in a diagrammatic or logical form.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Build the diagram, table, or structure. Accuracy and completeness of the form matter.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Deduce</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Reach a conclusion from the information given.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Use the evidence provided to draw a logical conclusion. Show the reasoning.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Discuss</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Offer a considered and balanced review that includes a range of arguments, factors or hypotheses. Opinions or conclusions should be presented clearly and supported by appropriate evidence.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Both sides. Balanced arguments. A clear conclusion supported by evidence.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Evaluate</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Make an appraisal by weighing up the strengths and limitations.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Strengths <em>and</em> limitations. A judgement or conclusion at the end.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Explain</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Give a detailed account including reasons or causes.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Say <em>why</em> or <em>how</em>, not just <em>what</em>. Use "because…" to link cause and effect.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Justify</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Give valid reasons or evidence to support an answer or conclusion.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Reasons must be valid and relevant. Support your answer with evidence — not just opinion.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Sketch</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Represent by means of a diagram or graph (labelled as appropriate). The sketch should give a general idea of the required shape or relationship, and should include relevant features.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> General shape and key features. Label the important parts. Not a precise scale drawing.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">Suggest</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Propose a solution, hypothesis or other possible answer.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Offer a plausible answer. There may be more than one valid response — support your choice.</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+    <div class="term-card w3" data-weight="3">
+      <div class="term-header">
+        <span class="term-name">To what extent</span>
+        <span class="weight-badge">Weight 3</span>
+      </div>
+      <div class="term-body">
+        <div class="definition"><strong>Definition:</strong> Consider the merits or otherwise of an argument or concept. Opinions and conclusions should be presented clearly and supported with appropriate evidence and sound argument.</div>
+        <div class="expectation"><i class="fas fa-lightbulb"></i> Weigh both sides. Reach a qualified conclusion — often "to a large extent…" or "to a limited extent…".</div>
+      </div>
+      <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to reveal definition</div>
+    </div>
+
+  </div>
+
+  <div class="no-results hidden" id="noResults">
+    <i class="fas fa-search-minus"></i>
+    No command terms match your search.
+  </div>
+
+  <hr class="divider-light">
+  <div class="footer-note">
+    <span><i class="fas fa-graduation-cap"></i> IB Computer Science · Command Terms</span>
+    <span><i class="fas fa-weight-hanging"></i> Weight = level of demand</span>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    const cards = document.querySelectorAll('.term-card');
+    const searchInput = document.getElementById('searchInput');
+    const selfTestBtn = document.getElementById('selfTestBtn');
+    const toggleAllBtn = document.getElementById('toggleAllBtn');
+    const termCount = document.getElementById('termCount');
+    const noResults = document.getElementById('noResults');
+    const legendPills = document.querySelectorAll('.weight-pill');
+
+    let activeWeightFilter = null; // null = all
+
+    // ---- Click a card to open/close ----
+    cards.forEach(card => {
+      card.addEventListener('click', function(e) {
+        // Don't toggle if clicking a link inside
+        if (e.target.tagName === 'A') return;
+        this.classList.toggle('open');
+      });
+    });
+
+    // ---- Self-test mode ----
+    selfTestBtn.addEventListener('click', function() {
+      document.body.classList.toggle('self-test');
+      const isSelfTest = document.body.classList.contains('self-test');
+
+      if (isSelfTest) {
+        selfTestBtn.innerHTML = '<i class="fas fa-eye"></i> Exit self-test';
+        selfTestBtn.classList.add('reveal-mode');
+        // Close all cards when entering self-test
+        cards.forEach(c => c.classList.remove('open'));
+      } else {
+        selfTestBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Self-test mode';
+        selfTestBtn.classList.remove('reveal-mode');
+      }
+    });
+
+    // ---- Toggle all open/close ----
+    toggleAllBtn.addEventListener('click', function() {
+      const anyClosed = Array.from(cards).some(c => !c.classList.contains('open') && !c.classList.contains('hidden'));
+      cards.forEach(c => {
+        if (c.classList.contains('hidden')) return;
+        if (anyClosed) c.classList.add('open');
+        else c.classList.remove('open');
+      });
+      toggleAllBtn.innerHTML = anyClosed
+        ? '<i class="fas fa-compress-alt"></i> Close all'
+        : '<i class="fas fa-expand-alt"></i> Open all';
+    });
+
+    // ---- Search filter ----
+    searchInput.addEventListener('input', function() {
+      applyFilters();
+    });
+
+    // ---- Weight legend filter ----
+    legendPills.forEach(pill => {
+      pill.addEventListener('click', function() {
+        const w = this.getAttribute('data-filter');
+        if (activeWeightFilter === w) {
+          activeWeightFilter = null;
+          legendPills.forEach(p => p.classList.remove('active'));
+        } else {
+          activeWeightFilter = w;
+          legendPills.forEach(p => p.classList.remove('active'));
+          this.classList.add('active');
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const name = card.querySelector('.term-name').textContent.toLowerCase();
+        const def = card.querySelector('.definition').textContent.toLowerCase();
+        const weight = card.getAttribute('data-weight');
+
+        const matchesSearch = query === '' || name.includes(query) || def.includes(query);
+        const matchesWeight = activeWeightFilter === null || weight === activeWeightFilter;
+
+        if (matchesSearch && matchesWeight) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+          card.classList.remove('open');
+        }
+      });
+
+      termCount.textContent = visibleCount + (visibleCount === 1 ? ' term' : ' terms');
+      noResults.classList.toggle('hidden', visibleCount > 0);
+    }
+
+    // ---- Init ----
+    applyFilters();
+  })();
+</script>
+
+</body>
+</html>
