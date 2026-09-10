@@ -186,12 +186,6 @@
     .timer-display.warning { color: #b8943e; border-color: #f0dfa8; background: #fdf3d8; }
     .timer-display.danger  { color: #a13232; border-color: #f2c4c4; background: #fdeaea; }
 
-    .term-count {
-      font-size: 0.85rem;
-      color: #5d7f9a;
-      font-weight: 500;
-    }
-
     /* ===== Progress ===== */
     .progress-row {
       display: flex;
@@ -292,12 +286,12 @@
     .term-card .term-body {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.35s ease, margin-top 0.35s ease, opacity 0.3s ease;
+      transition: max-height 0.45s ease, margin-top 0.35s ease, opacity 0.3s ease;
       opacity: 0;
       margin-top: 0;
     }
     .term-card.open .term-body {
-      max-height: 500px;
+      max-height: 800px;
       margin-top: 1rem;
       opacity: 1;
     }
@@ -367,7 +361,7 @@
     }
     .term-card.open .click-hint { opacity: 0; }
 
-    /* ===== Completed state — card fades and turns green ===== */
+    /* ===== Completed state ===== */
     .term-card.mastered {
       background: linear-gradient(135deg, #e6f7e6, #d4ebd8);
       border-color: #2d8f2d;
@@ -399,7 +393,7 @@
       opacity: 0;
     }
     body.self-test .term-card.open .term-body {
-      max-height: 500px;
+      max-height: 800px;
       margin-top: 1rem;
       opacity: 1;
     }
@@ -862,7 +856,7 @@
     <h2>Time's up!</h2>
     <p>Well done — here's how you did:</p>
     <div class="final-score" id="finalScore">0 / 17 mastered</div>
-    <button class="btn" id="timerCloseBtn">Close</button>
+    <button class="btn" id="timerCloseBtn"><i class="fas fa-redo"></i> Reset &amp; close</button>
   </div>
 </div>
 
@@ -883,6 +877,7 @@
     const timerOverlay = document.getElementById('timerOverlay');
     const timerCloseBtn = document.getElementById('timerCloseBtn');
     const finalScoreEl = document.getElementById('finalScore');
+    const noResults = document.getElementById('noResults');
 
     const STORAGE_KEY = 'commandTerms_mastered';
     const TOTAL = cards.length;
@@ -928,7 +923,18 @@
       progressFill.style.width = (masteredCount / TOTAL * 100) + '%';
     }
 
-    // ===== Click a card to open/close (ignore clicks on the check button) =====
+    // ===== Full reset (used by Reset button and by timer close) =====
+    function resetAll() {
+      localStorage.removeItem(STORAGE_KEY);
+      cards.forEach(card => {
+        card.classList.remove('mastered', 'open');
+      });
+      applyMasteredState();
+      // reset toggle all button label
+      toggleAllBtn.innerHTML = '<i class="fas fa-expand-alt"></i> Open all';
+    }
+
+    // ===== Click a card to open/close =====
     cards.forEach(card => {
       card.addEventListener('click', function(e) {
         if (e.target.closest('.check-btn')) return;
@@ -955,11 +961,10 @@
       });
     });
 
-    // ===== Reset =====
+    // ===== Reset button =====
     resetBtn.addEventListener('click', function() {
       if (confirm('Reset all mastery progress?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        applyMasteredState();
+        resetAll();
       }
     });
 
@@ -1021,7 +1026,7 @@
           card.classList.remove('open');
         }
       });
-      document.getElementById('noResults').classList.toggle('hidden', visibleCount > 0);
+      noResults.classList.toggle('hidden', visibleCount > 0);
     }
 
     // ===== TIMER =====
@@ -1085,10 +1090,12 @@
       timerDisplay.classList.remove('warning', 'danger');
     });
 
+    // ===== Timer close = reset everything =====
     timerCloseBtn.addEventListener('click', function() {
       timerOverlay.classList.remove('active');
       timerDisplay.textContent = '--:--';
       timerDisplay.classList.remove('warning', 'danger');
+      resetAll();
     });
 
     // ===== INIT =====
