@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Checklist · IB Computer Science</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0b2a4a;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #f0f6fc;
+      border-radius: 32px;
+      padding: 2.5rem 3rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    /* ===== HEADER ===== */
+    .page-header {
+      text-align: left;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid #cbddee;
+    }
+    .page-header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .page-header h1 i { color: #1a5f87; }
+    .page-header .sub {
+      font-size: 1.05rem;
+      color: #3b5f7a;
+      margin-top: 0.2rem;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.3rem 1.4rem;
+      border-radius: 40px;
+      font-weight: 400;
+    }
+    .page-header .sub i { margin-right: 6px; color: #1f7b4d; }
+
+    /* ===== STUDENT NAME INPUT ===== */
+    .student-name-box {
+      background: white;
+      border-radius: 20px;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.04);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+    .student-name-box label {
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .student-name-box label i { color: #1a5f87; }
+    .student-name-box input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.5rem 1.2rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 0.95rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .student-name-box input:focus { border-color: #1f6390; }
+    .student-name-box .save-status {
+      font-size: 0.8rem;
+      color: #1f7b4d;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .student-name-box .save-status.show { opacity: 1; }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-section {
+      background: white;
+      border-radius: 20px;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.04);
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .progress-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-header h3 i { color: #1a5f87; }
+    .progress-header .percent {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a5f87;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: #e5edf5;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, #1a5f87, #2d7d46);
+      border-radius: 20px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* ===== CHECKLIST SECTIONS ===== */
+    .section {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.8rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+      border-left: 6px solid #1a5f87;
+    }
+    .section.c-a { border-left-color: #2d7d46; }
+    .section.c-b { border-left-color: #1a5f87; }
+    .section.c-c { border-left-color: #a13232; }
+    .section.c-d { border-left-color: #6b21a5; }
+    .section.c-e { border-left-color: #b45309; }
+    .section.c-video { border-left-color: #fdbb2d; }
+    .section.c-final { border-left-color: #0b2a4a; }
+
+    .section h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .section h2 .badge {
+      font-size: 0.65rem;
+      background: #dceaf7;
+      color: #13416b;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section h2 .max-marks {
+      font-size: 0.8rem;
+      color: #6b7f8f;
+      background: #edf2f7;
+      padding: 0.15rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 500;
+      margin-left: auto;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f0f4f9;
+      transition: background 0.15s;
+    }
+    .checklist-item:last-of-type { border-bottom: none; }
+    .checklist-item:hover { background: #f8fbfe; border-radius: 8px; }
+    .checklist-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: #1a5f87;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .checklist-item label {
+      cursor: pointer;
+      font-size: 0.92rem;
+      color: #334155;
+      flex: 1;
+      line-height: 1.5;
+    }
+    .checklist-item input[type="checkbox"]:checked + label {
+      color: #6b7f8f;
+      text-decoration: line-through;
+      text-decoration-color: #a0b4c4;
+    }
+
+    /* Mark input row */
+    .mark-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 2px solid #e5edf5;
+      flex-wrap: wrap;
+    }
+    .mark-row label {
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.9rem;
+    }
+    .mark-row input[type="number"] {
+      width: 70px;
+      padding: 0.4rem 0.6rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+      font-family: inherit;
+      color: #1a5f87;
+    }
+    .mark-row input[type="number"]:focus { border-color: #1f6390; }
+    .mark-row .max-label {
+      font-size: 0.85rem;
+      color: #6b7f8f;
+      font-weight: 500;
+    }
+
+    /* ===== FINAL TOTAL ===== */
+    .final-total-box {
+      background: #0b2a4a;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      margin-top: 2rem;
+      color: #e6edf5;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .final-total-box h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+    }
+    .final-total-box h2 i { color: #fdbb2d; }
+    .final-total-box .total-display {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .final-total-box .total-display .score {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #fdbb2d;
+      line-height: 1;
+    }
+    .final-total-box .total-display .out-of {
+      font-size: 1.2rem;
+      color: #a5b8cc;
+      font-weight: 500;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.8rem;
+      justify-content: center;
+    }
+    .btn {
+      background: #1a5f87;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+      border: 1px solid #134f75;
+      box-shadow: 0 4px 10px rgba(26, 95, 135, 0.2);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn i { color: #a5d0ed; }
+    .btn:hover {
+      background: #134f75;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(26, 95, 135, 0.3);
+    }
+    .btn.btn-yellow {
+      background: #fdbb2d;
+      color: #0b2a4a;
+      border-color: #e6a800;
+      box-shadow: 0 4px 10px rgba(253, 187, 45, 0.3);
+    }
+    .btn.btn-yellow i { color: #7a5900; }
+    .btn.btn-yellow:hover {
+      background: #fcd15a;
+      box-shadow: 0 6px 16px rgba(253, 187, 45, 0.45);
+    }
+    .btn.btn-outline {
+      background: transparent;
+      color: #1a5f87;
+      border: 2px solid #1a5f87;
+      box-shadow: none;
+    }
+    .btn.btn-outline i { color: #1a5f87; }
+    .btn.btn-outline:hover {
+      background: #1a5f87;
+      color: white;
+    }
+    .btn.btn-outline:hover i { color: #a5d0ed; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 680px) {
+      body { padding: 0.5rem; }
+      .container { padding: 1.2rem; border-radius: 20px; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .page-header h1 { font-size: 1.8rem; }
+      .section { padding: 1.2rem; }
+      .section h2 { font-size: 1.1rem; }
+      .section h2 .max-marks { margin-left: 0; }
+      .final-total-box { flex-direction: column; text-align: center; }
+      .final-total-box .total-display { justify-content: center; }
+      .mark-row { justify-content: center; }
+      .student-name-box { flex-direction: column; align-items: stretch; }
+      .btn-row { flex-direction: column; }
+      .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-microchip"></i> IB CompSci</span>
+    <a href="ia-success-hub.html"><i class="fas fa-arrow-left"></i> Back to IA Hub</a>
+    <a href="year11.html"><i class="fas fa-arrow-left"></i> Year 11</a>
+    <a href="year12.html"><i class="fas fa-arrow-left"></i> Year 12</a>
+  </nav>
+
+  <!-- ===== HEADER ===== -->
+  <div class="page-header">
+    <h1><i class="fas fa-clipboard-check"></i> IA Checklist</h1>
+    <div class="sub"><i class="fas fa-user-check"></i> Track your progress and self-assess your work</div>
+  </div>
+
+  <!-- ===== STUDENT NAME ===== -->
+  <div class="student-name-box">
+    <label for="studentName"><i class="fas fa-user-graduate"></i> Your Name:</label>
+    <input type="text" id="studentName" placeholder="Enter your full name" autocomplete="off">
+    <span class="save-status" id="saveStatus"><i class="fas fa-check-circle"></i> Saved</span>
+  </div>
+
+  <!-- ===== PROGRESS BAR ===== -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <h3><i class="fas fa-tasks"></i> Overall Progress</h3>
+      <span class="percent" id="progressPercent">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- ===== CRITERION A ===== -->
+  <div class="section c-a" data-criterion="A" data-max="4">
+    <h2>
+      <i class="fas fa-clipboard-list"></i> Criterion A: Problem Specification
+      <span class="badge">4 marks</span>
+      <span class="max-marks">Max: 4</span>
+    </h2>
+    <div class="checklist-item">
+      <input type="checkbox" id="a1" data-criterion="A" data-item="a1">
+      <label for="a1">Have I identified a specific user or client?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="a2" data-criterion="A" data-item="a2">
+      <label for="a2">Have I clearly described the problem they face, not just the solution I want to build?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="a3" data-criterion="A" data-item="a3">
+      <label for="a3">Have I explained why the current system (if any) is inadequate?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="a4" data-criterion="A" data-item="a4">
+      <label for="a4">Have I stated what kind of solution I will build (e.g., OOP app, web app, database)?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="a5" data-criterion="A" data-item="a5">
+      <label for="a5">Have I justified why I chose this platform/language for this specific problem?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="a6" data-criterion="A" data-item="a6">
+      <label for="a6">Have I written at least 8-10 success criteria?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="a7" data-criterion="A" data-item="a7">
+      <label for="a7">Are all my criteria specific, measurable, and testable?</label>
+    </div>
+    <div class="mark-row">
+      <label for="markA">Self-Assessed Mark:</label>
+      <input type="number" id="markA" data-criterion="A" min="0" max="4" step="1" placeholder="0">
+      <span class="max-label">/ 4</span>
+    </div>
+  </div>
+
+  <!-- ===== CRITERION B ===== -->
+  <div class="section c-b" data-criterion="B" data-max="4">
+    <h2>
+      <i class="fas fa-project-diagram"></i> Criterion B: Planning
+      <span class="badge">4 marks</span>
+      <span class="max-marks">Max: 4</span>
+    </h2>
+    <div class="checklist-item">
+      <input type="checkbox" id="b1" data-criterion="B" data-item="b1">
+      <label for="b1">Have I decomposed my main problem into smaller, manageable sub-problems?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="b2" data-criterion="B" data-item="b2">
+      <label for="b2">Have I created a timeline (like a GANTT chart) that covers all 5 stages?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="b3" data-criterion="B" data-item="b3">
+      <label for="b3">Is my plan a plan for the future, not a journal of the past?</label>
+    </div>
+    <div class="mark-row">
+      <label for="markB">Self-Assessed Mark:</label>
+      <input type="number" id="markB" data-criterion="B" min="0" max="4" step="1" placeholder="0">
+      <span class="max-label">/ 4</span>
+    </div>
+  </div>
+
+  <!-- ===== CRITERION C ===== -->
+  <div class="section c-c" data-criterion="C" data-max="6">
+    <h2>
+      <i class="fas fa-puzzle-piece"></i> Criterion C: System Overview
+      <span class="badge">6 marks</span>
+      <span class="max-marks">Max: 6</span>
+    </h2>
+    <div class="checklist-item">
+      <input type="checkbox" id="c1" data-criterion="C" data-item="c1">
+      <label for="c1">Have I created a system model diagram (e.g., UML Class Diagram, ERD)?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="c2" data-criterion="C" data-item="c2">
+      <label for="c2">Have I included annotated sketches of my proposed User Interface (UI)?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="c3" data-criterion="C" data-item="c3">
+      <label for="c3">Have I written the algorithms for my main components (using pseudocode or flowcharts)?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="c4" data-criterion="C" data-item="c4">
+      <label for="c4">Have I created a test plan table?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="c5" data-criterion="C" data-item="c5">
+      <label for="c5">Does my test plan include tests for all my Success Criteria (from A)?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="c6" data-criterion="C" data-item="c6">
+      <label for="c6">Does my test plan include valid, invalid, and extreme/boundary data?</label>
+    </div>
+    <div class="mark-row">
+      <label for="markC">Self-Assessed Mark:</label>
+      <input type="number" id="markC" data-criterion="C" min="0" max="6" step="1" placeholder="0">
+      <span class="max-label">/ 6</span>
+    </div>
+  </div>
+
+  <!-- ===== CRITERION D ===== -->
+  <div class="section c-d" data-criterion="D" data-max="12">
+    <h2>
+      <i class="fas fa-code"></i> Criterion D: Development
+      <span class="badge">12 marks</span>
+      <span class="max-marks">Max: 12</span>
+    </h2>
+    <div class="checklist-item">
+      <input type="checkbox" id="d1" data-criterion="D" data-item="d1">
+      <label for="d1">Have I used code excerpts (not huge blocks) to show my techniques?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="d2" data-criterion="D" data-item="d2">
+      <label for="d2">Have I justified why I chose each technique (e.g., "I used a binary search for efficiency...")?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="d3" data-criterion="D" data-item="d3">
+      <label for="d3">Have I provided test evidence (e.g., screenshots or tables with "Observed Results")?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="d4" data-criterion="D" data-item="d4">
+      <label for="d4">Does my test evidence show what happens with invalid data?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="d5" data-criterion="D" data-item="d5">
+      <label for="d5">Have I acknowledged any AI (LLM) help I received, both in my code and in the documentation?</label>
+    </div>
+    <div class="mark-row">
+      <label for="markD">Self-Assessed Mark:</label>
+      <input type="number" id="markD" data-criterion="D" min="0" max="12" step="1" placeholder="0">
+      <span class="max-label">/ 12</span>
+    </div>
+  </div>
+
+  <!-- ===== CRITERION E ===== -->
+  <div class="section c-e" data-criterion="E" data-max="4">
+    <h2>
+      <i class="fas fa-file-alt"></i> Criterion E: Evaluation
+      <span class="badge">4 marks</span>
+      <span class="max-marks">Max: 4</span>
+    </h2>
+    <div class="checklist-item">
+      <input type="checkbox" id="e1" data-criterion="E" data-item="e1">
+      <label for="e1">Have I evaluated every single Success Criterion from Criterion A (e.g., in a table)?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="e2" data-criterion="E" data-item="e2">
+      <label for="e2">Have I used evidence from my testing (in D) to support my evaluation?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="e3" data-criterion="E" data-item="e3">
+      <label for="e3">Have I suggested specific and justified improvements (not vague ones)?</label>
+    </div>
+    <div class="mark-row">
+      <label for="markE">Self-Assessed Mark:</label>
+      <input type="number" id="markE" data-criterion="E" min="0" max="4" step="1" placeholder="0">
+      <span class="max-label">/ 4</span>
+    </div>
+  </div>
+
+  <!-- ===== FINAL VIDEO & SUBMISSION ===== -->
+  <div class="section c-video" data-criterion="Video" data-max="0">
+    <h2>
+      <i class="fas fa-video"></i> Final Video &amp; Submission
+      <span class="badge">Checklist</span>
+    </h2>
+    <div class="checklist-item">
+      <input type="checkbox" id="v1" data-criterion="Video" data-item="v1">
+      <label for="v1">Is my video under 5 minutes and in a common format (MP4)?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="v2" data-criterion="Video" data-item="v2">
+      <label for="v2">Does my video show all main features working?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="v3" data-criterion="Video" data-item="v3">
+      <label for="v3">Does my video show me testing invalid or extreme data?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="v4" data-criterion="Video" data-item="v4">
+      <label for="v4">Is my final documentation under the 2,000-word limit?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="v5" data-criterion="Video" data-item="v5">
+      <label for="v5">Have I stated the word count on the front page?</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="v6" data-criterion="Video" data-item="v6">
+      <label for="v6">Have I included my FULL source code in the separate appendix PDF?</label>
+    </div>
+  </div>
+
+  <!-- ===== FINAL TOTAL ===== -->
+  <div class="final-total-box">
+    <h2><i class="fas fa-star"></i> Final Self-Assessed Total</h2>
+    <div class="total-display">
+      <span class="score" id="finalScore">0</span>
+      <span class="out-of">/ 30</span>
+    </div>
+  </div>
+
+  <!-- ===== BUTTONS ===== -->
+  <div class="btn-row">
+    <button class="btn btn-outline" id="resetBtn"><i class="fas fa-redo"></i> Reset Checklist</button>
+    <button class="btn btn-yellow" id="printBtn"><i class="fas fa-print"></i> Print / Save as PDF</button>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    const STORAGE_PREFIX = 'ia_checklist_';
+    let currentStudent = '';
+
+    // ---- Get Student Name ----
+    function getStudentKey(suffix) {
+      return STORAGE_PREFIX + (currentStudent || 'anonymous') + '_' + suffix;
+    }
+
+    // ---- Load Data ----
+    function loadChecklist() {
+      // Load student name
+      const savedName = localStorage.getItem(STORAGE_PREFIX + 'student_name') || '';
+      document.getElementById('studentName').value = savedName;
+      currentStudent = savedName.trim().toLowerCase() || 'anonymous';
+
+      // Load checkboxes
+      document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+        const key = getStudentKey(cb.id);
+        const saved = localStorage.getItem(key);
+        if (saved === 'true') cb.checked = true;
+      });
+
+      // Load marks
+      document.querySelectorAll('.mark-row input[type="number"]').forEach(input => {
+        const key = getStudentKey(input.id);
+        const saved = localStorage.getItem(key);
+        if (saved !== null) input.value = saved;
+      });
+
+      updateProgress();
+      updateTotal();
+    }
+
+    // ---- Save Checkbox ----
+    function saveCheckbox(cb) {
+      const key = getStudentKey(cb.id);
+      localStorage.setItem(key, cb.checked ? 'true' : 'false');
+      updateProgress();
+      showSaved();
+    }
+
+    // ---- Save Mark ----
+    function saveMark(input) {
+      const key = getStudentKey(input.id);
+      localStorage.setItem(key, input.value);
+      updateTotal();
+      showSaved();
+    }
+
+    // ---- Update Progress Bar ----
+    function updateProgress() {
+      const allCheckboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+      const total = allCheckboxes.length;
+      let checked = 0;
+      allCheckboxes.forEach(cb => { if (cb.checked) checked++; });
+      const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
+      document.getElementById('progressBar').style.width = percent + '%';
+      document.getElementById('progressPercent').textContent = percent + '%';
+    }
+
+    // ---- Update Final Total ----
+    function updateTotal() {
+      let total = 0;
+      ['A', 'B', 'C', 'D', 'E'].forEach(criterion => {
+        const input = document.getElementById('mark' + criterion);
+        if (input && input.value) {
+          total += parseInt(input.value) || 0;
+        }
+      });
+      document.getElementById('finalScore').textContent = total;
+    }
+
+    // ---- Show Saved Indicator ----
+    let saveTimeout;
+    function showSaved() {
+      const el = document.getElementById('saveStatus');
+      el.classList.add('show');
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        el.classList.remove('show');
+      }, 1500);
+    }
+
+    // ---- Event Listeners ----
+    document.getElementById('studentName').addEventListener('input', function() {
+      const name = this.value.trim();
+      localStorage.setItem(STORAGE_PREFIX + 'student_name', name);
+      currentStudent = name.toLowerCase() || 'anonymous';
+      // Reload checklist for this student
+      loadChecklist();
+      showSaved();
+    });
+
+    document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', function() {
+        saveCheckbox(this);
+      });
+    });
+
+    document.querySelectorAll('.mark-row input[type="number"]').forEach(input => {
+      input.addEventListener('input', function() {
+        // Clamp value to max
+        const max = parseInt(this.getAttribute('max')) || 100;
+        let val = parseInt(this.value) || 0;
+        if (val > max) { val = max; this.value = val; }
+        if (val < 0) { val = 0; this.value = val; }
+        saveMark(this);
+      });
+    });
+
+    // ---- Reset Button ----
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      if (confirm('Are you sure you want to reset your entire checklist? This cannot be undone.')) {
+        // Clear all checkboxes
+        document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+          cb.checked = false;
+          const key = getStudentKey(cb.id);
+          localStorage.removeItem(key);
+        });
+        // Clear all marks
+        document.querySelectorAll('.mark-row input[type="number"]').forEach(input => {
+          input.value = '';
+          const key = getStudentKey(input.id);
+          localStorage.removeItem(key);
+        });
+        updateProgress();
+        updateTotal();
+      }
+    });
+
+    // ---- Print Button ----
+    document.getElementById('printBtn').addEventListener('click', function() {
+      window.print();
+    });
+
+    // ---- Initial Load ----
+    loadChecklist();
+
+  })();
+</script>
+
+</body>
+</html>
