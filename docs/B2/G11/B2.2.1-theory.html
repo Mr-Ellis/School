@@ -1,1 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2.2.1 - Static and Dynamic Data Structures (Theory)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        h4 { color: #0b2a4a; margin-top: 18px; margin-bottom: 6px; }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge.theory { background: #1a5f87; }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .code-block pre { margin: 0; white-space: pre; }
+        .comment { color: #6b8c9e; }
+        .keyword { color: #f7c948; }
+        .string { color: #a3d9a5; }
+        .function { color: #66b3ff; }
+        .error { color: #f87171; }
+
+        .code-output {
+            background: #0f1724;
+            color: #f7c948;
+            padding: 10px 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-top: 1px solid #2d3748;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+
+        .task-box {
+            background: #f7fafc;
+            border-left: 4px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .starter-box {
+            background: #ebf4ff;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .plenary-box {
+            background: #f0f7ee;
+            border-left: 5px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .scope-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: #0b2a4a;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: none !important;
+            transition: background 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+        .btn-link:hover { background: #1a3f64; color: #fff !important; border-bottom: none !important; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+        .principle-box {
+            background: #0b2a4a;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .principle-box .highlight { color: #fdbb2d; }
+
+        .analogy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 15px 0;
+        }
+        .analogy-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+        .analogy-card h4 { margin-top: 0; }
+        .analogy-card.static { border-top: 4px solid #b21f1f; }
+        .analogy-card.dynamic { border-top: 4px solid #2d8f2d; }
+
+        hr { border: 0; border-top: 2px solid #e2e8f0; margin: 30px 0; }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .btn-group { flex-direction: column; }
+            .btn-link { text-align: center; }
+            .analogy-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="#" onclick="goBack(); return false;">← Back to B2 Programming</a>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '../B2.html';
+            }
+        }
+    </script>
+
+    <h1>B2.2.1 – Static and Dynamic Data Structures <span class="badge theory">Theory</span></h1>
+
+    <!-- ==================== STARTER ==================== -->
+    <h2>🎯 Starter Activity</h2>
+    <div class="starter-box">
+        <p><strong>🅿️ The Parking Lot Analogy</strong></p>
+        <p>Think about the difference between a fixed-size parking lot and a valet parking service. What are the advantages and disadvantages of each?</p>
+        <div class="btn-group">
+            <a href="https://play.blooket.com/host/brawl?id=68b039cd9d570785d69cb829" target="_blank" class="btn-link">▶ Blooket Recap</a>
+        </div>
+    </div>
+
+    <!-- ==================== LESSON CONTENT ==================== -->
+    <h2>📖 Lesson Content</h2>
+
+    <h3>The Big Idea</h3>
+    <p>In computer science, a <strong>data structure</strong> is a way of organising data so it can be accessed and worked with efficiently. Data structures come in two primary types: <strong>static</strong> and <strong>dynamic</strong>. The key difference lies in how they handle <strong>memory allocation</strong> and <strong>resizing</strong>.</p>
+    <p>Choosing between static and dynamic data structures is like choosing the right tool—sometimes you need a fixed-size wrench, and sometimes an adjustable one.</p>
+
+    <h3>Key Concepts</h3>
+
+    <h4>1. The Parking Lot Analogy</h4>
+    <div class="analogy-grid">
+        <div class="analogy-card static">
+            <h4>🅿️ Static Data Structure</h4>
+            <ul style="margin-left: 18px;">
+                <li>Fixed number of parking spaces</li>
+                <li>Cannot add more spaces</li>
+                <li>If full, no more cars can park</li>
+                <li>Fast to find a specific car (direct access)</li>
+            </ul>
+        </div>
+        <div class="analogy-card dynamic">
+            <h4>🚗 Dynamic Data Structure</h4>
+            <ul style="margin-left: 18px;">
+                <li>No fixed number of spaces</li>
+                <li>Can add more spaces as needed</li>
+                <li>Never runs out of space</li>
+                <li>Slightly slower to find a specific car</li>
+            </ul>
+        </div>
+    </div>
+
+    <h4>2. Static Data Structures</h4>
+    <p>A <strong>static data structure</strong> has a fixed size that is determined at <strong>compile time</strong> and cannot be changed during program execution.</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment">// Java - Static array with fixed size</span>
+<span class="keyword">int</span>[] scores = <span class="keyword">new int</span>[<span class="string">5</span>];
+
+<span class="comment">// Index:  0   1   2   3   4</span>
+<span class="comment">// Value: 78  85  92  63  89</span>
+
+<span class="comment">// Cannot add a 6th score!</span>
+</code></pre>
+    </div>
+
+    <table>
+        <thead>
+            <tr><th>Aspect</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Allocation Time</strong></td><td>Compile-time (before the program runs)</td></tr>
+            <tr><td><strong>Memory Location</strong></td><td>Stack (fast, but limited)</td></tr>
+            <tr><td><strong>Size</strong></td><td>Fixed; cannot be changed</td></tr>
+            <tr><td><strong>Flexibility</strong></td><td>None</td></tr>
+        </tbody>
+    </table>
+
+    <div class="principle-box">
+        <p><span class="highlight">🔑 Key Principle:</span> Static data structures are allocated on the <strong>stack</strong>. They are fast because memory is <strong>contiguous</strong> and access is direct (O(1)).</p>
+    </div>
+
+    <h4>3. Dynamic Data Structures</h4>
+    <p>A <strong>dynamic data structure</strong> can grow or shrink as needed during program execution, allocating memory at <strong>runtime</strong>.</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Python - Dynamic linked list</span>
+<span class="comment"># Node 1 → Node 2 → Node 3 → NULL</span>
+<span class="comment">#   78       85       92</span>
+
+<span class="comment"># Can grow by adding new nodes</span>
+<span class="comment"># Can shrink by removing nodes</span>
+<span class="comment"># Slower access (must traverse from start)</span>
+</code></pre>
+    </div>
+
+    <table>
+        <thead>
+            <tr><th>Aspect</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Allocation Time</strong></td><td>Runtime (while the program is running)</td></tr>
+            <tr><td><strong>Memory Location</strong></td><td>Heap (flexible, but slower)</td></tr>
+            <tr><td><strong>Size</strong></td><td>Flexible; can grow or shrink</td></tr>
+            <tr><td><strong>Flexibility</strong></td><td>High</td></tr>
+        </tbody>
+    </table>
+
+    <div class="principle-box">
+        <p><span class="highlight">🔑 Key Principle:</span> Dynamic data structures are allocated on the <strong>heap</strong>. They are flexible because memory is allocated and deallocated as needed, but access may require traversal (O(n)).</p>
+    </div>
+
+    <h3>Comparison Summary</h3>
+    <table>
+        <thead>
+            <tr><th>Feature</th><th>Static</th><th>Dynamic</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Size</strong></td><td>Fixed</td><td>Flexible</td></tr>
+            <tr><td><strong>Memory Allocation</strong></td><td>Compile-time</td><td>Runtime</td></tr>
+            <tr><td><strong>Memory Location</strong></td><td>Stack</td><td>Heap</td></tr>
+            <tr><td><strong>Resizing</strong></td><td>Not possible</td><td>Possible</td></tr>
+            <tr><td><strong>Access Speed</strong></td><td>Fast (O(1))</td><td>Slower (O(n))</td></tr>
+            <tr><td><strong>Memory Efficiency</strong></td><td>Efficient if size known</td><td>Efficient for varying sizes</td></tr>
+            <tr><td><strong>Flexibility</strong></td><td>Low</td><td>High</td></tr>
+            <tr><td><strong>Overflow Risk</strong></td><td>Yes</td><td>No (within heap limits)</td></tr>
+            <tr><td><strong>Memory Overhead</strong></td><td>None</td><td>Pointers/references</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Common Structures</h3>
+    <table>
+        <thead>
+            <tr><th>Static Structures</th><th>Dynamic Structures</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Array</td><td>Linked List</td></tr>
+            <tr><td>Static Stack</td><td>Dynamic Stack</td></tr>
+            <tr><td>Static Queue</td><td>Dynamic Queue</td></tr>
+            <tr><td>—</td><td>Tree</td></tr>
+            <tr><td>—</td><td>Graph</td></tr>
+            <tr><td>—</td><td>ArrayList (Python list)</td></tr>
+        </tbody>
+    </table>
+
+    <h3>When to Use Static vs. Dynamic</h3>
+
+    <div class="scope-box">
+        <h4>✅ Use Static When...</h4>
+        <ul style="margin-left: 20px;">
+            <li><strong>Known data size</strong> – You know exactly how much data will be stored</li>
+            <li><strong>Performance is critical</strong> – Static structures are faster</li>
+            <li><strong>Memory is limited</strong> – No overhead for pointers</li>
+            <li><strong>Data size is constant</strong> – The amount of data will not change</li>
+            <li><strong>Examples:</strong> Days of the week, months of the year, fixed arrays</li>
+        </ul>
+    </div>
+
+    <div class="scope-box">
+        <h4>✅ Use Dynamic When...</h4>
+        <ul style="margin-left: 20px;">
+            <li><strong>Unknown data size</strong> – You don't know how much data will be stored</li>
+            <li><strong>Data changes frequently</strong> – Elements are added and removed often</li>
+            <li><strong>Memory efficiency</strong> – Only use as much memory as needed</li>
+            <li><strong>Flexibility is important</strong> – Need to adapt to changing requirements</li>
+            <li><strong>Examples:</strong> User input, inventory, social media feeds</li>
+        </ul>
+    </div>
+
+    <h3>Practical Worked Examples</h3>
+
+    <div class="scope-box">
+        <h4>📊 Example 1: Storing Student Information</h4>
+        <p><strong>Problem:</strong> A school needs to store information for 500 students. The number of students is known and changes rarely.</p>
+        <table>
+            <thead><tr><th>Analysis</th><th>Recommendation</th></tr></thead>
+            <tbody>
+                <tr><td>Data Size</td><td>Known (500 students)</td></tr>
+                <tr><td>Changes</td><td>Rarely</td></tr>
+                <tr><td>Performance</td><td>Important (fast access needed)</td></tr>
+                <tr><td>Memory</td><td>Efficient memory use</td></tr>
+            </tbody>
+        </table>
+        <p><strong>Recommended: Static (Array)</strong> – The number is fixed, and fast access is important.</p>
+    </div>
+
+    <div class="scope-box">
+        <h4>📦 Example 2: Managing an Online Store Inventory</h4>
+        <p><strong>Problem:</strong> An online store needs to track inventory. Products are added and removed frequently.</p>
+        <table>
+            <thead><tr><th>Analysis</th><th>Recommendation</th></tr></thead>
+            <tbody>
+                <tr><td>Data Size</td><td>Unknown; changes frequently</td></tr>
+                <tr><td>Changes</td><td>Frequent additions and removals</td></tr>
+                <tr><td>Performance</td><td>Moderate</td></tr>
+                <tr><td>Memory</td><td>Efficiency is important</td></tr>
+            </tbody>
+        </table>
+        <p><strong>Recommended: Dynamic (Linked List)</strong> – Inventory changes frequently; flexibility is important.</p>
+    </div>
+
+    <div class="scope-box">
+        <h4>📱 Example 3: Tracking Social Media User Data</h4>
+        <p><strong>Problem:</strong> A social media platform needs to store user profiles for millions of users. New users join every day.</p>
+        <table>
+            <thead><tr><th>Analysis</th><th>Recommendation</th></tr></thead>
+            <tbody>
+                <tr><td>Data Size</td><td>Unknown; grows every day</td></tr>
+                <tr><td>Changes</td><td>Constant additions</td></tr>
+                <tr><td>Performance</td><td>Moderate</td></tr>
+                <tr><td>Memory</td><td>Important to use only what's needed</td></tr>
+            </tbody>
+        </table>
+        <p><strong>Recommended: Dynamic (Linked List / Tree)</strong> – User base grows constantly; need flexible storage.</p>
+    </div>
+
+    <div class="scope-box">
+        <h4>📅 Example 4: Days of the Week</h4>
+        <p><strong>Problem:</strong> A program needs to store the days of the week.</p>
+        <table>
+            <thead><tr><th>Analysis</th><th>Recommendation</th></tr></thead>
+            <tbody>
+                <tr><td>Data Size</td><td>Fixed (7 days)</td></tr>
+                <tr><td>Changes</td><td>Never</td></tr>
+                <tr><td>Performance</td><td>Important</td></tr>
+                <tr><td>Memory</td><td>Efficient</td></tr>
+            </tbody>
+        </table>
+        <p><strong>Recommended: Static (Array)</strong> – Fixed size; fast access; no need for flexibility.</p>
+    </div>
+
+    <h3>Key Terms</h3>
+    <table>
+        <thead>
+            <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Static data structure</strong></td><td>A data structure with a fixed size that cannot be changed at runtime</td></tr>
+            <tr><td><strong>Dynamic data structure</strong></td><td>A data structure that can grow or shrink as needed during runtime</td></tr>
+            <tr><td><strong>Memory allocation</strong></td><td>The process of reserving memory for data storage</td></tr>
+            <tr><td><strong>Compile-time allocation</strong></td><td>Memory is allocated when the program is compiled (before execution)</td></tr>
+            <tr><td><strong>Runtime allocation</strong></td><td>Memory is allocated while the program is running</td></tr>
+            <tr><td><strong>Stack</strong></td><td>A region of memory used for static allocation (fast, fixed size)</td></tr>
+            <tr><td><strong>Heap</strong></td><td>A region of memory used for dynamic allocation (flexible, but slower)</td></tr>
+            <tr><td><strong>Resizing</strong></td><td>The ability to change the size of a data structure</td></tr>
+            <tr><td><strong>Contiguous memory</strong></td><td>Memory locations that are adjacent to each other</td></tr>
+            <tr><td><strong>Non-contiguous memory</strong></td><td>Memory locations that are not adjacent to each other</td></tr>
+        </tbody>
+    </table>
+
+    <div class="info-box">
+        <p><strong>⚠️ Common Errors:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li><strong>Overflow (Static):</strong> Trying to store more data than the allocated size.</li>
+            <li><strong>Underflow (Dynamic):</strong> A dynamic structure unexpectedly empty or reduced below expected size.</li>
+            <li><strong>Memory fragmentation:</strong> Dynamic structures can leave gaps in memory over time.</li>
+            <li><strong>Pointer overhead:</strong> Dynamic structures require extra memory for pointers/references.</li>
+        </ul>
+    </div>
+
+    <!-- ==================== TASK 1 ==================== -->
+    <h2>📝 Task 1: Understanding</h2>
+    <div class="task-box">
+        <div class="task-title">📖 Read & Understand</div>
+        <div class="task-desc">Read through the detailed explanations of static and dynamic data structures on the Computer Science Wiki and in the eBook.</div>
+        <div class="btn-group">
+            <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.2.1-compare-static-and-dynamic-data-structures" target="_blank" class="btn-link">📄 Static vs Dynamic Wiki</a>
+            <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.2.1.pdf" target="_blank" class="btn-link">📄 B2.2.1 eBook (Reference)</a>
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vTw8pN5mWeiL8CdXIArzCBXc_gI7PCURTVbXA_csQXeWNHl_jPcH0i6TLwvwGNYp0SN6ZBHtPfnTCHn/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" class="btn-link">📄 Lesson Presentation (Slides)</a>
+        </div>
+    </div>
+
+    <!-- ==================== TASK 2 ==================== -->
+    <h2>🤖 Task 2: Teach the AI</h2>
+    <div class="task-box">
+        <div class="task-title">🧠 RevisionDojo "Teach the AI"</div>
+        <div class="task-desc">Explain what you've learned about static and dynamic data structures to the AI. This will help consolidate your understanding.</div>
+        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank" class="btn-link">🤖 Teach the AI</a>
+    </div>
+
+    <!-- ==================== TASK 3 ==================== -->
+    <h2>💻 Task 3: Assessment</h2>
+    <div class="task-box">
+        <div class="task-title">📊 Quiz & Scenario Analysis</div>
+        <div class="task-desc">Complete the eBook quiz and work through the scenario cards to test your understanding.</div>
+
+        <p style="margin-top: 10px;"><strong>Sample Quiz Questions:</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>What is the main difference between static and dynamic data structures?</li>
+            <li>Where is memory allocated for static data structures?</li>
+            <li>Why is access faster in static data structures?</li>
+            <li>Give an example of a dynamic data structure.</li>
+            <li>When would you use a static data structure over a dynamic one?</li>
+        </ul>
+
+        <div class="btn-group">
+            <a href="https://quizlet.com/pt/1015871069/b-221-static-and-dynamic-data-structures-flash-cards/?i=f0i3o&x=1qqt" target="_blank" class="btn-link">🃏 Quizlet Flashcards</a>
+            <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.2.1.pdf" target="_blank" class="btn-link">📄 eBook Quiz</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Important:</strong> Save your answers and notes. You will use these in the Lab session.</p>
+    </div>
+
+    <!-- ==================== PLENARY ==================== -->
+    <h2>🎯 Plenary</h2>
+    <div class="plenary-box">
+        <p><strong>🎮 Plenary Activity</strong></p>
+        <p>Test your understanding of static and dynamic data structures with this final Blooket quiz.</p>
+        <a href="https://play.blooket.com/host/brawl?id=68b039cd9d570785d69cb829" target="_blank" class="btn-link">▶ Blooket</a>
+    </div>
+
+    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"Choosing between static and dynamic data structures is about balancing flexibility, performance, and memory efficiency. Static structures are fast and predictable; dynamic structures are flexible and adaptable. The right choice depends on your data and your requirements."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="footer-meta">
+        B2.2.1 – Static and Dynamic Data Structures (Theory) • IB Computer Science
+    </div>
+
+</div>
+
+</body>
+</html>
 
