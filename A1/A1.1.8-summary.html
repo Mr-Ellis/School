@@ -1,329 +1,744 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A1.1.8 – Data Compression</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f4fb;
-            color: #1e293b;
-            padding: 24px;
-            line-height: 1.7;
-        }
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 40px 50px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #b21f1f;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
-        h1 {
-            font-size: 2.2rem;
-            color: #0b2a4a;
-            border-bottom: 4px solid #fdbb2d;
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-        }
-        h2 {
-            font-size: 1.5rem;
-            color: #0b2a4a;
-            margin-top: 35px;
-            margin-bottom: 15px;
-            border-left: 5px solid #b21f1f;
-            padding-left: 15px;
-        }
-        h3 {
-            font-size: 1.15rem;
-            color: #0b2a4a;
-            margin-top: 25px;
-            margin-bottom: 10px;
-        }
-        .badge {
-            display: inline-block;
-            background: #b21f1f;
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.8rem;
-            padding: 2px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-        }
-        .command-term {
-            background: #ebf4ff;
-            border-left: 5px solid #0b2a4a;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-style: italic;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95rem;
-        }
-        th {
-            background: #0b2a4a;
-            color: #fff;
-            font-weight: 600;
-            padding: 12px 15px;
-            text-align: left;
-        }
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #e2e8f0;
-            vertical-align: top;
-        }
-        tr:nth-child(even) { background: #f7fafc; }
-        a {
-            color: #b21f1f;
-            text-decoration: none;
-            border-bottom: 1px dotted #b21f1f;
-        }
-        a:hover {
-            color: #0b2a4a;
-            border-bottom: 2px solid #0b2a4a;
-        }
-        hr {
-            border: 0;
-            border-top: 2px solid #e2e8f0;
-            margin: 30px 0;
-        }
-        .footer-meta {
-            margin-top: 30px;
-            font-size: 0.85rem;
-            color: #4a5568;
-            text-align: center;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 20px;
-        }
-        .lesson-nav {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .lesson-nav a { border-bottom: none; font-weight: 500; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1.1.8 – Data Compression</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #f0f4fb;
+    color: #1e293b;
+    padding: 2rem 1.5rem;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .container { max-width: 1000px; margin: 0 auto; }
 
-        .info-box {
-            background: #f1f6fc;
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin: 15px 0;
-            border-left: 5px solid #1a5f87;
-        }
-        .info-box strong { color: #0b2a4a; }
+  /* ---- NAV ---- */
+  .nav {
+    background: #0b2a4a;
+    padding: 0.9rem 2rem;
+    border-radius: 60px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.6rem;
+    margin-bottom: 2.4rem;
+    box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+  }
+  .nav a {
+    color: #e6edf5;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+  }
+  .nav a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+  .nav .brand { margin-right: auto; font-weight: 600; color: #fff; font-size: 1.05rem; }
+  .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+  .nav .badge-nav {
+    background: #1f4b6e;
+    color: #b6d0e8;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.9rem;
+    border-radius: 30px;
+    font-weight: 600;
+  }
 
-        .example-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-        }
-        .example-box .label {
-            font-family: Arial, sans-serif;
-            font-weight: 700;
-            color: #0b2a4a;
-            font-size: 0.85rem;
-            display: block;
-            margin-bottom: 5px;
-        }
+  /* ---- HEADER ---- */
+  h1 {
+    font-size: 2.4rem;
+    color: #0b2a4a;
+    border-bottom: 4px solid #fdbb2d;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  h1 i { color: #2a6f97; font-size: 2rem; }
+  .subtitle {
+    color: #475569;
+    font-size: 0.95rem;
+    background: #e9eff8;
+    display: inline-block;
+    padding: 0.4rem 1.4rem;
+    border-radius: 40px;
+    margin-bottom: 2rem;
+    border-left: 4px solid #2a6f97;
+  }
 
-        code {
-            background: #eef2f7;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-        }
+  /* ---- CARDS ---- */
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 1.8rem 2rem;
+    margin-bottom: 1.6rem;
+    box-shadow: 0 6px 18px rgba(0,20,40,0.04);
+    border: 1px solid #e5edf5;
+  }
+  .card h2 {
+    font-size: 1.4rem;
+    color: #0b2a4a;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 5px solid #b21f1f;
+    padding-left: 14px;
+  }
+  .card h2 i { color: #1f6390; font-size: 1.2rem; }
+  .card h3 {
+    font-size: 1.05rem;
+    color: #0b2a4a;
+    margin: 1.2rem 0 0.5rem;
+  }
 
-        @media (max-width: 640px) {
-            .container { padding: 20px; }
-            h1 { font-size: 1.8rem; }
-            table { font-size: 0.85rem; }
-        }
-    </style>
+  /* ---- BADGE ---- */
+  .badge {
+    display: inline-block;
+    background: #b21f1f;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.7rem;
+    padding: 2px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ---- COMMAND TERM ---- */
+  .command-term {
+    background: #ebf4ff;
+    border-left: 5px solid #0b2a4a;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-style: italic;
+  }
+
+  /* ---- TABLES ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9rem;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  th {
+    background: #0b2a4a;
+    color: #fff;
+    font-weight: 600;
+    padding: 11px 14px;
+    text-align: left;
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  tr:nth-child(even) { background: #f7fafc; }
+  tr:last-child td { border-bottom: none; }
+
+  /* ---- INFO / EXAMPLE BOXES ---- */
+  .info-box {
+    background: #f1f6fc;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    border-left: 5px solid #1a5f87;
+  }
+  .info-box strong { color: #0b2a4a; }
+
+  .example-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+  }
+  .example-box .label {
+    font-family: inherit;
+    font-weight: 700;
+    color: #0b2a4a;
+    font-size: 0.8rem;
+    display: block;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  code {
+    background: #eef2f7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+  }
+
+  /* ---- ACCORDION ---- */
+  .accordion {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .accordion-header {
+    background: #f1f6fc;
+    padding: 14px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: #0b2a4a;
+    font-size: 0.95rem;
+    transition: 0.2s;
+    user-select: none;
+  }
+  .accordion-header:hover { background: #e3eef8; }
+  .accordion-header .chevron { transition: transform 0.3s; color: #1f6390; }
+  .accordion.open .chevron { transform: rotate(180deg); }
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    padding: 0 20px;
+    background: #fff;
+  }
+  .accordion.open .accordion-body {
+    max-height: 600px;
+    padding: 16px 20px;
+  }
+
+  /* ---- INTERACTIVE RLE TOOL ---- */
+  .tool-box {
+    background: #0b2a4a;
+    border-radius: 16px;
+    padding: 1.6rem 1.8rem;
+    color: #e6edf5;
+    margin: 16px 0;
+  }
+  .tool-box h3 { color: #fff; margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+  .tool-box label { font-size: 0.8rem; color: #b6d0e8; display: block; margin-bottom: 4px; font-weight: 600; }
+  .tool-box input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 2px solid #1f4b6e;
+    border-radius: 10px;
+    background: #0f3557;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .tool-box input:focus { border-color: #7bb3ff; }
+  .tool-box input::placeholder { color: #5d7f9a; }
+  .tool-box .btn-run {
+    background: #fdbb2d;
+    color: #0b2a4a;
+    border: none;
+    padding: 0.55rem 1.6rem;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .tool-box .btn-run:hover { background: #ffd45e; transform: translateY(-1px); }
+  .tool-box .output {
+    margin-top: 14px;
+    background: #0f3557;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    min-height: 48px;
+    word-break: break-all;
+  }
+  .tool-box .output .hl { color: #fdbb2d; font-weight: 700; }
+  .tool-box .meta { font-size: 0.75rem; color: #7ba8c9; margin-top: 8px; }
+
+  /* ---- QUIZ ---- */
+  .quiz-box {
+    background: #f8fafc;
+    border: 2px solid #b21f1f;
+    border-radius: 16px;
+    padding: 1.5rem 1.8rem;
+    margin: 16px 0;
+  }
+  .quiz-box h3 { color: #b21f1f; margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+  .quiz-q {
+    margin-bottom: 1.2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .quiz-q:last-of-type { border-bottom: none; }
+  .quiz-q p { font-weight: 600; color: #0b2a4a; font-size: 0.92rem; margin-bottom: 8px; }
+  .quiz-opt {
+    display: block;
+    background: #fff;
+    border: 1.5px solid #dce4ed;
+    border-radius: 10px;
+    padding: 9px 14px;
+    margin: 6px 0;
+    cursor: pointer;
+    font-size: 0.88rem;
+    transition: 0.15s;
+  }
+  .quiz-opt:hover { border-color: #1a5f87; background: #f1f6fc; }
+  .quiz-opt.correct { background: #e6f7e6; border-color: #2d7d46; color: #1a6b33; font-weight: 600; }
+  .quiz-opt.wrong { background: #fdeaea; border-color: #b13a3a; color: #a13232; }
+  .quiz-opt.disabled { pointer-events: none; opacity: 0.7; }
+  .quiz-feedback {
+    font-size: 0.82rem;
+    margin-top: 6px;
+    min-height: 20px;
+    font-weight: 500;
+  }
+  .quiz-feedback.ok { color: #2d7d46; }
+  .quiz-feedback.no { color: #b13a3a; }
+  .quiz-score {
+    text-align: center;
+    font-weight: 700;
+    color: #0b2a4a;
+    font-size: 1rem;
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  /* ---- RESOURCE PILLS ---- */
+  .resource-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .resource-pills a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #ecf3fa;
+    color: #13416b;
+    padding: 0.45rem 1.1rem;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #dce4ed;
+    transition: 0.15s;
+  }
+  .resource-pills a:hover { background: #d6e4f2; border-color: #b6cfe5; transform: translateY(-1px); }
+  .resource-pills a i { color: #1a5f87; }
+
+  /* ---- NAV FOOTER ---- */
+  .lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1.4rem;
+    border-top: 2px solid #e2e8f0;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .lesson-nav a {
+    color: #b21f1f;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lesson-nav a:hover { color: #0b2a4a; }
+
+  .footer-meta {
+    margin-top: 1.6rem;
+    font-size: 0.8rem;
+    color: #4a5568;
+    text-align: center;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.2rem;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    h1 { font-size: 1.7rem; }
+    .card { padding: 1.2rem 1.3rem; }
+    table { font-size: 0.8rem; }
+    th, td { padding: 8px 10px; }
+    .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+    .nav .brand { margin-right: 0; }
+  }
+</style>
 </head>
 <body>
 
 <div class="container">
 
-    <a class="back-link" href="../index.html">← Back to A1 Unit</a>
+  <!-- NAV -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-microchip"></i> IB CompSci</span>
+    <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to A1 Unit</a>
+    <a href="A1.1.7-summary.html"><i class="fas fa-chevron-left"></i> A1.1.7</a>
+    <a href="A1.1.9-summary.html">A1.1.9 <i class="fas fa-chevron-right"></i></a>
+    <span class="badge-nav"><i class="fas fa-graduation-cap"></i> Core · SL & HL</span>
+  </nav>
 
-    <h1>A1.1.8 – Data Compression</h1>
+  <!-- HEADER -->
+  <h1><i class="fas fa-file-zipper"></i> A1.1.8 – Data Compression</h1>
+  <div class="subtitle"><i class="fas fa-bullseye"></i> Describe the concept of compression</div>
 
-    <h2>📌 Learning Objective</h2>
+  <!-- ============ LEARNING OBJECTIVE ============ -->
+  <div class="card">
+    <h2><i class="fas fa-bullseye"></i> Learning Objective</h2>
     <p>By the end of this lesson, you will be able to:</p>
-    <ul>
-        <li><strong>Describe</strong> the concept of compression and why it is used (storage space, transmission time, bandwidth)</li>
-        <li><strong>Describe</strong> the difference between lossy and lossless compression methods, including when each is appropriate</li>
-        <li><strong>Describe</strong> how Run-Length Encoding (RLE) and transform coding work, giving for each the technology, a defining characteristic, and a typical use</li>
+    <ul style="margin: 10px 0 0 20px;">
+      <li><strong>Describe</strong> the concept of compression and why it is used (storage space, transmission time, bandwidth)</li>
+      <li><strong>Describe</strong> the difference between lossy and lossless compression methods, including when each is appropriate</li>
+      <li><strong>Describe</strong> how Run-Length Encoding (RLE) and transform coding work, giving for each the technology, a defining characteristic, and a typical use</li>
     </ul>
+  </div>
 
-    <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
+  <!-- ============ COMMAND TERM ============ -->
+  <div class="card">
+    <h2><i class="fas fa-crosshairs"></i> IB Command Term: <span class="badge">Describe</span></h2>
     <div class="command-term">
-        <strong>Describe</strong> – <em>"Give a detailed account."</em><br><br>
-        Simply naming a compression method (e.g., "JPEG") is not describing it. This lesson builds the skill of providing a detailed account of how compression works, what it achieves, and the trade-offs involved.
+      <strong>Describe</strong> – <em>"Give a detailed account."</em><br><br>
+      Simply naming a compression method (e.g., "JPEG") is not describing it. This lesson builds the skill of providing a detailed account of how compression works, what it achieves, and the trade-offs involved.
     </div>
+  </div>
 
-    <!-- ===== KEY TERMS ===== -->
-    <h2>🔑 Key Terms</h2>
+  <!-- ============ KEY TERMS ============ -->
+  <div class="card">
+    <h2><i class="fas fa-key"></i> Key Terms</h2>
     <table>
-        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
-        <tbody>
-            <tr><td><strong>Compression</strong></td><td>The process of reducing the size of data to save storage space or transmission bandwidth.</td></tr>
-            <tr><td><strong>Lossless compression</strong></td><td>A compression method where all original data is retained, allowing the exact reconstruction of the original file without any loss of quality.</td></tr>
-            <tr><td><strong>Lossy compression</strong></td><td>A compression method where some original data is permanently removed, leading to a smaller file size but a loss of quality.</td></tr>
-            <tr><td><strong>Run-length encoding (RLE)</strong></td><td>A lossless compression technique that replaces sequences of identical data values with a count and the single value.</td></tr>
-            <tr><td><strong>Transform coding</strong></td><td>A lossy compression technique that converts data into a different domain (e.g., frequency domain) to remove less important information.</td></tr>
-            <tr><td><strong>Redundancy</strong></td><td>Data that is repeated or unnecessary; compression works by removing this.</td></tr>
-        </tbody>
+      <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Compression</strong></td><td>The process of reducing the size of data to save storage space or transmission bandwidth.</td></tr>
+        <tr><td><strong>Lossless compression</strong></td><td>A compression method where all original data is retained, allowing the exact reconstruction of the original file without any loss of quality.</td></tr>
+        <tr><td><strong>Lossy compression</strong></td><td>A compression method where some original data is permanently removed, leading to a smaller file size but a loss of quality.</td></tr>
+        <tr><td><strong>Run-length encoding (RLE)</strong></td><td>A lossless compression technique that replaces sequences of identical data values with a count and the single value.</td></tr>
+        <tr><td><strong>Transform coding</strong></td><td>A lossy compression technique that converts data into a different domain (e.g., frequency domain) to remove less important information.</td></tr>
+        <tr><td><strong>Redundancy</strong></td><td>Data that is repeated or unnecessary; compression works by removing this.</td></tr>
+      </tbody>
     </table>
+  </div>
 
-    <!-- ===== WHY COMPRESSION ===== -->
-    <h2>💡 Why Compression?</h2>
+  <!-- ============ WHY COMPRESSION ============ -->
+  <div class="card">
+    <h2><i class="fas fa-lightbulb"></i> Why Compression?</h2>
     <p>Compression is a fundamental technique in computer science. It works by removing redundancy, either reversibly or irreversibly, depending on the method used.</p>
     <div class="info-box">
-        <strong>The goal is to reduce:</strong>
-        <ul style="margin-top: 8px;">
-            <li><strong>File size</strong> (e.g., MB to KB) — saves storage space</li>
-            <li><strong>Bandwidth usage</strong> during transmission — faster downloads and streaming</li>
-            <li><strong>Storage requirements</strong> — more files fit on a disk</li>
-        </ul>
+      <strong>The goal is to reduce:</strong>
+      <ul style="margin-top: 8px; margin-left: 18px;">
+        <li><strong>File size</strong> (e.g., MB to KB) — saves storage space</li>
+        <li><strong>Bandwidth usage</strong> during transmission — faster downloads and streaming</li>
+        <li><strong>Storage requirements</strong> — more files fit on a disk</li>
+      </ul>
     </div>
     <p>Compression is essential in areas such as multimedia (images, audio, video), data transmission, file storage, and archival.</p>
+  </div>
 
-    <!-- ===== LOSSLESS VS LOSSY ===== -->
-    <h2>📊 Lossless vs. Lossy Compression</h2>
+  <!-- ============ LOSSLESS VS LOSSY ============ -->
+  <div class="card">
+    <h2><i class="fas fa-scale-balanced"></i> Lossless vs. Lossy Compression</h2>
     <table>
-        <thead><tr><th>Feature</th><th>Lossless Compression</th><th>Lossy Compression</th></tr></thead>
-        <tbody>
-            <tr><td><strong>Reversible?</strong></td><td>Yes – exact original data can be reconstructed.</td><td>No – some data is permanently lost.</td></tr>
-            <tr><td><strong>Compression Ratio</strong></td><td>Lower (less reduction in size).</td><td>Higher (greater reduction in size).</td></tr>
-            <tr><td><strong>Data Integrity</strong></td><td>Perfect – no quality loss.</td><td>Approximate – quality is degraded.</td></tr>
-            <tr><td><strong>Typical Use</strong></td><td>Text files, executable programs, databases, archives.</td><td>Images, audio, video where imperceptible loss is acceptable.</td></tr>
-            <tr><td><strong>Common Methods</strong></td><td>Run-Length Encoding (RLE), Huffman Coding, Lempel-Ziv (LZ).</td><td>Transform Coding (DCT in JPEG), Quantization, Psychoacoustic models.</td></tr>
-            <tr><td><strong>Example Formats</strong></td><td>PNG, ZIP, FLAC, GIF.</td><td>JPEG, MP3, MPEG, H.264.</td></tr>
-        </tbody>
+      <thead><tr><th>Feature</th><th>Lossless Compression</th><th>Lossy Compression</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reversible?</strong></td><td>Yes – exact original data can be reconstructed.</td><td>No – some data is permanently lost.</td></tr>
+        <tr><td><strong>Compression Ratio</strong></td><td>Lower (less reduction in size).</td><td>Higher (greater reduction in size).</td></tr>
+        <tr><td><strong>Data Integrity</strong></td><td>Perfect – no quality loss.</td><td>Approximate – quality is degraded.</td></tr>
+        <tr><td><strong>Typical Use</strong></td><td>Text files, executable programs, databases, archives.</td><td>Images, audio, video where imperceptible loss is acceptable.</td></tr>
+        <tr><td><strong>Common Methods</strong></td><td>Run-Length Encoding (RLE), Huffman Coding, Lempel-Ziv (LZ).</td><td>Transform Coding (DCT in JPEG), Quantization, Psychoacoustic models.</td></tr>
+        <tr><td><strong>Example Formats</strong></td><td>PNG, ZIP, FLAC, GIF.</td><td>JPEG, MP3, MPEG, H.264.</td></tr>
+      </tbody>
     </table>
+  </div>
 
-    <!-- ===== RLE ===== -->
-    <h2>🔁 Run-Length Encoding (RLE) – Lossless</h2>
+  <!-- ============ RLE (ACCORDION) ============ -->
+  <div class="card">
+    <h2><i class="fas fa-repeat"></i> Run-Length Encoding (RLE) – Lossless</h2>
     <p>Run-Length Encoding is a simple lossless compression method used when data contains consecutive repeated values (runs). It replaces repeated elements with a single value and a count.</p>
 
-    <h3>How it works</h3>
-    <ul>
-        <li>Scan the data for consecutive identical values.</li>
-        <li>Replace each run with a count followed by the single value.</li>
-    </ul>
-
-    <div class="example-box">
-        <span class="label">Example 1 — Text</span>
-        Original: <code>AAAAABBBCCDAA</code><br>
-        Compressed: <code>5A3B2C1D2A</code>
+    <div class="accordion open" id="acc-rle">
+      <div class="accordion-header" onclick="toggleAccordion('acc-rle')">
+        <span><i class="fas fa-gear"></i> How RLE works</span>
+        <i class="fas fa-chevron-down chevron"></i>
+      </div>
+      <div class="accordion-body">
+        <ol style="margin-left: 20px;">
+          <li>Scan the data for consecutive identical values.</li>
+          <li>Replace each run with a count followed by the single value.</li>
+        </ol>
+        <div class="example-box">
+          <span class="label">Example 1 — Text</span>
+          Original: <code>AAAAABBBCCDAA</code><br>
+          Compressed: <code>5A3B2C1D2A</code>
+        </div>
+        <div class="example-box">
+          <span class="label">Example 2 — Binary</span>
+          Original binary string: <code>00000011110000</code><br>
+          Compressed: <code>6×0, 4×1, 4×0</code> → represented as <code>(0,6)(1,4)(0,4)</code>
+        </div>
+        <div class="info-box">
+          <strong>Best for:</strong> Data with long repeated sequences — simple images (e.g., black-and-white bitmaps), text with repeated characters, icons.<br><br>
+          <strong>Limitations:</strong> Inefficient on data with high variability (e.g., random data or noisy signals) — it can actually <em>increase</em> file size if there are few runs.
+        </div>
+      </div>
     </div>
 
-    <div class="example-box">
-        <span class="label">Example 2 — Binary</span>
-        Original binary string: <code>00000011110000</code><br>
-        Compressed: <code>6×0, 4×1, 4×0</code> → represented as <code>(0,6)(1,4)(0,4)</code>
+    <!-- INTERACTIVE RLE TOOL -->
+    <div class="tool-box">
+      <h3><i class="fas fa-flask"></i> Try It: Live RLE Encoder</h3>
+      <label for="rleInput">Type any text (use repeated characters to see it compress):</label>
+      <input type="text" id="rleInput" value="AAAAABBBCCDAA" placeholder="e.g. AAABBBCCCD" autocomplete="off">
+      <button class="btn-run" onclick="runRLE()"><i class="fas fa-play"></i> Encode</button>
+      <div class="output" id="rleOutput">—</div>
+      <div class="meta" id="rleMeta"></div>
     </div>
+  </div>
 
-    <div class="info-box">
-        <strong>Best for:</strong> Data with long repeated sequences — simple images (e.g., black-and-white bitmaps), text with repeated characters, icons.<br><br>
-        <strong>Limitations:</strong> Inefficient on data with high variability (e.g., random data or noisy signals) — it can actually <em>increase</em> file size if there are few runs.
-    </div>
-
-    <!-- ===== TRANSFORM CODING ===== -->
-    <h2>🎵 Transform Coding – Lossy</h2>
+  <!-- ============ TRANSFORM CODING (ACCORDION) ============ -->
+  <div class="card">
+    <h2><i class="fas fa-wave-square"></i> Transform Coding – Lossy</h2>
     <p>Transform coding is the basis of most modern lossy compression algorithms, especially for images and audio. It removes data that is considered redundant or imperceptible to human senses.</p>
 
-    <h3>How it works</h3>
-    <ol>
-        <li>Transform the data from the time/spatial domain to the frequency domain (e.g., apply the Discrete Cosine Transform (DCT) in JPEG images).</li>
-        <li>Quantize the frequency components (round or remove small values).</li>
-        <li>Encode the quantized values using entropy coding (e.g., Huffman).</li>
-    </ol>
-
-    <div class="example-box">
-        <span class="label">Example in JPEG</span>
-        • An image is divided into 8×8 blocks.<br>
-        • Each block is transformed using DCT to get frequency coefficients.<br>
-        • Coefficients representing fine details (high-frequency) are often quantized to zero.<br>
-        • The result is high compression with acceptable loss of visual quality.
+    <div class="accordion" id="acc-tc">
+      <div class="accordion-header" onclick="toggleAccordion('acc-tc')">
+        <span><i class="fas fa-gear"></i> How transform coding works</span>
+        <i class="fas fa-chevron-down chevron"></i>
+      </div>
+      <div class="accordion-body">
+        <ol style="margin-left: 20px;">
+          <li>Transform the data from the time/spatial domain to the frequency domain (e.g., apply the Discrete Cosine Transform (DCT) in JPEG images).</li>
+          <li>Quantize the frequency components (round or remove small values).</li>
+          <li>Encode the quantized values using entropy coding (e.g., Huffman).</li>
+        </ol>
+        <div class="example-box">
+          <span class="label">Example in JPEG</span>
+          • An image is divided into 8×8 blocks.<br>
+          • Each block is transformed using DCT to get frequency coefficients.<br>
+          • Coefficients representing fine details (high-frequency) are often quantized to zero.<br>
+          • The result is high compression with acceptable loss of visual quality.
+        </div>
+        <div class="info-box">
+          <strong>Best for:</strong> Images (JPEG), audio (MP3), video (MPEG, H.264).<br><br>
+          <strong>Trade-offs:</strong> Compression ratio vs. perceptual quality — loss of fine detail and possible visible artifacts at high compression.
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="info-box">
-        <strong>Best for:</strong> Images (JPEG), audio (MP3), video (MPEG, H.264).<br><br>
-        <strong>Trade-offs:</strong> Compression ratio vs. perceptual quality — loss of fine detail and possible visible artifacts at high compression.
-    </div>
-
-    <!-- ===== COMPARISON ===== -->
-    <h2>📊 Compression Algorithms: RLE vs. Transform Coding</h2>
+  <!-- ============ COMPARISON ============ -->
+  <div class="card">
+    <h2><i class="fas fa-table-columns"></i> RLE vs. Transform Coding</h2>
     <table>
-        <thead><tr><th>Algorithm</th><th>Type</th><th>How it works</th><th>Best for</th><th>Example</th></tr></thead>
-        <tbody>
-            <tr>
-                <td><strong>Run-Length Encoding (RLE)</strong></td>
-                <td>Lossless</td>
-                <td>Replaces consecutive repeated values (runs) with a single value and a count.</td>
-                <td>Data with long repeated sequences: simple images, icons, text with repeated characters.</td>
-                <td>Original: <code>AAAAABBBCCDAA</code><br>Compressed: <code>5A3B2C1D2A</code></td>
-            </tr>
-            <tr>
-                <td><strong>Transform Coding</strong></td>
-                <td>Lossy</td>
-                <td>Transforms data from time/spatial domain to frequency domain (e.g., DCT), quantizes coefficients to remove fine details, then encodes.</td>
-                <td>Images (JPEG), audio (MP3), video (MPEG).</td>
-                <td>JPEG divides image into 8×8 blocks, applies DCT, quantizes high-frequency coefficients to zero.</td>
-            </tr>
-        </tbody>
+      <thead><tr><th>Algorithm</th><th>Type</th><th>How it works</th><th>Best for</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Run-Length Encoding (RLE)</strong></td>
+          <td>Lossless</td>
+          <td>Replaces consecutive repeated values (runs) with a single value and a count.</td>
+          <td>Data with long repeated sequences: simple images, icons, text with repeated characters.</td>
+          <td>Original: <code>AAAAABBBCCDAA</code><br>Compressed: <code>5A3B2C1D2A</code></td>
+        </tr>
+        <tr>
+          <td><strong>Transform Coding</strong></td>
+          <td>Lossy</td>
+          <td>Transforms data from time/spatial domain to frequency domain (e.g., DCT), quantizes coefficients to remove fine details, then encodes.</td>
+          <td>Images (JPEG), audio (MP3), video (MPEG).</td>
+          <td>JPEG divides image into 8×8 blocks, applies DCT, quantizes high-frequency coefficients to zero.</td>
+        </tr>
+      </tbody>
     </table>
+  </div>
 
-    <!-- ===== SUMMARY TABLE ===== -->
-    <h2>📋 Summary Table</h2>
+  <!-- ============ SUMMARY ============ -->
+  <div class="card">
+    <h2><i class="fas fa-list-check"></i> Summary</h2>
     <table>
-        <thead><tr><th>Compression Type</th><th>Method</th><th>Reversible</th><th>Best For</th><th>Example Formats</th></tr></thead>
-        <tbody>
-            <tr><td>Lossless</td><td>Run-Length Encoding</td><td>Yes</td><td>Text, binary data</td><td>PNG, ZIP, FLAC</td></tr>
-            <tr><td>Lossless</td><td>Huffman / LZ</td><td>Yes</td><td>General files</td><td>DEFLATE (ZIP), PNG</td></tr>
-            <tr><td>Lossy</td><td>Transform Coding</td><td>No</td><td>Images, audio, video</td><td>JPEG, MP3, MPEG</td></tr>
-        </tbody>
+      <thead><tr><th>Compression Type</th><th>Method</th><th>Reversible</th><th>Best For</th><th>Example Formats</th></tr></thead>
+      <tbody>
+        <tr><td>Lossless</td><td>Run-Length Encoding</td><td>Yes</td><td>Text, binary data</td><td>PNG, ZIP, FLAC</td></tr>
+        <tr><td>Lossless</td><td>Huffman / LZ</td><td>Yes</td><td>General files</td><td>DEFLATE (ZIP), PNG</td></tr>
+        <tr><td>Lossy</td><td>Transform Coding</td><td>No</td><td>Images, audio, video</td><td>JPEG, MP3, MPEG</td></tr>
+      </tbody>
     </table>
+  </div>
 
-    <!-- ===== CONCLUSION ===== -->
-    <h2>✅ Conclusion</h2>
-    <p>Compression is an important tool in managing digital data efficiently. The distinction between lossless and lossy compression determines whether original data can be perfectly reconstructed. Run-Length Encoding offers a simple method for lossless scenarios, while transform coding underpins powerful lossy formats like JPEG and MP3. Understanding when and how to use each method enables better design of storage systems, transmission protocols, and multimedia applications.</p>
+  <!-- ============ QUIZ ============ -->
+  <div class="card">
+    <h2><i class="fas fa-circle-question"></i> Quick Check</h2>
+    <div class="quiz-box" id="quiz">
+      <h3><i class="fas fa-pen-to-square"></i> Test yourself</h3>
 
-    <hr>
+      <div class="quiz-q" data-answer="b">
+        <p>1. Which statement best describes lossless compression?</p>
+        <div class="quiz-opt" data-opt="a">a) It permanently removes some data to achieve a smaller file size.</div>
+        <div class="quiz-opt" data-opt="b">b) It allows the exact original data to be reconstructed after decompression.</div>
+        <div class="quiz-opt" data-opt="c">c) It is only used for images and audio.</div>
+        <div class="quiz-feedback"></div>
+      </div>
 
-    <div class="lesson-nav">
-        <a href="A1.1.7-summary.html">← Previous: A1.1.7</a>
-        <a href="A1.1.9-summary.html">Next: A1.1.9 →</a>
+      <div class="quiz-q" data-answer="c">
+        <p>2. Run-Length Encoding is most effective when the data contains…</p>
+        <div class="quiz-opt" data-opt="a">a) random, unpredictable values.</div>
+        <div class="quiz-opt" data-opt="b">b) high-frequency audio signals.</div>
+        <div class="quiz-opt" data-opt="c">c) long sequences of repeated values.</div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-q" data-answer="a">
+        <p>3. Which of the following is a lossy compression format?</p>
+        <div class="quiz-opt" data-opt="a">a) JPEG</div>
+        <div class="quiz-opt" data-opt="b">b) PNG</div>
+        <div class="quiz-opt" data-opt="c">c) ZIP</div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-q" data-answer="b">
+        <p>4. What is the main trade-off when using lossy compression?</p>
+        <div class="quiz-opt" data-opt="a">a) It cannot be used for video files.</div>
+        <div class="quiz-opt" data-opt="b">b) Smaller file size vs. loss of quality.</div>
+        <div class="quiz-opt" data-opt="c">c) It takes longer to decompress.</div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-q" data-answer="c">
+        <p>5. In transform coding (e.g., JPEG), what does the DCT do?</p>
+        <div class="quiz-opt" data-opt="a">a) It deletes whole blocks of pixels.</div>
+        <div class="quiz-opt" data-opt="b">b) It counts repeated values and stores them.</div>
+        <div class="quiz-opt" data-opt="c">c) It converts data from the spatial domain to the frequency domain.</div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-score" id="quizScore">Score: 0 / 5</div>
     </div>
+  </div>
 
-    <div class="footer-meta">
-        A1.1.8 – Data Compression • IB Computer Science • Year 12
+  <!-- ============ RESOURCES ============ -->
+  <div class="card">
+    <h2><i class="fas fa-book-open"></i> Further Resources</h2>
+    <div class="resource-pills">
+      <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.8-describe-the-concept-of-compression" target="_blank"><i class="fas fa-globe"></i> CS Wiki (A1.1.8)</a>
+      <a href="https://docs.google.com/presentation/d/e/2PACX-1vQ2D4kgR2hXkrHCitQFRu2gUbJEUx_GZwhsfMjGRc2zlCGTAcNvSlG5bGBNAbl74V8bwhpzWjuPRAlL/pub?start=false&loop=false&delayms=3000" target="_blank"><i class="fas fa-chalkboard"></i> Lesson Slides</a>
+      <a href="https://quizlet.com/pt/1065939012/a-118-describe-the-concept-of-compression-flash-cards/" target="_blank"><i class="fas fa-clone"></i> Quizlet Flashcards</a>
+      <a href="https://play.blooket.com/host/factory?id=68b03753ddff7a4868b8d256" target="_blank"><i class="fas fa-gamepad"></i> Blooket</a>
     </div>
+  </div>
+
+  <!-- ============ NAV FOOTER ============ -->
+  <div class="lesson-nav">
+    <a href="A1.1.7-summary.html"><i class="fas fa-arrow-left"></i> Previous: A1.1.7</a>
+    <a href="A1.1.9-summary.html">Next: A1.1.9 <i class="fas fa-arrow-right"></i></a>
+  </div>
+
+  <div class="footer-meta">
+    A1.1.8 – Data Compression • IB Computer Science • Year 12
+  </div>
+
 </div>
+
+<script>
+  /* ---- Accordion toggle ---- */
+  function toggleAccordion(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  /* ---- RLE Encoder ---- */
+  function runRLE() {
+    const input = document.getElementById('rleInput').value;
+    const out = document.getElementById('rleOutput');
+    const meta = document.getElementById('rleMeta');
+    if (!input) { out.textContent = '—'; meta.textContent = ''; return; }
+
+    // Detect if binary (only 0s and 1s)
+    const isBinary = /^[01]+$/.test(input);
+
+    let encoded = '';
+    let parts = [];
+    let i = 0;
+    while (i < input.length) {
+      let count = 1;
+      while (i + count < input.length && input[i + count] === input[i]) count++;
+      parts.push({ val: input[i], n: count });
+      i += count;
+    }
+
+    if (isBinary) {
+      // Binary RLE: represent as (val,count)
+      encoded = parts.map(p => `(${p.val},${p.n})`).join('');
+    } else {
+      // Text RLE: count+value
+      encoded = parts.map(p => `${p.n}${p.val}`).join('');
+    }
+
+    const ratio = ((1 - encoded.length / input.length) * 100).toFixed(1);
+    out.innerHTML = `<span class="hl">${encoded || '—'}</span>`;
+    meta.textContent = `Original: ${input.length} chars → Compressed: ${encoded.length} chars (saved ${ratio}%)`;
+  }
+
+  // Auto-run on page load and on Enter key
+  document.getElementById('rleInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') runRLE();
+  });
+  document.getElementById('rleInput').addEventListener('input', runRLE);
+  runRLE();
+
+  /* ---- Quiz ---- */
+  const quiz = document.getElementById('quiz');
+  const questions = quiz.querySelectorAll('.quiz-q');
+  let score = 0;
+  let answered = 0;
+
+  questions.forEach(q => {
+    const correct = q.dataset.answer;
+    const opts = q.querySelectorAll('.quiz-opt');
+    const feedback = q.querySelector('.quiz-feedback');
+
+    opts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (q.classList.contains('done')) return;
+        q.classList.add('done');
+
+        const chosen = opt.dataset.opt;
+        opts.forEach(o => o.classList.add('disabled'));
+
+        if (chosen === correct) {
+          opt.classList.add('correct');
+          feedback.textContent = '✓ Correct!';
+          feedback.className = 'quiz-feedback ok';
+          score++;
+        } else {
+          opt.classList.add('wrong');
+          // highlight correct
+          opts.forEach(o => { if (o.dataset.opt === correct) o.classList.add('correct'); });
+          feedback.textContent = '✗ Not quite — the correct answer is highlighted.';
+          feedback.className = 'quiz-feedback no';
+        }
+        answered++;
+        document.getElementById('quizScore').textContent = `Score: ${score} / ${questions.length}`;
+
+        if (answered === questions.length) {
+          const msg = score === questions.length ? ' 🎉 Perfect!' : (score >= 3 ? ' 👍 Good work!' : ' 📖 Review the page and try again.');
+          document.getElementById('quizScore').textContent += msg;
+        }
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
