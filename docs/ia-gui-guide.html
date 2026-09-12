@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA – GUI Development Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        h4 { color: #0b2a4a; margin-top: 18px; margin-bottom: 6px; }
+
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge.ia { background: #1a5f87; }
+        .badge.oop { background: #2d8f2d; }
+        .badge.gui { background: #7c3aed; }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .code-block pre { margin: 0; white-space: pre; }
+        .comment { color: #6b8c9e; }
+        .keyword { color: #f7c948; }
+        .string { color: #a3d9a5; }
+        .function { color: #66b3ff; }
+        .class { color: #f472b6; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+
+        .info-box, .task-box, .resource-box, .warning-box {
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-left: 4px solid #2a6f97;
+        }
+        .task-box {
+            background: #f7fafc;
+            border-left: 4px solid #2d8f2d;
+        }
+        .resource-box {
+            background: #ebf4ff;
+            border-left: 5px solid #fdbb2d;
+        }
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #d97706;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: #0b2a4a;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: none !important;
+            transition: background 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+        .btn-link:hover { background: #1a3f64; color: #fff !important; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+        .principle-box {
+            background: #0b2a4a;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .principle-box .highlight { color: #fdbb2d; }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 15px 0;
+        }
+        .resource-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px 20px;
+            transition: 0.2s;
+        }
+        .resource-card:hover {
+            border-color: #b6d0e8;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .resource-card h4 { margin-top: 0; margin-bottom: 8px; }
+        .resource-card p { font-size: 0.9rem; margin-bottom: 10px; }
+        .resource-card .tag {
+            display: inline-block;
+            background: #dceaf7;
+            color: #13416b;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-right: 6px;
+        }
+
+        hr { border: 0; border-top: 2px solid #e2e8f0; margin: 30px 0; }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 6px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .checklist li::before {
+            content: "☐";
+            font-size: 1.2rem;
+            color: #2a6f97;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .btn-group { flex-direction: column; }
+            .btn-link { text-align: center; }
+            .resource-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="#" onclick="goBack(); return false;">← Back to IA Resources</a>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '../IA.html';
+            }
+        }
+    </script>
+
+    <h1>Internal Assessment – GUI Development <span class="badge ia">IA</span> <span class="badge gui">GUI</span></h1>
+
+    <!-- ==================== WHY GUIs ==================== -->
+    <h2>🖥️ Why Build a GUI for Your IA?</h2>
+    <div class="info-box">
+        <p><strong>Important:</strong> The course does not explicitly teach you how to create GUIs. However, for your Internal Assessment, the strongest projects typically include a graphical user interface built using <strong>classes and Object-Oriented Programming (OOP)</strong>.</p>
+    </div>
+
+    <p>Choosing to develop a GUI application rather than a command-line interface (CLI) offers several advantages for your IA:</p>
+
+    <table>
+        <thead>
+            <tr><th>Aspect</th><th>CLI Project</th><th>GUI Project (with OOP)</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Complexity</strong></td>
+                <td>Limited to text input/output; harder to demonstrate advanced features</td>
+                <td>Higher complexity — event handling, widget management, layout design, multiple classes</td>
+            </tr>
+            <tr>
+                <td><strong>OOP Integration</strong></td>
+                <td>Often procedural; classes may feel forced</td>
+                <td>Natural fit — each window, panel, or widget can be its own class</td>
+            </tr>
+            <tr>
+                <td><strong>User Experience</strong></td>
+                <td>Functional but not visually engaging</td>
+                <td>Professional-looking, intuitive, and demonstrable</td>
+            </tr>
+            <tr>
+                <td><strong>IA Criteria</strong></td>
+                <td>May struggle to show complexity and algorithmic thinking</td>
+                <td>Easier to justify complexity, modularity, and good design</td>
+            </tr>
+            <tr>
+                <td><strong>Portfolio Value</strong></td>
+                <td>Less impressive to showcase</td>
+                <td>Strong portfolio piece; visually demonstrates your skills</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="principle-box">
+        <p><span class="highlight">🔑 Key Insight:</span> A GUI built with <strong>classes and OOP</strong> naturally demonstrates <strong>decomposition</strong>, <strong>modularity</strong>, and <strong>complexity</strong> — all of which are highly valued in the IA criteria.</p>
+    </div>
+
+    <!-- ==================== OOP + GUI ==================== -->
+    <h2>🧩 Building GUIs with Classes & OOP</h2>
+    <p>When you build a GUI using OOP, everything fits together neatly. Each component becomes a class with its own responsibilities, making your code easier to manage, extend, and explain in your IA documentation.</p>
+
+    <h3>Typical Structure of a GUI Application</h3>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Example structure using CustomTkinter (Python)</span>
+<span class="keyword">import</span> customtkinter <span class="keyword">as</span> ctk
+
+<span class="comment"># Each major component can be its own class</span>
+<span class="keyword">class</span> <span class="class">LoginFrame</span>(ctk.CTkFrame):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, master, app_controller):
+        <span class="keyword">super</span>().__init__(master)
+        <span class="keyword">self</span>.app_controller = app_controller
+        <span class="comment"># Build login widgets here</span>
+
+<span class="keyword">class</span> <span class="class">DashboardFrame</span>(ctk.CTkFrame):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, master, app_controller):
+        <span class="keyword">super</span>().__init__(master)
+        <span class="keyword">self</span>.app_controller = app_controller
+        <span class="comment"># Build dashboard widgets here</span>
+
+<span class="keyword">class</span> <span class="class">App</span>(ctk.CTk):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>):
+        <span class="keyword">super</span>().__init__()
+        <span class="keyword">self</span>.title(<span class="string">"My IA Application"</span>)
+        <span class="keyword">self</span>.geometry(<span class="string">"900x600"</span>)
+
+        <span class="comment"># Show login first</span>
+        <span class="keyword">self</span>.show_login()
+
+    <span class="keyword">def</span> <span class="function">show_login</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.login_frame = LoginFrame(<span class="keyword">self</span>, <span class="keyword">self</span>)
+        <span class="keyword">self</span>.login_frame.pack(fill=<span class="string">"both"</span>, expand=<span class="keyword">True</span>)
+
+    <span class="keyword">def</span> <span class="function">show_dashboard</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.login_frame.destroy()
+        <span class="keyword">self</span>.dashboard_frame = DashboardFrame(<span class="keyword">self</span>, <span class="keyword">self</span>)
+        <span class="keyword">self</span>.dashboard_frame.pack(fill=<span class="string">"both"</span>, expand=<span class="keyword">True</span>)
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    app = App()
+    app.mainloop()
+</code></pre>
+    </div>
+
+    <h4>Why this works well for the IA:</h4>
+    <ul style="margin-left: 20px;">
+        <li><strong>Separation of concerns</strong> — each class handles one part of the UI</li>
+        <li><strong>Reusability</strong> — components can be reused or swapped easily</li>
+        <li><strong>Complexity</strong> — demonstrates advanced understanding beyond simple scripts</li>
+        <li><strong>Documentation</strong> — easy to explain class relationships in your IA write-up</li>
+    </ul>
+
+    <!-- ==================== RECOMMENDED RESOURCES ==================== -->
+    <h2>📚 Recommended Learning Resources</h2>
+    <p>These resources will teach you everything you need to build a professional GUI for your IA.</p>
+
+    <div class="resource-grid">
+        <!-- Turtle Code -->
+        <div class="resource-card">
+            <h4>🐢 Turtle Code YouTube Playlist</h4>
+            <span class="tag">⭐ Best Free Structured Course</span>
+            <p>A 21-video playlist covering buttons, frames, tab views, text boxes, scrollbars, forms, and complete desktop app projects.</p>
+            <p><strong>Why it's good:</strong> Step-by-step progression, practical examples, covers most commonly used widgets.</p>
+            <a href="https://www.youtube.com/playlist?list=PLMi6KgK4_mk0P9FWD1ULjzhzspu23h-Br" target="_blank" class="btn-link">▶ Watch Playlist</a>
+        </div>
+
+        <!-- Tkinter.com -->
+        <div class="resource-card">
+            <h4>🎨 Tkinter.com (John Elder)</h4>
+            <span class="tag">⭐ Best for Tkinter Developers</span>
+            <p>The "Modern GUI Design With CustomTkinter" videos focus on creating professional-looking applications and exploring themes and styling.</p>
+            <p><strong>Best for:</strong> Intermediate Python users learning polished GUI design techniques.</p>
+            <a href="https://www.youtube.com/watch?v=Y01r643ckfI" target="_blank" class="btn-link">▶ Watch Video</a>
+        </div>
+
+        <!-- CustomTkinter Channel -->
+        <div class="resource-card">
+            <h4>🚀 CustomTkinter YouTube Channel</h4>
+            <span class="tag">Project-Based Learning</span>
+            <p>Showcases modern apps such as chat applications, PDF viewers, login screens, image downloaders, and card-slider interfaces.</p>
+            <p><strong>Best for:</strong> UI inspiration, portfolio projects, and advanced interface design.</p>
+            <a href="https://www.youtube.com/@CustomTkinter/videos" target="_blank" class="btn-link">▶ Visit Channel</a>
+        </div>
+
+        <!-- CustomTkinter Project Example -->
+        <div class="resource-card">
+            <h4>💡 CustomTkinter Project Example</h4>
+            <span class="tag">Advanced Interface Design</span>
+            <p>A full project walkthrough demonstrating modern GUI techniques with CustomTkinter.</p>
+            <p><strong>Best for:</strong> Seeing how a complete app comes together with OOP and GUI design.</p>
+            <a href="https://www.youtube.com/watch?v=Y01r643ckfI" target="_blank" class="btn-link">▶ Watch Example</a>
+        </div>
+    </div>
+
+    <!-- ==================== QUICK REFERENCE ==================== -->
+    <h2>⚡ Quick Reference: GUI Components for Your IA</h2>
+    <p>These are the most common widgets and features you will likely use in your project:</p>
+
+    <table>
+        <thead>
+            <tr><th>Component</th><th>Purpose</th><th>Common Use in IA</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Buttons</strong></td><td>Trigger actions</td><td>Submit, calculate, navigate, save</td></tr>
+            <tr><td><strong>Labels</strong></td><td>Display static text</td><td>Titles, instructions, output</td></tr>
+            <tr><td><strong>Entry / Text Boxes</strong></td><td>User input</td><td>Forms, search bars, data entry</td></tr>
+            <tr><td><strong>Frames</strong></td><td>Group widgets</td><td>Organise layout into sections</td></tr>
+            <tr><td><strong>Tab Views</strong></td><td>Multiple pages</td><td>Settings, different feature areas</td></tr>
+            <tr><td><strong>Scrollbars</strong></td><td>Navigate content</td><td>Long lists, text areas, tables</td></tr>
+            <tr><td><strong>Listboxes / Tables</strong></td><td>Display data</td><td>Records, search results, inventory</td></tr>
+            <tr><td><strong>Dropdowns / Comboboxes</strong></td><td>Select from options</td><td>Categories, filters, settings</td></tr>
+            <tr><td><strong>Checkboxes / Radio Buttons</strong></td><td>Toggle options</td><td>Preferences, filters, forms</td></tr>
+            <tr><td><strong>Message Boxes</strong></td><td>Alerts / confirmations</td><td>Errors, success messages, warnings</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ==================== IA CHECKLIST ==================== -->
+    <h2>✅ IA GUI Checklist</h2>
+    <div class="task-box">
+        <p>Use this checklist to make sure your GUI project meets the IA requirements:</p>
+        <ul class="checklist">
+            <li>GUI built using <strong>classes and OOP</strong></li>
+            <li>Multiple <strong>windows or frames</strong> (e.g., login → main → settings)</li>
+            <li>Input validation and <strong>error handling</strong> (message boxes)</li>
+            <li>Data persistence (file I/O or database)</li>
+            <li>At least one <strong>complex algorithm</strong> or feature</li>
+            <li>Clean, modular code with comments</li>
+            <li>Professional-looking interface (themes, consistent styling)</li>
+            <li>Documentation explaining class structure and design decisions</li>
+            <li>Video demonstration of the working application</li>
+        </ul>
+    </div>
+
+    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"The course doesn't teach GUI development, but for your IA, a GUI built with classes and OOP gives you the best opportunity to demonstrate complexity, modularity, and professional design. Use the resources above to learn the skills — then apply them to your own project."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="footer-meta">
+        Internal Assessment – GUI Development Guide • IB Computer Science
+    </div>
+
+</div>
+
+</body>
+</html>
