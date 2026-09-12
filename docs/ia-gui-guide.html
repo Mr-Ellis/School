@@ -3,201 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA – GUI Development Guide</title>
+    <title>IA – Interactive GUI Structure · CustomTkinter</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             background: #f0f4fb;
             color: #1e293b;
             padding: 24px;
-            line-height: 1.7;
+            line-height: 1.6;
         }
         .container {
             max-width: 1000px;
             margin: 0 auto;
             background: #fff;
-            padding: 40px 50px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 40px 45px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
         }
         .back-link {
             display: inline-block;
             margin-bottom: 20px;
             color: #b21f1f;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
         }
-        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             color: #0b2a4a;
-            border-bottom: 4px solid #fdbb2d;
-            padding-bottom: 10px;
+            border-bottom: 5px solid #fdbb2d;
+            padding-bottom: 12px;
             margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        h2 {
-            font-size: 1.5rem;
-            color: #0b2a4a;
-            margin-top: 35px;
-            margin-bottom: 15px;
-            border-left: 5px solid #b21f1f;
-            padding-left: 15px;
-        }
-        h3 {
-            font-size: 1.2rem;
-            color: #0b2a4a;
-            margin-top: 25px;
-            margin-bottom: 10px;
-        }
-        h4 { color: #0b2a4a; margin-top: 18px; margin-bottom: 6px; }
-
         .badge {
             display: inline-block;
             background: #b21f1f;
             color: #fff;
             font-weight: 600;
-            font-size: 0.8rem;
-            padding: 2px 12px;
-            border-radius: 20px;
+            font-size: 0.75rem;
+            padding: 4px 14px;
+            border-radius: 30px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            vertical-align: middle;
         }
         .badge.ia { background: #1a5f87; }
-        .badge.oop { background: #2d8f2d; }
         .badge.gui { background: #7c3aed; }
 
-        .code-block {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 16px 20px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            overflow-x: auto;
-            margin: 10px 0;
-            line-height: 1.8;
+        h2 {
+            font-size: 1.6rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 18px;
+            border-left: 6px solid #b21f1f;
+            padding-left: 16px;
         }
-        .code-block pre { margin: 0; white-space: pre; }
+        h3 {
+            font-size: 1.25rem;
+            color: #0b2a4a;
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+        h4 {
+            color: #0b2a4a;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        /* ------ interactive code block ------ */
+        .interactive-code {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 8px 0 8px 0;
+            margin: 25px 0;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.25);
+            border: 1px solid #2d3b4f;
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 18px 6px 22px;
+            background: #1e293b;
+            color: #b9c7d9;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid #2d3b4f;
+        }
+        .code-header span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-header .dot-group {
+            display: flex;
+            gap: 6px;
+            margin-right: 8px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .interactive-code pre {
+            margin: 0;
+            padding: 18px 22px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.9;
+            color: #e2e8f0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .code-line {
+            display: block;
+            border-left: 4px solid transparent;
+            padding-left: 12px;
+            margin-left: -4px;
+            transition: background 0.2s, border-color 0.2s;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            position: relative;
+        }
+        .code-line:hover {
+            background: #1e2d44;
+            border-left-color: #fdbb2d;
+        }
+        .code-line.active {
+            background: #1e3a5f;
+            border-left-color: #fdbb2d;
+            box-shadow: inset 0 0 0 1px #334e6e;
+        }
         .comment { color: #6b8c9e; }
         .keyword { color: #f7c948; }
         .string { color: #a3d9a5; }
         .function { color: #66b3ff; }
         .class { color: #f472b6; }
+        .builtin { color: #c084fc; }
+
+        /* ------ explanation panel ------ */
+        .explain-panel {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 6px solid #0b2a4a;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin: 16px 0 30px 0;
+            transition: all 0.2s;
+            min-height: 100px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .explain-panel .panel-title {
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .explain-panel .panel-title i {
+            font-style: normal;
+            font-size: 1.2rem;
+        }
+        .explain-panel p {
+            margin: 0;
+            font-size: 0.96rem;
+            color: #1e293b;
+        }
+        .explain-panel code {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #0b2a4a;
+            font-weight: 600;
+        }
+        .explain-panel .highlight {
+            background: #fef9c3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* ------ other components ------ */
+        .info-box, .task-box, .resource-box {
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin: 20px 0;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-left: 6px solid #2a6f97;
+        }
+        .task-box {
+            background: #f7fafc;
+            border-left: 6px solid #2d8f2d;
+        }
+        .resource-box {
+            background: #ebf4ff;
+            border-left: 6px solid #fdbb2d;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 6px solid #fdbb2d;
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin: 30px 0;
+            font-weight: 500;
+            font-size: 1.05rem;
+            box-shadow: 0 6px 12px rgba(253, 187, 45, 0.15);
+        }
+        .principle-box {
+            background: #0b2a4a;
+            color: #e2e8f0;
+            padding: 18px 24px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+        }
+        .principle-box .highlight { color: #fdbb2d; }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
             font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
         }
         th {
             background: #0b2a4a;
             color: #fff;
             font-weight: 600;
-            padding: 12px 15px;
+            padding: 14px 16px;
             text-align: left;
         }
         td {
-            padding: 12px 15px;
+            padding: 12px 16px;
             border-bottom: 1px solid #e2e8f0;
             vertical-align: top;
         }
-        tr:nth-child(even) { background: #f7fafc; }
+        tr:nth-child(even) { background: #f9fcff; }
 
-        .info-box, .task-box, .resource-box, .warning-box {
-            border-radius: 8px;
-            padding: 15px 20px;
-            margin: 15px 0;
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
         }
-        .info-box {
-            background: #f0f7ee;
-            border-left: 4px solid #2a6f97;
-        }
-        .task-box {
-            background: #f7fafc;
-            border-left: 4px solid #2d8f2d;
-        }
-        .resource-box {
-            background: #ebf4ff;
-            border-left: 5px solid #fdbb2d;
-        }
-        .warning-box {
-            background: #fef3c7;
-            border-left: 5px solid #d97706;
-        }
-        .key-takeaway {
-            background: #fefcbf;
-            border-left: 5px solid #fdbb2d;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 25px 0;
-            font-weight: 500;
-        }
-
         .btn-link {
             display: inline-block;
             background: #0b2a4a;
             color: #fff !important;
-            padding: 8px 20px;
-            border-radius: 30px;
+            padding: 10px 24px;
+            border-radius: 40px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
-            border-bottom: none !important;
-            transition: background 0.2s;
-            margin: 4px 8px 4px 0;
+            border: none;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
         }
-        .btn-link:hover { background: #1a3f64; color: #fff !important; }
-        .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-
-        .principle-box {
-            background: #0b2a4a;
-            color: #e2e8f0;
-            padding: 16px 20px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
+        .btn-link:hover {
+            background: #1a3f64;
+            transform: translateY(-2px);
         }
-        .principle-box .highlight { color: #fdbb2d; }
+        .btn-secondary {
+            background: #2d3b4f;
+            color: #e2e8f0 !important;
+        }
+        .btn-secondary:hover {
+            background: #3e4f66;
+        }
 
         .resource-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 15px 0;
+            gap: 18px;
+            margin: 20px 0;
         }
         .resource-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 18px 20px;
+            border-radius: 14px;
+            padding: 20px 22px;
             transition: 0.2s;
         }
         .resource-card:hover {
             border-color: #b6d0e8;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
         }
-        .resource-card h4 { margin-top: 0; margin-bottom: 8px; }
-        .resource-card p { font-size: 0.9rem; margin-bottom: 10px; }
-        .resource-card .tag {
+        .resource-card h4 { margin-top: 0; margin-bottom: 10px; }
+        .resource-card p { font-size: 0.92rem; margin-bottom: 12px; }
+        .tag {
             display: inline-block;
             background: #dceaf7;
             color: #13416b;
             font-size: 0.7rem;
-            font-weight: 600;
-            padding: 2px 10px;
-            border-radius: 20px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 30px;
             margin-right: 6px;
-        }
-
-        hr { border: 0; border-top: 2px solid #e2e8f0; margin: 30px 0; }
-        .footer-meta {
-            margin-top: 30px;
-            font-size: 0.85rem;
-            color: #4a5568;
-            text-align: center;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 20px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
 
         .checklist {
@@ -208,22 +341,35 @@
             padding: 6px 0;
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 12px;
         }
         .checklist li::before {
             content: "☐";
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: #2a6f97;
             flex-shrink: 0;
         }
 
-        @media (max-width: 640px) {
-            .container { padding: 20px; }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 40px 0 20px;
+        }
+        .footer-meta {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .container { padding: 24px 18px; }
             h1 { font-size: 1.8rem; }
-            table { font-size: 0.85rem; }
+            .resource-grid { grid-template-columns: 1fr; }
             .btn-group { flex-direction: column; }
             .btn-link { text-align: center; }
-            .resource-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -243,202 +389,274 @@
         }
     </script>
 
-    <h1>Internal Assessment – GUI Development <span class="badge ia">IA</span> <span class="badge gui">GUI</span></h1>
+    <h1>
+        IA – GUI Development
+        <span class="badge ia">IA</span>
+        <span class="badge gui">GUI</span>
+    </h1>
 
-    <!-- ==================== WHY GUIs ==================== -->
+    <!-- ===== WHY GUIs ===== -->
     <h2>🖥️ Why Build a GUI for Your IA?</h2>
     <div class="info-box">
-        <p><strong>Important:</strong> The course does not explicitly teach you how to create GUIs. However, for your Internal Assessment, the strongest projects typically include a graphical user interface built using <strong>classes and Object-Oriented Programming (OOP)</strong>.</p>
+        <p><strong>Important:</strong> The course does not explicitly teach GUI creation. But for your Internal Assessment, the strongest projects include a graphical user interface built with <strong>classes and OOP</strong>.</p>
     </div>
 
-    <p>Choosing to develop a GUI application rather than a command-line interface (CLI) offers several advantages for your IA:</p>
+    <p>Choosing a GUI over a command-line interface gives you a clear edge in the IA criteria:</p>
 
     <table>
         <thead>
             <tr><th>Aspect</th><th>CLI Project</th><th>GUI Project (with OOP)</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td><strong>Complexity</strong></td>
-                <td>Limited to text input/output; harder to demonstrate advanced features</td>
-                <td>Higher complexity — event handling, widget management, layout design, multiple classes</td>
-            </tr>
-            <tr>
-                <td><strong>OOP Integration</strong></td>
-                <td>Often procedural; classes may feel forced</td>
-                <td>Natural fit — each window, panel, or widget can be its own class</td>
-            </tr>
-            <tr>
-                <td><strong>User Experience</strong></td>
-                <td>Functional but not visually engaging</td>
-                <td>Professional-looking, intuitive, and demonstrable</td>
-            </tr>
-            <tr>
-                <td><strong>IA Criteria</strong></td>
-                <td>May struggle to show complexity and algorithmic thinking</td>
-                <td>Easier to justify complexity, modularity, and good design</td>
-            </tr>
-            <tr>
-                <td><strong>Portfolio Value</strong></td>
-                <td>Less impressive to showcase</td>
-                <td>Strong portfolio piece; visually demonstrates your skills</td>
-            </tr>
+            <tr><td><strong>Complexity</strong></td><td>Limited to text I/O</td><td>Event handling, widgets, layout, multiple classes</td></tr>
+            <tr><td><strong>OOP Integration</strong></td><td>Often procedural</td><td>Natural fit — windows, frames, widgets as classes</td></tr>
+            <tr><td><strong>User Experience</strong></td><td>Functional but plain</td><td>Professional, intuitive, demonstrable</td></tr>
+            <tr><td><strong>IA Criteria</strong></td><td>Harder to show complexity</td><td>Easier to justify modularity and design</td></tr>
+            <tr><td><strong>Portfolio Value</strong></td><td>Less impressive</td><td>Strong showcase piece</td></tr>
         </tbody>
     </table>
 
     <div class="principle-box">
-        <p><span class="highlight">🔑 Key Insight:</span> A GUI built with <strong>classes and OOP</strong> naturally demonstrates <strong>decomposition</strong>, <strong>modularity</strong>, and <strong>complexity</strong> — all of which are highly valued in the IA criteria.</p>
+        <p><span class="highlight">🔑 Key Insight:</span> A GUI built with <strong>classes and OOP</strong> naturally demonstrates <strong>decomposition</strong>, <strong>modularity</strong>, and <strong>complexity</strong> — all highly valued in the IA.</p>
     </div>
 
-    <!-- ==================== OOP + GUI ==================== -->
-    <h2>🧩 Building GUIs with Classes & OOP</h2>
-    <p>When you build a GUI using OOP, everything fits together neatly. Each component becomes a class with its own responsibilities, making your code easier to manage, extend, and explain in your IA documentation.</p>
+    <!-- ===== INTERACTIVE SECTION ===== -->
+    <h2>🧩 Typical Structure of a GUI Application</h2>
+    <p><strong>Click any line of code</strong> below to see a detailed explanation of what it does and why it matters for your IA.</p>
 
-    <h3>Typical Structure of a GUI Application</h3>
-    <div class="code-block">
-<pre><code>
-<span class="comment"># Example structure using CustomTkinter (Python)</span>
-<span class="keyword">import</span> customtkinter <span class="keyword">as</span> ctk
-
-<span class="comment"># Each major component can be its own class</span>
-<span class="keyword">class</span> <span class="class">LoginFrame</span>(ctk.CTkFrame):
-    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, master, app_controller):
-        <span class="keyword">super</span>().__init__(master)
-        <span class="keyword">self</span>.app_controller = app_controller
-        <span class="comment"># Build login widgets here</span>
-
-<span class="keyword">class</span> <span class="class">DashboardFrame</span>(ctk.CTkFrame):
-    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>, master, app_controller):
-        <span class="keyword">super</span>().__init__(master)
-        <span class="keyword">self</span>.app_controller = app_controller
-        <span class="comment"># Build dashboard widgets here</span>
-
-<span class="keyword">class</span> <span class="class">App</span>(ctk.CTk):
-    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="keyword">self</span>):
-        <span class="keyword">super</span>().__init__()
-        <span class="keyword">self</span>.title(<span class="string">"My IA Application"</span>)
-        <span class="keyword">self</span>.geometry(<span class="string">"900x600"</span>)
-
-        <span class="comment"># Show login first</span>
-        <span class="keyword">self</span>.show_login()
-
-    <span class="keyword">def</span> <span class="function">show_login</span>(<span class="keyword">self</span>):
-        <span class="keyword">self</span>.login_frame = LoginFrame(<span class="keyword">self</span>, <span class="keyword">self</span>)
-        <span class="keyword">self</span>.login_frame.pack(fill=<span class="string">"both"</span>, expand=<span class="keyword">True</span>)
-
-    <span class="keyword">def</span> <span class="function">show_dashboard</span>(<span class="keyword">self</span>):
-        <span class="keyword">self</span>.login_frame.destroy()
-        <span class="keyword">self</span>.dashboard_frame = DashboardFrame(<span class="keyword">self</span>, <span class="keyword">self</span>)
-        <span class="keyword">self</span>.dashboard_frame.pack(fill=<span class="string">"both"</span>, expand=<span class="keyword">True</span>)
-
-<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
-    app = App()
-    app.mainloop()
-</code></pre>
+    <div class="interactive-code" id="codeBlock">
+        <div class="code-header">
+            <span>
+                <span class="dot-group">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                </span>
+                <span>main.py</span>
+            </span>
+            <span style="font-size:0.75rem; opacity:0.7;">⬤ click lines</span>
+        </div>
+        <pre id="codePre"><code id="codeContent"></code></pre>
     </div>
 
-    <h4>Why this works well for the IA:</h4>
-    <ul style="margin-left: 20px;">
-        <li><strong>Separation of concerns</strong> — each class handles one part of the UI</li>
-        <li><strong>Reusability</strong> — components can be reused or swapped easily</li>
-        <li><strong>Complexity</strong> — demonstrates advanced understanding beyond simple scripts</li>
-        <li><strong>Documentation</strong> — easy to explain class relationships in your IA write-up</li>
-    </ul>
+    <!-- explanation panel -->
+    <div class="explain-panel" id="explainPanel">
+        <div class="panel-title"><i>💡</i> Click a line to see the explanation</div>
+        <p>Each line of the CustomTkinter example is interactive. Select any line to understand its role in the OOP structure.</p>
+    </div>
 
-    <!-- ==================== RECOMMENDED RESOURCES ==================== -->
+    <!-- ===== RESOURCES ===== -->
     <h2>📚 Recommended Learning Resources</h2>
-    <p>These resources will teach you everything you need to build a professional GUI for your IA.</p>
-
     <div class="resource-grid">
-        <!-- Turtle Code -->
         <div class="resource-card">
             <h4>🐢 Turtle Code YouTube Playlist</h4>
-            <span class="tag">⭐ Best Free Structured Course</span>
-            <p>A 21-video playlist covering buttons, frames, tab views, text boxes, scrollbars, forms, and complete desktop app projects.</p>
-            <p><strong>Why it's good:</strong> Step-by-step progression, practical examples, covers most commonly used widgets.</p>
-            <a href="https://www.youtube.com/playlist?list=PLMi6KgK4_mk0P9FWD1ULjzhzspu23h-Br" target="_blank" class="btn-link">▶ Watch Playlist</a>
+            <span class="tag">⭐ Best Free Course</span>
+            <p>21 videos covering buttons, frames, tab views, text boxes, forms, and complete desktop apps.</p>
+            <a href="https://www.youtube.com/playlist?list=PLMi6KgK4_mk0P9FWD1ULjzhzspu23h-Br" target="_blank" class="btn-link" style="padding:8px 18px; font-size:0.85rem;">▶ Watch</a>
         </div>
-
-        <!-- Tkinter.com -->
         <div class="resource-card">
             <h4>🎨 Tkinter.com (John Elder)</h4>
-            <span class="tag">⭐ Best for Tkinter Developers</span>
-            <p>The "Modern GUI Design With CustomTkinter" videos focus on creating professional-looking applications and exploring themes and styling.</p>
-            <p><strong>Best for:</strong> Intermediate Python users learning polished GUI design techniques.</p>
-            <a href="https://www.youtube.com/watch?v=Y01r643ckfI" target="_blank" class="btn-link">▶ Watch Video</a>
+            <span class="tag">⭐ Modern GUI</span>
+            <p>CustomTkinter videos focused on professional styling, themes, and layout.</p>
+            <a href="https://www.youtube.com/watch?v=Y01r643ckfI" target="_blank" class="btn-link" style="padding:8px 18px; font-size:0.85rem;">▶ Watch</a>
         </div>
-
-        <!-- CustomTkinter Channel -->
         <div class="resource-card">
-            <h4>🚀 CustomTkinter YouTube Channel</h4>
-            <span class="tag">Project-Based Learning</span>
-            <p>Showcases modern apps such as chat applications, PDF viewers, login screens, image downloaders, and card-slider interfaces.</p>
-            <p><strong>Best for:</strong> UI inspiration, portfolio projects, and advanced interface design.</p>
-            <a href="https://www.youtube.com/@CustomTkinter/videos" target="_blank" class="btn-link">▶ Visit Channel</a>
+            <h4>🚀 CustomTkinter Channel</h4>
+            <span class="tag">Project-Based</span>
+            <p>Chat apps, PDF viewers, login screens, image downloaders, and card sliders.</p>
+            <a href="https://www.youtube.com/@CustomTkinter/videos" target="_blank" class="btn-link" style="padding:8px 18px; font-size:0.85rem;">▶ Visit</a>
         </div>
-
-        <!-- CustomTkinter Project Example -->
         <div class="resource-card">
-            <h4>💡 CustomTkinter Project Example</h4>
-            <span class="tag">Advanced Interface Design</span>
-            <p>A full project walkthrough demonstrating modern GUI techniques with CustomTkinter.</p>
-            <p><strong>Best for:</strong> Seeing how a complete app comes together with OOP and GUI design.</p>
-            <a href="https://www.youtube.com/watch?v=Y01r643ckfI" target="_blank" class="btn-link">▶ Watch Example</a>
+            <h4>💡 Full Project Example</h4>
+            <span class="tag">Advanced</span>
+            <p>Complete walkthrough of a modern GUI app using CustomTkinter and OOP.</p>
+            <a href="https://www.youtube.com/watch?v=Y01r643ckfI" target="_blank" class="btn-link" style="padding:8px 18px; font-size:0.85rem;">▶ Watch</a>
         </div>
     </div>
 
-    <!-- ==================== QUICK REFERENCE ==================== -->
-    <h2>⚡ Quick Reference: GUI Components for Your IA</h2>
-    <p>These are the most common widgets and features you will likely use in your project:</p>
-
+    <!-- ===== QUICK REFERENCE ===== -->
+    <h2>⚡ Quick Reference: GUI Components</h2>
     <table>
-        <thead>
-            <tr><th>Component</th><th>Purpose</th><th>Common Use in IA</th></tr>
-        </thead>
+        <thead><tr><th>Component</th><th>Purpose</th><th>Common IA Use</th></tr></thead>
         <tbody>
-            <tr><td><strong>Buttons</strong></td><td>Trigger actions</td><td>Submit, calculate, navigate, save</td></tr>
-            <tr><td><strong>Labels</strong></td><td>Display static text</td><td>Titles, instructions, output</td></tr>
-            <tr><td><strong>Entry / Text Boxes</strong></td><td>User input</td><td>Forms, search bars, data entry</td></tr>
-            <tr><td><strong>Frames</strong></td><td>Group widgets</td><td>Organise layout into sections</td></tr>
-            <tr><td><strong>Tab Views</strong></td><td>Multiple pages</td><td>Settings, different feature areas</td></tr>
-            <tr><td><strong>Scrollbars</strong></td><td>Navigate content</td><td>Long lists, text areas, tables</td></tr>
-            <tr><td><strong>Listboxes / Tables</strong></td><td>Display data</td><td>Records, search results, inventory</td></tr>
-            <tr><td><strong>Dropdowns / Comboboxes</strong></td><td>Select from options</td><td>Categories, filters, settings</td></tr>
-            <tr><td><strong>Checkboxes / Radio Buttons</strong></td><td>Toggle options</td><td>Preferences, filters, forms</td></tr>
-            <tr><td><strong>Message Boxes</strong></td><td>Alerts / confirmations</td><td>Errors, success messages, warnings</td></tr>
+            <tr><td>Buttons</td><td>Trigger actions</td><td>Submit, calculate, navigate</td></tr>
+            <tr><td>Labels</td><td>Display static text</td><td>Titles, instructions</td></tr>
+            <tr><td>Entry / Text Boxes</td><td>User input</td><td>Forms, search bars</td></tr>
+            <tr><td>Frames</td><td>Group widgets</td><td>Organise layout</td></tr>
+            <tr><td>Tab Views</td><td>Multiple pages</td><td>Settings, feature areas</td></tr>
+            <tr><td>Listboxes / Tables</td><td>Display data</td><td>Records, search results</td></tr>
+            <tr><td>Message Boxes</td><td>Alerts / confirmations</td><td>Errors, success messages</td></tr>
         </tbody>
     </table>
 
-    <!-- ==================== IA CHECKLIST ==================== -->
+    <!-- ===== CHECKLIST ===== -->
     <h2>✅ IA GUI Checklist</h2>
     <div class="task-box">
-        <p>Use this checklist to make sure your GUI project meets the IA requirements:</p>
         <ul class="checklist">
             <li>GUI built using <strong>classes and OOP</strong></li>
-            <li>Multiple <strong>windows or frames</strong> (e.g., login → main → settings)</li>
-            <li>Input validation and <strong>error handling</strong> (message boxes)</li>
+            <li>Multiple <strong>windows or frames</strong> (login → main → settings)</li>
+            <li>Input validation and <strong>error handling</strong></li>
             <li>Data persistence (file I/O or database)</li>
-            <li>At least one <strong>complex algorithm</strong> or feature</li>
+            <li>At least one <strong>complex algorithm</strong></li>
             <li>Clean, modular code with comments</li>
-            <li>Professional-looking interface (themes, consistent styling)</li>
-            <li>Documentation explaining class structure and design decisions</li>
-            <li>Video demonstration of the working application</li>
+            <li>Professional-looking interface</li>
+            <li>Documentation explaining class structure</li>
+            <li>Video demonstration of the working app</li>
         </ul>
     </div>
 
-    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <!-- ===== KEY TAKEAWAY ===== -->
     <h2>💡 Key Takeaway</h2>
     <div class="key-takeaway">
-        <p><em>"The course doesn't teach GUI development, but for your IA, a GUI built with classes and OOP gives you the best opportunity to demonstrate complexity, modularity, and professional design. Use the resources above to learn the skills — then apply them to your own project."</em></p>
+        <p><em>"The course doesn't teach GUI development, but for your IA, a GUI built with classes and OOP gives you the best opportunity to demonstrate complexity, modularity, and professional design. Use the resources above — then apply them to your own project."</em></p>
     </div>
 
     <hr>
-
     <div class="footer-meta">
         Internal Assessment – GUI Development Guide • IB Computer Science
     </div>
 
 </div>
+
+<!-- ======================= INTERACTIVE SCRIPT ======================= -->
+<script>
+    (function() {
+        // ---------- code lines with metadata ----------
+        const codeLines = [
+            { text: '# Example structure using CustomTkinter (Python)', type: 'comment', explanation: 'A comment introducing the example. Comments are essential for documenting your IA code — they explain the purpose of each section.' },
+            { text: 'import customtkinter as ctk', type: 'keyword', explanation: 'Imports the CustomTkinter library (aliased as <code>ctk</code>). CustomTkinter provides modern, themed widgets on top of Tkinter. Importing with an alias is a common convention to keep code concise.' },
+            { text: '', type: 'blank', explanation: '' },
+            { text: '# Each major component can be its own class', type: 'comment', explanation: 'This comment highlights the core OOP design principle: decompose the GUI into separate classes. Each class handles a distinct part of the interface, improving modularity and reusability.' },
+            { text: 'class LoginFrame(ctk.CTkFrame):', type: 'class', explanation: '<code>LoginFrame</code> inherits from <code>ctk.CTkFrame</code>. It represents the login screen. Using a separate class keeps login logic and widgets isolated — exactly the kind of decomposition the IA rewards.' },
+            { text: '    def __init__(self, master, app_controller):', type: 'function', explanation: 'The constructor receives <code>master</code> (the parent widget) and <code>app_controller</code> (a reference to the main App). This allows the frame to communicate back to the controller — a key pattern for switching screens.' },
+            { text: '        super().__init__(master)', type: 'builtin', explanation: 'Calls the parent class constructor to properly initialise the frame with its master. Essential for the widget hierarchy to work correctly.' },
+            { text: '        self.app_controller = app_controller', type: 'keyword', explanation: 'Stores the controller reference. Later, buttons inside this frame can call <code>self.app_controller.show_dashboard()</code> to trigger a screen change.' },
+            { text: '        # Build login widgets here', type: 'comment', explanation: 'A placeholder for adding widgets (labels, entry fields, buttons). In a real IA, you would create and place them here using methods like <code>pack()</code> or <code>grid()</code>.' },
+            { text: '', type: 'blank', explanation: '' },
+            { text: 'class DashboardFrame(ctk.CTkFrame):', type: 'class', explanation: '<code>DashboardFrame</code> is another frame class, representing the main application screen after login. This demonstrates multiple windows/frames — a checklist item for the IA.' },
+            { text: '    def __init__(self, master, app_controller):', type: 'function', explanation: 'Same pattern as <code>LoginFrame</code>: receives master and controller. Consistent structure makes the code predictable and easier to document.' },
+            { text: '        super().__init__(master)', type: 'builtin', explanation: 'Initialises the frame with its parent widget.' },
+            { text: '        self.app_controller = app_controller', type: 'keyword', explanation: 'Stores the controller for navigation or data access. This is a lightweight version of the Mediator pattern.' },
+            { text: '        # Build dashboard widgets here', type: 'comment', explanation: 'Placeholder for the dashboard UI — tables, charts, buttons, etc.' },
+            { text: '', type: 'blank', explanation: '' },
+            { text: 'class App(ctk.CTk):', type: 'class', explanation: '<code>App</code> inherits from <code>ctk.CTk</code> — the main application window. It acts as the <strong>controller</strong> that coordinates which frame is visible.' },
+            { text: '    def __init__(self):', type: 'function', explanation: 'Constructor for the main window. Sets up the window properties and shows the first screen (login).' },
+            { text: '        super().__init__()', type: 'builtin', explanation: 'Initialises the main window (CTk). This must be called before any other window configuration.' },
+            { text: '        self.title("My IA Application")', type: 'string', explanation: 'Sets the window title. Replace with a meaningful name for your project.' },
+            { text: '        self.geometry("900x600")', type: 'string', explanation: 'Sets the initial window size to 900×600 pixels. A good size for most desktop IA applications.' },
+            { text: '', type: 'blank', explanation: '' },
+            { text: '        # Show login first', type: 'comment', explanation: 'Comment clarifying the initial screen.' },
+            { text: '        self.show_login()', type: 'function', explanation: 'Calls the method to display the login frame. This is where the application starts its UI flow.' },
+            { text: '', type: 'blank', explanation: '' },
+            { text: '    def show_login(self):', type: 'function', explanation: 'Method that creates and displays the <code>LoginFrame</code>. It passes <code>self</code> as both master and controller — a simple way to give the frame access to the main app.' },
+            { text: '        self.login_frame = LoginFrame(self, self)', type: 'keyword', explanation: 'Instantiates <code>LoginFrame</code> with the main window as parent and controller. Stores it as an attribute so it can be destroyed later.' },
+            { text: '        self.login_frame.pack(fill="both", expand=True)', type: 'string', explanation: 'Packs the frame to fill the entire window and expand with resizing. This is standard layout management.' },
+            { text: '', type: 'blank', explanation: '' },
+            { text: '    def show_dashboard(self):', type: 'function', explanation: 'Method to switch to the dashboard. Typically called after a successful login.' },
+            { text: '        self.login_frame.destroy()', type: 'keyword', explanation: 'Removes the login frame from the window. Destroying old frames prevents memory leaks and visual clutter.' },
+            { text: '        self.dashboard_frame = DashboardFrame(self, self)', type: 'keyword', explanation: 'Creates the dashboard frame, again passing the main app as controller.' },
+            { text: '        self.dashboard_frame.pack(fill="both", expand=True)', type: 'string', explanation: 'Packs the dashboard frame to fill the window.' },
+            { text: '', type: 'blank', explanation: '' },
+            { text: 'if __name__ == "__main__":', type: 'keyword', explanation: 'Python idiom: only run the following block if this file is executed directly (not imported). Good practice for all IA projects.' },
+            { text: '    app = App()', type: 'keyword', explanation: 'Creates an instance of the main application class.' },
+            { text: '    app.mainloop()', type: 'function', explanation: 'Starts the Tkinter event loop. This keeps the window open and responsive to user actions.' }
+        ];
+
+        // ---------- render code lines ----------
+        const codeContent = document.getElementById('codeContent');
+        const explainPanel = document.getElementById('explainPanel');
+
+        // clear
+        codeContent.innerHTML = '';
+
+        codeLines.forEach((line, index) => {
+            const span = document.createElement('span');
+            span.className = 'code-line';
+            span.dataset.index = index;
+            if (line.type === 'blank') {
+                span.innerHTML = '&nbsp;';
+            } else {
+                // apply syntax highlighting manually (simple)
+                let html = line.text;
+                // escape HTML first
+                html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                // highlight keywords (very naive but works for this demo)
+                const keywords = ['import', 'as', 'class', 'def', 'super', 'if', '__name__', '__main__', 'self', 'return', 'True', 'False', 'None'];
+                keywords.forEach(kw => {
+                    const regex = new RegExp(`\\b${kw}\\b`, 'g');
+                    html = html.replace(regex, `<span class="keyword">${kw}</span>`);
+                });
+                // highlight strings
+                html = html.replace(/"([^"]*)"/g, '<span class="string">"$1"</span>');
+                // highlight comments (lines starting with # or with # after spaces)
+                if (line.type === 'comment') {
+                    html = `<span class="comment">${html}</span>`;
+                }
+                // highlight class names (simple)
+                if (line.type === 'class') {
+                    html = html.replace(/(class\s+)(\w+)/, '$1<span class="class">$2</span>');
+                }
+                // highlight function names
+                if (line.type === 'function') {
+                    html = html.replace(/(def\s+)(\w+)/, '$1<span class="function">$2</span>');
+                }
+                // builtin (super)
+                if (line.type === 'builtin') {
+                    html = html.replace(/super\(\)/, '<span class="builtin">super()</span>');
+                }
+                span.innerHTML = html;
+            }
+            span.addEventListener('click', function(e) {
+                e.stopPropagation();
+                // remove active from all
+                document.querySelectorAll('.code-line').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+                updateExplanation(index);
+            });
+            codeContent.appendChild(span);
+            // add newline via CSS (white-space pre-wrap handles it) but we need to add a <br> or use block display
+            // Actually the spans are block-level via CSS .code-line { display: block; }
+            // So each span is on its own line. Good.
+        });
+
+        // ---------- update explanation panel ----------
+        function updateExplanation(index) {
+            const line = codeLines[index];
+            if (!line) return;
+            const title = line.type === 'blank' ? 'Empty line' : line.text.trim() || 'Empty line';
+            let desc = line.explanation || '';
+
+            if (line.type === 'blank') {
+                desc = 'Blank lines improve readability. They separate logical blocks of code, making the structure clearer for you and your IA moderator.';
+            }
+
+            // if no explanation, fallback
+            if (!desc) {
+                desc = 'This line is part of the code structure. Click another line for details.';
+            }
+
+            explainPanel.innerHTML = `
+                <div class="panel-title"><i>📘</i> ${title}</div>
+                <p>${desc}</p>
+            `;
+        }
+
+        // default: show first non-blank line explanation
+        updateExplanation(0);
+        // optionally set active on first line after render
+        setTimeout(() => {
+            const first = document.querySelector('.code-line[data-index="0"]');
+            if (first) first.classList.add('active');
+        }, 50);
+
+        // Also allow clicking the panel to reset? Not needed.
+        // Add a button to reset? Not necessary.
+
+        // small extra: make the panel more friendly
+        explainPanel.style.transition = 'background 0.2s';
+
+    })();
+</script>
 
 </body>
 </html>
