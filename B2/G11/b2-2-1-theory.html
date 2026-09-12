@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B2.2.1 - Static and Dynamic Data Structures (Theory)</title>
+    <title>B2.2.1 – Static & Dynamic Data Structures (Interactive)</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -14,7 +14,7 @@
             line-height: 1.7;
         }
         .container {
-            max-width: 960px;
+            max-width: 1000px;
             margin: 0 auto;
             background: #fff;
             padding: 40px 50px;
@@ -51,6 +51,7 @@
             margin-bottom: 10px;
         }
         h4 { color: #0b2a4a; margin-top: 18px; margin-bottom: 6px; }
+
         .badge {
             display: inline-block;
             background: #b21f1f;
@@ -62,6 +63,7 @@
             text-transform: uppercase;
         }
         .badge.theory { background: #1a5f87; }
+        .badge.interactive { background: #2d8f2d; }
 
         .code-block {
             background: #1e293b;
@@ -80,17 +82,6 @@
         .string { color: #a3d9a5; }
         .function { color: #66b3ff; }
         .error { color: #f87171; }
-
-        .code-output {
-            background: #0f1724;
-            color: #f7c948;
-            padding: 10px 20px;
-            border-radius: 0 0 8px 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            border-top: 1px solid #2d3748;
-            margin-bottom: 10px;
-        }
 
         table {
             width: 100%;
@@ -112,48 +103,35 @@
         }
         tr:nth-child(even) { background: #f7fafc; }
 
+        .task-box, .starter-box, .plenary-box, .info-box, .key-takeaway, .scope-box {
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
         .task-box {
             background: #f7fafc;
             border-left: 4px solid #2d8f2d;
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
-            margin: 15px 0;
         }
         .starter-box {
             background: #ebf4ff;
             border-left: 5px solid #fdbb2d;
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
-            margin: 15px 0;
         }
         .plenary-box {
             background: #f0f7ee;
             border-left: 5px solid #2d8f2d;
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
-            margin: 15px 0;
         }
         .info-box {
             background: #f0f7ee;
-            border-radius: 8px;
-            padding: 12px 18px;
-            margin: 10px 0;
             border-left: 4px solid #2a6f97;
         }
         .key-takeaway {
             background: #fefcbf;
             border-left: 5px solid #fdbb2d;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 25px 0;
             font-weight: 500;
         }
         .scope-box {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px 20px;
-            margin: 12px 0;
         }
 
         .btn-link {
@@ -168,8 +146,10 @@
             border-bottom: none !important;
             transition: background 0.2s;
             margin: 4px 8px 4px 0;
+            cursor: pointer;
+            border: none;
         }
-        .btn-link:hover { background: #1a3f64; color: #fff !important; border-bottom: none !important; }
+        .btn-link:hover { background: #1a3f64; color: #fff !important; }
         .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 
         .principle-box {
@@ -208,6 +188,171 @@
             padding-top: 20px;
         }
 
+        /* --- interactive styles --- */
+        .memory-demo {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .memory-block {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        .stack-area, .heap-area {
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px;
+            min-width: 220px;
+        }
+        .stack-area h4, .heap-area h4 {
+            margin-top: 0;
+            color: #0b2a4a;
+            font-family: Arial, sans-serif;
+            font-size: 1rem;
+        }
+        .mem-cells {
+            display: flex;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            background: #e2e8f0;
+            border: 1px solid #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #0b2a4a;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        .cell.filled { background: #fdbb2d; border-color: #b45309; }
+        .cell.dynamic-filled { background: #86efac; border-color: #166534; }
+        .scenario-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .btn-reveal {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin: 6px 0;
+        }
+        .btn-reveal:hover { background: #1a3f64; }
+        .reveal-content {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            border-left: 4px solid #2d8f2d;
+            display: none;
+        }
+        .reveal-content.show { display: block; }
+        .checkpoint-box {
+            background: #fef9e7;
+            border: 2px dashed #fdbb2d;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 24px 0;
+        }
+        .checkpoint-box h4 { margin-top: 0; color: #b45309; }
+        .decision-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .decision-card {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 16px;
+            flex: 1 1 180px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .decision-card p { font-weight: 600; margin-bottom: 10px; }
+        .decision-buttons { display: flex; gap: 6px; }
+        .decision-buttons button {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #94a3b8;
+            background: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .decision-buttons button.selected-static { background: #b21f1f; color: white; border-color: #b21f1f; }
+        .decision-buttons button.selected-dynamic { background: #2d8f2d; color: white; border-color: #2d8f2d; }
+        .decision-feedback { margin-top: 8px; font-size: 0.85rem; min-height: 20px; }
+        .overflow-demo {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+        }
+        .overflow-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 12px 0; }
+        .overflow-btn {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 16px;
+            cursor: pointer;
+        }
+        .overflow-btn:hover { background: #1a3f64; }
+        .overflow-result { font-weight: bold; }
+        .overflow-result.error { color: #b91c1c; }
+        .overflow-result.success { color: #15803d; }
+        .exam-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 5px solid #b21f1f;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 18px 0;
+        }
+        .exam-box h4 { margin-top: 0; color: #b21f1f; }
+        .mark-badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .convince-box {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .convince-side {
+            flex: 1 1 200px;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        .convince-side.static { border-left: 5px solid #b21f1f; }
+        .convince-side.dynamic { border-left: 5px solid #2d8f2d; }
+
         @media (max-width: 640px) {
             .container { padding: 20px; }
             h1 { font-size: 1.8rem; }
@@ -215,6 +360,7 @@
             .btn-group { flex-direction: column; }
             .btn-link { text-align: center; }
             .analogy-grid { grid-template-columns: 1fr; }
+            .memory-block { flex-direction: column; }
         }
     </style>
 </head>
@@ -232,9 +378,45 @@
                 window.location.href = '../B2.html';
             }
         }
+
+        function toggleReveal(id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.toggle('show');
+        }
+
+        function selectChoice(btn, choice, correct) {
+            var parent = btn.closest('.decision-card');
+            var feedback = parent.querySelector('.decision-feedback');
+            var buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.classList.remove('selected-static', 'selected-dynamic'));
+            btn.classList.add(choice === 'static' ? 'selected-static' : 'selected-dynamic');
+            if (correct) {
+                feedback.innerHTML = '✅ Correct!';
+                feedback.style.color = '#15803d';
+            } else {
+                feedback.innerHTML = '❌ Try again. Think about whether the size is known and fixed.';
+                feedback.style.color = '#b91c1c';
+            }
+        }
+
+        function addStatic() {
+            var result = document.getElementById('staticOverflowResult');
+            result.innerHTML = '❌ Overflow Error — No Space Available';
+            result.className = 'overflow-result error';
+        }
+        function addDynamic() {
+            var result = document.getElementById('dynamicOverflowResult');
+            result.innerHTML = '[78][85][92][63][89][95] ✅ New Memory Allocated';
+            result.className = 'overflow-result success';
+        }
+
+        function revealCheckpoint(id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.toggle('show');
+        }
     </script>
 
-    <h1>B2.2.1 – Static and Dynamic Data Structures <span class="badge theory">Theory</span></h1>
+    <h1>B2.2.1 – Static & Dynamic Data Structures <span class="badge theory">Theory</span> <span class="badge interactive">Interactive</span></h1>
 
     <!-- ==================== STARTER ==================== -->
     <h2>🎯 Starter Activity</h2>
@@ -243,6 +425,49 @@
         <p>Think about the difference between a fixed-size parking lot and a valet parking service. What are the advantages and disadvantages of each?</p>
         <div class="btn-group">
             <a href="https://play.blooket.com/host/brawl?id=68b039cd9d570785d69cb829" target="_blank" class="btn-link">▶ Blooket Recap</a>
+        </div>
+    </div>
+
+    <!-- ==================== MEMORY SIMULATOR ==================== -->
+    <h2>🧠 Interactive Memory Challenge</h2>
+    <div class="memory-demo">
+        <p style="margin-bottom: 12px;"><strong>Memory layout:</strong> Stack (static) &amp; Heap (dynamic)</p>
+        <div class="memory-block">
+            <div class="stack-area">
+                <h4>📚 STACK</h4>
+                <div class="mem-cells">
+                    <div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div>
+                </div>
+                <p style="font-size:0.8rem; color:#475569;">Fixed size · compile-time · fast</p>
+            </div>
+            <div class="heap-area">
+                <h4>🗂️ HEAP</h4>
+                <div class="mem-cells">
+                    <div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div>
+                    <div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div><div class="cell">[ ]</div>
+                </div>
+                <p style="font-size:0.8rem; color:#475569;">Flexible size · runtime · slower</p>
+            </div>
+        </div>
+
+        <!-- Scenario A -->
+        <div class="scenario-card">
+            <p><strong>Scenario A (Java):</strong> <code>int[] scores = new int[5];</code></p>
+            <p><em>Where is memory allocated? Static or Dynamic? Fixed or Flexible?</em></p>
+            <button class="btn-reveal" onclick="toggleReveal('revealA')">Reveal Answer</button>
+            <div id="revealA" class="reveal-content">
+                ✅ Static &nbsp;|&nbsp; ✅ Stack &nbsp;|&nbsp; ✅ Fixed Size
+            </div>
+        </div>
+
+        <!-- Scenario B -->
+        <div class="scenario-card">
+            <p><strong>Scenario B (Python):</strong> <code>students = []</code> <br> <code>students.append("Alice")</code> <br> <code>students.append("Bob")</code></p>
+            <p><em>Where is memory allocated? Static or Dynamic? Fixed or Flexible?</em></p>
+            <button class="btn-reveal" onclick="toggleReveal('revealB')">Reveal Answer</button>
+            <div id="revealB" class="reveal-content">
+                ✅ Dynamic &nbsp;|&nbsp; ✅ Heap &nbsp;|&nbsp; ✅ Can Grow
+            </div>
         </div>
     </div>
 
@@ -307,6 +532,14 @@
         <p><span class="highlight">🔑 Key Principle:</span> Static data structures are allocated on the <strong>stack</strong>. They are fast because memory is <strong>contiguous</strong> and access is direct (O(1)).</p>
     </div>
 
+    <!-- Checkpoint 1 -->
+    <div class="checkpoint-box">
+        <h4>🧠 Checkpoint Question</h4>
+        <p>Where are static data structures allocated?</p>
+        <button class="btn-reveal" onclick="revealCheckpoint('cp1')">Reveal</button>
+        <div id="cp1" class="reveal-content">On the <strong>stack</strong> — fast, fixed size, compile-time allocation.</div>
+    </div>
+
     <h4>3. Dynamic Data Structures</h4>
     <p>A <strong>dynamic data structure</strong> can grow or shrink as needed during program execution, allocating memory at <strong>runtime</strong>.</p>
     <div class="code-block">
@@ -335,6 +568,14 @@
 
     <div class="principle-box">
         <p><span class="highlight">🔑 Key Principle:</span> Dynamic data structures are allocated on the <strong>heap</strong>. They are flexible because memory is allocated and deallocated as needed, but access may require traversal (O(n)).</p>
+    </div>
+
+    <!-- Checkpoint 2 -->
+    <div class="checkpoint-box">
+        <h4>🧠 Checkpoint Question</h4>
+        <p>Where are dynamic data structures allocated?</p>
+        <button class="btn-reveal" onclick="revealCheckpoint('cp2')">Reveal</button>
+        <div id="cp2" class="reveal-content">On the <strong>heap</strong> — flexible, runtime allocation, may require traversal.</div>
     </div>
 
     <h3>Comparison Summary</h3>
@@ -370,172 +611,186 @@
         </tbody>
     </table>
 
-    <h3>When to Use Static vs. Dynamic</h3>
+    <!-- ==================== OVERFLOW DEMO ==================== -->
+    <h2>⚠️ Interactive Array Overflow Demo</h2>
+    <div class="overflow-demo">
+        <p><strong>Static Array (size = 5):</strong> [78][85][92][63][89]</p>
+        <div class="overflow-row">
+            <button class="overflow-btn" onclick="addStatic()">Add 95 (Static)</button>
+            <span id="staticOverflowResult" class="overflow-result"></span>
+        </div>
 
-    <div class="scope-box">
-        <h4>✅ Use Static When...</h4>
-        <ul style="margin-left: 20px;">
-            <li><strong>Known data size</strong> – You know exactly how much data will be stored</li>
-            <li><strong>Performance is critical</strong> – Static structures are faster</li>
-            <li><strong>Memory is limited</strong> – No overhead for pointers</li>
-            <li><strong>Data size is constant</strong> – The amount of data will not change</li>
-            <li><strong>Examples:</strong> Days of the week, months of the year, fixed arrays</li>
-        </ul>
+        <p style="margin-top: 24px;"><strong>Dynamic Structure (linked list):</strong> [78][85][92][63][89]</p>
+        <div class="overflow-row">
+            <button class="overflow-btn" onclick="addDynamic()">Add 95 (Dynamic)</button>
+            <span id="dynamicOverflowResult" class="overflow-result"></span>
+        </div>
     </div>
 
-    <div class="scope-box">
-        <h4>✅ Use Dynamic When...</h4>
-        <ul style="margin-left: 20px;">
-            <li><strong>Unknown data size</strong> – You don't know how much data will be stored</li>
-            <li><strong>Data changes frequently</strong> – Elements are added and removed often</li>
-            <li><strong>Memory efficiency</strong> – Only use as much memory as needed</li>
-            <li><strong>Flexibility is important</strong> – Need to adapt to changing requirements</li>
-            <li><strong>Examples:</strong> User input, inventory, social media feeds</li>
-        </ul>
+    <!-- ==================== DECISION GAME ==================== -->
+    <h2>🎯 Which Structure Should I Use?</h2>
+    <p>Click the correct choice for each scenario.</p>
+
+    <div class="decision-grid">
+        <div class="decision-card">
+            <p>📅 Store 7 days of the week</p>
+            <div class="decision-buttons">
+                <button onclick="selectChoice(this, 'static', true)">Static</button>
+                <button onclick="selectChoice(this, 'dynamic', false)">Dynamic</button>
+            </div>
+            <div class="decision-feedback"></div>
+        </div>
+        <div class="decision-card">
+            <p>👥 Social media followers</p>
+            <div class="decision-buttons">
+                <button onclick="selectChoice(this, 'static', false)">Static</button>
+                <button onclick="selectChoice(this, 'dynamic', true)">Dynamic</button>
+            </div>
+            <div class="decision-feedback"></div>
+        </div>
+        <div class="decision-card">
+            <p>📝 Exam marks for exactly 30 students</p>
+            <div class="decision-buttons">
+                <button onclick="selectChoice(this, 'static', true)">Static</button>
+                <button onclick="selectChoice(this, 'dynamic', false)">Dynamic</button>
+            </div>
+            <div class="decision-feedback"></div>
+        </div>
+        <div class="decision-card">
+            <p>🛒 Shopping cart items (frequent add/remove)</p>
+            <div class="decision-buttons">
+                <button onclick="selectChoice(this, 'static', false)">Static</button>
+                <button onclick="selectChoice(this, 'dynamic', true)">Dynamic</button>
+            </div>
+            <div class="decision-feedback"></div>
+        </div>
+        <div class="decision-card">
+            <p>📊 Monthly rainfall for 12 months</p>
+            <div class="decision-buttons">
+                <button onclick="selectChoice(this, 'static', true)">Static</button>
+                <button onclick="selectChoice(this, 'dynamic', false)">Dynamic</button>
+            </div>
+            <div class="decision-feedback"></div>
+        </div>
+        <div class="decision-card">
+            <p>🎵 Playlist that grows as you add songs</p>
+            <div class="decision-buttons">
+                <button onclick="selectChoice(this, 'static', false)">Static</button>
+                <button onclick="selectChoice(this, 'dynamic', true)">Dynamic</button>
+            </div>
+            <div class="decision-feedback"></div>
+        </div>
+        <div class="decision-card">
+            <p>🏫 Student records for a school of 500 (fixed)</p>
+            <div class="decision-buttons">
+                <button onclick="selectChoice(this, 'static', true)">Static</button>
+                <button onclick="selectChoice(this, 'dynamic', false)">Dynamic</button>
+            </div>
+            <div class="decision-feedback"></div>
+        </div>
+        <div class="decision-card">
+            <p>📦 Inventory with fluctuating stock</p>
+            <div class="decision-buttons">
+                <button onclick="selectChoice(this, 'static', false)">Static</button>
+                <button onclick="selectChoice(this, 'dynamic', true)">Dynamic</button>
+            </div>
+            <div class="decision-feedback"></div>
+        </div>
     </div>
 
-    <h3>Practical Worked Examples</h3>
-
-    <div class="scope-box">
-        <h4>📊 Example 1: Storing Student Information</h4>
-        <p><strong>Problem:</strong> A school needs to store information for 500 students. The number of students is known and changes rarely.</p>
-        <table>
-            <thead><tr><th>Analysis</th><th>Recommendation</th></tr></thead>
-            <tbody>
-                <tr><td>Data Size</td><td>Known (500 students)</td></tr>
-                <tr><td>Changes</td><td>Rarely</td></tr>
-                <tr><td>Performance</td><td>Important (fast access needed)</td></tr>
-                <tr><td>Memory</td><td>Efficient memory use</td></tr>
-            </tbody>
-        </table>
-        <p><strong>Recommended: Static (Array)</strong> – The number is fixed, and fast access is important.</p>
+    <!-- ==================== EXAM PRACTICE ==================== -->
+    <h2>📄 Exam Practice</h2>
+    <div class="exam-box">
+        <h4>Question 1 <span class="mark-badge">4 marks</span></h4>
+        <p>A shopping website stores products that are frequently added and removed. Explain why a dynamic data structure would be more suitable than a static data structure.</p>
+        <button class="btn-reveal" onclick="toggleReveal('exam1')">Reveal mark scheme</button>
+        <div id="exam1" class="reveal-content">
+            <ul>
+                <li>Dynamic structures can grow/shrink as products are added/removed (1).</li>
+                <li>Memory is allocated at runtime, so no fixed limit (1).</li>
+                <li>Avoids overflow and wasted memory (1).</li>
+                <li>Static would require a fixed maximum, risking overflow or unused space (1).</li>
+            </ul>
+        </div>
+    </div>
+    <div class="exam-box">
+        <h4>Question 2 <span class="mark-badge">6 marks</span></h4>
+        <p>Compare static and dynamic data structures with reference to: memory allocation, performance, and flexibility.</p>
+        <button class="btn-reveal" onclick="toggleReveal('exam2')">Reveal mark scheme</button>
+        <div id="exam2" class="reveal-content">
+            <ul>
+                <li><strong>Memory allocation:</strong> static at compile time, dynamic at runtime; static on stack, dynamic on heap.</li>
+                <li><strong>Performance:</strong> static faster access (O(1)) due to contiguous memory; dynamic slower (O(n)) due to traversal and pointer overhead.</li>
+                <li><strong>Flexibility:</strong> static fixed size, cannot resize; dynamic can grow/shrink, more flexible.</li>
+                <li>Additional credit for overflow/fragmentation discussion.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="exam-box">
+        <h4>Question 3 <span class="mark-badge">8 marks</span></h4>
+        <p>A school initially stores 500 students but expects enrolment to vary greatly over the next five years. Discuss whether a static or dynamic data structure should be used.</p>
+        <button class="btn-reveal" onclick="toggleReveal('exam3')">Reveal mark scheme</button>
+        <div id="exam3" class="reveal-content">
+            <ul>
+                <li>Analysis: known initial size but high variability.</li>
+                <li>Static: simple, fast, but may overflow or waste memory if numbers change.</li>
+                <li>Dynamic: flexible, handles growth, avoids overflow, but slower access and pointer overhead.</li>
+                <li>Recommendation: dynamic is likely better for varying enrolment, but could use a hybrid (resizable array).</li>
+            </ul>
+        </div>
     </div>
 
-    <div class="scope-box">
-        <h4>📦 Example 2: Managing an Online Store Inventory</h4>
-        <p><strong>Problem:</strong> An online store needs to track inventory. Products are added and removed frequently.</p>
-        <table>
-            <thead><tr><th>Analysis</th><th>Recommendation</th></tr></thead>
-            <tbody>
-                <tr><td>Data Size</td><td>Unknown; changes frequently</td></tr>
-                <tr><td>Changes</td><td>Frequent additions and removals</td></tr>
-                <tr><td>Performance</td><td>Moderate</td></tr>
-                <tr><td>Memory</td><td>Efficiency is important</td></tr>
-            </tbody>
-        </table>
-        <p><strong>Recommended: Dynamic (Linked List)</strong> – Inventory changes frequently; flexibility is important.</p>
+    <!-- ==================== PEER INSTRUCTION ==================== -->
+    <h2>🤝 Convince Your Partner</h2>
+    <div class="convince-box">
+        <div class="convince-side static">
+            <h4>Static is better because…</h4>
+            <ul>
+                <li>⚡ Faster access (O(1))</li>
+                <li>📦 No pointer overhead, memory efficient when size is known</li>
+                <li>🔒 Predictable, no fragmentation</li>
+            </ul>
+            <p><em>One disadvantage:</em> Fixed size leads to overflow or wasted memory.</p>
+        </div>
+        <div class="convince-side dynamic">
+            <h4>Dynamic is better because…</h4>
+            <ul>
+                <li>📈 Can grow/shrink at runtime</li>
+                <li>💾 Memory used only as needed</li>
+                <li>🔄 Perfect for unknown or changing data sizes</li>
+            </ul>
+            <p><em>One disadvantage:</em> Slower access and extra pointer memory.</p>
+        </div>
     </div>
+    <p><strong>Now switch sides and argue the opposite.</strong> What misconceptions emerge?</p>
 
-    <div class="scope-box">
-        <h4>📱 Example 3: Tracking Social Media User Data</h4>
-        <p><strong>Problem:</strong> A social media platform needs to store user profiles for millions of users. New users join every day.</p>
-        <table>
-            <thead><tr><th>Analysis</th><th>Recommendation</th></tr></thead>
-            <tbody>
-                <tr><td>Data Size</td><td>Unknown; grows every day</td></tr>
-                <tr><td>Changes</td><td>Constant additions</td></tr>
-                <tr><td>Performance</td><td>Moderate</td></tr>
-                <tr><td>Memory</td><td>Important to use only what's needed</td></tr>
-            </tbody>
-        </table>
-        <p><strong>Recommended: Dynamic (Linked List / Tree)</strong> – User base grows constantly; need flexible storage.</p>
-    </div>
-
-    <div class="scope-box">
-        <h4>📅 Example 4: Days of the Week</h4>
-        <p><strong>Problem:</strong> A program needs to store the days of the week.</p>
-        <table>
-            <thead><tr><th>Analysis</th><th>Recommendation</th></tr></thead>
-            <tbody>
-                <tr><td>Data Size</td><td>Fixed (7 days)</td></tr>
-                <tr><td>Changes</td><td>Never</td></tr>
-                <tr><td>Performance</td><td>Important</td></tr>
-                <tr><td>Memory</td><td>Efficient</td></tr>
-            </tbody>
-        </table>
-        <p><strong>Recommended: Static (Array)</strong> – Fixed size; fast access; no need for flexibility.</p>
-    </div>
-
-    <h3>Key Terms</h3>
-    <table>
-        <thead>
-            <tr><th>Term</th><th>Definition</th></tr>
-        </thead>
-        <tbody>
-            <tr><td><strong>Static data structure</strong></td><td>A data structure with a fixed size that cannot be changed at runtime</td></tr>
-            <tr><td><strong>Dynamic data structure</strong></td><td>A data structure that can grow or shrink as needed during runtime</td></tr>
-            <tr><td><strong>Memory allocation</strong></td><td>The process of reserving memory for data storage</td></tr>
-            <tr><td><strong>Compile-time allocation</strong></td><td>Memory is allocated when the program is compiled (before execution)</td></tr>
-            <tr><td><strong>Runtime allocation</strong></td><td>Memory is allocated while the program is running</td></tr>
-            <tr><td><strong>Stack</strong></td><td>A region of memory used for static allocation (fast, fixed size)</td></tr>
-            <tr><td><strong>Heap</strong></td><td>A region of memory used for dynamic allocation (flexible, but slower)</td></tr>
-            <tr><td><strong>Resizing</strong></td><td>The ability to change the size of a data structure</td></tr>
-            <tr><td><strong>Contiguous memory</strong></td><td>Memory locations that are adjacent to each other</td></tr>
-            <tr><td><strong>Non-contiguous memory</strong></td><td>Memory locations that are not adjacent to each other</td></tr>
-        </tbody>
-    </table>
-
-    <div class="info-box">
-        <p><strong>⚠️ Common Errors:</strong></p>
-        <ul style="margin-left: 20px;">
-            <li><strong>Overflow (Static):</strong> Trying to store more data than the allocated size.</li>
-            <li><strong>Underflow (Dynamic):</strong> A dynamic structure unexpectedly empty or reduced below expected size.</li>
-            <li><strong>Memory fragmentation:</strong> Dynamic structures can leave gaps in memory over time.</li>
-            <li><strong>Pointer overhead:</strong> Dynamic structures require extra memory for pointers/references.</li>
-        </ul>
-    </div>
-
-    <!-- ==================== TASK 1 ==================== -->
+    <!-- ==================== TASK 1 (Reading) ==================== -->
     <h2>📝 Task 1: Understanding</h2>
     <div class="task-box">
         <div class="task-title">📖 Read & Understand</div>
-        <div class="task-desc">Read through the detailed explanations of static and dynamic data structures on the Computer Science Wiki and in the eBook.</div>
+        <div class="task-desc">Use these resources to deepen your understanding.</div>
         <div class="btn-group">
             <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.2.1-compare-static-and-dynamic-data-structures" target="_blank" class="btn-link">📄 Static vs Dynamic Wiki</a>
-            <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.2.1.pdf" target="_blank" class="btn-link">📄 B2.2.1 eBook (Reference)</a>
-            <a href="https://docs.google.com/presentation/d/e/2PACX-1vTw8pN5mWeiL8CdXIArzCBXc_gI7PCURTVbXA_csQXeWNHl_jPcH0i6TLwvwGNYp0SN6ZBHtPfnTCHn/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" class="btn-link">📄 Lesson Presentation (Slides)</a>
+            <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.2.1.pdf" target="_blank" class="btn-link">📄 B2.2.1 eBook</a>
         </div>
     </div>
 
-    <!-- ==================== TASK 2 ==================== -->
-    <h2>🤖 Task 2: Teach the AI</h2>
-    <div class="task-box">
-        <div class="task-title">🧠 RevisionDojo "Teach the AI"</div>
-        <div class="task-desc">Explain what you've learned about static and dynamic data structures to the AI. This will help consolidate your understanding.</div>
-        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank" class="btn-link">🤖 Teach the AI</a>
-    </div>
-
-    <!-- ==================== TASK 3 ==================== -->
+    <!-- ==================== TASK 3 (Assessment - Main PowerPoint) ==================== -->
     <h2>💻 Task 3: Assessment</h2>
     <div class="task-box">
-        <div class="task-title">📊 Quiz & Scenario Analysis</div>
-        <div class="task-desc">Complete the eBook quiz and work through the scenario cards to test your understanding.</div>
-
-        <p style="margin-top: 10px;"><strong>Sample Quiz Questions:</strong></p>
-        <ul style="margin-left: 20px; margin-bottom: 10px;">
-            <li>What is the main difference between static and dynamic data structures?</li>
-            <li>Where is memory allocated for static data structures?</li>
-            <li>Why is access faster in static data structures?</li>
-            <li>Give an example of a dynamic data structure.</li>
-            <li>When would you use a static data structure over a dynamic one?</li>
-        </ul>
-
+        <div class="task-title">📊 Main Assessment — Lesson Presentation</div>
+        <div class="task-desc">Complete the assessment task in the lesson presentation. Submit your work on Schoolbox.</div>
         <div class="btn-group">
-            <a href="https://quizlet.com/pt/1015871069/b-221-static-and-dynamic-data-structures-flash-cards/?i=f0i3o&x=1qqt" target="_blank" class="btn-link">🃏 Quizlet Flashcards</a>
-            <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.2.1.pdf" target="_blank" class="btn-link">📄 eBook Quiz</a>
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vQL7TttkFoBsEc00MyRbolC-I6e4dqnzRo1shhIDgf555Zg8kH1LO84sfm-gFTwDLw4bqaEi3vBjRHf/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank" class="btn-link">📄 Lesson Presentation (Assessment Task)</a>
         </div>
     </div>
 
-    <div class="info-box">
-        <p><strong>📌 Important:</strong> Save your answers and notes. You will use these in the Lab session.</p>
-    </div>
-
-    <!-- ==================== PLENARY ==================== -->
+    <!-- ==================== PLENARY (Quizlet) ==================== -->
     <h2>🎯 Plenary</h2>
     <div class="plenary-box">
-        <p><strong>🎮 Plenary Activity</strong></p>
-        <p>Test your understanding of static and dynamic data structures with this final Blooket quiz.</p>
-        <a href="https://play.blooket.com/host/brawl?id=68b039cd9d570785d69cb829" target="_blank" class="btn-link">▶ Blooket</a>
+        <p><strong>🃏 Quizlet Flashcards</strong></p>
+        <p>Test your understanding of static and dynamic data structures with this final flashcard activity.</p>
+        <a href="https://quizlet.com/pt/1015871069/b-221-static-and-dynamic-data-structures-flash-cards/?i=f0i3o&x=1qqt" target="_blank" class="btn-link">🃏 Quizlet Flashcards</a>
     </div>
 
     <!-- ==================== KEY TAKEAWAY ==================== -->
@@ -547,7 +802,7 @@
     <hr>
 
     <div class="footer-meta">
-        B2.2.1 – Static and Dynamic Data Structures (Theory) • IB Computer Science
+        B2.2.1 – Static and Dynamic Data Structures (Interactive Theory) • IB Computer Science
     </div>
 
 </div>
