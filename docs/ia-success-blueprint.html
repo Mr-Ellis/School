@@ -63,12 +63,20 @@ ul.list li:before{content:"•";position:absolute;left:6px;color:#4f46e5;font-we
 .dark ul{display:grid;gap:12px;list-style:none}
 @media(min-width:768px){.dark ul{grid-template-columns:1fr 1fr}}
 .ai{background:#eef2ff;border-radius:24px;padding:32px;margin-bottom:40px}
-.amber{background:#fef3c7;border-left:4px solid #f59e0b;border-radius:24px;padding:32px}
-.amber h2{color:#78350f}
-.amber p{color:#78350f}
-.amber .small{color:#92400e;font-size:.95rem}
-.pattern{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:16px;padding:20px;margin:16px 0}
-.pattern h4{font-size:1rem;font-weight:700;margin-bottom:8px;color:#166534}
+.oop{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:24px;padding:32px;margin-bottom:40px}
+.oop h2{color:#166534}
+.oop p,.oop li{color:#166534}
+.traffic{display:flex;gap:8px;margin-top:12px}
+.light{width:20px;height:20px;border-radius:50%;border:2px solid #cbd5e1}
+.light.green{background:#22c55e;border-color:#22c55e}
+.light.amber{background:#f59e0b;border-color:#f59e0b}
+.light.red{background:#ef4444;border-color:#ef4444}
+.toc{background:#fff;border-radius:24px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,.06);margin-bottom:40px}
+.toc h2{font-size:1.25rem;margin-bottom:12px}
+.toc ul{list-style:none;display:grid;gap:8px}
+@media(min-width:768px){.toc ul{grid-template-columns:1fr 1fr}}
+.toc li{color:#334155;padding-left:20px;position:relative}
+.toc li:before{content:"✓";position:absolute;left:0;color:#22c55e;font-weight:700}
 </style>
 </head>
 <body>
@@ -76,6 +84,50 @@ ul.list li:before{content:"•";position:absolute;left:6px;color:#4f46e5;font-we
 
 <h1>IB Computer Science IA Success Blueprint</h1>
 <p style="font-size:1.1rem;max-width:800px;margin-bottom:40px">A complete 4-week development framework using CustomTkinter and SQLite. This is not your solution — it is a worked example showing the standard expected. Your final project must be your own work and must address your own client's requirements and success criteria.</p>
+
+<div class="toc">
+<h2>What's In This Blueprint</h2>
+<ul>
+<li>IA Dashboard</li>
+<li>Week 1-4 roadmap</li>
+<li>Progress tracking</li>
+<li>CustomTkinter tutorial</li>
+<li>SQLite tutorial</li>
+<li>Example Library Manager project</li>
+<li>IA complexity checklist</li>
+<li>Criterion C guidance</li>
+<li>Criterion D guidance</li>
+<li>Teacher checkpoints</li>
+<li>Code examples</li>
+<li>Common mistakes</li>
+<li>Traffic-light progress indicators</li>
+</ul>
+</div>
+
+<div class="oop">
+<h2>Why You Must Use Classes and OOP From Day 1</h2>
+<p><strong>This is not optional.</strong> The way you structure your code from the very first line determines whether you can demonstrate complexity in Criterion C — and complexity is where the marks are.</p>
+<p>If you write everything inside one <code>main.py</code> file with 2,000 lines of code, you will:</p>
+<ul class="list">
+<li>Lose marks for decomposition and modularity</li>
+<li>Struggle to explain your code line-by-line (the One Rule)</li>
+<li>Have no clear class structure to discuss in Criterion C</li>
+<li>Make debugging almost impossible</li>
+</ul>
+<p><strong>The fix is simple:</strong> Build your GUI with classes from Day 1. Your MainWindow is a class. Each screen is a class. Your database manager is a class. This is the pattern that demonstrates OOP naturally, without forcing artificial domain classes.</p>
+<p style="font-weight:600;margin-top:16px">Your file structure should look like this from the start:</p>
+<pre>project/
+├── main.py              # Starts the app
+├── gui/
+│   ├── main_window.py   # class MainWindow(ctk.CTk)
+│   ├── dashboard.py     # class DashboardFrame(ctk.CTkFrame)
+│   └── forms.py         # class AddRecordFrame(ctk.CTkFrame)
+├── database/
+│   └── database.py      # class DatabaseManager
+└── models/
+    └── record.py        # class Record</pre>
+<p>This structure alone demonstrates decomposition, modularity, and OOP — all valued in Criterion C.</p>
+</div>
 
 <div class="rule">
 <h2>The One Rule</h2>
@@ -134,7 +186,7 @@ ul.list li:before{content:"•";position:absolute;left:6px;color:#4f46e5;font-we
 <div class="mistakes">
 <h2>Common Mistakes That Lose Marks</h2>
 <ul class="list">
-<li>Putting everything in one <code>main.py</code> file (1,500+ lines)</li>
+<li>Putting everything in one <code>main.py</code> file (2,000+ lines)</li>
 <li>No separation between GUI, logic, and database</li>
 <li>Hardcoding values instead of using parameters</li>
 <li>No validation — app crashes on empty input</li>
@@ -148,6 +200,7 @@ ul.list li:before{content:"•";position:absolute;left:6px;color:#4f46e5;font-we
 
 <div class="card">
 <h2>Your Success Checklist</h2>
+<p style="margin-bottom:16px;color:#64748b">Check each item as you complete it. Aim for all green.</p>
 <div class="check-grid" id="checklist"></div>
 </div>
 
@@ -178,10 +231,29 @@ ul.list li:before{content:"•";position:absolute;left:6px;color:#4f46e5;font-we
 <p style="margin-top:16px;font-weight:600;color:#3730a3">The rule: If you cannot explain it line-by-line, do not include it.</p>
 </div>
 
-<div class="amber">
-<h2>The Week 2 Non-Negotiable</h2>
-<p style="font-size:1.15rem">"If you cannot add, search, edit and delete data through your GUI within two weeks, your project scope must be reduced immediately."</p>
-<p class="small">This single rule prevents most IA disasters. CRUD working by end of Week 2 is the minimum viable project.</p>
+<div class="card">
+<h2>Criterion C Guidance</h2>
+<p>Criterion C is worth 12 marks — the biggest single criterion. It assesses the complexity and ingenuity of your solution, not just whether it works.</p>
+<ul class="list">
+<li><strong>Focus on 1-3 complex techniques</strong> — not your whole program</li>
+<li><strong>Explain why, not just what</strong> — justify your design decisions</li>
+<li><strong>Annotate your code</strong> — screenshots with labels explaining each part</li>
+<li><strong>Reference your sources</strong> — tutorials, frameworks, Stack Overflow solutions you adapted</li>
+<li><strong>Show decomposition</strong> — classes, functions, modules, clear structure</li>
+</ul>
+<p style="margin-top:12px">Strong Criterion C answers: OOP with multiple classes, complex algorithms (sorting, searching, calculations), database relationships, input validation, error handling, and API integration.</p>
+</div>
+
+<div class="card">
+<h2>Criterion D Guidance</h2>
+<p>Criterion D requires a video demonstration (2-7 minutes for HL, recommended for SL) showing your product meeting every success criterion.</p>
+<ul class="list">
+<li><strong>Plan your video</strong> — don't improvise it after coding</li>
+<li><strong>Show every success criterion</strong> — narrate what you're demonstrating</li>
+<li><strong>Include test evidence</strong> — normal, boundary, and abnormal cases</li>
+<li><strong>Keep it clear</strong> — readable screens, clear narration</li>
+<li><strong>Show client feedback</strong> — what they tried, what broke, what changed</li>
+</ul>
 </div>
 
 </div>
