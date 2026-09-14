@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucas — Program Code Feedback</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0f1219;
+    font-family: 'Segoe UI', 'Calibri', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #c9d1d9;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 80px;
+  }
+
+  .page { max-width: 880px; width: 100%; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1b2028 0%, #12151b 100%);
+    border: 1px solid #2e3646;
+    border-radius: 12px;
+    padding: 30px 34px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; position: relative; }
+  .header p { color: #9aa5b6; font-size: 14px; position: relative; }
+  .header .badge {
+    display: inline-block; background: #1a2936; color: #7dd3fc;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 20px; margin-top: 10px; position: relative;
+  }
+
+  /* Nav */
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .nav a {
+    background: #1b2028; border: 1px solid #2e3646; color: #9aa5b6;
+    text-decoration: none; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; transition: all 0.2s;
+  }
+  .nav a:hover { background: #232934; color: #38bdf8; border-color: #38bdf8; }
+
+  /* Progress */
+  .progress-wrap {
+    background: #12151b; border: 1px solid #2e3646; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-wrap .label { font-size: 13px; font-weight: 600; color: #9aa5b6; white-space: nowrap; }
+  .progress-bar { flex: 1; height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+  .progress-bar .fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #4ade80);
+    border-radius: 4px; transition: width 0.4s ease;
+  }
+  .progress-wrap .count { font-size: 13px; font-weight: 700; color: #38bdf8; min-width: 50px; text-align: right; }
+
+  /* Sections */
+  .section {
+    background: #1b2028; border: 1px solid #2e3646; border-radius: 10px;
+    padding: 26px 30px; margin-bottom: 22px; transition: border-color 0.2s;
+  }
+  .section:hover { border-color: #3b4a5e; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section h2 .icon { font-size: 20px; }
+  .section h3 { font-size: 15px; font-weight: 700; color: #e2e8f0; margin-top: 20px; margin-bottom: 8px; }
+
+  p { margin-bottom: 10px; color: #b0b8c4; }
+  strong { color: #f0f3f8; }
+  a { color: #38bdf8; text-decoration: none; border-bottom: 1px dotted #38bdf8; transition: color 0.2s; }
+  a:hover { color: #7dd3fc; border-bottom-style: solid; }
+  ul, ol { margin-left: 22px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; color: #b0b8c4; }
+  li strong { color: #f0f3f8; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 16px 0; font-size: 13px; }
+  th {
+    background: #12151b; color: #7dd3fc; font-weight: 600; text-align: left;
+    padding: 9px 12px; border: 1px solid #2e3646; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  td { padding: 9px 12px; border: 1px solid #2e3646; vertical-align: top; color: #b0b8c4; }
+  tr:nth-child(even) td { background: #181d26; }
+
+  /* Pills */
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.3px; }
+  .pill-met { background: #0f2e1f; color: #4ade80; border: 1px solid #166534; }
+  .pill-partial { background: #2e2a0f; color: #fbbf24; border: 1px solid #854d0e; }
+  .pill-notmet { background: #2e0f0f; color: #f87171; border: 1px solid #991b1b; }
+
+  /* Code */
+  pre {
+    background: #0d1117; color: #c9d1d9;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px; line-height: 1.5;
+    padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; margin: 10px 0 14px 0;
+    border: 1px solid #21262d; position: relative;
+  }
+  pre .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: #21262d; color: #8b949e;
+    border: 1px solid #30363d; border-radius: 4px;
+    font-size: 11px; padding: 3px 8px;
+    cursor: pointer; font-family: 'Segoe UI', sans-serif;
+    transition: all 0.2s;
+  }
+  pre .copy-btn:hover { background: #30363d; color: #c9d1d9; }
+  pre .copy-btn.copied { background: #166534; color: #4ade80; border-color: #166534; }
+  code { font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; }
+  p code, li code, td code {
+    background: #21262d; color: #79c0ff;
+    padding: 2px 6px; border-radius: 4px; font-size: 12.5px;
+  }
+
+  /* Diagrams */
+  .diagram {
+    background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+    padding: 16px 18px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11.5px; line-height: 1.35;
+    white-space: pre; overflow-x: auto;
+    margin: 10px 0 14px 0; color: #8b949e;
+  }
+
+  /* Checklist */
+  .checklist { list-style: none; margin-left: 0; padding-left: 0; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 10px; border-radius: 6px; margin-bottom: 4px;
+    transition: background 0.15s; cursor: pointer;
+  }
+  .checklist li:hover { background: #232934; }
+  .checklist li input[type="checkbox"] {
+    margin-top: 4px; width: 16px; height: 16px;
+    accent-color: #38bdf8; cursor: pointer; flex-shrink: 0;
+  }
+  .checklist li.done label { text-decoration: line-through; color: #6b7280; }
+  .checklist li label { cursor: pointer; color: #b0b8c4; }
+  .checklist li label strong { color: #f0f3f8; }
+
+  /* Priority */
+  .priority-list { counter-reset: priority; list-style: none; margin-left: 0; padding-left: 0; }
+  .priority-list li {
+    counter-increment: priority;
+    padding: 8px 12px 8px 42px;
+    position: relative; border-bottom: 1px solid #21262d; color: #b0b8c4;
+  }
+  .priority-list li:last-child { border-bottom: none; }
+  .priority-list li::before {
+    content: counter(priority);
+    position: absolute; left: 10px; top: 8px;
+    background: #1a2936; color: #38bdf8;
+    font-weight: 700; font-size: 12px;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #2e3646;
+  }
+
+  /* Callouts */
+  .callout {
+    border-left: 4px solid #38bdf8; background: #0f1a24;
+    padding: 12px 16px; margin: 14px 0; border-radius: 0 6px 6px 0;
+  }
+  .callout.warn { border-left-color: #fbbf24; background: #1a1a0f; }
+  .callout.danger { border-left-color: #f87171; background: #1a0f0f; }
+  .callout strong { color: #7dd3fc; }
+  .callout.warn strong { color: #fbbf24; }
+  .callout.danger strong { color: #f87171; }
+
+  /* Resources */
+  .resources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+  .resource-card {
+    background: #12151b; border: 1px solid #2e3646;
+    border-radius: 8px; padding: 14px 16px; transition: all 0.2s;
+  }
+  .resource-card:hover { border-color: #38bdf8; background: #161c26; }
+  .resource-card .rc-title { font-size: 13px; font-weight: 700; color: #f0f3f8; margin-bottom: 4px; }
+  .resource-card .rc-desc { font-size: 12px; color: #8b949e; margin-bottom: 6px; }
+  .resource-card a { font-size: 12px; font-weight: 600; }
+
+  .footer { text-align: center; color: #4b5563; font-size: 12px; padding: 20px 0 10px; }
+
+  @media (max-width: 600px) {
+    body { padding: 14px 10px 60px; }
+    .section { padding: 18px 16px; }
+    .header { padding: 20px; }
+    .header h1 { font-size: 20px; }
+    .diagram { font-size: 9px; }
+    pre { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>Lucas — Program Code Feedback</h1>
+    <p>Password Strength Analyzer · IB Computer Science IA · Client: Mr. Aloof</p>
+    <span class="badge">● Interactive Review</span>
+  </div>
+
+  <nav class="nav">
+    <a href="#sc">Success Criteria</a>
+    <a href="#done">Done Well</a>
+    <a href="#fixes">Critical Fixes</a>
+    <a href="#patterns">Pattern Detection</a>
+    <a href="#csv">CSV / Database</a>
+    <a href="#oop">OOP Refactor</a>
+    <a href="#resources">Resources</a>
+    <a href="#priority">Priority</a>
+  </nav>
+
+  <div class="progress-wrap">
+    <span class="label">Completion</span>
+    <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+    <span class="count" id="progressCount">0 / 10</span>
+  </div>
+
+  <div class="section" id="sc">
+    <h2><span class="icon">📊</span> Success Criteria Coverage</h2>
+    <table>
+      <thead>
+        <tr><th style="width:28%;">SC</th><th style="width:16%;">Status</th><th>Gap</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SC1 (Entropy + crack time &lt;0.5s)</td><td><span class="pill pill-partial">Partial</span></td><td>Latency only printed to console, not shown in UI</td></tr>
+        <tr><td>SC2 (Visual meter)</td><td><span class="pill pill-met">Met</span></td><td><code>draw_meter()</code> works in real time</td></tr>
+        <tr><td>SC3 (SHA-256)</td><td><span class="pill pill-notmet">Not met</span></td><td><code>hashlib</code> imported but never used — hash label is hardcoded</td></tr>
+        <tr><td>SC4 (Breached DB)</td><td><span class="pill pill-notmet">Not met</span></td><td>Placeholder text only</td></tr>
+        <tr><td>SC5 (Pattern detection)</td><td><span class="pill pill-notmet">Not met</span></td><td>Placeholder text only</td></tr>
+        <tr><td>SC6 (3 fixes)</td><td><span class="pill pill-notmet">Not met</span></td><td>Placeholder text only</td></tr>
+        <tr><td>SC7 (Input validation)</td><td><span class="pill pill-partial">Partial</span></td><td>Empty input handled, but no max length / non-ASCII guards</td></tr>
+        <tr><td>SC8 (Math breakdown)</td><td><span class="pill pill-met">Met</span></td><td>Formula updates dynamically</td></tr>
+      </tbody>
+    </table>
+    <div class="callout danger">
+      <strong>⚠ Only SC2 and SC8 are fully met.</strong> SC4, SC5, SC6 are entirely missing. This caps your Criterion D mark significantly.
+    </div>
+  </div>
+
+  <div class="section" id="done">
+    <h2><span class="icon">✅</span> Done Well</h2>
+    <ul>
+      <li>Clean OOP structure with <code>PasswordAuditor</code> class</li>
+      <li>Real-time <code>KeyRelease</code> binding (SC2)</li>
+      <li>Professional dark UI with card layout</li>
+      <li>Correct entropy formula <code>E = L * log2(R)</code></li>
+      <li>Threat model (10<sup>10</sup> guesses/sec) justified in comments</li>
+      <li>Reset logic prevents stale data</li>
+    </ul>
+  </div>
+
+  <div class="section" id="fixes">
+    <h2><span class="icon">🔧</span> Critical Fixes Needed</h2>
+    <ul class="checklist" id="fixList">
+      <li><input type="checkbox" id="fix1"><label for="fix1"><strong>SC3</strong> — Actually call <code>hashlib.sha256(pwd.encode()).hexdigest()</code> and display it.</label></li>
+      <li><input type="checkbox" id="fix2"><label for="fix2"><strong>SC4</strong> — Load a local breached-password file at startup and check the hash against it.</label></li>
+      <li><input type="checkbox" id="fix3"><label for="fix3"><strong>SC5</strong> — Detect repeating chars, sequences, and dictionary words.</label></li>
+      <li><input type="checkbox" id="fix4"><label for="fix4"><strong>SC6</strong> — Generate 3 specific fixes based on what SC5 finds.</label></li>
+      <li><input type="checkbox" id="fix5"><label for="fix5"><strong>SC7</strong> — Add max-length guard (e.g. 128 chars) and visible error label.</label></li>
+      <li><input type="checkbox" id="fix6"><label for="fix6"><strong>SC1</strong> — Display analysis latency on-screen, not just in console.</label></li>
+    </ul>
+  </div>
+
+  <div class="section" id="patterns">
+    <h2><span class="icon">🔍</span> On Pattern Detection</h2>
+    <p>Simple approach for SC5:</p>
+    <ul>
+      <li><strong>Repeating chars</strong>: check for <code>aaa</code>, <code>111</code> using a loop or regex</li>
+      <li><strong>Sequences</strong>: check against a list like <code>"abc"</code>, <code>"123"</code>, <code>"qwerty"</code></li>
+      <li><strong>Dictionary words</strong>: check if the password contains any word from a small wordlist</li>
+    </ul>
+    <div class="callout">
+      <strong>💡 Tip:</strong> Python's <code>re</code> module makes repeating-character detection easy. For example, <code>re.search(r'(.)\1{2,}', pwd)</code> finds any character repeated 3+ times.
+    </div>
+  </div>
+
+  <div class="section" id="csv">
+    <h2><span class="icon">📁</span> CSV / Database Question — Yes, Use CSV</h2>
+    <p><strong>Yes, a CSV is the better choice.</strong> Reasons:</p>
+    <ul>
+      <li><strong>Simpler</strong> — Python's <code>csv</code> module is built-in, no external database needed.</li>
+      <li><strong>Portable</strong> — Mr. Aloof can open it in Excel to inspect or update breached passwords.</li>
+      <li><strong>Offline-friendly</strong> — aligns with your "zero keystroke transmission" constraint.</li>
+      <li><strong>Easy to justify</strong> in Criterion C — you can show the file structure and explain the lookup algorithm.</li>
+    </ul>
+    <h3>Suggested approach</h3>
+    <ol>
+      <li>Create <code>breached_passwords.csv</code> with one column of plain-text breached passwords (or pre-hashed values).</li>
+      <li>At startup, load them into a Python <code>set</code>:</li>
+    </ol>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import csv, hashlib
+
+def load_breached_hashes(path="breached_passwords.csv"):
+    hashes = set()
+    with open(path, newline='', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if row:
+                hashes.add(hashlib.sha256(row[0].strip().encode()).hexdigest())
+    return hashes</code></pre>
+    <ol start="3">
+      <li>On each keypress, hash the input and check <code>if hash in breached_hashes</code>.</li>
+      <li>Show a red banner if found, green if not.</li>
+    </ol>
+    <div class="callout warn">
+      <strong>Why store hashes instead of plain text?</strong> SC3 says passwords should never be stored in plain text — storing the breached list as hashes is consistent with that. It's also faster to compare hashes than to hash every entry on every keypress.
+    </div>
+    <p>If you want to keep it simpler, store plain text in the CSV and hash on load — still defensible.</p>
+    <div class="callout">
+      <strong>🔗 Useful resource:</strong> <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned — Pwned Passwords</a> — a real-world example of a breached-password lookup service. You can download a sample of their SHA-1 hash list to seed your CSV.
+    </div>
+  </div>
+
+  <div class="section" id="oop">
+    <h2><span class="icon">🏗️</span> OOP Refactor — Why and How</h2>
+    <p>Your current code has one class doing everything: UI, math, state. For Criterion D, you want to show <strong>modularity</strong> and <strong>separation of concerns</strong>. Splitting into multiple classes makes testing easier and demonstrates stronger OOP.</p>
+
+    <h3>Current Structure (One Class Does Everything)</h3>
+    <div class="diagram">+-----------------------------------------+
+|           PasswordAuditor               |
+|  +-----------------------------------+  |
+|  | UI: create_header()               |  |
+|  | UI: create_input_section()        |  |
+|  | UI: create_metrics_section()      |  |
+|  | UI: create_feedback_section()     |  |
+|  | UI: create_math_section()         |  |
+|  | Logic: get_pool_size()            |  |
+|  | Logic: calculate_entropy()        |  |
+|  | Logic: estimate_crack_time()      |  |
+|  | Logic: get_tier_level()           |  |
+|  | Event: on_key_press()             |  |
+|  +-----------------------------------+  |
++-----------------------------------------+</div>
+
+    <div class="callout warn">
+      <strong>Problem:</strong> You can't test the math without launching the GUI. You can't reuse the logic in a CLI or web version.
+    </div>
+
+    <h3>Proposed Structure (Four Classes)</h3>
+    <div class="diagram">+-------------------------------------------------------------+
+|                     PasswordAuditorUI                       |
+|  (Tkinter window, widgets, event binding)                   |
+|  - create_header(), create_input_section()                  |
+|  - on_key_press() -&gt; calls analyzer.analyze()               |
+|  - update_ui(results)                                       |
++----------------------+--------------------------------------+
+                       | uses
+                       v
++-------------------------------------------------------------+
+|                   PasswordAnalyzer                          |
+|  (Pure logic — no UI imports)                               |
+|  - analyze(pwd) -&gt; AnalysisResult                           |
+|  - get_pool_size(pwd)                                       |
+|  - calculate_entropy(length, pool)                          |
+|  - estimate_crack_time(entropy)                             |
+|  - get_tier_level(entropy)                                  |
++----------+------------------------------+-------------------+
+           | uses                         | uses
+           v                              v
++--------------------------+   +-----------------------------+
+|   BreachChecker          |   |   PatternDetector           |
+|  - load_csv(path)        |   |  - find_repeats(pwd)        |
+|  - is_breached(hash)     |   |  - find_sequences(pwd)      |
+|  - hash(pwd)             |   |  - find_dictionary(pwd)     |
++--------------------------+   +-----------------------------+</div>
+
+    <h3>What Each Class Does</h3>
+    <table>
+      <thead><tr><th style="width:28%;">Class</th><th>Responsibility</th><th style="width:22%;">Imports</th></tr></thead>
+      <tbody>
+        <tr><td><code>PasswordAuditorUI</code></td><td>All Tkinter widgets, layout, event handling</td><td><code>tkinter</code>, <code>PasswordAnalyzer</code></td></tr>
+        <tr><td><code>PasswordAnalyzer</code></td><td>Entropy math, crack time, tier scoring</td><td><code>math</code> only</td></tr>
+        <tr><td><code>BreachChecker</code></td><td>Load CSV, hash passwords, lookup</td><td><code>csv</code>, <code>hashlib</code></td></tr>
+        <tr><td><code>PatternDetector</code></td><td>Find repeats, sequences, dictionary words</td><td><code>re</code> (optional)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Why This Helps</h3>
+    <ol><li><strong>Testability</strong> — You can write:</li></ol>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>analyzer = PasswordAnalyzer()
+assert analyzer.calculate_entropy(8, 26) == 8 * math.log2(26)</code></pre>
+    <p>without opening a window.</p>
+    <ol start="2">
+      <li><strong>Criterion D evidence</strong> — You can show code excerpts of each class and explain why you separated them.</li>
+      <li><strong>Criterion C</strong> — A UML class diagram becomes natural to draw (see below).</li>
+      <li><strong>Reusability</strong> — If you later want a CLI version or web version, the logic classes stay the same.</li>
+    </ol>
+
+    <h3>UML Class Diagram (for Criterion C)</h3>
+    <div class="diagram">+--------------------------------------+
+|         PasswordAuditorUI            |
++--------------------------------------+
+| - analyzer: PasswordAnalyzer         |
+| - breach_checker: BreachChecker      |
+| - pattern_detector: PatternDetector  |
+| - pw_entry: tk.Entry                 |
+| - canvas_meter: tk.Canvas            |
++--------------------------------------+
+| + create_header()                    |
+| + create_input_section()             |
+| + on_key_press(event)                |
+| + update_ui(result)                  |
+| + draw_meter(level)                  |
++------------------+-------------------+
+                   |
+                   | uses
+                   v
++--------------------------------------+
+|         PasswordAnalyzer             |
++--------------------------------------+
+| - gpu_speed: float = 1e10            |
++--------------------------------------+
+| + analyze(pwd) -&gt; AnalysisResult     |
+| + get_pool_size(pwd) -&gt; (int, str)   |
+| + calculate_entropy(L, R) -&gt; float   |
+| + estimate_crack_time(E) -&gt; str      |
+| + get_tier_level(E) -&gt; int           |
++------------------+-------------------+
+                   |
+          +--------+--------+
+          v                 v
++-----------------+ +--------------------+
+| BreachChecker   | |  PatternDetector   |
++-----------------+ +--------------------+
+| - hashes: set   | | - sequences: list  |
++-----------------+ | - words: list      |
+| + load(path)    | +--------------------+
+| + is_breached   | | + find_repeats()   |
+| + hash(pwd)     | | + find_sequences() |
++-----------------+ | + find_dictionary()|
+                    | + get_advice()     |
+                    +--------------------+</div>
+
+    <h3>Refactor Steps</h3>
+    <ol>
+      <li>Create <code>PasswordAnalyzer</code> class — move <code>get_pool_size</code>, <code>calculate_entropy</code>, <code>estimate_crack_time</code>, <code>get_tier_level</code> into it.</li>
+      <li>Create <code>BreachChecker</code> class — load CSV, hash, lookup.</li>
+      <li>Create <code>PatternDetector</code> class — find repeats, sequences, dictionary words.</li>
+      <li>Create <code>AnalysisResult</code> dataclass (or dict) to pass results from analyzer to UI.</li>
+      <li><code>PasswordAuditorUI</code> calls <code>analyzer.analyze(pwd)</code> and updates widgets from the result.</li>
+      <li>Add unit tests for <code>PasswordAnalyzer</code>.</li>
+    </ol>
+
+    <h3>Example <code>AnalysisResult</code></h3>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>from dataclasses import dataclass
+
+@dataclass
+class AnalysisResult:
+    length: int
+    pool: int
+    pool_details: str
+    entropy: float
+    crack_time: str
+    tier: int
+    tier_name: str
+    hash: str
+    is_breached: bool
+    patterns: list[str]
+    advice: list[str]
+    latency_ms: float</code></pre>
+    <p>This makes <code>update_ui()</code> clean — it just reads fields.</p>
+    <div class="callout">
+      <strong>🔗 Useful resource:</strong> <a href="https://realpython.com/python-dataclasses/" target="_blank" rel="noopener">Real Python — Data Classes</a> explains why dataclasses are ideal for passing structured results between classes.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon">✨</span> Other Improvements</h2>
+    <ul>
+      <li><strong>Unit tests</strong> — Criterion D requires at least 3 test cases (valid, extreme, invalid).</li>
+      <li><strong>Video demo</strong> — show weak → breached → strong → empty input.</li>
+      <li><strong>Acknowledge any LLM use</strong> in comments and documentation.</li>
+      <li><strong>On-screen latency</strong> — display <code>Analysis time: 0.03 ms</code> to evidence SC1.</li>
+    </ul>
+  </div>
+
+  <div class="section" id="resources">
+    <h2><span class="icon">📚</span> Useful Resources</h2>
+    <div class="resources">
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion A</div>
+        <div class="rc-desc">Problem specification &amp; success criteria</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionA.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion B</div>
+        <div class="rc-desc">Planning &amp; decomposition</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionB.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion C</div>
+        <div class="rc-desc">System overview &amp; UML</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionC.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion D</div>
+        <div class="rc-desc">Development &amp; testing</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionD.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion E</div>
+        <div class="rc-desc">Evaluation &amp; improvements</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionE.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Have I Been Pwned</div>
+        <div class="rc-desc">Real breached-password dataset</div>
+        <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Visit →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">NIST Password Guidelines</div>
+        <div class="rc-desc">SP 800-63B official standard</div>
+        <a href="https://pages.nist.gov/800-63-3/sp800-63b.html" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Real Python — Dataclasses</div>
+        <div class="rc-desc">Clean data transfer between classes</div>
+        <a href="https://realpython.com/python-dataclasses/" target="_blank" rel="noopener">Read →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="priority">
+    <h2><span class="icon">🎯</span> Priority Order</h2>
+    <ol class="priority-list">
+      <li>SC3 (SHA-256)</li>
+      <li>SC4 (CSV lookup)</li>
+      <li>SC5 (pattern detection)</li>
+      <li>SC6 (fix suggestions)</li>
+      <li>SC7 (input guards)</li>
+      <li>SC1 (on-screen latency)</li>
+      <li>OOP refactor into 4 classes</li>
+      <li>Unit tests</li>
+      <li>UML class diagram</li>
+      <li>Video demonstration</li>
+    </ol>
+    <div class="callout">
+      Your foundation is solid — you just need to finish SC3–SC6, refactor for modularity, and add testing evidence.
+    </div>
+  </div>
+
+  <div class="footer">IB Computer Science IA · Lucas · Password Strength Analyzer</div>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.parentElement;
+    const code = pre.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    }).catch(() => {
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  const checkboxes = document.querySelectorAll('#fixList input[type="checkbox"]');
+  const progressFill = document.getElementById('progressFill');
+  const progressCount = document.getElementById('progressCount');
+  const totalTasks = 10;
+
+  function updateProgress() {
+    let checked = 0;
+    checkboxes.forEach(cb => { if (cb.checked) checked++; });
+    const done = checked;
+    const pct = Math.min((done / totalTasks) * 100, 100);
+    progressFill.style.width = pct + '%';
+    progressCount.textContent = done + ' / ' + totalTasks;
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      const li = e.target.closest('li');
+      if (e.target.checked) {
+        li.classList.add('done');
+      } else {
+        li.classList.remove('done');
+      }
+      updateProgress();
+    });
+    const li = cb.closest('li');
+    li.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
