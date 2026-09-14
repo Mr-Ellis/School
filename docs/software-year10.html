@@ -202,18 +202,15 @@
       background: #134f75 !important;
     }
 
-    /* Admin-only links (hidden by default, shown in teacher mode) */
+    /* Admin-only links container (injected by JS when teacher mode active) */
     .admin-only-links {
-      display: none;
-      margin-top: 0.6rem;
-      padding-top: 0.6rem;
-      border-top: 1px dashed #d4e0ec;
+      display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       align-items: center;
-    }
-    body.is-teacher .admin-only-links {
-      display: flex;
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed #d4e0ec;
     }
     .admin-only-links .admin-badge {
       font-size: 0.6rem;
@@ -611,12 +608,6 @@
             <div class="card-actions">
                 <a href="https://mr-ellis.github.io/School/Software-RevisionGuide.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Revision Guide</a>
             </div>
-            <!-- Admin-only assessment links (hidden from students) -->
-            <div class="admin-only-links">
-                <span class="admin-badge">Admin</span>
-                <a href="https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/6%20Software/G10%20T1%20A1%20(Unit%206%20Software)%20QP.pdf" target="_blank" rel="noopener" class="btn btn-admin"><i class="fas fa-file-pdf"></i> QP</a>
-                <a href="https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/6%20Software/G10%20T1%20A1%20(Unit%206%20Software)%20MS.pdf" target="_blank" rel="noopener" class="btn btn-admin"><i class="fas fa-file-pdf"></i> MS</a>
-            </div>
         </div>
 
     </div>
@@ -789,6 +780,19 @@
             document.body.classList.add('is-teacher');
             sessionStorage.setItem('teacherMode', 'true');
             
+            // Inject the admin-only QP/MS links into the Revision card
+            const revisionCard = document.querySelector('.card[data-lesson="SWR"]');
+            if (revisionCard && !revisionCard.querySelector('.admin-only-links')) {
+                const linksContainer = document.createElement('div');
+                linksContainer.className = 'admin-only-links';
+                linksContainer.innerHTML = `
+                    <span class="admin-badge">Admin</span>
+                    <a href="https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/6%20Software/G10%20T1%20A1%20(Unit%206%20Software)%20QP.pdf" target="_blank" rel="noopener" class="btn btn-admin"><i class="fas fa-file-pdf"></i> QP</a>
+                    <a href="https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/6%20Software/G10%20T1%20A1%20(Unit%206%20Software)%20MS.pdf" target="_blank" rel="noopener" class="btn btn-admin"><i class="fas fa-file-pdf"></i> MS</a>
+                `;
+                revisionCard.appendChild(linksContainer);
+            }
+            
             // Add a "Lock" button to exit teacher mode
             let existingBtn = document.getElementById('lockAdminBtn');
             if(!existingBtn) {
@@ -861,6 +865,9 @@
 
     })();
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
