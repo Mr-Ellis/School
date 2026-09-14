@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Software-RevisionGuide</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.5;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 2rem;
+    }
+
+    h1 small {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #4b6a8b;
+      margin-left: auto;
+      background: #e9f0fa;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      background: #ffc857;
+      color: #1e2b3c;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      letter-spacing: 0.02em;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+      transition: box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 18px -8px rgba(0, 40, 80, 0.12);
+    }
+
+    .qa-block {
+      margin-bottom: 1.6rem;
+    }
+
+    .question {
+      font-weight: 600;
+      color: #0b2f52;
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.04rem;
+    }
+
+    .question .num {
+      background: #d9e8ff;
+      color: #0a2a4a;
+      font-weight: 700;
+      padding: 0.1rem 0.7rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .answer-toggle {
+      background: #e9f0fa;
+      border: none;
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1f4973;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s, color 0.15s;
+      margin-top: 0.25rem;
+      border: 1px solid #bed3ec;
+    }
+
+    .answer-toggle:hover {
+      background: #d4e3fc;
+      color: #0c2f54;
+    }
+
+    .answer-toggle.active {
+      background: #1f4973;
+      color: white;
+      border-color: #1f4973;
+    }
+
+    .answer-content {
+      background: white;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin-top: 0.8rem;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      display: none;
+    }
+
+    .answer-content.show {
+      display: block;
+    }
+
+    .answer-content ul, .answer-content ol {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .answer-content li {
+      margin-bottom: 0.3rem;
+    }
+
+    .highlight {
+      background: #fff3d6;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .keyword {
+      font-weight: 600;
+      color: #1f4973;
+      background: #eef5ff;
+      padding: 0.1rem 0.4rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    .btn-expand-all {
+      background: #1a3e6b;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.15s;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-expand-all:hover {
+      background: #0f2e4f;
+    }
+
+    .note {
+      background: #e2f0fa;
+      padding: 0.8rem 1.4rem;
+      border-radius: 1rem;
+      font-size: 0.95rem;
+      border-left: 4px solid #1a3e6b;
+      margin: 1rem 0;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.6rem; flex-wrap: wrap; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+    <h1>
+      ⚙️ Software-RevisionGuide
+      <small>IGCSE Computer Science</small>
+    </h1>
+
+    <p style="margin-bottom: 1.8rem; color: #2c4b6e;">
+      Click <strong>“Show answer”</strong> under each question to reveal model answers, 
+      key terms, and exam tips. Use this to check your understanding and revise 
+      the topics tested in the G10 T1 A1 (Unit 6 Software) exam paper.
+    </p>
+
+    <button class="btn-expand-all" id="expandAllBtn">
+      📖 Show all answers
+    </button>
+
+    <!-- =========== SECTION 1: OPERATING SYSTEMS & MULTITASKING ========== -->
+    <h2>1. Operating systems &amp; multitasking</h2>
+
+    <!-- Q1a -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">1(a)</span>
+        <span>Describe how multi-tasking works.</span>
+      </div>
+      <button class="answer-toggle" data-target="ans1a">Show answer ▼</button>
+      <div id="ans1a" class="answer-content">
+        <p><strong>Multi-tasking</strong> allows a single CPU to run multiple programs “simultaneously”. The operating system rapidly switches between programs, giving each a small slice of CPU time (time slicing).</p>
+        <ul>
+          <li>The OS keeps track of the state of each process (e.g., program counter, registers).</li>
+          <li>It schedules which process runs next based on priority and fairness.</li>
+          <li>Because the switching is very fast, it appears that programs are running at the same time.</li>
+        </ul>
+        <p><span class="keyword">Key term:</span> <span class="highlight">time slicing / scheduler</span>.</p>
+      </div>
+    </div>
+
+    <!-- Q1b -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">1(b)</span>
+        <span>When a user presses a key on their keyboard an interrupt is generated. Describe the actions of the operating system as a result of this interrupt. [2]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans1b">Show answer ▼</button>
+      <div id="ans1b" class="answer-content">
+        <ul>
+          <li>The CPU finishes the current instruction and checks the interrupt.</li>
+          <li>The OS saves the current state of the running process (registers, program counter).</li>
+          <li>It identifies the source (keyboard) and runs the appropriate <strong>interrupt service routine (ISR)</strong>.</li>
+          <li>The ISR reads the key pressed and stores it in a buffer / passes it to the program.</li>
+          <li>After handling, the OS restores the saved state and continues the previous task.</li>
+        </ul>
+        <p><em>(Any two valid points for 2 marks)</em></p>
+      </div>
+    </div>
+
+    <!-- Q1c -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">1(c)</span>
+        <span>A keypress on a keyboard is an example of a hardware interrupt. Give one example of a software interrupt.</span>
+      </div>
+      <button class="answer-toggle" data-target="ans1c">Show answer ▼</button>
+      <div id="ans1c" class="answer-content">
+        <ul>
+          <li><strong>Division by zero</strong> – the program tries to divide by zero.</li>
+          <li><strong>Two processes trying to access the same memory location</strong> at the same time.</li>
+          <li>A program requesting a service from the operating system (system call).</li>
+          <li>Page fault / segmentation fault (illegal memory access).</li>
+        </ul>
+        <p><em>(Any one)</em></p>
+      </div>
+    </div>
+
+    <!-- Q1d -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">1(d)</span>
+        <span>Other than managing multi-tasking and interrupts, explain three other functions of an operating system. [6]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans1d">Show answer ▼</button>
+      <div id="ans1d" class="answer-content">
+        <ul>
+          <li><strong>Managing files</strong> – creation, deletion, organisation of files/folders; keeps track of where files are stored on secondary storage.</li>
+          <li><strong>Providing a user interface</strong> – e.g., GUI (WIMP) or command-line, allowing the user to interact with the computer.</li>
+          <li><strong>Managing peripherals and drivers</strong> – communicates with hardware devices via device drivers, manages input/output.</li>
+          <li><strong>Managing memory</strong> – allocates RAM to programs, ensures programs don’t interfere with each other’s memory.</li>
+          <li><strong>Providing a platform for running applications</strong> – provides the environment and services (e.g., file access, networking) that applications need.</li>
+          <li><strong>Managing user accounts / security</strong> – handles login, access rights, permissions, and protects data.</li>
+        </ul>
+        <p><em>(Three explained functions, 2 marks each = 6 marks)</em></p>
+      </div>
+    </div>
+
+    <!-- =========== SECTION 2: UTILITY SOFTWARE ========== -->
+    <h2>2. Utility software</h2>
+
+    <!-- Q2a -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">2(a)</span>
+        <span>Explain what a utility program is.</span>
+      </div>
+      <button class="answer-toggle" data-target="ans2a">Show answer ▼</button>
+      <div id="ans2a" class="answer-content">
+        <p>A <strong>utility program</strong> is system software that helps to maintain, manage, and optimise the computer’s performance. It is not essential for the computer to run, but it helps the computer run efficiently and safely.</p>
+        <p>Examples: disk defragmenter, disk clean-up, backup software, antivirus.</p>
+      </div>
+    </div>
+
+    <!-- Q2b -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">2(b)</span>
+        <span>A disk defragmenter may improve the performance of a computer. Describe how a disk defragmenter works to improve the performance of a computer. [3]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans2b">Show answer ▼</button>
+      <div id="ans2b" class="answer-content">
+        <ul>
+          <li>Over time, files become <strong>fragmented</strong> (split into pieces scattered across the disk).</li>
+          <li>The defragmenter rearranges the pieces of files so they are stored <strong>contiguously</strong> (together).</li>
+          <li>It also consolidates free space.</li>
+          <li>This reduces the movement of the read/write head, so files load faster and overall performance improves.</li>
+        </ul>
+        <p><em>(3 marks for a clear description)</em></p>
+      </div>
+    </div>
+
+    <!-- Q2c -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">2(c)</span>
+        <span>Hard drives normally use magnetic or solid-state technologies. Explain which technology will need defragmentation. [2]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans2c">Show answer ▼</button>
+      <div id="ans2c" class="answer-content">
+        <ul>
+          <li><strong>Magnetic hard drives</strong> need defragmentation.</li>
+          <li>They have moving read/write heads and spinning platters; fragmentation causes extra head movement, slowing access.</li>
+          <li><strong>Solid-state drives (SSD)</strong> do <em>not</em> need defragmentation – they have no moving parts, and defragmenting can cause unnecessary writes, reducing lifespan.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- =========== SECTION 3: FIRMWARE & BOOTLOADER ========== -->
+    <h2>3. Firmware &amp; bootloader</h2>
+
+    <!-- Q3a -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">3(a)</span>
+        <span>The bootloader is firmware. Explain what the term firmware means.</span>
+      </div>
+      <button class="answer-toggle" data-target="ans3a">Show answer ▼</button>
+      <div id="ans3a" class="answer-content">
+        <p><strong>Firmware</strong> is software that is stored permanently on a hardware device, typically in <strong>ROM</strong> (read-only memory) or flash memory. It is non-volatile (retains its contents when power is off) and provides low-level control for the device’s hardware.</p>
+        <p>It acts as an intermediary between hardware and higher-level software.</p>
+      </div>
+    </div>
+
+    <!-- Q3b -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">3(b)</span>
+        <span>State the purpose of a bootloader.</span>
+      </div>
+      <button class="answer-toggle" data-target="ans3b">Show answer ▼</button>
+      <div id="ans3b" class="answer-content">
+        <p>The bootloader is the first program that runs when a computer is switched on. Its purpose is to:</p>
+        <ul>
+          <li>Initialise the hardware (POST).</li>
+          <li>Locate and load the operating system from secondary storage into RAM.</li>
+          <li>Transfer control to the operating system so it can start.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- =========== SECTION 4: LANGUAGES & TRANSLATORS ========== -->
+    <h2>4. Programming languages &amp; translators</h2>
+
+    <!-- Q4a -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">4(a)</span>
+        <span>Identify whether assembly language is a high-level or low-level language. [2]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans4a">Show answer ▼</button>
+      <div id="ans4a" class="answer-content">
+        <p>Assembly language is a <strong>low-level language</strong>.</p>
+        <p>It is specific to a particular processor architecture and uses mnemonics that correspond closely to machine code instructions.</p>
+      </div>
+    </div>
+
+    <!-- Q4b -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">4(b)</span>
+        <span>The assembly code produced by the programmer makes use of mnemonics. Give the purpose of using mnemonics when creating assembly code. [1]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans4b">Show answer ▼</button>
+      <div id="ans4b" class="answer-content">
+        <p>Mnemonics are short, memorable codes (e.g., MOV, ADD) that represent machine code instructions. They make assembly code easier for humans to read, write, and remember compared to binary.</p>
+      </div>
+    </div>
+
+    <!-- Q4c -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">4(c)</span>
+        <span>Give one reason why the programmer has chosen assembly language rather than a high-level language to write the device driver. [1]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans4c">Show answer ▼</button>
+      <div id="ans4c" class="answer-content">
+        <ul>
+          <li>Assembly gives direct control over hardware, which is needed for a device driver.</li>
+          <li>It produces more efficient (faster / smaller) code than high-level languages.</li>
+          <li>High-level languages may not provide the necessary low-level access to hardware.</li>
+        </ul>
+        <p><em>(Any one)</em></p>
+      </div>
+    </div>
+
+    <!-- Q4d -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">4(d)</span>
+        <span>Once the programmer has completed their assembly program, state the translator they will need to use to create the machine code. [1]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans4d">Show answer ▼</button>
+      <div id="ans4d" class="answer-content">
+        <p><strong>Assembler</strong></p>
+      </div>
+    </div>
+
+    <!-- Q4e -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">4(e)</span>
+        <span>Explain why a high-level language would be more appropriate than assembly code for programming this application. [2]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans4e">Show answer ▼</button>
+      <div id="ans4e" class="answer-content">
+        <ul>
+          <li>High-level languages are easier to write, read, and maintain.</li>
+          <li>They are portable (machine-independent) – the same code can run on different hardware.</li>
+          <li>They provide built-in functions and libraries that speed up development (e.g., for video editing).</li>
+          <li>Assembly is time-consuming and error-prone for complex applications.</li>
+        </ul>
+        <p><em>(Any two)</em></p>
+      </div>
+    </div>
+
+    <!-- Q4f -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">4(f)</span>
+        <span>Once the video editing application is complete the programmer makes use of a compiler. Describe the purpose of a compiler in this situation. [2]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans4f">Show answer ▼</button>
+      <div id="ans4f" class="answer-content">
+        <p>A compiler translates the entire high-level source code into machine code <strong>all at once</strong>, producing an executable file.</p>
+        <p>The executable can then be run without the need for the compiler or source code. It also allows the program to be distributed without sharing the source code.</p>
+      </div>
+    </div>
+
+    <!-- Q4g -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">4(g)</span>
+        <span>State the meaning of the term interpreter. [1]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans4g">Show answer ▼</button>
+      <div id="ans4g" class="answer-content">
+        <p>An <strong>interpreter</strong> translates and executes high-level source code <strong>line by line</strong>, every time the program is run. It does not produce a separate executable file.</p>
+      </div>
+    </div>
+
+    <!-- Q4h -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">4(h)</span>
+        <span>Explain why an interpreter wouldn't be as good a choice as a compiler for the video editing application. [2]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans4h">Show answer ▼</button>
+      <div id="ans4h" class="answer-content">
+        <ul>
+          <li>Interpreted code runs <strong>slower</strong> because it must be translated each time it is executed.</li>
+          <li>For a complex application like video editing, performance is critical.</li>
+          <li>An interpreter requires the source code to be present when running, which is not ideal for distribution.</li>
+          <li>A compiler produces a standalone executable that runs faster and can be distributed without source code.</li>
+        </ul>
+        <p><em>(Any two)</em></p>
+      </div>
+    </div>
+
+    <!-- =========== SECTION 5: IDEs ========== -->
+    <h2>5. Integrated Development Environments (IDEs)</h2>
+
+    <!-- Q5a -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">5(a)</span>
+        <span>One key feature of an IDE is a code editor. Describe two features that are available to a programmer that will change how the code appears in the code editor. [4]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans5a">Show answer ▼</button>
+      <div id="ans5a" class="answer-content">
+        <ul>
+          <li><strong>Prettyprint</strong> – automatically formats code with consistent indentation, spacing and line breaks, making it easier to read.</li>
+          <li><strong>Syntax highlighting</strong> – displays different parts of the code in different colours (e.g., keywords, strings, comments) to improve readability and spot errors.</li>
+          <li><strong>Auto-completion / auto-correction</strong> – may suggest or insert code, changing the appearance.</li>
+          <li><strong>Line numbering / code folding</strong> – adds line numbers or allows sections of code to be collapsed.</li>
+        </ul>
+        <p><em>(Two features described, 2 marks each = 4 marks)</em></p>
+      </div>
+    </div>
+
+    <!-- Q5b -->
+    <div class="card qa-block">
+      <div class="question">
+        <span class="num">5(b)</span>
+        <span>Name one other feature of an IDE that will help the programmer with debugging their code. [1]</span>
+      </div>
+      <button class="answer-toggle" data-target="ans5b">Show answer ▼</button>
+      <div id="ans5b" class="answer-content">
+        <ul>
+          <li><strong>Error diagnostics</strong> – highlights syntax errors and warnings.</li>
+          <li><strong>Breakpoints</strong> – pause execution at a specific line.</li>
+          <li><strong>Variable watch / inspection</strong> – view the current values of variables.</li>
+          <li><strong>Step-through / run-time environment</strong> – execute code line by line.</li>
+        </ul>
+        <p><em>(Any one)</em></p>
+      </div>
+    </div>
+
+    <!-- =========== SUMMARY TABLE ========== -->
+    <h2>📘 Quick revision summary</h2>
+    <div class="card" style="background: #eef5ff;">
+      <div class="grid-2">
+        <div>
+          <h3 style="margin-top: 0;">Operating system</h3>
+          <ul style="padding-left: 1.2rem;">
+            <li>Multitasking / time slicing</li>
+            <li>Interrupt handling (ISR)</li>
+            <li>Memory management</li>
+            <li>File management</li>
+            <li>User interface</li>
+            <li>Peripherals &amp; drivers</li>
+            <li>Security / user accounts</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="margin-top: 0;">Utility software</h3>
+          <ul style="padding-left: 1.2rem;">
+            <li>Disk defragmenter (magnetic only)</li>
+            <li>Disk clean-up</li>
+            <li>Backup</li>
+            <li>Antivirus</li>
+          </ul>
+          <h3>Firmware / bootloader</h3>
+          <ul style="padding-left: 1.2rem;">
+            <li>Stored in ROM, non-volatile</li>
+            <li>Bootloader loads OS</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Languages</h3>
+          <ul style="padding-left: 1.2rem;">
+            <li><strong>Low-level:</strong> assembly, mnemonics, assembler</li>
+            <li><strong>High-level:</strong> portable, easier to write</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Translators</h3>
+          <ul style="padding-left: 1.2rem;">
+            <li><strong>Compiler:</strong> all at once, executable, faster</li>
+            <li><strong>Interpreter:</strong> line by line, slower, needs source</li>
+          </ul>
+          <h3>IDE features</h3>
+          <ul style="padding-left: 1.2rem;">
+            <li>Code editor, prettyprint, syntax highlighting</li>
+            <li>Error diagnostics, breakpoints</li>
+            <li>Auto-completion, auto-correction</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      ⚡ Software-RevisionGuide · Unit 6 Software · IGCSE Computer Science
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Toggle individual answers
+      const toggles = document.querySelectorAll('.answer-toggle');
+      toggles.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('data-target');
+          const answerDiv = document.getElementById(targetId);
+          if (!answerDiv) return;
+
+          const isVisible = answerDiv.classList.contains('show');
+          if (isVisible) {
+            answerDiv.classList.remove('show');
+            this.textContent = 'Show answer ▼';
+            this.classList.remove('active');
+          } else {
+            answerDiv.classList.add('show');
+            this.textContent = 'Hide answer ▲';
+            this.classList.add('active');
+          }
+        });
+      });
+
+      // Expand / collapse all
+      const expandAllBtn = document.getElementById('expandAllBtn');
+      expandAllBtn.addEventListener('click', function() {
+        const allAnswers = document.querySelectorAll('.answer-content');
+        const allToggles = document.querySelectorAll('.answer-toggle');
+        const anyHidden = Array.from(allAnswers).some(div => !div.classList.contains('show'));
+
+        if (anyHidden) {
+          // show all
+          allAnswers.forEach(div => div.classList.add('show'));
+          allToggles.forEach(btn => {
+            btn.textContent = 'Hide answer ▲';
+            btn.classList.add('active');
+          });
+          expandAllBtn.textContent = '📕 Hide all answers';
+        } else {
+          // hide all
+          allAnswers.forEach(div => div.classList.remove('show'));
+          allToggles.forEach(btn => {
+            btn.textContent = 'Show answer ▼';
+            btn.classList.remove('active');
+          });
+          expandAllBtn.textContent = '📖 Show all answers';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
