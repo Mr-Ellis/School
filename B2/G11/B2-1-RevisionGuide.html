@@ -98,6 +98,16 @@
     }
     .check-box strong { color: #2e7d32; }
 
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
     .keyword {
       font-weight: 600;
       color: #1f4973;
@@ -191,6 +201,16 @@
     }
     li { margin-bottom: 0.3rem; }
 
+    .analogy {
+      background: #eef6ff;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #2c4b6e;
+      border-left: 4px solid #2a6f97;
+    }
+
     .footer-note {
       margin-top: 3rem;
       padding-top: 1.5rem;
@@ -222,164 +242,280 @@
     </h1>
 
     <p style="margin-bottom: 2rem; color: #2c4b6e;">
-      This guide covers the <strong>concepts</strong> tested in G11 T1 A1 (B2.1). It explains the key ideas,
-      gives exam technique tips, and provides practice questions so you can test your understanding.
-      Work through each section, then try the practice questions <strong>without</strong> looking at the notes.
+      This guide teaches the <strong>concepts</strong> you need for the Unit B2.1 exam. Each section explains
+      the idea from scratch, shows a worked example of the technique, and points out common mistakes.
+      At the end there are practice questions so you can test yourself — the answers are hidden
+      behind the buttons so you can try first.
     </p>
 
     <!-- ============================================================ -->
     <!-- SECTION 1: VARIABLES & DATA TYPES -->
     <!-- ============================================================ -->
-    <h2>1. Variables &amp; Data Types (B2.1.1)</h2>
+    <h2>1. Variables &amp; Data Types</h2>
 
     <div class="card">
       <h3>What is a variable?</h3>
-      <p>A <strong>variable</strong> is a named storage location in memory that holds a value which can change during program execution. Think of it as a labelled box you can put data into.</p>
+      <p>A <strong>variable</strong> is a named storage location in memory that holds a value which can change during program execution.</p>
 
-      <h3>Data types you must know</h3>
+      <div class="analogy">
+        💡 Think of a variable like a labelled box. You write a name on the box (the variable name), and you put something inside it (the value). Later you can look inside, swap the contents, or throw it away.
+      </div>
+
+      <p>In Python you create a variable simply by assigning a value to it. No type declaration is needed — Python figures out the type automatically.</p>
+
+      <pre><code>fruit = "apple"        # creates a variable called 'fruit'
+quantity = 6           # creates a variable called 'quantity'
+price = 0.75           # creates a variable called 'price'
+in_stock = True        # creates a variable called 'in_stock'</code></pre>
+
+      <h3>Why do data types matter?</h3>
+      <p>Every value in Python has a <strong>data type</strong>. The type determines:</p>
+      <ul>
+        <li>What operations you can perform on the value (e.g. you can add two integers, but not add an integer to a string).</li>
+        <li>How the value is stored in memory.</li>
+        <li>What the output will look like when printed.</li>
+      </ul>
+
+      <h3>The five data types you must know</h3>
       <table>
         <thead>
-          <tr><th>Data type</th><th>Description</th><th>Python example</th></tr>
+          <tr><th>Data type</th><th>What it stores</th><th>Python example</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>int</code></td><td>Whole numbers (no decimal point)</td><td><code>age = 16</code></td></tr>
-          <tr><td><code>float</code></td><td>Numbers with a decimal point</td><td><code>price = 19.99</code></td></tr>
-          <tr><td><code>str</code></td><td>Text / characters enclosed in quotes</td><td><code>name = "Alice"</code></td></tr>
-          <tr><td><code>bool</code></td><td>True or False</td><td><code>is_student = True</code></td></tr>
-          <tr><td><code>char</code></td><td>A single character (in Python, still a <code>str</code> of length 1)</td><td><code>initial = 'J'</code></td></tr>
+          <tr><td><code>int</code></td><td>Whole numbers, no decimal point</td><td><code>quantity = 6</code></td></tr>
+          <tr><td><code>float</code></td><td>Numbers with a decimal point</td><td><code>price = 0.75</code></td></tr>
+          <tr><td><code>str</code></td><td>Text / sequences of characters, in quotes</td><td><code>fruit = "apple"</code></td></tr>
+          <tr><td><code>bool</code></td><td>Either <code>True</code> or <code>False</code></td><td><code>in_stock = True</code></td></tr>
+          <tr><td><code>char</code></td><td>A single character. In Python there is no separate char type — a single character is just a <code>str</code> of length 1.</td><td><code>grade = 'A'</code></td></tr>
         </tbody>
       </table>
 
-      <h3>Scope: global vs local</h3>
-      <ul>
-        <li><strong>Local variable</strong> — declared <em>inside</em> a function; only accessible within that function.</li>
-        <li><strong>Global variable</strong> — declared <em>outside</em> all functions; accessible throughout the program.</li>
-        <li>To <strong>modify</strong> a global variable inside a function, you must use the <code>global</code> keyword.</li>
-      </ul>
+      <div class="tip-box">
+        <strong>📝 Choosing the right type:</strong> Use <code>int</code> for counting, <code>float</code> for measuring (price, height), <code>str</code> for text, and <code>bool</code> for yes/no flags. Choosing the wrong type causes bugs — for example, storing a phone number as an <code>int</code> loses the leading zero.
+      </div>
+    </div>
 
-      <pre><code>name = "Bob"          # global
+    <div class="card">
+      <h3>Scope — where a variable lives</h3>
+      <p><strong>Scope</strong> describes where in your program a variable can be seen and used. Python has two kinds you need to know.</p>
 
-def greet():
-    print("Hello", name)   # accesses global
+      <h4>Local variables</h4>
+      <p>A variable declared <strong>inside a function</strong> is <strong>local</strong> to that function. It is created when the function runs and destroyed when the function finishes. It cannot be seen from outside.</p>
 
-def change_name():
-    global name            # needed to modify global
-    name = "Alice"
+      <pre><code>def welcome():
+    greeting = "Welcome!"    # 'greeting' is local
+    print(greeting)
 
-greet()            # Hello Bob
-change_name()
-greet()            # Hello Alice</code></pre>
+welcome()                    # Welcome!
+print(greeting)              # ERROR: name 'greeting' is not defined</code></pre>
+
+      <h4>Global variables</h4>
+      <p>A variable declared <strong>outside all functions</strong> (in the main body of the program) is <strong>global</strong>. It can be read by any function.</p>
+
+      <pre><code>lives = 3                  # 'lives' is global
+
+def show_lives():
+    print("You have", lives, "lives left")
+
+show_lives()               # You have 3 lives left</code></pre>
+
+      <h4>Modifying a global from inside a function</h4>
+      <p>If you want to <em>change</em> a global variable inside a function, you must tell Python you mean the global one — otherwise Python creates a brand new local variable with the same name.</p>
+
+      <pre><code>lives = 3
+
+def lose_life():
+    global lives           # without this line, the next line creates a local
+    lives = lives - 1
+
+lose_life()
+print(lives)               # 2</code></pre>
+
+      <div class="warn-box">
+        <strong>⚠️ Common mistake:</strong> Students forget the <code>global</code> keyword and then wonder why the global variable didn't change. Python treats the assignment as creating a new local variable, so the global stays at its original value.
+      </div>
 
       <div class="tip-box">
-        <strong>📝 Exam tip:</strong> If a question asks "state the scope," answer with a single word — <em>local</em> or <em>global</em>. If it asks you to "explain why the variable cannot be accessed," you must say that it only exists inside the function's scope.
+        <strong>📝 Exam tip:</strong> If a question asks "state the scope," answer with a single word — <em>local</em> or <em>global</em>. If it asks you to "explain why the variable cannot be accessed from outside the function," you must say that the variable only exists within that function's scope.
       </div>
     </div>
 
     <!-- ============================================================ -->
     <!-- SECTION 2: STRING MANIPULATION -->
     <!-- ============================================================ -->
-    <h2>2. String Manipulation (B2.1.2)</h2>
+    <h2>2. String Manipulation</h2>
 
     <div class="card">
       <h3>The big idea</h3>
-      <p>A <strong>substring</strong> is a contiguous sequence of characters within a larger string. You need to be able to extract, combine, and modify substrings.</p>
+      <p>A <strong>string</strong> is a sequence of characters. In programming we often need to <em>pull out</em> parts of a string, <em>combine</em> strings, or <em>change</em> parts of them. These operations are called <strong>string manipulation</strong>.</p>
+      <p>Any contiguous chunk of characters inside a string is called a <strong>substring</strong>. For example, in the string <code>"Elephant"</code>, <code>"Ele"</code>, <code>"phan"</code>, and <code>"ant"</code> are all substrings.</p>
 
-      <h3>Key techniques</h3>
+      <h3>Indexing — how we refer to individual characters</h3>
+      <p>Python numbers the characters in a string starting from <strong>0</strong>. This is called <strong>zero-indexing</strong>.</p>
+
+      <pre><code>animal = "Elephant"
+#         01234567    ← index positions
+
+print(animal[0])    # E   (first character)
+print(animal[4])    # p
+print(animal[7])    # t   (last character)</code></pre>
+
+      <p>You can also count from the end using <strong>negative indices</strong>. <code>-1</code> is the last character, <code>-2</code> is the second-to-last, and so on.</p>
+
+      <pre><code>print(animal[-1])   # t
+print(animal[-3])   # a</code></pre>
+
+      <h3>Slicing — extracting a substring</h3>
+      <p>To extract more than one character, use <strong>slicing</strong> with the syntax <code>[start:end]</code>.</p>
+
+      <div class="analogy">
+        💡 Think of it like cutting a slice of cake. You say "start here" and "stop <em>before</em> here." The end position is <strong>exclusive</strong> — the character at that index is <em>not</em> included.
+      </div>
+
+      <pre><code>animal = "Elephant"
+
+animal[0:3]    # "Ele"      (positions 0, 1, 2)
+animal[3:8]    # "phant"    (positions 3 to 7)
+animal[3:]     # "phant"    (from 3 to the end)
+animal[:4]     # "Elep"     (from the start up to position 3)
+animal[-3:]    # "ant"      (last 3 characters)</code></pre>
+
+      <h3>Concatenation — joining strings together</h3>
+      <p>Use the <code>+</code> operator to join strings. Python will not add a space for you — you must include it.</p>
+
+      <pre><code>first = "Good"
+second = "morning"
+full = first + " " + second + "!"
+print(full)     # Good morning!</code></pre>
+
+      <h3>Replacing — swapping part of a string for something else</h3>
+      <p>The <code>.replace()</code> method takes two arguments: the old substring and the new substring.</p>
+
+      <pre><code>message = "I love apples"
+new_message = message.replace("apples", "oranges")
+print(new_message)     # I love oranges</code></pre>
+
+      <div class="warn-box">
+        <strong>⚠️ Strings are immutable.</strong> This means once a string is created, it cannot be changed. Methods like <code>.replace()</code> and <code>.lower()</code> do <strong>not</strong> modify the original string — they return a <strong>new</strong> string. If you forget to store the result, the change is lost.
+      </div>
+
+      <pre><code>message = "HELLO"
+message.lower()             # returns "hello"
+print(message)              # still "HELLO" — original unchanged
+
+message = message.lower()   # now we save the new string
+print(message)              # "hello"</code></pre>
+
+      <h3>Useful string methods</h3>
       <table>
         <thead>
-          <tr><th>Operation</th><th>Example</th><th>Result</th></tr>
+          <tr><th>Method</th><th>What it does</th><th>Example → Result</th></tr>
         </thead>
         <tbody>
-          <tr><td>Slicing <code>[start:end]</code></td><td><code>"Computer"[0:3]</code></td><td><code>"Com"</code></td></tr>
-          <tr><td>Slice to end</td><td><code>"Computer"[3:]</code></td><td><code>"puter"</code></td></tr>
-          <tr><td>Negative index</td><td><code>"Computer"[-3:]</code></td><td><code>"ter"</code></td></tr>
-          <tr><td>Concatenation <code>+</code></td><td><code>"Hello" + ", " + "Bill"</code></td><td><code>"Hello, Bill"</code></td></tr>
-          <tr><td>Lowercase <code>.lower()</code></td><td><code>"HELLO".lower()</code></td><td><code>"hello"</code></td></tr>
-          <tr><td>Replace <code>.replace()</code></td><td><code>"cats".replace("cats","dogs")</code></td><td><code>"dogs"</code></td></tr>
-          <tr><td>Find <code>.find()</code></td><td><code>"Hello".find("lo")</code></td><td><code>3</code></td></tr>
-          <tr><td>Split <code>.split()</code></td><td><code>"a,b,c".split(",")</code></td><td><code>['a','b','c']</code></td></tr>
+          <tr><td><code>.lower()</code></td><td>Returns the string in lowercase</td><td><code>"HELLO".lower()</code> → <code>"hello"</code></td></tr>
+          <tr><td><code>.upper()</code></td><td>Returns the string in uppercase</td><td><code>"hello".upper()</code> → <code>"HELLO"</code></td></tr>
+          <tr><td><code>.find(x)</code></td><td>Returns the index of the first occurrence of <code>x</code>, or <code>-1</code> if not found</td><td><code>"Hello".find("lo")</code> → <code>3</code></td></tr>
+          <tr><td><code>.index(x)</code></td><td>Same as <code>.find()</code> but raises an error if not found instead of returning <code>-1</code></td><td><code>"Hello".index("lo")</code> → <code>3</code></td></tr>
+          <tr><td><code>.split(sep)</code></td><td>Splits the string into a list at each separator</td><td><code>"cat,dog,fox".split(",")</code> → <code>['cat','dog','fox']</code></td></tr>
+          <tr><td><code>.strip()</code></td><td>Removes whitespace from the start and end</td><td><code>"  hi  ".strip()</code> → <code>"hi"</code></td></tr>
         </tbody>
       </table>
 
+      <h3>Worked example: extracting a postcode from an address</h3>
+      <p>Suppose we have an address string and we want to pull out the postcode at the end.</p>
+
+      <pre><code>address = "10 High Street, London, SW1A 2AA"
+
+# The postcode is always the last 8 characters
+postcode = address[-8:]
+print(postcode)     # "SW1A 2AA"</code></pre>
+
+      <p>We can also split on the comma to get the parts.</p>
+
+      <pre><code>parts = address.split(", ")
+print(parts)        # ['10 High Street', 'London', 'SW1A 2AA']
+print(parts[-1])    # "SW1A 2AA"</code></pre>
+
       <div class="tip-box">
-        <strong>📝 The golden rules:</strong>
-        <ul>
-          <li>Python strings are <strong>0-indexed</strong> — the first character is at index 0.</li>
-          <li>Slicing <code>[start:end]</code> <strong>includes</strong> <code>start</code> but <strong>excludes</strong> <code>end</code> (off-by-one trap).</li>
-          <li>Strings are <strong>immutable</strong> — methods like <code>.replace()</code> and <code>.lower()</code> return a <strong>new</strong> string. They do not change the original.</li>
-        </ul>
-      </div>
-
-      <h3>Worked example: extracting username from email</h3>
-      <pre><code>email = "user123@gmail.com"
-at_index = email.find("@")
-username = email[:at_index]     # "user123"
-domain   = email[at_index+1:]   # "gmail.com"
-print(username, domain)         # user123 gmail.com</code></pre>
-
-      <div class="check-box">
-        <strong>✅ Check your understanding:</strong>
-        <ul>
-          <li>What is the difference between <code>.find()</code> and <code>.index()</code>?</li>
-          <li>Why does <code>"Hello"[1:4]</code> return <code>"ell"</code> and not <code>"ello"</code>?</li>
-          <li>If <code>message = "Hello"</code>, what is the value of <code>message</code> after calling <code>message.lower()</code>?</li>
-        </ul>
+        <strong>📝 Exam tip:</strong> When you write code to extract a substring, comment what each line does. If you make an off-by-one error (very common!), the examiner can still see you understand the logic and award partial credit.
       </div>
     </div>
 
     <!-- ============================================================ -->
     <!-- SECTION 3: EXCEPTION HANDLING -->
     <!-- ============================================================ -->
-    <h2>3. Exception Handling (B2.1.3)</h2>
+    <h2>3. Exception Handling</h2>
 
     <div class="card">
-      <h3>What is exception handling?</h3>
-      <p>Exception handling lets a program <strong>respond to errors gracefully</strong> instead of crashing. In Python we use <code>try</code>, <code>except</code>, and <code>finally</code> blocks.</p>
+      <h3>Why do we need exception handling?</h3>
+      <p>When a program runs, things can go wrong: the user types letters instead of numbers, a file is missing, or a calculation divides by zero. Without special handling, the program crashes and the user sees an ugly error message.</p>
+      <p><strong>Exception handling</strong> lets us catch those problems, deal with them, and keep the program running. This makes our programs <em>robust</em> and <em>user-friendly</em>.</p>
 
-      <h3>The three keywords</h3>
-      <table>
-        <thead>
-          <tr><th>Keyword</th><th>Purpose</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>try</code></td><td>Wraps code that might raise an exception</td></tr>
-          <tr><td><code>except</code></td><td>Catches and handles a specific exception type</td></tr>
-          <tr><td><code>finally</code></td><td>Always runs — with or without an exception. Used for cleanup</td></tr>
-        </tbody>
-      </table>
+      <div class="analogy">
+        💡 Think of exception handling as a safety net. If a trapeze artist falls, the net catches them so the show can go on.
+      </div>
+
+      <h3>The try / except structure</h3>
+      <p>You put risky code inside a <code>try</code> block. If something goes wrong, Python jumps to the matching <code>except</code> block instead of crashing.</p>
 
       <pre><code>try:
-    number = int(input("Enter a number: "))
-    result = 10 / number
-    print(result)
+    quantity = int(input("How many? "))
+    cost = 20 / quantity
+    print("Each one costs", cost)
+
 except ValueError:
-    print("Please enter a valid integer.")
+    print("That wasn't a whole number!")
+
 except ZeroDivisionError:
-    print("You cannot divide by zero.")
+    print("You can't have zero items!")</code></pre>
+
+      <h3>Walking through it</h3>
+      <ul>
+        <li>If the user types <code>"lots"</code>, <code>int("lots")</code> fails with a <code>ValueError</code>, so the first <code>except</code> runs.</li>
+        <li>If the user types <code>"0"</code>, the input is fine but <code>20 / 0</code> fails with a <code>ZeroDivisionError</code>, so the second <code>except</code> runs.</li>
+        <li>If the user types <code>"4"</code>, everything works and <code>5.0</code> is printed.</li>
+      </ul>
+
+      <h3>What is <code>as e</code>?</h3>
+      <p>You can capture the actual exception object with <code>except Exception as e:</code>. The variable <code>e</code> holds information about what went wrong — useful for debugging or for showing the user a helpful message.</p>
+
+      <pre><code>try:
+    x = int("hello")
+except Exception as e:
+    print("Something went wrong:", e)</code></pre>
+
+      <h3>The finally block</h3>
+      <p>Sometimes you have code that <strong>must run no matter what</strong> — for example, closing a file even if an error occurred while reading it. Use <code>finally</code> for that.</p>
+
+      <pre><code>try:
+    file = open("scores.txt")
+    # ... read the file ...
+except FileNotFoundError:
+    print("That file doesn't exist.")
 finally:
-    print("Done.")</code></pre>
+    print("Cleaning up.")     # always runs</code></pre>
 
       <h3>Why order matters</h3>
-      <p>Specific exceptions <strong>must</strong> come before general ones. <code>except Exception</code> catches everything — if it comes first, the specific handlers below it will <strong>never run</strong>.</p>
+      <p>Python checks the <code>except</code> blocks in order from top to bottom, and runs the <strong>first one that matches</strong>. If you put a broad handler first, the specific ones below it never run.</p>
 
       <pre><code># ✅ Correct
 try:
     ...
-except ValueError:      # specific first
+except ValueError:         # specific first
     ...
-except Exception:       # general last
+except Exception:          # general last
     ...
 
-# ❌ Incorrect
+# ❌ Incorrect — ValueError below never runs
 try:
     ...
-except Exception:       # catches everything
+except Exception:          # catches EVERYTHING
     ...
-except ValueError:      # never reached
+except ValueError:
     ...</code></pre>
 
-      <div class="tip-box">
-        <strong>📝 Exam tip:</strong> A classic exam question is why <code>except ZeroDivisionError</code> "wouldn't work" if placed after <code>except Exception</code>. Answer: because <code>Exception</code> catches all exceptions, so execution never reaches the specific handler.
+      <div class="warn-box">
+        <strong>⚠️ Common mistake:</strong> Putting <code>except Exception</code> first. A classic exam question asks why <code>except ZeroDivisionError</code> would "not work" if placed after <code>except Exception</code>. The answer: because <code>Exception</code> catches all exceptions, so execution never reaches the specific handler.
       </div>
 
       <h3>Common exception types</h3>
@@ -388,71 +524,98 @@ except ValueError:      # never reached
           <tr><th>Exception</th><th>Raised when…</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>ValueError</code></td><td>A value has the right type but wrong contents (e.g. <code>int("abc")</code>)</td></tr>
+          <tr><td><code>ValueError</code></td><td>A value has the right type but the wrong contents (e.g. <code>int("abc")</code>)</td></tr>
           <tr><td><code>ZeroDivisionError</code></td><td>Dividing by zero</td></tr>
-          <tr><td><code>TypeError</code></td><td>Operation on wrong data type (e.g. <code>10 + "30"</code>)</td></tr>
-          <tr><td><code>FileNotFoundError</code></td><td>Trying to open a file that doesn't exist</td></tr>
-          <tr><td><code>IndexError</code></td><td>List/string index out of range</td></tr>
+          <tr><td><code>TypeError</code></td><td>Operation on the wrong data type (e.g. <code>10 + "30"</code>)</td></tr>
+          <tr><td><code>FileNotFoundError</code></td><td>Trying to open a file that does not exist</td></tr>
+          <tr><td><code>IndexError</code></td><td>List or string index out of range</td></tr>
           <tr><td><code>KeyError</code></td><td>Dictionary key not found</td></tr>
         </tbody>
       </table>
-
-      <div class="check-box">
-        <strong>✅ Check your understanding:</strong>
-        <ul>
-          <li>What does the <code>finally</code> block do?</li>
-          <li>Give one real-world use case for <code>finally</code>.</li>
-          <li>Why must specific exceptions be caught before general ones?</li>
-        </ul>
-      </div>
     </div>
 
     <!-- ============================================================ -->
     <!-- SECTION 4: DEBUGGING TECHNIQUES -->
     <!-- ============================================================ -->
-    <h2>4. Debugging Techniques (B2.1.4)</h2>
+    <h2>4. Debugging Techniques</h2>
 
     <div class="card">
-      <h3>Types of error</h3>
-      <ul>
-        <li><strong>Syntax error</strong> — code breaks the rules of the language (e.g. missing colon, missing bracket). Caught before the program runs.</li>
-        <li><strong>Runtime error</strong> — happens while the program runs (e.g. <code>ZeroDivisionError</code>, <code>FileNotFoundError</code>).</li>
-        <li><strong>Logical error</strong> — code runs fine but produces the <strong>wrong result</strong> (e.g. wrong formula, wrong loop range). Hardest to find.</li>
-      </ul>
+      <h3>What is debugging?</h3>
+      <p><strong>Debugging</strong> is the process of finding and fixing errors ("bugs") in your code. Even experienced programmers write buggy code — debugging is the skill of tracking down and fixing those bugs systematically.</p>
 
-      <h3>The four debugging techniques</h3>
+      <h3>Types of error</h3>
       <table>
         <thead>
-          <tr><th>Technique</th><th>What it does</th><th>Best for</th></tr>
+          <tr><th>Type</th><th>What it is</th><th>Example</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>Trace table</strong></td><td>Track variable values by hand at each step</td><td>Loops, conditionals, understanding flow</td></tr>
-          <tr><td><strong>Print statements</strong></td><td>Insert <code>print()</code> to show values at run time</td><td>Quick checks, verifying function calls</td></tr>
-          <tr><td><strong>Breakpoints</strong></td><td>Pause execution at a specific line to inspect variables</td><td>Interactive inspection, complex logic</td></tr>
-          <tr><td><strong>Step-through execution</strong></td><td>Run one line at a time</td><td>Following control flow precisely</td></tr>
+          <tr><td><strong>Syntax error</strong></td><td>Your code breaks the rules of the language, so Python cannot even run it.</td><td>Missing colon after <code>if</code>, unbalanced brackets</td></tr>
+          <tr><td><strong>Runtime error</strong></td><td>The program starts but crashes partway through.</td><td><code>ZeroDivisionError</code>, <code>FileNotFoundError</code></td></tr>
+          <tr><td><strong>Logical error</strong></td><td>The program runs without crashing but gives the wrong answer.</td><td>Using the wrong formula, or a loop that runs one time too few</td></tr>
         </tbody>
       </table>
 
-      <h3>Worked example: trace table</h3>
-      <pre><code>total = 0
-for i in range(3):
-    total += i
+      <p>Logical errors are the hardest to find because nothing tells you there's a problem — you have to notice that the output is wrong.</p>
+
+      <h3>Technique 1: Trace tables</h3>
+      <p>A <strong>trace table</strong> is a manual tool where you write down the value of each variable at each step, as if you were the computer. It's slow but extremely effective for understanding loops and conditionals.</p>
+
+      <h4>Worked example</h4>
+      <p>Trace the following code:</p>
+
+      <pre><code>score = 0
+for round_num in range(4):
+    score += round_num * 5
+print(score)</code></pre>
+
+      <p>We write one row for each iteration. <code>round_num</code> takes the values 0, 1, 2, 3 (because <code>range(4)</code> stops before 4).</p>
+
+      <table>
+        <thead>
+          <tr><th>Iteration</th><th><code>round_num</code></th><th>Calculation</th><th><code>score</code> after</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>0</td><td>0 + 0*5</td><td>0</td></tr>
+          <tr><td>2</td><td>1</td><td>0 + 1*5</td><td>5</td></tr>
+          <tr><td>3</td><td>2</td><td>5 + 2*5</td><td>15</td></tr>
+          <tr><td>4</td><td>3</td><td>15 + 3*5</td><td>30</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Final output:</strong> <code>30</code></p>
+
+      <h3>Technique 2: Print statements</h3>
+      <p>The simplest debugging tool. Insert <code>print()</code> lines to see what variables contain at particular moments.</p>
+
+      <pre><code>numbers = [5, 10, "15", 20]
+total = 0
+
+for n in numbers:
+    print("Processing:", n, type(n))    # debug line
+    total += n
+
 print(total)</code></pre>
 
-      <table>
-        <thead>
-          <tr><th>Iteration</th><th><code>i</code></th><th><code>total</code></th></tr>
-        </thead>
-        <tbody>
-          <tr><td>1</td><td>0</td><td>0</td></tr>
-          <tr><td>2</td><td>1</td><td>1</td></tr>
-          <tr><td>3</td><td>2</td><td>3</td></tr>
-        </tbody>
-      </table>
-      <p><strong>Final output:</strong> <code>3</code></p>
+      <p>Running this shows that <code>n</code> is a <code>str</code> on the third iteration — that's the bug.</p>
+
+      <h3>Technique 3: Breakpoints</h3>
+      <p>A <strong>breakpoint</strong> is a marker that tells the debugger to pause the program at a specific line. When it pauses, you can inspect every variable's current value and step forward line by line.</p>
+      <p>Most IDEs (PyCharm, VS Code, Thonny) let you set a breakpoint by clicking in the left margin next to a line of code.</p>
+
+      <h3>Technique 4: Step-through execution</h3>
+      <p>Closely related to breakpoints. You run the program one line at a time and observe exactly what changes at each step. This is very useful for following the flow through nested <code>if</code> statements or loops.</p>
 
       <div class="tip-box">
-        <strong>📝 Exam tip:</strong> A <strong>trace table</strong> question gives you marks for every correct row. Be careful with the <em>value of <code>total</code> after the update</em> in each row, not before.
+        <strong>📝 Which technique should I use?</strong>
+        <ul>
+          <li>Stuck on a loop? <strong>Trace table</strong>.</li>
+          <li>Quick sanity check on a variable? <strong>Print statement</strong>.</li>
+          <li>Complex logic you can't follow by eye? <strong>Breakpoint + step-through</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="warn-box">
+        <strong>⚠️ Common mistake:</strong> Leaving debug <code>print()</code> lines in your final program. Always clean them up before submitting — they clutter the output and can confuse the examiner (or the user).
       </div>
     </div>
 
@@ -462,19 +625,36 @@ print(total)</code></pre>
     <h2>5. Exam Technique</h2>
 
     <div class="card">
-      <h3>Command words</h3>
+      <h3>Understanding command words</h3>
+      <p>The command word at the start of a question tells you exactly how much detail the examiner wants.</p>
+
+      <table>
+        <thead>
+          <tr><th>Command word</th><th>What to do</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>State / Give / Name</strong></td><td>A short answer — often one word or phrase. No explanation.</td></tr>
+          <tr><td><strong>Describe</strong></td><td>Say what happens or what something is. More detail than "state," but no need for reasons.</td></tr>
+          <tr><td><strong>Explain</strong></td><td>Say <em>how</em> or <em>why</em>. Give reasons and make connections.</td></tr>
+          <tr><td><strong>Distinguish</strong></td><td>Make clear the differences between two things.</td></tr>
+          <tr><td><strong>Complete / Trace</strong></td><td>Fill in the blank, or work through the code step by step.</td></tr>
+          <tr><td><strong>Identify</strong></td><td>Pick out the correct answer from the information given.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Reading the mark allocation</h3>
+      <p>The number of marks tells you how many distinct points the examiner expects.</p>
       <ul>
-        <li><strong>State / Give / Name</strong> — a short answer, no explanation needed.</li>
-        <li><strong>Describe</strong> — say what happens; more detail than "state".</li>
-        <li><strong>Explain</strong> — say <em>how</em> or <em>why</em>; give reasons.</li>
-        <li><strong>Distinguish</strong> — give the differences between two things.</li>
-        <li><strong>Complete / Trace</strong> — fill in the blank or work through the code.</li>
-        <li><strong>Identify</strong> — pick out the correct answer from the information given.</li>
+        <li><strong>1 mark:</strong> one short answer.</li>
+        <li><strong>2 marks:</strong> two distinct points, OR one point with a clear explanation.</li>
+        <li><strong>3 marks:</strong> three distinct points, OR one point developed through three stages.</li>
+        <li><strong>4+ marks:</strong> multiple developed points — don't try to answer in one sentence.</li>
       </ul>
 
-      <div class="tip-box">
-        <strong>📝 Mark allocation matters:</strong> A 2-mark question needs two distinct points. A 3-mark question needs three points — or one point developed in three stages. Don't write one sentence for a 4-mark question.
-      </div>
+      <h3>How to answer "explain" questions</h3>
+      <p>Aim for a two-part structure: <strong>what happens + why it happens</strong>.</p>
+      <p><strong>Weak answer:</strong> "It handles the error." <br>
+         <strong>Strong answer:</strong> "The <code>except ValueError</code> block catches the error raised by <code>int()</code> when the input is not a number, so the program prints a helpful message instead of crashing."</p>
 
       <h3>Common mistakes to avoid</h3>
       <ul>
@@ -501,27 +681,28 @@ print(total)</code></pre>
     <!-- ============================================================ -->
     <h2>6. Practice Questions</h2>
     <p style="margin-bottom: 1rem; color: #2c4b6e;">
-      Try these questions <strong>without</strong> looking at your notes. Then click the button to reveal the answer.
+      Now test yourself. Try each question <strong>without</strong> looking back at the notes. Write your answer first,
+      then click <strong>Show answer ▼</strong> to check. None of these questions are the same as the ones in the exam —
+      they test the same skills on different scenarios.
     </p>
 
     <div class="card">
       <h3>Question 1</h3>
       <p>State the data type that would be most appropriate for each of the following values in Python: <em>(4 marks)</em></p>
       <ul>
-        <li><code>42</code></li>
-        <li><code>3.14159</code></li>
-        <li><code>"Hello World"</code></li>
-        <li><code>False</code></li>
+        <li><code>100</code></li>
+        <li><code>2.71828</code></li>
+        <li><code>"Goodbye"</code></li>
+        <li><code>True</code></li>
       </ul>
       <button class="qa-toggle" data-target="q1">Show answer ▼</button>
       <div id="q1" class="qa-content">
         <ul>
-          <li><code>42</code> → <strong>int</strong></li>
-          <li><code>3.14159</code> → <strong>float</strong></li>
-          <li><code>"Hello World"</code> → <strong>str</strong></li>
-          <li><code>False</code> → <strong>bool</strong></li>
+          <li><code>100</code> → <strong>int</strong></li>
+          <li><code>2.71828</code> → <strong>float</strong></li>
+          <li><code>"Goodbye"</code> → <strong>str</strong></li>
+          <li><code>True</code> → <strong>bool</strong></li>
         </ul>
-        <p><em>(4 marks — 1 per correct data type.)</em></p>
       </div>
     </div>
 
@@ -532,27 +713,27 @@ print(total)</code></pre>
          <strong>(b)</strong> Explain why this variable cannot be accessed from outside the function. <em>(2 marks)</em></p>
       <button class="qa-toggle" data-target="q2">Show answer ▼</button>
       <div id="q2" class="qa-content">
-        <p><strong>(a)</strong> <strong>Local</strong> (1).</p>
-        <p><strong>(b)</strong> A local variable can only be accessed within the function where it is declared (1). It does not exist outside that function's scope (1).</p>
+        <p><strong>(a)</strong> Local.</p>
+        <p><strong>(b)</strong> A local variable can only be accessed within the function where it is declared. It does not exist outside that function's scope.</p>
       </div>
     </div>
 
     <div class="card">
       <h3>Question 3</h3>
-      <p>A string <code>word = "Computer"</code> has been declared in Python. State the output of each expression: <em>(3 marks)</em></p>
-      <ul>
-        <li><code>word[0:3]</code></li>
-        <li><code>word[3:]</code></li>
-        <li><code>word[-3:]</code></li>
-      </ul>
+      <p>A student has written the following code:</p>
+      <pre><code>reference = "BOOK-2024-0891"
+year = reference[5:9]
+code = reference[10:]
+print(year)
+print(code)</code></pre>
+      <p><strong>(a)</strong> State the output of <code>print(year)</code>. <em>(1 mark)</em><br>
+         <strong>(b)</strong> State the output of <code>print(code)</code>. <em>(1 mark)</em><br>
+         <strong>(c)</strong> Write a single Python statement that would extract the first four characters of <code>reference</code> and store them in a variable called <code>type_code</code>. <em>(2 marks)</em></p>
       <button class="qa-toggle" data-target="q3">Show answer ▼</button>
       <div id="q3" class="qa-content">
-        <ul>
-          <li><code>word[0:3]</code> → <code>"Com"</code></li>
-          <li><code>word[3:]</code> → <code>"puter"</code></li>
-          <li><code>word[-3:]</code> → <code>"ter"</code></li>
-        </ul>
-        <p><em>(3 marks — 1 per correct output.)</em></p>
+        <p><strong>(a)</strong> <code>2024</code></p>
+        <p><strong>(b)</strong> <code>0891</code></p>
+        <p><strong>(c)</strong> <code>type_code = reference[0:4]</code> (or <code>reference[:4]</code>).</p>
       </div>
     </div>
 
@@ -561,7 +742,7 @@ print(total)</code></pre>
       <p>Explain why strings in Python are described as <strong>immutable</strong>. <em>(3 marks)</em></p>
       <button class="qa-toggle" data-target="q4">Show answer ▼</button>
       <div id="q4" class="qa-content">
-        <p>Strings are immutable because they cannot be changed in place after they are created (1). Methods like <code>.replace()</code> and <code>.lower()</code> return a <strong>new</strong> string rather than modifying the original (1). Example: <code>message.replace("World","IB")</code> returns a new string, but <code>message</code> remains unchanged (1).</p>
+        <p>Strings are immutable because they cannot be changed in place after they are created. Methods like <code>.replace()</code> and <code>.lower()</code> return a <strong>new</strong> string rather than modifying the original. For example, <code>message.replace("cat","dog")</code> returns a new string, but the original <code>message</code> remains unchanged.</p>
       </div>
     </div>
 
@@ -569,21 +750,21 @@ print(total)</code></pre>
       <h3>Question 5</h3>
       <p>Study the following code:</p>
       <pre><code>try:
-    number = int(input("Enter a number: "))
-    result = 10 / number
-    print(result)
+    age = int(input("Enter your age: "))
+    birth_year = 2025 - age
+    print(birth_year)
 except ValueError:
-    print("Please enter a valid integer.")
+    print("Please enter a whole number.")
 except ZeroDivisionError:
-    print("You cannot divide by zero.")</code></pre>
-      <p><strong>(a)</strong> State the output if the user enters <code>"abc"</code>. <em>(1 mark)</em><br>
-         <strong>(b)</strong> State the output if the user enters <code>"0"</code>. <em>(1 mark)</em><br>
+    print("This will never happen.")</code></pre>
+      <p><strong>(a)</strong> State the output if the user enters <code>"ten"</code>. <em>(1 mark)</em><br>
+         <strong>(b)</strong> State the output if the user enters <code>"15"</code>. <em>(1 mark)</em><br>
          <strong>(c)</strong> Explain why <code>except ZeroDivisionError</code> would not work if it were placed <em>after</em> <code>except Exception</code>. <em>(2 marks)</em></p>
       <button class="qa-toggle" data-target="q5">Show answer ▼</button>
       <div id="q5" class="qa-content">
-        <p><strong>(a)</strong> <code>Please enter a valid integer.</code></p>
-        <p><strong>(b)</strong> <code>You cannot divide by zero.</code></p>
-        <p><strong>(c)</strong> <code>except Exception</code> catches all exceptions (1). If it were placed first, it would catch everything and the specific <code>ZeroDivisionError</code> handler would never run (1).</p>
+        <p><strong>(a)</strong> <code>Please enter a whole number.</code></p>
+        <p><strong>(b)</strong> <code>2010</code></p>
+        <p><strong>(c)</strong> <code>except Exception</code> catches all exceptions. If it were placed first, it would catch everything and the specific <code>ZeroDivisionError</code> handler would never run.</p>
       </div>
     </div>
 
@@ -592,41 +773,51 @@ except ZeroDivisionError:
       <p>Distinguish between a <strong>syntax error</strong> and a <strong>logical error</strong>, giving one example of each. <em>(4 marks)</em></p>
       <button class="qa-toggle" data-target="q6">Show answer ▼</button>
       <div id="q6" class="qa-content">
-        <p><strong>Syntax error</strong> — a violation of the rules of the programming language (1). Example: missing parentheses or a missing colon (1).</p>
-        <p><strong>Logical error</strong> — the code runs without crashing but produces an incorrect result (1). Example: using the wrong formula, or a loop that iterates the wrong number of times (1).</p>
+        <p><strong>Syntax error</strong> — a violation of the rules of the programming language. Example: missing parentheses or a missing colon.</p>
+        <p><strong>Logical error</strong> — the code runs without crashing but produces an incorrect result. Example: using the wrong formula, or a loop that iterates the wrong number of times.</p>
       </div>
     </div>
 
     <div class="card">
       <h3>Question 7</h3>
       <p>A programmer has written the following code:</p>
-      <pre><code>total = 0
-for i in range(3):
-    total += i
-print(total)</code></pre>
-      <p><strong>(a)</strong> Complete the trace table. <em>(3 marks)</em><br>
+      <pre><code>count = 0
+for n in range(1, 4):
+    count = count + n * 2
+print(count)</code></pre>
+      <p><strong>(a)</strong> Complete the trace table below. <em>(3 marks)</em><br>
          <strong>(b)</strong> State the final output. <em>(1 mark)</em></p>
+      <table>
+        <thead>
+          <tr><th>Iteration</th><th><code>n</code></th><th><code>count</code></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td></td><td></td></tr>
+          <tr><td>2</td><td></td><td></td></tr>
+          <tr><td>3</td><td></td><td></td></tr>
+        </tbody>
+      </table>
       <button class="qa-toggle" data-target="q7">Show answer ▼</button>
       <div id="q7" class="qa-content">
         <p><strong>(a)</strong></p>
         <table>
-          <thead><tr><th>Iteration</th><th><code>i</code></th><th><code>total</code></th></tr></thead>
+          <thead><tr><th>Iteration</th><th><code>n</code></th><th><code>count</code></th></tr></thead>
           <tbody>
-            <tr><td>1</td><td>0</td><td>0</td></tr>
-            <tr><td>2</td><td>1</td><td>1</td></tr>
-            <tr><td>3</td><td>2</td><td>3</td></tr>
+            <tr><td>1</td><td>1</td><td>2</td></tr>
+            <tr><td>2</td><td>2</td><td>6</td></tr>
+            <tr><td>3</td><td>3</td><td>12</td></tr>
           </tbody>
         </table>
-        <p><strong>(b)</strong> <code>3</code></p>
+        <p><strong>(b)</strong> <code>12</code></p>
       </div>
     </div>
 
     <div class="card">
       <h3>Question 8</h3>
-      <p>A programmer is debugging a program that crashes with a <code>TypeError</code> when processing a list of prices: <code>[10, 20, "30", 40]</code>. Describe how a print statement could help identify the problem. <em>(2 marks)</em></p>
+      <p>A programmer is debugging a program that crashes with a <code>TypeError</code> when processing a list of ages: <code>[12, 15, "eighteen", 22]</code>. Describe how a print statement could help identify the problem. <em>(2 marks)</em></p>
       <button class="qa-toggle" data-target="q8">Show answer ▼</button>
       <div id="q8" class="qa-content">
-        <p>Insert <code>print(price)</code> inside the loop so you can see each value as the program runs (1). This reveals that <code>"30"</code> is a string, not an integer, so the addition fails (1).</p>
+        <p>Insert <code>print(age)</code> inside the loop so you can see each value as the program runs. This reveals that <code>"eighteen"</code> is a string, not an integer, so the addition fails.</p>
       </div>
     </div>
 
@@ -635,7 +826,7 @@ print(total)</code></pre>
       <p>Explain what a <strong>breakpoint</strong> is and how it helps in debugging. <em>(2 marks)</em></p>
       <button class="qa-toggle" data-target="q9">Show answer ▼</button>
       <div id="q9" class="qa-content">
-        <p>A breakpoint is a marker that pauses the program at a specific line of code (1). It lets the programmer inspect current variable values and step through the code one line at a time to find the error (1).</p>
+        <p>A breakpoint is a marker that pauses the program at a specific line of code. It lets the programmer inspect current variable values and step through the code one line at a time to find the error.</p>
       </div>
     </div>
 
@@ -644,7 +835,7 @@ print(total)</code></pre>
       <p>A programmer is writing a program that reads data from a file. The file may not exist. Explain how the <code>try</code> and <code>except</code> blocks could be used to handle this situation. <em>(3 marks)</em></p>
       <button class="qa-toggle" data-target="q10">Show answer ▼</button>
       <div id="q10" class="qa-content">
-        <p>Put the file-reading code inside a <code>try</code> block (1). Use <code>except FileNotFoundError</code> to catch the error if the file does not exist (1). Display a helpful message to the user instead of crashing (1).</p>
+        <p>Put the file-reading code inside a <code>try</code> block. Use <code>except FileNotFoundError</code> to catch the error if the file does not exist. Display a helpful message to the user instead of crashing.</p>
       </div>
     </div>
 
