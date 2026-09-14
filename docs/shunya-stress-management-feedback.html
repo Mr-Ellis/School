@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shunya — Stress Management Test Feedback</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0f1219;
+    font-family: 'Segoe UI', 'Calibri', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #c9d1d9;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 80px;
+  }
+
+  .page { max-width: 880px; width: 100%; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1b2028 0%, #12151b 100%);
+    border: 1px solid #2e3646;
+    border-radius: 12px;
+    padding: 30px 34px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; position: relative; }
+  .header p { color: #9aa5b6; font-size: 14px; position: relative; }
+  .header .badge {
+    display: inline-block; background: #1a2936; color: #7dd3fc;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 20px; margin-top: 10px; position: relative;
+  }
+
+  /* Nav */
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .nav a {
+    background: #1b2028; border: 1px solid #2e3646; color: #9aa5b6;
+    text-decoration: none; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; transition: all 0.2s;
+  }
+  .nav a:hover { background: #232934; color: #38bdf8; border-color: #38bdf8; }
+
+  /* Progress */
+  .progress-wrap {
+    background: #12151b; border: 1px solid #2e3646; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-wrap .label { font-size: 13px; font-weight: 600; color: #9aa5b6; white-space: nowrap; }
+  .progress-bar { flex: 1; height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+  .progress-bar .fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #4ade80);
+    border-radius: 4px; transition: width 0.4s ease;
+  }
+  .progress-wrap .count { font-size: 13px; font-weight: 700; color: #38bdf8; min-width: 50px; text-align: right; }
+
+  /* Sections */
+  .section {
+    background: #1b2028; border: 1px solid #2e3646; border-radius: 10px;
+    padding: 26px 30px; margin-bottom: 22px; transition: border-color 0.2s;
+  }
+  .section:hover { border-color: #3b4a5e; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section h2 .icon { font-size: 20px; }
+  .section h3 { font-size: 15px; font-weight: 700; color: #e2e8f0; margin-top: 24px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #2e3646; }
+
+  p { margin-bottom: 10px; color: #b0b8c4; }
+  strong { color: #f0f3f8; }
+  a { color: #38bdf8; text-decoration: none; border-bottom: 1px dotted #38bdf8; transition: color 0.2s; }
+  a:hover { color: #7dd3fc; border-bottom-style: solid; }
+  ul, ol { margin-left: 22px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; color: #b0b8c4; }
+  li strong { color: #f0f3f8; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 16px 0; font-size: 13px; }
+  th {
+    background: #12151b; color: #7dd3fc; font-weight: 600; text-align: left;
+    padding: 9px 12px; border: 1px solid #2e3646; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  td { padding: 9px 12px; border: 1px solid #2e3646; vertical-align: top; color: #b0b8c4; }
+  tr:nth-child(even) td { background: #181d26; }
+
+  /* Pills */
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.3px; }
+  .pill-met { background: #0f2e1f; color: #4ade80; border: 1px solid #166534; }
+  .pill-partial { background: #2e2a0f; color: #fbbf24; border: 1px solid #854d0e; }
+  .pill-notmet { background: #2e0f0f; color: #f87171; border: 1px solid #991b1b; }
+
+  /* Code */
+  pre {
+    background: #0d1117; color: #c9d1d9;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px; line-height: 1.5;
+    padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; margin: 10px 0 14px 0;
+    border: 1px solid #21262d; position: relative;
+  }
+  pre .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: #21262d; color: #8b949e;
+    border: 1px solid #30363d; border-radius: 4px;
+    font-size: 11px; padding: 3px 8px;
+    cursor: pointer; font-family: 'Segoe UI', sans-serif;
+    transition: all 0.2s;
+  }
+  pre .copy-btn:hover { background: #30363d; color: #c9d1d9; }
+  pre .copy-btn.copied { background: #166534; color: #4ade80; border-color: #166534; }
+  code { font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; }
+  p code, li code, td code {
+    background: #21262d; color: #79c0ff;
+    padding: 2px 6px; border-radius: 4px; font-size: 12.5px;
+  }
+
+  /* Diagrams */
+  .diagram {
+    background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+    padding: 16px 18px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11.5px; line-height: 1.35;
+    white-space: pre; overflow-x: auto;
+    margin: 10px 0 14px 0; color: #8b949e;
+  }
+
+  /* Priority */
+  .priority-list { counter-reset: priority; list-style: none; margin-left: 0; padding-left: 0; }
+  .priority-list li {
+    counter-increment: priority;
+    padding: 8px 12px 8px 42px;
+    position: relative; border-bottom: 1px solid #21262d; color: #b0b8c4;
+  }
+  .priority-list li:last-child { border-bottom: none; }
+  .priority-list li::before {
+    content: counter(priority);
+    position: absolute; left: 10px; top: 8px;
+    background: #1a2936; color: #38bdf8;
+    font-weight: 700; font-size: 12px;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #2e3646;
+  }
+
+  /* Callouts */
+  .callout {
+    border-left: 4px solid #38bdf8; background: #0f1a24;
+    padding: 12px 16px; margin: 14px 0; border-radius: 0 6px 6px 0;
+  }
+  .callout.warn { border-left-color: #fbbf24; background: #1a1a0f; }
+  .callout.danger { border-left-color: #f87171; background: #1a0f0f; }
+  .callout strong { color: #7dd3fc; }
+  .callout.warn strong { color: #fbbf24; }
+  .callout.danger strong { color: #f87171; }
+
+  /* Resources */
+  .resources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+  .resource-card {
+    background: #12151b; border: 1px solid #2e3646;
+    border-radius: 8px; padding: 14px 16px; transition: all 0.2s;
+  }
+  .resource-card:hover { border-color: #38bdf8; background: #161c26; }
+  .resource-card .rc-title { font-size: 13px; font-weight: 700; color: #f0f3f8; margin-bottom: 4px; }
+  .resource-card .rc-desc { font-size: 12px; color: #8b949e; margin-bottom: 6px; }
+  .resource-card a { font-size: 12px; font-weight: 600; }
+
+  .footer { text-align: center; color: #4b5563; font-size: 12px; padding: 20px 0 10px; }
+
+  @media (max-width: 600px) {
+    body { padding: 14px 10px 60px; }
+    .section { padding: 18px 16px; }
+    .header { padding: 20px; }
+    .header h1 { font-size: 20px; }
+    .diagram { font-size: 9px; }
+    pre { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>Shunya — Stress Management Test Feedback</h1>
+    <p>IB Computer Science IA · Client: Year 1 IB Student · PySide6 Desktop App</p>
+    <span class="badge">● Interactive Review</span>
+  </div>
+
+  <nav class="nav">
+    <a href="#sc">Success Criteria</a>
+    <a href="#done">Done Well</a>
+    <a href="#fixes">Critical Fixes</a>
+    <a href="#bugs">Bugs Found</a>
+    <a href="#oop">OOP Refactor</a>
+    <a href="#resources">Resources</a>
+    <a href="#priority">Priority</a>
+  </nav>
+
+  <div class="progress-wrap">
+    <span class="label">Completion</span>
+    <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+    <span class="count" id="progressCount">0 / 10</span>
+  </div>
+
+  <div class="section" id="sc">
+    <h2><span class="icon">📊</span> Success Criteria Coverage</h2>
+    <table>
+      <thead>
+        <tr><th style="width:32%;">SC</th><th style="width:16%;">Status</th><th>Gap</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SC1 (Input answers to all questions)</td><td><span class="pill pill-met">Met</span></td><td>All 10 questions have inputs — checkboxes for Q1–Q5, line edits for Q6–Q10</td></tr>
+        <tr><td>SC2 (Stress score out of 10)</td><td><span class="pill pill-met">Met</span></td><td>Weighted scoring algorithm in <code>submit_answers()</code> with normalization</td></tr>
+        <tr><td>SC3 (Handle invalid data types)</td><td><span class="pill pill-partial">Partial</span></td><td>Validates empty fields and non-integers, but errors are inconsistent (see bugs)</td></tr>
+        <tr><td>SC4 (Record date/time of each test)</td><td><span class="pill pill-met">Met</span></td><td><code>timestamp</code> field saved in <code>Score_history.json</code></td></tr>
+        <tr><td>SC5 (Recommend break duration)</td><td><span class="pill pill-met">Met</span></td><td><code>update_break_display()</code> converts score to mm:ss using <code>BREAK_SECONDS_PER_SCORE</code></td></tr>
+        <tr><td>SC6 (Set and trigger alarm)</td><td><span class="pill pill-met">Met</span></td><td><code>winsound.Beep()</code> loops until user closes the dialog</td></tr>
+        <tr><td>SC7 (Reminders when avg stress exceeds threshold)</td><td><span class="pill pill-notmet">Not met</span></td><td>The code that would detect trends is commented out and marked "broken"</td></tr>
+        <tr><td>SC8 (Results under 1 minute)</td><td><span class="pill pill-met">Met</span></td><td>Scoring is instant — no heavy computation</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn">
+      <strong>⚠ 6 of 8 SCs are met.</strong> SC7 is missing and SC3 needs tightening. That's still a strong foundation — just a few focused fixes left.
+    </div>
+  </div>
+
+  <div class="section" id="done">
+    <h2><span class="icon">✅</span> Done Well</h2>
+    <ul>
+      <li><strong>Two-window flow works</strong> — start screen → questionnaire → back to start, with clean transitions</li>
+      <li><strong>Weighted scoring algorithm</strong> — each question has a weight in <code>Questioneer.json</code>, and you normalize to 10 correctly</li>
+      <li><strong>JSON data persistence</strong> — history is appended, not overwritten, so past tests are preserved</li>
+      <li><strong>Button groups in GUI.ui</strong> — only one checkbox per question can be selected (radio-button behaviour using QCheckBox)</li>
+      <li><strong>Non-blocking timer</strong> — <code>QTimer</code> is used instead of <code>time.sleep()</code>, so the UI stays responsive during the countdown</li>
+      <li><strong>Good use of constants</strong> — <code>BREAK_SECONDS_PER_SCORE</code>, <code>NORMALIZED_SCORE_MAX</code>, etc. at the top of the file</li>
+      <li><strong>Reusable <code>find_button()</code> helper</strong> — handles object-name or text-based button lookup</li>
+    </ul>
+  </div>
+
+  <div class="section" id="fixes">
+    <h2><span class="icon">🔧</span> Critical Fixes Needed</h2>
+
+    <!-- SC7 -->
+    <h3>SC7 — Re-enable the Trend Detection / Reminder System</h3>
+    <p><strong>What's wrong now:</strong> The method <code>maximum_score_trend()</code> finds the timestamp of the highest score, prints it, and returns it — but nothing uses the return value. The reminder code below it is commented out and labelled <em>"broken"</em>.</p>
+    <p><strong>Why it matters:</strong> SC7 is the only success criterion not met. It's also the most useful feature for your client — "remind me when my stress is usually high".</p>
+    <p><strong>What to add:</strong> Compare the current hour to the hour of the max-scoring tests, and show a reminder:</p>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def check_trend_reminder(self):
+    if not HISTORY_FILE.exists():
+        return
+    with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+        history = json.load(f)
+    if not history:
+        return
+
+    # Find the hour with the highest average score
+    from collections import defaultdict
+    hourly = defaultdict(list)
+    for entry in history:
+        hour = int(entry["timestamp"][8:10])
+        hourly[hour].append(entry["score"])
+
+    avg = {h: sum(s) / len(s) for h, s in hourly.items()}
+    peak_hour = max(avg, key=avg.get)
+
+    now_hour = datetime.now().hour
+    if now_hour == peak_hour and avg[peak_hour] >= 6.0:
+        QMessageBox.information(
+            self, "Trend reminder",
+            f"Your stress typically peaks around {peak_hour}:00. Consider taking a test."
+        )</code></pre>
+    <p><strong>How to test it:</strong> Add several fake entries to <code>Score_history.json</code> with high scores at the current hour. Reload the app — the reminder should appear.</p>
+
+    <!-- SC3 -->
+    <h3>SC3 — Tighten Input Validation</h3>
+    <p><strong>What's wrong now:</strong> The validation loop has two bugs (see Bugs Found below). It also doesn't handle out-of-range values consistently — Q6 has a limit of 10, Q7 of 15, Q8 of 12, but the check uses a single <code>&gt;= 1.1</code> rule that doesn't map to the actual limits.</p>
+    <p><strong>Why it matters:</strong> SC3 requires the program to handle invalid input gracefully. Right now, invalid input produces confusing or duplicate error messages.</p>
+    <p><strong>What to add:</strong> Validate each numeric field against its own range:</p>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>limits = {"Q6": 10, "Q7": 15, "Q8": 12}
+for key, max_val in limits.items():
+    val = values[key]
+    if val is None:
+        QMessageBox.warning(self, "Invalid input",
+                            f"{key}: please enter a number.")
+        return
+    if not (0 <= val * 10 <= max_val):
+        QMessageBox.warning(self, "Out of range",
+                            f"{key}: enter a value between 0 and {max_val}.")
+        return</code></pre>
+    <p><strong>How to test it:</strong> Enter <code>20</code> for Q6 — should show a clear out-of-range message. Enter <code>abc</code> for Q7 — should show a clear number-only message.</p>
+
+    <!-- Input validation for yes/no -->
+    <h3>SC3 — Fix the Yes/No Validation Logic</h3>
+    <p><strong>What's wrong now:</strong> The code checks Q9 and Q10 separately, but the two <code>if</code> statements are not chained with <code>elif</code>. If both are invalid, you get <em>two</em> popups instead of one.</p>
+    <p><strong>What to add:</strong> Combine the checks:</p>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>invalid = [q for q in ("Q9", "Q10") if values[q] == 0.5]
+if invalid:
+    QMessageBox.warning(self, "Invalid input",
+                        f"Please enter yes or no for: {', '.join(invalid)}")
+    return</code></pre>
+    <p><strong>How to test it:</strong> Leave both Q9 and Q10 blank and submit — you should see one combined message, not two.</p>
+
+    <!-- Score clamping -->
+    <h3>Scoring — Fix the Negative Score Clamp</h3>
+    <p><strong>What's wrong now:</strong> These two lines don't do anything:</p>
+<pre><code>if score < 0:
+    score == 0        # comparison, not assignment
+if scaled_score < 0:
+    scaled_score == 0 # same bug</code></pre>
+    <p><strong>Why it matters:</strong> Q8 has a negative weight (<code>-0.5</code>) in one version of your JSON, so a low-hours-slept answer could push the score negative. The current line silently does nothing.</p>
+    <p><strong>What to add:</strong> Use <code>max()</code> which both clamps and assigns:</p>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>scaled_score = max(DEFAULT_SCORE, min(NORMALIZED_SCORE_MAX, score * NORMALIZED_SCORE_MAX))</code></pre>
+    <p><strong>How to test it:</strong> Fill in answers that produce a negative raw score — the final displayed score should be 0, not negative.</p>
+
+    <!-- Duplicate json -->
+    <h3>Data Integrity — Two <code>Questioneer.json</code> Files Are Being Loaded</h3>
+    <p><strong>What's wrong now:</strong> You provided two versions of <code>Questioneer.json</code>:</p>
+    <ul>
+      <li>The first has weights that sum to <code>1.0</code> (0.09 + 0.10 + 0.12 + ... = 1.00)</li>
+      <li>The second has weights that sum to <code>9.5</code> (0.9 + 1.1 + 1.2 + ... = 9.5)</li>
+    </ul>
+    <p><strong>Why it matters:</strong> Your code divides by <code>total_weight</code>, so both should produce the same relative score — but only if the JSON is consistent. If you have both files in the project folder, <code>load</code> will pick one and the weights won't match what you documented.</p>
+    <p><strong>What to do:</strong> Keep only one <code>Questioneer.json</code>. Delete the other. Use whichever set of weights you actually want to defend in your IA documentation — I'd recommend the <code>0.09, 0.10, ...</code> version because the weights sum to exactly <code>1.0</code>, which is easier to explain.</p>
+
+    <!-- Return-to-start bug -->
+    <h3>Bug — Wrong Parent Passed to <code>StartWindow()</code></h3>
+    <p><strong>What's wrong now:</strong> <code>StartWindow.__init__</code> accepts no arguments, but <code>return_to_start()</code> creates it without a parent. That's fine — but if you ever want the window to return to a specific parent, you'd need to add a parameter.</p>
+    <p><strong>Why it matters:</strong> This is minor, but Criterion D rewards clean code. If you want to keep it simple, leave it — just be aware the code currently has a slightly odd flow where each window creates the next one itself.</p>
+
+    <!-- maximum_score_trend -->
+    <h3>Bug — <code>maximum_score_trend()</code> Crashes on Empty History</h3>
+    <p><strong>What's wrong now:</strong> If <code>Score_history.json</code> is empty (<code>[]</code>), <code>max(score, key=itemgetter("score"))</code> raises <code>ValueError</code>. The app crashes on startup.</p>
+    <p><strong>What to add:</strong> Add an early return:</p>
+<pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def maximum_score_trend(self):
+    if not HISTORY_FILE.exists():
+        return None
+    with open(HISTORY_FILE) as f:
+        scores = json.load(f)
+    if not scores:
+        return None
+    max_entry = max(scores, key=lambda e: e["score"])
+    return int(max_entry["timestamp"])</code></pre>
+    <p><strong>How to test it:</strong> Delete <code>Score_history.json</code> or set it to <code>[]</code> and launch the app — it should open cleanly with no error.</p>
+  </div>
+
+  <div class="section" id="bugs">
+    <h2><span class="icon">🐛</span> Bugs Found in the Code</h2>
+
+    <table>
+      <thead>
+        <tr><th style="width:22%;">Location</th><th>Problem</th><th style="width:30%;">Suggested Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>submit_answers()</code> — validation</td>
+          <td>Two separate <code>if</code> statements for Q9 and Q10 produce duplicate popups</td>
+          <td>Merge into one combined check</td>
+        </tr>
+        <tr>
+          <td><code>submit_answers()</code> — clamping</td>
+          <td><code>score == 0</code> is a comparison, not an assignment — has no effect</td>
+          <td>Use <code>max(0, score)</code></td>
+        </tr>
+        <tr>
+          <td><code>submit_answers()</code> — range check</td>
+          <td><code>&gt;= 1.1</code> rule doesn't match the actual per-question limits</td>
+          <td>Use a limits dictionary keyed by question</td>
+        </tr>
+        <tr>
+          <td><code>maximum_score_trend()</code></td>
+          <td>Crashes on empty history</td>
+          <td>Guard with <code>if not scores: return None</code></td>
+        </tr>
+        <tr>
+          <td><code>Questioneer.json</code></td>
+          <td>Two conflicting files with different weights</td>
+          <td>Keep only one version</td>
+        </tr>
+        <tr>
+          <td><code>update_break_display()</code></td>
+          <td>Uses <code>self.latest_score</code> which may be <code>0.0</code> on first launch</td>
+          <td>Call <code>refresh_break_duration()</code> immediately in <code>__init__</code></td>
+        </tr>
+        <tr>
+          <td><code>Q1_0</code> vs <code>Q1_1</code> naming</td>
+          <td>Checkbox names use <code>_0, _2, _3, _4</code> — there's no <code>_1</code>. The <code>/4.0</code> divisor skips a value</td>
+          <td>Rename to <code>_0, _1, _2, _3</code> or adjust the divisor to match</td>
+        </tr>
+        <tr>
+          <td><code>return_to_start()</code></td>
+          <td>Doesn't pass the parent — minor, but breaks the window hierarchy chain</td>
+          <td>Accept an optional <code>parent</code> in <code>StartWindow.__init__</code></td>
+        </tr>
+        <tr>
+          <td>Q6–Q8 validation</td>
+          <td>Validation says "integer only" but uses <code>float()</code> — so <code>5.5</code> is accepted, contradicting the message</td>
+          <td>Either accept floats and change the message, or reject non-integers with <code>int()</code></td>
+        </tr>
+        <tr>
+          <td>Break time offset</td>
+          <td><code>BREAK_SECONDS_OFFSET = 180</code> subtracts 3 minutes — could make break time zero or negative</td>
+          <td>Document why the offset exists, or clamp the result</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section" id="oop">
+    <h2><span class="icon">🏗️</span> OOP Refactor — Suggestions</h2>
+    <p>Your code already splits into two classes — <code>StartWindow</code> and <code>TestWindow</code>. That's a solid start, but for Criterion D you want to show <strong>separation of concerns</strong>. The <code>TestWindow</code> class currently does three jobs:</p>
+    <ol>
+      <li>Loads and wires up the GUI</li>
+      <li>Reads and validates inputs</li>
+      <li>Calculates scores and writes to JSON</li>
+    </ol>
+
+    <h3>Current Structure</h3>
+    <div class="diagram">+---------------------------+     +---------------------------+
+|       StartWindow         |     |       TestWindow          |
++---------------------------+     +---------------------------+
+| - break_timer: QTimer     |     | - ui widgets              |
+| - alarm_beep_timer: QTimer|     | - answer_boxes: list      |
+| - latest_score: float     |     | - q6..q10: QLineEdit      |
++---------------------------+     +---------------------------+
+| + open_test()             |     | + submit_answers()        |
+| + start_break_countdown() |     | + get_question_value()    |
+| + update_break_countdown()|     | + get_line_value()        |
+| + maximum_score_trend()   |     | + get_yes_no_value()      |
+| + get_latest_score()      |     | + append_history_record() |
++---------------------------+     +---------------------------+</div>
+
+    <h3>Suggested Refactor</h3>
+    <p>Extract the scoring logic into a separate class that has <strong>no PySide6 imports</strong>. That way you can unit-test it without launching a window.</p>
+    <div class="diagram">+---------------------------+     +---------------------------+
+|       StartWindow         |     |       TestWindow          |
+|  (UI only)                |     |  (UI only)                |
++---------------------------+     +---------------------------+
+| + open_test()             |     | + submit_answers()        |
+| + start_break_countdown() |     |   (calls scorer)          |
+| + update_break_countdown()|     +-------------+-------------+
++---------------------------+                   |
+                                                | uses
+                                                v
+                                  +---------------------------+
+                                  |      ScoreCalculator      |
+                                  |  (pure logic — testable)  |
+                                  +---------------------------+
+                                  | - weights: dict           |
+                                  | - questions: list         |
+                                  +---------------------------+
+                                  | + load_questions(path)    |
+                                  | + compute(values) -> float|
+                                  | + clamp(score) -> float   |
+                                  +-------------+-------------+
+                                                |
+                                                | uses
+                                                v
+                                  +---------------------------+
+                                  |     HistoryStore          |
+                                  |  (file I/O only)          |
+                                  +---------------------------+
+                                  | - path: Path              |
+                                  +---------------------------+
+                                  | + load() -> list          |
+                                  | + append(record)          |
+                                  | + get_latest_score()      |
+                                  +---------------------------+</div>
+
+    <h3>Why This Helps</h3>
+    <ul>
+      <li><strong>Testable</strong> — you can write <code>assert ScoreCalculator().compute(values) == 7.23</code> without opening a window</li>
+      <li><strong>Criterion C</strong> — a UML class diagram becomes natural</li>
+      <li><strong>Criterion D</strong> — you can show clean code excerpts of each class and justify why you separated them</li>
+      <li><strong>Reusability</strong> — if you later want a CLI version, only the UI classes change</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon">✨</span> Other Improvements</h2>
+    <ul>
+      <li><strong>Fix the typos in the GUI</strong> — "yyou", "mmentally", "usal" — they're visible to your client</li>
+      <li><strong>Rename <code>Q1_0, Q1_2, Q1_3, Q1_4</code></strong> — the missing <code>_1</code> breaks the <code>/4.0</code> divisor logic</li>
+      <li><strong>Add a summary label</strong> — you already find <code>summary_label</code>, but it doesn't exist in the UI. Either add it to <code>GUI.ui</code> or remove the code</li>
+      <li><strong>Test with extreme input</strong> — Q6 = 0, Q7 = 15, Q8 = 12, and empty fields</li>
+    </ul>
+  </div>
+
+  <div class="section" id="resources">
+    <h2><span class="icon">📚</span> Useful Resources</h2>
+    <div class="resources">
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion A</div>
+        <div class="rc-desc">Problem specification &amp; success criteria</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionA.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion B</div>
+        <div class="rc-desc">Planning &amp; decomposition</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionB.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion C</div>
+        <div class="rc-desc">System overview &amp; UML</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionC.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion D</div>
+        <div class="rc-desc">Development &amp; testing</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionD.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion E</div>
+        <div class="rc-desc">Evaluation &amp; improvements</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionE.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">PySide6 Docs</div>
+        <div class="rc-desc">Official Qt for Python documentation</div>
+        <a href="https://doc.qt.io/qtforpython-6/" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Python JSON Docs</div>
+        <div class="rc-desc">Official reference for json module</div>
+        <a href="https://docs.python.org/3/library/json.html" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Python Dataclasses</div>
+        <div class="rc-desc">Clean data containers for refactoring</div>
+        <a href="https://docs.python.org/3/library/dataclasses.html" target="_blank" rel="noopener">Read →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="priority">
+    <h2><span class="icon">🎯</span> Priority Order</h2>
+    <ol class="priority-list">
+      <li>Fix <code>maximum_score_trend()</code> crash on empty history</li>
+      <li>Fix score clamping bug (<code>==</code> → <code>max()</code>)</li>
+      <li>Re-enable SC7 trend reminder</li>
+      <li>Fix Q9/Q10 duplicate popup validation</li>
+      <li>Per-question range validation for Q6–Q8</li>
+      <li>Delete the duplicate <code>Questioneer.json</code></li>
+      <li>Fix checkbox naming (<code>_0, _1, _2, _3</code>)</li>
+      <li>Fix typos in GUI labels</li>
+      <li>Refactor scoring into <code>ScoreCalculator</code></li>
+      <li>Write 3 unit tests + record video demo</li>
+    </ol>
+    <div class="callout">
+      Shunya, your project is already 75% of the way there. SC7 is the only missing criterion — fix that plus the validation bugs, and you'll have a strong submission.
+    </div>
+  </div>
+
+  <div class="footer">IB Computer Science IA · Shunya · Stress Management Test</div>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.parentElement;
+    const code = pre.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    }).catch(() => {
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  const checkboxes = document.querySelectorAll('#fixList input[type="checkbox"]');
+  const progressFill = document.getElementById('progressFill');
+  const progressCount = document.getElementById('progressCount');
+  const totalTasks = 10;
+
+  function updateProgress() {
+    let checked = 0;
+    checkboxes.forEach(cb => { if (cb.checked) checked++; });
+    const done = checked;
+    const pct = Math.min((done / totalTasks) * 100, 100);
+    progressFill.style.width = pct + '%';
+    progressCount.textContent = done + ' / ' + totalTasks;
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      const li = e.target.closest('li');
+      if (e.target.checked) {
+        li.classList.add('done');
+      } else {
+        li.classList.remove('done');
+      }
+      updateProgress();
+    });
+    const li = cb.closest('li');
+    li.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
