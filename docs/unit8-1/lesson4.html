@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8.1 Lesson 4 · ARQ &amp; Network Security Software</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f0f4fb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            padding: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .nav {
+            background: #0b2a4a;
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .nav a {
+            color: #e6edf5;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav a:hover { color: #fff; text-decoration: underline; }
+        .nav .brand { margin-right: auto; font-weight: 600; color: white; }
+        .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .page-header h1 i { color: #2a6f97; }
+        .page-header .sub {
+            color: #475569;
+            background: #e9eff8;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .resource-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            background: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 60px;
+            border: 1px solid #d4e3f0;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+        .resource-bar .label {
+            font-weight: 600;
+            color: #0b2a4a;
+            font-size: 0.85rem;
+        }
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .tool-link:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .tool-link.blooket { background: #e8f5e9; color: #2e7d32; border-color: #81c784; }
+        .tool-link.blooket:hover { background: #c8e6c9; }
+        .tool-link.search { background: #e3f2fd; color: #0d47a1; border-color: #64b5f6; }
+        .tool-link.search:hover { background: #bbdefb; }
+        .tool-link .badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.05rem 0.5rem;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.08);
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.8rem 2rem;
+            border: 1px solid #e5edf5;
+            box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+            margin-bottom: 2rem;
+        }
+
+        .lesson-card h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin: 1.4rem 0 0.6rem 0;
+            border-left: 5px solid #2a6f97;
+            padding-left: 14px;
+        }
+        .lesson-card h2:first-of-type { margin-top: 0; }
+        .lesson-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin: 1rem 0 0.3rem 0;
+        }
+        .lesson-card p { margin-bottom: 0.5rem; }
+        .lesson-card ul, .lesson-card ol { padding-left: 1.4rem; margin: 0.3rem 0 0.8rem 0; }
+        .lesson-card li { margin-bottom: 0.2rem; }
+
+        .objectives-box {
+            background: #eef6fc;
+            border-radius: 14px;
+            padding: 0.7rem 1.2rem;
+            border-left: 4px solid #2a6f97;
+            margin-bottom: 1rem;
+        }
+        .objectives-box strong { color: #0b2a4a; }
+        .objectives-box ul { margin: 0.2rem 0 0 1.2rem; }
+
+        .highlight-box {
+            background: #eef6fc;
+            padding: 0.8rem 1.4rem;
+            border-radius: 14px;
+            border-left: 5px solid #2a6f97;
+            margin: 0.8rem 0;
+        }
+        .highlight-box.orange { border-left-color: #e67e22; background: #fef6ed; }
+        .highlight-box.green { border-left-color: #4caf50; background: #edf7ed; }
+        .highlight-box.purple { border-left-color: #7b1fa2; background: #f3e5f5; }
+
+        .step-list {
+            background: #f6faff;
+            border-radius: 14px;
+            padding: 1rem 1.4rem;
+            border: 1px solid #dceaf7;
+            margin: 0.8rem 0;
+        }
+        .step-list ol {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+        .step-list ol li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 0.6rem;
+        }
+        .step-list ol li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #2a6f97;
+            color: white;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .ack-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 0.8rem 0;
+        }
+        .ack-card {
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            border: 2px solid;
+        }
+        .ack-card.positive {
+            background: #edf7ed;
+            border-color: #81c784;
+        }
+        .ack-card.negative {
+            background: #fdf0ef;
+            border-color: #ef9a9a;
+        }
+        .ack-card h4 {
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ack-card.positive h4 { color: #2e7d32; }
+        .ack-card.negative h4 { color: #c62828; }
+        .ack-card p { font-size: 0.9rem; }
+
+        /* Drag and drop */
+        .parsons {
+            background: #f6faff;
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            border: 2px dashed #cbddee;
+            margin: 0.8rem 0;
+            min-height: 100px;
+        }
+        .parsons .parsons-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+        .parsons-item {
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #d4e3f0;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.15s;
+        }
+        .parsons-item:hover { border-color: #2a6f97; background: #f0f7ff; }
+        .parsons-item .grip { color: #94a3b8; font-size: 0.8rem; }
+        .parsons-item.placed { cursor: default; background: #f0f7ff; border-color: #b6d0e8; }
+        .parsons-item.placed .grip { display: none; }
+        .parsons-target {
+            background: #eef6fc;
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            border: 2px solid #dceaf7;
+            min-height: 100px;
+            margin: 0.8rem 0;
+        }
+        .parsons-target .empty-msg {
+            color: #94a3b8;
+            text-align: center;
+            padding: 0.5rem;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .parsons-actions {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .btn-parsons {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-parsons:hover { background: #1a3f62; }
+        .btn-parsons.reset { background: #e9eff8; color: #0b2a4a; }
+        .btn-parsons.reset:hover { background: #d4e3f0; }
+        .parsons-feedback {
+            margin-top: 0.4rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .parsons-feedback.correct { color: #2d6a2d; }
+        .parsons-feedback.incorrect { color: #8a3a3a; }
+
+        /* Q&A */
+        .qa-block {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1rem 1.4rem;
+            border: 1px solid #dceaf7;
+            margin: 1rem 0;
+        }
+        .qa-block .question {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .qa-block .question i { color: #2a6f97; }
+        .qa-block .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.2rem;
+            margin: 0.5rem 0 0.3rem 0;
+        }
+        .qa-block .options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            transition: 0.15s;
+        }
+        .qa-block .options label:hover { background: #e9eff8; }
+        .qa-block .options input[type="radio"] {
+            accent-color: #0b2a4a;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .qa-block .feedback {
+            margin-top: 0.4rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .qa-block .feedback.show { display: block; }
+        .qa-block .feedback.correct {
+            background: #dff0d8;
+            color: #2d6a2d;
+            border-left: 4px solid #4caf50;
+        }
+        .qa-block .feedback.incorrect {
+            background: #f8e0e0;
+            color: #8a3a3a;
+            border-left: 4px solid #d9534f;
+        }
+
+        .btn-check {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.3rem;
+        }
+        .btn-check:hover { background: #1a3f62; }
+
+        /* Comparison table for security software */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.8rem 0;
+            font-size: 0.85rem;
+        }
+        .compare-table th {
+            background: #0b2a4a;
+            color: white;
+            padding: 0.5rem 0.7rem;
+            text-align: left;
+        }
+        .compare-table td, .compare-table th {
+            border: 1px solid #d4e3f0;
+            padding: 0.5rem 0.7rem;
+        }
+        .compare-table tr:nth-child(even) { background: #f6faff; }
+        .compare-table td a {
+            color: #1f6390;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .compare-table td a:hover { text-decoration: underline; }
+
+        .worksheet-box {
+            background: #fff8e7;
+            border: 2px solid #f0d080;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .worksheet-box h3 {
+            color: #8a6d2b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .worksheet-box h3 i { color: #e6a800; }
+
+        .challenge-box {
+            background: #e8f5e9;
+            border: 2px solid #81c784;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .challenge-box h3 {
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .challenge-box h3 i { color: #4caf50; }
+
+        .self-check {
+            background: #edf7ed;
+            border-radius: 16px;
+            padding: 1rem 1.4rem;
+            border: 2px solid #81c784;
+            margin: 1rem 0;
+        }
+        .self-check h4 {
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-reveal {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 0.35rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        .btn-reveal:hover { background: #1b5e20; }
+        .hidden-solution { display: none; margin-top: 0.6rem; }
+        .hidden-solution.show { display: block; }
+
+        .divider {
+            margin: 2rem 0 0.5rem;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, #d4e0ec, transparent);
+        }
+
+        @media (max-width: 680px) {
+            body { padding: 0.8rem; }
+            .lesson-card { padding: 1.2rem; }
+            .page-header h1 { font-size: 1.6rem; }
+            .resource-bar { flex-direction: column; align-items: stretch; border-radius: 24px; }
+            .tool-link { justify-content: center; }
+            .ack-grid { grid-template-columns: 1fr; }
+            .compare-table { font-size: 0.75rem; }
+            .compare-table th, .compare-table td { padding: 0.3rem 0.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- NAV -->
+        <nav class="nav">
+            <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+            <a href="../unit8.1-Networks.html"><i class="fas fa-arrow-left"></i> Back to 8.1</a>
+        </nav>
+
+        <!-- HEADER -->
+        <div class="page-header">
+            <h1><i class="fas fa-exchange-alt"></i> Lesson 4 · ARQ &amp; Network Security Software</h1>
+            <div class="sub"><i class="fas fa-book-open" style="margin-right:6px;"></i> Student's Book pages 29–30</div>
+        </div>
+
+        <!-- RESOURCE BAR -->
+        <div class="resource-bar">
+            <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+            <a href="https://play.blooket.com/host/gold?id=68c15f6ec687e3b92e0e1ba6" target="_blank" class="tool-link blooket">
+                <i class="fas fa-gamepad"></i> Blooket Gold <span class="badge">🏆</span>
+            </a>
+            <a href="https://www.google.com" target="_blank" class="tool-link search">
+                <i class="fas fa-search"></i> Research Tool
+            </a>
+        </div>
+
+        <!-- LESSON CONTENT -->
+        <div class="lesson-card">
+
+            <!-- Objectives -->
+            <div class="objectives-box">
+                <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+                <ul>
+                    <li><strong>8DC.04</strong> Describe how ARQ is used to detect and correct errors in transmission.</li>
+                    <li><strong>8DC.05</strong> Explain the role and the importance of firewalls in networks.</li>
+                    <li><strong>8DC.06</strong> Explain the use of antivirus and anti-spyware to keep data secure on a network.</li>
+                </ul>
+            </div>
+
+            <!-- ===== SECTION 1: RECAP ===== -->
+            <h2>🔄 Quick Recap: Why Do We Need Error Checking?</h2>
+            <p>When computers send data across a network, it's really important that the information arrives <strong>correctly</strong>. You've already learned about <strong>echo checks</strong>, where the data is sent back to the sender to check for mistakes.</p>
+
+            <div class="highlight-box orange">
+                <i class="fas fa-exclamation-triangle" style="color:#b45309; margin-right:8px;"></i>
+                <strong>But there's a problem:</strong> Echo checks can take up a lot of time and use extra data. There must be a better way!
+            </div>
+
+            <!-- ===== SECTION 2: WHAT IS ARQ ===== -->
+            <h2>🔁 What is ARQ?</h2>
+            <p><strong>ARQ</strong> stands for <strong>Automatic Repeat reQuest</strong>. It's a way for computers to check if data has been received correctly — <em>without</em> sending the whole message back.</p>
+
+            <div class="step-list">
+                <h3 style="margin-top:0; color:#0b2a4a;"><i class="fas fa-list-ol" style="color:#2a6f97;"></i> How ARQ Works</h3>
+                <ol>
+                    <li>The <strong>sender</strong> sends the data.</li>
+                    <li>The <strong>receiver</strong> checks the data and sends back a message:
+                        <ul style="margin-top:0.3rem;">
+                            <li>If the data is <strong>correct</strong>, it sends a <strong>positive acknowledgement</strong>.</li>
+                            <li>If the data is <strong>wrong</strong>, it sends a <strong>negative acknowledgement</strong>.</li>
+                        </ul>
+                    </li>
+                    <li>If the sender doesn't get a reply in time (called a <strong>timeout</strong>), it sends the data again.</li>
+                </ol>
+            </div>
+
+            <p>This helps make sure that the data is accurate, even if the network isn't perfect.</p>
+
+            <!-- Acknowledgements -->
+            <h3>Acknowledgements</h3>
+            <div class="ack-grid">
+                <div class="ack-card positive">
+                    <h4><i class="fas fa-check-circle"></i> Positive Acknowledgement</h4>
+                    <p>Data arrived correctly. No need to resend. This is often called <strong>ACK</strong>.</p>
+                </div>
+                <div class="ack-card negative">
+                    <h4><i class="fas fa-times-circle"></i> Negative Acknowledgement</h4>
+                    <p>Data arrived with errors. The sender must resend. This is often called <strong>NAK</strong>.</p>
+                </div>
+            </div>
+
+            <!-- ===== DRAG AND DROP: ARQ ORDER ===== -->
+            <h3>🧩 Challenge: Order the ARQ Steps</h3>
+            <p>Drag the steps into the correct order to show how ARQ works.</p>
+
+            <div class="parsons" id="parsonsSource">
+                <div class="parsons-label"><i class="fas fa-arrow-down"></i> Drag from here</div>
+                <div class="parsons-item" draggable="true" data-line="1"><span class="grip"><i class="fas fa-grip-vertical"></i></span> Receiver checks the data and sends back an acknowledgement</div>
+                <div class="parsons-item" draggable="true" data-line="2"><span class="grip"><i class="fas fa-grip-vertical"></i></span> Sender sends the data to the receiver</div>
+                <div class="parsons-item" draggable="true" data-line="3"><span class="grip"><i class="fas fa-grip-vertical"></i></span> If no reply arrives within the timeout, the sender sends the data again</div>
+                <div class="parsons-item" draggable="true" data-line="4"><span class="grip"><i class="fas fa-grip-vertical"></i></span> If the acknowledgement is negative, the sender resends the data</div>
+            </div>
+
+            <div class="parsons-target" id="parsonsTarget">
+                <div class="empty-msg">Drop steps here in the correct order...</div>
+            </div>
+
+            <div class="parsons-actions">
+                <button class="btn-parsons" onclick="checkParsons()"><i class="fas fa-check"></i> Check order</button>
+                <button class="btn-parsons reset" onclick="resetParsons()"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+            <div class="parsons-feedback" id="parsonsFeedback"></div>
+
+            <!-- ===== SECTION 3: ARQ VS ECHO CHECK ===== -->
+            <h2>⚖️ ARQ vs Echo Check</h2>
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Echo Check</th>
+                        <th>ARQ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>What gets sent back?</strong></td>
+                        <td>The entire message is echoed back to the sender</td>
+                        <td>Just a short acknowledgement (ACK or NAK)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data usage</strong></td>
+                        <td>High — the whole message goes back</td>
+                        <td>Low — only a small signal goes back</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>Slower — lots of data to send</td>
+                        <td>Faster — small acknowledgements</td>
+                    </tr>
+                    <tr>
+                        <td><strong>What if data is lost?</strong></td>
+                        <td>Sender compares and resends if mismatched</td>
+                        <td>Timeout triggers automatic resend</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box purple">
+                <i class="fas fa-lightbulb" style="color:#6a1b9a; margin-right:8px;"></i>
+                <strong>Key idea:</strong> ARQ is more efficient than echo checking because it only sends small acknowledgements back, not the whole message.
+            </div>
+
+            <!-- ===== Q&A ===== -->
+            <h2>❓ Check Your Understanding</h2>
+
+            <div class="qa-block" id="qa1">
+                <div class="question"><i class="fas fa-question-circle"></i> What does ARQ stand for?</div>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="a"> Automatic Repeat reQuest</label>
+                    <label><input type="radio" name="q1" value="b"> Advanced Router Query</label>
+                    <label><input type="radio" name="q1" value="c"> Automatic Retry Queue</label>
+                    <label><input type="radio" name="q1" value="d"> Asynchronous Response Quality</label>
+                </div>
+                <button class="btn-check" onclick="checkQA('qa1', 'a')">Check answer</button>
+                <div class="feedback" id="fb-qa1"></div>
+            </div>
+
+            <div class="qa-block" id="qa2">
+                <div class="question"><i class="fas fa-question-circle"></i> What does a receiver send when the data arrives correctly?</div>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="a"> A negative acknowledgement</label>
+                    <label><input type="radio" name="q2" value="b"> A positive acknowledgement</label>
+                    <label><input type="radio" name="q2" value="c"> The whole message back</label>
+                    <label><input type="radio" name="q2" value="d"> Nothing</label>
+                </div>
+                <button class="btn-check" onclick="checkQA('qa2', 'b')">Check answer</button>
+                <div class="feedback" id="fb-qa2"></div>
+            </div>
+
+            <div class="qa-block" id="qa3">
+                <div class="question"><i class="fas fa-question-circle"></i> What happens if the sender doesn't get a reply in time?</div>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="a"> The connection is closed</label>
+                    <label><input type="radio" name="q3" value="b"> The sender waits forever</label>
+                    <label><input type="radio" name="q3" value="c"> A timeout occurs and the data is sent again</label>
+                    <label><input type="radio" name="q3" value="d"> The data is deleted</label>
+                </div>
+                <button class="btn-check" onclick="checkQA('qa3', 'c')">Check answer</button>
+                <div class="feedback" id="fb-qa3"></div>
+            </div>
+
+            <!-- ===== SECTION 4: SECURITY SOFTWARE COMPARISON TASK ===== -->
+            <h2>🔍 Today's Task: Compare Network Security Software</h2>
+            <p>Now that you understand how to protect networks, it's time to look at <strong>real software</strong> that people use to stay safe online.</p>
+
+            <div class="worksheet-box">
+                <h3><i class="fas fa-file-alt"></i> Main Task: 8.1 Worksheet 4</h3>
+                <p><strong>Complete Worksheet 4 on Schoolbox.</strong></p>
+
+                <p style="margin-top:0.5rem;"><strong>Part 1 — Explain:</strong></p>
+                <ol style="margin-top:0.3rem;">
+                    <li>How firewalls protect a network and why they are important.</li>
+                    <li>How antivirus software and anti-spyware provide protection to keep data secure on a network.</li>
+                </ol>
+
+                <p style="margin-top:0.8rem;"><strong>Part 2 — Research:</strong> Use the internet to research some utility software that keeps devices secure. For each example, identify the <strong>price (often shown per year)</strong>, <strong>compatibility</strong> (what devices it works on), <strong>features</strong> (what the software does), and the <strong>type of protection</strong> (antivirus / firewall / anti-spyware).</p>
+
+                <p style="margin-top:0.8rem; background:#f0f0e0; padding:0.3rem 0.8rem; border-radius:8px; display:inline-block;">
+                    <i class="fas fa-cloud-upload-alt" style="color:#8a6d2b;"></i> Submit your completed worksheet on <strong>Schoolbox</strong> when finished.
+                </p>
+                <p style="margin-top:0.3rem; font-size:0.85rem; color:#6d5a2b;">
+                    <i class="fas fa-book"></i> See Student's Book pages 29–30 for help.
+                </p>
+            </div>
+
+            <!-- Comparison Table -->
+            <h3>📋 Research Table</h3>
+            <p>Fill in this table as you research each software option:</p>
+
+            <div style="overflow-x:auto;">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price (3 years)</th>
+                            <th>Compatibility</th>
+                            <th>Features</th>
+                            <th>Protection</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="https://www.norton.com" target="_blank">Norton 360</a></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.bitdefender.com" target="_blank">Bitdefender Internet Security</a></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.adaware.com" target="_blank">Adaware</a></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.radiosilenceapp.com" target="_blank">Radio Silence</a></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.avast.com" target="_blank">Avast Mobile Security</a></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box orange">
+                <i class="fas fa-search" style="color:#b45309; margin-right:8px;"></i>
+                <strong>Research tip:</strong> Prices are often shown per year. Multiply by 3 for a three-year cost. Check the "Family" or "Premium" plans — they often differ in how many devices they cover.
+            </div>
+
+            <!-- ===== SELF-CHECK ===== -->
+            <div class="self-check">
+                <h4><i class="fas fa-check-circle"></i> Self-Check: Sample Answers</h4>
+                <p style="font-size:0.9rem;">Once you've written your explanations, click below to reveal sample answers and compare.</p>
+                <button class="btn-reveal" onclick="toggleSolution('sol1')"><i class="fas fa-eye"></i> Reveal sample answers</button>
+                <div class="hidden-solution" id="sol1">
+                    <div style="background:#f6faff; border-radius:14px; padding:1rem 1.2rem; border:1px solid #dceaf7; margin-top:0.5rem;">
+                        <h4 style="color:#0b2a4a; margin-bottom:0.3rem;">a) How firewalls protect a network</h4>
+                        <p style="font-size:0.9rem;">Firewalls keep networks safe by <strong>limiting the access</strong> that devices have to networks. They prevent <strong>unauthorised users</strong> from accessing a network. Firewalls <strong>examine all the data</strong> entering and leaving a network to check that it does not break any rules. If something breaks one of the network rules, the action will not be completed and the user will be notified.</p>
+
+                        <h4 style="color:#0b2a4a; margin-top:0.8rem; margin-bottom:0.3rem;">b) How antivirus and anti-spyware protect data</h4>
+                        <p style="font-size:0.9rem;"><strong>Antivirus software</strong> prevents viruses from opening and infecting files on computers. It performs <strong>real-time scans</strong> of chunks of data coming into a device to detect whether it has been infected. If it detects a file as harmful, it <strong>quarantines the file</strong> and lets the user know a virus has been detected. The user can then decide whether to delete the file.</p>
+                        <p style="font-size:0.9rem;"><strong>Anti-spyware</strong> works in a similar way. It <strong>regularly scans</strong> for files that could be troublesome — such as <strong>adware</strong> and <strong>trojans</strong>. When it detects threats, it removes them from the system and informs the user.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== CHALLENGE ===== -->
+            <div class="challenge-box">
+                <h3><i class="fas fa-star"></i> Challenge: Security Software Recommendation</h3>
+                <p>Imagine a small business with <strong>10 laptops</strong> running Windows and <strong>5 smartphones</strong> running Android. They have a limited budget and want to protect their network from viruses, spyware, and ransomware.</p>
+                <ol style="margin-top:0.5rem;">
+                    <li>Choose <strong>one</strong> of the software options from your research table that you think is best for them.</li>
+                    <li>Justify your choice using <strong>price</strong>, <strong>compatibility</strong>, and <strong>features</strong>.</li>
+                    <li>Explain how this software will help <strong>protect the business's data</strong>.</li>
+                </ol>
+                <p style="margin-top:0.5rem; font-size:0.9rem;">
+                    <i class="fas fa-lightbulb" style="color:#f57c00;"></i> <strong>Hint:</strong> Think about how many devices each plan covers — 15 devices means you need a family or business plan, not a single-device plan.
+                </p>
+            </div>
+
+            <div class="divider"></div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#5d7f9a; padding:0.3rem 0; flex-wrap:wrap; gap:0.5rem;">
+                <span><i class="fas fa-arrow-left" style="margin-right:6px;"></i><a href="../unit8.1-Networks.html" style="color:#1f6390; text-decoration:none;">Back to 8.1 Building Networks</a></span>
+                <span>8.1 Lesson 4 · ARQ &amp; Network Security Software</span>
+            </div>
+
+        </div><!-- /lesson-card -->
+
+    </div><!-- /container -->
+
+    <script>
+        // ===== Q&A CHECK =====
+        function checkQA(questionId, correctValue) {
+            const qaBlock = document.getElementById(questionId);
+            const selected = qaBlock.querySelector('input[type="radio"]:checked');
+            const feedback = document.getElementById('fb-' + questionId);
+
+            if (!selected) {
+                feedback.textContent = '⚠️ Please select an answer first.';
+                feedback.className = 'feedback show incorrect';
+                return;
+            }
+
+            if (selected.value === correctValue) {
+                feedback.textContent = '✅ Correct! Well done!';
+                feedback.className = 'feedback show correct';
+            } else {
+                feedback.textContent = '❌ Not quite. Try again!';
+                feedback.className = 'feedback show incorrect';
+            }
+        }
+
+        // ===== DRAG AND DROP PARSONS =====
+        let draggedParsons = null;
+
+        document.addEventListener('dragstart', function(e) {
+            const item = e.target.closest('.parsons-item');
+            if (!item) return;
+            draggedParsons = item;
+            item.style.opacity = '0.5';
+        });
+
+        document.addEventListener('dragend', function(e) {
+            const item = e.target.closest('.parsons-item');
+            if (item) item.style.opacity = '1';
+        });
+
+        document.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const target = e.target.closest('.parsons-target');
+            if (!target || !draggedParsons) return;
+            const emptyMsg = target.querySelector('.empty-msg');
+            if (emptyMsg) emptyMsg.remove();
+            const clone = draggedParsons.cloneNode(true);
+            clone.draggable = false;
+            clone.style.opacity = '1';
+            clone.classList.add('placed');
+            const grip = clone.querySelector('.grip');
+            if (grip) grip.remove();
+            draggedParsons.remove();
+            draggedParsons = null;
+            target.appendChild(clone);
+        });
+
+        function checkParsons() {
+            const target = document.getElementById('parsonsTarget');
+            const items = target.querySelectorAll('.parsons-item');
+            const feedback = document.getElementById('parsonsFeedback');
+
+            if (items.length === 0) {
+                feedback.textContent = '⚠️ Drop some steps into the order first!';
+                feedback.className = 'parsons-feedback incorrect';
+                return;
+            }
+
+            const correctOrder = ['2', '1', '4', '3'];
+            const userOrder = [];
+            items.forEach(item => userOrder.push(item.dataset.line));
+
+            if (userOrder.length !== correctOrder.length) {
+                feedback.textContent = '⚠️ You need all 4 steps in order!';
+                feedback.className = 'parsons-feedback incorrect';
+                return;
+            }
+
+            let correct = true;
+            for (let i = 0; i < correctOrder.length; i++) {
+                if (userOrder[i] !== correctOrder[i]) { correct = false; break; }
+            }
+
+            if (correct) {
+                feedback.textContent = '✅ Perfect! Sender sends → Receiver checks & acknowledges → If NAK, resend → If timeout, resend.';
+                feedback.className = 'parsons-feedback correct';
+            } else {
+                feedback.textContent = '❌ Not quite. Remember: send → check → resend if NAK → resend if timeout.';
+                feedback.className = 'parsons-feedback incorrect';
+            }
+        }
+
+        function resetParsons() {
+            const target = document.getElementById('parsonsTarget');
+            const source = document.getElementById('parsonsSource');
+            const feedback = document.getElementById('parsonsFeedback');
+
+            target.innerHTML = '<div class="empty-msg">Drop steps here in the correct order...</div>';
+            feedback.textContent = '';
+            feedback.className = 'parsons-feedback';
+
+            const lines = [
+                { line: '1', text: 'Receiver checks the data and sends back an acknowledgement' },
+                { line: '2', text: 'Sender sends the data to the receiver' },
+                { line: '3', text: 'If no reply arrives within the timeout, the sender sends the data again' },
+                { line: '4', text: 'If the acknowledgement is negative, the sender resends the data' }
+            ];
+
+            source.innerHTML = '<div class="parsons-label"><i class="fas fa-arrow-down"></i> Drag from here</div>';
+            lines.forEach(l => {
+                const div = document.createElement('div');
+                div.className = 'parsons-item';
+                div.draggable = true;
+                div.dataset.line = l.line;
+                div.innerHTML = `<span class="grip"><i class="fas fa-grip-vertical"></i></span> ${l.text}`;
+                source.appendChild(div);
+            });
+        }
+
+        // ===== SELF-CHECK REVEAL =====
+        function toggleSolution(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('show');
+        }
+    </script>
+
+</body>
+</html>
