@@ -100,6 +100,32 @@
     margin: 1.2rem 0 0.5rem;
   }
 
+  /* ---- GREEN TASK CARD ---- */
+  .card.green-task {
+    background: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    border-left: 6px solid #2e7d32;
+  }
+  .card.green-task h2 {
+    border-left-color: #2e7d32;
+    color: #1b5e20;
+  }
+  .card.green-task h2 i { color: #2e7d32; }
+  .card.green-task .info-box {
+    background: #dcedc8;
+    border-left-color: #2e7d32;
+  }
+  .card.green-task .resource-pills a {
+    background: #dcedc8;
+    border-color: #a5d6a7;
+    color: #1b5e20;
+  }
+  .card.green-task .resource-pills a:hover {
+    background: #c5e1a5;
+    border-color: #8bc34a;
+  }
+  .card.green-task .resource-pills a i { color: #2e7d32; }
+
   /* ---- BADGE ---- */
   .badge {
     display: inline-block;
@@ -111,6 +137,10 @@
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+  }
+  .badge.main-task {
+    background: #2e7d32;
+    color: #fff;
   }
 
   /* ---- COMMAND TERM ---- */
@@ -183,6 +213,65 @@
     border-radius: 4px;
     font-family: 'Courier New', monospace;
     font-size: 0.88rem;
+  }
+
+  /* ---- IMAGE COMPARISON BOXES ---- */
+  .img-compare {
+    display: flex;
+    gap: 16px;
+    margin: 18px 0;
+    flex-wrap: wrap;
+  }
+  .img-compare .img-card {
+    flex: 1;
+    min-width: 200px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: center;
+  }
+  .img-compare .img-card .img-placeholder {
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e40af;
+    font-size: 0.85rem;
+    font-weight: 600;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .img-compare .img-card .img-placeholder i {
+    font-size: 2rem;
+    opacity: 0.6;
+  }
+  .img-compare .img-card .img-meta {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    background: #fff;
+  }
+  .img-compare .img-card .img-meta strong {
+    display: block;
+    color: #0b2a4a;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+  }
+  .img-compare .img-card .img-meta .size-tag {
+    display: inline-block;
+    background: #e2e8f0;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.7rem;
+    padding: 1px 8px;
+    border-radius: 12px;
+    margin-top: 4px;
+  }
+  .img-compare .img-card .img-meta .size-tag.lossy {
+    background: #fde8e8;
+    color: #b21f1f;
   }
 
   /* ---- ACCORDION ---- */
@@ -380,6 +469,7 @@
     th, td { padding: 8px 10px; }
     .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
     .nav .brand { margin-right: 0; }
+    .img-compare { flex-direction: column; }
   }
 </style>
 </head>
@@ -465,6 +555,48 @@
         <tr><td><strong>Example Formats</strong></td><td>PNG, ZIP, FLAC, GIF.</td><td>JPEG, MP3, MPEG, H.264.</td></tr>
       </tbody>
     </table>
+
+    <!-- IMAGE COMPARISON BOXES -->
+    <h3><i class="fas fa-image"></i> Visual Comparison</h3>
+    <p>The images below show the same scene saved at different compression levels. While it may be difficult to visually distinguish the difference in quality, the lossy version uses significantly less data.</p>
+    <div class="img-compare">
+      <div class="img-card">
+        <div class="img-placeholder">
+          <i class="fas fa-image"></i>
+          Original Image
+        </div>
+        <div class="img-meta">
+          <strong>Original</strong>
+          Full quality, no compression
+          <span class="size-tag">1.73 MB</span>
+        </div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">
+          <i class="fas fa-compress-alt"></i>
+          Lossless (PNG)
+        </div>
+        <div class="img-meta">
+          <strong>Lossless Saved</strong>
+          Exact copy, smaller size
+          <span class="size-tag">1.58 MB (9% saved)</span>
+        </div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">
+          <i class="fas fa-compress"></i>
+          Lossy (JPEG)
+        </div>
+        <div class="img-meta">
+          <strong>Lossy Saved</strong>
+          Near-identical, much smaller
+          <span class="size-tag lossy">886 KB (50% saved)</span>
+        </div>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>Key takeaway:</strong> Lossless compression reduces file size without losing any data. Lossy compression achieves much greater savings by permanently discarding data that is considered less important to human perception.
+    </div>
   </div>
 
   <!-- ============ RLE (ACCORDION) ============ -->
@@ -577,16 +709,16 @@
     <p style="margin-top: 12px;">Take notes on each compression type, why it is designed that way, and how it affects data integrity and file size.</p>
   </div>
 
-  <!-- ============ TASK 2: STARTER ACTIVITY (MAIN TASK) ============ -->
-  <div class="card">
-    <h2><i class="fas fa-play-circle"></i> Task 2: Starter Activity <span class="badge" style="margin-left: 8px;">Main Task</span></h2>
-    <p>Answer the mild, medium and spicy questions from the Lesson Starter PowerPoint.</p>
-    <p>Use <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" style="color: #1a5f87; font-weight: 600;"><i class="fas fa-flask"></i> 🐍 Python Code Lab</a> to write your questions and answers in a text file.</p>
-    <div class="info-box" style="border-left-color: #b21f1f;">
-      <strong>📌 Important:</strong> Save your code as a <code>.txt</code> file. You will submit all starter activity answers to Schoolbox at the end of A1.1.9 Debugging Techniques.
-    </div>
+  <!-- ============ TASK 2: MAIN TASK (GREEN) ============ -->
+  <div class="card green-task">
+    <h2><i class="fas fa-play-circle"></i> Task 2 <span class="badge main-task" style="margin-left: 8px;">Main Task</span></h2>
     <div class="resource-pills">
       <a href="https://docs.google.com/presentation/d/e/2PACX-1vQe-ehQDMGvfO9jdTB_vWqIUiJjH9-a_c_uJ0FbPY_IIcpDfdyqRnWTfUpIDGTCAAs42ocaOI9_jsMX/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank"><i class="fas fa-file-powerpoint"></i> Lesson Starter PowerPoint</a>
+    </div>
+    <p>Answer the mild, medium and spicy questions from the Lesson Starter PowerPoint.</p>
+    <p>Use <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" style="color: #1b5e20; font-weight: 600;"><i class="fas fa-flask"></i> 🐍 Python Code Lab</a> to write your questions and answers in a text file.</p>
+    <div class="info-box">
+      <strong>📌 Important:</strong> Save your code as a <code>.txt</code> file. You will submit all starter activity answers to Schoolbox at the end of A1.1.9 Debugging Techniques.
     </div>
   </div>
 
@@ -689,7 +821,6 @@
     const meta = document.getElementById('rleMeta');
     if (!input) { out.textContent = '—'; meta.textContent = ''; return; }
 
-    // Detect if binary (only 0s and 1s)
     const isBinary = /^[01]+$/.test(input);
 
     let encoded = '';
@@ -703,10 +834,8 @@
     }
 
     if (isBinary) {
-      // Binary RLE: represent as (val,count)
       encoded = parts.map(p => `(${p.val},${p.n})`).join('');
     } else {
-      // Text RLE: count+value
       encoded = parts.map(p => `${p.n}${p.val}`).join('');
     }
 
@@ -715,7 +844,6 @@
     meta.textContent = `Original: ${input.length} chars → Compressed: ${encoded.length} chars (saved ${ratio}%)`;
   }
 
-  // Auto-run on page load and on Enter key
   document.getElementById('rleInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') runRLE();
   });
@@ -748,7 +876,6 @@
           score++;
         } else {
           opt.classList.add('wrong');
-          // highlight correct
           opts.forEach(o => { if (o.dataset.opt === correct) o.classList.add('correct'); });
           feedback.textContent = '✗ Not quite — the correct answer is highlighted.';
           feedback.className = 'quiz-feedback no';
