@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sara — IB Score Tracker Feedback</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0f1219;
+    font-family: 'Segoe UI', 'Calibri', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #c9d1d9;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 80px;
+  }
+
+  .page { max-width: 880px; width: 100%; }
+
+  .header {
+    background: linear-gradient(135deg, #1b2028 0%, #12151b 100%);
+    border: 1px solid #2e3646;
+    border-radius: 12px;
+    padding: 30px 34px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; position: relative; }
+  .header p { color: #9aa5b6; font-size: 14px; position: relative; }
+  .header .badge {
+    display: inline-block; background: #1a2936; color: #7dd3fc;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 20px; margin-top: 10px; position: relative;
+  }
+
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .nav a {
+    background: #1b2028; border: 1px solid #2e3646; color: #9aa5b6;
+    text-decoration: none; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; transition: all 0.2s;
+  }
+  .nav a:hover { background: #232934; color: #38bdf8; border-color: #38bdf8; }
+
+  .progress-wrap {
+    background: #12151b; border: 1px solid #2e3646; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-wrap .label { font-size: 13px; font-weight: 600; color: #9aa5b6; white-space: nowrap; }
+  .progress-bar { flex: 1; height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+  .progress-bar .fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #4ade80);
+    border-radius: 4px; transition: width 0.4s ease;
+  }
+  .progress-wrap .count { font-size: 13px; font-weight: 700; color: #38bdf8; min-width: 50px; text-align: right; }
+
+  .section {
+    background: #1b2028; border: 1px solid #2e3646; border-radius: 10px;
+    padding: 26px 30px; margin-bottom: 22px; transition: border-color 0.2s;
+  }
+  .section:hover { border-color: #3b4a5e; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section h2 .icon { font-size: 20px; }
+  .section h3 { font-size: 15px; font-weight: 700; color: #e2e8f0; margin-top: 24px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #2e3646; }
+  .section h4 { font-size: 14px; font-weight: 700; color: #cbd5e1; margin-top: 18px; margin-bottom: 6px; }
+
+  p { margin-bottom: 10px; color: #b0b8c4; }
+  strong { color: #f0f3f8; }
+  a { color: #38bdf8; text-decoration: none; border-bottom: 1px dotted #38bdf8; transition: color 0.2s; }
+  a:hover { color: #7dd3fc; border-bottom-style: solid; }
+  ul, ol { margin-left: 22px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; color: #b0b8c4; }
+  li strong { color: #f0f3f8; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 16px 0; font-size: 13px; }
+  th {
+    background: #12151b; color: #7dd3fc; font-weight: 600; text-align: left;
+    padding: 9px 12px; border: 1px solid #2e3646; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  td { padding: 9px 12px; border: 1px solid #2e3646; vertical-align: top; color: #b0b8c4; }
+  tr:nth-child(even) td { background: #181d26; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.3px; }
+  .pill-met { background: #0f2e1f; color: #4ade80; border: 1px solid #166534; }
+  .pill-partial { background: #2e2a0f; color: #fbbf24; border: 1px solid #854d0e; }
+  .pill-notmet { background: #2e0f0f; color: #f87171; border: 1px solid #991b1b; }
+
+  pre {
+    background: #0d1117; color: #c9d1d9;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px; line-height: 1.5;
+    padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; margin: 10px 0 14px 0;
+    border: 1px solid #21262d; position: relative;
+  }
+  pre .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: #21262d; color: #8b949e;
+    border: 1px solid #30363d; border-radius: 4px;
+    font-size: 11px; padding: 3px 8px;
+    cursor: pointer; font-family: 'Segoe UI', sans-serif;
+    transition: all 0.2s;
+  }
+  pre .copy-btn:hover { background: #30363d; color: #c9d1d9; }
+  pre .copy-btn.copied { background: #166534; color: #4ade80; border-color: #166534; }
+  code { font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; }
+  p code, li code, td code {
+    background: #21262d; color: #79c0ff;
+    padding: 2px 6px; border-radius: 4px; font-size: 12.5px;
+  }
+
+  .diagram {
+    background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+    padding: 16px 18px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px; line-height: 1.3;
+    white-space: pre; overflow-x: auto;
+    margin: 10px 0 14px 0; color: #8b949e;
+  }
+
+  .priority-list { counter-reset: priority; list-style: none; margin-left: 0; padding-left: 0; }
+  .priority-list li {
+    counter-increment: priority;
+    padding: 8px 12px 8px 42px;
+    position: relative; border-bottom: 1px solid #21262d; color: #b0b8c4;
+  }
+  .priority-list li:last-child { border-bottom: none; }
+  .priority-list li::before {
+    content: counter(priority);
+    position: absolute; left: 10px; top: 8px;
+    background: #1a2936; color: #38bdf8;
+    font-weight: 700; font-size: 12px;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #2e3646;
+  }
+
+  .callout {
+    border-left: 4px solid #38bdf8; background: #0f1a24;
+    padding: 12px 16px; margin: 14px 0; border-radius: 0 6px 6px 0;
+  }
+  .callout.warn { border-left-color: #fbbf24; background: #1a1a0f; }
+  .callout.danger { border-left-color: #f87171; background: #1a0f0f; }
+  .callout.success { border-left-color: #4ade80; background: #0f2a1a; }
+  .callout strong { color: #7dd3fc; }
+  .callout.warn strong { color: #fbbf24; }
+  .callout.danger strong { color: #f87171; }
+  .callout.success strong { color: #4ade80; }
+
+  .resources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+  .resource-card {
+    background: #12151b; border: 1px solid #2e3646;
+    border-radius: 8px; padding: 14px 16px; transition: all 0.2s;
+  }
+  .resource-card:hover { border-color: #38bdf8; background: #161c26; }
+  .resource-card .rc-title { font-size: 13px; font-weight: 700; color: #f0f3f8; margin-bottom: 4px; }
+  .resource-card .rc-desc { font-size: 12px; color: #8b949e; margin-bottom: 6px; }
+  .resource-card a { font-size: 12px; font-weight: 600; }
+
+  .footer { text-align: center; color: #4b5563; font-size: 12px; padding: 20px 0 10px; }
+
+  @media (max-width: 600px) {
+    body { padding: 14px 10px 60px; }
+    .section { padding: 18px 16px; }
+    .header { padding: 20px; }
+    .header h1 { font-size: 20px; }
+    .diagram { font-size: 9px; }
+    pre { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>Sara — IB Score Tracker Feedback</h1>
+    <p>IB Computer Science IA · Client: Grade 11 IB student · Python CLI + JSON</p>
+    <span class="badge">● Interactive Review</span>
+  </div>
+
+  <nav class="nav">
+    <a href="#sc">Success Criteria</a>
+    <a href="#done">Done Well</a>
+    <a href="#fixes">Critical Fixes</a>
+    <a href="#bugs">Bugs Found</a>
+    <a href="#oop">OOP Refactor</a>
+    <a href="#resources">Resources</a>
+    <a href="#priority">Priority</a>
+  </nav>
+
+  <div class="progress-wrap">
+    <span class="label">Completion</span>
+    <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+    <span class="count" id="progressCount">0 / 10</span>
+  </div>
+
+  <!-- SUCCESS CRITERIA COVERAGE -->
+  <div class="section" id="sc">
+    <h2><span class="icon">📊</span> Success Criteria Coverage</h2>
+
+    <p>Assessed against the 7 success criteria in <code>Criteria A.docx</code> and the code in <code>ib_score_tracker.txt</code>.</p>
+
+    <table>
+      <thead>
+        <tr><th style="width:38%;">SC</th><th style="width:16%;">Status</th><th>Gap</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SC1 (Input assessment score 0–100)</td><td><span class="pill pill-met">Met</span></td><td><code>input_float("Score (%): ", min_val=0, max_val=100)</code></td></tr>
+        <tr><td>SC2 (Convert % to IB grade 1–7)</td><td><span class="pill pill-met">Met</span></td><td><code>calculate_grade()</code> iterates grades 7→1 and returns first match</td></tr>
+        <tr><td>SC3 (Minimum score needed for target)</td><td><span class="pill pill-met">Met</span></td><td><code>calculate_required_score()</code> — handles three cases: secured / possible / impossible</td></tr>
+        <tr><td>SC4 (Current average per subject)</td><td><span class="pill pill-met">Met</span></td><td><code>calculate_average()</code> returns the mean of all scores</td></tr>
+        <tr><td>SC5 (All calculations under 1 second)</td><td><span class="pill pill-notmet">Not demonstrated</span></td><td>All operations are O(n) — trivially fast — but there is <strong>no timing evidence anywhere</strong></td></tr>
+        <tr><td>SC6 (Display past grades in a table)</td><td><span class="pill pill-met">Met</span></td><td><code>print_assessment_list()</code> renders a formatted table</td></tr>
+        <tr><td>SC7 (Prevent invalid input outside 0–100)</td><td><span class="pill pill-met">Met</span></td><td><code>input_int()</code> and <code>input_float()</code> loop until valid</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <strong>⚠ 6 of 7 SCs are met.</strong> SC5 needs timing evidence to be provable in the video demo. That is the single biggest gap.
+    </div>
+  </div>
+
+  <!-- DONE WELL -->
+  <div class="section" id="done">
+    <h2><span class="icon">✅</span> Done Well</h2>
+    <ul>
+      <li><strong>Excellent input validation design</strong> — <code>input_int()</code> and <code>input_float()</code> loop until a valid value is entered, with clear error messages. This directly satisfies SC7 and SC1</li>
+      <li><strong>Three-outcome design for the "required score" calculation</strong> — <code>already_secured</code>, <code>possible</code>, and <code>impossible</code> are handled distinctly, with the best-possible average shown in the impossible case. Most students only handle the "possible" case</li>
+      <li><strong>Boundary validation during setup</strong> — <code>input_boundaries_manual()</code> enforces that each grade boundary is lower than the one above it. This prevents nonsensical scales</li>
+      <li><strong>Default boundary scale is documented and overridable</strong> — the code comments that official IB boundaries vary by subject, and offers a per-course override. This is real-world thinking</li>
+      <li><strong>Colour-aware output with graceful fallback</strong> — if <code>colorama</code> isn't installed, the code still runs; the <code>_NoColor</code> stub class is a clever way to avoid <code>if COLOR</code> checks everywhere</li>
+      <li><strong>Clean JSON persistence</strong> — <code>load_data()</code> catches <code>json.JSONDecodeError</code> and falls back to a fresh structure instead of crashing</li>
+      <li><strong>Full CRUD on assessments</strong> — add, edit, and delete all implemented with confirmation on delete</li>
+      <li><strong>Auto-increment IDs</strong> — <code>next_id = max((a["id"] for a in course["assessments"]), default=0) + 1</code> is the correct way to generate IDs</li>
+      <li><strong>Selection-based course picker</strong> — <code>select_course()</code> uses numbered options instead of typing names, avoiding typos</li>
+      <li><strong>Formatting helpers</strong> — <code>box_title()</code>, <code>section()</code>, and <code>pause()</code> give the CLI a consistent, professional look</li>
+      <li><strong>All-courses summary view</strong> — <code>view_all_courses()</code> shows every course at a glance with average, grade, target, and next-needed score</li>
+      <li><strong>Cross-platform file paths</strong> — <code>os.path.join(SCRIPT_DIR, "ib_tracker_data.json")</code> works on Windows, macOS, and Linux</li>
+    </ul>
+  </div>
+
+  <!-- CRITICAL FIXES -->
+  <div class="section" id="fixes">
+    <h2><span class="icon">🔧</span> Critical Fixes Needed</h2>
+
+    <!-- SC5 timing -->
+    <h3>SC5 — Add Timing Evidence</h3>
+    <p><strong>What's wrong now:</strong> SC5 says "All calculation speed should be under 1s". Every function you have (<code>calculate_average</code>, <code>calculate_grade</code>, <code>calculate_required_score</code>) runs in microseconds, but there is <strong>no code that measures or displays this</strong>. In a video demo, you can't claim SC5 is met without showing a timer.</p>
+    <p><strong>Why it matters:</strong> Criterion D explicitly requires evidence of testing. Timing claims need a printed value, not an assertion.</p>
+    <p><strong>What to add:</strong> Wrap calculations in a timer and display the result:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import time
+
+def timed(label, fn, *args, **kwargs):
+    start = time.perf_counter()
+    result = fn(*args, **kwargs)
+    elapsed = (time.perf_counter() - start) * 1000  # milliseconds
+    print(c(f"  [{label}: {elapsed:.2f} ms]", DIM_C))
+    return result
+
+# Usage in add_assessment, view_course_details, etc:
+average = timed("avg", calculate_average, course["assessments"])
+grade = timed("grade", calculate_grade, average, course["boundaries"])
+</code></pre>
+    <p><strong>How to test it:</strong> Run the app, add an assessment, and watch the console print timing values. They will be well under 1 ms — every time.</p>
+
+    <!-- input_target_grade unused -->
+    <h3><code>input_target_grade()</code> Is Defined but Rarely Used</h3>
+    <p><strong>What's wrong now:</strong> <code>input_target_grade()</code> is a helper function, but <code>setup_courses()</code> and <code>edit_course_settings()</code> both call <code>input_int("Target grade (1-7): ", min_val=1, max_val=7)</code> directly instead of using the helper.</p>
+    <p><strong>Why it matters:</strong> Having an unused helper is a small code-quality issue — but more importantly, if you later change the valid range (say, to include "no target"), you'd have to update two places instead of one.</p>
+    <p><strong>What to add:</strong> Use the helper consistently:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code># In setup_courses()
+target = input_target_grade()  # instead of input_int(..., min_val=1, max_val=7)
+
+# In edit_course_settings() 
+course["target_grade"] = input_target_grade()</code></pre>
+    <p><strong>How to test it:</strong> Enter setup and confirm target grade validation still works for 0, 8, and "abc".</p>
+
+    <!-- Boundaries dict uses string keys -->
+    <h3>Design — Grade Boundaries Use String Keys</h3>
+    <p><strong>What's wrong now:</strong> <code>DEFAULT_BOUNDARIES</code> is defined with string keys:</p>
+    <pre><code>DEFAULT_BOUNDARIES = {"7": 90, "6": 80, "5": 70, ...}</code></pre>
+    <p>This is because JSON only supports string keys. That's a legitimate reason — but it means every lookup has to convert <code>str(grade)</code>:</p>
+    <pre><code>boundaries[str(target_grade)]</code></pre>
+    <p><strong>Why it matters:</strong> It's easy to forget and use <code>boundaries[7]</code> somewhere, which would raise <code>KeyError</code>. It's a maintenance hazard.</p>
+    <p><strong>What to do:</strong> Wrap the boundaries in an accessor method that handles conversion, or define a named constant for the string conversion. The simplest fix is a small helper:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def get_boundary(boundaries, grade):
+    """Fetch a grade boundary by integer grade, handling the JSON string-key format."""
+    return boundaries[str(grade)]</code></pre>
+    <p>Then replace every direct access. This makes the code self-documenting and prevents the KeyError entirely.</p>
+
+    <!-- calculate_required_score edge case -->
+    <h3>SC3 — Edge Case in <code>calculate_required_score()</code> When There Are Zero Assessments</h3>
+    <p><strong>What's wrong now:</strong> If a student has just set up a course but hasn't added any assessments yet:</p>
+    <pre><code>n = len(assessments)  # = 0
+existing_total = sum(...)  # = 0
+required = target_min * (0 + 1) - 0  # = target_min</code></pre>
+    <p>This actually works correctly — it returns <code>target_min</code> as the required score for the first assessment, which is exactly right. Good.</p>
+    <p><strong>But:</strong> <code>view_course_details()</code> calls <code>print_summary_for_course()</code>, which calls <code>calculate_required_score()</code> even when <code>assessments</code> is empty. Test this path — it should display "Need 90% on your next assessment for grade 7" which is correct and helpful.</p>
+    <p><strong>What to do:</strong> Add a test for this. Confirm the output is correct. Mention it in Criterion D as evidence of handling the empty-collection case.</p>
+
+    <!-- percentage rounding -->
+    <h3>Precision — <code>calculate_grade()</code> Uses Floating-Point Comparison</h3>
+    <p><strong>What's wrong now:</strong> In <code>calculate_grade()</code>:</p>
+    <pre><code>if average >= boundaries[str(grade)]:
+    return grade</code></pre>
+    <p>If <code>average</code> is computed as <code>89.99999999</code> due to floating-point arithmetic, and the boundary for grade 7 is exactly <code>90</code>, this returns grade 6 — which is correct but surprising to the user who sees "90.00%" displayed.</p>
+    <p><strong>Why it matters:</strong> This is a classic floating-point trap. It's unlikely to occur in practice with two decimal places, but a student who has exactly 90.00% displayed and is told they have a 6 is going to be confused.</p>
+    <p><strong>What to add:</strong> Round the average to a small number of decimal places before comparing:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def calculate_grade(average, boundaries):
+    if average is None:
+        return None
+    average = round(average, 2)
+    for grade in GRADES:
+        if average >= boundaries[str(grade)]:
+            return grade
+    return None</code></pre>
+    <p><strong>How to test it:</strong> Add assessments that produce exactly 90.00% average and confirm the grade is 7, not 6.</p>
+
+    <!-- course name truncation -->
+    <h3>Display — Course Name Truncation May Cut Off Important Words</h3>
+    <p><strong>What's wrong now:</strong> In <code>view_all_courses()</code>:</p>
+    <pre><code>display_name = name if len(name) <= name_width - 1 else name[:name_width - 4] + "..."</code></pre>
+    <p>With <code>name_width = 30</code>, this truncates anything over 29 chars to 26 chars + "...". Long names like "Mathematics: Analysis and Approaches (AA)" will become "Mathematics: Analysis a..." — cutting off the crucial (AA) vs (AI) distinction.</p>
+    <p><strong>Why it matters:</strong> The two Math courses are the ones most likely to be confused. Truncating them so they look identical defeats the purpose of the display.</p>
+    <p><strong>What to add:</strong> Either widen the column, or add a numeric ID next to each course so users can distinguish them:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code># Option A: widen the column
+name_width = 45
+
+# Option B: show an index
+for i, (name, course) in enumerate(data["courses"].items(), start=1):
+    # print with i as prefix so users can refer to "course 3"
+</code></pre>
+
+    <!-- except catches -->
+    <h3>Robustness — Save Errors Are Not Caught</h3>
+    <p><strong>What's wrong now:</strong> <code>save_data()</code> has no error handling:</p>
+    <pre><code>def save_data(data):
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)</code></pre>
+    <p>If the disk is full, or the file is locked by another program, or the directory becomes read-only, the app crashes and the user loses all unsaved work.</p>
+    <p><strong>Why it matters:</strong> SC7 is about preventing crashes. Robustness in persistence is a natural extension of that.</p>
+    <p><strong>What to add:</strong></p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def save_data(data):
+    try:
+        with open(DATA_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        return True
+    except OSError as error:
+        print(c(f"  Could not save data: {error}", ERR_C))
+        return False</code></pre>
+    <p>Then check the return value wherever you call <code>save_data()</code> and warn the user if it fails.</p>
+  </div>
+
+  <!-- BUGS -->
+  <div class="section" id="bugs">
+    <h2><span class="icon">🐛</span> Bugs Found in the Code</h2>
+
+    <table>
+      <thead>
+        <tr><th style="width:24%;">Location</th><th>Problem</th><th style="width:30%;">Suggested Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>input_target_grade()</code></td>
+          <td>Defined but not used — other functions inline the same logic</td>
+          <td>Call the helper everywhere the target is set</td>
+        </tr>
+        <tr>
+          <td><code>calculate_grade()</code></td>
+          <td>Floating-point comparison can miss boundary by <code>0.0000001</code></td>
+          <td>Round the average to 2 decimals before comparing</td>
+        </tr>
+        <tr>
+          <td><code>save_data()</code></td>
+          <td>No try/except — disk errors crash the app</td>
+          <td>Wrap in try/except <code>OSError</code>, return success flag</td>
+        </tr>
+        <tr>
+          <td><code>view_all_courses()</code></td>
+          <td>Truncates long course names ambiguously — Maths AA vs AI look the same</td>
+          <td>Widen column or add index numbers</td>
+        </tr>
+        <tr>
+          <td>Boundaries dict key type</td>
+          <td>Uses string keys but grades are ints — easy to forget <code>str()</code></td>
+          <td>Add a <code>get_boundary()</code> helper</td>
+        </tr>
+        <tr>
+          <td><code>edit_assessment()</code> — id range</td>
+          <td><code>input_int("Edit which #? ", min_val=min(ids), max_val=max(ids))</code> uses <em>min/max</em> rather than a contiguous range</td>
+          <td>If IDs are ever non-contiguous (after deletes), this will still accept values that don't exist. Better: loop until an existing ID is entered</td>
+        </tr>
+        <tr>
+          <td><code>edit_assessment()</code> / <code>delete_assessment()</code></td>
+          <td>No retry if the user enters a non-existent ID — just gives up</td>
+          <td>Loop until a valid ID is entered, or provide a Cancel option</td>
+        </tr>
+        <tr>
+          <td><code>setup_courses()</code> — confirmation</td>
+          <td>Only accepts exactly <code>"y"</code> — <code>"yes"</code> is rejected</td>
+          <td>Use <code>.lower() in {"y", "yes"}</code></td>
+        </tr>
+        <tr>
+          <td><code>view_course_details()</code> — title</td>
+          <td><code>course_name.upper()[:WIDTH - 4]</code> truncates without ellipsis</td>
+          <td>Use a shared truncation helper for consistency</td>
+        </tr>
+        <tr>
+          <td>Menu loop</td>
+          <td>No Ctrl+C handler — interrupting with Ctrl+C prints a raw Python traceback</td>
+          <td>Wrap <code>main()</code> in try/except <code>KeyboardInterrupt</code></td>
+        </tr>
+        <tr>
+          <td><code>main()</code></td>
+          <td>On unexpected exceptions, the app crashes without saving</td>
+          <td>Add a top-level try/except that saves and exits cleanly</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- OOP REFACTOR -->
+  <div class="section" id="oop">
+    <h2><span class="icon">🏗️</span> OOP Refactor — Why and How</h2>
+
+    <p>The current code is <strong>entirely procedural</strong> — 12 functions with no classes. This is the biggest structural gap for Criterion D. Criterion C explicitly says: <em>"For object-oriented coding, it is important to document the component objects using UML diagrams that show dependencies between objects."</em> With no classes, you have no UML diagram.</p>
+
+    <h3>Current Structure (Procedural)</h3>
+    <div class="diagram">+---------------------------------------------+
+|  ib_score_tracker.py                        |
+|  (~400 lines of functions)                  |
++---------------------------------------------+
+| load_data()  / save_data()                  |
+| input_int()  / input_float()                |
+| input_nonempty() / pause()                  |
+| choose_subjects() / setup_courses()         |
+| edit_course_settings()                      |
+| select_course()                             |
+| add_assessment() / edit_assessment()        |
+| delete_assessment()                         |
+| calculate_average() / calculate_grade()     |
+| calculate_required_score()                  |
+| view_course_details() / view_all_courses()  |
+| print_summary_for_course()                  |
+| print_menu() / main()                       |
++---------------------------------------------+</div>
+
+    <h3>Proposed Structure (OOP)</h3>
+    <p>Extract three classes, each with a single responsibility:</p>
+    <div class="diagram">+-----------------------------+
+|  CourseTracker              |
+|  (top-level controller)     |
++-----------------------------+
+| - data: dict                |
+| - store: DataStore          |
++-----------------------------+
+| + setup_courses()           |
+| + add_assessment()          |
+| + edit_assessment()         |
+| + delete_assessment()       |
++------+---------------+------+
+       |               |
+       | uses          | uses
+       v               v
++----------------+ +-------------------+
+|  DataStore     | |   Course          |
+|  (JSON I/O)    | |   (model)         |
++----------------+ +-------------------+
+| + load()       | | - name            |
+| + save(data)   | | - boundaries      |
++----------------+ | - target_grade    |
+                   | - assessments     |
+                   +-------------------+
+                   | + average()       |
+                   | + grade()         |
+                   | + required_score()|
+                   +-------------------+</div>
+
+    <h3>What Each Class Does</h3>
+    <table>
+      <thead>
+        <tr><th style="width:24%;">Class</th><th>Responsibility</th><th style="width:24%;">Imports</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>DataStore</code></td><td>Load/save JSON, handle file errors, return a plain dict</td><td><code>json</code>, <code>os</code></td></tr>
+        <tr><td><code>Course</code></td><td>Hold one course's boundaries, target, and assessments; calculate average, grade, and required score</td><td>none (pure logic)</td></tr>
+        <tr><td><code>CourseTracker</code></td><td>Top-level CLI controller — menus, user interaction, calls into <code>Course</code> and <code>DataStore</code></td><td><code>sys</code>, <code>colorama</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>UML Class Diagram (for Criterion C)</h3>
+    <div class="diagram">+----------------------------------+
+|         CourseTracker            |
++----------------------------------+
+| - courses: dict[str, Course]     |
+| - store: DataStore               |
++----------------------------------+
+| + run()                          |
+| + setup_courses()                |
+| + edit_course_settings()         |
+| + view_all_courses()             |
+| + view_course_details()          |
+| + add_assessment()               |
+| + edit_assessment()              |
+| + delete_assessment()            |
++------------------+---------------+
+                   |
+      +------------+------------+
+      |                         |
+      | uses                    | uses
+      v                         v
++-----------------+       +------------------+
+|   DataStore     |       |     Course       |
++-----------------+       +------------------+
+| - path: str     |       | - name: str      |
++-----------------+       | - boundaries     |
+| + load() -> dict|       | - target_grade   |
+| + save(dict)    |       | - assessments    |
++-----------------+       +------------------+
+                          | + average()      |
+                          | + grade()        |
+                          | + required_score()|
+                          +------------------+</div>
+
+    <h3>Why This Helps</h3>
+    <ul>
+      <li><strong>Criterion C</strong> — a UML diagram becomes natural to draw</li>
+      <li><strong>Criterion D</strong> — you can show clean code excerpts of each class and justify the separation</li>
+      <li><strong>Testability</strong> — you can write <code>course = Course("Maths AA", boundaries, 7); assert course.average() == 85.0</code> without running the CLI</li>
+      <li><strong>Extensibility</strong> — if you later want a GUI, only <code>CourseTracker</code> changes; <code>Course</code> and <code>DataStore</code> stay the same</li>
+    </ul>
+
+    <h3>Example Skeleton</h3>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>class Course:
+    def __init__(self, name, boundaries, target_grade):
+        self.name = name
+        self.boundaries = boundaries
+        self.target_grade = target_grade
+        self.assessments = []
+
+    def average(self):
+        if not self.assessments:
+            return None
+        return sum(a["score"] for a in self.assessments) / len(self.assessments)
+
+    def grade(self):
+        avg = self.average()
+        if avg is None:
+            return None
+        avg = round(avg, 2)
+        for g in GRADES:
+            if avg >= self.boundaries[str(g)]:
+                return g
+        return None
+
+    def required_score(self):
+        target_min = self.boundaries[str(self.target_grade)]
+        n = len(self.assessments)
+        existing = sum(a["score"] for a in self.assessments)
+        required = target_min * (n + 1) - existing
+        if required <= 0:
+            return ("already_secured", 0)
+        if required > 100:
+            return ("impossible", (existing + 100) / (n + 1))
+        return ("possible", required)</code></pre>
+  </div>
+
+  <!-- OTHER IMPROVEMENTS -->
+  <div class="section">
+    <h2><span class="icon">✨</span> Other Improvements</h2>
+    <ul>
+      <li><strong>Add a top-level Ctrl+C handler</strong> so the app exits cleanly instead of printing a traceback</li>
+      <li><strong>Write unit tests</strong> — Criterion D requires at least 3 test cases with valid, extreme, and invalid data:
+        <ul>
+          <li>Valid: <code>calculate_average([{"score": 80}]) == 80.0</code></li>
+          <li>Extreme: <code>calculate_required_score</code> with 0 assessments and with 100% next score</li>
+          <li>Invalid: <code>calculate_grade(None, boundaries) == None</code></li>
+        </ul>
+      </li>
+      <li><strong>Record a video demo</strong> — show: setup with 6 subjects, add 3 assessments with valid and invalid input, view all courses, edit a boundary, delete an assessment, and confirm the JSON file updates on disk</li>
+      <li><strong>Acknowledge any LLM use</strong> in comments and in the Criterion D write-up. The docstring format at the top of the file is very polished — if any of it was generated, acknowledge it</li>
+      <li><strong>Add an "import from CSV" feature</strong> — this would be a natural extension, and gives you something to write about in Criterion E as an improvement</li>
+      <li><strong>Consider adding a "weight" field to assessments</strong> — in the IB, different assessments have different weights toward the final grade. Right now every assessment counts equally, which is not realistic</li>
+      <li><strong>Fix the Criterion A typos</strong> — "according ot" → "according to", "acknowledge that friends of mine and myself, tends" → "tend", "in track with their specific target" → awkward phrasing</li>
+      <li><strong>Update Criterion A to reflect SC count</strong> — you have 7 SCs, which is below the 8–10 range the IB recommends. Consider splitting SC2 into two (e.g. "convert percentage to IB grade" and "display grade alongside percentage") and adding a "sort courses by name" criterion</li>
+    </ul>
+  </div>
+
+  <!-- RESOURCES -->
+  <div class="section" id="resources">
+    <h2><span class="icon">📚</span> Useful Resources</h2>
+    <div class="resources">
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion A</div>
+        <div class="rc-desc">Problem specification guidance</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionA.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion B</div>
+        <div class="rc-desc">Planning &amp; decomposition</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionB.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion C</div>
+        <div class="rc-desc">System overview &amp; UML</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionC.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion D</div>
+        <div class="rc-desc">Development &amp; testing</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionD.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion E</div>
+        <div class="rc-desc">Evaluation &amp; improvements</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionE.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Python <code>json</code> module</div>
+        <div class="rc-desc">Official reference for load/save</div>
+        <a href="https://docs.python.org/3/library/json.html" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Python <code>time</code> module</div>
+        <div class="rc-desc">Docs on <code>perf_counter()</code> for timing</div>
+        <a href="https://docs.python.org/3/library/time.html" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Python Dataclasses</div>
+        <div class="rc-desc">Clean data containers for the refactor</div>
+        <a href="https://docs.python.org/3/library/dataclasses.html" target="_blank" rel="noopener">Read →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIORITY -->
+  <div class="section" id="priority">
+    <h2><span class="icon">🎯</span> Priority Order</h2>
+    <ol class="priority-list">
+      <li>Add timing around all calculations to prove SC5</li>
+      <li>Refactor into three classes — <code>DataStore</code>, <code>Course</code>, <code>CourseTracker</code></li>
+      <li>Round the average to 2 decimals in <code>calculate_grade()</code> to avoid float-boundary bugs</li>
+      <li>Wrap <code>save_data()</code> in try/except <code>OSError</code></li>
+      <li>Fix the truncation of long course names in <code>view_all_courses()</code></li>
+      <li>Loop until a valid assessment ID is entered in edit/delete</li>
+      <li>Accept "yes" as well as "y" in the reset confirmation</li>
+      <li>Add a top-level Ctrl+C handler</li>
+      <li>Write 3+ unit tests for the calculation functions</li>
+      <li>Proofread and extend Criterion A (aim for 8–10 SCs), and record a video demo</li>
+    </ol>
+    <div class="callout">
+      Sara, the code is well-organised and the CLI presentation is genuinely nice — the box titles and colour-coded output make it feel professional. The two biggest wins are adding timing evidence for SC5 and refactoring into classes so you have a UML diagram for Criterion C. Both are achievable in a few hours.
+    </div>
+  </div>
+
+  <div class="footer">IB Computer Science IA · Sara · IB Score Tracker</div>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.parentElement;
+    const code = pre.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    }).catch(() => {
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  const checkboxes = document.querySelectorAll('#fixList input[type="checkbox"]');
+  const progressFill = document.getElementById('progressFill');
+  const progressCount = document.getElementById('progressCount');
+  const totalTasks = 10;
+
+  function updateProgress() {
+    let checked = 0;
+    checkboxes.forEach(cb => { if (cb.checked) checked++; });
+    const done = checked;
+    const pct = Math.min((done / totalTasks) * 100, 100);
+    progressFill.style.width = pct + '%';
+    progressCount.textContent = done + ' / ' + totalTasks;
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      const li = e.target.closest('li');
+      if (e.target.checked) {
+        li.classList.add('done');
+      } else {
+        li.classList.remove('done');
+      }
+      updateProgress();
+    });
+    const li = cb.closest('li');
+    li.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
