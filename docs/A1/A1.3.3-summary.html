@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1.3.3 – Compare Different Approaches to Scheduling</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel-2: #273449;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-2: #22c55e;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --border: #334155;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 0 1rem 4rem;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  a { color: var(--accent); }
+  .back {
+    display: inline-block;
+    margin: 1.5rem 0;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+  .back:hover { color: var(--accent); }
+  h1 {
+    font-size: 2rem;
+    margin: 0.5rem 0 1.5rem;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.75rem;
+  }
+  h2 {
+    font-size: 1.35rem;
+    margin: 2.5rem 0 1rem;
+    color: var(--accent);
+    border-left: 4px solid var(--accent);
+    padding-left: 0.75rem;
+  }
+  h3 { font-size: 1.1rem; margin: 1.75rem 0 0.75rem; color: var(--accent-2); }
+  p, li { color: var(--text); }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 1rem 0;
+  }
+  .panel.accent { border-left: 4px solid var(--accent); }
+  .panel.warn { border-left: 4px solid var(--warn); background: #2a2313; }
+  .panel.danger { border-left: 4px solid var(--danger); background: #2a1414; }
+  .panel.good { border-left: 4px solid var(--accent-2); background: #132a1c; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: var(--panel);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.95rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 0.7rem 0.9rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: var(--panel-2); color: var(--accent); }
+  tr:nth-child(even) td { background: #1a2537; }
+  code {
+    background: #0b1220;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #7dd3fc;
+  }
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+  }
+  .flow .box {
+    background: var(--panel-2);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    min-width: 150px;
+  }
+  .flow .box strong { color: var(--accent); display: block; }
+  .flow .box small { color: var(--muted); font-size: 0.8rem; }
+  .flow .arrow { color: var(--accent-2); font-size: 1.5rem; font-weight: bold; }
+  .btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #0b1220;
+    font-weight: 700;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    margin: 0.4rem 0.4rem 0.4rem 0;
+    transition: transform 0.1s ease, background 0.15s ease;
+  }
+  .btn:hover { background: #7dd3fc; transform: translateY(-1px); }
+  .btn.green { background: var(--accent-2); }
+  .btn.green:hover { background: #4ade80; }
+  .btn.orange { background: var(--warn); }
+  .btn.orange:hover { background: #fbbf24; }
+  details {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+  }
+  summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+  details[open] summary { margin-bottom: 0.75rem; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding: 0.4rem 0 0.4rem 1.9rem; position: relative; }
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+  .checklist li.done::before { content: "✅"; color: var(--accent-2); }
+  .takeaway {
+    background: linear-gradient(135deg, #132a1c, #1a2537);
+    border: 1px solid var(--accent-2);
+    border-radius: 10px;
+    padding: 1.5rem;
+    font-size: 1.05rem;
+    font-style: italic;
+    margin-top: 2rem;
+  }
+  .tag {
+    display: inline-block;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.15rem 0.7rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-right: 0.4rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="#">← Back to A1 Unit</a>
+
+  <h1>A1.3.3 – Compare Different Approaches to Scheduling</h1>
+
+  <div class="panel accent">
+    <h2 style="margin-top:0;border:none;padding:0;color:var(--accent)">📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to <strong>compare</strong>:</p>
+    <ul>
+      <li>The four scheduling approaches — <strong>First-Come First-Served</strong>, <strong>Round Robin</strong>, <strong>Multilevel Queue</strong> and <strong>Priority Scheduling</strong></li>
+      <li>How each approach allocates processor time</li>
+      <li>The main <strong>strength</strong> and main <strong>limitation</strong> of each approach</li>
+      <li>Which approach best suits a given workload — and <em>why</em></li>
+    </ul>
+  </div>
+
+  <div class="panel warn">
+    <h2 style="margin-top:0;border:none;padding:0;color:var(--warn)">🎯 IB Command Term: Compare</h2>
+    <p><strong>Compare</strong> – "Give an account of the similarities <em>and</em> differences between two or more items or situations, referring to both throughout."</p>
+    <p>For this topic, a compare question expects you to hold the approaches <strong>side by side</strong>: say what they have in common, where they diverge, and what the consequences of those differences are.</p>
+    <p><strong>An answer that describes each algorithm in turn without ever comparing them does not meet the command term.</strong></p>
+  </div>
+
+  <p>
+    🎮 <strong>Starter Activity – Blooket</strong> — Test your scheduling knowledge before we begin!
+  </p>
+  <a class="btn orange" href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">🚀 Launch Blooket</a>
+
+  <h2>🔑 Key Terms</h2>
+  <table>
+    <thead>
+      <tr><th>Term</th><th>Definition</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Process</strong></td><td>A program in execution, with its own state and resources</td></tr>
+      <tr><td><strong>Scheduling</strong></td><td>The method by which the OS decides which ready process uses the processor next, and for how long</td></tr>
+      <tr><td><strong>First-Come First-Served (FCFS)</strong></td><td>Processes run to completion in the order they arrive</td></tr>
+      <tr><td><strong>Round Robin</strong></td><td>Each process gets a fixed time slice (the quantum), then moves to the back of the queue</td></tr>
+      <tr><td><strong>Multilevel Queue</strong></td><td>Processes are split into separate queues by type or priority, each queue with its own rule</td></tr>
+      <tr><td><strong>Priority Scheduling</strong></td><td>The highest-priority ready process runs first</td></tr>
+      <tr><td><strong>Time slice / Quantum</strong></td><td>The fixed amount of processor time a process receives under Round Robin</td></tr>
+      <tr><td><strong>Context switch</strong></td><td>Saving the state of one process and restoring another's — pure overhead</td></tr>
+      <tr><td><strong>Convoy effect</strong></td><td>Under FCFS, one long job at the front delays every short job behind it</td></tr>
+      <tr><td><strong>Starvation</strong></td><td>A process never runs because higher-priority work keeps arriving</td></tr>
+      <tr><td><strong>Ageing</strong></td><td>Gradually raising the priority of a waiting process to prevent starvation</td></tr>
+      <tr><td><strong>Responsiveness</strong></td><td>How quickly the system reacts to interactive input</td></tr>
+    </tbody>
+  </table>
+
+  <h2>📊 The Four Approaches</h2>
+
+  <div class="flow">
+    <div class="box"><strong>FCFS</strong><small>Arrival order, run to completion</small></div>
+    <span class="arrow">➜</span>
+    <div class="box"><strong>Round Robin</strong><small>Fixed slice, then rotate</small></div>
+    <span class="arrow">➜</span>
+    <div class="box"><strong>Multilevel Queue</strong><small>Separate queues, separate rules</small></div>
+    <span class="arrow">➜</span>
+    <div class="box"><strong>Priority</strong><small>Highest priority runs first</small></div>
+  </div>
+
+  <h3>THINK FIRST</h3>
+  <div class="panel">
+    <p>Three programs all want the processor at the same instant: a long video export, a text editor waiting for a keystroke, and a background backup.</p>
+    <p><strong>Before reading on, decide what order you would run them in — and be honest about what "fair" should mean.</strong></p>
+    <p>Most disagreements about scheduling are really disagreements about that word.</p>
+  </div>
+
+  <h3>1. First-Come First-Served (FCFS)</h3>
+  <p>Processes run <strong>to completion in the order they arrive</strong>. Simple and predictable.</p>
+  <p><strong>Weakness:</strong> the <strong>convoy effect</strong> — one long job at the front holds up every short job behind it, pushing up average waiting time.</p>
+
+  <h3>2. Round Robin</h3>
+  <p>Each process gets a <strong>fixed time slice</strong> (the quantum), then moves to the back of the queue and the next process starts.</p>
+  <p><strong>Strength:</strong> no process is left waiting indefinitely, so the system feels <strong>responsive</strong>.</p>
+  <p><strong>Weakness:</strong> the <strong>overhead of context switching</strong> many times a second. Quantum too short → switching dominates. Too long → behaves like FCFS.</p>
+
+  <h3>3. Multilevel Queue</h3>
+  <p>Processes are split into <strong>separate queues</strong> by type or priority, each queue with its own rule. Interactive work might sit in a high queue served quickly; background work waits in a lower queue.</p>
+  <p><strong>Strength:</strong> different work gets <strong>suitable treatment</strong>.</p>
+  <p><strong>Weakness:</strong> more <strong>complex</strong>; a low-priority queue can be <strong>starved</strong> while higher queues stay busy.</p>
+
+  <h3>4. Priority Scheduling</h3>
+  <p>The <strong>highest-priority ready process runs first</strong>. Suits real-time and urgent work.</p>
+  <p><strong>Weakness:</strong> a low-priority process may <strong>never run</strong> while higher-priority work keeps arriving — unless the system uses <strong>ageing</strong>.</p>
+
+  <h2>📋 The Comparison Table</h2>
+  <p>This is the single most important artefact for this topic. Learn it as a <em>comparison</em>, not four separate descriptions.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Approach</th>
+        <th>How processor time is allocated</th>
+        <th>Main strength</th>
+        <th>Main limitation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>First-Come First-Served</strong></td>
+        <td>In arrival order; each process runs to completion</td>
+        <td>Simple and predictable</td>
+        <td>Convoy effect: a long job delays all jobs behind it</td>
+      </tr>
+      <tr>
+        <td><strong>Round Robin</strong></td>
+        <td>Fixed time slice each, then rotate to the back of the queue</td>
+        <td>Responsive; no process is starved</td>
+        <td>Frequent context switching adds overhead</td>
+      </tr>
+      <tr>
+        <td><strong>Multilevel Queue</strong></td>
+        <td>Processes split into queues by type or priority, each queue with its own rule</td>
+        <td>Different work gets suitable treatment</td>
+        <td>Lower queues can starve; more complex to manage</td>
+      </tr>
+      <tr>
+        <td><strong>Priority Scheduling</strong></td>
+        <td>Highest-priority ready process runs first</td>
+        <td>Urgent and real-time work served first</td>
+        <td>Low-priority processes can starve without ageing</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="panel danger">
+    <strong>⚠️ Common exam mistake:</strong> In a "compare" question, candidates often write a paragraph on each algorithm and stop there. That is <em>four descriptions</em>, not a comparison. Pull them together explicitly: say which is more responsive, which carries more overhead, which can cause starvation. <strong>The comparison is the bit that scores on this command term.</strong>
+  </div>
+
+  <h2>🔄 How to Write a Comparison (the compare move)</h2>
+  <p>Use comparative connectives to hold the approaches side by side:</p>
+  <ul>
+    <li><strong>Similarity:</strong> "Both FCFS and Round Robin…", "Like FCFS, Round Robin…"</li>
+    <li><strong>Difference:</strong> "…whereas…", "…however…", "…unlike…", "…in contrast…"</li>
+    <li><strong>Consequence:</strong> "The effect of this difference is…", "As a result…", "This means that…"</li>
+  </ul>
+
+  <div class="panel good">
+    <strong>Model comparison sentence:</strong><br>
+    "Both FCFS and Round Robin are processor scheduling algorithms that decide the order in which ready processes use the processor. However, FCFS runs each process to completion <em>whereas</em> Round Robin gives each a fixed time slice before rotating it to the back of the queue. The effect of this difference is that FCFS can suffer the convoy effect, while Round Robin shares the processor more evenly — at the cost of extra context-switching overhead."
+  </div>
+
+  <h2>💻 Scheduling Simulation</h2>
+  <p>Your teacher is the CPU. Four students are processes. The rest of the class is the scheduler panel with scorecards. We will run the same four processes through each approach in turn and record what happens.</p>
+
+  <table>
+    <thead>
+      <tr><th>Process</th><th>Role</th><th>Burst time</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>P1</strong></td><td>Long video export</td><td>Long</td></tr>
+      <tr><td><strong>P2</strong></td><td>Text editor waiting for keystrokes</td><td>Short, frequent</td></tr>
+      <tr><td><strong>P3</strong></td><td>Background backup</td><td>Long</td></tr>
+      <tr><td><strong>P4</strong></td><td>Music player</td><td>Short, regular</td></tr>
+    </tbody>
+  </table>
+
+  <p>For each approach, watch for:</p>
+  <ul>
+    <li>Who waits longest?</li>
+    <li>How many times did the CPU switch?</li>
+    <li>Did any process never get a turn?</li>
+  </ul>
+
+  <a class="btn" href="#" target="_blank" rel="noopener">🔧 Launch Scheduling Simulator</a>
+
+  <h2>📖 Your Tasks</h2>
+  <ol>
+    <li>
+      <strong>Read &amp; Learn</strong> — Use the resources below to learn about the four scheduling approaches. Take notes on how each allocates processor time, its main strength and its main limitation.
+    </li>
+    <li>
+      <strong>Complete the Starter Activity</strong> — Answer the mild, medium and spicy questions from the Lesson Starter PowerPoint. Use <a href="#" target="_blank" rel="noopener">🐍 Python Code Lab</a> to write your questions and answers in a text file.
+      <div class="panel warn" style="margin-top:0.75rem">
+        📌 <strong>Important:</strong> Save your file as a <code>.txt</code>. You will submit all starter activity answers to Schoolbox at the end of <strong>A1.1.9 Debugging Techniques</strong>.
+      </div>
+    </li>
+    <li>
+      <strong>Deliberate Practice</strong> — Write a <em>compare</em> answer to this question:
+      <div class="panel accent" style="margin-top:0.75rem">
+        <em>"Compare First-Come First-Served and Round Robin scheduling. [4 marks]"</em>
+      </div>
+      <p><strong>📝 Sentence Frame:</strong></p>
+      <p>"Both ___ and ___ are ___. However, ___ runs ___ whereas ___ gives ___. The effect of this difference is that ___, while ___. ___ pays for this with ___."</p>
+      <details>
+        <summary>📌 Click to see a completed example</summary>
+        <p>Both FCFS and Round Robin are processor scheduling algorithms that decide the order in which ready processes use the processor <strong>[1]</strong>.</p>
+        <p>Under FCFS a process runs until it finishes, whereas under Round Robin a process runs only for a fixed time slice before being moved to the back of the queue <strong>[1]</strong>.</p>
+        <p>As a result FCFS can make short processes wait behind a long one (the convoy effect), while Round Robin shares the processor more evenly so short processes respond sooner <strong>[1]</strong>.</p>
+        <p>Round Robin pays for this with the overhead of frequent context switching, which FCFS largely avoids <strong>[1]</strong>.</p>
+      </details>
+    </li>
+    <li>
+      <strong>Plenary</strong> — Test yourself with the Quizlet flashcards.
+    </li>
+  </ol>
+
+  <a class="btn green" href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank" rel="noopener">🃏 Launch Quizlet</a>
+  <a class="btn" href="#" target="_blank" rel="noopener">📑 View Lesson Slides</a>
+
+  <h2>⭐ Extension Activities</h2>
+
+  <h3>🔍 Deeper Exploration</h3>
+  <ul>
+    <li><strong>Real-time challenge:</strong> Which approach would you choose for a pacemaker, and why? What breaks if you get it wrong?</li>
+    <li><strong>Research:</strong> Find out what <em>ageing</em> is and how it fixes starvation in priority scheduling. Write one paragraph.</li>
+    <li><strong>Real-world link:</strong> How does a mobile OS prioritise foreground vs background apps? Which approach does it resemble?</li>
+  </ul>
+
+  <h3>🏗️ Build Your Own</h3>
+  <ul>
+    <li>Design a scheduling policy for a school computer lab. Justify your choice using at least <strong>three</strong> comparative points against the alternatives.</li>
+    <li>Create a set of process cards and run the simulation for a workload of your own design. Record the average waiting time for each approach and compare.</li>
+  </ul>
+
+  <h2>✅ Observation Form Coverage</h2>
+  <p>This section maps the lesson directly onto the observation form criteria. Ticked items are fully evidenced by the lesson as designed.</p>
+
+  <h3>1. Learning</h3>
+  <ul class="checklist">
+    <li class="done"><strong>Syllabus / Guide Reference:</strong> A1.3.3 – Compare different approaches to scheduling</li>
+    <li class="done"><strong>Content to Be Taught:</strong> FCFS, Round Robin, Multilevel Queue, Priority — how each allocates processor time, main strength, main limitation</li>
+    <li class="done"><strong>Student Outcome:</strong> Compare at least two approaches, giving a similarity and a difference, and justify a recommendation</li>
+    <li class="done"><strong>Proof:</strong> Completed comparison table + independent 4-mark compare answer</li>
+    <li class="done"><strong>Secure Standard:</strong> Names approach + allocation method, gives similarity <em>and</em> difference, links difference to consequence, makes a comparative judgement</li>
+    <li class="done"><strong>IB Connection:</strong> Command term "Compare" — both similarities and differences, held side by side; 4-mark allocation modelled</li>
+  </ul>
+
+  <h3>2. Plan</h3>
+  <ul class="checklist">
+    <li class="done"><strong>Connect:</strong> Retrieval whiteboard quiz on A1.3.2 (functions of an OS) → scheduling; "THINK FIRST" hook on fairness</li>
+    <li class="done"><strong>Teach / Model:</strong> FCFS worked example on the board + explicit modelling of the <em>compare move</em> with connectives</li>
+    <li class="done"><strong>Students Think / Do:</strong> Kinesthetic scheduling simulation (teacher = CPU, students = processes, class = scheduler panel); group mini-runs; choice of approach to investigate</li>
+    <li class="done"><strong>Check Everyone:</strong> Mini whiteboards — all students write a comparative sentence; teacher scans every board; targeted cold-call</li>
+    <li class="done"><strong>Adapt:</strong> Support = partially completed table + sentence stems + vocabulary card; Challenge = real-time system justification, ageing research</li>
+    <li class="done"><strong>Feedback &amp; Improve:</strong> Peer feedback against 4 displayed success criteria, then 60-second whole-class correction before independent proof</li>
+    <li class="done"><strong>Independent Proof:</strong> Silent, individual 4-mark compare question</li>
+  </ul>
+
+  <h3>3. Planned Response and Follow-Through</h3>
+  <ul class="checklist">
+    <li class="done"><strong>If Learning Is Not Secure:</strong> Re-model with the two-tills supermarket analogy; reduce to FCFS vs Round Robin only; re-teach one table row at a time</li>
+    <li class="done"><strong>Next Step:</strong> Homework = TRY IT ON PAPER Q1 (compare) + Q2 (evaluate polling vs interrupts, previews A1.3.4); anchor table posted to Schoolbox; deadline set</li>
+  </ul>
+
+  <h3>4. Observation Checklist</h3>
+  <ul class="checklist">
+    <li class="done">Accurate guide content</li>
+    <li class="done">Clear outcome and standard</li>
+    <li class="done">Every student actively learning</li>
+    <li class="done">Higher-order thinking / agency visible</li>
+    <li class="done">Every student checked</li>
+    <li class="done">Feedback will be used</li>
+    <li class="done">Time and expectations are clear</li>
+  </ul>
+
+  <div class="panel good">
+    <strong>Where the strongest evidence sits:</strong>
+    <ul>
+      <li><strong>Higher-order thinking / agency:</strong> students choose which approach to investigate and must justify a recommendation, not just recall definitions</li>
+      <li><strong>Every student checked:</strong> mini whiteboards force a response from all students, and the teacher scans every board before cold-calling</li>
+      <li><strong>Feedback will be used:</strong> peer feedback happens <em>before</em> the independent proof, so the feedback has a direct, visible effect on the assessed work</li>
+      <li><strong>Accurate guide content:</strong> the compare command term is explicitly taught and modelled — the most common exam failure on this statement</li>
+    </ul>
+  </div>
+
+  <div class="takeaway">
+    💡 <strong>Key Takeaway:</strong> "No scheduling approach is best in every way. FCFS is simple but suffers the convoy effect; Round Robin is responsive but pays in context-switching overhead; Multilevel Queue treats different work appropriately but risks starving lower queues; Priority serves urgent work first but can starve the low-priority work entirely. To <em>compare</em> them is to say which is more responsive, which carries more overhead, and which can starve — and to justify your choice for the workload in front of you."
+  </div>
+
+</div>
+</body>
+</html>
