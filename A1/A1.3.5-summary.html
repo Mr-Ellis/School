@@ -1,1 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.3.5 - Managing Multitasking and Resource Allocation (HL)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.15rem;
+            color: #0b2a4a;
+            margin-top: 22px;
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge-hl {
+            background: #7c3a3a;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
 
+        /* Blooket starter */
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        /* Task styles */
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong {
+            color: #1a6b33;
+        }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+        .task-1-resources .teach-link {
+            background: #0b2a4a;
+            color: white;
+            padding: 3px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: none;
+        }
+        .task-1-resources .teach-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .task-1-resources .teach-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        /* Unit-end reminder */
+        .unit-reminder {
+            background: #fff8e1;
+            border-left: 5px solid #fdbb2d;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 20px;
+            margin: 20px 0;
+            font-size: 0.92rem;
+        }
+        .unit-reminder strong { color: #7a4a0a; }
+
+        /* Activity explanation box */
+        .activity-box {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 20px;
+            margin: 14px 0;
+            font-size: 0.92rem;
+        }
+        .activity-box h4 {
+            color: #0b2a4a;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .activity-box p { margin-bottom: 6px; }
+
+        /* HL banner */
+        .hl-banner {
+            background: linear-gradient(135deg, #fef2f2, #fef3c7);
+            border: 2px dashed #b21f1f;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            color: #7a1f1f;
+        }
+        .hl-banner strong { color: #b21f1f; }
+
+        /* Challenge grid */
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .challenge-grid { grid-template-columns: 1fr; } }
+        .challenge-card {
+            background: #f7fafc;
+            border: 2px solid #dce8f5;
+            border-radius: 10px;
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .challenge-card:hover { border-color: #0b2a4a; background: #ebf4ff; }
+        .challenge-card.open { border-color: #b21f1f; background: #ebf4ff; }
+        .challenge-card .c-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 0.95rem;
+        }
+        .challenge-card .c-head .c-icon { font-size: 1.4rem; }
+        .challenge-card .c-short {
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-top: 6px;
+        }
+        .challenge-card .c-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, margin-top 0.3s ease;
+            font-size: 0.85rem;
+            color: #1e293b;
+            margin-top: 0;
+        }
+        .challenge-card.open .c-detail {
+            max-height: 400px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #b21f1f;
+        }
+
+        /* Flip cards */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .flip-grid { grid-template-columns: 1fr; } }
+
+        .flip-card {
+            perspective: 1000px;
+            height: 200px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .flip-card-front {
+            background: #0b2a4a;
+            color: #fff;
+        }
+        .flip-card-front .big-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .flip-card-front .big-name {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .flip-card-front .flip-hint {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+        .flip-card-back {
+            background: #fef3c7;
+            color: #7a4a0a;
+            transform: rotateY(180deg);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: 2px solid #fdbb2d;
+            text-align: left;
+            justify-content: flex-start;
+            overflow-y: auto;
+        }
+        .flip-card-back strong { color: #b21f1f; }
+
+        /* Deadlock cycle diagram */
+        .deadlock-vis {
+            background: #fef2f2;
+            border: 2px dashed #b21f1f;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: "Courier New", monospace;
+            font-size: 0.9rem;
+            color: #7a1f1f;
+            line-height: 1.6;
+        }
+
+        /* Scenario explorer */
+        .scenario {
+            background: #f7fafc;
+            border-left: 5px solid #0b2a4a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+        .scenario .scenario-q {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .scenario .scenario-q:hover { color: #b21f1f; }
+        .scenario .reveal-btn {
+            font-size: 0.75rem;
+            background: #b21f1f;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            flex-shrink: 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .scenario .reveal-btn:hover { background: #0b2a4a; }
+        .scenario .scenario-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.3s ease;
+            margin-top: 0;
+            color: #1e293b;
+            font-size: 0.92rem;
+        }
+        .scenario.open .scenario-a {
+            max-height: 800px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .scenario .scenario-a ul { padding-left: 1.2rem; }
+        .scenario .scenario-a li { margin-bottom: 6px; }
+
+        /* Quick quiz */
+        .quiz {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+        .quiz h3 { margin-top: 0; }
+        .quiz-q { margin-bottom: 18px; }
+        .quiz-q .q-text {
+            font-weight: 600;
+            color: #0b2a4a;
+            margin-bottom: 8px;
+        }
+        .quiz-options { display: flex; flex-direction: column; gap: 6px; }
+        .quiz-option {
+            background: white;
+            border: 2px solid #dce4ed;
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quiz-option:hover { border-color: #0b2a4a; background: #ebf4ff; }
+        .quiz-option.correct {
+            border-color: #2d7d46;
+            background: #e6f5e6;
+            color: #1a6b33;
+            font-weight: 600;
+        }
+        .quiz-option.wrong {
+            border-color: #b21f1f;
+            background: #fdeaea;
+            color: #a13232;
+        }
+        .quiz-option .mark { font-weight: 700; }
+        .quiz-score {
+            text-align: center;
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1.05rem;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+
+    <h1>A1.3.5 – Managing Multitasking and Resource Allocation <span class="badge badge-hl">HL</span></h1>
+
+    <h2>📌 Learning Objective</h2>
+    <ul>
+        <li><strong>Explain</strong> how the OS manages multitasking and resource allocation</li>
+        <li><strong>Describe</strong> the challenges of multitasking: context switching, resource contention, synchronisation</li>
+        <li><strong>Explain</strong> how semaphores, locks and monitors enforce mutual exclusion</li>
+        <li><strong>Describe</strong> deadlock, its four conditions, and the strategies to prevent, avoid, detect and recover from it</li>
+    </ul>
+
+    <h2>🎯 IB Command Term: <span class="badge">Explain</span></h2>
+    <div class="command-term">
+        <strong>Explain</strong> – <em>"Give a detailed account including reasons or causes."</em><br>
+        Saying <em>that</em> multitasking creates problems is not enough — you must say <strong>why</strong> it does. Link cause and effect: "Because processes share resources, …"
+    </div>
+
+    <!-- HL Banner -->
+    <div class="hl-banner">
+        <strong>🔴 HL only:</strong> This statement is <strong>not examined at SL</strong>. It builds directly on A1.3.3 (scheduling) and assumes you can already compare FCFS, Round Robin, Priority and Multilevel Queue.
+    </div>
+
+    <!-- Blooket Starter Activity -->
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket</span>
+        <span style="color:#3d5f7a;">Test your current knowledge before we begin!</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/hack?id=68b0379dda963af6c9571984" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <h2>💡 The Big Idea — The Illusion of Parallelism</h2>
+    <p>A typical processor core does <strong>one thing at a time</strong>. Yet your machine appears to run a browser, a music player and a download at once.</p>
+
+    <p>This <strong>illusion of parallelism</strong> comes from the OS <strong>switching between tasks many times a second</strong>, giving each a short turn. For each switch, the OS:</p>
+    <ol>
+        <li><strong>Saves</strong> the running task's state (its registers, memory pointers and open files)</li>
+        <li><strong>Restores</strong> the next task's state</li>
+        <li>Hands over the CPU</li>
+    </ol>
+
+    <div class="command-term">
+        <strong>This switching is pure overhead.</strong> Doing too much of it wastes the CPU it is meant to share.
+    </div>
+
+    <p>To keep everything progressing, the OS acts as the <strong>coordinator for every resource</strong>: processor time, memory and I/O devices. Three challenges make that hard.</p>
+
+    <h2>📊 The Three Multitasking Challenges — Click to Explore</h2>
+    <p><strong>Click each card</strong> to see why this challenge exists and how the OS handles it.</p>
+
+    <div class="challenge-grid">
+        <div class="challenge-card" onclick="this.classList.toggle('open')">
+            <div class="c-head"><span class="c-icon">⏱️</span><span>Task Scheduling</span></div>
+            <div class="c-short">Deciding which process runs next, and for how long.</div>
+            <div class="c-detail">
+                With many tasks competing, the system must keep choosing which runs next — using the algorithms from A1.3.3 (FCFS, Round Robin, Priority, Multilevel Queue).<br><br>
+                <strong>The goal:</strong> keep interactive tasks responsive without starving background work.
+            </div>
+        </div>
+        <div class="challenge-card" onclick="this.classList.toggle('open')">
+            <div class="c-head"><span class="c-icon">⚔️</span><span>Resource Contention</span></div>
+            <div class="c-short">Two or more tasks want the same resource at the same time.</div>
+            <div class="c-detail">
+                Tasks often want the same region of memory, the same file, or the same device — at the same time. The OS must <strong>arbitrate</strong>, which means some tasks wait.<br><br>
+                <strong>Poorly handled:</strong> contention causes long delays, or lets a high-priority task get stuck behind a lower one holding what it needs.
+            </div>
+        </div>
+        <div class="challenge-card" onclick="this.classList.toggle('open')">
+            <div class="c-head"><span class="c-icon">🔒</span><span>Deadlock</span></div>
+            <div class="c-short">Progress stops entirely — each process waits for the other.</div>
+            <div class="c-detail">
+                Contention can reach a state where <strong>progress stops completely</strong>. Process P1 holds resource R1 and asks for R2, while P2 holds R2 and asks for R1. Each waits for the other to release what it holds — and neither ever will.<br><br>
+                <strong>This is a circular wait</strong> — the classic cause of deadlock.
+            </div>
+        </div>
+    </div>
+
+    <h2>🌀 Deadlock — The Circular Wait</h2>
+
+    <div class="deadlock-vis">
+        <strong>P1</strong> holds <strong>R1</strong> ──waits for──▶ <strong>R2</strong> held by <strong>P2</strong><br>
+        <strong>P2</strong> holds <strong>R2</strong> ──waits for──▶ <strong>R1</strong> held by <strong>P1</strong><br><br>
+        Neither process can proceed. Neither will ever release what it holds.
+    </div>
+
+    <h3>The Four Necessary Conditions</h3>
+    <p>Deadlock can occur <strong>only</strong> when all four conditions hold <strong>at the same time</strong>. Because all four are required together, the OS can prevent deadlock by denying any one of them.</p>
+
+    <table>
+        <thead>
+            <tr><th>Condition</th><th>What it means</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>1. Mutual exclusion</strong></td><td>A resource cannot be shared — only one process can use it at a time.</td></tr>
+            <tr><td><strong>2. Hold and wait</strong></td><td>A process is holding at least one resource while waiting to acquire another.</td></tr>
+            <tr><td><strong>3. No preemption</strong></td><td>A resource cannot be forcibly taken back from a process — it must be released voluntarily.</td></tr>
+            <tr><td><strong>4. Circular wait</strong></td><td>A cycle of processes exists, each waiting for a resource held by the next one in the chain.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Deadlock Strategies</h3>
+    <table>
+        <thead>
+            <tr><th>Strategy</th><th>How it works</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Prevention</strong></td><td>Design the system so that one of the four conditions can never hold. For example, impose a <strong>fixed order</strong> in which resources must be requested — this removes the possibility of a circular wait.</td></tr>
+            <tr><td><strong>Avoidance</strong></td><td>The OS checks before allocating whether the allocation could lead to deadlock. The <strong>Banker's algorithm</strong> is the classic example — it only allocates if all processes can eventually complete.</td></tr>
+            <tr><td><strong>Detection</strong></td><td>The OS periodically checks for stuck processes. If a cycle is found, recovery is triggered.</td></tr>
+            <tr><td><strong>Recovery</strong></td><td>Break the cycle by stopping (aborting) one or more processes, or by reallocating resources differently.</td></tr>
+        </tbody>
+    </table>
+
+    <h2>🔐 Synchronisation — Three Tools</h2>
+    <p>When multiple processes share resources, the OS uses <strong>synchronisation tools</strong> to enforce <strong>mutual exclusion</strong> — ensuring only one process accesses a critical section at a time.</p>
+
+    <div class="flip-grid">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">🚦</span>
+                    <span class="big-name">Semaphores</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    An integer variable incremented (<strong>signal</strong>) or decremented (<strong>wait</strong>) atomically.<br><br>
+                    <strong>Binary</strong> — value 0 or 1, acts as a lock.<br>
+                    <strong>Counting</strong> — any non-negative value, manages multiple instances of a resource.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">🔒</span>
+                    <span class="big-name">Locks</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    A lock ensures only one process uses a shared resource at a time.<br><br>
+                    <strong>Binary locks (mutexes)</strong> — one process at a time.<br>
+                    <strong>Readers-writer locks</strong> — many readers OR one writer.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">📦</span>
+                    <span class="big-name">Monitors</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    A container holding shared variables and the methods that operate on them.<br><br>
+                    When a process uses a monitor's method, the monitor is <strong>automatically locked</strong>. Condition variables let processes wait for events and notify others.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Semaphores in Action — Two Worked Examples</h3>
+
+    <h4>Binary Semaphore — Two processes writing to the same log file</h4>
+    <ol>
+        <li>Semaphore initialised to <strong>1</strong> — the log file is available.</li>
+        <li>Process A checks the semaphore. It's 1, so A sets it to <strong>0</strong> (locks the resource) and writes.</li>
+        <li>Process B tries to write. Semaphore is 0, so B is <strong>blocked</strong> until A finishes.</li>
+        <li>A finishes and sets the semaphore back to <strong>1</strong>.</li>
+        <li>B sets it to <strong>0</strong>, writes, and sets it back to <strong>1</strong> when done.</li>
+    </ol>
+
+    <h4>Counting Semaphore — Three database connections shared by many processes</h4>
+    <ol>
+        <li>Semaphore initialised to <strong>3</strong> — three connections available.</li>
+        <li>Process A wants a connection. Value is &gt; 0, so A decrements it to <strong>2</strong> and gains access.</li>
+        <li>B and C do the same — value drops to <strong>1</strong>, then <strong>0</strong>.</li>
+        <li>Process D requests a connection — value is 0, so D must <strong>wait</strong>.</li>
+        <li>A finishes and increments the semaphore back to <strong>1</strong> — now D can proceed.</li>
+    </ol>
+
+    <h2>🔍 Scenario Explorer — What's Happening Here?</h2>
+    <p>For each scenario, <strong>click the question to reveal</strong> what's going wrong (or right).</p>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>📝 Two programs try to write to the same file at the same time</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Problem:</strong> a race condition — the file's contents become corrupted because both processes write interleaved bytes.</li>
+                <li><strong>Solution:</strong> mutual exclusion. A <strong>binary semaphore</strong> or <strong>mutex lock</strong> ensures only one writer at a time. The second process blocks until the first releases.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🔒 Process P1 holds R1 and waits for R2 — while P2 holds R2 and waits for R1</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Problem:</strong> this is a classic <strong>deadlock</strong>. Both processes are stuck in a <em>circular wait</em> — neither will release what it holds.</li>
+                <li><strong>Fix:</strong> <strong>Prevention</strong> via resource ordering — force both processes to request resources in the same fixed order (say R1 first, then R2). That removes the possibility of the cycle forming.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>⚠️ A low-priority background task holds a lock that a high-priority alarm task needs</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Problem:</strong> this is <strong>priority inversion</strong>. The high-priority process is effectively blocked by a lower-priority one.</li>
+                <li><strong>Effect:</strong> the system's response time becomes unpredictable — critical work waits behind unimportant work.</li>
+                <li><strong>Fix:</strong> <strong>priority inheritance</strong> — the low-priority process temporarily inherits the priority of the higher one, so it can finish quickly and release the resource.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>⚡ The OS switches between processes hundreds of times per second</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>What's happening:</strong> context switching — the OS saves the state of one process and restores another.</li>
+                <li><strong>Cost:</strong> pure <strong>overhead</strong>. Time spent saving and restoring registers, updating the memory map, and flushing caches is time not spent on useful work.</li>
+                <li><strong>Balance:</strong> the OS must switch often enough to feel responsive, but not so often that overhead dominates. This is why the Round Robin quantum must be tuned carefully.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>🧠 Quick Quiz</h2>
+    <div class="quiz" id="quizContainer">
+        <div class="quiz-q" data-answer="3">
+            <div class="q-text">1. Why does multitasking on a single-core CPU produce an "illusion of parallelism"?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Because the CPU runs two programs at the same instant</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Because the CPU has multiple cores</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Because the OS switches between tasks fast enough that they appear simultaneous</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Because the OS duplicates each program in memory</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="2">
+            <div class="q-text">2. Which of the following is <em>not</em> one of the four necessary conditions for deadlock?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Mutual exclusion</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Round-robin scheduling</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Hold and wait</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Circular wait</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="4">
+            <div class="q-text">3. What is the difference between a binary semaphore and a counting semaphore?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Binary is used for CPU, counting for memory</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Binary is faster than counting</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Binary prevents deadlock; counting does not</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Binary can only be 0 or 1 (acts as a lock); counting can hold any non-negative value (manages multiple instances)</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="1">
+            <div class="q-text">4. Which strategy breaks the deadlock cycle by requiring resources to be requested in a fixed order?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Prevention — via resource ordering</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Avoidance — via the Banker's algorithm</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Detection — periodic checks for stuck processes</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Recovery — aborting a process</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-score" id="quizScore">Score: 0 / 4</div>
+    </div>
+
+    <h2>📋 Reference — Multitasking Challenges Summary</h2>
+
+    <table>
+        <thead>
+            <tr><th>Challenge</th><th>What it is</th><th>How the OS handles it</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Context switching overhead</strong></td>
+                <td>Saving and restoring process states costs CPU time — this is pure overhead.</td>
+                <td>Tune the quantum; avoid unnecessary switches. Too many switches reduce performance.</td>
+            </tr>
+            <tr>
+                <td><strong>Resource contention</strong></td>
+                <td>Multiple processes compete for the same CPU, memory, file or device.</td>
+                <td>Arbitrate access; use mutual exclusion via semaphores, locks and monitors.</td>
+            </tr>
+            <tr>
+                <td><strong>Synchronisation issues</strong></td>
+                <td>Processes must coordinate access to shared data to avoid corruption.</td>
+                <td>Semaphores, locks, monitors, condition variables. Enforce <em>critical sections</em>.</td>
+            </tr>
+            <tr>
+                <td><strong>Resource starvation</strong></td>
+                <td>A process is constantly denied resources it needs.</td>
+                <td>Ageing — gradually raise the priority of waiting processes.</td>
+            </tr>
+            <tr>
+                <td><strong>Priority inversion</strong></td>
+                <td>A low-priority process holds a resource needed by a high-priority one.</td>
+                <td>Priority inheritance — the holder temporarily inherits the higher priority.</td>
+            </tr>
+            <tr>
+                <td><strong>Deadlock</strong></td>
+                <td>Progress stops because each process waits for a resource another holds.</td>
+                <td>Prevention, avoidance, detection, recovery.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Tasks -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+        <!-- Task 1 -->
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Teach</strong> — Use the resources below to learn about multitasking, resource allocation and deadlock, then explain it to the AI.
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.3.1-1.3.5.pdf" target="_blank">📖 eBook</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.3.5-explain-the-role-of-the-operating-system-in-managing-multitasking-and-resource-allocation-hl-only-" target="_blank">🌐 CS Wiki</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vSwiBgGIyTj2a1FeLsdBA8M9vUJWH0ZGQLyLFn2CCzxYKbtkEeQS57Mp80eBeDOliHXpiLltSbBU33C/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
+                    <span class="pill">📘 Textbook</span>
+                    <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85;">Take notes on the three multitasking challenges, the four deadlock conditions, and the three synchronisation tools.</span>
+            </span>
+        </div>
+        <!-- Task 2 – green -->
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_12" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.
+            </span>
+        </div>
+        <!-- Task 3 -->
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066038123/a-135-explain-the-role-of-the-operating-system-in-managing-multitasking-and-resource-allocation-hl-only-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
+        </div>
+    </div>
+
+    <!-- Unit-end submission reminder -->
+    <div class="unit-reminder">
+        📌 <strong>End-of-unit submission:</strong> Save your Lesson Questions as a <strong>.txt</strong> file. You will submit <strong>all</strong> starter activity answers to <strong>Schoolbox</strong> at the end of <strong>A1.1.9 Debugging Techniques</strong>.
+    </div>
+
+    <div class="key-takeaway">
+        <p><em>"Multitasking on a single core is an illusion created by rapid context switching — and that switching has a cost. The OS must balance responsiveness against overhead, arbitrate contention between tasks, enforce mutual exclusion through semaphores, locks and monitors, and prevent or resolve deadlock by denying one of its four necessary conditions. Every one of these decisions shapes whether the system feels fast, fair and stable."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.3.4-summary.html">← Previous: A1.3.4 Polling vs Interrupts</a>
+        <a href="A1.3.6-summary.html">Next: A1.3.6 Control System Components →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.3.5 – Managing Multitasking and Resource Allocation (HL) • IB Computer Science • Year 12
+    </div>
+</div>
+
+<script>
+    // ===== Quick Quiz =====
+    (function() {
+        const quizQs = document.querySelectorAll('#quizContainer .quiz-q');
+        const scoreEl = document.getElementById('quizScore');
+        let correctCount = 0;
+        const answered = new Set();
+
+        quizQs.forEach((q, idx) => {
+            const answer = q.getAttribute('data-answer');
+            const options = q.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (answered.has(idx)) return;
+                    answered.add(idx);
+
+                    const chosen = opt.getAttribute('data-opt');
+                    const mark = opt.querySelector('.mark');
+
+                    if (chosen === answer) {
+                        opt.classList.add('correct');
+                        mark.textContent = '✓';
+                        correctCount++;
+                    } else {
+                        opt.classList.add('wrong');
+                        mark.textContent = '✗';
+                        options.forEach(o => {
+                            if (o.getAttribute('data-opt') === answer) {
+                                o.classList.add('correct');
+                                o.querySelector('.mark').textContent = '✓';
+                            }
+                        });
+                    }
+                    scoreEl.textContent = 'Score: ' + correctCount + ' / ' + quizQs.length;
+                });
+            });
+        });
+    })();
+</script>
+
+</body>
+</html>
