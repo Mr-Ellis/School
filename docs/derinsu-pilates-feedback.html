@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Derinsu — Pilates Studio Feedback</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0f1219;
+    font-family: 'Segoe UI', 'Calibri', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #c9d1d9;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 80px;
+  }
+
+  .page { max-width: 880px; width: 100%; }
+
+  .header {
+    background: linear-gradient(135deg, #1b2028 0%, #12151b 100%);
+    border: 1px solid #2e3646;
+    border-radius: 12px;
+    padding: 30px 34px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; position: relative; }
+  .header p { color: #9aa5b6; font-size: 14px; position: relative; }
+  .header .badge {
+    display: inline-block; background: #1a2936; color: #7dd3fc;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 20px; margin-top: 10px; position: relative;
+  }
+
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .nav a {
+    background: #1b2028; border: 1px solid #2e3646; color: #9aa5b6;
+    text-decoration: none; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; transition: all 0.2s;
+  }
+  .nav a:hover { background: #232934; color: #38bdf8; border-color: #38bdf8; }
+
+  .progress-wrap {
+    background: #12151b; border: 1px solid #2e3646; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-wrap .label { font-size: 13px; font-weight: 600; color: #9aa5b6; white-space: nowrap; }
+  .progress-bar { flex: 1; height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+  .progress-bar .fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #4ade80);
+    border-radius: 4px; transition: width 0.4s ease;
+  }
+  .progress-wrap .count { font-size: 13px; font-weight: 700; color: #38bdf8; min-width: 50px; text-align: right; }
+
+  .section {
+    background: #1b2028; border: 1px solid #2e3646; border-radius: 10px;
+    padding: 26px 30px; margin-bottom: 22px; transition: border-color 0.2s;
+  }
+  .section:hover { border-color: #3b4a5e; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section h2 .icon { font-size: 20px; }
+  .section h3 { font-size: 15px; font-weight: 700; color: #e2e8f0; margin-top: 24px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #2e3646; }
+  .section h4 { font-size: 14px; font-weight: 700; color: #cbd5e1; margin-top: 18px; margin-bottom: 6px; }
+
+  p { margin-bottom: 10px; color: #b0b8c4; }
+  strong { color: #f0f3f8; }
+  a { color: #38bdf8; text-decoration: none; border-bottom: 1px dotted #38bdf8; transition: color 0.2s; }
+  a:hover { color: #7dd3fc; border-bottom-style: solid; }
+  ul, ol { margin-left: 22px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; color: #b0b8c4; }
+  li strong { color: #f0f3f8; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 16px 0; font-size: 13px; }
+  th {
+    background: #12151b; color: #7dd3fc; font-weight: 600; text-align: left;
+    padding: 9px 12px; border: 1px solid #2e3646; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  td { padding: 9px 12px; border: 1px solid #2e3646; vertical-align: top; color: #b0b8c4; }
+  tr:nth-child(even) td { background: #181d26; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.3px; }
+  .pill-met { background: #0f2e1f; color: #4ade80; border: 1px solid #166534; }
+  .pill-partial { background: #2e2a0f; color: #fbbf24; border: 1px solid #854d0e; }
+  .pill-notmet { background: #2e0f0f; color: #f87171; border: 1px solid #991b1b; }
+
+  pre {
+    background: #0d1117; color: #c9d1d9;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px; line-height: 1.5;
+    padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; margin: 10px 0 14px 0;
+    border: 1px solid #21262d; position: relative;
+  }
+  pre .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: #21262d; color: #8b949e;
+    border: 1px solid #30363d; border-radius: 4px;
+    font-size: 11px; padding: 3px 8px;
+    cursor: pointer; font-family: 'Segoe UI', sans-serif;
+    transition: all 0.2s;
+  }
+  pre .copy-btn:hover { background: #30363d; color: #c9d1d9; }
+  pre .copy-btn.copied { background: #166534; color: #4ade80; border-color: #166534; }
+  code { font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; }
+  p code, li code, td code {
+    background: #21262d; color: #79c0ff;
+    padding: 2px 6px; border-radius: 4px; font-size: 12.5px;
+  }
+
+  .diagram {
+    background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+    padding: 16px 18px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px; line-height: 1.3;
+    white-space: pre; overflow-x: auto;
+    margin: 10px 0 14px 0; color: #8b949e;
+  }
+
+  .priority-list { counter-reset: priority; list-style: none; margin-left: 0; padding-left: 0; }
+  .priority-list li {
+    counter-increment: priority;
+    padding: 8px 12px 8px 42px;
+    position: relative; border-bottom: 1px solid #21262d; color: #b0b8c4;
+  }
+  .priority-list li:last-child { border-bottom: none; }
+  .priority-list li::before {
+    content: counter(priority);
+    position: absolute; left: 10px; top: 8px;
+    background: #1a2936; color: #38bdf8;
+    font-weight: 700; font-size: 12px;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #2e3646;
+  }
+
+  .callout {
+    border-left: 4px solid #38bdf8; background: #0f1a24;
+    padding: 12px 16px; margin: 14px 0; border-radius: 0 6px 6px 0;
+  }
+  .callout.warn { border-left-color: #fbbf24; background: #1a1a0f; }
+  .callout.danger { border-left-color: #f87171; background: #1a0f0f; }
+  .callout strong { color: #7dd3fc; }
+  .callout.warn strong { color: #fbbf24; }
+  .callout.danger strong { color: #f87171; }
+
+  .resources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+  .resource-card {
+    background: #12151b; border: 1px solid #2e3646;
+    border-radius: 8px; padding: 14px 16px; transition: all 0.2s;
+  }
+  .resource-card:hover { border-color: #38bdf8; background: #161c26; }
+  .resource-card .rc-title { font-size: 13px; font-weight: 700; color: #f0f3f8; margin-bottom: 4px; }
+  .resource-card .rc-desc { font-size: 12px; color: #8b949e; margin-bottom: 6px; }
+  .resource-card a { font-size: 12px; font-weight: 600; }
+
+  .footer { text-align: center; color: #4b5563; font-size: 12px; padding: 20px 0 10px; }
+
+  @media (max-width: 600px) {
+    body { padding: 14px 10px 60px; }
+    .section { padding: 18px 16px; }
+    .header { padding: 20px; }
+    .header h1 { font-size: 20px; }
+    .diagram { font-size: 9px; }
+    pre { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>Derinsu — Pilates Studio Feedback</h1>
+    <p>IB Computer Science IA · Client: Maria (Pilates studio owner) · Python + Flask + MySQL</p>
+    <span class="badge">● Interactive Review</span>
+  </div>
+
+  <nav class="nav">
+    <a href="#sc">Success Criteria</a>
+    <a href="#done">Done Well</a>
+    <a href="#fixes">Critical Fixes</a>
+    <a href="#bugs">Bugs Found</a>
+    <a href="#oop">OOP Refactor</a>
+    <a href="#resources">Resources</a>
+    <a href="#priority">Priority</a>
+  </nav>
+
+  <div class="progress-wrap">
+    <span class="label">Completion</span>
+    <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+    <span class="count" id="progressCount">0 / 10</span>
+  </div>
+
+  <!-- SUCCESS CRITERIA COVERAGE -->
+  <div class="section" id="sc">
+    <h2><span class="icon">📊</span> Success Criteria Coverage</h2>
+
+    <p>Assessed against the 10 success criteria from <code>Criteria A.docx</code> and the code in <code>pilates_studio_code.txt</code>.</p>
+
+    <table>
+      <thead>
+        <tr><th style="width:32%;">SC</th><th style="width:16%;">Status</th><th>Gap</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SC1 (Add client: name, age, gender, goal)</td><td><span class="pill pill-met">Met</span></td><td><code>client_values()</code> validates all five fields and creates a <code>Client</code> record</td></tr>
+        <tr><td>SC2 (Search clients by name and ID)</td><td><span class="pill pill-met">Met</span></td><td><code>/clients?q=</code> supports both name (ILIKE) and ID (numeric)</td></tr>
+        <tr><td>SC3 (Generate personalised plan per goal)</td><td><span class="pill pill-met">Met</span></td><td><code>recommend()</code> + <code>generate_plan()</code> score exercises by goal + muscle + level</td></tr>
+        <tr><td>SC4 (Track progress as percentage)</td><td><span class="pill pill-met">Met</span></td><td><code>Plan.progress</code> property returns <code>round(100 * completed / total)</code></td></tr>
+        <tr><td>SC5 (Download progress reports)</td><td><span class="pill pill-met">Met</span></td><td><code>/clients/&lt;id&gt;/report.csv</code> and <code>report.pdf</code> both implemented</td></tr>
+        <tr><td>SC6 (Schedule without overlaps)</td><td><span class="pill pill-met">Met</span></td><td><code>validate_booking()</code> uses <code>BEGIN IMMEDIATE</code> for SQLite or row-lock for others</td></tr>
+        <tr><td>SC7 (Take notes for each session)</td><td><span class="pill pill-met">Met</span></td><td><code>Session.notes</code> field with 10,000-char validation</td></tr>
+        <tr><td>SC8 (Edit client details)</td><td><span class="pill pill-met">Met</span></td><td><code>/clients/&lt;id&gt;/edit</code> reuses <code>client_form()</code> and updates in place</td></tr>
+        <tr><td>SC9 (Input validation and verification)</td><td><span class="pill pill-met">Met</span></td><td>Validation at every boundary — <code>client_values()</code>, <code>validate_booking()</code>, plan form, session form, exercise form</td></tr>
+        <tr><td>SC10 (Sort by first name, age, or progress)</td><td><span class="pill pill-met">Met</span></td><td><code>keys</code> dict in <code>/clients</code> handles all three sort modes</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>✓ All 10 success criteria are met.</strong> This is a strong submission — the code is well-organised and every criterion maps to a concrete route or method.
+    </div>
+  </div>
+
+  <!-- DONE WELL -->
+  <div class="section" id="done">
+    <h2><span class="icon">✅</span> Done Well</h2>
+    <ul>
+      <li><strong>Clean application factory pattern</strong> — <code>create_app()</code> in <code>__init__.py</code> handles config, security, DB init, and blueprint registration. This is proper Flask structure, not a single-file script</li>
+      <li><strong>CSRF protection at the framework level</strong> — <code>@app.before_request</code> generates a token per session and validates on every POST. Most students don't even know CSRF exists</li>
+      <li><strong>Security headers on every response</strong> — <code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>, <code>Referrer-Policy</code>, and <code>Cache-Control: no-store</code>. This is production-grade</li>
+      <li><strong>Secret key handling</strong> — generated once and stored in <code>instance/.secret</code>, or read from env var. Never hardcoded</li>
+      <li><strong>Race condition awareness in <code>validate_booking()</code></strong> — uses <code>BEGIN IMMEDIATE</code> for SQLite and <code>with_for_update()</code> for other databases. This is a genuinely advanced concurrency fix</li>
+      <li><strong>Weighted exercise scoring in <code>recommend()</code></strong> — goal match scores 4, muscle match scores 3, level acts as a hard filter. Per-muscle cap of 2 keeps plans balanced</li>
+      <li><strong>Plan history rather than deletion</strong> — old plans are marked <code>active=False</code> instead of being deleted, so progress over time is preserved</li>
+      <li><strong>Progress calculation is a property, not a column</strong> — <code>Plan.progress</code> computes on the fly. No stale data possible</li>
+      <li><strong>CSV formula injection prevention</strong> — <code>safe()</code> in the CSV report prefixes dangerous leading characters with an apostrophe. This is a real security vulnerability most developers miss</li>
+      <li><strong>SQL wildcard escaping in search</strong> — <code>q.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')</code> prevents users from breaking the search with <code>%</code> or <code>_</code></li>
+      <li><strong>Two report formats</strong> — CSV for Excel import, PDF for printing. Both are styled with proper headers, pagination, and metadata</li>
+      <li><strong>Normalised schema</strong> — Client, Exercise, Plan, PlanItem, Session are all separate tables with proper foreign keys and relationships</li>
+      <li><strong>Constants at module level</strong> — <code>GOALS</code>, <code>LEVELS</code>, <code>MUSCLES</code>, <code>GENDERS</code> are shared across services and routes via <code>app_context_processor</code></li>
+    </ul>
+  </div>
+
+  <!-- CRITICAL FIXES -->
+  <div class="section" id="fixes">
+    <h2><span class="icon">🔧</span> Critical Fixes Needed</h2>
+
+    <!-- Criterion A mismatch -->
+    <h3>Criterion A vs Code — Flask vs MySQL Mismatch</h3>
+    <p><strong>What's wrong now:</strong> Your Criterion A says you will use <strong>MySQL</strong> and justifies it thoroughly (structured tables, popular, documented). But your code uses <strong>SQLite</strong> by default:</p>
+    <pre><code>SQLALCHEMY_DATABASE_URI=os.environ.get('DATABASE_URL', 'sqlite:///studio.db')</code></pre>
+    <p><strong>Why it matters:</strong> Criterion D rewards consistency between what you planned and what you built. A marker will notice the mismatch immediately. Either:</p>
+    <ul>
+      <li><strong>Option A:</strong> Update Criterion A to say "SQLite by default, with MySQL supported via <code>DATABASE_URL</code> environment variable" — this is honest and technically accurate since SQLAlchemy abstracts both</li>
+      <li><strong>Option B:</strong> Actually switch to MySQL by default by changing the fallback URI to <code>mysql+pymysql://...</code></li>
+    </ul>
+    <p><strong>Recommendation:</strong> Option A. SQLite is a defensible choice for a single-user studio app, and your code already supports MySQL via env var. Reword Criterion A to match reality, and mention in Criterion D that you kept SQLite as the default for portability.</p>
+
+    <!-- progress property division by zero -->
+    <h3><code>Plan.progress</code> — Guard Against Empty Plans</h3>
+    <p><strong>What's wrong now:</strong> The property is:</p>
+    <pre><code>@property
+def progress(self):
+    return round(100 * self.completed / len(self.items)) if self.items else 0</code></pre>
+    <p>This is safe because of the <code>if self.items else 0</code>. Good. But consider: if a plan somehow ends up with 0 items but <code>completed</code> returns a value, you're safe. This is fine — flag it as a well-handled edge case.</p>
+    <p><strong>No fix needed</strong> — but mention it in Criterion D as evidence of defensive programming.</p>
+
+    <!-- Session status validation -->
+    <h3>Session Status — Cancelled State Is Not Reachable in the Form</h3>
+    <p><strong>What's wrong now:</strong> In <code>session_form()</code>, you validate:</p>
+    <pre><code>if status not in ['Scheduled', 'Completed']:
+    raise ValueError('Choose a valid session status.')</code></pre>
+    <p>But the <code>Session</code> model has a <code>'Cancelled'</code> status, and <code>cancel_session()</code> sets it. However, the form only allows Scheduled or Completed — so a cancelled session can never be edited back to Scheduled or Completed. If Maria cancels by mistake, she cannot undo it.</p>
+    <p><strong>What to add:</strong> Allow <code>'Cancelled'</code> in the form validation, OR add an "Uncancel" button on the session detail page:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>@bp.post('/sessions/&lt;int:session_id&gt;/uncancel')
+def uncancel_session(session_id):
+    record = db.get_or_404(Session, session_id)
+    record.status = 'Scheduled'
+    db.session.commit()
+    flash('Session restored to Scheduled.', 'success')
+    return redirect(url_for('main.session_detail', session_id=record.id))</code></pre>
+    <p><strong>How to test it:</strong> Cancel a session, then click "Uncancel" — the status should change back and the session should reappear in the schedule.</p>
+
+    <!-- CSRF on GET routes -->
+    <h3>CSRF Token — Refresh on Every Response</h3>
+    <p><strong>What's wrong now:</strong> The CSRF token is generated once per session and never rotated. If the same token is used for every POST, a stolen token (e.g. via XSS on a subdomain) remains valid forever.</p>
+    <p><strong>Why it matters:</strong> Real-world CSRF protection rotates the token per form or per response. This is defensive depth, not a required fix for the IA, but a marker who knows security will notice.</p>
+    <p><strong>What to add:</strong> Rotate the token after every successful POST:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>@app.after_request
+def rotate_csrf(response):
+    if request.method == 'POST' and response.status_code < 400:
+        session['csrf_token'] = secrets.token_hex(32)
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    # ... rest of headers
+    return response</code></pre>
+    <p><strong>How to test it:</strong> Submit a form, inspect the new CSRF token in the HTML — it should be different from the previous one.</p>
+
+    <!-- Route file structure -->
+    <h3>Routes File — Split by Domain</h3>
+    <p><strong>What's wrong now:</strong> <code>routes.py</code> contains all route handlers for clients, sessions, schedule, exercises, and reports in one file. That's ~15 routes, ~200 lines.</p>
+    <p><strong>Why it matters:</strong> Criterion D rewards modularity. A single route file is fine for a small app, but for a full-marks submission you want to show separation of concerns.</p>
+    <p><strong>What to add:</strong> Split into separate blueprints:</p>
+    <div class="diagram">routes/
+├── __init__.py       # registers all blueprints
+├── clients.py        # /clients, /clients/new, /clients/<id>/edit
+├── sessions.py       # /sessions/new, /sessions/<id>, /sessions/<id>/cancel
+├── schedule.py       # /schedule
+├── exercises.py      # /exercises
+├── reports.py        # /clients/<id>/report.csv, report.pdf
+└── dashboard.py      # /</code></pre>
+    </div>
+    <p><strong>How to test it:</strong> All URLs still work after the split. Add a unit test that imports <code>create_app()</code> and iterates <code>app.url_map</code> to assert each route exists.</p>
+
+    <!-- add_custom_exercise -->
+    <h3>Exercise Library — Add Custom Exercise Support</h3>
+    <p><strong>What's wrong now:</strong> You can add exercises to the library via <code>/exercises</code>, but every new exercise must have a name, goal, muscle, level, instructions, AND prescription. For a studio owner adding a one-off exercise, this is heavy.</p>
+    <p><strong>Why it matters:</strong> Maria may want to add exercises with just a name and goal during a session and fill in the rest later. Requiring all fields slows her down.</p>
+    <p><strong>What to add:</strong> Make <code>instructions</code> and <code>prescription</code> optional in the model, with a fallback in the form:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code># In Exercise model
+instructions = db.Column(db.Text, nullable=True)
+prescription = db.Column(db.String(100), nullable=True)
+
+# In exercises route
+if not values['instructions']:
+    values['instructions'] = 'Instructions not yet recorded.'
+if not values['prescription']:
+    values['prescription'] = 'Prescription not yet recorded.'</code></pre>
+    <p><strong>How to test it:</strong> Add an exercise with only name, goal, muscle, and level — it should save without error.</p>
+
+    <!-- pagination -->
+    <h3>Client List — Add Pagination</h3>
+    <p><strong>What's wrong now:</strong> <code>/clients</code> loads all clients into memory and sorts them in Python. This is fine for 20 clients, but if Maria grows to 200+ clients, the page will slow down.</p>
+    <p><strong>Why it matters:</strong> SC10 says "sort clients by first name, age, or progress". Sorting in the database is more scalable and uses indexes.</p>
+    <p><strong>What to add:</strong> Push the sort into SQL:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>sort_map = {
+    'name': (Client.first_name, Client.last_name),
+    'age': (Client.age, Client.first_name),
+    'progress': (Client.first_name,)   # progress is a computed property, so approximate
+}
+query = query.order_by(*sort_map.get(sort, sort_map['name']))</code></pre>
+    <p><strong>Note:</strong> progress is a Python property, not a column, so database-side sorting on it is not trivial. Document this limitation in Criterion D. As a simple workaround, keep the current Python sort but add a comment explaining why.</p>
+
+    <!-- 404 pages -->
+    <h3>Custom 404 and 500 Error Pages</h3>
+    <p><strong>What's wrong now:</strong> <code>get_or_404</code> and <code>abort(400)</code> return Flask's default error pages, which are unstyled and don't match the rest of the UI.</p>
+    <p><strong>Why it matters:</strong> Criterion A's SC9 says "input validation and verification", which is about user-facing errors. A clean 404 page is part of that.</p>
+    <p><strong>What to add:</strong> Register error handlers in <code>create_app()</code>:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>@app.errorhandler(404)
+def not_found(error):
+    return render_template('errors/404.html'), 404
+
+@app.errorhandler(400)
+def bad_request(error):
+    return render_template('errors/400.html', message=str(error)), 400
+
+@app.errorhandler(500)
+def server_error(error):
+    db.session.rollback()
+    return render_template('errors/500.html'), 500</code></pre>
+    <p><strong>How to test it:</strong> Visit <code>/clients/9999</code> — you should see a styled 404 page, not Flask's default.</p>
+  </div>
+
+  <!-- BUGS -->
+  <div class="section" id="bugs">
+    <h2><span class="icon">🐛</span> Bugs Found in the Code</h2>
+
+    <table>
+      <thead>
+        <tr><th style="width:24%;">Location</th><th>Problem</th><th style="width:30%;">Suggested Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>create_app()</code> — DB URI</td>
+          <td>Defaults to SQLite but Criterion A documents MySQL</td>
+          <td>Update Criterion A to match, or switch default to MySQL</td>
+        </tr>
+        <tr>
+          <td><code>session_form()</code> — status validation</td>
+          <td>Doesn't allow <code>'Cancelled'</code> — cancelled sessions can't be edited back</td>
+          <td>Allow <code>'Cancelled'</code> in the form, or add an uncancel route</td>
+        </tr>
+        <tr>
+          <td><code>csrf_protection()</code></td>
+          <td>Token generated once per session — never rotated</td>
+          <td>Rotate on every successful POST in <code>after_request</code></td>
+        </tr>
+        <tr>
+          <td><code>routes.py</code></td>
+          <td>All routes in one file — poor modularity for Criterion D</td>
+          <td>Split into domain-specific blueprints</td>
+        </tr>
+        <tr>
+          <td><code>Exercise</code> model</td>
+          <td><code>instructions</code> and <code>prescription</code> are <code>nullable=False</code> — heavy for quick additions</td>
+          <td>Make optional, with fallback text</td>
+        </tr>
+        <tr>
+          <td><code>/clients</code></td>
+          <td>Loads all clients and sorts in Python — doesn't scale</td>
+          <td>Push sort to SQL where possible; document the progress-property limitation</td>
+        </tr>
+        <tr>
+          <td>Error pages</td>
+          <td>No custom 404/500 — Flask defaults shown</td>
+          <td>Register error handlers with styled templates</td>
+        </tr>
+        <tr>
+          <td><code>seed_demo()</code> — item completion</td>
+          <td>Uses <code>plan.items[:[12, 8, 16, 4, 6, 14][index]]</code> — magic list, breaks if plans have fewer items</td>
+          <td>Compute the completion count as a fraction of <code>len(plan.items)</code></td>
+        </tr>
+        <tr>
+          <td><code>client_form()</code> — verification</td>
+          <td>Requires <code>request.form.get('verified') == 'yes'</code> but this field is not visible in the form template code you shared</td>
+          <td>Confirm the checkbox exists in <code>client_form.html</code></td>
+        </tr>
+        <tr>
+          <td><code>report()</code> — PDF</td>
+          <td>If <code>client.plans</code> is empty, the PDF only shows "No exercise plans have been created yet" — the sessions section still runs but may look empty</td>
+          <td>Add a placeholder for sessions with no notes</td>
+        </tr>
+        <tr>
+          <td><code>seed_demo()</code> — timezones</td>
+          <td>Uses <code>datetime.now()</code> which is naive local time — DST transitions could cause session overlaps on the boundary day</td>
+          <td>Document the assumption, or use UTC with conversion at display time</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- OOP REFACTOR -->
+  <div class="section" id="oop">
+    <h2><span class="icon">🏗️</span> OOP Structure — Already Strong</h2>
+
+    <p>Derinsu, your code is already well-structured. Unlike most IA submissions, you have proper separation between:</p>
+    <ul>
+      <li><strong>Models</strong> (<code>models.py</code>) — SQLAlchemy ORM classes</li>
+      <li><strong>Services</strong> (<code>services.py</code>) — pure business logic: <code>client_values()</code>, <code>recommend()</code>, <code>generate_plan()</code>, <code>validate_booking()</code></li>
+      <li><strong>Seed</strong> (<code>seed.py</code>) — exercise data and demo setup</li>
+      <li><strong>Routes</strong> (<code>routes.py</code>) — HTTP layer only</li>
+      <li><strong>App factory</strong> (<code>__init__.py</code>) — config + registration</li>
+    </ul>
+
+    <h3>Current Structure</h3>
+    <div class="diagram">+---------------------+
+|   create_app()      |
+|   (__init__.py)     |
++----------+----------+
+           |
+           | registers
+           v
++---------------------+     +----------------------+
+|    routes.py        |---->|    models.py         |
+|  (Blueprint 'main') |     |  (SQLAlchemy ORM)    |
++----------+----------+     +----------------------+
+           |                 - Client
+           | calls           - Exercise
+           v                 - Plan
++---------------------+     - PlanItem
+|    services.py      |     - Session
++---------------------+     - ScheduleLock
+| - client_values()   |
+| - recommend()       |
+| - generate_plan()   |
+| - validate_booking()|
++---------------------+</div>
+
+    <p><strong>This is genuinely good architecture.</strong> The main improvement is splitting <code>routes.py</code> into domain-specific blueprints, which I've covered in the Critical Fixes section.</p>
+
+    <h3>Suggested Refinement — Split Routes</h3>
+    <div class="diagram">+---------------------+     +---------------------+
+|  clients_bp         |     |  sessions_bp        |
+|  /clients/*         |     |  /sessions/*        |
++---------------------+     +---------------------+
++---------------------+     +---------------------+
+|  schedule_bp        |     |  exercises_bp       |
+|  /schedule          |     |  /exercises         |
++---------------------+     +---------------------+
++---------------------+     +---------------------+
+|  reports_bp         |     |  dashboard_bp       |
+|  /clients/*/report* |     |  /                  |
++---------------------+     +---------------------+
+           |
+           | all registered in
+           v
++---------------------+
+|   create_app()      |
++---------------------+</div>
+
+    <h3>Why This Helps</h3>
+    <ul>
+      <li><strong>Criterion D</strong> — you can show code excerpts of each blueprint and justify the separation</li>
+      <li><strong>Maintainability</strong> — a change to the report logic doesn't require scrolling past client routes</li>
+      <li><strong>Testing</strong> — you can write tests targeting a single blueprint</li>
+    </ul>
+  </div>
+
+  <!-- OTHER IMPROVEMENTS -->
+  <div class="section">
+    <h2><span class="icon">✨</span> Other Improvements</h2>
+    <ul>
+      <li><strong>Write unit tests</strong> — Criterion D requires at least 3 test cases with valid, extreme, and invalid data. Test <code>client_values()</code> (empty name, 121-year-old, invalid gender), <code>validate_booking()</code> (end before start, 5-hour session, exact overlap), and <code>recommend()</code> (client with no matching exercises)</li>
+      <li><strong>Record a video demo</strong> — show: adding a client, generating a plan, booking a session that conflicts (and seeing the error), taking notes, downloading the PDF report, sorting by progress</li>
+      <li><strong>Acknowledge any LLM use</strong> in comments and in the Criterion D write-up</li>
+      <li><strong>Add a database migration tool</strong> (Flask-Migrate / Alembic) — you're currently using <code>db.create_all()</code> on every startup, which doesn't handle schema changes</li>
+      <li><strong>Add a session length in minutes to the schedule view</strong> — currently it only shows start times</li>
+      <li><strong>Add a "clients with overdue plans" indicator</strong> on the dashboard — Maria would find this useful</li>
+      <li><strong>Review your Criterion B and C worksheets</strong> — you provided the fillable templates but no content. Make sure your decomposition, component → SC links, 5-stage plan, and system model diagrams are all filled in</li>
+    </ul>
+  </div>
+
+  <!-- RESOURCES -->
+  <div class="section" id="resources">
+    <h2><span class="icon">📚</span> Useful Resources</h2>
+    <div class="resources">
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion A</div>
+        <div class="rc-desc">Problem specification guidance</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionA.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion B</div>
+        <div class="rc-desc">Planning &amp; decomposition</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionB.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion C</div>
+        <div class="rc-desc">System overview &amp; UML</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionC.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion D</div>
+        <div class="rc-desc">Development &amp; testing</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionD.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion E</div>
+        <div class="rc-desc">Evaluation &amp; improvements</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionE.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Flask Blueprints</div>
+        <div class="rc-desc">Official docs on splitting routes</div>
+        <a href="https://flask.palletsprojects.com/en/stable/blueprints/" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">SQLAlchemy ORM</div>
+        <div class="rc-desc">Official relationship &amp; query docs</div>
+        <a href="https://docs.sqlalchemy.org/en/20/orm/" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">OWASP CSRF Prevention</div>
+        <div class="rc-desc">Reference for your CSRF token design</div>
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Flask-Migrate</div>
+        <div class="rc-desc">Database schema migrations for Flask</div>
+        <a href="https://flask-migrate.readthedocs.io/" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">ReportLab User Guide</div>
+        <div class="rc-desc">Reference for PDF generation</div>
+        <a href="https://www.reportlab.com/docs/reportlab-userguide.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIORITY -->
+  <div class="section" id="priority">
+    <h2><span class="icon">🎯</span> Priority Order</h2>
+    <ol class="priority-list">
+      <li>Reconcile Criterion A with the code — MySQL vs SQLite mismatch</li>
+      <li>Fix session status validation — allow 'Cancelled' or add uncancel route</li>
+      <li>Rotate CSRF token on every successful POST</li>
+      <li>Split <code>routes.py</code> into domain-specific blueprints</li>
+      <li>Add custom 404 / 400 / 500 error pages</li>
+      <li>Make <code>instructions</code> and <code>prescription</code> optional on exercises</li>
+      <li>Fix <code>seed_demo()</code> magic-number list for item completion</li>
+      <li>Confirm the <code>verified</code> checkbox exists in <code>client_form.html</code></li>
+      <li>Write 3+ unit tests (valid, extreme, invalid) for <code>client_values()</code>, <code>validate_booking()</code>, <code>recommend()</code></li>
+      <li>Record the video demo — full CRUD flow, conflict detection, PDF export, sorting</li>
+    </ol>
+    <div class="callout">
+      Derinsu, this is one of the strongest submissions I've reviewed. All 10 success criteria are met. The code is properly structured with models, services, routes, and an app factory. You've implemented CSRF protection, security headers, race-condition-safe booking, and CSV injection prevention — all things most students don't even know about. The remaining work is refinement and making sure Criterion A, B, and C documents match what you actually built.
+    </div>
+  </div>
+
+  <div class="footer">IB Computer Science IA · Derinsu · Pilates Studio Management</div>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.parentElement;
+    const code = pre.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    }).catch(() => {
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  const checkboxes = document.querySelectorAll('#fixList input[type="checkbox"]');
+  const progressFill = document.getElementById('progressFill');
+  const progressCount = document.getElementById('progressCount');
+  const totalTasks = 10;
+
+  function updateProgress() {
+    let checked = 0;
+    checkboxes.forEach(cb => { if (cb.checked) checked++; });
+    const done = checked;
+    const pct = Math.min((done / totalTasks) * 100, 100);
+    progressFill.style.width = pct + '%';
+    progressCount.textContent = done + ' / ' + totalTasks;
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      const li = e.target.closest('li');
+      if (e.target.checked) {
+        li.classList.add('done');
+      } else {
+        li.classList.remove('done');
+      }
+      updateProgress();
+    });
+    const li = cb.closest('li');
+    li.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
