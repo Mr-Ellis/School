@@ -26,7 +26,7 @@
     line-height: 1.6;
     padding: 0 1rem 4rem;
   }
-  .wrap { max-width: 960px; margin: 0 auto; }
+  .wrap { max-width: 1000px; margin: 0 auto; }
   a { color: var(--accent); }
   .back {
     display: inline-block;
@@ -69,11 +69,11 @@
     background: var(--panel);
     border-radius: 8px;
     overflow: hidden;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
   th, td {
     border: 1px solid var(--border);
-    padding: 0.7rem 0.9rem;
+    padding: 0.6rem 0.8rem;
     text-align: left;
     vertical-align: top;
   }
@@ -149,16 +149,25 @@
     font-style: italic;
     margin-top: 2rem;
   }
-  .tag {
-    display: inline-block;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 0.15rem 0.7rem;
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-right: 0.4rem;
+  .fig {
+    background: #0b1220;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    overflow-x: auto;
+    white-space: pre;
   }
+  .fig .label { color: var(--muted); }
+  .fig .p1 { color: #38bdf8; }
+  .fig .p2 { color: #22c55e; }
+  .fig .p3 { color: #f59e0b; }
+  .fig .p4 { color: #a78bfa; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 700px) { .cols { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -172,9 +181,9 @@
     <h2 style="margin-top:0;border:none;padding:0;color:var(--accent)">📌 Learning Objective</h2>
     <p>By the end of this lesson, you will be able to <strong>compare</strong>:</p>
     <ul>
-      <li>The four scheduling approaches — <strong>First-Come First-Served</strong>, <strong>Round Robin</strong>, <strong>Multilevel Queue</strong> and <strong>Priority Scheduling</strong></li>
-      <li>How each approach allocates processor time</li>
-      <li>The main <strong>strength</strong> and main <strong>limitation</strong> of each approach</li>
+      <li>The four scheduling approaches — <strong>First-Come First-Served (FCFS)</strong>, <strong>Round Robin (RR)</strong>, <strong>Priority Scheduling</strong> and <strong>Multilevel Queue (MLQ)</strong></li>
+      <li>How each allocates processor time, and whether it is <strong>pre-emptive</strong> or <strong>non-pre-emptive</strong></li>
+      <li>How each approach trades off <strong>fairness</strong>, <strong>overhead</strong>, <strong>starvation-risk</strong> and <strong>predictability</strong></li>
       <li>Which approach best suits a given workload — and <em>why</em></li>
     </ul>
   </div>
@@ -182,108 +191,182 @@
   <div class="panel warn">
     <h2 style="margin-top:0;border:none;padding:0;color:var(--warn)">🎯 IB Command Term: Compare</h2>
     <p><strong>Compare</strong> – "Give an account of the similarities <em>and</em> differences between two or more items or situations, referring to both throughout."</p>
-    <p>For this topic, a compare question expects you to hold the approaches <strong>side by side</strong>: say what they have in common, where they diverge, and what the consequences of those differences are.</p>
-    <p><strong>An answer that describes each algorithm in turn without ever comparing them does not meet the command term.</strong></p>
+    <p>A compare question expects you to hold the approaches <strong>side by side</strong>: what they share, where they diverge, and what the consequences of those differences are.</p>
+    <p><strong>Describing each algorithm in turn, without ever comparing them, does not meet the command term.</strong></p>
   </div>
 
-  <p>
-    🎮 <strong>Starter Activity – Blooket</strong> — Test your scheduling knowledge before we begin!
-  </p>
+  <p>🎮 <strong>Starter Activity – Blooket</strong> — Test your scheduling knowledge before we begin!</p>
   <a class="btn orange" href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">🚀 Launch Blooket</a>
 
   <h2>🔑 Key Terms</h2>
   <table>
-    <thead>
-      <tr><th>Term</th><th>Definition</th></tr>
-    </thead>
+    <thead><tr><th>Term</th><th>Definition</th></tr></thead>
     <tbody>
-      <tr><td><strong>Process</strong></td><td>A program in execution, with its own state and resources</td></tr>
-      <tr><td><strong>Scheduling</strong></td><td>The method by which the OS decides which ready process uses the processor next, and for how long</td></tr>
-      <tr><td><strong>First-Come First-Served (FCFS)</strong></td><td>Processes run to completion in the order they arrive</td></tr>
-      <tr><td><strong>Round Robin</strong></td><td>Each process gets a fixed time slice (the quantum), then moves to the back of the queue</td></tr>
-      <tr><td><strong>Multilevel Queue</strong></td><td>Processes are split into separate queues by type or priority, each queue with its own rule</td></tr>
-      <tr><td><strong>Priority Scheduling</strong></td><td>The highest-priority ready process runs first</td></tr>
-      <tr><td><strong>Time slice / Quantum</strong></td><td>The fixed amount of processor time a process receives under Round Robin</td></tr>
+      <tr><td><strong>Process / thread</strong></td><td>A program in execution, with its own state and resources</td></tr>
+      <tr><td><strong>Scheduling</strong></td><td>The method by which the OS allocates CPU time to processes to optimise system performance</td></tr>
+      <tr><td><strong>Pre-emptive</strong></td><td>The OS can forcibly take the CPU away from a running process before it finishes</td></tr>
+      <tr><td><strong>Non-pre-emptive</strong></td><td>Once a process starts, it runs until it finishes or blocks on I/O — it cannot be interrupted</td></tr>
+      <tr><td><strong>Time slice / Quantum</strong></td><td>The fixed amount of CPU time a process receives under Round Robin</td></tr>
       <tr><td><strong>Context switch</strong></td><td>Saving the state of one process and restoring another's — pure overhead</td></tr>
       <tr><td><strong>Convoy effect</strong></td><td>Under FCFS, one long job at the front delays every short job behind it</td></tr>
-      <tr><td><strong>Starvation</strong></td><td>A process never runs because higher-priority work keeps arriving</td></tr>
+      <tr><td><strong>Starvation</strong></td><td>A process waits indefinitely because higher-priority work keeps arriving</td></tr>
       <tr><td><strong>Ageing</strong></td><td>Gradually raising the priority of a waiting process to prevent starvation</td></tr>
-      <tr><td><strong>Responsiveness</strong></td><td>How quickly the system reacts to interactive input</td></tr>
+      <tr><td><strong>Fairness</strong></td><td>Each process receives a share of CPU time proportional to what the policy entitles it to</td></tr>
+      <tr><td><strong>Overhead</strong></td><td>CPU time consumed by scheduling itself — data structures, timer interrupts, context switches</td></tr>
+      <tr><td><strong>Predictability</strong></td><td>Bounded, repeatable response times — small worst-case latency jitter (a.k.a. determinism)</td></tr>
+      <tr><td><strong>Throughput</strong></td><td>The amount of useful work completed per unit time</td></tr>
     </tbody>
   </table>
 
   <h2>📊 The Four Approaches</h2>
 
   <div class="flow">
-    <div class="box"><strong>FCFS</strong><small>Arrival order, run to completion</small></div>
+    <div class="box"><strong>FCFS</strong><small>Arrival order, run to completion (non-pre-emptive)</small></div>
     <span class="arrow">➜</span>
-    <div class="box"><strong>Round Robin</strong><small>Fixed slice, then rotate</small></div>
+    <div class="box"><strong>Round Robin</strong><small>Fixed quantum, then rotate (pre-emptive)</small></div>
+    <span class="arrow">➜</span>
+    <div class="box"><strong>Priority</strong><small>Highest priority runs first (either variant)</small></div>
     <span class="arrow">➜</span>
     <div class="box"><strong>Multilevel Queue</strong><small>Separate queues, separate rules</small></div>
-    <span class="arrow">➜</span>
-    <div class="box"><strong>Priority</strong><small>Highest priority runs first</small></div>
   </div>
 
   <h3>THINK FIRST</h3>
   <div class="panel">
-    <p>Three programs all want the processor at the same instant: a long video export, a text editor waiting for a keystroke, and a background backup.</p>
+    <p>Three programs all want the CPU at the same instant: a long video export, a text editor waiting for a keystroke, and a background backup.</p>
     <p><strong>Before reading on, decide what order you would run them in — and be honest about what "fair" should mean.</strong></p>
     <p>Most disagreements about scheduling are really disagreements about that word.</p>
   </div>
 
   <h3>1. First-Come First-Served (FCFS)</h3>
-  <p>Processes run <strong>to completion in the order they arrive</strong>. Simple and predictable.</p>
-  <p><strong>Weakness:</strong> the <strong>convoy effect</strong> — one long job at the front holds up every short job behind it, pushing up average waiting time.</p>
+  <p>Processes run <strong>in arrival order</strong>, each to completion. <strong>Non-pre-emptive.</strong></p>
+  <p><strong>Strength:</strong> negligible context-switch overhead; easy to implement; high raw throughput in homogeneous batch workloads.</p>
+  <p><strong>Weakness:</strong> the <strong>convoy effect</strong> — one long job at the front delays every short job behind it.</p>
 
-  <h3>2. Round Robin</h3>
-  <p>Each process gets a <strong>fixed time slice</strong> (the quantum), then moves to the back of the queue and the next process starts.</p>
-  <p><strong>Strength:</strong> no process is left waiting indefinitely, so the system feels <strong>responsive</strong>.</p>
-  <p><strong>Weakness:</strong> the <strong>overhead of context switching</strong> many times a second. Quantum too short → switching dominates. Too long → behaves like FCFS.</p>
+  <div class="fig"><span class="label">Worked example — P1(0–3), P2(3–6), P3(6–9). Average waiting time = (0+3+6)/3 = 3.</span>
+Time   0    1    2    3    4    5    6    7    8    9
+      ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┐
+      │  <span class="p1">P1</span>           │  <span class="p2">P2</span>           │  <span class="p3">P3</span>           │
+      └────┴────┴────┴────┴────┴────┴────┴────┴────┴────┘
+      P1 runs to completion, then P2, then P3 — no pre-emption.</div>
 
-  <h3>3. Multilevel Queue</h3>
-  <p>Processes are split into <strong>separate queues</strong> by type or priority, each queue with its own rule. Interactive work might sit in a high queue served quickly; background work waits in a lower queue.</p>
-  <p><strong>Strength:</strong> different work gets <strong>suitable treatment</strong>.</p>
-  <p><strong>Weakness:</strong> more <strong>complex</strong>; a low-priority queue can be <strong>starved</strong> while higher queues stay busy.</p>
+  <h3>2. Round Robin (RR)</h3>
+  <p>Each process gets a fixed <strong>time quantum</strong>, then is pre-empted and moved to the back of the queue. <strong>Pre-emptive.</strong></p>
+  <p><strong>Strength:</strong> good perceived fairness; quick interactive response if the quantum is tuned.</p>
+  <p><strong>Weakness:</strong> quantum too small → high context-switch overhead ("thrashing"); quantum too large → degenerates into FCFS.</p>
 
-  <h3>4. Priority Scheduling</h3>
-  <p>The <strong>highest-priority ready process runs first</strong>. Suits real-time and urgent work.</p>
-  <p><strong>Weakness:</strong> a low-priority process may <strong>never run</strong> while higher-priority work keeps arriving — unless the system uses <strong>ageing</strong>.</p>
+  <div class="fig"><span class="label">Worked example — quantum = 2. P1(0–2), P2(2–4), P3(4–6), P1(6–8), P2(8–10), P3(10–12).</span>
+Time   0    1    2    3    4    5    6    7    8    9   10   11   12
+      ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┐
+      │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │
+      └────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┘
+      Each process gets an equal slice; cycle repeats until all complete.</div>
 
-  <h2>📋 The Comparison Table</h2>
-  <p>This is the single most important artefact for this topic. Learn it as a <em>comparison</em>, not four separate descriptions.</p>
+  <h3>3. Priority Scheduling</h3>
+  <p>The <strong>highest-priority</strong> ready process runs first. Priorities may be <strong>static</strong> (fixed at creation) or <strong>dynamic</strong> (adjusted over time, e.g. by ageing). <strong>Both pre-emptive and non-pre-emptive variants exist</strong> — the pre-emptive version is most common.</p>
+  <p><strong>Strength:</strong> lets critical (real-time, kernel, latency-sensitive) work jump the queue; can deliver deterministic latencies.</p>
+  <p><strong>Weakness:</strong> <strong>starvation</strong> of low-priority tasks unless ageing or priority inheritance is used; risk of <strong>priority inversion</strong>.</p>
+
+  <div class="fig"><span class="label">Worked example — P1(High), P4(High), P2(Medium), P3(Low).</span>
+Process   Arrival   Priority
+  P1        0        High
+  P2        1        Medium
+  P3        2        Low
+  P4        3        High
+
+Time   0    1    2    3    4    5    6    7
+      ┌────┬────┬────┬────┬────┬────┬────┬────┐
+      │  <span class="p1">P1</span>      │  <span class="p4">P4</span>      │  <span class="p2">P2</span>      │  <span class="p3">P3</span>      │
+      └────┴────┴────┴────┴────┴────┴────┴────┘
+      High-priority P1 and P4 run first; then Medium P2; Low P3 last.</div>
+
+  <h3>4. Multilevel Queue (MLQ)</h3>
+  <p>The ready queue is <strong>partitioned into several separate queues</strong> by process type or priority. Each queue has its <strong>own algorithm</strong> (often RR or FCFS). The scheduler picks from the highest-priority queue first, only moving down when it is empty.</p>
+  <p><strong>Strength:</strong> clear segregation of workload classes; simple to give system or interactive tasks guaranteed precedence.</p>
+  <p><strong>Weakness:</strong> rigid — processes rarely migrate between queues, so background work can starve; lower utilisation if upper queues stay full.</p>
+
+  <div class="fig"><span class="label">Worked example — Q1 High (RR, quantum 2): P1, P2. Q2 Medium (FCFS): P3. Q3 Low (FCFS): P4.</span>
+Time   0    1    2    3    4    5    6    7    8    9   10   11   12
+      ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┐
+      │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │ <span class="p3">P3</span> │ <span class="p4">P4</span> │ ...
+      └────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┘
+      High queue served first (RR), then Medium (FCFS), then Low — scheduler checks back to High frequently.</div>
+
+  <h2>📋 The Compare Table — side by side by metric</h2>
+  <p>This is the single most important artefact for this topic. Learn it as a <em>comparison across dimensions</em>, not four separate descriptions.</p>
+
   <table>
     <thead>
       <tr>
-        <th>Approach</th>
-        <th>How processor time is allocated</th>
-        <th>Main strength</th>
-        <th>Main limitation</th>
+        <th>Feature / metric</th>
+        <th>FCFS</th>
+        <th>Round Robin</th>
+        <th>Priority</th>
+        <th>Multilevel Queue</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><strong>First-Come First-Served</strong></td>
-        <td>In arrival order; each process runs to completion</td>
-        <td>Simple and predictable</td>
-        <td>Convoy effect: a long job delays all jobs behind it</td>
+        <td><strong>Pre-emptive?</strong></td>
+        <td>No</td>
+        <td>Yes (time quantum)</td>
+        <td>Either variant</td>
+        <td>Usually non-pre-emptive between queues; each queue may be pre-emptive</td>
       </tr>
       <tr>
-        <td><strong>Round Robin</strong></td>
-        <td>Fixed time slice each, then rotate to the back of the queue</td>
-        <td>Responsive; no process is starved</td>
-        <td>Frequent context switching adds overhead</td>
+        <td><strong>Ready-queue structure</strong></td>
+        <td>Simple FIFO list</td>
+        <td>FIFO + periodic rotation</td>
+        <td>Priority heap / arrays</td>
+        <td>Several separate queues by priority class</td>
       </tr>
       <tr>
-        <td><strong>Multilevel Queue</strong></td>
-        <td>Processes split into queues by type or priority, each queue with its own rule</td>
-        <td>Different work gets suitable treatment</td>
-        <td>Lower queues can starve; more complex to manage</td>
+        <td><strong>Typical quantum</strong></td>
+        <td>N/A</td>
+        <td>10–100 ms (tuneable)</td>
+        <td>Runs until higher priority arrives or it blocks</td>
+        <td>High queues short quanta; lower queues often FCFS</td>
       </tr>
       <tr>
-        <td><strong>Priority Scheduling</strong></td>
-        <td>Highest-priority ready process runs first</td>
-        <td>Urgent and real-time work served first</td>
-        <td>Low-priority processes can starve without ageing</td>
+        <td><strong>Average response time</strong></td>
+        <td>Poor for short jobs (convoy effect)</td>
+        <td>Good for interactive jobs; depends on quantum</td>
+        <td>Excellent for high priority; poor/indefinite for low</td>
+        <td>Excellent for top class; can be very poor for background</td>
+      </tr>
+      <tr>
+        <td><strong>Throughput &amp; overhead</strong></td>
+        <td>High throughput; minimal overhead</td>
+        <td>Lower throughput as quantum ↓ (more switches)</td>
+        <td>Similar to FCFS if non-pre-emptive; overhead on priority change</td>
+        <td>Extra bookkeeping per queue + inner scheduling</td>
+      </tr>
+      <tr>
+        <td><strong>Fairness</strong></td>
+        <td>Favours arrival order; ignores job length</td>
+        <td>High perceived fairness (equal quanta)</td>
+        <td>Unfair across priority levels; mitigated by ageing</td>
+        <td>Fair within a queue, not across</td>
+      </tr>
+      <tr>
+        <td><strong>Starvation risk</strong></td>
+        <td>None</td>
+        <td>None</td>
+        <td>High for low priority unless ageing</td>
+        <td>High for lowest queue(s) if upper classes stay busy</td>
+      </tr>
+      <tr>
+        <td><strong>Best suited to</strong></td>
+        <td>Simple batch, single-user workloads</td>
+        <td>Time-sharing, interactive shells, GUIs</td>
+        <td>Real-time or QoS-critical workloads</td>
+        <td>Mixed workloads needing hard separation</td>
+      </tr>
+      <tr>
+        <td><strong>Weakness in practice</strong></td>
+        <td>Long jobs block short ones</td>
+        <td>Quantum too small → thrashing; too large → FCFS</td>
+        <td>Needs careful priority assignment; priority inversion</td>
+        <td>Rigidity — tasks rarely migrate; utilisation loss</td>
       </tr>
     </tbody>
   </table>
@@ -302,62 +385,44 @@
 
   <div class="panel good">
     <strong>Model comparison sentence:</strong><br>
-    "Both FCFS and Round Robin are processor scheduling algorithms that decide the order in which ready processes use the processor. However, FCFS runs each process to completion <em>whereas</em> Round Robin gives each a fixed time slice before rotating it to the back of the queue. The effect of this difference is that FCFS can suffer the convoy effect, while Round Robin shares the processor more evenly — at the cost of extra context-switching overhead."
+    "Both FCFS and Round Robin are processor scheduling algorithms that decide the order in which ready processes use the CPU. However, FCFS is <em>non-pre-emptive</em> and runs each process to completion, <em>whereas</em> Round Robin is <em>pre-emptive</em> and gives each a fixed time slice before rotating it to the back of the queue. The effect of this difference is that FCFS can suffer the convoy effect, while Round Robin shares the CPU more evenly — at the cost of extra context-switching overhead."
   </div>
 
   <h2>💻 Scheduling Simulation</h2>
   <p>Your teacher is the CPU. Four students are processes. The rest of the class is the scheduler panel with scorecards. We will run the same four processes through each approach in turn and record what happens.</p>
 
   <table>
-    <thead>
-      <tr><th>Process</th><th>Role</th><th>Burst time</th></tr>
-    </thead>
+    <thead><tr><th>Process</th><th>Role</th><th>Priority</th><th>Burst time</th></tr></thead>
     <tbody>
-      <tr><td><strong>P1</strong></td><td>Long video export</td><td>Long</td></tr>
-      <tr><td><strong>P2</strong></td><td>Text editor waiting for keystrokes</td><td>Short, frequent</td></tr>
-      <tr><td><strong>P3</strong></td><td>Background backup</td><td>Long</td></tr>
-      <tr><td><strong>P4</strong></td><td>Music player</td><td>Short, regular</td></tr>
+      <tr><td><strong>P1</strong></td><td>Long video export</td><td>High</td><td>Long</td></tr>
+      <tr><td><strong>P2</strong></td><td>Text editor waiting for keystrokes</td><td>Medium</td><td>Short, frequent</td></tr>
+      <tr><td><strong>P3</strong></td><td>Background backup</td><td>Low</td><td>Long</td></tr>
+      <tr><td><strong>P4</strong></td><td>Music player</td><td>High</td><td>Short, regular</td></tr>
     </tbody>
   </table>
 
-  <p>For each approach, watch for:</p>
-  <ul>
-    <li>Who waits longest?</li>
-    <li>How many times did the CPU switch?</li>
-    <li>Did any process never get a turn?</li>
-  </ul>
-
+  <p>For each approach, watch for: who waits longest? how many switches? did anyone never get a turn?</p>
   <a class="btn" href="#" target="_blank" rel="noopener">🔧 Launch Scheduling Simulator</a>
 
   <h2>📖 Your Tasks</h2>
   <ol>
-    <li>
-      <strong>Read &amp; Learn</strong> — Use the resources below to learn about the four scheduling approaches. Take notes on how each allocates processor time, its main strength and its main limitation.
+    <li><strong>Read &amp; Learn</strong> — Use the resources below to learn about the four scheduling approaches. Take notes on how each allocates CPU time, whether it is pre-emptive, and its main strength and limitation.</li>
+    <li><strong>Complete the Starter Activity</strong> — Answer the mild, medium and spicy questions from the Lesson Starter PowerPoint. Use <a href="#" target="_blank" rel="noopener">🐍 Python Code Lab</a> to write your answers in a text file.
+      <div class="panel warn" style="margin-top:0.75rem">📌 <strong>Important:</strong> Save your file as <code>.txt</code>. Submit all starter activity answers to Schoolbox at the end of <strong>A1.1.9 Debugging Techniques</strong>.</div>
     </li>
-    <li>
-      <strong>Complete the Starter Activity</strong> — Answer the mild, medium and spicy questions from the Lesson Starter PowerPoint. Use <a href="#" target="_blank" rel="noopener">🐍 Python Code Lab</a> to write your questions and answers in a text file.
-      <div class="panel warn" style="margin-top:0.75rem">
-        📌 <strong>Important:</strong> Save your file as a <code>.txt</code>. You will submit all starter activity answers to Schoolbox at the end of <strong>A1.1.9 Debugging Techniques</strong>.
-      </div>
-    </li>
-    <li>
-      <strong>Deliberate Practice</strong> — Write a <em>compare</em> answer to this question:
-      <div class="panel accent" style="margin-top:0.75rem">
-        <em>"Compare First-Come First-Served and Round Robin scheduling. [4 marks]"</em>
-      </div>
+    <li><strong>Deliberate Practice</strong> — Write a <em>compare</em> answer:
+      <div class="panel accent" style="margin-top:0.75rem"><em>"Compare First-Come First-Served and Round Robin scheduling. [4 marks]"</em></div>
       <p><strong>📝 Sentence Frame:</strong></p>
-      <p>"Both ___ and ___ are ___. However, ___ runs ___ whereas ___ gives ___. The effect of this difference is that ___, while ___. ___ pays for this with ___."</p>
+      <p>"Both ___ and ___ are ___. However, ___ is ___ and runs ___ whereas ___ is ___ and gives ___. The effect of this difference is that ___, while ___. ___ pays for this with ___."</p>
       <details>
         <summary>📌 Click to see a completed example</summary>
-        <p>Both FCFS and Round Robin are processor scheduling algorithms that decide the order in which ready processes use the processor <strong>[1]</strong>.</p>
-        <p>Under FCFS a process runs until it finishes, whereas under Round Robin a process runs only for a fixed time slice before being moved to the back of the queue <strong>[1]</strong>.</p>
-        <p>As a result FCFS can make short processes wait behind a long one (the convoy effect), while Round Robin shares the processor more evenly so short processes respond sooner <strong>[1]</strong>.</p>
+        <p>Both FCFS and Round Robin are processor scheduling algorithms that decide the order in which ready processes use the CPU <strong>[1]</strong>.</p>
+        <p>However, FCFS is <em>non-pre-emptive</em> and runs each process to completion, whereas Round Robin is <em>pre-emptive</em> and gives each a fixed time slice before moving it to the back of the queue <strong>[1]</strong>.</p>
+        <p>As a result, FCFS can make short processes wait behind a long one (the convoy effect), while Round Robin shares the CPU more evenly so short processes respond sooner <strong>[1]</strong>.</p>
         <p>Round Robin pays for this with the overhead of frequent context switching, which FCFS largely avoids <strong>[1]</strong>.</p>
       </details>
     </li>
-    <li>
-      <strong>Plenary</strong> — Test yourself with the Quizlet flashcards.
-    </li>
+    <li><strong>Plenary</strong> — Test yourself with the Quizlet flashcards.</li>
   </ol>
 
   <a class="btn green" href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank" rel="noopener">🃏 Launch Quizlet</a>
@@ -368,44 +433,79 @@
   <h3>🔍 Deeper Exploration</h3>
   <ul>
     <li><strong>Real-time challenge:</strong> Which approach would you choose for a pacemaker, and why? What breaks if you get it wrong?</li>
-    <li><strong>Research:</strong> Find out what <em>ageing</em> is and how it fixes starvation in priority scheduling. Write one paragraph.</li>
+    <li><strong>Research ageing:</strong> How does it fix starvation in priority scheduling? Write one paragraph.</li>
     <li><strong>Real-world link:</strong> How does a mobile OS prioritise foreground vs background apps? Which approach does it resemble?</li>
   </ul>
+
+  <h3>💻 Programming Exercise — simulate FCFS in Python</h3>
+  <p>From your course PDF: write a program that simulates FCFS scheduling and reports waiting and turnaround time.</p>
+  <details>
+    <summary>📌 Starter code</summary>
+    <pre style="white-space:pre-wrap;color:#7dd3fc;font-size:0.85rem">class Process:
+    def __init__(self, pid, arrival_time, burst_time):
+        self.pid = pid
+        self.arrival_time = arrival_time
+        self.burst_time = burst_time
+        self.waiting_time = 0
+        self.turnaround_time = 0
+
+def calculate_fcfs(processes):
+    start_time = 0
+    for process in processes:
+        if start_time &lt; process.arrival_time:
+            start_time = process.arrival_time
+        # ... complete the calculation ...</pre>
+  </details>
 
   <h3>🏗️ Build Your Own</h3>
   <ul>
     <li>Design a scheduling policy for a school computer lab. Justify your choice using at least <strong>three</strong> comparative points against the alternatives.</li>
-    <li>Create a set of process cards and run the simulation for a workload of your own design. Record the average waiting time for each approach and compare.</li>
+    <li>Create your own process cards and run the simulation. Record the average waiting time for each approach and compare.</li>
   </ul>
 
+  <h2>❓ Discussion Questions</h2>
+  <ol>
+    <li>Explain the difference between FCFS and Round Robin. How does the choice of time quantum affect performance?</li>
+    <li>What is the purpose of priority scheduling, and how does it differ from multilevel queue scheduling? Give an example where each is preferred.</li>
+    <li>What is meant by <em>context switching</em>, and why is it important in process scheduling?</li>
+    <li>Describe how multilevel queue scheduling works and discuss its advantages and disadvantages.</li>
+    <li>How does the OS ensure fairness while also optimising performance? Discuss in the context of Round Robin and Priority.</li>
+    <li>What are the potential drawbacks of FCFS in a multi-user environment?</li>
+    <li>Why might an OS choose a hybrid scheduling approach, and what benefits does this provide?</li>
+  </ol>
+
+  <div class="panel danger">
+    <strong>⚠️ Common mistake (from your PDF):</strong> Don't forget that <strong>context switching</strong> — when the CPU switches from one task to another — can slow things down. Even though it allows multitasking, too much switching reduces efficiency because the CPU spends time saving and restoring tasks.
+  </div>
+
   <h2>✅ Observation Form Coverage</h2>
-  <p>This section maps the lesson directly onto the observation form criteria. Ticked items are fully evidenced by the lesson as designed.</p>
+  <p>Mapped to your IGCSE/IB lesson-plan observation form. Ticked items are fully evidenced by this lesson.</p>
 
   <h3>1. Learning</h3>
   <ul class="checklist">
     <li class="done"><strong>Syllabus / Guide Reference:</strong> A1.3.3 – Compare different approaches to scheduling</li>
-    <li class="done"><strong>Content to Be Taught:</strong> FCFS, Round Robin, Multilevel Queue, Priority — how each allocates processor time, main strength, main limitation</li>
+    <li class="done"><strong>Content to Be Taught:</strong> FCFS, Round Robin, Priority, Multilevel Queue; pre-emptive vs non-pre-emptive; fairness, overhead, starvation-risk, predictability</li>
     <li class="done"><strong>Student Outcome:</strong> Compare at least two approaches, giving a similarity and a difference, and justify a recommendation</li>
-    <li class="done"><strong>Proof:</strong> Completed comparison table + independent 4-mark compare answer</li>
-    <li class="done"><strong>Secure Standard:</strong> Names approach + allocation method, gives similarity <em>and</em> difference, links difference to consequence, makes a comparative judgement</li>
-    <li class="done"><strong>IB Connection:</strong> Command term "Compare" — both similarities and differences, held side by side; 4-mark allocation modelled</li>
+    <li class="done"><strong>Proof:</strong> Completed compare table + independent 4-mark compare answer</li>
+    <li class="done"><strong>Secure Standard:</strong> Names approach + allocation method + pre-emptive status; gives similarity <em>and</em> difference; links difference to consequence; comparative judgement</li>
+    <li class="done"><strong>IB Connection:</strong> Command term "Compare"; 4-mark allocation modelled with a sentence frame and exemplar</li>
   </ul>
 
   <h3>2. Plan</h3>
   <ul class="checklist">
-    <li class="done"><strong>Connect:</strong> Retrieval whiteboard quiz on A1.3.2 (functions of an OS) → scheduling; "THINK FIRST" hook on fairness</li>
-    <li class="done"><strong>Teach / Model:</strong> FCFS worked example on the board + explicit modelling of the <em>compare move</em> with connectives</li>
-    <li class="done"><strong>Students Think / Do:</strong> Kinesthetic scheduling simulation (teacher = CPU, students = processes, class = scheduler panel); group mini-runs; choice of approach to investigate</li>
-    <li class="done"><strong>Check Everyone:</strong> Mini whiteboards — all students write a comparative sentence; teacher scans every board; targeted cold-call</li>
-    <li class="done"><strong>Adapt:</strong> Support = partially completed table + sentence stems + vocabulary card; Challenge = real-time system justification, ageing research</li>
+    <li class="done"><strong>Connect:</strong> Blooket retrieval starter + "THINK FIRST" fairness hook + whiteboard recall of A1.3.2 functions</li>
+    <li class="done"><strong>Teach / Model:</strong> FCFS worked Gantt example on the board + explicit modelling of the <em>compare move</em> with connectives</li>
+    <li class="done"><strong>Students Think / Do:</strong> Kinesthetic simulation (teacher = CPU, students = P1–P4, class = scheduler panel); group mini-runs; choice of approach to investigate; optional Python FCFS programming exercise</li>
+    <li class="done"><strong>Check Everyone:</strong> Mini whiteboards — all students write one comparative sentence; teacher scans every board; targeted cold-call</li>
+    <li class="done"><strong>Adapt:</strong> Support = compare-table template + sentence stems + key-term glossary; Challenge = pacemaker real-time justification, ageing research, Python simulation, hybrid-approach discussion Q7</li>
     <li class="done"><strong>Feedback &amp; Improve:</strong> Peer feedback against 4 displayed success criteria, then 60-second whole-class correction before independent proof</li>
-    <li class="done"><strong>Independent Proof:</strong> Silent, individual 4-mark compare question</li>
+    <li class="done"><strong>Independent Proof:</strong> Silent individual 4-mark compare question</li>
   </ul>
 
   <h3>3. Planned Response and Follow-Through</h3>
   <ul class="checklist">
-    <li class="done"><strong>If Learning Is Not Secure:</strong> Re-model with the two-tills supermarket analogy; reduce to FCFS vs Round Robin only; re-teach one table row at a time</li>
-    <li class="done"><strong>Next Step:</strong> Homework = TRY IT ON PAPER Q1 (compare) + Q2 (evaluate polling vs interrupts, previews A1.3.4); anchor table posted to Schoolbox; deadline set</li>
+    <li class="done"><strong>If Learning Is Not Secure:</strong> Re-model with the two-tills supermarket analogy; reduce to FCFS vs RR only; re-teach one row of the compare table at a time</li>
+    <li class="done"><strong>Next Step:</strong> Discussion questions 1–3 as homework; Python FCFS simulation for stretch; Q2 previews A1.3.4 (polling vs interrupts); compare table posted to Schoolbox; deadline set</li>
   </ul>
 
   <h3>4. Observation Checklist</h3>
@@ -422,15 +522,16 @@
   <div class="panel good">
     <strong>Where the strongest evidence sits:</strong>
     <ul>
-      <li><strong>Higher-order thinking / agency:</strong> students choose which approach to investigate and must justify a recommendation, not just recall definitions</li>
-      <li><strong>Every student checked:</strong> mini whiteboards force a response from all students, and the teacher scans every board before cold-calling</li>
-      <li><strong>Feedback will be used:</strong> peer feedback happens <em>before</em> the independent proof, so the feedback has a direct, visible effect on the assessed work</li>
-      <li><strong>Accurate guide content:</strong> the compare command term is explicitly taught and modelled — the most common exam failure on this statement</li>
+      <li><strong>Higher-order thinking / agency:</strong> the compare table forces side-by-side evaluation across four dimensions (fairness, overhead, starvation-risk, predictability) — not recall of four definitions</li>
+      <li><strong>Every student checked:</strong> mini whiteboards force a response from all, and the teacher scans every board before cold-calling</li>
+      <li><strong>Feedback will be used:</strong> peer feedback happens <em>before</em> the independent proof, so it has a visible effect on the assessed work</li>
+      <li><strong>Accurate guide content:</strong> the compare command term is explicitly taught, modelled, and scaffolded with a sentence frame and exemplar</li>
+      <li><strong>Support and challenge ready:</strong> sentence stems + glossary (support) and pacemaker/ageing/Python/hybrid (challenge) are both prepared</li>
     </ul>
   </div>
 
   <div class="takeaway">
-    💡 <strong>Key Takeaway:</strong> "No scheduling approach is best in every way. FCFS is simple but suffers the convoy effect; Round Robin is responsive but pays in context-switching overhead; Multilevel Queue treats different work appropriately but risks starving lower queues; Priority serves urgent work first but can starve the low-priority work entirely. To <em>compare</em> them is to say which is more responsive, which carries more overhead, and which can starve — and to justify your choice for the workload in front of you."
+    💡 <strong>Key Takeaway:</strong> "No scheduling approach is best in every way. FCFS is simple but non-pre-emptive and suffers the convoy effect; Round Robin is pre-emptive and responsive but pays in context-switching overhead; Priority serves urgent work first but can starve low-priority processes; Multilevel Queue separates workloads cleanly but can starve lower queues. To <em>compare</em> them is to say which is more responsive, which carries more overhead, which can starve, and which is more predictable — and to justify your choice for the workload in front of you."
   </div>
 
 </div>
