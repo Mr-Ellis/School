@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ben — Typing Assistant Feedback</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0f1219;
+    font-family: 'Segoe UI', 'Calibri', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #c9d1d9;
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 80px;
+  }
+
+  .page { max-width: 880px; width: 100%; }
+
+  .header {
+    background: linear-gradient(135deg, #1b2028 0%, #12151b 100%);
+    border: 1px solid #2e3646;
+    border-radius: 12px;
+    padding: 30px 34px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; position: relative; }
+  .header p { color: #9aa5b6; font-size: 14px; position: relative; }
+  .header .badge {
+    display: inline-block; background: #1a2936; color: #7dd3fc;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 20px; margin-top: 10px; position: relative;
+  }
+
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .nav a {
+    background: #1b2028; border: 1px solid #2e3646; color: #9aa5b6;
+    text-decoration: none; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; transition: all 0.2s;
+  }
+  .nav a:hover { background: #232934; color: #38bdf8; border-color: #38bdf8; }
+
+  .progress-wrap {
+    background: #12151b; border: 1px solid #2e3646; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .progress-wrap .label { font-size: 13px; font-weight: 600; color: #9aa5b6; white-space: nowrap; }
+  .progress-bar { flex: 1; height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+  .progress-bar .fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #4ade80);
+    border-radius: 4px; transition: width 0.4s ease;
+  }
+  .progress-wrap .count { font-size: 13px; font-weight: 700; color: #38bdf8; min-width: 50px; text-align: right; }
+
+  .section {
+    background: #1b2028; border: 1px solid #2e3646; border-radius: 10px;
+    padding: 26px 30px; margin-bottom: 22px; transition: border-color 0.2s;
+  }
+  .section:hover { border-color: #3b4a5e; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section h2 .icon { font-size: 20px; }
+  .section h3 { font-size: 15px; font-weight: 700; color: #e2e8f0; margin-top: 24px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #2e3646; }
+  .section h4 { font-size: 14px; font-weight: 700; color: #cbd5e1; margin-top: 18px; margin-bottom: 6px; }
+
+  p { margin-bottom: 10px; color: #b0b8c4; }
+  strong { color: #f0f3f8; }
+  a { color: #38bdf8; text-decoration: none; border-bottom: 1px dotted #38bdf8; transition: color 0.2s; }
+  a:hover { color: #7dd3fc; border-bottom-style: solid; }
+  ul, ol { margin-left: 22px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; color: #b0b8c4; }
+  li strong { color: #f0f3f8; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 16px 0; font-size: 13px; }
+  th {
+    background: #12151b; color: #7dd3fc; font-weight: 600; text-align: left;
+    padding: 9px 12px; border: 1px solid #2e3646; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  td { padding: 9px 12px; border: 1px solid #2e3646; vertical-align: top; color: #b0b8c4; }
+  tr:nth-child(even) td { background: #181d26; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.3px; }
+  .pill-met { background: #0f2e1f; color: #4ade80; border: 1px solid #166534; }
+  .pill-partial { background: #2e2a0f; color: #fbbf24; border: 1px solid #854d0e; }
+  .pill-notmet { background: #2e0f0f; color: #f87171; border: 1px solid #991b1b; }
+
+  pre {
+    background: #0d1117; color: #c9d1d9;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px; line-height: 1.5;
+    padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; margin: 10px 0 14px 0;
+    border: 1px solid #21262d; position: relative;
+  }
+  pre .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: #21262d; color: #8b949e;
+    border: 1px solid #30363d; border-radius: 4px;
+    font-size: 11px; padding: 3px 8px;
+    cursor: pointer; font-family: 'Segoe UI', sans-serif;
+    transition: all 0.2s;
+  }
+  pre .copy-btn:hover { background: #30363d; color: #c9d1d9; }
+  pre .copy-btn.copied { background: #166534; color: #4ade80; border-color: #166534; }
+  code { font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; }
+  p code, li code, td code {
+    background: #21262d; color: #79c0ff;
+    padding: 2px 6px; border-radius: 4px; font-size: 12.5px;
+  }
+
+  .diagram {
+    background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+    padding: 16px 18px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px; line-height: 1.3;
+    white-space: pre; overflow-x: auto;
+    margin: 10px 0 14px 0; color: #8b949e;
+  }
+
+  .priority-list { counter-reset: priority; list-style: none; margin-left: 0; padding-left: 0; }
+  .priority-list li {
+    counter-increment: priority;
+    padding: 8px 12px 8px 42px;
+    position: relative; border-bottom: 1px solid #21262d; color: #b0b8c4;
+  }
+  .priority-list li:last-child { border-bottom: none; }
+  .priority-list li::before {
+    content: counter(priority);
+    position: absolute; left: 10px; top: 8px;
+    background: #1a2936; color: #38bdf8;
+    font-weight: 700; font-size: 12px;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #2e3646;
+  }
+
+  .callout {
+    border-left: 4px solid #38bdf8; background: #0f1a24;
+    padding: 12px 16px; margin: 14px 0; border-radius: 0 6px 6px 0;
+  }
+  .callout.warn { border-left-color: #fbbf24; background: #1a1a0f; }
+  .callout.danger { border-left-color: #f87171; background: #1a0f0f; }
+  .callout strong { color: #7dd3fc; }
+  .callout.warn strong { color: #fbbf24; }
+  .callout.danger strong { color: #f87171; }
+
+  .resources { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+  .resource-card {
+    background: #12151b; border: 1px solid #2e3646;
+    border-radius: 8px; padding: 14px 16px; transition: all 0.2s;
+  }
+  .resource-card:hover { border-color: #38bdf8; background: #161c26; }
+  .resource-card .rc-title { font-size: 13px; font-weight: 700; color: #f0f3f8; margin-bottom: 4px; }
+  .resource-card .rc-desc { font-size: 12px; color: #8b949e; margin-bottom: 6px; }
+  .resource-card a { font-size: 12px; font-weight: 600; }
+
+  .footer { text-align: center; color: #4b5563; font-size: 12px; padding: 20px 0 10px; }
+
+  @media (max-width: 600px) {
+    body { padding: 14px 10px 60px; }
+    .section { padding: 18px 16px; }
+    .header { padding: 20px; }
+    .header h1 { font-size: 20px; }
+    .diagram { font-size: 9px; }
+    pre { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>Ben — Typing Assistant Feedback</h1>
+    <p>IB Computer Science IA · Client: IB Diploma Student · Python + Trie + BK-Tree + JSON</p>
+    <span class="badge">● Interactive Review</span>
+  </div>
+
+  <nav class="nav">
+    <a href="#sc">Success Criteria</a>
+    <a href="#done">Done Well</a>
+    <a href="#fixes">Critical Fixes</a>
+    <a href="#bugs">Bugs Found</a>
+    <a href="#oop">OOP Refactor</a>
+    <a href="#resources">Resources</a>
+    <a href="#priority">Priority</a>
+  </nav>
+
+  <div class="progress-wrap">
+    <span class="label">Completion</span>
+    <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+    <span class="count" id="progressCount">0 / 10</span>
+  </div>
+
+  <!-- SUCCESS CRITERIA COVERAGE -->
+  <div class="section" id="sc">
+    <h2><span class="icon">📊</span> Success Criteria Coverage</h2>
+
+    <div class="callout danger">
+      <strong>⚠ Critical:</strong> Your <code>Criteria A.docx</code> has 10 blank success criteria. Without SCs, nothing in Criterion B, C, or D can be marked. This is the top priority.
+    </div>
+
+    <p>Below is the coverage table based on the sample SCs from your feedback document (pages 16–17), which are the ones you should adopt. The engine code you provided has been assessed against them.</p>
+
+    <table>
+      <thead>
+        <tr><th style="width:32%;">SC</th><th style="width:16%;">Status</th><th>Gap</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SC1 (Type continuously without interruption)</td><td><span class="pill pill-met">Met</span></td><td><code>Trie.search_prefix()</code> returns suggestions on each keystroke</td></tr>
+        <tr><td>SC2 (Suggest top 3 most likely next words)</td><td><span class="pill pill-met">Met</span></td><td><code>search_prefix()</code> sorts by frequency and returns top 3</td></tr>
+        <tr><td>SC3 (Update/store word frequencies after each session)</td><td><span class="pill pill-partial">Partial</span></td><td>JSON load exists, but save logic is missing from <code>engine.py</code></td></tr>
+        <tr><td>SC4 (Suggestions in under 0.5 seconds)</td><td><span class="pill pill-met">Met</span></td><td>Trie lookup is O(prefix length), well under 0.5s</td></tr>
+        <tr><td>SC5 (Add custom vocabulary to personal dictionary)</td><td><span class="pill pill-notmet">Not met</span></td><td>No method to add user words; <code>load_words()</code> is read-only</td></tr>
+        <tr><td>SC6 (Prefix-based searching)</td><td><span class="pill pill-met">Met</span></td><td><code>Trie.search_prefix()</code> walks the prefix character by character</td></tr>
+        <tr><td>SC7 (Correct common typing errors)</td><td><span class="pill pill-met">Met</span></td><td><code>Corrector.correct()</code> uses BK-Tree + Levenshtein + shorthand map</td></tr>
+        <tr><td>SC8 (Works fully offline)</td><td><span class="pill pill-met">Met</span></td><td>All data is local JSON; no network calls anywhere</td></tr>
+        <tr><td>SC9 (Clean, non-distracting interface)</td><td><span class="pill pill-partial">Partial</span></td><td>Overlay UI design is in Criterion C, but no implementation code provided</td></tr>
+        <tr><td>SC10 (Adapts over time via writing history)</td><td><span class="pill pill-partial">Partial</span></td><td>Frequency data is used, but no session-to-session learning loop shown</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <strong>⚠ 5 of 10 SCs fully met.</strong> SC5 (custom vocabulary) and SC10 (adaptive learning) need explicit methods. SC3 needs a save function. SC9 needs the overlay code.
+    </div>
+  </div>
+
+  <!-- DONE WELL -->
+  <div class="section" id="done">
+    <h2><span class="icon">✅</span> Done Well</h2>
+    <ul>
+      <li><strong>Trie implementation is correct</strong> — <code>TrieNode</code> has <code>children</code>, <code>is_end</code>, and <code>frequency</code>; <code>Trie.insert()</code> walks the word character by character and creates nodes on demand</li>
+      <li><strong><code>search_prefix()</code> returns top 3 by frequency</strong> — sorts results in descending frequency and slices <code>[:3]</code>, exactly matching SC2</li>
+      <li><strong>Recursive <code>_collect()</code></strong> — clean depth-first traversal that gathers all words under a prefix node</li>
+      <li><strong>BK-Tree (Burkhard-Keller Tree) for fuzzy matching</strong> — this is a real, non-trivial data structure. Most IA students brute-force Levenshtein across the entire dictionary. You used a metric tree that prunes branches using the triangle inequality. This is <em>excellent</em> evidence for Criterion D</li>
+      <li><strong>Adaptive threshold in <code>Corrector.correct()</code></strong> — 1 edit for words ≤ 6 chars, 2 edits for longer words. This is a smart heuristic that reduces false positives</li>
+      <li><strong>Frequency-based tie-breaking</strong> — when two correction candidates are equally close, you prefer the more common word. This is what real spell-checkers do</li>
+      <li><strong>Shorthand map is comprehensive</strong> — 100+ entries covering modern chat abbreviations (<code>tbh</code>, <code>idk</code>, <code>iykyk</code>, <code>fyp</code>)</li>
+      <li><strong>Skip short words in correction</strong> — <code>if len(word) &lt; 4: return word</code> prevents false corrections on 3-letter words where Levenshtein would match too many candidates</li>
+      <li><strong>Component diagram and data model are strong</strong> — Criterion C clearly shows the JSON schema, Trie node structure, and in-memory hash maps</li>
+      <li><strong>Testing table covers valid/invalid/extreme</strong> — 9+ test cases across SCs with expected outcomes</li>
+    </ul>
+  </div>
+
+  <!-- CRITICAL FIXES -->
+  <div class="section" id="fixes">
+    <h2><span class="icon">🔧</span> Critical Fixes Needed</h2>
+
+    <!-- SC3 -->
+    <h3>SC3 — Add a Save Function for Frequencies</h3>
+    <p><strong>What's wrong now:</strong> <code>engine.py</code> loads word frequencies from a file and uses them to rank suggestions, but there is no code that writes the updated frequencies <em>back</em> to disk. Every session starts from the same baseline — the system never learns.</p>
+    <p><strong>Why it matters:</strong> SC3 says the system must "update and store word frequencies after each session". SC10 (adaptive learning) depends on this too. Without saving, the program has no memory.</p>
+    <p><strong>What to add:</strong> A <code>save()</code> method on your persistence layer:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def save_data(self, path="data.json"):
+    import json
+    payload = {
+        "frequencies": self.word_frequency,
+        "bigrams": self.bigrams,
+        "shorthand": self.shorthand,
+        "settings": {"max_suggestions": 3, "min_prefix": 2}
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=4)</code></pre>
+    <p><strong>How to test it:</strong> Type three sentences, close the app, reopen it. The frequencies of the words you used most should now rank higher in suggestions.</p>
+
+    <!-- SC5 -->
+    <h3>SC5 — Add Custom Vocabulary Support</h3>
+    <p><strong>What's wrong now:</strong> There is no method to add a user's own word to the dictionary. The <code>load_words()</code> method only reads an existing file, and <code>Trie.insert()</code> is never exposed to the UI layer.</p>
+    <p><strong>Why it matters:</strong> SC5 says "the system allows the user to add custom vocabulary to a personal dictionary". This is the feature that makes the tool personalised — the client can add subject-specific terms like "photosynthesis" or "Raskolnikov" and get suggestions for them next time.</p>
+    <p><strong>What to add:</strong> A public method that inserts into the Trie and bumps the frequency:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def add_custom_word(self, word):
+    word = word.strip().lower()
+    if not word:
+        return
+    self.trie.insert(word, frequency=1)
+    self.word_frequency[word] = self.word_frequency.get(word, 0) + 1
+    self.all_words.add(word)
+    self.correction_tree.add(word)
+    # Persist immediately so it survives a crash
+    self.save_data()</code></pre>
+    <p><strong>How to test it:</strong> Add <code>"Raskolnikov"</code>. Type <code>ras</code> — the suggestion should appear in the top 3.</p>
+
+    <!-- SC10 -->
+    <h3>SC10 — Make the System Actually Adapt</h3>
+    <p><strong>What's wrong now:</strong> Frequencies are read from the file at startup, but nothing increments them during typing. The system is <em>static</em> within a session — it never learns as the user writes.</p>
+    <p><strong>Why it matters:</strong> SC10 says "the system adapts over time by improving suggestions based on the user's writing history". Without a live update, the suggestions are frozen at whatever the initial file contained.</p>
+    <p><strong>What to add:</strong> Call an update every time a word is completed (space, punctuation, or newline):</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def update_frequency(self, word):
+    word = word.strip().lower()
+    if not word:
+        return
+    self.word_frequency[word] = self.word_frequency.get(word, 0) + 1
+    # Re-insert with the new frequency so ranking picks it up
+    self.trie.insert(word, self.word_frequency[word])
+
+def update_bigram(self, prev_word, next_word):
+    if prev_word not in self.bigrams:
+        self.bigrams[prev_word] = {}
+    self.bigrams[prev_word][next_word] = self.bigrams[prev_word].get(next_word, 0) + 1</code></pre>
+    <p><strong>How to test it:</strong> Type the word "however" five times in a session. Then type <code>how</code> — "however" should now rank above other "how-" words.</p>
+
+    <!-- SC9 -->
+    <h3>SC9 — Implement the Overlay UI</h3>
+    <p><strong>What's wrong now:</strong> Your Criterion C wireframe shows a beautiful overlay with slot 1 highlighted and slots 2–3 below it. Your pseudocode describes positioning it near the caret. But there is no implementation code for this in the file you provided.</p>
+    <p><strong>Why it matters:</strong> SC9 says "the system displays suggestions in a clean, non-distracting interface". The overlay <em>is</em> the interface. Without it, nothing is visible to the user.</p>
+    <p><strong>What to add:</strong> A <code>SuggestionOverlay</code> class using Tkinter's <code>overrideredirect(True)</code> and <code>attributes("-topmost", True)</code>:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import tkinter as tk
+
+class SuggestionOverlay:
+    def __init__(self, root):
+        self.win = tk.Toplevel(root)
+        self.win.overrideredirect(True)
+        self.win.attributes("-topmost", True)
+        self.win.configure(bg="#1b2028")
+        self.labels = []
+        for i in range(3):
+            lbl = tk.Label(self.win, text="", font=("Segoe UI", 11),
+                           bg="#1b2028", fg="#c9d1d9", anchor="w", padx=8, pady=4)
+            lbl.pack(fill="x")
+            self.labels.append(lbl)
+
+    def show(self, suggestions, x, y):
+        for i, lbl in enumerate(self.labels):
+            if i < len(suggestions):
+                lbl.config(text=f"{i+1}. {suggestions[i]}")
+            else:
+                lbl.config(text="")
+        self.win.geometry(f"+{x}+{y}")
+        self.win.deiconify()
+
+    def hide(self):
+        self.win.withdraw()</code></pre>
+    <p><strong>How to test it:</strong> Type in Notepad — the overlay should appear below the caret with three suggestions and hide when the buffer is cleared.</p>
+
+    <!-- Global Hook -->
+    <h3>Global Input Capture — Not in the Code Provided</h3>
+    <p><strong>What's wrong now:</strong> Your Criterion B says the first component is a "Global Input Capture Module" that "detects and intercepts keystrokes system-wide using a Windows keyboard hook". But no hook code appears in <code>engine.py</code>.</p>
+    <p><strong>Why it matters:</strong> Without the global hook, the tool only works inside its own window — which defeats the entire purpose of a typing assistant. The client needs it to work in Word, Google Docs, and browsers.</p>
+    <p><strong>What to add:</strong> Use the <code>keyboard</code> library to capture keystrokes globally:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import keyboard
+
+def start_capture(engine, overlay):
+    buffer = []
+
+    def on_event(event):
+        if event.event_type != "down":
+            return
+        key = event.name
+        if len(key) == 1 and key.isalpha():
+            buffer.append(key)
+            prefix = "".join(buffer)
+            suggestions = engine.search_prefix(prefix)
+            overlay.show(suggestions, x=100, y=200)
+        elif key in ("space", "enter", "tab"):
+            if buffer:
+                word = "".join(buffer)
+                engine.update_frequency(word)
+            buffer.clear()
+            overlay.hide()
+        elif key == "backspace":
+            if buffer:
+                buffer.pop()
+
+    keyboard.hook(on_event)</code></pre>
+    <p><strong>How to test it:</strong> Run the app, open Notepad, start typing — suggestions should appear in the overlay above other windows.</p>
+
+    <!-- Fix missing self -->
+    <h3>Missing <code>self.</code> Prefixes — Code Will Not Run</h3>
+    <p><strong>What's wrong now:</strong> In the PDF snapshot of <code>engine.py</code>, every line inside <code>TrieNode.__init__</code>, <code>Trie.__init__</code>, and every other method is missing the <code>self.</code> prefix. For example:</p>
+    <pre><code>class Trie:
+def __init__(self):
+self.root = TrieNode()    # missing indent + self</code></pre>
+    <p><strong>Why it matters:</strong> This is a fatal scope bug. Running this code raises <code>AttributeError</code> or <code>NameError</code> immediately. It may just be a PDF conversion artefact, but double-check the actual source file.</p>
+    <p><strong>What to do:</strong> Every method body must be indented, and every instance variable needs <code>self.</code>:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word, frequency=0):
+        node = self.root
+        for letter in word:
+            if letter not in node.children:
+                node.children[letter] = TrieNode()
+            node = node.children[letter]
+        node.is_end = True
+        node.frequency = frequency</code></pre>
+
+    <!-- load methods incomplete -->
+    <h3><code>load_from_file()</code> and <code>load_words()</code> Are Incomplete</h3>
+    <p><strong>What's wrong now:</strong> Both methods read lines from a file but the loop body ends without ever calling <code>self.insert()</code> or <code>self.correction_tree.add()</code>. The word data is never actually loaded into the data structures.</p>
+    <p><strong>What to add:</strong></p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def load_from_file(self, filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    total = len(lines)
+    for index, line in enumerate(lines):
+        word = line.strip()
+        if word:
+            frequency = total - index
+            self.insert(word, frequency)
+
+def load_words(self, filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    total = len(lines)
+    for index, line in enumerate(lines):
+        word = line.strip()
+        if word:
+            self.words_by_length.setdefault(len(word), []).append(word)
+            self.all_words.add(word)
+            self.word_frequency[word] = total - index
+            self.correction_tree.add(word)</code></pre>
+    <p><strong>How to test it:</strong> Load a 100-word file and print <code>len(self.all_words)</code> — should return 100, not 0.</p>
+
+    <!-- levenshtein missing -->
+    <h3><code>Corrector.__init__()</code> References Undefined Functions</h3>
+    <p><strong>What's wrong now:</strong> <code>Corrector</code> creates a BK-Tree with <code>BKTree(self.levenshtein, self.levenshtein_bounded)</code> — but neither <code>self.levenshtein</code> nor <code>self.levenshtein_bounded</code> is defined anywhere in the class or module.</p>
+    <p><strong>Why it matters:</strong> This line raises <code>AttributeError</code> the moment a <code>Corrector</code> object is created. The entire correction module is unusable until this is fixed.</p>
+    <p><strong>What to add:</strong> Define the two distance functions at module level:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def levenshtein(a, b):
+    if len(a) < len(b):
+        a, b = b, a
+    if not b:
+        return len(a)
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        curr = [i]
+        for j, cb in enumerate(b, 1):
+            curr.append(min(
+                prev[j] + 1,
+                curr[j - 1] + 1,
+                prev[j - 1] + (ca != cb)
+            ))
+        prev = curr
+    return prev[-1]
+
+def levenshtein_bounded(a, b, bound):
+    # Early exit if length difference already exceeds bound
+    if abs(len(a) - len(b)) > bound:
+        return bound + 1
+    return levenshtein(a, b)</code></pre>
+
+    <!-- BK-tree search detail -->
+    <h3>BK-Tree <code>search()</code> — Undocumented Tuple Assumption</h3>
+    <p><strong>What's wrong now:</strong> In <code>BKTree.search()</code>, you push <code>current_children[edge_distance]</code> onto a stack that unpacks tuples as <code>(current_word, current_children)</code>. This works because <code>add()</code> stored <code>(word, {})</code> — but the code is fragile and looks like a bug to a marker.</p>
+    <p><strong>What to add:</strong> A comment explaining the tuple structure, and explicit variable names:</p>
+    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code># Each child is stored as (word, child_dict).
+# The stack is a list of (word, child_dict) tuples.
+stack = [(self.root_word, self.children)]
+while stack:
+    current_word, current_children = stack.pop()
+    # ... distance checks ...
+    for edge_distance, child_tuple in current_children.items():
+        if low &lt;= edge_distance &lt;= high:
+            stack.append(child_tuple)</code></pre>
+    <p>Same behaviour, but it reads as intentional rather than accidental.</p>
+  </div>
+
+  <!-- BUGS -->
+  <div class="section" id="bugs">
+    <h2><span class="icon">🐛</span> Bugs Found in the Code</h2>
+
+    <table>
+      <thead>
+        <tr><th style="width:24%;">Location</th><th>Problem</th><th style="width:30%;">Suggested Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>All classes in <code>engine.py</code></td>
+          <td>Missing <code>self.</code> prefixes on every instance variable — code will not run</td>
+          <td>Indent method bodies and add <code>self.</code> to every attribute</td>
+        </tr>
+        <tr>
+          <td><code>Trie.load_from_file()</code></td>
+          <td>Loop body ends after <code>frequency = total - index</code>; <code>self.insert()</code> is never called</td>
+          <td>Move <code>self.insert(word, frequency)</code> inside the loop</td>
+        </tr>
+        <tr>
+          <td><code>Corrector.load_words()</code></td>
+          <td>Reads lines but never adds to <code>all_words</code>, <code>word_frequency</code>, or <code>correction_tree</code></td>
+          <td>Add the four insert calls inside the loop</td>
+        </tr>
+        <tr>
+          <td><code>Corrector.__init__()</code></td>
+          <td>Calls <code>BKTree(self.levenshtein, self.levenshtein_bounded)</code> but neither function is defined</td>
+          <td>Define both functions at module level</td>
+        </tr>
+        <tr>
+          <td><code>BKTree.search()</code></td>
+          <td>Relies on undocumented tuple shape <code>(word, dict)</code> being pushed to the stack</td>
+          <td>Add a comment and unpack explicitly</td>
+        </tr>
+        <tr>
+          <td><code>frequency = total - index</code></td>
+          <td>Assumes the word file is pre-sorted by frequency; if it's alphabetical, rankings are wrong</td>
+          <td>Either sort the file by frequency before loading, or read frequency values from a column</td>
+        </tr>
+        <tr>
+          <td>No <code>save()</code> method anywhere</td>
+          <td>Frequencies are never persisted back to JSON after a session</td>
+          <td>Add <code>save_data()</code> and call it on app exit</td>
+        </tr>
+        <tr>
+          <td>Global input hook missing</td>
+          <td>The "Global Input Capture Module" from Criterion B has no implementation</td>
+          <td>Use <code>keyboard.hook()</code> to capture system-wide keystrokes</td>
+        </tr>
+        <tr>
+          <td>Overlay UI not implemented</td>
+          <td>SC9's overlay is described in pseudocode but no class exists</td>
+          <td>Create a Tkinter <code>SuggestionOverlay</code> class</td>
+        </tr>
+        <tr>
+          <td>No custom-word method</td>
+          <td>SC5 requires adding user vocabulary, but no public method exists</td>
+          <td>Add <code>add_custom_word()</code></td>
+        </tr>
+        <tr>
+          <td>No live frequency updates</td>
+          <td>Frequencies are static after load; SC10 cannot be demonstrated</td>
+          <td>Call <code>update_frequency(word)</code> on every completed word</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- OOP REFACTOR -->
+  <div class="section" id="oop">
+    <h2><span class="icon">🏗️</span> OOP Refactor — Why and How</h2>
+
+    <p>Your engine already uses proper classes — <code>TrieNode</code>, <code>Trie</code>, <code>BKTree</code>, <code>Corrector</code>. That's genuinely strong OOP for an IA. But there is no <em>UI layer</em> class, no <em>persistence</em> class, and no <em>capture</em> class — so the six-component decomposition from Criterion B isn't reflected in the code structure.</p>
+
+    <h3>Current Structure (Engine Only)</h3>
+    <div class="diagram">+-------------+    +-------------+    +-------------+
+|  TrieNode   |<---|    Trie     |    |   BKTree    |
++-------------+    +-------------+    +-------------+
+                   | + insert()  |    | + add()     |
+                   | + search_   |    | + search()  |
+                   |   prefix()  |    +------+------+
+                   | + _collect()|           |
+                   | + load_from_|           | uses
+                   |   file()    |           v
+                   +------+------+    +-------------+
+                          |           |  Corrector  |
+                          | uses      +-------------+
+                          v           | + correct() |
+                   (nothing)          | + load_words|
+                                      +-------------+</div>
+
+    <p><strong>Problem:</strong> The engine has no way to receive input and no way to display output. SC1, SC9, and SC10 cannot be demonstrated with this code alone.</p>
+
+    <h3>Proposed Structure (Six Components from Criterion B)</h3>
+    <div class="diagram">+-----------------------+       +----------------------+
+| GlobalInputCapture    |       |  SuggestionOverlay   |
++-----------------------+       +----------------------+
+| - keyboard hook       |       | - Toplevel window    |
+| - buffer: list[str]   |       | - 3 label slots      |
++-----------------------+       +----------+-----------+
+| + start()             |                  ^
+| + stop()              |                  |
++----------+------------+                  |
+           |                               |
+           | pushes prefix                 | shows
+           v                               |
++-----------------------+       +----------+-----------+
+|  SuggestionEngine     |------>|     Ranking          |
+|  (wraps Trie)         |       |  (freq + bigrams)    |
++-----------------------+       +----------------------+
+           |                               ^
+           |                               |
+           v                               |
++-----------------------+       +----------+-----------+
+|  ErrorCorrection      |       |   JSONPersistence    |
+|  (wraps Corrector)    |<------|  load/save data.json |
++-----------------------+       +----------------------+</div>
+
+    <h3>What Each Class Does</h3>
+    <table>
+      <thead>
+        <tr><th style="width:26%;">Class</th><th>Responsibility</th><th style="width:22%;">Imports</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>GlobalInputCapture</code></td><td>Hook keystrokes, maintain buffer, fire callbacks</td><td><code>keyboard</code></td></tr>
+        <tr><td><code>SuggestionEngine</code></td><td>Wrap <code>Trie</code>; expose <code>get(prefix)</code></td><td><code>engine</code> only</td></tr>
+        <tr><td><code>Ranking</code></td><td>Score candidates by frequency + bigram context</td><td>none (pure logic)</td></tr>
+        <tr><td><code>ErrorCorrection</code></td><td>Wrap <code>Corrector</code>; expand shorthand, fix typos</td><td>none (pure logic)</td></tr>
+        <tr><td><code>SuggestionOverlay</code></td><td>Top-most Tkinter window with 3 slots</td><td><code>tkinter</code></td></tr>
+        <tr><td><code>JSONPersistence</code></td><td>Load and save <code>data.json</code></td><td><code>json</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>UML Class Diagram (for Criterion C)</h3>
+    <div class="diagram">+--------------------------+
+|   GlobalInputCapture     |
++--------------------------+
+| - buffer: list[str]      |
+| - engine: SuggestionEngine|
+| - overlay: SuggestionOverlay|
++--------------------------+
+| + start()                |
+| + stop()                 |
+| + on_key(event)          |
++------------+-------------+
+             |
+             | uses
+             v
++--------------------------+     +--------------------------+
+|   SuggestionEngine       |---->|        Ranking           |
++--------------------------+     +--------------------------+
+| - trie: Trie             |     | - freq_map: dict         |
+| - ranker: Ranking        |     | - bigram_map: dict       |
++--------------------------+     +--------------------------+
+| + get(prefix) -> list    |     | + rank(candidates)       |
+| + add_custom_word(word)  |     | + update(word)           |
++------------+-------------+     +--------------------------+
+             |
+             | uses
+             v
++--------------------------+     +--------------------------+
+|   ErrorCorrection        |     |    SuggestionOverlay     |
++--------------------------+     +--------------------------+
+| - corrector: Corrector   |     | - window: Toplevel       |
++--------------------------+     | - slots: list[Label]     |
+| + check(word) -> str     |     +--------------------------+
++--------------------------+     | + show(suggestions, x,y) |
+                                 | + hide()                 |
++--------------------------+     +--------------------------+
+|    JSONPersistence       |
++--------------------------+
+| - path: Path             |
++--------------------------+
+| + load() -> dict         |
+| + save(data: dict)       |
++--------------------------+</div>
+
+    <h3>Refactor Steps</h3>
+    <ol>
+      <li>Wrap <code>Trie</code> in a <code>SuggestionEngine</code> facade that also holds the ranker and corrector</li>
+      <li>Create <code>GlobalInputCapture</code> using <code>keyboard.hook()</code></li>
+      <li>Create <code>SuggestionOverlay</code> as a Tkinter <code>Toplevel</code></li>
+      <li>Create <code>JSONPersistence</code> with <code>load()</code> and <code>save()</code></li>
+      <li>Wire them together in <code>main.py</code> — one file that just imports and starts the capture</li>
+      <li>Add unit tests for <code>SuggestionEngine.get()</code> and <code>ErrorCorrection.check()</code></li>
+    </ol>
+
+    <h3>Why This Helps</h3>
+    <ul>
+      <li><strong>Testability</strong> — you can write <code>assert engine.get("auth") == ["author", "authority", "authentic"]</code> without launching anything</li>
+      <li><strong>Criterion B match</strong> — your six components finally appear as six classes</li>
+      <li><strong>Criterion C</strong> — the UML diagram becomes natural</li>
+      <li><strong>Criterion D</strong> — you can show excerpts of each class and justify the separation</li>
+    </ul>
+  </div>
+
+  <!-- OTHER IMPROVEMENTS -->
+  <div class="section">
+    <h2><span class="icon">✨</span> Other Improvements</h2>
+    <ul>
+      <li><strong>Write 3+ unit tests</strong> — Criterion D requires valid, extreme, and invalid data. Test <code>Trie.insert()</code>, <code>search_prefix()</code>, and <code>Corrector.correct()</code></li>
+      <li><strong>Time the suggestion pipeline</strong> — print <code>time.perf_counter()</code> delta to prove SC4 (&lt;0.5s)</li>
+      <li><strong>Record a video demo</strong> — show typing in Word, shorthand expansion, offline mode, custom word addition</li>
+      <li><strong>Acknowledge any LLM use</strong> in comments and in Criterion D documentation</li>
+      <li><strong>Redraw the Gantt chart manually</strong> — the AI-generated one in Criterion B will lose marks</li>
+      <li><strong>Sort your word list by frequency</strong> before loading, or read a frequency column, so <code>total - index</code> produces meaningful rankings</li>
+    </ul>
+  </div>
+
+  <!-- RESOURCES -->
+  <div class="section" id="resources">
+    <h2><span class="icon">📚</span> Useful Resources</h2>
+    <div class="resources">
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion A</div>
+        <div class="rc-desc">Problem specification guidance</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionA.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion B</div>
+        <div class="rc-desc">Planning &amp; decomposition</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionB.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion C</div>
+        <div class="rc-desc">System overview &amp; UML</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionC.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion D</div>
+        <div class="rc-desc">Development &amp; testing</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionD.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">IB Criterion E</div>
+        <div class="rc-desc">Evaluation &amp; improvements</div>
+        <a href="https://mr-ellis.github.io/School/ebooks/CriterionE.pdf" target="_blank" rel="noopener">Open PDF →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">BK-Tree Explained</div>
+        <div class="rc-desc">Real article on the metric tree you used</div>
+        <a href="https://blog.notdot.net/2007/4/Damn-Cool-Algorithms-Part-1-BK-Trees" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Levenshtein Distance</div>
+        <div class="rc-desc">Reference for the edit-distance algorithm</div>
+        <a href="https://en.wikipedia.org/wiki/Levenshtein_distance" target="_blank" rel="noopener">Read →</a>
+      </div>
+      <div class="resource-card">
+        <div class="rc-title">Python <code>keyboard</code> library</div>
+        <div class="rc-desc">Global key hook for Windows</div>
+        <a href="https://pypi.org/project/keyboard/" target="_blank" rel="noopener">View →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIORITY -->
+  <div class="section" id="priority">
+    <h2><span class="icon">🎯</span> Priority Order</h2>
+    <ol class="priority-list">
+      <li>Fix the missing <code>self.</code> prefixes — the code does not run as written</li>
+      <li>Fix <code>load_from_file()</code> and <code>load_words()</code> — move <code>self.insert()</code> and <code>correction_tree.add()</code> inside the loops</li>
+      <li>Define <code>levenshtein()</code> and <code>levenshtein_bounded()</code> so <code>Corrector.__init__()</code> works</li>
+      <li>Add <code>save_data()</code> to persist frequencies (SC3)</li>
+      <li>Add <code>add_custom_word()</code> (SC5)</li>
+      <li>Add <code>update_frequency()</code> for live learning (SC10)</li>
+      <li>Implement the global input hook with <code>keyboard.hook()</code></li>
+      <li>Implement the <code>SuggestionOverlay</code> Tkinter window (SC9)</li>
+      <li>Write Criterion A completely — client, problem, existing solutions, context, 10 SCs</li>
+      <li>Redraw the Gantt chart manually and add sub-tasks to Criterion B</li>
+    </ol>
+    <div class="callout">
+      Ben, the algorithms in <code>engine.py</code> are genuinely impressive — Trie, BK-Tree, Levenshtein, adaptive thresholds. That is far beyond what most IA students attempt. Your Criterion C diagrams and testing table are also strong. The two blockers are: <strong>(1) Criterion A is empty</strong>, and <strong>(2) the code won't run without the <code>self.</code> fixes and the missing <code>levenshtein()</code> functions</strong>. Fix those first, then wire the six components together.
+    </div>
+  </div>
+
+  <div class="footer">IB Computer Science IA · Ben · Typing Assistant</div>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.parentElement;
+    const code = pre.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    }).catch(() => {
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  const checkboxes = document.querySelectorAll('#fixList input[type="checkbox"]');
+  const progressFill = document.getElementById('progressFill');
+  const progressCount = document.getElementById('progressCount');
+  const totalTasks = 10;
+
+  function updateProgress() {
+    let checked = 0;
+    checkboxes.forEach(cb => { if (cb.checked) checked++; });
+    const done = checked;
+    const pct = Math.min((done / totalTasks) * 100, 100);
+    progressFill.style.width = pct + '%';
+    progressCount.textContent = done + ' / ' + totalTasks;
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      const li = e.target.closest('li');
+      if (e.target.checked) {
+        li.classList.add('done');
+      } else {
+        li.classList.remove('done');
+      }
+      updateProgress();
+    });
+    const li = cb.closest('li');
+    li.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
