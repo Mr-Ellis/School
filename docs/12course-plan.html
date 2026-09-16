@@ -116,10 +116,11 @@
       color: #a13232;
     }
 
+    /* ===== Week grid with sub-rows ===== */
     .week-grid {
       display: grid;
-      grid-template-columns: 55px 90px 1.5fr 1.2fr;
-      gap: 0.4rem 1rem;
+      grid-template-columns: 85px 90px 2fr 1.4fr;
+      gap: 0.25rem 1rem;
       font-size: 0.9rem;
       padding: 0.5rem 0;
     }
@@ -128,22 +129,63 @@
       color: #0b2a4a;
       border-bottom: 2px solid #e2ebf3;
       padding-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
-    .week-grid .week-item {
-      padding: 0.3rem 0;
-      border-bottom: 1px solid #f0f4fb;
+    /* week divider row */
+    .week-grid .week-header {
+      grid-column: 1 / -1;
+      font-weight: 700;
+      color: #0b2a4a;
+      background: #e9eff8;
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      margin-top: 0.8rem;
+      margin-bottom: 0.2rem;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .week-grid .week-item.topic {
+    .week-grid .week-header .dates {
+      font-weight: 500;
+      color: #1f6390;
+      font-size: 0.85rem;
+    }
+    .week-grid .week-header:first-of-type { margin-top: 0; }
+
+    /* session rows */
+    .week-grid .session-level {
+      font-weight: 700;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 20px;
+      text-align: center;
+      align-self: start;
+      margin-top: 0.15rem;
+      white-space: nowrap;
+      justify-self: start;
+    }
+    .week-grid .session-level.sl {
+      background: #dceaf7;
+      color: #13416b;
+    }
+    .week-grid .session-level.hl {
+      background: #f7d9d9;
+      color: #a13232;
+    }
+
+    .week-grid .topic {
       font-weight: 500;
       color: #1a5f87;
+      padding: 0.25rem 0;
     }
-    .week-grid .week-item.topic .code {
+    .week-grid .topic .code {
       font-weight: 700;
       color: #0b2a4a;
       margin-right: 4px;
     }
-    .week-grid .week-item.topic .hl-tag {
-      font-size: 0.65rem;
+    .week-grid .topic .hl-tag {
+      font-size: 0.62rem;
       font-weight: 700;
       color: #a13232;
       background: #f7d9d9;
@@ -151,29 +193,25 @@
       border-radius: 20px;
       margin-left: 6px;
       vertical-align: middle;
+      letter-spacing: 0.3px;
     }
-    .week-grid .week-item.lesson a {
-      color: #b21f1f;
-      text-decoration: none;
-      border-bottom: 1px dotted #b21f1f;
-    }
-    .week-grid .week-item.lesson a:hover {
-      color: #0b2a4a;
-      border-bottom: 2px solid #0b2a4a;
-    }
-    .week-grid .week-item.content {
+    .week-grid .content {
       color: #4a5568;
       font-size: 0.85rem;
+      padding: 0.25rem 0;
     }
+
+    /* special full-width rows */
     .week-grid .break-row {
       grid-column: 1 / -1;
       text-align: center;
       font-weight: 600;
       color: #b8943e;
       background: #f8f4ec;
-      padding: 0.3rem 0;
+      padding: 0.35rem 0;
       border-radius: 8px;
-      margin: 0.2rem 0;
+      margin: 0.6rem 0 0.2rem;
+      font-size: 0.85rem;
     }
     .week-grid .info-row {
       grid-column: 1 / -1;
@@ -181,9 +219,9 @@
       font-weight: 600;
       color: #1f6390;
       background: #e9eff8;
-      padding: 0.3rem 0;
+      padding: 0.35rem 0;
       border-radius: 8px;
-      margin: 0.2rem 0;
+      margin: 0.6rem 0 0.2rem;
       font-size: 0.85rem;
     }
     .week-grid .ia-row {
@@ -192,9 +230,9 @@
       font-weight: 600;
       color: #2d7d46;
       background: #e6f7e6;
-      padding: 0.3rem 0;
+      padding: 0.35rem 0;
       border-radius: 8px;
-      margin: 0.2rem 0;
+      margin: 0.6rem 0 0.2rem;
       font-size: 0.85rem;
     }
 
@@ -248,6 +286,17 @@
     }
     .hl-note i { color: #c0392b; margin-right: 8px; }
 
+    .sl-note {
+      background: #eef4fa;
+      border-left: 5px solid #1f6390;
+      padding: 1rem 1.5rem;
+      border-radius: 0 12px 12px 0;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      color: #13416b;
+    }
+    .sl-note i { color: #1f6390; margin-right: 8px; }
+
     .back-link {
       display: inline-block;
       margin-bottom: 1.5rem;
@@ -260,15 +309,42 @@
       text-decoration: underline;
     }
 
+    /* Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.82rem;
+      color: #4a5568;
+    }
+    .legend .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend .pill .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .legend .pill .swatch.sl { background: #dceaf7; border: 1px solid #9bbcd8; }
+    .legend .pill .swatch.hl { background: #f7d9d9; border: 1px solid #dba8a8; }
+    .legend .pill .swatch.ia { background: #e6f7e6; border: 1px solid #a4d4a4; }
+
     @media (max-width: 768px) {
       body { padding: 1rem; }
       .week-grid {
-        grid-template-columns: 40px 70px 1fr;
-        gap: 0.3rem;
+        grid-template-columns: 70px 1fr;
+        gap: 0.2rem 0.6rem;
         font-size: 0.8rem;
       }
+      .week-grid .header:nth-child(2),
       .week-grid .header:nth-child(4) { display: none; }
-      .week-grid .week-item.content { display: none; }
+      .week-grid .session-level { grid-column: 1; }
+      .week-grid .topic { grid-column: 2; }
+      .week-grid .content { grid-column: 2; font-size: 0.78rem; }
       .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
       .nav .brand { margin-right: 0; }
       .main-title { font-size: 2rem; flex-wrap: wrap; }
@@ -294,7 +370,14 @@
   </div>
   <div class="subhead">
     <i class="fas fa-clock" style="color:#1f7b4d; margin-right: 6px;"></i> 
-    Full Scope & Sequence · ISR 2026–27 · HL/SL
+    Full Scope &amp; Sequence · ISR 2026–27 · HL/SL
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <span class="pill"><span class="swatch sl"></span> SL session — whole class (SL + HL together)</span>
+    <span class="pill"><span class="swatch hl"></span> HL session — HL students only</span>
+    <span class="pill"><span class="swatch ia"></span> IA / consolidation week</span>
   </div>
 
   <!-- ========== TERM 1 – A1 Computer Fundamentals ========== -->
@@ -313,60 +396,173 @@
       For the 2026–27 cohort, this topic is omitted from the Year 12 course plan.
     </div>
 
-    <div class="hl-note" style="margin-bottom: 1.5rem;">
+    <div class="hl-note" style="margin-bottom: 1rem;">
       <i class="fas fa-exclamation-triangle"></i> 
-      <strong>HL Note:</strong> Every HL class between now and Winter Break is dedicated to either 
-      <strong>exam preparation</strong> or the <strong>Internal Assessment</strong>. 
-      The weeks below reflect this priority.
+      <strong>HL Note:</strong> HL students attend all SL sessions plus <strong>2 additional HL sessions</strong> each week. 
+      SL students do not attend HL sessions.
+    </div>
+
+    <div class="sl-note" style="margin-bottom: 1.5rem;">
+      <i class="fas fa-info-circle"></i> 
+      <strong>Session structure:</strong> Each week runs <strong>2 SL sessions</strong> (whole class) + <strong>2 HL sessions</strong> (HL only).
     </div>
 
     <div class="week-grid">
+      <span class="header">Session</span>
       <span class="header">Week</span>
-      <span class="header">Dates</span>
       <span class="header">Topic / Lesson</span>
       <span class="header">Content</span>
 
-      <span class="week-item">1</span>
-      <span class="week-item">Aug 24–28</span>
-      <span class="week-item topic"><span class="code">A1.1.1</span> CPU Architecture · <span class="code">A1.1.2</span> GPU</span>
-      <span class="week-item content">CPU components, registers; GPU role & architecture; AI Strand 2 – Data, Bias & Model Evaluation</span>
+      <!-- ===== Week 1 ===== -->
+      <div class="week-header"><span>Week 1</span><span class="dates">Aug 24–28</span></div>
 
-      <span class="week-item">2</span>
-      <span class="week-item">Aug 31 – Sep 4</span>
-      <span class="week-item topic"><span class="code">A1.1.3</span> GPU (HL) · <span class="code">A1.1.6</span> Pipelining (HL)</span>
-      <span class="week-item content">GPU architecture (HL); multi‑core, pipelining (HL)</span>
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.1</span> CPU Architecture</span>
+      <span class="content" style="display:none;"></span>
+      <span class="content" style="display:none;"></span>
 
-      <span class="week-item">3</span>
-      <span class="week-item">Sep 7–11</span>
-      <span class="week-item topic"><span class="code">A1.1.4</span> Primary Memory · <span class="code">A1.1.5</span> Fetch-Decode-Execute</span>
-      <span class="week-item content">Memory/register interaction; FDE cycle</span>
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.2</span> GPU</span>
 
-      <span class="week-item">4</span>
-      <span class="week-item">Sep 14–18</span>
-      <span class="week-item topic"><span class="code">A1.1.7</span> Secondary Memory · <span class="code">A1.1.8</span> Data Compression</span>
-      <span class="week-item content">SSD/HDD/eMMC, optical, flash; RLE, lossless compression</span>
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.1/A1.1.2</span> HL depth — registers &amp; GPU role; AI Strand 2 – Data, Bias &amp; Model Evaluation</span>
 
-      <span class="week-item">5</span>
-      <span class="week-item">Sep 21–25</span>
-      <span class="week-item topic"><span class="code">A1.1.9</span> Cloud Computing · <span class="code">A1.3.1–5</span> Operating Systems</span>
-      <span class="week-item content">Cloud models; OS functions, scheduling, memory management, resource management</span>
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL extension — AI Strand 2 deep dive</span>
 
-      <span class="week-item">6</span>
-      <span class="week-item">Sep 28 – Oct 2</span>
-      <span class="week-item topic"><span class="code">A1.3.6–7</span> Control Systems · <span class="code">A1.4.1</span> Translation</span>
-      <span class="week-item content">Control systems (sensors, actuators, feedback); compilers/interpreters</span>
+      <!-- ===== Week 2 ===== -->
+      <div class="week-header"><span>Week 2</span><span class="dates">Aug 31 – Sep 4</span></div>
 
-      <span class="week-item">7</span>
-      <span class="week-item">Oct 5–9</span>
-      <span class="week-item topic">Internal Assessment — Criterion D Write-up</span>
-      <span class="week-item content">Documenting development, evidence of testing, algorithmic thinking</span>
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.4</span> Primary Memory</span>
 
-      <span class="week-item">8</span>
-      <span class="week-item">Oct 12–16</span>
-      <span class="week-item topic"><span class="code">A2.1.1</span> Network Characteristics · <span class="code">A2.1.2</span> Digital Infrastructures</span>
-      <span class="week-item content">LAN/WAN/PAN/VPN; cloud, distributed systems</span>
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.5</span> Fetch-Decode-Execute</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.3</span> GPU architecture <span class="hl-tag">HL ONLY</span></span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.6</span> Pipelining &amp; multi-core <span class="hl-tag">HL ONLY</span></span>
+
+      <!-- ===== Week 3 ===== -->
+      <div class="week-header"><span>Week 3</span><span class="dates">Sep 7–11</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.7</span> Secondary Memory</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.8</span> Data Compression</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL depth — memory hierarchy, SSD/HDD/eMMC, optical, flash</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL depth — RLE &amp; lossless compression applications</span>
+
+      <!-- ===== Week 4 ===== -->
+      <div class="week-header"><span>Week 4</span><span class="dates">Sep 14–18</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;"><span class="code" style="font-weight:700;color:#0b2a4a;">A1.1.9</span> Cloud Computing</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Cloud models; consolidation of A1.1.1–A1.1.9</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL retrieval &amp; exam practice — A1.1 block</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL retrieval &amp; exam practice — A1.1 block (continued)</span>
+
+      <!-- ===== Week 5 — OS BLOCK BEGINS ===== -->
+      <div class="week-header" style="background: #dceaf7;"><span>Week 5 — Operating Systems block begins</span><span class="dates">Sep 21–25</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A1.3.1</span> Role of Operating Systems</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Resource management, abstraction of hardware</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A1.3.2</span> Functions of an Operating System</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Nine functions: memory, file, device, scheduling, security, accounting, GUI, virtualisation, networking</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A1.3.5</span> Multitasking &amp; Resource Allocation <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Context switching, resource contention, deadlock (four conditions)</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A1.3.6</span> Control System Components <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Controller, sensors, actuators, transducers</span>
+
+      <!-- ===== Week 6 — OS BLOCK COMPLETES ===== -->
+      <div class="week-header" style="background: #dceaf7;"><span>Week 6 — Operating Systems &amp; Control Systems block completes</span><span class="dates">Sep 28 – Oct 2</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A1.3.3</span> Compare Approaches to Scheduling</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">FCFS, Round Robin, Priority, Multilevel Queue — OS Recruitment Challenge lesson</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A1.3.4</span> Evaluate Polling &amp; Interrupt Handling</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Six considerations; reaching a judgement for a given case</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A1.3.7</span> Control Systems in Real-World Applications <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Autonomous vehicle, traffic signal control, washing machine</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A1.4.1</span> Evaluate Interpreters &amp; Compilers <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Translation processes; trade-offs; performance vs portability</span>
+
+      <!-- ===== Week 7 — IA ===== -->
+      <div class="week-header" style="background: #e6f7e6;"><span>Week 7 — Internal Assessment</span><span class="dates">Oct 5–9</span></div>
+
+      <span class="ia-row">📝 Internal Assessment — Criterion D Write-up</span>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Documenting development, evidence of testing, algorithmic thinking</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">IA Criterion D workshop — student work sessions with teacher feedback</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL retrieval — A1.3.5–A1.4.1 exam-style questions <em>while SL students work on IA</em></span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL IA Criterion D intensive — deeper documentation &amp; testing evidence</span>
+
+      <!-- ===== Week 8 — Consolidation ===== -->
+      <div class="week-header"><span>Week 8 — Consolidation &amp; buffer</span><span class="dates">Oct 12–16</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval — A1.3.1–A1.3.4 exam practice &amp; feedback</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval — A1.3.1–A1.3.4 exam practice &amp; feedback (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL retrieval — A1.3.5–A1.4.1 exam practice &amp; feedback</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL retrieval — A1.3.5–A1.4.1 exam practice &amp; feedback (continued)</span>
 
       <span class="break-row">🍂 Autumn Break: Oct 19–23</span>
+
+      <!-- ===== Week 9 — Networks begin ===== -->
+      <div class="week-header" style="background: #dceaf7;"><span>Week 9 — A2 Networks begins</span><span class="dates">Oct 26–30</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.1.3</span> Network Devices</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Routers, switches, fibre, wireless</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.1.4</span> Network Protocols</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">TCP/IP, HTTP, DNS, DHCP</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL depth — protocol layers, packet structure</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL depth — device behaviour in routed vs switched networks</span>
     </div>
   </div>
 
@@ -380,45 +576,112 @@
     <p style="color:#4a5568; margin-bottom: 1rem;">Students gain understanding of network types, devices, topologies, protocols, addressing, and security. Emphasis on layered communication, packet flow, and architecture comparison.</p>
 
     <div class="week-grid">
+      <span class="header">Session</span>
       <span class="header">Week</span>
-      <span class="header">Dates</span>
       <span class="header">Topic / Lesson</span>
       <span class="header">Content</span>
 
-      <span class="week-item">9</span>
-      <span class="week-item">Oct 26–30</span>
-      <span class="week-item topic"><span class="code">A2.1.3</span> Network Devices · <span class="code">A2.1.4</span> Network Protocols</span>
-      <span class="week-item content">Routers, switches, fibre, wireless; TCP/IP, HTTP, DNS, DHCP</span>
+      <!-- ===== Week 10 ===== -->
+      <div class="week-header"><span>Week 10</span><span class="dates">Nov 2–6</span></div>
 
-      <span class="week-item">10</span>
-      <span class="week-item">Nov 2–6</span>
-      <span class="week-item topic"><span class="code">A2.1.5</span> TCP/IP (HL) · <span class="code">A2.2.1</span> Network Topologies</span>
-      <span class="week-item content">OSI model; star, mesh, hybrid topologies</span>
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.2.1</span> Network Topologies</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Star, mesh, hybrid topologies</span>
 
-      <span class="week-item">11</span>
-      <span class="week-item">Nov 9–13</span>
-      <span class="week-item topic"><span class="code">A2.2.2</span> Servers (HL) · <span class="code">A2.2.3</span> Network Models</span>
-      <span class="week-item content">DNS/DHCP/file/mail/web servers; network models</span>
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Topology comparison workshop</span>
 
-      <span class="week-item">12</span>
-      <span class="week-item">Nov 16–20</span>
-      <span class="week-item topic"><span class="code">A2.2.4</span> Network Segmentation · <span class="code">A2.3.1</span> IP Addressing</span>
-      <span class="week-item content">Segmentation; addressing, packet switching</span>
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.1.5</span> TCP/IP <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">OSI model layers</span>
 
-      <span class="week-item">13</span>
-      <span class="week-item">Nov 23–27</span>
-      <span class="week-item topic"><span class="code">A2.3.2</span> Data Transmission · <span class="code">A2.3.3</span> Packet Switching</span>
-      <span class="week-item content">Transmission methods; packet switching</span>
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">OSI model applied — packet flow analysis</span>
 
-      <span class="week-item">14</span>
-      <span class="week-item">Nov 30 – Dec 4</span>
-      <span class="week-item topic"><span class="code">A2.3.4</span> Static/Dynamic Routing · <span class="code">A2.4.1</span> Firewalls</span>
-      <span class="week-item content">Routing, firewall design; AI Strand 6 – Ethics & Responsible AI</span>
+      <!-- ===== Week 11 ===== -->
+      <div class="week-header"><span>Week 11</span><span class="dates">Nov 9–13</span></div>
 
-      <span class="week-item">15</span>
-      <span class="week-item">Dec 7–11</span>
-      <span class="week-item topic"><span class="code">A2.4.2</span> Network Vulnerabilities (HL) · <span class="code">A2.4.3</span> Countermeasures</span>
-      <span class="week-item content">Vulnerabilities, countermeasures, encryption, certificates</span>
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.2.3</span> Network Models</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Client-server vs peer-to-peer</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Network models comparison</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.2.2</span> Servers <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">DNS/DHCP/file/mail/web servers</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Server architecture &amp; configuration</span>
+
+      <!-- ===== Week 12 ===== -->
+      <div class="week-header"><span>Week 12</span><span class="dates">Nov 16–20</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.3.1</span> IP Addressing</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Addressing, packet switching</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">IP addressing workshop</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.2.4</span> Network Segmentation <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Segmentation strategies</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Segmentation in practice — VLANs, subnets</span>
+
+      <!-- ===== Week 13 ===== -->
+      <div class="week-header"><span>Week 13</span><span class="dates">Nov 23–27</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.3.2</span> Data Transmission</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Transmission methods</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.3.3</span> Packet Switching</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Packet switching</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL depth — transmission media &amp; error detection</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL depth — packet routing &amp; congestion</span>
+
+      <!-- ===== Week 14 ===== -->
+      <div class="week-header"><span>Week 14</span><span class="dates">Nov 30 – Dec 4</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.4.1</span> Firewalls</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Firewall design; AI Strand 6 – Ethics &amp; Responsible AI</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Firewall design workshop</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.3.4</span> Static/Dynamic Routing <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Routing algorithms</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Routing in practice</span>
+
+      <!-- ===== Week 15 ===== -->
+      <div class="week-header"><span>Week 15</span><span class="dates">Dec 7–11</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.4.3</span> Countermeasures</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Encryption, certificates</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Security countermeasures workshop</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A2.4.2</span> Network Vulnerabilities <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Vulnerability analysis</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Vulnerability &amp; countermeasure case studies</span>
 
       <span class="break-row">❄️ Winter Break: Dec 21 – Jan 1</span>
     </div>
@@ -426,7 +689,7 @@
 
   <!-- ========== TERM 2 – A4 Machine Learning ========== -->
   <div class="section-head">
-    <i class="fas fa-brain"></i> Term 2 — A4 Machine Learning & Case Study
+    <i class="fas fa-brain"></i> Term 2 — A4 Machine Learning &amp; Case Study
   </div>
 
   <div class="term-block">
@@ -434,45 +697,129 @@
     <p style="color:#4a5568; margin-bottom: 1rem;">Students develop practical and conceptual understanding of ML: data prep, regression, classification, clustering, neural networks, and ethical implications.</p>
 
     <div class="week-grid">
+      <span class="header">Session</span>
       <span class="header">Week</span>
-      <span class="header">Dates</span>
       <span class="header">Topic / Lesson</span>
       <span class="header">Content</span>
 
-      <span class="week-item">16</span>
-      <span class="week-item">Dec 14–18</span>
-      <span class="week-item topic"><span class="code">A4.1.1</span> Types of ML · <span class="code">A4.1.2</span> ML Hardware</span>
-      <span class="week-item content">AI Strand 3 – ML models & algorithms; hardware acceleration</span>
+      <!-- ===== Week 16 ===== -->
+      <div class="week-header"><span>Week 16</span><span class="dates">Dec 14–18</span></div>
 
-      <span class="week-item">17</span>
-      <span class="week-item">Jan 4–8</span>
-      <span class="week-item topic"><span class="code">A4.2.1</span> Data Cleaning · <span class="code">A4.2.3</span> Dimensionality Reduction (HL)</span>
-      <span class="week-item content">Cleaning, missing data, normalization; PCA, curse of dimensionality</span>
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; consolidation — A2 Networks</span>
 
-      <span class="week-item">18</span>
-      <span class="week-item">Jan 11–15</span>
-      <span class="week-item topic"><span class="code">A4.3.1</span> Linear Regression (HL) · <span class="code">A4.3.2</span> Classification (HL)</span>
-      <span class="week-item content">Predictor/response, slope, r²; KNN, decision trees</span>
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; consolidation — A2 Networks (continued)</span>
 
-      <span class="week-item">19</span>
-      <span class="week-item">Jan 18–22</span>
-      <span class="week-item topic"><span class="code">A4.3.3</span> Model Metrics (HL) · <span class="code">A4.3.4</span> Clustering (HL)</span>
-      <span class="week-item content">Accuracy, precision, recall, F1; K‑means, segmentation</span>
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.1.1</span> Types of ML <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">AI Strand 3 – ML models &amp; algorithms</span>
 
-      <span class="week-item">20</span>
-      <span class="week-item">Jan 25–29</span>
-      <span class="week-item topic"><span class="code">A4.3.6</span> Reinforcement & Genetic Alg. · <span class="code">A4.3.8</span> ANNs</span>
-      <span class="week-item content">RL, genetic algorithms; AI Strand 4 – Neural Networks, Generative AI & LLMs</span>
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.1.2</span> ML Hardware <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Hardware acceleration</span>
 
-      <span class="week-item">21</span>
-      <span class="week-item">Feb 1–5</span>
-      <span class="week-item topic"><span class="code">A4.3.9</span> CNNs · <span class="code">A4.3.10</span> Model Selection</span>
-      <span class="week-item content">CNN image interpretation; model selection, cross‑validation</span>
+      <!-- ===== Week 17 ===== -->
+      <div class="week-header"><span>Week 17</span><span class="dates">Jan 4–8</span></div>
 
-      <span class="week-item">22</span>
-      <span class="week-item">Feb 15–19</span>
-      <span class="week-item topic"><span class="code">A4.4.1</span> Ethics of Emerging Tech · <span class="code">A4.Assessment</span></span>
-      <span class="week-item content">Ethical implications of ML; daily life impact; assessment markscheme</span>
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL IA catch-up &amp; consolidation</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL IA catch-up &amp; consolidation (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.2.1</span> Data Cleaning <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Cleaning, missing data, normalization</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.2.3</span> Dimensionality Reduction <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">PCA, curse of dimensionality</span>
+
+      <!-- ===== Week 18 ===== -->
+      <div class="week-header"><span>Week 18</span><span class="dates">Jan 11–15</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL IA support &amp; retrieval</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL IA support &amp; retrieval (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.3.1</span> Linear Regression <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Predictor/response, slope, r²</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.3.2</span> Classification <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">KNN, decision trees</span>
+
+      <!-- ===== Week 19 ===== -->
+      <div class="week-header"><span>Week 19</span><span class="dates">Jan 18–22</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; exam practice</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; exam practice (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.3.3</span> Model Metrics <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Accuracy, precision, recall, F1</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.3.4</span> Clustering <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">K-means, segmentation</span>
+
+      <!-- ===== Week 20 ===== -->
+      <div class="week-header"><span>Week 20</span><span class="dates">Jan 25–29</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; exam practice</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; exam practice (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.3.6</span> Reinforcement &amp; Genetic Algorithms <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">RL, genetic algorithms; AI Strand 4 – Neural Networks, Generative AI &amp; LLMs</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.3.8</span> ANNs <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Artificial Neural Networks</span>
+
+      <!-- ===== Week 21 ===== -->
+      <div class="week-header"><span>Week 21</span><span class="dates">Feb 1–5</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; exam practice</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; exam practice (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.3.9</span> CNNs <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">CNN image interpretation</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.3.10</span> Model Selection <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Model selection, cross-validation</span>
+
+      <!-- ===== Week 22 ===== -->
+      <div class="week-header"><span>Week 22</span><span class="dates">Feb 15–19</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; exam practice</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">SL retrieval &amp; exam practice (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.4.1</span> Ethics of Emerging Tech <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Ethical implications of ML; daily life impact</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;"><span class="code">A4.Assessment</span> <span class="hl-tag">HL ONLY</span></span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Assessment markscheme &amp; practice</span>
 
       <span class="break-row">❄️ Winter Break: Feb 8–12</span>
     </div>
@@ -492,64 +839,138 @@
     </p>
 
     <div class="week-grid">
+      <span class="header">Session</span>
       <span class="header">Week</span>
-      <span class="header">Dates</span>
       <span class="header">Topic / Lesson</span>
       <span class="header">Content</span>
 
-      <span class="week-item">23</span>
-      <span class="week-item">Feb 22–26</span>
-      <span class="week-item topic">System Overview</span>
-      <span class="week-item content">Visionary Studios architecture, actors, data flow; diffusion models & GANs; AI Strand 1 – Understanding AI & Human‑AI Interaction</span>
+      <!-- ===== Week 23 ===== -->
+      <div class="week-header"><span>Week 23</span><span class="dates">Feb 22–26</span></div>
 
-      <span class="week-item">24</span>
-      <span class="week-item">Mar 1–5</span>
-      <span class="week-item topic">Scenario Analysis</span>
-      <span class="week-item content">Inputs, processes, outputs; ethical issues of image generation; bias, copyright, deepfakes</span>
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;">System Overview</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Visionary Studios architecture, actors, data flow</span>
 
-      <span class="week-item">25</span>
-      <span class="week-item">Mar 8–12</span>
-      <span class="week-item topic">Paper 1 Section B Practice</span>
-      <span class="week-item content">Structured responses, reasoning, challenge questions on Visionary Studios</span>
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Diffusion models &amp; GANs; AI Strand 1 – Understanding AI &amp; Human-AI Interaction</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL depth — diffusion model architecture</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL depth — GANs in practice</span>
+
+      <!-- ===== Week 24 ===== -->
+      <div class="week-header"><span>Week 24</span><span class="dates">Mar 1–5</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;">Scenario Analysis</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Inputs, processes, outputs</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Ethical issues of image generation; bias, copyright, deepfakes</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL case study analysis workshop</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL case study analysis workshop (continued)</span>
+
+      <!-- ===== Week 25 ===== -->
+      <div class="week-header"><span>Week 25</span><span class="dates">Mar 8–12</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="topic" style="grid-column: 3; padding: 0.25rem 0;">Paper 1 Section B Practice</span>
+      <span class="content" style="grid-column: 4; padding: 0.25rem 0;">Structured responses, reasoning</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Challenge questions on Visionary Studios</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL Paper 1 Section B intensive practice</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL Paper 1 Section B intensive practice (continued)</span>
     </div>
   </div>
 
   <!-- ========== Mock Exams & Revision ========== -->
   <div class="section-head">
-    <i class="fas fa-pencil-alt"></i> Mock Exams & Revision
+    <i class="fas fa-pencil-alt"></i> Mock Exams &amp; Revision
   </div>
 
   <div class="term-block">
-    <h3>Mock Exams & Revision <span class="term-badge">Core + HL</span></h3>
+    <h3>Mock Exams &amp; Revision <span class="term-badge">Core + HL</span></h3>
     <div class="week-grid">
+      <span class="header">Session</span>
       <span class="header">Week</span>
-      <span class="header">Dates</span>
       <span class="header">Topic / Lesson</span>
       <span class="header">Content</span>
 
       <span class="info-row">📅 Term 2 Ends: Mar 12 • In-Service Day: Mar 15 • Term 3 Begins: Mar 16</span>
 
-      <span class="week-item">26</span>
-      <span class="week-item">Mar 16–20</span>
-      <span class="week-item topic">Mock Exams</span>
-      <span class="week-item content">Full timed papers</span>
+      <!-- ===== Week 26 ===== -->
+      <div class="week-header"><span>Week 26</span><span class="dates">Mar 16–20</span></div>
 
-      <span class="week-item">27</span>
-      <span class="week-item">Mar 22 – Apr 2</span>
-      <span class="week-item topic">Mock Exams (continued)</span>
-      <span class="week-item content">Case study exam (Paper 1 Section B)</span>
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Mock Exams — full timed papers</span>
 
-      <span class="week-item">28</span>
-      <span class="week-item">Apr 5–9</span>
-      <span class="week-item topic">Revision</span>
-      <span class="week-item content">Paper 1, Paper 2 review</span>
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Mock Exams — full timed papers (continued)</span>
 
-      <span class="week-item">29</span>
-      <span class="week-item">Apr 12–16</span>
-      <span class="week-item topic">Final Revision</span>
-      <span class="week-item content">Exam techniques, past papers</span>
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Mock Exams — full timed papers</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Mock Exams — full timed papers (continued)</span>
+
+      <!-- ===== Week 27 ===== -->
+      <div class="week-header"><span>Week 27</span><span class="dates">Mar 22 – Apr 2</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Mock Exams (continued) — Case study exam (Paper 1 Section B)</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Mock Exams feedback &amp; review</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Mock Exams (continued) — Paper 2 &amp; Case Study</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Mock Exams feedback &amp; review</span>
 
       <span class="break-row">🌸 Spring Break: Mar 22 – Apr 2</span>
+
+      <!-- ===== Week 28 ===== -->
+      <div class="week-header"><span>Week 28</span><span class="dates">Apr 5–9</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Revision — Paper 1, Paper 2 review</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Revision — Paper 1, Paper 2 review (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL Revision — Paper 1 Section B and Paper 2</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL Revision — deeper exam practice</span>
+
+      <!-- ===== Week 29 ===== -->
+      <div class="week-header"><span>Week 29</span><span class="dates">Apr 12–16</span></div>
+
+      <span class="session-level sl">SL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Final Revision — exam techniques, past papers</span>
+
+      <span class="session-level sl">SL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">Final Revision — exam techniques, past papers (continued)</span>
+
+      <span class="session-level hl">HL 1</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL Final Revision — exam techniques</span>
+
+      <span class="session-level hl">HL 2</span>
+      <span class="content" style="grid-column: 2 / -1; padding: 0.25rem 0;">HL Final Revision — exam techniques (continued)</span>
+
       <span class="break-row">📅 IB EXAMS: May 2–23 (Paper 1, Paper 2)</span>
     </div>
   </div>
@@ -579,7 +1000,7 @@
         <tr><th>Component</th><th>SL</th><th>HL</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>Paper 2</strong></td><td>35% of grade<br>1:15 hours<br>50 marks total<br>One non‑programming question (B1)</td><td>40% of grade<br>2 hours<br>80 marks total<br>SL + HL topics</td></tr>
+        <tr><td><strong>Paper 2</strong></td><td>35% of grade<br>1:15 hours<br>50 marks total<br>One non-programming question (B1)</td><td>40% of grade<br>2 hours<br>80 marks total<br>SL + HL topics</td></tr>
       </tbody>
     </table>
 
@@ -609,7 +1030,7 @@
         <tr class="sub-row"><td>• Section A (A1/A2/A3/A4)</td><td>38</td><td>—</td><td>—</td><td>56</td><td>—</td><td>—</td></tr>
         <tr class="sub-row"><td>• Section B (Case study — Visionary Studios)</td><td>12</td><td>18m</td><td>8%</td><td>24</td><td>36m</td><td>12%</td></tr>
         <tr><td><strong>Paper 2</strong></td><td>50</td><td>75m</td><td>35%</td><td>80</td><td>120m</td><td>40%</td></tr>
-        <tr class="sub-row"><td>• Non‑programming (B1)</td><td>15</td><td>22m</td><td>10%</td><td>15</td><td>22m</td><td>7.5%</td></tr>
+        <tr class="sub-row"><td>• Non-programming (B1)</td><td>15</td><td>22m</td><td>10%</td><td>15</td><td>22m</td><td>7.5%</td></tr>
         <tr class="sub-row"><td>• Programming (B2)</td><td>15</td><td>22m</td><td>10%</td><td>15</td><td>22m</td><td>7.5%</td></tr>
         <tr class="sub-row"><td>• Programming (B3)</td><td>20</td><td>40m</td><td>14%</td><td>20</td><td>30m</td><td>10%</td></tr>
         <tr class="sub-row"><td>• Programming (B4)</td><td>n/a</td><td>n/a</td><td>n/a</td><td>30</td><td>45m</td><td>15%</td></tr>
@@ -620,7 +1041,8 @@
 
   <hr class="divider-light" style="border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); margin: 2rem 0 0.5rem;">
   <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
-    <i class="fas fa-save" style="margin-right: 8px;"></i> Last updated: 2026 · Year 12 Scope  </div>
+    <i class="fas fa-save" style="margin-right: 8px;"></i> Last updated: 2026 · Year 12 Scope
+  </div>
 
 </div>
 
