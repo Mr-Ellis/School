@@ -87,17 +87,6 @@
             vertical-align: top;
         }
         tr:nth-child(even) { background: #f7fafc; }
-        .extension-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 4px 15px;
-            background: #f7fafc;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-        .extension-grid .label { font-weight: 600; color: #0b2a4a; }
-        .extension-grid .desc { color: #1e293b; }
         a {
             color: #b21f1f;
             text-decoration: none;
@@ -255,7 +244,7 @@
         }
         .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
 
-        /* Nine functions grid */
+        /* ===== Interactive: function grid with hover reveal ===== */
         .function-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -264,12 +253,26 @@
         }
         @media (max-width: 700px) { .function-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { .function-grid { grid-template-columns: 1fr; } }
+
         .function-card {
             background: #f7fafc;
             border: 2px solid #dce8f5;
             border-radius: 10px;
-            padding: 12px 14px;
+            padding: 14px 14px 12px;
             text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .function-card:hover {
+            background: #ebf4ff;
+            border-color: #0b2a4a;
+            transform: translateY(-2px);
+        }
+        .function-card.open {
+            background: #ebf4ff;
+            border-color: #b21f1f;
+            text-align: left;
         }
         .function-card .icon {
             font-size: 1.5rem;
@@ -287,27 +290,229 @@
             margin-top: 4px;
             line-height: 1.4;
         }
+        .function-card .detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, margin-top 0.3s ease;
+            color: #1e293b;
+            font-size: 0.85rem;
+            margin-top: 0;
+            line-height: 1.5;
+        }
+        .function-card.open .detail {
+            max-height: 500px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #b21f1f;
+        }
+        .function-card .tap-hint {
+            font-size: 0.7rem;
+            color: #b21f1f;
+            font-weight: 600;
+            margin-top: 6px;
+            display: block;
+        }
+        .function-card.open .tap-hint { color: #4a5568; }
 
-        /* Worked example */
-        .worked {
+        /* ===== Interactive: flip cards for I/O techniques ===== */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .flip-grid { grid-template-columns: 1fr; } }
+
+        .flip-card {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .flip-card-front {
+            background: #0b2a4a;
+            color: #fff;
+        }
+        .flip-card-front .big-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .flip-card-front .big-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        .flip-card-front .flip-hint {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+        .flip-card-back {
+            background: #fef3c7;
+            color: #7a4a0a;
+            transform: rotateY(180deg);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: 2px solid #fdbb2d;
+        }
+
+        /* ===== Interactive: scenario cards with reveal ===== */
+        .scenario {
+            background: #f7fafc;
+            border-left: 5px solid #0b2a4a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+        .scenario .scenario-q {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .scenario .scenario-q:hover { color: #b21f1f; }
+        .scenario .reveal-btn {
+            font-size: 0.75rem;
+            background: #b21f1f;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            flex-shrink: 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .scenario .reveal-btn:hover { background: #0b2a4a; }
+        .scenario .scenario-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.3s ease;
+            margin-top: 0;
+            color: #1e293b;
+            font-size: 0.92rem;
+        }
+        .scenario.open .scenario-a {
+            max-height: 800px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .scenario .scenario-a ul { padding-left: 1.2rem; }
+        .scenario .scenario-a li { margin-bottom: 6px; }
+
+        /* ===== Interactive: quick quiz ===== */
+        .quiz {
             background: #f1f6fc;
             border-radius: 10px;
-            padding: 16px 20px;
-            margin: 15px 0;
+            padding: 20px 24px;
+            margin: 20px 0;
         }
-        .worked h4 {
+        .quiz h3 { margin-top: 0; }
+        .quiz-q { margin-bottom: 18px; }
+        .quiz-q .q-text {
+            font-weight: 600;
             color: #0b2a4a;
             margin-bottom: 8px;
-            font-size: 1rem;
         }
-        .worked ol { padding-left: 1.3rem; font-size: 0.92rem; }
-        .worked li { margin-bottom: 4px; }
+        .quiz-options { display: flex; flex-direction: column; gap: 6px; }
+        .quiz-option {
+            background: white;
+            border: 2px solid #dce4ed;
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quiz-option:hover { border-color: #0b2a4a; background: #ebf4ff; }
+        .quiz-option.correct {
+            border-color: #2d7d46;
+            background: #e6f5e6;
+            color: #1a6b33;
+            font-weight: 600;
+        }
+        .quiz-option.wrong {
+            border-color: #b21f1f;
+            background: #fdeaea;
+            color: #a13232;
+        }
+        .quiz-option .mark { font-weight: 700; }
+        .quiz-score {
+            text-align: center;
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1.05rem;
+            margin-top: 10px;
+        }
+
+        /* ===== Interactive: match-up drag ===== */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .match-grid { grid-template-columns: 1fr; } }
+        .match-col h4 {
+            color: #0b2a4a;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .match-item {
+            background: white;
+            border: 2px solid #dce4ed;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.15s ease;
+        }
+        .match-item:hover { border-color: #0b2a4a; }
+        .match-item.selected { border-color: #fdbb2d; background: #fefcbf; font-weight: 600; }
+        .match-item.matched { border-color: #2d7d46; background: #e6f5e6; color: #1a6b33; cursor: default; }
+        .match-item.matched::after { content: " ✓"; font-weight: 700; }
+        .match-feedback {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #2d7d46;
+            min-height: 24px;
+        }
 
         @media (max-width: 640px) {
             .container { padding: 20px; }
             h1 { font-size: 1.8rem; }
-            table, .extension-grid { font-size: 0.85rem; }
-            .extension-grid { grid-template-columns: 1fr; gap: 2px; }
+            table { font-size: 0.85rem; }
             .task-1-resources { flex-direction: column; align-items: flex-start; }
             .blooket-box { flex-direction: column; align-items: flex-start; }
         }
@@ -322,12 +527,10 @@
     <h1>A1.3.2 – Describe the Functions of an Operating System</h1>
 
     <h2>📌 Learning Objective</h2>
-    <p>By the end of this lesson, you will be able to:</p>
     <ul>
         <li><strong>Describe</strong> the nine core functions of an operating system</li>
         <li><strong>Explain</strong> what each function does and how it maintains <strong>system integrity</strong></li>
         <li><strong>Link</strong> each function back to the resource it manages and the hardware it abstracts</li>
-        <li><strong>Identify</strong> which functions are at work in real tasks you perform every day</li>
     </ul>
 
     <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
@@ -344,204 +547,253 @@
     </div>
 
     <h2>💡 The Big Idea — System Integrity</h2>
-    <p>An operating system's functions are the <strong>concrete services</strong> that put its resource-management role into practice. Where the <em>role</em> (A1.3.1) is to abstract hardware and arbitrate resources, the <em>functions</em> (A1.3.2) are the specialised subsystems that do the day-to-day work.</p>
+    <p>An OS's functions are the <strong>concrete services</strong> that put its resource-management role into practice. Their overarching purpose is to maintain <strong>system integrity</strong>:</p>
 
-    <p>Their overarching purpose is to maintain <strong>system integrity</strong>:</p>
     <div class="command-term">
-        <strong>System integrity</strong> – the state where a computer system operates correctly and securely, free from unauthorised changes or corruption. The OS ensures its own code, its data, and running applications' code remain correct, consistent and protected from accidental corruption or malicious interference.
+        <strong>System integrity</strong> – the state where a computer system operates correctly and securely, free from unauthorised changes or corruption.
     </div>
 
     <p>Without these functions, one malfunctioning driver or runaway process could destabilise the entire system.</p>
 
-    <h2>📊 The Nine Functions</h2>
-    <p>The IB syllabus groups OS functions into nine broad areas. Each one manages a different resource or provides a different service.</p>
+    <h2>📊 The Nine Functions — Click to Explore</h2>
+    <p><strong>Click any card</strong> to reveal what that function actually does.</p>
 
     <div class="function-grid">
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">🧠</span>
             <span class="name">Memory Management</span>
-            <span class="short">Allocates RAM to processes; manages virtual memory</span>
+            <span class="short">Manages RAM and virtual memory</span>
+            <div class="detail">Allocates memory space for each process, protects processes from each other, and uses virtual memory to extend apparent RAM capacity when physical memory runs out.</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">📁</span>
             <span class="name">File System</span>
-            <span class="short">Organises files and directories; controls access</span>
+            <span class="short">Organises files and directories</span>
+            <div class="detail">Provides a hierarchical structure for storing and retrieving data. Handles creation, reading, writing, renaming, moving and deleting files. Enforces naming rules and permissions. Performs defragmentation on HDDs.</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">🖨️</span>
             <span class="name">Device Management</span>
-            <span class="short">Controls hardware via drivers; handles I/O</span>
+            <span class="short">Controls hardware via drivers</span>
+            <div class="detail">Uses device drivers to communicate with hardware (printers, keyboards, network cards). Manages I/O using buffering, caching and spooling. Supports Plug and Play for automatic device setup.</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">⏱️</span>
             <span class="name">Scheduling</span>
-            <span class="short">Decides which process runs next, and for how long</span>
+            <span class="short">Decides which process runs next</span>
+            <div class="detail">The scheduler allocates CPU time to processes, ensuring efficient and fair use. Crucial for multitasking — implements algorithms like FCFS, round robin, priority and multilevel queue. Covered in detail in A1.3.3.</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">🔒</span>
             <span class="name">Security</span>
-            <span class="short">Authentication, encryption, malware protection</span>
+            <span class="short">Protects data and resources</span>
+            <div class="detail">Authenticates users (passwords, biometrics, tokens), enforces access control, encrypts files and communications, audits system activity, and protects against malware (viruses, worms, trojans).</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">📊</span>
             <span class="name">Accounting</span>
-            <span class="short">Tracks resource usage; quotas and billing</span>
+            <span class="short">Tracks resource usage</span>
+            <div class="detail">Monitors CPU, memory, disk and network usage by users and processes. Supports quotas, performance monitoring, auditing, and billing on shared or cloud systems.</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">🖥️</span>
             <span class="name">GUI</span>
-            <span class="short">Windows, icons, menus, pointers for user interaction</span>
+            <span class="short">User-friendly visual interface</span>
+            <div class="detail">Provides windows, icons, menus and pointers (WIMP). Handles application management (task switching, window snapping), file management (File Explorer), accessibility (screen readers), visual feedback and customisation.</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">📦</span>
             <span class="name">Virtualisation</span>
-            <span class="short">Runs multiple VMs on one physical machine</span>
+            <span class="short">Runs multiple VMs on one machine</span>
+            <div class="detail">Uses a hypervisor to run multiple virtual machines on a single physical machine. Each VM has its own OS. Benefits: isolation, snapshots, live migration, disaster recovery, cloud scaling.</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
-        <div class="function-card">
+        <div class="function-card" onclick="this.classList.toggle('open')">
             <span class="icon">🌐</span>
             <span class="name">Networking</span>
-            <span class="short">Manages connections and data communication</span>
+            <span class="short">Manages network communication</span>
+            <div class="detail">Establishes and maintains network connections, configures network interfaces, assigns IP addresses via DHCP, and implements protocols like TCP/IP. Handles error checking, flow control and congestion avoidance.</div>
+            <span class="tap-hint">Tap to reveal</span>
         </div>
     </div>
 
-    <h2>🔍 Function in Detail</h2>
-    <p>For each function, the exam expects you to say <strong>what the OS is actually doing</strong> — not just name it.</p>
+    <h2>🔄 Device Management — Flip the Cards</h2>
+    <p>The OS uses three key I/O techniques to handle data flow between devices. <strong>Click each card to flip it.</strong></p>
 
-    <h3>1. Memory Management</h3>
-    <p>The OS controls and coordinates the computer's primary memory (RAM). It ensures memory is <strong>allocated efficiently to processes</strong>, maintains system stability, and <strong>protects memory areas from unauthorised access</strong>.</p>
-    <p>When you open an application, the OS:</p>
-    <ol>
-        <li>Locates the application on the storage device (HDD or SSD)</li>
-        <li>Reads the executable file (.exe on Windows, .app on Mac)</li>
-        <li>Allocates the necessary memory space for code, data and resources</li>
-        <li>Ensures the application has enough space without interfering with other processes</li>
-    </ol>
-    <p>If applications need more memory than is available in RAM, the OS uses <strong>virtual memory</strong> — allocating space on the HDD or SSD to act as RAM. Reading from storage is much slower than RAM, but by switching higher-priority processes into RAM and lower-priority ones into virtual memory, the OS keeps the system running.</p>
-
-    <div class="worked">
-        <h4>💡 Analogy</h4>
-        <p>Think of memory management as organising books on a bookshelf. The OS allocates each book (process) its own space on the shelf (memory). Just as you wouldn't let books overlap, the OS ensures each process has its own protected area.</p>
-    </div>
-
-    <h3>2. File Management</h3>
-    <p>The OS provides a <strong>structured way to manage files and directories</strong> on storage devices, ensuring system stability and security. It employs a <strong>hierarchical file system</strong> — files organised into directories (folders), which can contain further directories, forming a tree-like structure.</p>
-    <p>Set file operations include:</p>
-    <ul>
-        <li>Creating new files and directories</li>
-        <li>Reading and writing data to files</li>
-        <li>Deleting files</li>
-        <li>Renaming files</li>
-        <li>Moving or copying files and directories</li>
-    </ul>
-    <p>The OS enforces <strong>naming rules</strong> so no two files in the same directory have the same name. Files often have <strong>extensions</strong> (like .jpg or .exe) to indicate file type.</p>
-    <p>One important maintenance task is <strong>defragmentation</strong> — reorganising fragmented data on an HDD so files are stored in contiguous blocks, improving access speed and overall performance.</p>
-
-    <h3>3. Device Management</h3>
-    <p>The OS controls and coordinates hardware components — printers, disk drives, display screens, keyboards, network interfaces — through <strong>device drivers</strong>: specialised software that allows the OS to communicate with and control hardware by providing necessary instructions and protocols.</p>
-    <p>The OS handles I/O using three key techniques:</p>
-    <table>
-        <thead>
-            <tr><th>Technique</th><th>What it does</th></tr>
-        </thead>
-        <tbody>
-            <tr><td><strong>Buffering</strong></td><td>Temporarily stores data in memory while it's transferred between two devices, managing differences in data-flow rates</td></tr>
-            <tr><td><strong>Caching</strong></td><td>Stores frequently accessed data in a high-speed area to reduce access time</td></tr>
-            <tr><td><strong>Spooling</strong></td><td>Queues data or tasks (e.g. for printers) so they process sequentially, letting the system work on other tasks meanwhile</td></tr>
-        </tbody>
-    </table>
-    <p>Modern OSes use <strong>Plug and Play (PnP)</strong> — the OS automatically detects, configures and installs drivers for new hardware without manual setup.</p>
-
-    <h3>4. Scheduling</h3>
-    <p>The OS manages the execution of multiple processes by determining which process runs at any given time. The <strong>scheduler</strong> allocates CPU time to processes, ensuring efficient and fair use of system resources.</p>
-    <p>This is crucial for multitasking environments — implementing various scheduling algorithms to optimise performance, reduce wait times and maintain system stability. (Details are covered in <a href="A1.3.3-summary.html">A1.3.3</a>.)</p>
-
-    <h3>5. Security</h3>
-    <p>The OS protects the <strong>integrity, confidentiality and availability</strong> of information and resources. It has mechanisms to safeguard against threats, prevent unauthorised access, and ensure users and applications can operate securely.</p>
-    <table>
-        <thead>
-            <tr><th>Aspect</th><th>What the OS does</th></tr>
-        </thead>
-        <tbody>
-            <tr><td><strong>User authentication</strong></td><td>Requires credentials — username/password, biometric data or security tokens — to log in. Based on user settings, grants or prevents access to files, folders and applications. Allows multiple users with different credentials (administrator vs standard user).</td></tr>
-            <tr><td><strong>Encryption</strong></td><td>Provides tools and frameworks for encrypting files, communication channels and devices. Even if data is intercepted, it cannot be read without the decryption key.</td></tr>
-            <tr><td><strong>Auditing and monitoring</strong></td><td>Tracks all system activities — logins, file access, errors, administrator actions — in a log. Used for auditing, detecting suspicious activity, and identifying issues.</td></tr>
-            <tr><td><strong>Malware protection</strong></td><td>Detects and prevents malware infections and intruders using antivirus software, firewalls and intrusion detection systems (IDS). Protects against viruses, worms and trojans.</td></tr>
-        </tbody>
-    </table>
-
-    <h3>6. Accounting</h3>
-    <p>The OS tracks <strong>resource consumption</strong> by users and processes, providing data for performance analysis, cost allocation and resource optimisation. Key aspects:</p>
-    <ul>
-        <li><strong>Resource usage tracking</strong> — CPU time, memory, disk space, network volume used by each process/user</li>
-        <li><strong>Process accounting</strong> — process ID, user ID, execution time, start/end times, resource consumption</li>
-        <li><strong>User accounting</strong> — cost allocation, quota management (disk quotas, memory quotas)</li>
-        <li><strong>Performance monitoring</strong> — identifying bottlenecks, underutilisation and trends</li>
-        <li><strong>Auditing and reporting</strong> — compliance, security analysis, resource management decisions</li>
-        <li><strong>Billing and chargeback</strong> — usage-based billing (e.g. cloud computing), chargeback to departments</li>
-    </ul>
-
-    <h3>7. Graphical User Interface (GUI)</h3>
-    <p>The OS provides a <strong>user-friendly environment</strong> for interacting with the computer using visual elements: <strong>windows</strong> (display application contents), <strong>icons</strong> (graphical representations of applications and files), <strong>menus</strong> (lists of commands), <strong>pointers</strong> (cursor controlled by input device).</p>
-    <p>Key GUI responsibilities:</p>
-    <ul>
-        <li><strong>Application management</strong> — task switching (Alt+Tab), window management (snapping, tiling), desktop environment</li>
-        <li><strong>File and system management</strong> — File Explorer, system settings, drag-and-drop</li>
-        <li><strong>Accessibility</strong> — screen readers, high-contrast themes, keyboard shortcuts for users with disabilities</li>
-        <li><strong>Visual feedback</strong> — progress bars, notifications, tooltips</li>
-        <li><strong>Customisation</strong> — themes, wallpapers, widgets</li>
-    </ul>
-
-    <h3>8. Virtualisation</h3>
-    <p>The OS allows <strong>multiple virtual machines (VMs)</strong> to run on a single physical machine. Each VM operates independently with its own OS and applications. The OS manages this through a <strong>hypervisor</strong>, which allocates CPU time, memory and storage to each VM.</p>
-    <p>Benefits: isolation between VMs, snapshots and backups, live migrations, disaster recovery, dynamic scaling in cloud environments.</p>
-
-    <h3>9. Networking</h3>
-    <p>The OS manages and facilitates <strong>network communication</strong>. It establishes and maintains network connections, manages network interfaces and protocols, configures settings, assigns IP addresses via <strong>DHCP</strong>, and handles underlying hardware like <strong>NICs</strong> (network interface cards).</p>
-    <p>It implements networking protocols such as <strong>TCP/IP</strong> — governing how data is packetised, addressed, transmitted, routed and received. It ensures data integrity through error checking, flow control and congestion avoidance, and supports higher-level protocols like HTTP, FTP.</p>
-
-    <h2>🎯 Activity — Functions in the Wild</h2>
-    <p>In groups, identify which of the nine functions are at work in each scenario. Some scenarios involve more than two functions — find as many as you can.</p>
-
-    <div class="task-block">
-        <div class="task-row">
-            <span class="task-step">1</span>
-            <span class="task-desc">
-                <strong>Printing a 50-page document</strong> — Which functions are at work? What is each one doing?
-            </span>
+    <div class="flip-grid">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">📥</span>
+                    <span class="big-name">Buffering</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    Temporarily stores data in memory while it is transferred between two devices. Manages differences in data-flow rates (e.g. slow printer vs fast CPU).
+                </div>
+            </div>
         </div>
-        <div class="task-row">
-            <span class="task-step">2</span>
-            <span class="task-desc">
-                <strong>Plugging in a new USB drive and copying files to it</strong> — Which functions are at work? What is each one doing?
-            </span>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">⚡</span>
+                    <span class="big-name">Caching</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    Stores frequently accessed data in a high-speed storage area (cache) to reduce access time and improve overall system performance.
+                </div>
+            </div>
         </div>
-        <div class="task-row">
-            <span class="task-step">3</span>
-            <span class="task-desc">
-                <strong>Running out of RAM while editing a video</strong> — Which functions are at work? What is each one doing?
-            </span>
-        </div>
-        <div class="task-row">
-            <span class="task-step">4</span>
-            <span class="task-desc">
-                <strong>Logging in to a school computer and opening a network drive</strong> — Which functions are at work? What is each one doing?
-            </span>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">📄</span>
+                    <span class="big-name">Spooling</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    Queues data or tasks (typically for printers) so they process sequentially at their own pace, letting the system work on other tasks meanwhile.
+                </div>
+            </div>
         </div>
     </div>
 
-    <h2>💻 Worked Example — Opening an Application</h2>
-    <div class="worked">
-        <h4>What happens when you double-click a Word document?</h4>
-        <ol>
-            <li><strong>File system</strong> — locates the document by name and maps it to physical blocks on the disk</li>
-            <li><strong>Memory management</strong> — allocates a private address space; loads Word's code and the document into RAM</li>
-            <li><strong>Scheduling</strong> — gives the Word process CPU time, alongside other running processes</li>
-            <li><strong>Security</strong> — checks that your user account has permission to read the file</li>
-            <li><strong>GUI</strong> — renders the window, menus and document on screen</li>
-            <li><strong>Device management</strong> — handles keyboard and mouse input via drivers</li>
-            <li><strong>Accounting</strong> — logs the CPU time and memory the process consumes</li>
-        </ol>
-        <p style="margin-top:10px;">Seven of the nine functions are involved in a single everyday action. This is why "system integrity" matters: all seven must cooperate correctly or the experience breaks.</p>
+    <h2>🔍 Scenario Explorer — Which Functions Are at Work?</h2>
+    <p>For each scenario, <strong>click the question to reveal</strong> the functions involved.</p>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>📄 Printing a 50-page document</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Device management</strong> — the print job is spooled so the CPU can do other work while the printer processes pages at its own pace.</li>
+                <li><strong>File system</strong> — reads the document from disk to send to the printer.</li>
+                <li><strong>Scheduling</strong> — gives the print process a share of CPU time alongside other tasks.</li>
+                <li><strong>Memory management</strong> — buffers pages of the document in RAM before sending.</li>
+                <li><strong>Security</strong> — checks that the user has permission to print.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>💾 Plugging in a new USB drive and copying files to it</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Device management</strong> — Plug and Play detects the USB drive and loads the appropriate driver automatically.</li>
+                <li><strong>File system</strong> — reads the drive's file table, allows copying files to it, and enforces naming rules.</li>
+                <li><strong>Memory management</strong> — buffers file data during transfer.</li>
+                <li><strong>Security</strong> — may enforce permission checks on both source and destination.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🎬 Running out of RAM while editing a video</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Memory management</strong> — swaps less-active pages out to disk as <em>virtual memory</em>, keeping the most-needed pages in RAM.</li>
+                <li><strong>Scheduling</strong> — prioritises the video editor so its pages stay in RAM.</li>
+                <li><strong>File system</strong> — the swap file on disk is managed by the file system.</li>
+                <li><strong>Accounting</strong> — logs the memory usage, which is why Task Manager can show you which process is hogging RAM.</li>
+            </ul>
+            <p style="margin-top:8px;"><em>Effect: the editor slows down noticeably — RAM is much faster than disk, so virtual memory is a fallback, not a substitute.</em></p>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🔐 Logging in to a school computer and opening a network drive</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Security</strong> — authenticates your credentials and applies your access permissions.</li>
+                <li><strong>Networking</strong> — establishes the connection to the network drive and handles file transfer over TCP/IP.</li>
+                <li><strong>File system</strong> — mounts the network drive as if it were a local folder.</li>
+                <li><strong>Accounting</strong> — logs your login event and resource usage for auditing.</li>
+                <li><strong>GUI</strong> — renders the login screen and displays the network drive in File Explorer.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>🎮 Match-Up Challenge</h2>
+    <p>Click a <strong>function</strong> on the left, then click its <strong>description</strong> on the right. Get them all right to complete the challenge.</p>
+
+    <div class="match-grid">
+        <div class="match-col">
+            <h4>Functions</h4>
+            <div class="match-item" data-match="1">Memory management</div>
+            <div class="match-item" data-match="2">File system</div>
+            <div class="match-item" data-match="3">Device management</div>
+            <div class="match-item" data-match="4">Accounting</div>
+            <div class="match-item" data-match="5">Virtualisation</div>
+        </div>
+        <div class="match-col">
+            <h4>What it does</h4>
+            <div class="match-item" data-match="4">Tracks resource usage by users and processes</div>
+            <div class="match-item" data-match="5">Runs multiple VMs on one physical machine</div>
+            <div class="match-item" data-match="1">Allocates RAM and manages virtual memory</div>
+            <div class="match-item" data-match="3">Controls hardware via drivers, buffering, caching, spooling</div>
+            <div class="match-item" data-match="2">Organises files into a hierarchical directory structure</div>
+        </div>
+    </div>
+    <div class="match-feedback" id="matchFeedback"></div>
+
+    <h2>🧠 Quick Quiz</h2>
+    <div class="quiz" id="quizContainer">
+        <div class="quiz-q" data-answer="2">
+            <div class="q-text">1. Which function uses a hypervisor to run multiple OS instances on one machine?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Scheduling</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Virtualisation</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Device management</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Networking</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="3">
+            <div class="q-text">2. What is the purpose of spooling?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Encrypting network traffic</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Storing frequently accessed data in cache</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Queuing print jobs so the CPU can do other work</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Allocating virtual memory to processes</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="1">
+            <div class="q-text">3. Which function maintains <em>system integrity</em> most directly by preventing process interference?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Memory management</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>GUI</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Accounting</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Virtualisation</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="4">
+            <div class="q-text">4. Which OS function assigns IP addresses to devices on a network?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Security</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>File system</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Scheduling</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Networking (via DHCP)</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-score" id="quizScore">Score: 0 / 4</div>
     </div>
 
     <!-- Tasks -->
@@ -559,14 +811,13 @@
                     <span class="pill">📘 Textbook</span>
                     <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
                 </div>
-                <span style="font-size:0.9rem; color:#4a6a85;">Take notes on all nine functions — for each one, what it does and how it maintains system integrity.</span>
             </span>
         </div>
-        <!-- Task 2 – green background -->
+        <!-- Task 2 – green -->
         <div class="task-row task-starter">
             <span class="task-step">2</span>
             <span class="task-desc">
-                <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions.<br>
+                <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_0" target="_blank">Lesson Starter PowerPoint</a>.<br>
                 Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.<br>
                 <strong>📌 Important:</strong> Save your code as a <strong>.txt</strong> file. You will submit all answers to <strong>Schoolbox</strong> at the end of A1.1.9 Debugging Techniques.
             </span>
@@ -574,31 +825,8 @@
         <!-- Task 3 -->
         <div class="task-row">
             <span class="task-step">3</span>
-            <span class="task-desc"><strong>Extension Activities</strong> — Choose from the activities below if you finish early.</span>
-        </div>
-        <!-- Task 4 -->
-        <div class="task-row">
-            <span class="task-step">4</span>
             <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066033297/a-132-describe-the-functions-of-an-operating-system-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
         </div>
-    </div>
-
-    <h2>⭐ Extension Activities</h2>
-    <div class="extension-grid">
-        <span class="label">1. Ubuntu Install &amp; Compare</span>
-        <span class="desc">Install Ubuntu on a VM or spare device. Compare how Ubuntu and Windows (or macOS) handle key aspects: user interface and accessibility, file management, memory management, and software installation/updates. Present findings as a comparison table with a reflection.</span>
-
-        <span class="label">2. Memory Hog Program</span>
-        <span class="desc">Run the Python "Memory Hog" script that allocates memory until the system runs out. Monitor memory usage in Task Manager (Windows) or Activity Monitor (macOS). Explain what the OS does as RAM runs out — which function is at work?</span>
-
-        <span class="label">3. File Management Tasks</span>
-        <span class="desc">Create the folder structure <code>ProjectFiles/Reports</code>, <code>/Data</code>, <code>/Images</code>. Create three text files in Reports. Move, rename, and delete files. Recover a deleted folder from the Recycle Bin / Trash. Document each step — which OS function is doing the work?</span>
-
-        <span class="label">4. Command Line vs GUI</span>
-        <span class="desc">Repeat the file management tasks using the terminal (Command Prompt / cmd on Windows, Terminal on macOS) instead of the GUI. Compare the two approaches — what does each one teach you about the file system function?</span>
-
-        <span class="label">5. Accessibility Deep Dive</span>
-        <span class="desc">Explore accessibility features on Windows (Ease of Access Center) or macOS (Accessibility section). Activate at least two features — e.g. Narrator / VoiceOver, Magnifier / Zoom. Write a reflection on how the GUI function supports accessibility.</span>
     </div>
 
     <div class="key-takeaway">
@@ -616,6 +844,112 @@
         A1.3.2 – Describe the Functions of an Operating System • IB Computer Science • Year 12
     </div>
 </div>
+
+<script>
+    // ===== Quick Quiz =====
+    (function() {
+        const quizQs = document.querySelectorAll('#quizContainer .quiz-q');
+        const scoreEl = document.getElementById('quizScore');
+        let correctCount = 0;
+        const answered = new Set();
+
+        quizQs.forEach((q, idx) => {
+            const answer = q.getAttribute('data-answer');
+            const options = q.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (answered.has(idx)) return;
+                    answered.add(idx);
+
+                    const chosen = opt.getAttribute('data-opt');
+                    const mark = opt.querySelector('.mark');
+
+                    if (chosen === answer) {
+                        opt.classList.add('correct');
+                        mark.textContent = '✓';
+                        correctCount++;
+                    } else {
+                        opt.classList.add('wrong');
+                        mark.textContent = '✗';
+                        // highlight correct
+                        options.forEach(o => {
+                            if (o.getAttribute('data-opt') === answer) {
+                                o.classList.add('correct');
+                                o.querySelector('.mark').textContent = '✓';
+                            }
+                        });
+                    }
+                    scoreEl.textContent = 'Score: ' + correctCount + ' / ' + quizQs.length;
+                });
+            });
+        });
+    })();
+
+    // ===== Match-Up =====
+    (function() {
+        const items = document.querySelectorAll('.match-item');
+        const feedback = document.getElementById('matchFeedback');
+        let selected = null;
+        let matchedCount = 0;
+        const totalMatches = 5;
+
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                if (item.classList.contains('matched')) return;
+
+                // If nothing selected, select this
+                if (!selected) {
+                    selected = item;
+                    item.classList.add('selected');
+                    return;
+                }
+
+                // If clicking the same item, deselect
+                if (selected === item) {
+                    selected.classList.remove('selected');
+                    selected = null;
+                    return;
+                }
+
+                // Check if we're pairing across columns
+                const selCol = selected.parentElement;
+                const curCol = item.parentElement;
+
+                if (selCol === curCol) {
+                    // Same column — switch selection
+                    selected.classList.remove('selected');
+                    selected = item;
+                    item.classList.add('selected');
+                    return;
+                }
+
+                // Different columns — check match
+                if (selected.getAttribute('data-match') === item.getAttribute('data-match')) {
+                    selected.classList.remove('selected');
+                    selected.classList.add('matched');
+                    item.classList.add('matched');
+                    matchedCount++;
+                    selected = null;
+
+                    if (matchedCount === totalMatches) {
+                        feedback.textContent = '🎉 All matched — challenge complete!';
+                    } else {
+                        feedback.textContent = '✅ Correct! (' + matchedCount + '/' + totalMatches + ')';
+                    }
+                } else {
+                    // Wrong
+                    item.classList.add('wrong');
+                    setTimeout(() => {
+                        item.classList.remove('wrong');
+                        selected.classList.remove('selected');
+                        selected = null;
+                    }, 400);
+                    feedback.textContent = '❌ Not quite — try again.';
+                }
+            });
+        });
+    })();
+</script>
 
 </body>
 </html>
