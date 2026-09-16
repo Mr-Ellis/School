@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1.3.1 – Describe the Role of Operating Systems</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #f8fafc;
+    --panel-2: #eef2f7;
+    --text: #1e293b;
+    --muted: #64748b;
+    --accent: #0369a1;
+    --accent-2: #15803d;
+    --warn: #b45309;
+    --danger: #b91c1c;
+    --border: #cbd5e1;
+    --team-a: #0369a1;
+    --team-b: #15803d;
+    --team-c: #b45309;
+    --team-d: #6d28d9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 0 1rem 4rem;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  a { color: var(--accent); }
+  .back { display: inline-block; margin: 1.5rem 0; color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+  .back:hover { color: var(--accent); }
+  h1 { font-size: 1.9rem; margin: 0.5rem 0 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.6rem; }
+  h2 { font-size: 1.3rem; margin: 2rem 0 0.9rem; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 0.7rem; }
+  h3 { font-size: 1.05rem; margin: 1.4rem 0 0.6rem; color: var(--accent-2); }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 1rem 0; }
+  .panel.accent { border-left: 4px solid var(--accent); }
+  .panel.warn { border-left: 4px solid var(--warn); background: #fffbeb; }
+  .panel.danger { border-left: 4px solid var(--danger); background: #fef2f2; }
+  .panel.good { border-left: 4px solid var(--accent-2); background: #f0fdf4; }
+  .panel.mission { border-left: 4px solid var(--accent); background: linear-gradient(135deg,#f0f9ff,#f8fafc); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: #fff; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
+  th, td { border: 1px solid var(--border); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
+  th { background: var(--panel-2); color: var(--accent); }
+  tr:nth-child(even) td { background: #fafbfc; }
+  code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: #0c4a6e; }
+  .btn { display: inline-block; background: var(--accent); color: #fff; font-weight: 700; padding: 0.55rem 1.1rem; border-radius: 8px; text-decoration: none; margin: 0.35rem 0.35rem 0.35rem 0; }
+  .btn:hover { background: #075985; }
+  .btn.green { background: var(--accent-2); }
+  .btn.green:hover { background: #166534; }
+  .btn.orange { background: var(--warn); }
+  .btn.orange:hover { background: #92400e; }
+  details { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; margin: 0.9rem 0; }
+  summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+  details[open] summary { margin-bottom: 0.6rem; }
+  .timing { display: inline-block; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 12px; margin-left: 0.5rem; vertical-align: middle; }
+  .takeaway { background: #f0fdf4; border: 1px solid var(--accent-2); border-radius: 10px; padding: 1.3rem; font-size: 1rem; font-style: italic; margin-top: 1.5rem; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding: 0.35rem 0 0.35rem 1.8rem; position: relative; }
+  .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); font-size: 1.05rem; }
+  .checklist li.done::before { content: "✅"; }
+  .layer { display: grid; grid-template-columns: 1fr; gap: 0.35rem; margin: 1rem 0; }
+  .layer .row { border-radius: 10px; padding: 0.85rem 1.1rem; font-weight: 600; text-align: center; }
+  .layer .row.apps { background: #dceaf7; color: #13416b; border: 2px solid #9bbcd8; }
+  .layer .row.os { background: #fef3c7; color: #7a4a0a; border: 2px solid #e6b800; }
+  .layer .row.hw { background: #e6f7e6; color: #1f6b1f; border: 2px solid #a4d4a4; }
+  .layer .row small { display: block; font-weight: 400; font-size: 0.78rem; margin-top: 0.2rem; }
+  .layer .arrow { text-align: center; color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+  .discovery { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .discovery { grid-template-columns: 1fr; } }
+  .discovery .card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.88rem; }
+  .discovery .card strong { display: block; color: var(--accent); margin-bottom: 0.3rem; }
+  .discovery .card .hw { color: var(--muted); font-style: italic; font-size: 0.82rem; }
+  .tasks { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .tasks { grid-template-columns: 1fr; } }
+  .tasks .task { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.88rem; }
+  .tasks .task strong { display: block; color: var(--accent); margin-bottom: 0.3rem; }
+  .quiz { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.3rem; margin: 1rem 0; }
+  .quiz ol { padding-left: 1.3rem; }
+  .quiz li { margin-bottom: 0.5rem; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="year12.html">← Back to Year 12 Course Plan</a>
+
+  <h1>A1.3.1 – Describe the Role of Operating Systems</h1>
+
+  <!-- ============ MISSION ============ -->
+  <div class="panel mission">
+    <h2 style="margin-top:0;border:none;padding:0;color:var(--accent)">🏢 Operating System Recruitment Challenge — Mission 1</h2>
+    <p><strong>Microsoft is building Windows 2030 from bare metal.</strong></p>
+    <p>Before the four scheduling teams compete (next lesson), you must answer the foundation question:</p>
+    <p><strong>Why does an operating system exist at all — and what does it actually do?</strong></p>
+    <p>Your mission today: produce a <strong>detailed description</strong> of the OS role, ready to defend in the pitch.</p>
+  </div>
+
+  <!-- ============ STARTER ============ -->
+  <h2>🎮 Starter — Know Your Command Term <span class="timing">5 min</span></h2>
+  <p>Open the Command Terms page. Find <strong>Describe</strong> (Weight 2 — medium demand).</p>
+  <a class="btn" href="https://mr-ellis.github.io/School/command-terms.html" target="_blank" rel="noopener">📖 Open Command Terms</a>
+  <a class="btn orange" href="https://play.blooket.com/host/brawl?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">🚀 Launch Blooket</a>
+  <a class="btn" href="#" target="_blank" rel="noopener">📑 View Lesson Slides</a>
+
+  <div class="panel accent">
+    <strong>Today's mission brief:</strong> <em>Describe</em> means <strong>give a detailed account</strong> — say what it is and how it works, in full sentences. <strong>Naming the role is not enough.</strong> Your answer must explain the mechanism and link the two central ideas.
+  </div>
+
+  <!-- ============ THINK FIRST ============ -->
+  <h2>🤔 Think First — What Makes Your Computer Work? <span class="timing">5 min</span></h2>
+
+  <div class="panel warn">
+    <strong>Brainstorm:</strong> When you open a Word document, listen to music, and browse the web at the same time — what is actually making all of that work?
+    <p>You have a bare CPU, some RAM, a disk and a keyboard. <strong>No operating system.</strong> You want to run a word processor. What problems would you hit immediately?</p>
+    <ul>
+      <li>Where would the word processor store your document?</li>
+      <li>How would two programs share the CPU?</li>
+      <li>How would the word processor know which printer is attached?</li>
+      <li>How would you stop a buggy program overwriting another program's memory?</li>
+    </ul>
+    <p>Write <strong>two problems</strong> on your whiteboard. Hold it up.</p>
+  </div>
+
+  <div class="panel good">
+    <strong>Discovery:</strong> Every problem you wrote down is something the <strong>operating system</strong> handles. The OS exists because raw hardware is unusable by ordinary programs.
+  </div>
+
+  <!-- ============ WHAT IS AN OS ============ -->
+  <h2>💡 What Is an Operating System? <span class="timing">5 min</span></h2>
+
+  <p>An operating system (OS) is the <strong>fundamental software that manages computer hardware and software resources</strong> and provides common services for computer programs. It acts as an <strong>intermediary between the user and the hardware</strong>, ensuring efficient and secure operation of the system.</p>
+
+  <p>Some of the most famous modern operating systems:</p>
+  <table>
+    <thead>
+      <tr><th>Device type</th><th>Operating systems</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Larger computers / laptops</td><td>Microsoft Windows, Apple macOS, Linux</td></tr>
+      <tr><td>Smaller portable devices</td><td>Android, iOS</td></tr>
+    </tbody>
+  </table>
+
+  <p>Useful analogies for the OS role:</p>
+  <ul>
+    <li><strong>Restaurant manager</strong> — doesn't cook the food (that's the CPU) but coordinates orders, staff, and customers so the kitchen works efficiently.</li>
+    <li><strong>Traffic controller</strong> — doesn't drive the cars (those are the processes) but ensures they all move safely and fairly through shared space.</li>
+  </ul>
+
+  <!-- ============ THE TWO BIG IDEAS ============ -->
+  <h2>📊 The Two Big Ideas — Connected <span class="timing">8 min</span></h2>
+
+  <div class="panel accent">
+    <strong>The exam-critical framing:</strong> The two ideas are <em>connected</em>, not parallel.
+    <br><br>
+    The OS <strong>manages the system's resources</strong> (the <em>what</em>) — the processor, main memory and storage are all finite, and several programs want them at the same time.
+    <br><br>
+    It does this by <strong>abstracting the hardware</strong> (the <em>how</em>) — programs ask the OS to open a file, and the OS translates that request into whatever the specific hardware needs.
+    <br><br>
+    <strong>The result:</strong> the same program runs on a machine with a completely different disk, because the messy, device-specific part is the OS's problem, not the program's.
+  </div>
+
+  <h3>Abstraction — how the OS hides complexity</h3>
+  <p>The OS <strong>hides hardware complexity</strong>. A program that wants to read a file does not issue the precise electrical commands a specific disk controller expects. It asks the OS to open a file, and the OS translates that into whatever the hardware needs.</p>
+
+  <div class="layer">
+    <div class="row apps">APPLICATIONS
+      <small>Word processor · browser · games · media player</small>
+    </div>
+    <div class="arrow">⬇ asks the OS for services &nbsp;&nbsp;|&nbsp;&nbsp; ⬆ returns results</div>
+    <div class="row os">OPERATING SYSTEM
+      <small>Memory management · process management · I/O management · file system · user interface · security</small>
+    </div>
+    <div class="arrow">⬇ translates requests &nbsp;&nbsp;|&nbsp;&nbsp; ⬆ returns data</div>
+    <div class="row hw">HARDWARE
+      <small>CPU · memory · storage · I/O devices · network</small>
+    </div>
+  </div>
+
+  <p><strong>Why it matters:</strong> Programs are written once against a simple, uniform interface instead of against every possible piece of hardware.</p>
+
+  <h3>Resource management — what the OS coordinates</h3>
+  <p>The OS <strong>allocates limited resources</strong> to competing demands. Without OS decisions, two programs writing to the same memory or the same file would corrupt each other within seconds.</p>
+
+  <table>
+    <thead>
+      <tr><th>Resource</th><th>What the OS does</th><th>Why it matters</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>CPU management</strong></td>
+        <td>Allocates CPU time to processes; schedules; handles context switching</td>
+        <td>Ensures efficient execution; enables multitasking</td>
+      </tr>
+      <tr>
+        <td><strong>Memory management</strong></td>
+        <td>Handles allocation and de-allocation; manages virtual memory; enforces protection</td>
+        <td>Extends apparent memory capacity; stops one program corrupting another</td>
+      </tr>
+      <tr>
+        <td><strong>Storage management</strong></td>
+        <td>Organises data on storage devices; controls access; manages file system</td>
+        <td>Reliable data storage and retrieval by name, independent of physical location</td>
+      </tr>
+      <tr>
+        <td><strong>Device management</strong></td>
+        <td>Loads drivers; provides interfaces; coordinates hardware devices</td>
+        <td>Same read/write calls work for files, pipes, sockets, printers, keyboards</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============ DISCOVERY TASK ============ -->
+  <h2>🔍 Discovery Task — Rebuild the Abstraction <span class="timing">10 min</span></h2>
+  <p>In your group, you will be given the <strong>hardware reality</strong> column only. Your job is to work out <strong>what abstraction the OS must provide</strong> and <strong>what benefit that gives</strong> to programs and users.</p>
+
+  <div class="discovery">
+    <div class="card">
+      <strong>Hardware reality 1</strong>
+      <span class="hw">Millions of bytes arranged in semiconductor cells</span>
+      <p style="margin:0.5rem 0 0;">What abstraction? What benefit?</p>
+    </div>
+    <div class="card">
+      <strong>Hardware reality 2</strong>
+      <span class="hw">Dozens of CPU registers and complex privilege levels</span>
+      <p style="margin:0.5rem 0 0;">What abstraction? What benefit?</p>
+    </div>
+    <div class="card">
+      <strong>Hardware reality 3</strong>
+      <span class="hw">Unstructured blocks on a disk platter or flash cells</span>
+      <p style="margin:0.5rem 0 0;">What abstraction? What benefit?</p>
+    </div>
+    <div class="card">
+      <strong>Hardware reality 4</strong>
+      <span class="hw">Heterogeneous buses, controllers and sensors</span>
+      <p style="margin:0.5rem 0 0;">What abstraction? What benefit?</p>
+    </div>
+  </div>
+
+  <details>
+    <summary>📌 Click to reveal the answers — after you've attempted all four</summary>
+    <table>
+      <thead>
+        <tr><th>Hardware reality</th><th>OS abstraction</th><th>Benefit to programs / users</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Millions of bytes in semiconductor cells</td>
+          <td>Virtual memory (flat, linear address space)</td>
+          <td>Programs see a clean private address space; the OS can protect, relocate and page memory</td>
+        </tr>
+        <tr>
+          <td>Dozens of CPU registers, complex privilege levels</td>
+          <td>Process model + system-call interface</td>
+          <td>Each process believes it owns a CPU; the kernel switches and protects</td>
+        </tr>
+        <tr>
+          <td>Unstructured blocks on disk or flash</td>
+          <td>Hierarchical file system</td>
+          <td>Persistent, named files and directories independent of physical location</td>
+        </tr>
+        <tr>
+          <td>Heterogeneous buses, controllers, sensors</td>
+          <td>Device drivers &amp; unified I/O API</td>
+          <td>Same read/write calls get bytes from a file, a pipe or a network socket</td>
+        </tr>
+      </tbody>
+    </table>
+  </details>
+
+  <!-- ============ OS IN ACTION ============ -->
+  <h2>🎯 Activity — OS in Action <span class="timing">7 min</span></h2>
+  <p>In groups, identify which OS responsibilities are at work in each everyday task. Be specific — <em>which</em> function, doing <em>what</em>?</p>
+
+  <div class="tasks">
+    <div class="task">
+      <strong>Task 1 — Opening a document</strong>
+      What is the OS doing here? Name at least two responsibilities.
+    </div>
+    <div class="task">
+      <strong>Task 2 — Browsing the internet</strong>
+      What is the OS doing here? Name at least two responsibilities.
+    </div>
+    <div class="task">
+      <strong>Task 3 — Listening to music while typing</strong>
+      What is the OS doing here? Name at least two responsibilities.
+    </div>
+    <div class="task">
+      <strong>Task 4 — Printing a page</strong>
+      What is the OS doing here? Name at least two responsibilities.
+    </div>
+  </div>
+
+  <details>
+    <summary>📌 Click to reveal suggested answers</summary>
+    <ul>
+      <li><strong>Opening a document:</strong> file system (locating the file by name, mapping to disk blocks); memory management (loading it into RAM); security (checking permissions); GUI (rendering the window).</li>
+      <li><strong>Browsing the internet:</strong> networking (TCP/IP, sockets); memory management (buffering pages); device management (network card driver); security (TLS, firewall).</li>
+      <li><strong>Listening to music while typing:</strong> scheduling (sharing CPU between music player and editor); I/O management (audio output driver, keyboard input); memory management (buffering audio).</li>
+      <li><strong>Printing a page:</strong> device management (printer driver, spooling); scheduling (background print job); file system (reading the document); security (printer access control).</li>
+    </ul>
+  </details>
+
+  <!-- ============ THE EIGHT RESPONSIBILITIES ============ -->
+  <h2>📋 The OS Role in Detail — Reference Table <span class="timing">reference</span></h2>
+  <p>Use this as your reference for the <strong>detailed description</strong> the exam expects. Naming each responsibility is <em>not</em> enough — say what it does.</p>
+
+  <table>
+    <thead>
+      <tr><th>Responsibility</th><th>What it does</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Processor management</strong></td><td>Creates, schedules, suspends and terminates processes and threads. Implements context switching and enforces privilege separation.</td></tr>
+      <tr><td><strong>Memory management</strong></td><td>Maintains page tables, performs paging/segmentation, enforces protection, handles allocation and de-allocation. Provides virtual memory to extend apparent capacity.</td></tr>
+      <tr><td><strong>I/O and device management</strong></td><td>Loads device drivers, mediates direct memory access (DMA), buffers asynchronous I/O, exposes uniform I/O abstractions.</td></tr>
+      <tr><td><strong>File-system and secondary-storage management</strong></td><td>Implements naming, directories, metadata, journaling, caching and quota enforcement.</td></tr>
+      <tr><td><strong>Network stack</strong></td><td>Implements protocol layers (e.g. TCP/IP) in software, integrates sockets with the generic I/O interface, applies firewall and QoS rules.</td></tr>
+      <tr><td><strong>Security and access control</strong></td><td>Authenticates principals, enforces discretionary/mandatory access-control models, addresses encryption and auditing.</td></tr>
+      <tr><td><strong>Virtualisation &amp; isolation</strong></td><td>May act as a hypervisor (type 1) or host for containers; isolates guests or namespaces while multiplexing physical hardware.</td></tr>
+      <tr><td><strong>User interface subsystem</strong></td><td>Provides command-line shells, window servers or system libraries so that application UI code need not address GPUs directly.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ INDEPENDENT PROOF ============ -->
+  <h2>✍️ Independent Proof <span class="timing">8 min</span></h2>
+  <p>Silent, individual. Write a full answer:</p>
+  <div class="panel accent">
+    <em>"Describe the role of an operating system in a computer system. [4 marks]"</em>
+  </div>
+
+  <p><strong>📝 Sentence frame:</strong></p>
+  <p>"The operating system is ___ that ___. Its primary role is to ___ and ___. It manages ___ by ___. For example, it manages ___ by ___. Without an OS, ___ would ___."</p>
+
+  <details>
+    <summary>📌 Click to see a model answer</summary>
+    <p>The operating system is the fundamental software that manages computer hardware and software resources and provides common services for programs, acting as an intermediary between the user and the hardware <strong>[1]</strong>.</p>
+    <p>Its role is to abstract hardware complexities and manage system resources <strong>[1]</strong>. It hides the intricate details of physical components so that programs can use simple, uniform interfaces instead of issuing device-specific commands — the same program therefore runs on any machine without being rewritten <strong>[1]</strong>.</p>
+    <p>For example, it manages CPU time by scheduling processes and performing context switches, and it manages memory by allocating and de-allocating space, enforcing protection between processes and providing virtual memory <strong>[1]</strong>.</p>
+    <p>Without an operating system, two programs could overwrite each other's memory or the same file, and ordinary users would need to understand every hardware detail to run a program.</p>
+  </details>
+
+  <!-- ============ PLENARY ============ -->
+  <h2>🃏 Plenary <span class="timing">2 min</span></h2>
+  <a class="btn green" href="https://quizlet.com/pt/1066048960/a-131-describe-the-role-of-operating-systems-flash-cards/" target="_blank" rel="noopener">Launch Quizlet</a>
+  <a class="btn" href="#" target="_blank" rel="noopener">📑 View Lesson Slides</a>
+
+  <!-- ============ EXTENSION ============ -->
+  <h2>⭐ Extension (if time / homework)</h2>
+  <ul>
+    <li><strong>Research:</strong> How does the abstraction of virtual memory actually work? One paragraph.</li>
+    <li><strong>Compare:</strong> Pick two operating systems (e.g. Windows and Linux) and describe how each performs <em>one</em> of the eight responsibilities differently.</li>
+    <li><strong>Real-world link:</strong> Why do mobile OSes (Android/iOS) have a different user interface subsystem from desktop OSes? What is the same at the core?</li>
+    <li><strong>Advanced research (challenge):</strong> How does virtualisation work as a responsibility? Distinguish a type-1 hypervisor from container isolation.</li>
+  </ul>
+
+  <!-- ============ SELF-CHECK QUIZ ============ -->
+  <h2>✅ Self-Check Quiz</h2>
+  <div class="quiz">
+    <ol>
+      <li>Which of the following is <strong>NOT</strong> a core function of an operating system?<br>
+        A. Running application software &nbsp; B. Compiling source code &nbsp; C. Providing a user interface &nbsp; D. Managing system resources</li>
+      <li>What is the purpose of abstraction in an operating system?<br>
+        A. To make the computer run faster &nbsp; B. To prevent software crashes &nbsp; C. To enable multitasking &nbsp; D. To hide complex hardware details from users and applications</li>
+      <li>Which of the following is an advantage of virtualisation?<br>
+        A. Decreased flexibility &nbsp; B. Reduced security &nbsp; C. Increased hardware costs &nbsp; D. Improved resource efficiency</li>
+      <li>What is a device driver?<br>
+        A. A type of scheduling algorithm &nbsp; B. A security feature &nbsp; C. A hardware component that controls a device &nbsp; D. A software program that allows the OS to communicate with a device</li>
+    </ol>
+    <details>
+      <summary>📌 Show answers</summary>
+      <p>1 — <strong>B</strong> (compiling source code is done by a compiler, not the OS). 2 — <strong>D</strong>. 3 — <strong>D</strong>. 4 — <strong>D</strong>.</p>
+    </details>
+  </div>
+
+  <div class="takeaway">
+    💡 <strong>Key Takeaway:</strong> "The operating system exists to do two connected things: <strong>manage resources</strong> so that competing programs share the CPU, memory, storage and devices safely, and <strong>abstract the hardware</strong> so programs can use simple, uniform interfaces instead of device-specific commands. The abstraction is <em>how</em> the OS manages resources; the resource management is <em>what</em> it does. Everything else — from drawing windows to encrypting network traffic — serves those two roles."
+  </div>
+
+  <!-- ============ OBS FORM ============ -->
+  <h2>✅ Observation Form Coverage</h2>
+  <p>Every activity is timed to fit a <strong>45–50 minute</strong> lesson and mapped to your observation form.</p>
+
+  <h3>1. Learning</h3>
+  <ul class="checklist">
+    <li class="done"><strong>Guide Reference:</strong> A1.3.1 – Describe the role of operating systems</li>
+    <li class="done"><strong>Content to Be Taught:</strong> OS as intermediary; abstraction of hardware complexity; resource management (CPU, memory, storage, devices); the eight responsibilities</li>
+    <li class="done"><strong>Student Outcome:</strong> Describe the role of an OS — naming both big ideas as <em>connected</em> and linking them to specific resources with mechanism, not just names</li>
+    <li class="done"><strong>Proof:</strong> Completed discovery task + OS in Action activity + independent 4-mark describe answer</li>
+    <li class="done"><strong>Secure Standard:</strong> Names the OS as software managing hardware/software; states abstraction <em>and</em> resource management and links them; gives at least two specific resources with what the OS does to them; explains a consequence</li>
+    <li class="done"><strong>IB Connection:</strong> Command term <em>Describe</em> (Weight 2) — "give a detailed account"; 4-mark allocation modelled with sentence frame and exemplar</li>
+  </ul>
+
+  <h3>2. Plan</h3>
+  <ul class="checklist">
+    <li class="done"><strong>Connect (5 min):</strong> Command Terms starter — students retrieve the definition of <em>Describe</em>; Think First bare-metal brainstorm on whiteboards</li>
+    <li class="done"><strong>Teach / Model (13 min):</strong> What is an OS + analogies; Two Big Ideas shown as <em>connected</em>; abstraction layer diagram + resource management table</li>
+    <li class="done"><strong>Students Think / Do (17 min):</strong> Discovery task reconstructing the abstraction table; OS in Action group activity identifying responsibilities in real tasks</li>
+    <li class="done"><strong>Check Everyone (embedded):</strong> Whiteboard problems; discovery task group answers; OS in Action group answers</li>
+    <li class="done"><strong>Adapt:</strong> Support = layer diagram + resource table + analogies; Challenge = virtualisation research, OS comparison, mobile vs desktop analysis</li>
+    <li class="done"><strong>Feedback &amp; Improve (embedded):</strong> Peer feedback on OS in Action answers before independent proof</li>
+    <li class="done"><strong>Independent Proof (8 min):</strong> Silent individual 4-mark describe question, self-marked against the model answer</li>
+  </ul>
+
+  <h3>3. Planned Response and Follow-Through</h3>
+  <ul class="checklist">
+    <li class="done"><strong>If Learning Is Not Secure:</strong> Re-model with the restaurant manager analogy (OS coordinates; CPU cooks; customers are programs; hardware is the kitchen); reduce to CPU + memory only; re-teach the layer diagram one row at a time; re-run the "corrupt each other within seconds" failure case</li>
+    <li class="done"><strong>Next Step:</strong> Extension tasks as homework (virtual memory research + OS comparison); layer diagram + resource table posted to Schoolbox; self-check quiz answers posted; deadline set</li>
+  </ul>
+
+  <h3>4. Observation Checklist</h3>
+  <ul class="checklist">
+    <li class="done">Accurate guide content</li>
+    <li class="done">Clear outcome and standard</li>
+    <li class="done">Every student actively learning</li>
+    <li class="done">Higher-order thinking / agency visible</li>
+    <li class="done">Every student checked</li>
+    <li class="done">Feedback will be used</li>
+    <li class="done">Time and expectations are clear</li>
+  </ul>
+
+  <div class="panel good">
+    <strong>What the observer will see and write:</strong>
+    <ul>
+      <li>✅ "Students worked out what the OS must do before being told" — the Discovery Task reconstructs the abstraction table from hardware reality alone</li>
+      <li>✅ "Students connected new learning to real tasks" — the OS in Action activity applies the responsibilities to opening a document, browsing, printing</li>
+      <li>✅ "Students were making decisions" — which abstraction fits which hardware reality, which responsibilities are at work in each task</li>
+      <li>✅ "Every student was checked" — whiteboards, group answers, self-check quiz, independent proof</li>
+      <li>✅ "The teacher facilitated rather than delivered" — the two big ideas are explained, then students apply them to unfamiliar scenarios</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>
