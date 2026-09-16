@@ -60,9 +60,6 @@
             border-radius: 20px;
             text-transform: uppercase;
         }
-        .badge-hl {
-            background: #7c3a3a;
-        }
         .command-term {
             background: #ebf4ff;
             border-left: 5px solid #0b2a4a;
@@ -90,17 +87,6 @@
             vertical-align: top;
         }
         tr:nth-child(even) { background: #f7fafc; }
-        .extension-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 4px 15px;
-            background: #f7fafc;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-        .extension-grid .label { font-weight: 600; color: #0b2a4a; }
-        .extension-grid .desc { color: #1e293b; }
         a {
             color: #b21f1f;
             text-decoration: none;
@@ -200,7 +186,6 @@
         .task-row .task-desc { flex: 1; }
         .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
 
-        /* Task 2 – green background */
         .task-row.task-starter {
             background: #e6f5e6;
             border-left: 4px solid #2d7d46;
@@ -259,7 +244,7 @@
         }
         .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
 
-        /* Two big ideas panel */
+        /* Big ideas panel */
         .big-ideas {
             background: linear-gradient(135deg,#f0f9ff,#f8fafc);
             border-left: 5px solid #0b2a4a;
@@ -288,11 +273,298 @@
         .layer .row small { display: block; font-weight: 400; font-size: 0.85rem; margin-top: 4px; }
         .layer .arrow { text-align: center; color: #4a5568; font-size: 0.9rem; line-height: 1.4; }
 
+        /* ===== Interactive: two big ideas click to reveal ===== */
+        .idea-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .idea-grid { grid-template-columns: 1fr; } }
+
+        .idea-card {
+            border-radius: 12px;
+            padding: 20px 22px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 2px solid;
+            position: relative;
+        }
+        .idea-card .idea-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            opacity: 0.7;
+        }
+        .idea-card .idea-title {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+        }
+        .idea-card .idea-short {
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        .idea-card .idea-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.3s ease;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            margin-top: 0;
+        }
+        .idea-card.open .idea-detail {
+            max-height: 600px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(0,0,0,0.15);
+        }
+        .idea-card .tap-hint {
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 8px;
+            display: block;
+            opacity: 0.7;
+        }
+
+        .idea-card.abstraction {
+            background: #ebf4ff;
+            border-color: #0b2a4a;
+            color: #0b2a4a;
+        }
+        .idea-card.abstraction:hover { background: #dce8f5; }
+        .idea-card.abstraction.open { background: #dce8f5; }
+
+        .idea-card.resources {
+            background: #fef3c7;
+            border-color: #b45309;
+            color: #7a4a0a;
+        }
+        .idea-card.resources:hover { background: #fde68a; }
+        .idea-card.resources.open { background: #fde68a; }
+
+        /* ===== Interactive: resource cards ===== */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .resource-grid { grid-template-columns: 1fr; } }
+
+        .resource-card {
+            background: #f7fafc;
+            border: 2px solid #dce8f5;
+            border-radius: 10px;
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .resource-card:hover {
+            border-color: #0b2a4a;
+            background: #ebf4ff;
+        }
+        .resource-card.open {
+            border-color: #b21f1f;
+            background: #ebf4ff;
+        }
+        .resource-card .r-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1rem;
+        }
+        .resource-card .r-head .r-icon {
+            font-size: 1.4rem;
+        }
+        .resource-card .r-what {
+            font-size: 0.88rem;
+            color: #4a5568;
+            margin-top: 6px;
+        }
+        .resource-card .r-why {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, margin-top 0.3s ease;
+            font-size: 0.85rem;
+            color: #1e293b;
+            margin-top: 0;
+        }
+        .resource-card.open .r-why {
+            max-height: 300px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #b21f1f;
+        }
+        .resource-card.open .r-why strong { color: #b21f1f; }
+
+        /* ===== Interactive: scenario explorer ===== */
+        .scenario {
+            background: #f7fafc;
+            border-left: 5px solid #0b2a4a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+        .scenario .scenario-q {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .scenario .scenario-q:hover { color: #b21f1f; }
+        .scenario .reveal-btn {
+            font-size: 0.75rem;
+            background: #b21f1f;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            flex-shrink: 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .scenario .reveal-btn:hover { background: #0b2a4a; }
+        .scenario .scenario-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.3s ease;
+            margin-top: 0;
+            color: #1e293b;
+            font-size: 0.92rem;
+        }
+        .scenario.open .scenario-a {
+            max-height: 800px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .scenario .scenario-a ul { padding-left: 1.2rem; }
+        .scenario .scenario-a li { margin-bottom: 6px; }
+
+        /* ===== Interactive: flip cards for OS examples ===== */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .flip-grid { grid-template-columns: 1fr; } }
+
+        .flip-card {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .flip-card-front {
+            background: #0b2a4a;
+            color: #fff;
+        }
+        .flip-card-front .big-icon {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+        .flip-card-front .big-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        .flip-card-front .flip-hint {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+        .flip-card-back {
+            background: #fef3c7;
+            color: #7a4a0a;
+            transform: rotateY(180deg);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: 2px solid #fdbb2d;
+        }
+
+        /* ===== Quick quiz ===== */
+        .quiz {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+        .quiz h3 { margin-top: 0; }
+        .quiz-q { margin-bottom: 18px; }
+        .quiz-q .q-text {
+            font-weight: 600;
+            color: #0b2a4a;
+            margin-bottom: 8px;
+        }
+        .quiz-options { display: flex; flex-direction: column; gap: 6px; }
+        .quiz-option {
+            background: white;
+            border: 2px solid #dce4ed;
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quiz-option:hover { border-color: #0b2a4a; background: #ebf4ff; }
+        .quiz-option.correct {
+            border-color: #2d7d46;
+            background: #e6f5e6;
+            color: #1a6b33;
+            font-weight: 600;
+        }
+        .quiz-option.wrong {
+            border-color: #b21f1f;
+            background: #fdeaea;
+            color: #a13232;
+        }
+        .quiz-option .mark { font-weight: 700; }
+        .quiz-score {
+            text-align: center;
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1.05rem;
+            margin-top: 10px;
+        }
+
         @media (max-width: 640px) {
             .container { padding: 20px; }
             h1 { font-size: 1.8rem; }
-            table, .extension-grid { font-size: 0.85rem; }
-            .extension-grid { grid-template-columns: 1fr; gap: 2px; }
+            table { font-size: 0.85rem; }
             .task-1-resources { flex-direction: column; align-items: flex-start; }
             .blooket-box { flex-direction: column; align-items: flex-start; }
         }
@@ -307,7 +579,6 @@
     <h1>A1.3.1 – Describe the Role of Operating Systems</h1>
 
     <h2>📌 Learning Objective</h2>
-    <p>By the end of this lesson, you will be able to:</p>
     <ul>
         <li><strong>Describe</strong> what an operating system is and why it exists</li>
         <li><strong>Explain</strong> how the OS abstracts hardware complexity to make programs portable</li>
@@ -331,29 +602,90 @@
     <h2>💡 What Is an Operating System?</h2>
     <p>An operating system (OS) is the <strong>fundamental software that manages computer hardware and software resources</strong> and provides common services for computer programs. It acts as an <strong>intermediary between the user and the hardware</strong>, ensuring efficient and secure operation of the system.</p>
 
-    <p>Some of the most famous modern operating systems:</p>
-    <table>
-        <thead>
-            <tr><th>Device type</th><th>Operating systems</th></tr>
-        </thead>
-        <tbody>
-            <tr><td>Larger computers / laptops</td><td>Microsoft Windows, Apple macOS, Linux</td></tr>
-            <tr><td>Smaller portable devices</td><td>Android, iOS</td></tr>
-        </tbody>
-    </table>
+    <h3>Flip the cards — meet some famous OSes</h3>
+    <div class="flip-grid">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">🪟</span>
+                    <span class="big-name">Windows</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    Microsoft Windows — used on the vast majority of desktop and laptop computers worldwide. Known for its wide hardware compatibility and Office productivity suite.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">🍎</span>
+                    <span class="big-name">macOS</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    Apple macOS — runs only on Apple hardware. Known for tight integration between hardware and software, Unix-based underpinnings, and design consistency.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">🐧</span>
+                    <span class="big-name">Linux</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    Linux — open-source, runs on everything from servers to Raspberry Pis. Comes in many distributions (Ubuntu, Debian, Fedora). Dominant on web servers and supercomputers.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">📱</span>
+                    <span class="big-name">Android &amp; iOS</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    Mobile operating systems — Android (Google) and iOS (Apple). Optimised for touch input, battery life and mobile hardware. Different design priorities from desktop OSes.
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h2>📊 The Two Big Ideas</h2>
+    <h2>📊 The Two Big Ideas — Click to Explore</h2>
+    <p>The role of the OS comes down to <strong>two connected ideas</strong>. <strong>Click each card</strong> to reveal how they work.</p>
+
+    <div class="idea-grid">
+        <div class="idea-card abstraction" onclick="this.classList.toggle('open')">
+            <div class="idea-label">The How</div>
+            <div class="idea-title">Abstraction</div>
+            <div class="idea-short">Hiding hardware complexity behind a simple, uniform interface.</div>
+            <div class="idea-detail">
+                A program that wants to read a file does not issue the precise electrical commands a specific disk controller expects. It asks the OS to open a file, and the OS translates that request into whatever the hardware needs.<br><br>
+                <strong>Why it matters:</strong> the same program runs on a machine with a completely different disk, because the messy, device-specific part is the OS's problem, not the program's.
+            </div>
+            <span class="tap-hint">Tap to reveal</span>
+        </div>
+        <div class="idea-card resources" onclick="this.classList.toggle('open')">
+            <div class="idea-label">The What</div>
+            <div class="idea-title">Resource Management</div>
+            <div class="idea-short">Allocating limited resources safely across competing programs.</div>
+            <div class="idea-detail">
+                The processor, main memory and storage are all finite, and several programs usually want them at the same time. The OS decides which process gets the processor and for how long, hands out memory and reclaims it, and tracks where every file sits on disk.<br><br>
+                <strong>Why it matters:</strong> without these decisions, two programs writing to the same memory or the same file would corrupt each other within seconds.
+            </div>
+            <span class="tap-hint">Tap to reveal</span>
+        </div>
+    </div>
 
     <div class="big-ideas">
         <p><strong>The two ideas are connected, not parallel.</strong></p>
-        <p style="margin-top:10px;">The OS <strong>manages the system's resources</strong> (the <em>what</em>) — the processor, main memory and storage are all finite, and several programs want them at the same time.</p>
-        <p style="margin-top:10px;">It does this by <strong>abstracting the hardware</strong> (the <em>how</em>) — programs ask the OS to open a file, and the OS translates that request into whatever the specific hardware needs.</p>
-        <p style="margin-top:10px;"><strong>The result:</strong> the same program runs on a machine with a completely different disk, because the messy, device-specific part is the OS's problem, not the program's.</p>
+        <p style="margin-top:10px;">The OS manages resources (<em>the what</em>) <strong>by</strong> abstracting the hardware (<em>the how</em>). The abstraction is the mechanism; the resource management is the goal.</p>
     </div>
 
-    <h3>Abstraction — how the OS hides complexity</h3>
-    <p>The OS <strong>hides hardware complexity</strong>. A program that wants to read a file does not issue the precise electrical commands a specific disk controller expects. It asks the OS to open a file, and the OS translates that into whatever the hardware needs.</p>
-
+    <h3>The OS as an intermediary layer</h3>
     <div class="layer">
         <div class="row apps">APPLICATIONS
             <small>Word processor · browser · games · media player</small>
@@ -368,71 +700,137 @@
         </div>
     </div>
 
-    <p><strong>Why it matters:</strong> Programs are written once against a simple, uniform interface instead of against every possible piece of hardware.</p>
+    <h2>🎯 The Four Resources — Click to Explore</h2>
+    <p>The OS coordinates <strong>four key resources</strong>. <strong>Click each card</strong> to see what the OS does and why it matters.</p>
 
-    <h3>Resource management — what the OS coordinates</h3>
-    <p>The OS <strong>allocates limited resources</strong> to competing demands. Without OS decisions, two programs writing to the same memory or the same file would corrupt each other within seconds.</p>
-
-    <table>
-        <thead>
-            <tr><th>Resource</th><th>What the OS does</th><th>Why it matters</th></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>CPU management</strong></td>
-                <td>Allocates CPU time to processes; schedules; handles context switching</td>
-                <td>Ensures efficient execution; enables multitasking</td>
-            </tr>
-            <tr>
-                <td><strong>Memory management</strong></td>
-                <td>Handles allocation and de-allocation; manages virtual memory; enforces protection</td>
-                <td>Extends apparent memory capacity; stops one program corrupting another</td>
-            </tr>
-            <tr>
-                <td><strong>Storage management</strong></td>
-                <td>Organises data on storage devices; controls access; manages file system</td>
-                <td>Reliable data storage and retrieval by name, independent of physical location</td>
-            </tr>
-            <tr>
-                <td><strong>Device management</strong></td>
-                <td>Loads drivers; provides interfaces; coordinates hardware devices</td>
-                <td>Same read/write calls work for files, pipes, sockets, printers, keyboards</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h2>🎯 Activity — OS in Action</h2>
-    <p>In groups, identify which OS responsibilities are at work in each everyday task. Be specific — <em>which</em> function, doing <em>what</em>?</p>
-
-    <div class="task-block">
-        <div class="task-row">
-            <span class="task-step">1</span>
-            <span class="task-desc">
-                <strong>Opening a document</strong> — What is the OS doing here? Name at least two responsibilities.
-            </span>
+    <div class="resource-grid">
+        <div class="resource-card" onclick="this.classList.toggle('open')">
+            <div class="r-head"><span class="r-icon">⚙️</span><span>CPU management</span></div>
+            <div class="r-what">Allocates CPU time to processes; schedules; handles context switching.</div>
+            <div class="r-why"><strong>Why it matters:</strong> ensures efficient execution and enables multitasking — without scheduling, one process could hog the CPU and freeze everything else.</div>
         </div>
-        <div class="task-row">
-            <span class="task-step">2</span>
-            <span class="task-desc">
-                <strong>Browsing the internet</strong> — What is the OS doing here? Name at least two responsibilities.
-            </span>
+        <div class="resource-card" onclick="this.classList.toggle('open')">
+            <div class="r-head"><span class="r-icon">🧠</span><span>Memory management</span></div>
+            <div class="r-what">Handles allocation and de-allocation; manages virtual memory; enforces protection.</div>
+            <div class="r-why"><strong>Why it matters:</strong> extends apparent memory capacity via virtual memory, and stops one program corrupting another's memory space.</div>
         </div>
-        <div class="task-row">
-            <span class="task-step">3</span>
-            <span class="task-desc">
-                <strong>Listening to music while typing</strong> — What is the OS doing here? Name at least two responsibilities.
-            </span>
+        <div class="resource-card" onclick="this.classList.toggle('open')">
+            <div class="r-head"><span class="r-icon">💾</span><span>Storage management</span></div>
+            <div class="r-what">Organises data on storage devices; controls access; manages the file system.</div>
+            <div class="r-why"><strong>Why it matters:</strong> provides reliable data storage and retrieval <em>by name</em>, independent of the physical location on the disk.</div>
         </div>
-        <div class="task-row">
-            <span class="task-step">4</span>
-            <span class="task-desc">
-                <strong>Printing a page</strong> — What is the OS doing here? Name at least two responsibilities.
-            </span>
+        <div class="resource-card" onclick="this.classList.toggle('open')">
+            <div class="r-head"><span class="r-icon">🔌</span><span>Device management</span></div>
+            <div class="r-what">Loads drivers; provides uniform interfaces; coordinates hardware devices.</div>
+            <div class="r-why"><strong>Why it matters:</strong> the same read/write calls work for files, pipes, sockets, printers and keyboards — one interface, many devices.</div>
         </div>
     </div>
 
-    <h2>📋 The OS Role in Detail</h2>
-    <p>Use this as your reference for the <strong>detailed account</strong> the exam expects. Naming each responsibility is <em>not</em> enough — say what it does.</p>
+    <h2>🔍 Scenario Explorer — What Is the OS Doing?</h2>
+    <p>For each everyday task, <strong>click the question to reveal</strong> which OS responsibilities are at work.</p>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>📄 Opening a document</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>File system</strong> — locates the file by name and maps it to disk blocks.</li>
+                <li><strong>Memory management</strong> — loads the file and the application into RAM.</li>
+                <li><strong>Security</strong> — checks that you have permission to read the file.</li>
+                <li><strong>GUI</strong> — renders the document window on screen.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🌐 Browsing the internet</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Networking</strong> — implements TCP/IP, opens sockets, handles packet flow.</li>
+                <li><strong>Memory management</strong> — buffers web pages and images in RAM.</li>
+                <li><strong>Device management</strong> — drives the network card and Wi-Fi adapter.</li>
+                <li><strong>Security</strong> — handles TLS encryption and firewall rules.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🎵 Listening to music while typing</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Scheduling</strong> — shares the CPU between the music player and the text editor so both feel responsive.</li>
+                <li><strong>I/O management</strong> — drives the audio output device and the keyboard input.</li>
+                <li><strong>Memory management</strong> — buffers audio data to prevent gaps in playback.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🖨️ Printing a page</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Device management</strong> — loads the printer driver and spools the print job.</li>
+                <li><strong>Scheduling</strong> — runs the background print job alongside your current work.</li>
+                <li><strong>File system</strong> — reads the document to send to the printer.</li>
+                <li><strong>Security</strong> — checks printer access permissions.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>🧠 Quick Quiz</h2>
+    <div class="quiz" id="quizContainer">
+        <div class="quiz-q" data-answer="2">
+            <div class="q-text">1. What is the primary role of an operating system?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>To run application software only</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>To abstract hardware complexity and manage system resources</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>To compile source code into machine language</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>To encrypt all files on the disk</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="3">
+            <div class="q-text">2. What is abstraction in the context of an OS?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Making the computer run faster</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Preventing software crashes</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Hiding complex hardware details from users and applications</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Enabling multitasking</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="1">
+            <div class="q-text">3. Why does the OS need to manage resources?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Because CPU, memory and storage are finite and several programs want them simultaneously</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Because programs are too large to fit in memory</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Because users demand it</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Because hardware is unreliable</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="4">
+            <div class="q-text">4. Which statement best describes the relationship between abstraction and resource management?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>They are unrelated — the OS does both independently</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Abstraction replaces resource management</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Resource management replaces abstraction</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>The OS manages resources <em>by</em> abstracting the hardware — abstraction is the mechanism, resource management is the goal</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-score" id="quizScore">Score: 0 / 4</div>
+    </div>
+
+    <h2>📋 The OS Role in Detail — Reference</h2>
+    <p>Use this as your reference for the <strong>detailed account</strong> the exam expects.</p>
 
     <table>
         <thead>
@@ -468,7 +866,7 @@
                 <span style="font-size:0.9rem; color:#4a6a85;">Take notes on the two big ideas — abstraction and resource management — and how they connect.</span>
             </span>
         </div>
-        <!-- Task 2 – green background: starter PowerPoint -->
+        <!-- Task 2 – green background -->
         <div class="task-row task-starter">
             <span class="task-step">2</span>
             <span class="task-desc">
@@ -480,28 +878,8 @@
         <!-- Task 3 -->
         <div class="task-row">
             <span class="task-step">3</span>
-            <span class="task-desc"><strong>Extension Activities</strong> — Choose from the activities below if you finish early.</span>
-        </div>
-        <!-- Task 4 -->
-        <div class="task-row">
-            <span class="task-step">4</span>
             <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066048960/a-131-describe-the-role-of-operating-systems-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
         </div>
-    </div>
-
-    <h2>⭐ Extension Activities</h2>
-    <div class="extension-grid">
-        <span class="label">1. Virtual Memory Research</span>
-        <span class="desc">How does the abstraction of virtual memory actually work? Write one paragraph explaining the mechanism.</span>
-
-        <span class="label">2. OS Comparison</span>
-        <span class="desc">Pick two operating systems (e.g. Windows and Linux) and describe how each performs <em>one</em> of the eight responsibilities differently.</span>
-
-        <span class="label">3. Mobile vs Desktop</span>
-        <span class="desc">Why do mobile OSes (Android/iOS) have a different user interface subsystem from desktop OSes? What is the same at the core?</span>
-
-        <span class="label">4. Virtualisation Deep Dive</span>
-        <span class="desc">How does virtualisation work as a responsibility? Distinguish a type-1 hypervisor from container isolation.</span>
     </div>
 
     <div class="key-takeaway">
@@ -519,6 +897,46 @@
         A1.3.1 – Describe the Role of Operating Systems • IB Computer Science • Year 12
     </div>
 </div>
+
+<script>
+    // ===== Quick Quiz =====
+    (function() {
+        const quizQs = document.querySelectorAll('#quizContainer .quiz-q');
+        const scoreEl = document.getElementById('quizScore');
+        let correctCount = 0;
+        const answered = new Set();
+
+        quizQs.forEach((q, idx) => {
+            const answer = q.getAttribute('data-answer');
+            const options = q.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (answered.has(idx)) return;
+                    answered.add(idx);
+
+                    const chosen = opt.getAttribute('data-opt');
+                    const mark = opt.querySelector('.mark');
+
+                    if (chosen === answer) {
+                        opt.classList.add('correct');
+                        mark.textContent = '✓';
+                        correctCount++;
+                    } else {
+                        opt.classList.add('wrong');
+                        mark.textContent = '✗';
+                        options.forEach(o => {
+                            if (o.getAttribute('data-opt') === answer) {
+                                o.classList.add('correct');
+                                o.querySelector('.mark').textContent = '✓';
+                            }
+                        });
+                    }
+                    scoreEl.textContent = 'Score: ' + correctCount + ' / ' + quizQs.length;
+                });
+            });
+        });
+    })();
+</script>
 
 </body>
 </html>
