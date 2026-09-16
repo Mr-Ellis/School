@@ -16,6 +16,10 @@
     --warn: #b45309;
     --danger: #b91c1c;
     --border: #cbd5e1;
+    --team-fcfs: #0369a1;
+    --team-rr: #15803d;
+    --team-pri: #b45309;
+    --team-mlq: #6d28d9;
   }
   * { box-sizing: border-box; }
   body {
@@ -26,7 +30,7 @@
     line-height: 1.6;
     padding: 0 1rem 4rem;
   }
-  .wrap { max-width: 960px; margin: 0 auto; }
+  .wrap { max-width: 980px; margin: 0 auto; }
   a { color: var(--accent); }
   .back { display: inline-block; margin: 1.5rem 0; color: var(--muted); text-decoration: none; font-size: 0.95rem; }
   .back:hover { color: var(--accent); }
@@ -38,6 +42,7 @@
   .panel.warn { border-left: 4px solid var(--warn); background: #fffbeb; }
   .panel.danger { border-left: 4px solid var(--danger); background: #fef2f2; }
   .panel.good { border-left: 4px solid var(--accent-2); background: #f0fdf4; }
+  .panel.mission { border-left: 4px solid var(--accent); background: linear-gradient(135deg,#f0f9ff,#f8fafc); }
   table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: #fff; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
   th, td { border: 1px solid var(--border); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
   th { background: var(--panel-2); color: var(--accent); }
@@ -57,13 +62,39 @@
   .fig .p1 { color: #0369a1; font-weight: bold; }
   .fig .p2 { color: #15803d; font-weight: bold; }
   .fig .p3 { color: #b45309; font-weight: bold; }
-  .fig .p4 { color: #6d28d9; font-weight: bold; }
   .timing { display: inline-block; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 12px; margin-left: 0.5rem; vertical-align: middle; }
   .takeaway { background: #f0fdf4; border: 1px solid var(--accent-2); border-radius: 10px; padding: 1.3rem; font-size: 1rem; font-style: italic; margin-top: 1.5rem; }
   .checklist { list-style: none; padding-left: 0; }
   .checklist li { padding: 0.35rem 0 0.35rem 1.8rem; position: relative; }
   .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); font-size: 1.05rem; }
   .checklist li.done::before { content: "✅"; }
+  .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .team-grid { grid-template-columns: 1fr; } }
+  .team-card { border-radius: 10px; padding: 1rem 1.2rem; background: #fff; border: 2px solid var(--border); }
+  .team-card h4 { margin: 0 0 0.4rem; font-size: 1rem; }
+  .team-card.fcfs { border-color: var(--team-fcfs); }
+  .team-card.fcfs h4 { color: var(--team-fcfs); }
+  .team-card.rr { border-color: var(--team-rr); }
+  .team-card.rr h4 { color: var(--team-rr); }
+  .team-card.pri { border-color: var(--team-pri); }
+  .team-card.pri h4 { color: var(--team-pri); }
+  .team-card.mlq { border-color: var(--team-mlq); }
+  .team-card.mlq h4 { color: var(--team-mlq); }
+  .team-card ul { margin: 0.4rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; }
+  .scorecard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .scorecard { grid-template-columns: 1fr 1fr; } }
+  .scorecard .metric { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; text-align: center; }
+  .scorecard .metric strong { display: block; color: var(--accent); font-size: 0.85rem; }
+  .scorecard .metric small { color: var(--muted); font-size: 0.75rem; }
+  .corners { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .corners { grid-template-columns: 1fr; } }
+  .corner { border-radius: 8px; padding: 0.8rem 1rem; text-align: center; font-weight: 700; color: #fff; }
+  .corner.fcfs { background: var(--team-fcfs); }
+  .corner.rr { background: var(--team-rr); }
+  .corner.pri { background: var(--team-pri); }
+  .corner.mlq { background: var(--team-mlq); }
+  .twist { background: #fef2f2; border: 2px dashed var(--danger); border-radius: 10px; padding: 1.2rem; margin: 1.2rem 0; }
+  .twist h4 { margin: 0 0 0.5rem; color: var(--danger); }
 </style>
 </head>
 <body>
@@ -73,87 +104,90 @@
 
   <h1>A1.3.3 – Compare Different Approaches to Scheduling</h1>
 
-  <div class="panel accent">
-    <h2 style="margin-top:0;border:none;padding:0;color:var(--accent)">📌 Learning Objective</h2>
-    <p>By the end of this lesson, you will be able to <strong>compare</strong>:</p>
-    <ul>
-      <li>The four scheduling approaches — <strong>FCFS</strong>, <strong>Round Robin</strong>, <strong>Priority</strong>, <strong>Multilevel Queue</strong></li>
-      <li>How each allocates CPU time, and whether it is <strong>pre-emptive</strong> or <strong>non-pre-emptive</strong></li>
-      <li>How each trades off <strong>fairness</strong>, <strong>overhead</strong> and <strong>starvation-risk</strong></li>
-      <li>Which approach suits a given workload — and <em>why</em></li>
-    </ul>
+  <!-- ============ MISSION ============ -->
+  <div class="panel mission">
+    <h2 style="margin-top:0;border:none;padding:0;color:var(--accent)">🏢 Operating System Recruitment Challenge</h2>
+    <p><strong>Microsoft is hiring a new CPU scheduler.</strong></p>
+    <p>Four scheduling teams are competing. Your team must prove your algorithm deserves to run <strong>Windows 2030</strong>.</p>
+    <p>Every round earns your team points. The team that builds the strongest case wins the contract.</p>
   </div>
 
   <!-- ============ STARTER ============ -->
-  <h2>🎮 Starter — Command Terms <span class="timing">5 min</span></h2>
-  <p>Open the Command Terms page. Find <strong>Compare</strong> (Weight 3 — high demand). Read the definition carefully.</p>
+  <h2>🎮 Starter — Know Your Command Term <span class="timing">5 min</span></h2>
+  <p>Open the Command Terms page. Find <strong>Compare</strong> (Weight 3 — high demand).</p>
   <a class="btn" href="https://mr-ellis.github.io/School/command-terms.html" target="_blank" rel="noopener">📖 Open Command Terms</a>
 
-  <div class="panel danger">
-    <strong>⚠️ Important correction for IB DP:</strong> Your Command Terms page defines <em>Compare</em> as similarities only. That is the IGCSE convention. In <strong>IB DP Computer Science</strong>, <em>Compare</em> means <strong>similarities AND differences</strong> — and the syllabus explicitly penalises answers that only describe each item in turn.
-    <br><br>
-    <strong>Today's working definition:</strong> <em>"Give an account of the similarities <strong>and</strong> differences between two or more items, referring to both throughout."</em>
+  <div class="panel accent">
+    <strong>Today's mission brief:</strong> Your team's pitch must <strong>compare</strong> — not describe. Referring to both your algorithm and a rival's throughout. Your final 4-mark answer is the contract bid.
   </div>
 
-  <details>
-    <summary>📌 Quick check — which of these meets the command term?</summary>
-    <p><strong>A:</strong> "FCFS runs processes in arrival order. Round Robin uses a time quantum. Priority uses priority levels."</p>
-    <p><strong>B:</strong> "Both FCFS and Round Robin decide the order processes run. However, FCFS is non-pre-emptive and runs to completion, whereas Round Robin is pre-emptive and uses a fixed time slice."</p>
-    <p><strong>Answer:</strong> B. A is three descriptions, not a comparison. B refers to both throughout and states a similarity and a difference.</p>
-  </details>
+  <!-- ============ EXPERT GROUPS ============ -->
+  <h2>👥 Expert Groups — Learn Your Algorithm <span class="timing">8 min</span></h2>
+  <p>Each team studies <strong>one</strong> scheduling algorithm. Use the mini information sheet and the compare table below. You must produce:</p>
+  <ol>
+    <li>A <strong>visual explanation</strong> (diagram or Gantt-style timeline)</li>
+    <li>A <strong>slogan</strong></li>
+    <li><strong>One strength</strong> and <strong>one weakness</strong></li>
+    <li>A <strong>prediction</strong>: where would this be used in the real world?</li>
+  </ol>
 
-  <!-- ============ KEY TERMS ============ -->
-  <h2>🔑 Key Terms <span class="timing">reference</span></h2>
-  <table>
-    <thead><tr><th>Term</th><th>Definition</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Scheduling</strong></td><td>How the OS allocates CPU time to processes to optimise performance</td></tr>
-      <tr><td><strong>Pre-emptive</strong></td><td>The OS can forcibly take the CPU away from a running process</td></tr>
-      <tr><td><strong>Non-pre-emptive</strong></td><td>Once a process starts, it runs until it finishes or blocks on I/O</td></tr>
-      <tr><td><strong>Time slice / Quantum</strong></td><td>The fixed amount of CPU time a process gets under Round Robin</td></tr>
-      <tr><td><strong>Context switch</strong></td><td>Saving one process's state and restoring another's — pure overhead</td></tr>
-      <tr><td><strong>Convoy effect</strong></td><td>Under FCFS, one long job delays every short job behind it</td></tr>
-      <tr><td><strong>Starvation</strong></td><td>A process waits indefinitely because higher-priority work keeps arriving</td></tr>
-      <tr><td><strong>Ageing</strong></td><td>Gradually raising a waiting process's priority to prevent starvation</td></tr>
-    </tbody>
-  </table>
-
-  <!-- ============ THE FOUR APPROACHES ============ -->
-  <h2>📊 The Four Approaches <span class="timing">8 min</span></h2>
-
-  <h3>THINK FIRST</h3>
-  <div class="panel">
-    <p>Three programs all want the CPU at once: a long video export, a text editor waiting for a keystroke, and a background backup.</p>
-    <p><strong>Decide what order you would run them in — and what "fair" should mean.</strong> Most disagreements about scheduling are disagreements about that word.</p>
+  <div class="team-grid">
+    <div class="team-card fcfs">
+      <h4>Team FCFS</h4>
+      <ul>
+        <li>Runs in arrival order, to completion</li>
+        <li><strong>Non-pre-emptive</strong></li>
+        <li>Simple, minimal overhead</li>
+        <li>Convoy effect: long job blocks short ones</li>
+      </ul>
+    </div>
+    <div class="team-card rr">
+      <h4>Team Round Robin</h4>
+      <ul>
+        <li>Fixed time quantum, then rotate</li>
+        <li><strong>Pre-emptive</strong></li>
+        <li>Fair, responsive</li>
+        <li>Quantum too small → high context-switch overhead</li>
+      </ul>
+    </div>
+    <div class="team-card pri">
+      <h4>Team Priority</h4>
+      <ul>
+        <li>Highest priority runs first</li>
+        <li><strong>Either variant</strong></li>
+        <li>Critical work jumps the queue</li>
+        <li>Starvation without ageing</li>
+      </ul>
+    </div>
+    <div class="team-card mlq">
+      <h4>Team Multilevel Queue</h4>
+      <ul>
+        <li>Separate queues by class, own algorithm each</li>
+        <li><strong>Usually non-pre-emptive between queues</strong></li>
+        <li>Clean separation of workloads</li>
+        <li>Rigid; lower queues can starve</li>
+      </ul>
+    </div>
   </div>
 
-  <h3>1. First-Come First-Served (FCFS)</h3>
-  <p>Processes run <strong>in arrival order</strong>, each to completion. <strong>Non-pre-emptive.</strong></p>
-  <p><strong>Strength:</strong> simple, minimal overhead. <strong>Weakness:</strong> the <strong>convoy effect</strong> — one long job blocks every short job behind it.</p>
-
-  <h3>2. Round Robin (RR)</h3>
-  <p>Each process gets a fixed <strong>time quantum</strong>, then is pre-empted and moved to the back of the queue. <strong>Pre-emptive.</strong></p>
-  <p><strong>Strength:</strong> fair, responsive. <strong>Weakness:</strong> quantum too small → high context-switch overhead; too large → becomes FCFS.</p>
-
-  <div class="fig"><span class="label">Worked example — quantum = 2. P1(0–2), P2(2–4), P3(4–6), then P1(6–8), P2(8–10), P3(10–12).</span>
+  <div class="fig"><span class="label">Reference example — Round Robin with quantum = 2.</span>
 Time   0    1    2    3    4    5    6    7    8    9   10   11   12
       ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┐
       │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │
       └────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┘
 Each process gets an equal slice; the cycle repeats until all complete.</div>
 
-  <h3>3. Priority Scheduling</h3>
-  <p>The <strong>highest-priority</strong> ready process runs first. Priorities can be static or dynamic. <strong>Either variant.</strong></p>
-  <p><strong>Strength:</strong> critical work jumps the queue. <strong>Weakness:</strong> <strong>starvation</strong> of low-priority tasks unless <strong>ageing</strong> is used.</p>
+  <!-- ============ JIGSAW ============ -->
+  <h2>🔀 Jigsaw — Teach Your Algorithm <span class="timing">10 min</span></h2>
+  <p>Re-form into new groups with <strong>one expert from each algorithm</strong>. Each expert gets <strong>90 seconds</strong> to teach their algorithm, then answers questions.</p>
 
-  <h3>4. Multilevel Queue (MLQ)</h3>
-  <p>The ready queue is <strong>split into separate queues</strong> by type or priority, each with its <strong>own algorithm</strong>. Higher queues are served first.</p>
-  <p><strong>Strength:</strong> clean separation of workload classes. <strong>Weakness:</strong> rigid — lower queues can starve.</p>
+  <div class="panel warn">
+    <strong>Rule:</strong> You may not describe your algorithm in isolation. Each explanation must reference <strong>at least one other algorithm</strong> — "unlike FCFS…", "whereas Round Robin…".
+  </div>
 
-  <!-- ============ THE COMPARE TABLE ============ -->
-  <h2>📋 The Compare Table <span class="timing">10 min</span></h2>
-  <p>This is the key artefact. Learn it as a <strong>comparison across dimensions</strong>, not four separate descriptions.</p>
+  <p>As you listen, complete the compare table below. This is your pitch evidence.</p>
 
+  <h2>📋 The Compare Table <span class="timing">evidence</span></h2>
   <table>
     <thead>
       <tr><th>Metric</th><th>FCFS</th><th>Round Robin</th><th>Priority</th><th>Multilevel Queue</th></tr>
@@ -169,13 +203,9 @@ Each process gets an equal slice; the cycle repeats until all complete.</div>
     </tbody>
   </table>
 
-  <div class="panel danger">
-    <strong>⚠️ Common exam mistake:</strong> Writing a paragraph on each algorithm and stopping there. That is <em>four descriptions</em>, not a comparison. Pull them together explicitly: which is more responsive, which carries more overhead, which can starve. <strong>The comparison is what scores.</strong>
-  </div>
-
   <!-- ============ SIMULATION ============ -->
-  <h2>💻 Scheduling Simulation <span class="timing">12 min</span></h2>
-  <p>Teacher is the CPU. Four students are the processes. The rest of the class is the scheduler panel with scorecards. We run the same four processes through each approach and record what happens.</p>
+  <h2>💻 Human Scheduling Simulation <span class="timing">10 min</span></h2>
+  <p>Teacher is the CPU. Four students are the processes. The rest of the class is the <strong>scheduler panel</strong>.</p>
 
   <table>
     <thead><tr><th>Process</th><th>Role</th><th>Priority</th><th>Burst</th></tr></thead>
@@ -187,15 +217,61 @@ Each process gets an equal slice; the cycle repeats until all complete.</div>
     </tbody>
   </table>
 
-  <p><strong>Watch for each round:</strong> Who waits longest? How many switches? Did anyone never get a turn?</p>
+  <p>Run the same four processes through each approach. After each round, the scheduler panel <strong>scores the algorithm</strong>:</p>
 
-  <div class="panel warn">
-    <strong>⚠️ Remember:</strong> <strong>Context switching</strong> costs time. Even though it enables multitasking, too much switching reduces efficiency because the CPU spends time saving and restoring tasks.
+  <div class="scorecard">
+    <div class="metric"><strong>Fairness</strong><small>/5</small></div>
+    <div class="metric"><strong>Speed</strong><small>/5</small></div>
+    <div class="metric"><strong>Starvation Risk</strong><small>/5</small></div>
+    <div class="metric"><strong>Overhead</strong><small>/5</small></div>
   </div>
 
+  <div class="panel danger">
+    <strong>Not "what happened?" — "Defend your score."</strong> Every score must reference a rival algorithm: "I gave Round Robin 4/5 for fairness <em>unlike FCFS</em>, which gave 2/5 because…"
+  </div>
+
+  <!-- ============ TWIST ============ -->
+  <h2>🌀 The Twist <span class="timing">5 min</span></h2>
+
+  <div class="twist">
+    <h4>🚨 New Scenario</h4>
+    <p>The class has just concluded Round Robin wins for a general-purpose PC.</p>
+    <p>Now Microsoft reveals the real target system: a <strong>hospital emergency system</strong>.</p>
+    <p><strong>Does your answer still stand?</strong></p>
+  </div>
+
+  <p>Discuss in your team. Consider:</p>
+  <ul>
+    <li>What if a life-critical process is waiting?</li>
+    <li>What if fairness causes a critical task to be delayed by a background job?</li>
+    <li>What does "predictability" mean here?</li>
+  </ul>
+
+  <div class="panel good">
+    <strong>Discovery:</strong> The best algorithm <em>depends on context</em>. Comparison requires judgement — not just knowledge of the four options.
+  </div>
+
+  <!-- ============ FOUR CORNERS ============ -->
+  <h2>🚶 Four Corners Debate <span class="timing">5 min</span></h2>
+  <p>Four posters around the room — one per algorithm. Move to the corner you believe should run the <strong>school network</strong>.</p>
+
+  <div class="corners">
+    <div class="corner fcfs">FCFS</div>
+    <div class="corner rr">Round Robin</div>
+    <div class="corner pri">Priority</div>
+    <div class="corner mlq">Multilevel Queue</div>
+  </div>
+
+  <p><strong>Rules when you speak:</strong></p>
+  <ol>
+    <li>Justify your choice.</li>
+    <li>Mention at least one <strong>other</strong> algorithm.</li>
+    <li>Explain why yours is <em>better</em> for this context.</li>
+  </ol>
+
   <!-- ============ INDEPENDENT PROOF ============ -->
-  <h2>✍️ Independent Proof <span class="timing">8 min</span></h2>
-  <p>Silent, individual. Write a full answer:</p>
+  <h2>✍️ Contract Bid — Independent Proof <span class="timing">5 min</span></h2>
+  <p>Silent, individual. This is your team's contract bid to Microsoft.</p>
   <div class="panel accent">
     <em>"Compare First-Come First-Served and Round Robin scheduling. [4 marks]"</em>
   </div>
@@ -212,17 +288,16 @@ Each process gets an equal slice; the cycle repeats until all complete.</div>
   </details>
 
   <!-- ============ PLENARY ============ -->
-  <h2>🃏 Plenary <span class="timing">4 min</span></h2>
+  <h2>🃏 Plenary <span class="timing">2 min</span></h2>
   <a class="btn green" href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank" rel="noopener">Launch Quizlet</a>
   <a class="btn orange" href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">Launch Blooket</a>
 
   <!-- ============ EXTENSION ============ -->
   <h2>⭐ Extension (if time / homework)</h2>
   <ul>
-    <li><strong>Real-time challenge:</strong> Which approach would you choose for a pacemaker, and why? What breaks if you get it wrong?</li>
-    <li><strong>Research ageing:</strong> How does it fix starvation in priority scheduling? One paragraph.</li>
     <li><strong>Programming:</strong> Write a Python program to simulate FCFS and report waiting and turnaround times.</li>
-    <li><strong>Hybrid thinking:</strong> Why might an OS combine approaches? What does it gain?</li>
+    <li><strong>Research ageing:</strong> How does it fix starvation in priority scheduling? One paragraph.</li>
+    <li><strong>Design challenge:</strong> Propose a hybrid scheduling policy for a school computer lab. Justify with three comparative points.</li>
   </ul>
 
   <div class="takeaway">
@@ -231,7 +306,7 @@ Each process gets an equal slice; the cycle repeats until all complete.</div>
 
   <!-- ============ OBS FORM ============ -->
   <h2>✅ Observation Form Coverage</h2>
-  <p>Mapped to your IGCSE/IB lesson-plan observation form. Every activity is timed to fit a <strong>45–50 minute</strong> lesson.</p>
+  <p>Every activity is timed to fit a <strong>45–50 minute</strong> lesson and mapped to your observation form.</p>
 
   <h3>1. Learning</h3>
   <ul class="checklist">
@@ -240,18 +315,18 @@ Each process gets an equal slice; the cycle repeats until all complete.</div>
     <li class="done"><strong>Student Outcome:</strong> Compare at least two approaches, giving a similarity and a difference, and justify a recommendation</li>
     <li class="done"><strong>Proof:</strong> Completed compare table + independent 4-mark compare answer</li>
     <li class="done"><strong>Secure Standard:</strong> Names approach + allocation method + pre-emptive status; gives similarity <em>and</em> difference; links difference to consequence; comparative judgement</li>
-    <li class="done"><strong>IB Connection:</strong> Command term "Compare" (IB definition: similarities AND differences); 4-mark allocation modelled with sentence frame and exemplar</li>
+    <li class="done"><strong>IB Connection:</strong> Command term "Compare"; 4-mark allocation modelled with sentence frame and exemplar</li>
   </ul>
 
   <h3>2. Plan</h3>
   <ul class="checklist">
-    <li class="done"><strong>Connect (5 min):</strong> Command Terms starter — students retrieve the definition of <em>Compare</em> and correct it for IB</li>
-    <li class="done"><strong>Teach / Model (8 min):</strong> The four approaches with THINK FIRST hook + one worked RR Gantt example + explicit modelling of the compare move</li>
-    <li class="done"><strong>Students Think / Do (12 min):</strong> Kinesthetic simulation — teacher = CPU, students = P1–P4, class = scheduler panel; compare table completed</li>
-    <li class="done"><strong>Check Everyone (embedded):</strong> Mini whiteboards during simulation — all students write one comparative sentence; teacher scans every board</li>
-    <li class="done"><strong>Adapt:</strong> Support = compare table template + sentence stems + key term glossary; Challenge = pacemaker justification, ageing research, Python simulation, hybrid thinking</li>
-    <li class="done"><strong>Feedback &amp; Improve (embedded):</strong> Peer feedback against success criteria before the independent proof</li>
-    <li class="done"><strong>Independent Proof (8 min):</strong> Silent individual 4-mark compare question, self-marked against the model answer</li>
+    <li class="done"><strong>Connect (5 min):</strong> Command Terms starter — students retrieve the definition of <em>Compare</em> and set the mission brief</li>
+    <li class="done"><strong>Teach / Model (8 min):</strong> Expert groups — students become the teachers via mini information sheets and team cards</li>
+    <li class="done"><strong>Students Think / Do (10 min):</strong> Jigsaw teaching + human scheduling simulation + scenario twist + Four Corners debate</li>
+    <li class="done"><strong>Check Everyone (embedded):</strong> Scorecard defence after each round; Four Corners justification; cold-call during jigsaw</li>
+    <li class="done"><strong>Adapt:</strong> Support = team cards + sentence stems + compare table; Challenge = scenario twist (hospital), hybrid design, Python simulation, ageing research</li>
+    <li class="done"><strong>Feedback &amp; Improve (embedded):</strong> Scorecard peer defence + Four Corners challenge before the independent proof</li>
+    <li class="done"><strong>Independent Proof (5 min):</strong> Silent individual 4-mark compare question, self-marked against the model answer</li>
   </ul>
 
   <h3>3. Planned Response and Follow-Through</h3>
@@ -272,13 +347,13 @@ Each process gets an equal slice; the cycle repeats until all complete.</div>
   </ul>
 
   <div class="panel good">
-    <strong>Where the strongest evidence sits:</strong>
+    <strong>What the observer will see and write:</strong>
     <ul>
-      <li><strong>Higher-order thinking / agency:</strong> the compare table forces side-by-side evaluation across dimensions — not recall of four definitions</li>
-      <li><strong>Every student checked:</strong> mini whiteboards force a response from all, and the teacher scans every board before cold-calling</li>
-      <li><strong>Feedback will be used:</strong> peer feedback happens <em>before</em> the independent proof, so it visibly affects the assessed work</li>
-      <li><strong>Accurate guide content:</strong> the IB definition of <em>Compare</em> is corrected explicitly at the starter — this is the most common exam failure on this statement</li>
-      <li><strong>Support and challenge ready:</strong> sentence stems + glossary (support) and pacemaker/ageing/Python/hybrid (challenge) are both prepared</li>
+      <li>✅ "Students were making decisions" — choosing corner, scoring algorithms</li>
+      <li>✅ "Students were justifying choices" — scorecard defence, Four Corners rules</li>
+      <li>✅ "Students challenged each other's reasoning" — jigsaw questioning, twist debate</li>
+      <li>✅ "The teacher facilitated rather than delivered" — expert groups replace teacher input</li>
+      <li>✅ "Higher-order thinking visible" — context twist forces reappraisal of the 'best' algorithm</li>
     </ul>
   </div>
 
