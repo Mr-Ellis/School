@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.3.6 - Control System Components (HL)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.15rem;
+            color: #0b2a4a;
+            margin-top: 22px;
+            margin-bottom: 10px;
+        }
+        h4 {
+            font-size: 1rem;
+            color: #0b2a4a;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge-hl {
+            background: #7c3a3a;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
+
+        /* Blooket starter */
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        /* Task styles */
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong {
+            color: #1a6b33;
+        }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+        .task-1-resources .teach-link {
+            background: #0b2a4a;
+            color: white;
+            padding: 3px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: none;
+        }
+        .task-1-resources .teach-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .task-1-resources .teach-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        /* Unit-end reminder */
+        .unit-reminder {
+            background: #fff8e1;
+            border-left: 5px solid #fdbb2d;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 20px;
+            margin: 20px 0;
+            font-size: 0.92rem;
+        }
+        .unit-reminder strong { color: #7a4a0a; }
+
+        /* HL banner */
+        .hl-banner {
+            background: linear-gradient(135deg, #fef2f2, #fef3c7);
+            border: 2px dashed #b21f1f;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            color: #7a1f1f;
+        }
+        .hl-banner strong { color: #b21f1f; }
+
+        /* Control loop diagram */
+        .control-loop {
+            background: #f8fafc;
+            border: 2px solid #dce8f5;
+            border-radius: 12px;
+            padding: 22px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .control-loop .row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        .control-loop .node {
+            background: #ebf4ff;
+            border: 2px solid #0b2a4a;
+            color: #0b2a4a;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+        .control-loop .node.circle {
+            border-radius: 50%;
+            width: 110px;
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 0.85rem;
+        }
+        .control-loop .node.green { background: #e6f7e6; border-color: #2d7d46; color: #1a6b33; }
+        .control-loop .node.yellow { background: #fef3c7; border-color: #b45309; color: #7a4a0a; }
+        .control-loop .arrow {
+            color: #b21f1f;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .control-loop .arrow-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Open vs closed comparison */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+
+        .compare-card {
+            border-radius: 12px;
+            padding: 20px 22px;
+            border: 2px solid;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .compare-card.open .detail {
+            max-height: 400px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(0,0,0,0.15);
+        }
+        .compare-card .c-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .compare-card .c-subtitle {
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        .compare-card .detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.3s ease;
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+        .compare-card.open-loop {
+            background: #fef3c7;
+            border-color: #b45309;
+            color: #7a4a0a;
+        }
+        .compare-card.open-loop:hover { background: #fde68a; }
+        .compare-card.closed-loop {
+            background: #ebf4ff;
+            border-color: #0b2a4a;
+            color: #0b2a4a;
+        }
+        .compare-card.closed-loop:hover { background: #dce8f5; }
+        .compare-card .tap-hint {
+            font-size: 0.72rem;
+            margin-top: 8px;
+            display: block;
+            opacity: 0.7;
+            font-weight: 600;
+        }
+
+        /* Component cards */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .component-grid { grid-template-columns: 1fr; } }
+
+        .component-card {
+            background: #fff;
+            border: 2px solid #dce8f5;
+            border-radius: 10px;
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .component-card:hover {
+            border-color: #0b2a4a;
+            background: #ebf4ff;
+        }
+        .component-card.open { border-color: #b21f1f; background: #ebf4ff; }
+        .component-card .comp-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1rem;
+        }
+        .component-card .comp-head .comp-icon { font-size: 1.5rem; }
+        .component-card .comp-sub {
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-top: 6px;
+            font-style: italic;
+        }
+        .component-card .comp-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, margin-top 0.3s ease;
+            font-size: 0.85rem;
+            color: #1e293b;
+            margin-top: 0;
+            line-height: 1.55;
+        }
+        .component-card.open .comp-detail {
+            max-height: 500px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #b21f1f;
+        }
+        .component-card.open .comp-detail strong { color: #b21f1f; }
+
+        /* Scenario explorer */
+        .scenario {
+            background: #f7fafc;
+            border-left: 5px solid #0b2a4a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+        .scenario .scenario-q {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .scenario .scenario-q:hover { color: #b21f1f; }
+        .scenario .reveal-btn {
+            font-size: 0.75rem;
+            background: #b21f1f;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            flex-shrink: 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .scenario .reveal-btn:hover { background: #0b2a4a; }
+        .scenario .scenario-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.3s ease;
+            margin-top: 0;
+            color: #1e293b;
+            font-size: 0.92rem;
+        }
+        .scenario.open .scenario-a {
+            max-height: 800px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .scenario .scenario-a ul { padding-left: 1.2rem; }
+        .scenario .scenario-a li { margin-bottom: 6px; }
+
+        /* Quick quiz */
+        .quiz {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+        .quiz h3 { margin-top: 0; }
+        .quiz-q { margin-bottom: 18px; }
+        .quiz-q .q-text {
+            font-weight: 600;
+            color: #0b2a4a;
+            margin-bottom: 8px;
+        }
+        .quiz-options { display: flex; flex-direction: column; gap: 6px; }
+        .quiz-option {
+            background: white;
+            border: 2px solid #dce4ed;
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quiz-option:hover { border-color: #0b2a4a; background: #ebf4ff; }
+        .quiz-option.correct {
+            border-color: #2d7d46;
+            background: #e6f5e6;
+            color: #1a6b33;
+            font-weight: 600;
+        }
+        .quiz-option.wrong {
+            border-color: #b21f1f;
+            background: #fdeaea;
+            color: #a13232;
+        }
+        .quiz-option .mark { font-weight: 700; }
+        .quiz-score {
+            text-align: center;
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1.05rem;
+            margin-top: 10px;
+        }
+
+        /* Match-up */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .match-grid { grid-template-columns: 1fr; } }
+        .match-col h4 {
+            color: #0b2a4a;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .match-item {
+            background: white;
+            border: 2px solid #dce4ed;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.15s ease;
+        }
+        .match-item:hover { border-color: #0b2a4a; }
+        .match-item.selected { border-color: #fdbb2d; background: #fefcbf; font-weight: 600; }
+        .match-item.matched { border-color: #2d7d46; background: #e6f5e6; color: #1a6b33; cursor: default; }
+        .match-item.matched::after { content: " ✓"; font-weight: 700; }
+        .match-feedback {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #2d7d46;
+            min-height: 24px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+            .control-loop .node { min-width: 90px; font-size: 0.8rem; padding: 10px 12px; }
+            .control-loop .node.circle { width: 90px; height: 90px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+
+    <h1>A1.3.6 – Control System Components <span class="badge badge-hl">HL</span></h1>
+
+    <h2>📌 Learning Objective</h2>
+    <ul>
+        <li><strong>Describe</strong> the four core components of a control system: controller, sensors, actuators, transducers</li>
+        <li><strong>Describe</strong> the input-process-output-feedback cycle</li>
+        <li><strong>Differentiate</strong> between open-loop and closed-loop systems</li>
+        <li><strong>Explain</strong> the role of the control algorithm</li>
+    </ul>
+
+    <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
+    <div class="command-term">
+        <strong>Describe</strong> – <em>"Give a detailed account."</em><br>
+        Naming a component is not enough — say <strong>what it does</strong> and <strong>how it fits into the control loop</strong>.
+    </div>
+
+    <!-- HL Banner -->
+    <div class="hl-banner">
+        <strong>🔴 HL only:</strong> This statement is <strong>not examined at SL</strong>. It introduces a new topic — control systems — which is separate from operating systems but follows the same systems-thinking pattern.
+    </div>
+
+    <!-- Blooket Starter Activity -->
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket</span>
+        <span style="color:#3d5f7a;">Test your current knowledge before we begin!</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/hack?id=68b0379dda963af6c9571984" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <h2>💡 What Is a Control System?</h2>
+    <p>A <strong>control system</strong> is a system designed to <strong>regulate or direct the behaviour of other devices or systems</strong>. They are fundamental in automating and regulating processes across a wide range of industries — from manufacturing to robotics to environmental control.</p>
+
+    <p>At the core of every control system are components that work together to:</p>
+    <ul>
+        <li><strong>Manage inputs</strong> — the desired condition or target</li>
+        <li><strong>Process data</strong> — comparing desired vs actual</li>
+        <li><strong>Generate outputs</strong> — the action taken to correct the system</li>
+    </ul>
+
+    <p>Control systems rely on a precise <strong>feedback mechanism</strong> to ensure the process remains stable and meets its objectives.</p>
+
+    <h2>🔄 The Control Loop</h2>
+    <p>Every control system follows the same fundamental cycle. The diagram below shows the sequence.</p>
+
+    <div class="control-loop">
+        <div class="row">
+            <div class="node">INPUT<br><span style="font-size:0.75rem;font-weight:400;">Desired value (setpoint)</span></div>
+            <span class="arrow">→</span>
+            <div class="node circle" style="background:#fef3c7;border-color:#b45309;color:#7a4a0a;">CONTROLLER<br><span style="font-size:0.65rem;font-weight:400;">compares &amp; decides</span></div>
+            <span class="arrow">→</span>
+            <div class="node green">PROCESS<br><span style="font-size:0.75rem;font-weight:400;">the system being controlled</span></div>
+            <span class="arrow">→</span>
+            <div class="node">OUTPUT<br><span style="font-size:0.75rem;font-weight:400;">actual value measured</span></div>
+        </div>
+        <div class="row" style="margin-top:14px;">
+            <span class="arrow-label" style="color:#b21f1f;">◀ ─ ─ ─ Feedback loop ─ ─ ─ ─ ▶</span>
+        </div>
+        <div class="row">
+            <div class="node circle" style="background:#dceaf7;border-color:#0369a1;color:#13416b;">SENSOR<br><span style="font-size:0.65rem;font-weight:400;">measures output</span></div>
+            <span style="font-size:0.8rem;color:#64748b;margin-left:10px;">feeds data back to the controller</span>
+        </div>
+    </div>
+
+    <h2>📊 The Four Core Components — Click to Explore</h2>
+    <p>Each component plays a specific role in the control loop. <strong>Click any card</strong> to see what it does.</p>
+
+    <div class="component-grid">
+        <div class="component-card" onclick="this.classList.toggle('open')">
+            <div class="comp-head"><span class="comp-icon">🧠</span><span>Controller</span></div>
+            <div class="comp-sub">The "brain" of the system</div>
+            <div class="comp-detail">
+                The <strong>central component</strong> that governs operation by processing inputs and generating outputs. It implements the <strong>control algorithm</strong> — making decisions based on input data and feedback.<br><br>
+                It compares the <strong>desired value</strong> (input) with the <strong>actual value</strong> (feedback) and determines the necessary action to minimise the difference, or <strong>error</strong>.<br><br>
+                <strong>Examples:</strong> from simple thermostats to complex microprocessors in industrial automation.
+            </div>
+        </div>
+        <div class="component-card" onclick="this.classList.toggle('open')">
+            <div class="comp-head"><span class="comp-icon">👁️</span><span>Sensors</span></div>
+            <div class="comp-sub">The "eyes and ears" of the system</div>
+            <div class="comp-detail">
+                Devices that <strong>detect and measure physical quantities</strong> from the environment or the system itself — temperature, pressure, speed, light.<br><br>
+                These measurements are converted into <strong>electrical signals</strong> that the controller can interpret.<br><br>
+                The <strong>accuracy and reliability</strong> of sensors directly affects the control system's performance, because they provide the critical feedback for adjustment.<br><br>
+                <strong>Examples:</strong> temperature sensor, humidity sensor, soil moisture sensor, proximity sensor, gas sensor.
+            </div>
+        </div>
+        <div class="component-card" onclick="this.classList.toggle('open')">
+            <div class="comp-head"><span class="comp-icon">💪</span><span>Actuators</span></div>
+            <div class="comp-sub">The "muscles" of the system</div>
+            <div class="comp-detail">
+                Components that <strong>carry out the physical actions</strong> or adjustments in response to commands from the controller.<br><br>
+                They convert the controller's <strong>electrical signals</strong> into <strong>mechanical motion</strong> or other forms of energy — turning a valve, moving a robotic arm, adjusting a motor's speed.<br><br>
+                <strong>Performance and precision</strong> are critical in applications requiring exact control — manufacturing equipment, robotics.
+            </div>
+        </div>
+        <div class="component-card" onclick="this.classList.toggle('open')">
+            <div class="comp-head"><span class="comp-icon">🔄</span><span>Transducers</span></div>
+            <div class="comp-sub">The energy converters</div>
+            <div class="comp-detail">
+                Devices that <strong>convert one form of energy into another</strong>. They bridge the gap between sensors, actuators and the controller.<br><br>
+                A sensor may not directly provide the type of signal the controller can process. A transducer converts signals into a compatible form.<br><br>
+                <strong>Example:</strong> a pressure sensor detects mechanical pressure and converts it into an electrical signal the controller can interpret. An actuator may need a specific voltage supplied by a transducer.<br><br>
+                Transducers ensure all parts of the control system <strong>communicate effectively</strong>.
+            </div>
+        </div>
+    </div>
+
+    <h2>🔀 Open-Loop vs Closed-Loop</h2>
+    <p>The distinction comes down to one thing: <strong>is there feedback?</strong> Click each card to explore.</p>
+
+    <div class="compare-grid">
+        <div class="compare-card open-loop" onclick="this.classList.toggle('open')">
+            <div class="c-title">Open-Loop <span class="tap-hint" style="display:inline;">Tap</span></div>
+            <div class="c-subtitle">No feedback from output back to input.</div>
+            <div class="detail">
+                The system operates <strong>solely based on the initial input</strong> — no correction or adjustment based on the actual output.<br><br>
+                <strong>Simple and predictable.</strong> Used when the relationship between input and output is straightforward.<br><br>
+                <strong>Examples:</strong> basic timers, simple toaster (it heats for a fixed time regardless of how toasted the bread actually is).
+            </div>
+            <span class="tap-hint">Tap to reveal detail</span>
+        </div>
+        <div class="compare-card closed-loop" onclick="this.classList.toggle('open')">
+            <div class="c-title">Closed-Loop <span class="tap-hint" style="display:inline;">Tap</span></div>
+            <div class="c-subtitle">Continuously monitors the output and feeds it back.</div>
+            <div class="detail">
+                Also called a <strong>feedback control system</strong>. If the output deviates from the desired input, the system <strong>makes corrections in real time</strong> to bring the output back in line with the target.<br><br>
+                <strong>Higher accuracy and adaptability.</strong> Essential for applications where conditions change.<br><br>
+                <strong>Examples:</strong> HVAC temperature control, thermostats, automatic elevator control, autonomous vehicles.
+            </div>
+            <span class="tap-hint">Tap to reveal detail</span>
+        </div>
+    </div>
+
+    <h3>The Full Comparison</h3>
+    <table>
+        <thead>
+            <tr><th>Feature</th><th>Open-Loop</th><th>Closed-Loop</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Feedback</strong></td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>Accuracy</strong></td><td>Lower</td><td>Higher</td></tr>
+            <tr><td><strong>Stability</strong></td><td>Less stable</td><td>More stable</td></tr>
+            <tr><td><strong>Complexity</strong></td><td>Simple</td><td>Complex</td></tr>
+            <tr><td><strong>Cost</strong></td><td>Lower</td><td>Higher</td></tr>
+            <tr><td><strong>Example</strong></td><td>Simple toaster</td><td>Thermostat</td></tr>
+        </tbody>
+    </table>
+
+    <h2>⚙️ The Control Algorithm</h2>
+    <p>The <strong>control algorithm</strong> is the <strong>set of rules or mathematical procedures</strong> the controller uses to determine the appropriate output based on input and feedback.</p>
+
+    <p>It is the logic that drives the decision-making process within the controller. Algorithms vary in complexity:</p>
+
+    <table>
+        <thead>
+            <tr><th>Type</th><th>How it works</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Proportional control</strong></td><td>Output is adjusted <strong>in direct proportion to the error</strong>. Simple but can leave a small steady-state error.</td></tr>
+            <tr><td><strong>PID control</strong></td><td><strong>Proportional-Integral-Derivative</strong> — considers <strong>past, present and future errors</strong> to make precise adjustments. More complex but much more accurate.</td></tr>
+        </tbody>
+    </table>
+
+    <p>The choice of control algorithm depends on the system's requirements: desired accuracy, speed of response, and stability.</p>
+
+    <h2>🎮 Match-Up Challenge</h2>
+    <p>Click a <strong>component</strong> on the left, then click its <strong>role</strong> on the right.</p>
+
+    <div class="match-grid">
+        <div class="match-col">
+            <h4>Component</h4>
+            <div class="match-item" data-match="1">Controller</div>
+            <div class="match-item" data-match="2">Sensors</div>
+            <div class="match-item" data-match="3">Actuators</div>
+            <div class="match-item" data-match="4">Transducers</div>
+            <div class="match-item" data-match="5">Control algorithm</div>
+        </div>
+        <div class="match-col">
+            <h4>Role</h4>
+            <div class="match-item" data-match="4">Convert one form of energy into another</div>
+            <div class="match-item" data-match="1">Processes inputs and makes decisions using the algorithm</div>
+            <div class="match-item" data-match="5">The set of rules the controller uses to determine the output</div>
+            <div class="match-item" data-match="3">Carries out the physical actions commanded by the controller</div>
+            <div class="match-item" data-match="2">Detect and measure physical quantities from the environment</div>
+        </div>
+    </div>
+    <div class="match-feedback" id="matchFeedback"></div>
+
+    <h2>🔍 Scenario Explorer — Identify the Components</h2>
+    <p>For each real-world system, <strong>click the question</strong> to reveal its components.</p>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🌡️ Home thermostat</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Input:</strong> Desired temperature (setpoint) — e.g. 20°C.</li>
+                <li><strong>Sensor:</strong> Temperature sensor — continuously monitors room temperature.</li>
+                <li><strong>Controller:</strong> The thermostat — compares actual vs desired and decides.</li>
+                <li><strong>Actuator:</strong> Heater or AC — heats or cools the room.</li>
+                <li><strong>Process:</strong> Room temperature.</li>
+                <li><strong>Feedback:</strong> Sensor continuously feeds temperature data back.</li>
+                <li><strong>Type:</strong> <em>Closed-loop</em>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🛗 Automatic elevator</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Input:</strong> Floor requests, door status, position.</li>
+                <li><strong>Sensors:</strong> Position sensors, floor sensors, door sensors.</li>
+                <li><strong>Controller:</strong> Elevator control computer.</li>
+                <li><strong>Actuators:</strong> Motor (to move), door mechanism (to open/close).</li>
+                <li><strong>Feedback:</strong> Continuous sensor data on position and speed, so the elevator stops precisely.</li>
+                <li><strong>Type:</strong> <em>Closed-loop</em>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>💧 Irrigation control system</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Input:</strong> Desired soil moisture level.</li>
+                <li><strong>Sensors:</strong> Soil moisture sensors, weather sensors.</li>
+                <li><strong>Controller:</strong> Irrigation control unit.</li>
+                <li><strong>Actuators:</strong> Water valves, pumps.</li>
+                <li><strong>Feedback:</strong> Continuous moisture readings — the system shuts off once the target moisture is reached.</li>
+                <li><strong>Type:</strong> <em>Closed-loop</em>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🚦 Traffic signal control</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Input:</strong> Desired traffic flow patterns, pedestrian requests.</li>
+                <li><strong>Sensors:</strong> Vehicle detectors (induction loops, cameras), pedestrian buttons.</li>
+                <li><strong>Controller:</strong> Traffic management computer.</li>
+                <li><strong>Actuators:</strong> Traffic lights (red, amber, green).</li>
+                <li><strong>Feedback:</strong> Sensor data on traffic volume, used to adjust timings in real time.</li>
+                <li><strong>Type:</strong> <em>Closed-loop</em>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🍞 Simple toaster</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Input:</strong> Time setting (e.g. 3 minutes).</li>
+                <li><strong>Controller:</strong> Timer mechanism.</li>
+                <li><strong>Actuator:</strong> Heating element.</li>
+                <li><strong>Sensor:</strong> None for controlling the toast.</li>
+                <li><strong>Feedback:</strong> <em>None</em> — the toaster runs for the set time regardless of how toasted the bread actually is.</li>
+                <li><strong>Type:</strong> <em>Open-loop</em>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>🧠 Quick Quiz</h2>
+    <div class="quiz" id="quizContainer">
+        <div class="quiz-q" data-answer="3">
+            <div class="q-text">1. What is the difference between an open-loop and a closed-loop control system?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Open-loop has more sensors</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Closed-loop is cheaper</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Closed-loop uses feedback to adjust the output; open-loop does not</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Open-loop is only for mechanical systems</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="1">
+            <div class="q-text">2. Which component acts as the "brain" of the control system?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Controller</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Sensor</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Actuator</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Transducer</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="4">
+            <div class="q-text">3. What is the role of a transducer in a control system?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>To make decisions based on input</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>To measure temperature</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>To carry out physical actions</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>To convert one form of energy into another</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="2">
+            <div class="q-text">4. Which statement about PID control is correct?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>It only looks at the present error</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>It considers past, present and future errors to make precise adjustments</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>It is simpler than proportional control</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>It doesn't use feedback</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-score" id="quizScore">Score: 0 / 4</div>
+    </div>
+
+    <h2>📋 Reference — Component Summary</h2>
+
+    <table>
+        <thead>
+            <tr><th>Component</th><th>Role</th><th>Example (Thermostat)</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Controller</strong></td><td>The "brain" that makes decisions</td><td>Thermostat</td></tr>
+            <tr><td><strong>Sensors</strong></td><td>The "eyes and ears" that gather information</td><td>Temperature sensor</td></tr>
+            <tr><td><strong>Actuators</strong></td><td>The "muscles" that perform actions</td><td>Heater / AC</td></tr>
+            <tr><td><strong>Transducers</strong></td><td>Convert one form of energy to another</td><td>Thermocouple</td></tr>
+            <tr><td><strong>Control algorithm</strong></td><td>The rules the controller uses to decide output</td><td>Proportional control / PID</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Tasks -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+        <!-- Task 1 -->
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Teach</strong> — Use the resources below to learn about control system components, then explain them to the AI.
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.3.6-7.pdf" target="_blank">📖 eBook (A1.3.6-7)</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.3.6-describe-the-use-of-the-control-system-components-hl-only-" target="_blank">🌐 CS Wiki</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vS4F40ZlK0jLKvqZtoTa1TSrQEk-Y3AN993rVQGSKg0Uu-5J-hp1duELwjzReFg5ncXqbGz0t_4YrA1/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
+                    <span class="pill">📘 Textbook</span>
+                    <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85;">Take notes on the four components and how they interact in the control loop.</span>
+            </span>
+        </div>
+        <!-- Task 2 – green -->
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_16" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.
+            </span>
+        </div>
+        <!-- Task 3 -->
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066038474/a-136-describe-the-use-of-the-control-system-components-hl-only-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
+        </div>
+    </div>
+
+    <!-- Unit-end submission reminder -->
+    <div class="unit-reminder">
+        📌 <strong>End-of-unit submission:</strong> Save your Lesson Questions as a <strong>.txt</strong> file. You will submit <strong>all</strong> starter activity answers to <strong>Schoolbox</strong> at the end of <strong>A1.1.9 Debugging Techniques</strong>.
+    </div>
+
+    <div class="key-takeaway">
+        <p><em>"A control system regulates another device or system through a cycle: an input sets the target, a controller compares it to feedback, and an actuator adjusts the process until the output matches. Sensors provide the feedback, transducers bridge the energy gap, and the control algorithm decides how aggressively to correct. Open-loop systems skip the feedback entirely — simple, but unable to adapt."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.3.5-summary.html">← Previous: A1.3.5 Multitasking (HL)</a>
+        <a href="A1.3.7-summary.html">Next: A1.3.7 Control System Applications →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.3.6 – Control System Components (HL) • IB Computer Science • Year 12
+    </div>
+</div>
+
+<script>
+    // ===== Quick Quiz =====
+    (function() {
+        const quizQs = document.querySelectorAll('#quizContainer .quiz-q');
+        const scoreEl = document.getElementById('quizScore');
+        let correctCount = 0;
+        const answered = new Set();
+
+        quizQs.forEach((q, idx) => {
+            const answer = q.getAttribute('data-answer');
+            const options = q.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (answered.has(idx)) return;
+                    answered.add(idx);
+
+                    const chosen = opt.getAttribute('data-opt');
+                    const mark = opt.querySelector('.mark');
+
+                    if (chosen === answer) {
+                        opt.classList.add('correct');
+                        mark.textContent = '✓';
+                        correctCount++;
+                    } else {
+                        opt.classList.add('wrong');
+                        mark.textContent = '✗';
+                        options.forEach(o => {
+                            if (o.getAttribute('data-opt') === answer) {
+                                o.classList.add('correct');
+                                o.querySelector('.mark').textContent = '✓';
+                            }
+                        });
+                    }
+                    scoreEl.textContent = 'Score: ' + correctCount + ' / ' + quizQs.length;
+                });
+            });
+        });
+    })();
+
+    // ===== Match-Up =====
+    (function() {
+        const items = document.querySelectorAll('.match-item');
+        const feedback = document.getElementById('matchFeedback');
+        let selected = null;
+        let matchedCount = 0;
+        const totalMatches = 5;
+
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                if (item.classList.contains('matched')) return;
+
+                if (!selected) {
+                    selected = item;
+                    item.classList.add('selected');
+                    return;
+                }
+
+                if (selected === item) {
+                    selected.classList.remove('selected');
+                    selected = null;
+                    return;
+                }
+
+                const selCol = selected.parentElement;
+                const curCol = item.parentElement;
+
+                if (selCol === curCol) {
+                    selected.classList.remove('selected');
+                    selected = item;
+                    item.classList.add('selected');
+                    return;
+                }
+
+                if (selected.getAttribute('data-match') === item.getAttribute('data-match')) {
+                    selected.classList.remove('selected');
+                    selected.classList.add('matched');
+                    item.classList.add('matched');
+                    matchedCount++;
+                    selected = null;
+
+                    if (matchedCount === totalMatches) {
+                        feedback.textContent = '🎉 All matched — challenge complete!';
+                    } else {
+                        feedback.textContent = '✅ Correct! (' + matchedCount + '/' + totalMatches + ')';
+                    }
+                } else {
+                    item.classList.add('wrong');
+                    setTimeout(() => {
+                        item.classList.remove('wrong');
+                        selected.classList.remove('selected');
+                        selected = null;
+                    }, 400);
+                    feedback.textContent = '❌ Not quite — try again.';
+                }
+            });
+        });
+    })();
+</script>
+
+</body>
+</html>
