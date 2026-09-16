@@ -1,1 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.3.2 - Describe the Functions of an Operating System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.15rem;
+            color: #0b2a4a;
+            margin-top: 22px;
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        .extension-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4px 15px;
+            background: #f7fafc;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .extension-grid .label { font-weight: 600; color: #0b2a4a; }
+        .extension-grid .desc { color: #1e293b; }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
 
+        /* Blooket starter */
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        /* Task styles */
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong {
+            color: #1a6b33;
+        }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+        .task-1-resources .teach-link {
+            background: #0b2a4a;
+            color: white;
+            padding: 3px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: none;
+        }
+        .task-1-resources .teach-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .task-1-resources .teach-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        /* Nine functions grid */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .function-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 480px) { .function-grid { grid-template-columns: 1fr; } }
+        .function-card {
+            background: #f7fafc;
+            border: 2px solid #dce8f5;
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+        }
+        .function-card .icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .function-card .name {
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 0.9rem;
+        }
+        .function-card .short {
+            color: #4a5568;
+            font-size: 0.78rem;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        /* Worked example */
+        .worked {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 15px 0;
+        }
+        .worked h4 {
+            color: #0b2a4a;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .worked ol { padding-left: 1.3rem; font-size: 0.92rem; }
+        .worked li { margin-bottom: 4px; }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table, .extension-grid { font-size: 0.85rem; }
+            .extension-grid { grid-template-columns: 1fr; gap: 2px; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+
+    <h1>A1.3.2 – Describe the Functions of an Operating System</h1>
+
+    <h2>📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to:</p>
+    <ul>
+        <li><strong>Describe</strong> the nine core functions of an operating system</li>
+        <li><strong>Explain</strong> what each function does and how it maintains <strong>system integrity</strong></li>
+        <li><strong>Link</strong> each function back to the resource it manages and the hardware it abstracts</li>
+        <li><strong>Identify</strong> which functions are at work in real tasks you perform every day</li>
+    </ul>
+
+    <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
+    <div class="command-term">
+        <strong>Describe</strong> – <em>"Give a detailed account."</em><br>
+        Naming the nine functions is not enough — for each one, say what it does and how it maintains system integrity.
+    </div>
+
+    <!-- Blooket Starter Activity -->
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket</span>
+        <span style="color:#3d5f7a;">Test your current knowledge before we begin!</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/hack?id=68b0379dda963af6c9571984" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <h2>💡 The Big Idea — System Integrity</h2>
+    <p>An operating system's functions are the <strong>concrete services</strong> that put its resource-management role into practice. Where the <em>role</em> (A1.3.1) is to abstract hardware and arbitrate resources, the <em>functions</em> (A1.3.2) are the specialised subsystems that do the day-to-day work.</p>
+
+    <p>Their overarching purpose is to maintain <strong>system integrity</strong>:</p>
+    <div class="command-term">
+        <strong>System integrity</strong> – the state where a computer system operates correctly and securely, free from unauthorised changes or corruption. The OS ensures its own code, its data, and running applications' code remain correct, consistent and protected from accidental corruption or malicious interference.
+    </div>
+
+    <p>Without these functions, one malfunctioning driver or runaway process could destabilise the entire system.</p>
+
+    <h2>📊 The Nine Functions</h2>
+    <p>The IB syllabus groups OS functions into nine broad areas. Each one manages a different resource or provides a different service.</p>
+
+    <div class="function-grid">
+        <div class="function-card">
+            <span class="icon">🧠</span>
+            <span class="name">Memory Management</span>
+            <span class="short">Allocates RAM to processes; manages virtual memory</span>
+        </div>
+        <div class="function-card">
+            <span class="icon">📁</span>
+            <span class="name">File System</span>
+            <span class="short">Organises files and directories; controls access</span>
+        </div>
+        <div class="function-card">
+            <span class="icon">🖨️</span>
+            <span class="name">Device Management</span>
+            <span class="short">Controls hardware via drivers; handles I/O</span>
+        </div>
+        <div class="function-card">
+            <span class="icon">⏱️</span>
+            <span class="name">Scheduling</span>
+            <span class="short">Decides which process runs next, and for how long</span>
+        </div>
+        <div class="function-card">
+            <span class="icon">🔒</span>
+            <span class="name">Security</span>
+            <span class="short">Authentication, encryption, malware protection</span>
+        </div>
+        <div class="function-card">
+            <span class="icon">📊</span>
+            <span class="name">Accounting</span>
+            <span class="short">Tracks resource usage; quotas and billing</span>
+        </div>
+        <div class="function-card">
+            <span class="icon">🖥️</span>
+            <span class="name">GUI</span>
+            <span class="short">Windows, icons, menus, pointers for user interaction</span>
+        </div>
+        <div class="function-card">
+            <span class="icon">📦</span>
+            <span class="name">Virtualisation</span>
+            <span class="short">Runs multiple VMs on one physical machine</span>
+        </div>
+        <div class="function-card">
+            <span class="icon">🌐</span>
+            <span class="name">Networking</span>
+            <span class="short">Manages connections and data communication</span>
+        </div>
+    </div>
+
+    <h2>🔍 Function in Detail</h2>
+    <p>For each function, the exam expects you to say <strong>what the OS is actually doing</strong> — not just name it.</p>
+
+    <h3>1. Memory Management</h3>
+    <p>The OS controls and coordinates the computer's primary memory (RAM). It ensures memory is <strong>allocated efficiently to processes</strong>, maintains system stability, and <strong>protects memory areas from unauthorised access</strong>.</p>
+    <p>When you open an application, the OS:</p>
+    <ol>
+        <li>Locates the application on the storage device (HDD or SSD)</li>
+        <li>Reads the executable file (.exe on Windows, .app on Mac)</li>
+        <li>Allocates the necessary memory space for code, data and resources</li>
+        <li>Ensures the application has enough space without interfering with other processes</li>
+    </ol>
+    <p>If applications need more memory than is available in RAM, the OS uses <strong>virtual memory</strong> — allocating space on the HDD or SSD to act as RAM. Reading from storage is much slower than RAM, but by switching higher-priority processes into RAM and lower-priority ones into virtual memory, the OS keeps the system running.</p>
+
+    <div class="worked">
+        <h4>💡 Analogy</h4>
+        <p>Think of memory management as organising books on a bookshelf. The OS allocates each book (process) its own space on the shelf (memory). Just as you wouldn't let books overlap, the OS ensures each process has its own protected area.</p>
+    </div>
+
+    <h3>2. File Management</h3>
+    <p>The OS provides a <strong>structured way to manage files and directories</strong> on storage devices, ensuring system stability and security. It employs a <strong>hierarchical file system</strong> — files organised into directories (folders), which can contain further directories, forming a tree-like structure.</p>
+    <p>Set file operations include:</p>
+    <ul>
+        <li>Creating new files and directories</li>
+        <li>Reading and writing data to files</li>
+        <li>Deleting files</li>
+        <li>Renaming files</li>
+        <li>Moving or copying files and directories</li>
+    </ul>
+    <p>The OS enforces <strong>naming rules</strong> so no two files in the same directory have the same name. Files often have <strong>extensions</strong> (like .jpg or .exe) to indicate file type.</p>
+    <p>One important maintenance task is <strong>defragmentation</strong> — reorganising fragmented data on an HDD so files are stored in contiguous blocks, improving access speed and overall performance.</p>
+
+    <h3>3. Device Management</h3>
+    <p>The OS controls and coordinates hardware components — printers, disk drives, display screens, keyboards, network interfaces — through <strong>device drivers</strong>: specialised software that allows the OS to communicate with and control hardware by providing necessary instructions and protocols.</p>
+    <p>The OS handles I/O using three key techniques:</p>
+    <table>
+        <thead>
+            <tr><th>Technique</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Buffering</strong></td><td>Temporarily stores data in memory while it's transferred between two devices, managing differences in data-flow rates</td></tr>
+            <tr><td><strong>Caching</strong></td><td>Stores frequently accessed data in a high-speed area to reduce access time</td></tr>
+            <tr><td><strong>Spooling</strong></td><td>Queues data or tasks (e.g. for printers) so they process sequentially, letting the system work on other tasks meanwhile</td></tr>
+        </tbody>
+    </table>
+    <p>Modern OSes use <strong>Plug and Play (PnP)</strong> — the OS automatically detects, configures and installs drivers for new hardware without manual setup.</p>
+
+    <h3>4. Scheduling</h3>
+    <p>The OS manages the execution of multiple processes by determining which process runs at any given time. The <strong>scheduler</strong> allocates CPU time to processes, ensuring efficient and fair use of system resources.</p>
+    <p>This is crucial for multitasking environments — implementing various scheduling algorithms to optimise performance, reduce wait times and maintain system stability. (Details are covered in <a href="A1.3.3-summary.html">A1.3.3</a>.)</p>
+
+    <h3>5. Security</h3>
+    <p>The OS protects the <strong>integrity, confidentiality and availability</strong> of information and resources. It has mechanisms to safeguard against threats, prevent unauthorised access, and ensure users and applications can operate securely.</p>
+    <table>
+        <thead>
+            <tr><th>Aspect</th><th>What the OS does</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>User authentication</strong></td><td>Requires credentials — username/password, biometric data or security tokens — to log in. Based on user settings, grants or prevents access to files, folders and applications. Allows multiple users with different credentials (administrator vs standard user).</td></tr>
+            <tr><td><strong>Encryption</strong></td><td>Provides tools and frameworks for encrypting files, communication channels and devices. Even if data is intercepted, it cannot be read without the decryption key.</td></tr>
+            <tr><td><strong>Auditing and monitoring</strong></td><td>Tracks all system activities — logins, file access, errors, administrator actions — in a log. Used for auditing, detecting suspicious activity, and identifying issues.</td></tr>
+            <tr><td><strong>Malware protection</strong></td><td>Detects and prevents malware infections and intruders using antivirus software, firewalls and intrusion detection systems (IDS). Protects against viruses, worms and trojans.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>6. Accounting</h3>
+    <p>The OS tracks <strong>resource consumption</strong> by users and processes, providing data for performance analysis, cost allocation and resource optimisation. Key aspects:</p>
+    <ul>
+        <li><strong>Resource usage tracking</strong> — CPU time, memory, disk space, network volume used by each process/user</li>
+        <li><strong>Process accounting</strong> — process ID, user ID, execution time, start/end times, resource consumption</li>
+        <li><strong>User accounting</strong> — cost allocation, quota management (disk quotas, memory quotas)</li>
+        <li><strong>Performance monitoring</strong> — identifying bottlenecks, underutilisation and trends</li>
+        <li><strong>Auditing and reporting</strong> — compliance, security analysis, resource management decisions</li>
+        <li><strong>Billing and chargeback</strong> — usage-based billing (e.g. cloud computing), chargeback to departments</li>
+    </ul>
+
+    <h3>7. Graphical User Interface (GUI)</h3>
+    <p>The OS provides a <strong>user-friendly environment</strong> for interacting with the computer using visual elements: <strong>windows</strong> (display application contents), <strong>icons</strong> (graphical representations of applications and files), <strong>menus</strong> (lists of commands), <strong>pointers</strong> (cursor controlled by input device).</p>
+    <p>Key GUI responsibilities:</p>
+    <ul>
+        <li><strong>Application management</strong> — task switching (Alt+Tab), window management (snapping, tiling), desktop environment</li>
+        <li><strong>File and system management</strong> — File Explorer, system settings, drag-and-drop</li>
+        <li><strong>Accessibility</strong> — screen readers, high-contrast themes, keyboard shortcuts for users with disabilities</li>
+        <li><strong>Visual feedback</strong> — progress bars, notifications, tooltips</li>
+        <li><strong>Customisation</strong> — themes, wallpapers, widgets</li>
+    </ul>
+
+    <h3>8. Virtualisation</h3>
+    <p>The OS allows <strong>multiple virtual machines (VMs)</strong> to run on a single physical machine. Each VM operates independently with its own OS and applications. The OS manages this through a <strong>hypervisor</strong>, which allocates CPU time, memory and storage to each VM.</p>
+    <p>Benefits: isolation between VMs, snapshots and backups, live migrations, disaster recovery, dynamic scaling in cloud environments.</p>
+
+    <h3>9. Networking</h3>
+    <p>The OS manages and facilitates <strong>network communication</strong>. It establishes and maintains network connections, manages network interfaces and protocols, configures settings, assigns IP addresses via <strong>DHCP</strong>, and handles underlying hardware like <strong>NICs</strong> (network interface cards).</p>
+    <p>It implements networking protocols such as <strong>TCP/IP</strong> — governing how data is packetised, addressed, transmitted, routed and received. It ensures data integrity through error checking, flow control and congestion avoidance, and supports higher-level protocols like HTTP, FTP.</p>
+
+    <h2>🎯 Activity — Functions in the Wild</h2>
+    <p>In groups, identify which of the nine functions are at work in each scenario. Some scenarios involve more than two functions — find as many as you can.</p>
+
+    <div class="task-block">
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Printing a 50-page document</strong> — Which functions are at work? What is each one doing?
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Plugging in a new USB drive and copying files to it</strong> — Which functions are at work? What is each one doing?
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc">
+                <strong>Running out of RAM while editing a video</strong> — Which functions are at work? What is each one doing?
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">4</span>
+            <span class="task-desc">
+                <strong>Logging in to a school computer and opening a network drive</strong> — Which functions are at work? What is each one doing?
+            </span>
+        </div>
+    </div>
+
+    <h2>💻 Worked Example — Opening an Application</h2>
+    <div class="worked">
+        <h4>What happens when you double-click a Word document?</h4>
+        <ol>
+            <li><strong>File system</strong> — locates the document by name and maps it to physical blocks on the disk</li>
+            <li><strong>Memory management</strong> — allocates a private address space; loads Word's code and the document into RAM</li>
+            <li><strong>Scheduling</strong> — gives the Word process CPU time, alongside other running processes</li>
+            <li><strong>Security</strong> — checks that your user account has permission to read the file</li>
+            <li><strong>GUI</strong> — renders the window, menus and document on screen</li>
+            <li><strong>Device management</strong> — handles keyboard and mouse input via drivers</li>
+            <li><strong>Accounting</strong> — logs the CPU time and memory the process consumes</li>
+        </ol>
+        <p style="margin-top:10px;">Seven of the nine functions are involved in a single everyday action. This is why "system integrity" matters: all seven must cooperate correctly or the experience breaks.</p>
+    </div>
+
+    <!-- Tasks -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+        <!-- Task 1 -->
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Teach</strong> — Use the resources below to learn about the nine functions, then explain them to the AI.
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.3.1-1.3.5.pdf" target="_blank">📖 eBook</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.3.2-describe-the-functions-of-an-operating-system" target="_blank">🌐 CS Wiki</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vRDMMfi2ioBdsETz0YhLpI9PsnUf5qnKsOjM7VmQXt-FRHoU7hzT76ihEGwC2XqQsrdBfmCzgGHunbG/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
+                    <span class="pill">📘 Textbook</span>
+                    <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85;">Take notes on all nine functions — for each one, what it does and how it maintains system integrity.</span>
+            </span>
+        </div>
+        <!-- Task 2 – green background -->
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.<br>
+                <strong>📌 Important:</strong> Save your code as a <strong>.txt</strong> file. You will submit all answers to <strong>Schoolbox</strong> at the end of A1.1.9 Debugging Techniques.
+            </span>
+        </div>
+        <!-- Task 3 -->
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc"><strong>Extension Activities</strong> — Choose from the activities below if you finish early.</span>
+        </div>
+        <!-- Task 4 -->
+        <div class="task-row">
+            <span class="task-step">4</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066033297/a-132-describe-the-functions-of-an-operating-system-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
+        </div>
+    </div>
+
+    <h2>⭐ Extension Activities</h2>
+    <div class="extension-grid">
+        <span class="label">1. Ubuntu Install &amp; Compare</span>
+        <span class="desc">Install Ubuntu on a VM or spare device. Compare how Ubuntu and Windows (or macOS) handle key aspects: user interface and accessibility, file management, memory management, and software installation/updates. Present findings as a comparison table with a reflection.</span>
+
+        <span class="label">2. Memory Hog Program</span>
+        <span class="desc">Run the Python "Memory Hog" script that allocates memory until the system runs out. Monitor memory usage in Task Manager (Windows) or Activity Monitor (macOS). Explain what the OS does as RAM runs out — which function is at work?</span>
+
+        <span class="label">3. File Management Tasks</span>
+        <span class="desc">Create the folder structure <code>ProjectFiles/Reports</code>, <code>/Data</code>, <code>/Images</code>. Create three text files in Reports. Move, rename, and delete files. Recover a deleted folder from the Recycle Bin / Trash. Document each step — which OS function is doing the work?</span>
+
+        <span class="label">4. Command Line vs GUI</span>
+        <span class="desc">Repeat the file management tasks using the terminal (Command Prompt / cmd on Windows, Terminal on macOS) instead of the GUI. Compare the two approaches — what does each one teach you about the file system function?</span>
+
+        <span class="label">5. Accessibility Deep Dive</span>
+        <span class="desc">Explore accessibility features on Windows (Ease of Access Center) or macOS (Accessibility section). Activate at least two features — e.g. Narrator / VoiceOver, Magnifier / Zoom. Write a reflection on how the GUI function supports accessibility.</span>
+    </div>
+
+    <div class="key-takeaway">
+        <p><em>"An operating system's nine functions — memory management, file system, device management, scheduling, security, accounting, GUI, virtualisation and networking — are the concrete services that put its resource-management role into practice. Together they maintain system integrity, ensuring that one malfunctioning driver or runaway process cannot destabilise the entire system."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.3.1-summary.html">← Previous: A1.3.1 Role of Operating Systems</a>
+        <a href="A1.3.3-summary.html">Next: A1.3.3 Scheduling →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.3.2 – Describe the Functions of an Operating System • IB Computer Science • Year 12
+    </div>
+</div>
+
+</body>
+</html>
