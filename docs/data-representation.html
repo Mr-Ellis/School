@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 5 · Representing Sound</title>
+  <title>Data Representation · Year 9 & Year 10</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -72,6 +72,7 @@
       padding: 0.4rem 1.4rem;
       border-radius: 40px;
     }
+    .subhead i { margin-right: 6px; }
 
     .section-head {
       font-size: 1.9rem;
@@ -86,99 +87,12 @@
     }
     .section-head i { color: #1f6390; font-size: 1.8rem; width: 2.2rem; }
 
-    .lesson-content {
-      background: white;
-      border-radius: 24px;
-      padding: 2rem 2.2rem;
-      margin-top: 1.5rem;
-      border: 1px solid #e5edf5;
-      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
-    }
-    .lesson-content h3 {
-      color: #0b2a4a;
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .lesson-content h3 i { color: #1f6390; }
-    .lesson-content h4 {
-      color: #1f6390;
-      font-size: 1.1rem;
-      margin: 1.5rem 0 0.5rem 0;
-    }
-    .lesson-content .key-point {
-      background: #e9eff8;
-      border-left: 4px solid #1f6390;
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      margin: 0.8rem 0;
-    }
-    .lesson-content .key-point strong { color: #0b2a4a; }
-    .lesson-content ul {
-      padding-left: 1.5rem;
-      margin: 0.5rem 0 1rem 0;
-    }
-    .lesson-content ul li { margin-bottom: 0.3rem; }
-    .lesson-content ol {
-      padding-left: 1.5rem;
-      margin: 0.5rem 0 1rem 0;
-    }
-    .lesson-content ol li { margin-bottom: 0.3rem; }
-
-    .activity-box {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 1.2rem 1.5rem;
-      margin: 1.2rem 0;
-      border: 2px solid #1f6390;
-      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.06);
-    }
-    .activity-box strong { color: #0b2a4a; }
-    .activity-box .btn {
-      display: inline-block;
-      background: #1a5f87;
-      color: white;
-      padding: 0.4rem 1.2rem;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
-      margin-top: 0.3rem;
-      margin-right: 0.3rem;
-    }
-    .activity-box .btn:hover { background: #134f75; }
-
-    .activity-box.gold {
-      border-color: #f5b342;
-      background: #fffcf0;
-    }
-    .activity-box.gold .btn {
-      background: #d48c2c;
-    }
-    .activity-box.gold .btn:hover {
-      background: #b8741f;
-    }
-
-    .activity-box.green {
-      border-color: #2d7d46;
-      background: #f0faf2;
-    }
-    .activity-box.green .btn {
-      background: #2d7d46;
-    }
-    .activity-box.green .btn:hover {
-      background: #1f5f34;
-    }
-
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
       gap: 1.8rem;
-      margin-top: 1.5rem;
+      margin-top: 0.8rem;
     }
-
     .card {
       background: white;
       border-radius: 24px;
@@ -188,14 +102,53 @@
       transition: 0.2s ease;
       display: flex;
       flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
     }
-    .card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
+    .card:hover {
+      border-color: #b6d0e8;
+      box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06);
+      transform: translateY(-2px);
+    }
+    
+    /* Separate Locks (Y9 Blue, Y10 Red) */
+    .lock-icons {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .lock-icon {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 8px;
+    }
+    .lock-y9 {
+      color: #1a5f87;
+      background: #e3f2fd;
+    }
+    .lock-y10 {
+      color: #a13232;
+      background: #fdeaea;
+    }
+    /* Green when unlocked */
+    .card:not(.is-y9-locked) .lock-y9 { color: #2d7d46; background: #e6f7e6; }
+    .card:not(.is-y10-locked) .lock-y10 { color: #2d7d46; background: #e6f7e6; }
 
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
     }
     .card-header h4 {
       font-size: 1.1rem;
@@ -203,8 +156,8 @@
       color: #0b2a4a;
       letter-spacing: -0.2px;
       line-height: 1.3;
+      margin-right: 110px; /* Space for the locks */
     }
-
     .card p {
       color: #475569;
       font-size: 0.9rem;
@@ -219,6 +172,8 @@
       align-items: center;
       border-top: 1px solid #e8eff6;
       padding-top: 0.9rem;
+      position: relative;
+      z-index: 1;
     }
     .card-actions .btn {
       background: #ecf3fa;
@@ -234,6 +189,7 @@
       border: 1px solid transparent;
       transition: 0.15s;
       cursor: pointer;
+      pointer-events: auto;
     }
     .card-actions .btn i { font-size: 0.8rem; }
     .card-actions .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
@@ -246,62 +202,39 @@
       background: #134f75 !important;
     }
 
-    .btn-locked {
-      background: #e8dfd0 !important;
-      color: #6a4e2e !important;
-      cursor: pointer;
-    }
-    .btn-locked i { color: #b8943e; }
-
-    .btn-green {
-      background: #2d7d46 !important;
-      color: #fff !important;
-    }
-    .btn-green:hover {
-      background: #1f5f34 !important;
-    }
-
-    .card-highlight {
-      border: 2px solid #f5b342;
-      background: #ffffff;
-      position: relative;
-    }
-    .card-highlight::after {
-      content: "⭐ Key Tool";
-      position: absolute;
-      top: -10px;
-      right: 16px;
-      background: #f5b342;
-      color: #0b2a4a;
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 2px 12px;
-      border-radius: 20px;
-      letter-spacing: 0.5px;
-    }
-    .card-highlight:hover { border-color: #e09d2a; }
-
-    .cover-section {
+    /* TEACHER CONTROLS (Hidden by default) */
+    .teacher-controls {
+      display: none;
       margin-top: 0.4rem;
       padding-top: 0.4rem;
       border-top: 1px solid #eef2f6;
-      display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
     }
-    .cover-section input[type="checkbox"] {
+    .cover-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+    .cover-item input[type="checkbox"] {
       width: 18px;
       height: 18px;
       accent-color: #0b2a4a;
       cursor: pointer;
     }
-    .cover-section label {
+    .cover-item label {
       cursor: pointer;
       font-weight: 500;
       color: #0b2a4a;
+      font-size: 0.8rem;
     }
-    .cover-section .teacher-badge {
+    .cover-item .y9-label { color: #1a5f87; }
+    .cover-item .y10-label { color: #a13232; }
+    .teacher-controls .teacher-badge {
       font-size: 0.65rem;
       background: #cbd5e1;
       color: #334155;
@@ -310,7 +243,7 @@
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
-    .cover-section .teacher-edit {
+    .teacher-controls .teacher-edit {
       font-size: 0.75rem;
       color: #6b7f8f;
       background: #edf2f7;
@@ -321,7 +254,62 @@
       transition: background 0.2s;
       margin-left: 6px;
     }
-    .cover-section .teacher-edit:hover { background: #d5dce6; }
+    .teacher-controls .teacher-edit:hover { background: #d5dce6; }
+
+    /* When Teacher Mode is active */
+    body.is-teacher .teacher-controls {
+      display: flex;
+    }
+
+    /* Progress bars */
+    .progress-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .progress-bar {
+      flex: 1;
+      min-width: 300px;
+      background: #0b2a4a;
+      border-radius: 60px;
+      padding: 0.8rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 1rem;
+      color: #e6edf5;
+    }
+    .progress-bar .label {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-bar .label i { color: #fdbb2d; }
+    .progress-bar .status-badge {
+      font-size: 0.75rem;
+      background: #1f4b6e;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #b6d0e8;
+    }
+    .progress-bar .status-badge .unlocked-count { color: #fdbb2d; font-weight: 700; }
+    .progress-bar .progress-track {
+      flex: 1;
+      min-width: 100px;
+      height: 8px;
+      background: #1f4b6e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar .progress-fill {
+      height: 100%;
+      background: #fdbb2d;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
 
     .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
@@ -367,88 +355,14 @@
     }
     .password-box .btn:hover { background: #134f75; }
     .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
-
-    .wave-container {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 1rem;
-      margin: 1rem 0;
-      text-align: center;
-    }
-    .wave-container svg {
-      max-width: 100%;
-      height: auto;
-    }
-    .wave-container .caption {
-      font-size: 0.85rem;
-      color: #64748b;
-      margin-top: 0.5rem;
-    }
-
-    .sampling-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1rem 0;
-      font-size: 0.9rem;
-    }
-    .sampling-table th {
+    .modal-type-badge {
+      display: inline-block;
       background: #0b2a4a;
-      color: #fff;
-      padding: 0.6rem 1rem;
-      text-align: left;
-    }
-    .sampling-table td {
-      padding: 0.6rem 1rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .sampling-table tr:nth-child(even) { background: #f8fafc; }
-
-    /* ===== Match-Up game ===== */
-    .match-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin: 1.2rem 0;
-    }
-    .match-col h4 {
-      color: #0b2a4a;
-      font-size: 0.95rem;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    .match-item {
-      background: white;
-      border: 2px solid #dce4ed;
-      border-radius: 10px;
-      padding: 10px 14px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      font-size: 0.88rem;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-    .match-item:hover { border-color: #0b2a4a; background: #ebf4ff; }
-    .match-item.selected { border-color: #fdbb2d; background: #fefcbf; font-weight: 600; }
-    .match-item.matched {
-      border-color: #2d7d46;
-      background: #e6f5e6;
-      color: #1a6b33;
-      cursor: default;
-    }
-    .match-item.matched::after { content: " ✓"; font-weight: 700; }
-    .match-item.wrong {
-      border-color: #b21f1f;
-      background: #fdeaea;
-      color: #a13232;
-    }
-    .match-feedback {
-      text-align: center;
-      margin-top: 12px;
-      font-weight: 600;
-      color: #2d7d46;
-      min-height: 24px;
-      font-size: 0.95rem;
+      color: white;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-bottom: 0.8rem;
     }
 
     @media (max-width: 680px) {
@@ -458,9 +372,7 @@
       .main-title { font-size: 2rem; flex-wrap: wrap; }
       .card-grid { grid-template-columns: 1fr; }
       .password-box { padding: 1.8rem; }
-      .lesson-content { padding: 1.2rem; }
-      .activity-box { padding: 1rem; }
-      .match-grid { grid-template-columns: 1fr; }
+      .progress-section { flex-direction: column; }
     }
   </style>
 </head>
@@ -471,8 +383,9 @@
     <!-- Password Modal -->
     <div id="passwordModal" class="password-modal">
       <div class="password-box">
+        <div class="modal-type-badge" id="modalType">🔒 Enter Master Password</div>
         <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
-        <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access lesson plan</p>
+        <p style="color:#3b5f7a; margin-bottom:1.2rem;" id="modalText">Enter password to access</p>
         <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
         <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
         <div class="error" id="pwdError"></div>
@@ -482,248 +395,232 @@
     <!-- ========== NAVIGATION ========== -->
     <nav class="nav">
         <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
-        <a href="../data-representation.html"><i class="fas fa-arrow-left"></i> Back to Unit 1</a>
-        <a href="../year9.html"><i class="fas fa-arrow-left"></i> Year 9</a>
+        <a href="year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9</a>
+        <a href="year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
     </nav>
 
     <!-- ========== HEADER ========== -->
     <div class="main-title">
-        <i class="fas fa-music"></i> Representing Sound
+        <i class="fas fa-code"></i> Data Representation
     </div>
     <div class="subhead">
         <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
-        Lesson 5 · Sampling, Sample Rate, Bit Depth
+        Year 9 & Year 10 · How computers store and process data
     </div>
 
-    <!-- ========== LESSON CONTENT ========== -->
-    <div class="lesson-content">
-
-        <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
-        <ul>
-            <li>Understand why sound must be converted from analogue to digital</li>
-            <li>Explain what sampling is and why it is necessary</li>
-            <li>Define <strong>sample rate</strong> and <strong>bit depth</strong> and explain how they affect quality and file size</li>
-            <li>Calculate the file size of a sound file using the correct formula</li>
-        </ul>
-
-        <div class="key-point">
-            <strong>💡 Key Fact:</strong> Sound is naturally <strong>analogue</strong> (continuous). Computers can only store <strong>digital</strong> (discrete) data. To store sound, we must convert it by <strong>sampling</strong> — measuring the wave at regular intervals.
+    <!-- PROGRESS BARS -->
+    <div class="progress-section">
+      <div class="progress-bar">
+        <span class="label"><i class="fas fa-graduation-cap"></i> Year 9</span>
+        <span class="status-badge"><span class="unlocked-count" id="y9UnlockedCount">0</span> / <span id="y9TotalLessons">0</span> lessons</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="y9ProgressFill"></div>
         </div>
-
-        <h4>🔊 Analogue vs Digital</h4>
-        <p>Sound travels as a continuous wave of pressure. A microphone converts that wave into a continuous electrical signal — this is <strong>analogue</strong>. But computers can only store 1s and 0s, so the wave must be converted into <strong>digital</strong> form.</p>
-        <p>The process is called <strong>analogue-to-digital conversion (ADC)</strong>, and it happens by <strong>sampling</strong>.</p>
-
-        <div class="wave-container">
-            <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 20 90 Q 70 20 120 90 T 220 90 T 320 90 T 420 90 T 520 90 T 580 90"
-                      fill="none" stroke="#0b2a4a" stroke-width="3"/>
-                <circle cx="20" cy="90" r="5" fill="#b21f1f"/>
-                <circle cx="70" cy="45" r="5" fill="#b21f1f"/>
-                <circle cx="120" cy="90" r="5" fill="#b21f1f"/>
-                <circle cx="170" cy="135" r="5" fill="#b21f1f"/>
-                <circle cx="220" cy="90" r="5" fill="#b21f1f"/>
-                <circle cx="270" cy="45" r="5" fill="#b21f1f"/>
-                <circle cx="320" cy="90" r="5" fill="#b21f1f"/>
-                <circle cx="370" cy="135" r="5" fill="#b21f1f"/>
-                <circle cx="420" cy="90" r="5" fill="#b21f1f"/>
-                <circle cx="470" cy="45" r="5" fill="#b21f1f"/>
-                <circle cx="520" cy="90" r="5" fill="#b21f1f"/>
-                <circle cx="570" cy="45" r="5" fill="#b21f1f"/>
-                <text x="300" y="170" text-anchor="middle" fill="#64748b" font-family="Arial" font-size="12">Analogue wave (smooth) with sample points (red dots)</text>
-            </svg>
-            <p class="caption">Each red dot is a <strong>sample</strong> — a measurement of the wave's amplitude at that instant.</p>
+      </div>
+      <div class="progress-bar">
+        <span class="label"><i class="fas fa-graduation-cap"></i> Year 10</span>
+        <span class="status-badge"><span class="unlocked-count" id="y10UnlockedCount">0</span> / <span id="y10TotalLessons">0</span> lessons</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="y10ProgressFill"></div>
         </div>
-
-        <h4>📏 Sampling — Two Key Decisions</h4>
-        <p>When a sound is sampled, two decisions must be made. Each affects both the <strong>quality</strong> and the <strong>file size</strong>.</p>
-
-        <table class="sampling-table">
-          <thead>
-            <tr>
-              <th>Term</th>
-              <th>Definition</th>
-              <th>Effect of increasing</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Sample Rate</strong></td>
-              <td>The number of samples taken per second, measured in <strong>Hertz (Hz)</strong>.</td>
-              <td>Higher quality, captures higher frequencies, <strong>larger file size</strong>.</td>
-            </tr>
-            <tr>
-              <td><strong>Bit Depth</strong><br><span style="font-size:0.8rem;color:#64748b;">(Sample Resolution)</span></td>
-              <td>The number of bits used to represent each sample's amplitude.</td>
-              <td>Greater dynamic range, more accurate volume levels, <strong>larger file size</strong>.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="key-point">
-            <strong>🔑 The Trade-off:</strong> Higher sample rate and higher bit depth both mean <strong>better quality</strong> but <strong>bigger files</strong>. Choosing the right settings is about balancing quality against storage and transmission cost.
-        </div>
-
-        <h4>🧮 Calculating Sound File Size</h4>
-        <p>For the exam, you must be able to calculate the size of a sound file. Use this formula:</p>
-
-        <div class="key-point" style="font-family: 'Courier New', monospace; font-size: 1.05rem;">
-            <strong>File Size (bits) = Sample Rate (Hz) × Bit Depth (bits) × Time (seconds)</strong>
-        </div>
-
-        <p>To convert the result into <strong>Bytes</strong>, divide by 8.</p>
-
-        <div class="key-point">
-            <strong>📝 Worked Example:</strong> A 10-second recording at 44,100 Hz with a 16-bit depth.<br>
-            44,100 × 16 × 10 = <strong>7,056,000 bits</strong><br>
-            7,056,000 ÷ 8 = <strong>882,000 bytes</strong> (≈ 882 KB)
-        </div>
-
-        <!-- ===== STARTER ACTIVITY (Blooket) ===== -->
-        <div class="activity-box">
-            <strong>🎯 Starter Activity – Sound Blooket</strong>
-            <p>Test your current knowledge of sound representation before we begin!</p>
-            <a href="https://play.blooket.com/host/hack?id=63d2acb4d78a1906e8f6cad4" target="_blank" class="btn"><i class="fas fa-rocket"></i> Launch Blooket Quiz</a>
-        </div>
-
-        <!-- ===== VIDEO RESOURCES ===== -->
-        <div class="activity-box" style="border-color: #b8943e;">
-            <strong>🎬 Video Explanations</strong>
-            <p>Watch these short videos to reinforce your understanding of sampling and file size.</p>
-            <a href="https://youtu.be/PAsMlDptjx8?si=DQIdSYLgqkD8Hyan" target="_blank" class="btn" style="background:#d48c2c;"><i class="fas fa-play-circle"></i> Watch Video 1</a>
-            <a href="https://www.youtube.com/watch?v=aTQS25w8kZo" target="_blank" class="btn" style="background:#d48c2c;"><i class="fas fa-play-circle"></i> Watch Video 2</a>
-        </div>
-
-        <!-- ===== CLASS ACTIVITY – FILE SIZE CALCULATOR ===== -->
-        <div class="activity-box gold">
-            <strong>🧮 Class Activity – Sound File Size Calculator</strong>
-            <p>Work through these tasks in pairs, using a calculator:</p>
-            <ol style="margin-top:0.5rem;">
-                <li>A 30-second clip at 22,050 Hz with 8-bit depth — what is the file size in bits?</li>
-                <li>A 5-second clip at 44,100 Hz with 16-bit depth — what is the file size in bytes?</li>
-                <li>Which is larger and why?</li>
-            </ol>
-            <details style="margin-top:0.6rem; cursor:pointer;">
-                <summary style="color:#1f6390; font-weight:600;"><i class="fas fa-chevron-down"></i> Reveal answers</summary>
-                <div style="background:#e9eff8; padding:0.6rem 1rem; border-radius:8px; margin-top:0.4rem;">
-                    <p><strong>1.</strong> 22,050 × 8 × 30 = <strong>5,292,000 bits</strong></p>
-                    <p><strong>2.</strong> 44,100 × 16 × 5 = 3,528,000 bits ÷ 8 = <strong>441,000 bytes</strong></p>
-                    <p><strong>3.</strong> Question 2 has a higher sample rate and bit depth, but is shorter (5s vs 30s). Question 1 is larger overall because of the longer duration.</p>
-                </div>
-            </details>
-        </div>
-
-        <!-- ===== MAIN WORKSHEET ===== -->
-        <h4>📝 Main Task – Worksheet</h4>
-        <div class="activity-box green">
-            <strong>📄 Worksheet 5: Representing Sound</strong>
-            <p>Complete the worksheet on <strong>Schoolbox</strong> as the main task for this lesson.</p>
-            <p style="font-size:0.85rem; color:#475569; margin-top:0.3rem;"><i class="fas fa-info-circle"></i> Use the resources below to help you complete the worksheet.</p>
-        </div>
-
+      </div>
     </div>
 
-    <!-- ========== KEY TOOLS CARDS ========== -->
-    <div class="card-grid" style="margin-top: 0.5rem;">
-
-        <!-- Lesson Presentation – KEY TOOL -->
-        <div class="card card-highlight">
-            <div class="card-header">
-                <h4>📊 Lesson Presentation</h4>
-            </div>
-            <p>Slides for the lesson – T5 Sound.</p>
-            <div class="card-actions">
-                <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F1%2520Data-representation%2FT5%2520Sound.pptx&wdOrigin=BROWSELINK" target="_blank" class="btn btn-theory"><i class="fas fa-desktop"></i> Open Slides</a>
-            </div>
-        </div>
-
-        <!-- AI Guide – KEY TOOL -->
-        <div class="card card-highlight">
-            <div class="card-header">
-                <h4>🤖 AI Guide</h4>
-            </div>
-            <p><strong>Your personal tutor!</strong> Ask the AI any question about representing sound.</p>
-            <div class="card-actions">
-                <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" class="btn btn-theory"><i class="fas fa-robot"></i> Open AI Guide</a>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- ========== EXTENSIONS & PLENARY ========== -->
-    <div class="lesson-content" style="margin-top: 1.5rem;">
-
-        <!-- ===== EXTENSION TASKS ===== -->
-        <h4>⭐ Extension Tasks</h4>
-        <ul>
-            <li><strong>Complete the extension task</strong> for this lesson.</li>
-            <li>Check that previous worksheets (Lessons 1–4) have also been submitted.</li>
-            <li><strong>Research task:</strong> What is the standard sample rate used on audio CDs, and why was this value chosen?</li>
-            <li><strong>Challenge:</strong> Find a real sound file (e.g. an MP3) and see if you can find its sample rate and bit depth in its properties. How large is the file? Does the size match the formula?</li>
-            <li><strong>Explore the homepage of the website</strong> to find any additional information or resources on representing sound.<br>
-                <span style="font-size:0.85rem; color:#a13232; font-weight:600;">⚠️ Note: You are not allowed to play games on the homepage — this is for research and exploration only.</span></li>
-        </ul>
-
-        <!-- ===== PLENARY ===== -->
-        <h4>🔁 Plenary – Match the Definition</h4>
-        <p>Click a <strong>term</strong> on the left, then click its <strong>definition</strong> on the right. Get them all right to complete the challenge.</p>
-
-        <div class="match-grid">
-          <div class="match-col">
-            <h4>Terms</h4>
-            <div class="match-item" data-match="1">Sampling</div>
-            <div class="match-item" data-match="2">Sample Rate</div>
-            <div class="match-item" data-match="3">Bit Depth</div>
-            <div class="match-item" data-match="4">Analogue</div>
-            <div class="match-item" data-match="5">Digital</div>
-          </div>
-          <div class="match-col">
-            <h4>Definitions</h4>
-            <div class="match-item" data-match="3">The number of bits used per sample — affects dynamic range and file size</div>
-            <div class="match-item" data-match="5">Data stored as discrete 1s and 0s</div>
-            <div class="match-item" data-match="1">Measuring the amplitude of a sound wave at regular intervals</div>
-            <div class="match-item" data-match="4">A continuous signal — the natural form of sound</div>
-            <div class="match-item" data-match="2">The number of samples taken per second, measured in Hertz (Hz)</div>
-          </div>
-        </div>
-        <div class="match-feedback" id="matchFeedback">Click a term to begin.</div>
-
-    </div>
-
-    <!-- ========== ADDITIONAL RESOURCES ========== -->
+    <!-- ========== LESSON GRID ========== -->
     <div class="section-head">
-        <i class="fas fa-tools"></i> Additional Resources
+        <i class="fas fa-calculator"></i> Lessons
     </div>
 
     <div class="card-grid">
 
-        <!-- Lesson Plan (Teacher only) -->
-        <div class="card">
+        <!-- Lesson 1 - Binary Systems -->
+        <a href="Data-representation/lesson1-binary-systems.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR1">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
-                <h4>📋 Lesson Plan <span style="font-size:0.7rem; color:#6b7f8f; font-weight:400;">(Teacher only)</span></h4>
+                <h4>Binary Systems</h4>
             </div>
-            <p>Full lesson plan with starter, activities, and plenary.</p>
+            <p>Binary, bits/bytes, denary ↔ binary</p>
             <div class="card-actions">
-                <button class="btn btn-locked unlock-btn" data-lesson="DR5"><i class="fas fa-lock"></i> Open Lesson Plan</button>
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-            <div class="cover-section">
-                <input type="checkbox" class="cover-checkbox" data-lesson="DR5" id="cover-DR5">
-                <label for="cover-DR5">✓ Lesson delivered</label>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="Y9" id="cover-DR1-Y9">
+                  <label for="cover-DR1-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR1" data-class="Y10" id="cover-DR1-Y10">
+                  <label for="cover-DR1-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
                 <span class="teacher-badge">Teacher only</span>
-                <span class="teacher-edit toggle-cover" data-lesson="DR5">(toggle)</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR1">(toggle both)</span>
             </div>
-        </div>
+        </a>
 
-        <!-- Reference Material -->
-        <div class="card">
+        <!-- Lesson 2 - Hexadecimal -->
+        <a href="Data-representation/lesson2-hexadecimal.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR2">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
             <div class="card-header">
-                <h4>📚 Reference Material</h4>
+                <h4>Hexadecimal</h4>
             </div>
-            <p>Additional content on representing sound — The Computer Science Lab.</p>
+            <p>Denary ↔ hex, binary ↔ hex</p>
             <div class="card-actions">
-                <a href="https://www.thecomputersciencelab.com/chapter-1-data-representation" target="_blank" class="btn btn-green"><i class="fas fa-book-open"></i> Open Reference</a>
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
-        </div>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="Y9" id="cover-DR2-Y9">
+                  <label for="cover-DR2-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR2" data-class="Y10" id="cover-DR2-Y10">
+                  <label for="cover-DR2-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR2">(toggle both)</span>
+            </div>
+        </a>
+
+        <!-- Lesson 3 - Binary Shifts & Two's Complement -->
+        <a href="Data-representation/lesson3-binary-shifts.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR3">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
+            <div class="card-header">
+                <h4>Binary Shifts &amp; Two's Complement</h4>
+            </div>
+            <p>Logical shifts, two's complement</p>
+            <div class="card-actions">
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
+            </div>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="Y9" id="cover-DR3-Y9">
+                  <label for="cover-DR3-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR3" data-class="Y10" id="cover-DR3-Y10">
+                  <label for="cover-DR3-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR3">(toggle both)</span>
+            </div>
+        </a>
+
+        <!-- Lesson 4 - ASCII & Unicode -->
+        <a href="Data-representation/lesson4-character-sets.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR4">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
+            <div class="card-header">
+                <h4>ASCII &amp; Unicode</h4>
+            </div>
+            <p>Character sets, ASCII vs Unicode</p>
+            <div class="card-actions">
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
+            </div>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="Y9" id="cover-DR4-Y9">
+                  <label for="cover-DR4-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR4" data-class="Y10" id="cover-DR4-Y10">
+                  <label for="cover-DR4-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR4">(toggle both)</span>
+            </div>
+        </a>
+
+        <!-- Lesson 5 - Representing Sound -->
+        <a href="Data-representation/lesson5-representing-sound.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR5">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
+            <div class="card-header">
+                <h4>Representing Sound</h4>
+            </div>
+            <p>Sampling, sample rate, bit-depth</p>
+            <div class="card-actions">
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
+            </div>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="Y9" id="cover-DR5-Y9">
+                  <label for="cover-DR5-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR5" data-class="Y10" id="cover-DR5-Y10">
+                  <label for="cover-DR5-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR5">(toggle both)</span>
+            </div>
+        </a>
+
+        <!-- Lesson 6 - Representing Images -->
+        <a href="Data-representation/lesson6-representing-images.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR6">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
+            <div class="card-header">
+                <h4>Representing Images</h4>
+            </div>
+            <p>Pixels, resolution, colour depth</p>
+            <div class="card-actions">
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
+            </div>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="Y9" id="cover-DR6-Y9">
+                  <label for="cover-DR6-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR6" data-class="Y10" id="cover-DR6-Y10">
+                  <label for="cover-DR6-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR6">(toggle both)</span>
+            </div>
+        </a>
+
+        <!-- Lesson 7 - Data Compression & Revision -->
+        <a href="Data-representation/lesson7-compression.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR7">
+            <div class="lock-icons">
+                <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
+                <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
+            </div>
+            <div class="card-header">
+                <h4>Data Compression &amp; Revision</h4>
+            </div>
+            <p>Lossy/lossless, RLE, review</p>
+            <div class="card-actions">
+                <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
+            </div>
+            <div class="teacher-controls" onclick="event.stopPropagation();">
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="Y9" id="cover-DR7-Y9">
+                  <label for="cover-DR7-Y9"><span class="y9-label">Year 9</span> covered</label>
+                </div>
+                <div class="cover-item">
+                  <input type="checkbox" class="cover-checkbox" data-lesson="DR7" data-class="Y10" id="cover-DR7-Y10">
+                  <label for="cover-DR7-Y10"><span class="y10-label">Year 10</span> covered</label>
+                </div>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="DR7">(toggle both)</span>
+            </div>
+        </a>
 
     </div>
 
@@ -735,130 +632,152 @@
 
 <script>
     (function() {
-        // ========== COVER CHECKBOXES ==========
+        // The single Master Password used for both Teacher Mode and Lesson Plans
+        const TEACHER_PASSWORD = 'Password262026';
+        
         const checkboxes = document.querySelectorAll('.cover-checkbox');
-        const GRADE_PREFIX = 'igcse_';
+        const GRADE_PREFIX = 'datarep_'; // Shared prefix for the single file
+        let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
+        let pendingPath = '';
 
+        // ---- All lessons ----
+        const allLessons = ['DR1', 'DR2', 'DR3', 'DR4', 'DR5', 'DR6', 'DR7'];
+        document.getElementById('y9TotalLessons').textContent = allLessons.length;
+        document.getElementById('y10TotalLessons').textContent = allLessons.length;
+
+        // ---- Track which lessons are unlocked (based on checkboxes) ----
+        function getUnlockedLessons(year) {
+          const unlocked = [];
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            const anyChecked = Array.from(checkboxes).some(cb => cb.dataset.class === year && cb.checked);
+            if (anyChecked) {
+              unlocked.push(lesson);
+            }
+          });
+          return unlocked;
+        }
+
+        function updateUI() {
+          const y9Unlocked = getUnlockedLessons('Y9');
+          const y10Unlocked = getUnlockedLessons('Y10');
+          
+          // Update card lock states
+          document.querySelectorAll('.card[data-lesson]').forEach(card => {
+            const lesson = card.getAttribute('data-lesson');
+            const checkboxes = card.querySelectorAll('.cover-checkbox');
+            
+            const y9Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y9' && cb.checked);
+            const y10Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y10' && cb.checked);
+            
+            // Update the Y9 and Y10 lock states
+            if (y9Checked) {
+              card.classList.remove('is-y9-locked');
+            } else {
+              card.classList.add('is-y9-locked');
+            }
+            
+            if (y10Checked) {
+              card.classList.remove('is-y10-locked');
+            } else {
+              card.classList.add('is-y10-locked');
+            }
+            
+            const anyChecked = y9Checked || y10Checked;
+
+            // Lock/unlock the main card
+            if (anyChecked) {
+              card.classList.remove('locked');
+            } else {
+              card.classList.add('locked');
+            }
+            
+            // Color coding
+            card.classList.remove('fully-covered', 'partially-covered');
+            if (y9Checked && y10Checked) {
+              card.classList.add('fully-covered'); // Green if both years done
+            } else if (anyChecked) {
+              card.classList.add('partially-covered'); // Yellow-ish if one year done
+            }
+          });
+          
+          // Update progress bars
+          document.getElementById('y9UnlockedCount').textContent = y9Unlocked.length;
+          document.getElementById('y10UnlockedCount').textContent = y10Unlocked.length;
+          document.getElementById('y9ProgressFill').style.width = (y9Unlocked.length / allLessons.length * 100) + '%';
+          document.getElementById('y10ProgressFill').style.width = (y10Unlocked.length / allLessons.length * 100) + '%';
+        }
+
+        // Restore checked states on load
         checkboxes.forEach(function(cb) {
             const lessonKey = cb.getAttribute('data-lesson');
-            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
-            const card = cb.closest('.card');
+            const classKey = cb.getAttribute('data-class');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey + '_' + classKey;
 
             if (localStorage.getItem(storageKey) === 'true') {
                 cb.checked = true;
-                if (card) card.style.background = '#e6f7e6';
             }
 
-            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
-            if (toggleSpan) {
-                toggleSpan.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const isChecked = !cb.checked;
-                    cb.checked = isChecked;
-                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
-                    if (card) {
-                        if (isChecked) {
-                            card.style.background = '#e6f7e6';
-                        } else {
-                            card.style.background = '';
-                        }
-                    }
-                });
-            }
-
+            // Handle changes
             cb.addEventListener('change', function() {
                 localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
-                if (card) {
-                    if (this.checked) {
-                        card.style.background = '#e6f7e6';
-                    } else {
-                        card.style.background = '';
-                    }
-                }
+                updateUI();
             });
         });
 
-        // ========== MATCH-UP GAME ==========
-        const matchItems = document.querySelectorAll('.match-item');
-        const feedback = document.getElementById('matchFeedback');
-        let selectedItem = null;
-        let matchedCount = 0;
-        const totalMatches = 5;
-
-        matchItems.forEach(function(item) {
-            item.addEventListener('click', function() {
-                if (item.classList.contains('matched')) return;
-
-                // Nothing selected yet — pick this one
-                if (!selectedItem) {
-                    selectedItem = item;
-                    item.classList.add('selected');
-                    feedback.textContent = 'Now click a matching definition on the right.';
-                    return;
-                }
-
-                // Clicking the same item again — deselect
-                if (selectedItem === item) {
-                    selectedItem.classList.remove('selected');
-                    selectedItem = null;
-                    feedback.textContent = 'Click a term to begin.';
-                    return;
-                }
-
-                // Must pair across columns
-                const selCol = selectedItem.parentElement;
-                const curCol = item.parentElement;
-
-                if (selCol === curCol) {
-                    // Same column — switch selection
-                    selectedItem.classList.remove('selected');
-                    selectedItem = item;
-                    item.classList.add('selected');
-                    return;
-                }
-
-                // Check for a match
-                if (selectedItem.getAttribute('data-match') === item.getAttribute('data-match')) {
-                    selectedItem.classList.remove('selected');
-                    selectedItem.classList.add('matched');
-                    item.classList.add('matched');
-                    matchedCount++;
-                    selectedItem = null;
-
-                    if (matchedCount === totalMatches) {
-                        feedback.textContent = '🎉 All matched — challenge complete!';
-                    } else {
-                        feedback.textContent = '✅ Correct! (' + matchedCount + '/' + totalMatches + ')';
-                    }
-                } else {
-                    item.classList.add('wrong');
-                    const wrongItem = item;
-                    const prevSelected = selectedItem;
-                    setTimeout(function() {
-                        wrongItem.classList.remove('wrong');
-                        prevSelected.classList.remove('selected');
-                        selectedItem = null;
-                        feedback.textContent = '❌ Not quite — try again.';
-                    }, 500);
-                }
+        // ---- "Toggle all" teacher edit ----
+        document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
+          toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const lesson = this.getAttribute('data-lesson');
+            const cbs = document.querySelectorAll('.cover-checkbox[data-lesson="' + lesson + '"]');
+            const anyUnchecked = Array.from(cbs).some(cb => !cb.checked);
+            cbs.forEach(function(cb) {
+              cb.checked = anyUnchecked;
+              const key = GRADE_PREFIX + 'covered_' + cb.getAttribute('data-lesson') + '_' + cb.getAttribute('data-class');
+              localStorage.setItem(key, anyUnchecked ? 'true' : 'false');
             });
+            updateUI();
+          });
         });
 
-        // ========== PASSWORD PROTECTION ==========
+        // Initial UI update
+        updateUI();
+
+        // ---- Password Modal Logic ----
         const modal = document.getElementById('passwordModal');
         const pwdInput = document.getElementById('pwdInput');
         const pwdError = document.getElementById('pwdError');
         const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
-        let pendingPath = '';
+        const modalType = document.getElementById('modalType');
+        const modalText = document.getElementById('modalText');
 
         const PDF_URLS = {
-            'DR5': 'https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2Flessonplans%2FIGCSE%2520Computer%2520Science%2FUnit%25201%2520Data%2520representation%2FLesson%2520Plan%25205.docx&wdOrigin=BROWSELINK'
+            'DR1': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR1-Binary-Systems.pdf',
+            'DR2': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR2-Hexadecimal.pdf',
+            'DR3': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR3-Binary-Shifts.pdf',
+            'DR4': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf',
+            'DR5': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf',
+            'DR6': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf',
+            'DR7': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf'
         };
 
-        function openModal(path) {
-            pendingPath = path;
+        function openModal(mode, path) {
+            currentModalMode = mode;
+            pendingPath = path || '';
             pwdInput.value = '';
             pwdError.textContent = '';
+
+            if (mode === 'teacher') {
+                modalType.textContent = '🔑 Enter Master Password';
+                modalText.textContent = 'Enter the master password to enable the teacher controls.';
+            } else {
+                modalType.textContent = '📄 Teacher Resource';
+                modalText.textContent = 'Enter the teacher password to access this lesson plan.';
+            }
+
             modal.classList.add('active');
             pwdInput.focus();
         }
@@ -868,10 +787,33 @@
             pendingPath = '';
         }
 
+        function activateTeacherMode() {
+            document.body.classList.add('is-teacher');
+            sessionStorage.setItem('teacherMode', 'true');
+            
+            // Add a "Lock" button to exit teacher mode
+            let existingBtn = document.getElementById('lockAdminBtn');
+            if(!existingBtn) {
+                existingBtn = document.createElement('a');
+                existingBtn.id = 'lockAdminBtn';
+                existingBtn.innerHTML = '<i class="fas fa-unlock-alt"></i> Lock Admin';
+                existingBtn.href = '#';
+                existingBtn.style.color = '#fdbb2d';
+                existingBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    sessionStorage.removeItem('teacherMode');
+                    window.location.reload();
+                });
+                document.querySelector('.nav').appendChild(existingBtn);
+            }
+        }
+
         function attemptUnlock() {
             const entered = pwdInput.value.trim();
-            if (entered === 'teacher') {
-                if (pendingPath) {
+            if (entered === TEACHER_PASSWORD) {
+                if (currentModalMode === 'teacher') {
+                    activateTeacherMode();
+                } else if (currentModalMode === 'lesson' && pendingPath) {
                     window.open(pendingPath, '_blank');
                 }
                 closeModal();
@@ -881,19 +823,6 @@
                 pwdInput.focus();
             }
         }
-
-        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const lesson = this.getAttribute('data-lesson');
-                const url = PDF_URLS[lesson];
-                if (url) {
-                    openModal(url);
-                } else {
-                    alert('No lesson plan found.');
-                }
-            });
-        });
 
         pwdSubmitBtn.addEventListener('click', attemptUnlock);
         pwdInput.addEventListener('keydown', function(e) {
@@ -914,6 +843,24 @@
                 closeModal();
             }
         });
+
+        // ---- INIT ----
+        // Check if teacher mode was previously active in this browser session
+        if (sessionStorage.getItem('teacherMode') === 'true') {
+            activateTeacherMode();
+        }
+
+        // Add a small "Admin" button in the nav to enter Teacher Mode later
+        let adminBtn = document.createElement('a');
+        adminBtn.id = 'adminModeBtn';
+        adminBtn.href = '#';
+        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
+        adminBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('teacher');
+        });
+        document.querySelector('.nav').appendChild(adminBtn);
+
     })();
 </script>
 
