@@ -144,6 +144,102 @@
       margin: 0;
     }
 
+    /* ===== WHICH DEVICE AM I? clue cards ===== */
+    .clue-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 1rem 0 1.5rem 0;
+    }
+    .clue-card {
+      background: linear-gradient(160deg, #f8fafc 0%, #eef4fa 100%);
+      border-radius: 16px;
+      padding: 1.2rem 1.3rem 1.1rem;
+      border: 1px solid #d9e6f2;
+      box-shadow: 0 4px 10px rgba(0, 32, 64, 0.04);
+      position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .clue-card:hover {
+      border-color: #b6d0e8;
+      box-shadow: 0 6px 16px rgba(0, 32, 64, 0.07);
+    }
+    .clue-number {
+      display: inline-block;
+      background: #1f6390;
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-bottom: 0.6rem;
+      align-self: flex-start;
+    }
+    .clue-text {
+      color: #1e293b;
+      font-size: 0.92rem;
+      font-style: italic;
+      margin: 0 0 0.9rem 0;
+      flex: 1;
+    }
+    .clue-btn {
+      background: #1a5f87;
+      color: #fff;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .clue-btn:hover { background: #134f75; }
+    .clue-btn:active { transform: scale(0.97); }
+    .clue-btn i { font-size: 0.8rem; }
+    .clue-answer {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      margin-top: 0;
+      transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+      border-top: 1px dashed transparent;
+      padding-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .clue-card.revealed .clue-answer {
+      max-height: 100px;
+      opacity: 1;
+      margin-top: 0.9rem;
+      padding-top: 0.8rem;
+      border-top-color: #cbddee;
+    }
+    .clue-answer-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+    .clue-answer-text {
+      font-weight: 700;
+      color: #2d7d46;
+      font-size: 1rem;
+    }
+    .clue-card.revealed .clue-btn {
+      background: #2d7d46;
+    }
+    .clue-card.revealed .clue-btn:hover {
+      background: #1f5f34;
+    }
+
     .activity-box {
       background: #ffffff;
       border-radius: 16px;
@@ -545,30 +641,40 @@
 
         <!-- ===== WHICH DEVICE AM I? (quick retrieval) ===== -->
         <h4>🕵️ Which Device Am I?</h4>
-        <p><strong>Read each clue and identify the device. Click to reveal the answer.</strong></p>
+        <p>Read each clue and identify the device. Click the button to reveal the answer.</p>
 
-        <div class="dropdown-answer" onclick="this.classList.toggle('active')">
-            <div class="hint-text"><i class="fas fa-chevron-down"></i> Clue 1</div>
-            <div class="answer-content">
-                <p style="margin:0 0 0.4rem 0;">"I connect multiple devices on a LAN. I forward frames using MAC addresses. I reduce network collisions."</p>
-                <p style="margin:0;"><strong>Answer:</strong> 🔄 Switch</p>
-            </div>
-        </div>
+        <div class="clue-grid">
 
-        <div class="dropdown-answer" onclick="this.classList.toggle('active')">
-            <div class="hint-text"><i class="fas fa-chevron-down"></i> Clue 2</div>
-            <div class="answer-content">
-                <p style="margin:0 0 0.4rem 0;">"I connect two different networks together. I use IP addresses to route packets. My home version links your LAN to the internet."</p>
-                <p style="margin:0;"><strong>Answer:</strong> 📶 Router</p>
+            <div class="clue-card" data-clue="1">
+                <div class="clue-number">Clue 1</div>
+                <p class="clue-text">"I connect multiple devices on a LAN. I forward frames using MAC addresses. I reduce network collisions."</p>
+                <button class="clue-btn" onclick="toggleClue(this)"><i class="fas fa-eye"></i> Reveal Answer</button>
+                <div class="clue-answer">
+                    <span class="clue-answer-icon">🔄</span>
+                    <span class="clue-answer-text">Switch</span>
+                </div>
             </div>
-        </div>
 
-        <div class="dropdown-answer" onclick="this.classList.toggle('active')">
-            <div class="hint-text"><i class="fas fa-chevron-down"></i> Clue 3</div>
-            <div class="answer-content">
-                <p style="margin:0 0 0.4rem 0;">"I am built into every device that connects to a network. I hold a unique 48-bit address assigned by my manufacturer."</p>
-                <p style="margin:0;"><strong>Answer:</strong> 🖥️ NIC (Network Interface Card)</p>
+            <div class="clue-card" data-clue="2">
+                <div class="clue-number">Clue 2</div>
+                <p class="clue-text">"I connect two different networks together. I use IP addresses to route packets. My home version links your LAN to the internet."</p>
+                <button class="clue-btn" onclick="toggleClue(this)"><i class="fas fa-eye"></i> Reveal Answer</button>
+                <div class="clue-answer">
+                    <span class="clue-answer-icon">📶</span>
+                    <span class="clue-answer-text">Router</span>
+                </div>
             </div>
+
+            <div class="clue-card" data-clue="3">
+                <div class="clue-number">Clue 3</div>
+                <p class="clue-text">"I am built into every device that connects to a network. I hold a unique 48-bit address assigned by my manufacturer."</p>
+                <button class="clue-btn" onclick="toggleClue(this)"><i class="fas fa-eye"></i> Reveal Answer</button>
+                <div class="clue-answer">
+                    <span class="clue-answer-icon">🖥️</span>
+                    <span class="clue-answer-text">NIC (Network Interface Card)</span>
+                </div>
+            </div>
+
         </div>
 
         <!-- ===== LAN vs WAN ===== -->
@@ -796,6 +902,15 @@
 
 <script>
     (function() {
+        // ========== WHICH DEVICE AM I? clue toggles ==========
+        window.toggleClue = function(btn) {
+            const card = btn.closest('.clue-card');
+            const revealed = card.classList.toggle('revealed');
+            btn.innerHTML = revealed
+                ? '<i class="fas fa-eye-slash"></i> Hide Answer'
+                : '<i class="fas fa-eye"></i> Reveal Answer';
+        };
+
         // ========== COVER CHECKBOXES ==========
         const checkboxes = document.querySelectorAll('.cover-checkbox');
         const GRADE_PREFIX = 'year10_';
