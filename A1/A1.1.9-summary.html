@@ -1,1246 +1,1322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A1.1.9 – Types of Services in Cloud Computing</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: #f0f4fb;
-    color: #1e293b;
-    padding: 2rem 1.5rem;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-  .container { max-width: 1000px; margin: 0 auto; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A1.1.9 – Cloud Service Models (SaaS, PaaS, IaaS) · Interactive</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  /* ---- NAV ---- */
-  .nav {
-    background: #0b2a4a;
-    padding: 0.9rem 2rem;
-    border-radius: 60px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1.6rem;
-    margin-bottom: 2.4rem;
-    box-shadow: 0 8px 20px rgba(0,20,40,0.08);
-  }
-  .nav a {
-    color: #e6edf5;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: 0.2s;
-  }
-  .nav a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
-  .nav .brand { margin-right: auto; font-weight: 600; color: #fff; font-size: 1.05rem; }
-  .nav .brand i { margin-right: 8px; color: #7bb3ff; }
-  .nav .badge-nav {
-    background: #1f4b6e;
-    color: #b6d0e8;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.9rem;
-    border-radius: 30px;
-    font-weight: 600;
-  }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f6f9ff;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
 
-  /* ---- HEADER ---- */
-  h1 {
-    font-size: 2.4rem;
-    color: #0b2a4a;
-    border-bottom: 4px solid #fdbb2d;
-    padding-bottom: 12px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  h1 i { color: #2a6f97; font-size: 2rem; }
-  .subtitle {
-    color: #475569;
-    font-size: 0.95rem;
-    background: #e9eff8;
-    display: inline-block;
-    padding: 0.4rem 1.4rem;
-    border-radius: 40px;
-    margin-bottom: 2rem;
-    border-left: 4px solid #2a6f97;
-  }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
 
-  /* ---- CARDS ---- */
-  .card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 1.8rem 2rem;
-    margin-bottom: 1.6rem;
-    box-shadow: 0 6px 18px rgba(0,20,40,0.04);
-    border: 1px solid #e5edf5;
-  }
-  .card h2 {
-    font-size: 1.4rem;
-    color: #0b2a4a;
-    margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-left: 5px solid #b21f1f;
-    padding-left: 14px;
-  }
-  .card h2 i { color: #1f6390; font-size: 1.2rem; }
-  .card h3 {
-    font-size: 1.05rem;
-    color: #0b2a4a;
-    margin: 1.2rem 0 0.5rem;
-  }
+    /* ---- NAV ---- */
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.6rem;
+      margin-bottom: 2.4rem;
+      box-shadow: 0 8px 20px rgba(0, 20, 40, 0.08);
+    }
 
-  /* ---- GREEN TASK CARD ---- */
-  .card.green-task {
-    background: #e8f5e9;
-    border: 1px solid #a5d6a7;
-    border-left: 6px solid #2e7d32;
-  }
-  .card.green-task h2 {
-    border-left-color: #2e7d32;
-    color: #1b5e20;
-  }
-  .card.green-task h2 i { color: #2e7d32; }
-  .card.green-task .info-box {
-    background: #dcedc8;
-    border-left-color: #2e7d32;
-  }
-  .card.green-task .resource-pills a {
-    background: #dcedc8;
-    border-color: #a5d6a7;
-    color: #1b5e20;
-  }
-  .card.green-task .resource-pills a:hover {
-    background: #c5e1a5;
-    border-color: #8bc34a;
-  }
-  .card.green-task .resource-pills a i { color: #2e7d32; }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
 
-  /* ---- BADGE ---- */
-  .badge {
-    display: inline-block;
-    background: #b21f1f;
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.7rem;
-    padding: 2px 12px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .badge.main-task {
-    background: #2e7d32;
-    color: #fff;
-  }
+    .nav a:hover {
+      color: #fff;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
 
-  /* ---- COMMAND TERM ---- */
-  .command-term {
-    background: #ebf4ff;
-    border-left: 5px solid #0b2a4a;
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-style: italic;
-  }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: #fff;
+      font-size: 1.05rem;
+    }
 
-  /* ---- TABLES ---- */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    font-size: 0.9rem;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  th {
-    background: #0b2a4a;
-    color: #fff;
-    font-weight: 600;
-    padding: 11px 14px;
-    text-align: left;
-  }
-  td {
-    padding: 11px 14px;
-    border-bottom: 1px solid #e2e8f0;
-    vertical-align: top;
-  }
-  tr:nth-child(even) { background: #f7fafc; }
-  tr:last-child td { border-bottom: none; }
+    .nav .brand i {
+      margin-right: 8px;
+      color: #7bb3ff;
+    }
 
-  /* ---- INFO / EXAMPLE BOXES ---- */
-  .info-box {
-    background: #f1f6fc;
-    border-radius: 10px;
-    padding: 15px 20px;
-    margin: 15px 0;
-    border-left: 5px solid #1a5f87;
-  }
-  .info-box strong { color: #0b2a4a; }
+    .nav .badge-nav {
+      background: #1f4b6e;
+      color: #b6d0e8;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.9rem;
+      border-radius: 30px;
+      font-weight: 600;
+    }
 
-  .example-box {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 15px 20px;
-    margin: 15px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 0.88rem;
-  }
-  .example-box .label {
-    font-family: inherit;
-    font-weight: 700;
-    color: #0b2a4a;
-    font-size: 0.8rem;
-    display: block;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+    /* ---- HEADER ---- */
+    h1 {
+      font-size: 2.3rem;
+      color: #0b2a4a;
+      border-bottom: 4px solid #fdbb2d;
+      padding-bottom: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-  code {
-    background: #eef2f7;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.88rem;
-  }
+    h1 i {
+      color: #2a6f97;
+      font-size: 2rem;
+    }
 
-  /* ---- ACCORDION ---- */
-  .accordion {
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 12px 0;
-  }
-  .accordion-header {
-    background: #f1f6fc;
-    padding: 14px 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    color: #0b2a4a;
-    font-size: 0.95rem;
-    transition: 0.2s;
-    user-select: none;
-  }
-  .accordion-header:hover { background: #e3eef8; }
-  .accordion-header .chevron { transition: transform 0.3s; color: #1f6390; }
-  .accordion.open .chevron { transform: rotate(180deg); }
-  .accordion-body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease;
-    padding: 0 20px;
-    background: #fff;
-  }
-  .accordion.open .accordion-body {
-    max-height: 600px;
-    padding: 16px 20px;
-  }
+    .subtitle {
+      color: #475569;
+      font-size: 0.95rem;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+      margin-bottom: 2rem;
+      border-left: 4px solid #2a6f97;
+    }
 
-  /* ---- DRAG & DROP ACTIVITY ---- */
-  .dnd-container {
-    display: flex;
-    gap: 16px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-  }
-  .dnd-column {
-    flex: 1;
-    min-width: 200px;
-    background: #f8fafc;
-    border: 2px dashed #cbd5e1;
-    border-radius: 14px;
-    padding: 12px;
-    min-height: 260px;
-    transition: 0.2s;
-  }
-  .dnd-column.drag-over {
-    background: #e0f2fe;
-    border-color: #3b82f6;
-  }
-  .dnd-column h4 {
-    font-size: 0.95rem;
-    color: #0b2a4a;
-    text-align: center;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #e2e8f0;
-  }
-  .dnd-column h4 i { margin-right: 6px; color: #1f6390; }
-  .dnd-column .drop-zone {
-    min-height: 180px;
-  }
-  .dnd-item {
-    background: #fff;
-    border: 1.5px solid #dce4ed;
-    border-radius: 10px;
-    padding: 9px 12px;
-    margin: 6px 0;
-    cursor: grab;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #0b2a4a;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.15s;
-    user-select: none;
-  }
-  .dnd-item:hover { border-color: #1a5f87; background: #f1f6fc; }
-  .dnd-item.dragging { opacity: 0.4; cursor: grabbing; }
-  .dnd-item i { color: #1f6390; font-size: 0.9rem; }
-  .dnd-item.correct { background: #e6f7e6; border-color: #2d7d46; color: #1a6b33; }
-  .dnd-item.wrong { background: #fdeaea; border-color: #b13a3a; color: #a13232; }
-  .dnd-pool {
-    background: #f1f5f9;
-    border: 2px dashed #94a3b8;
-    border-radius: 14px;
-    padding: 12px;
-    margin-bottom: 16px;
-    min-height: 80px;
-  }
-  .dnd-pool h4 {
-    font-size: 0.9rem;
-    color: #475569;
-    margin-bottom: 8px;
-    text-align: center;
-  }
-  .dnd-pool .pool-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-  .dnd-pool .dnd-item {
-    margin: 0;
-    cursor: grab;
-  }
-  .dnd-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 14px;
-    flex-wrap: wrap;
-  }
-  .dnd-btn {
-    border: none;
-    padding: 0.55rem 1.4rem;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .dnd-btn-check {
-    background: #fdbb2d;
-    color: #0b2a4a;
-  }
-  .dnd-btn-check:hover { background: #ffd45e; transform: translateY(-1px); }
-  .dnd-btn-reset {
-    background: #e2e8f0;
-    color: #475569;
-  }
-  .dnd-btn-reset:hover { background: #cbd5e1; }
-  .dnd-feedback {
-    text-align: center;
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-top: 10px;
-    min-height: 24px;
-  }
-  .dnd-feedback.ok { color: #2d7d46; }
-  .dnd-feedback.no { color: #b13a3a; }
+    /* ---- CARDS ---- */
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 10px 25px rgba(0, 20, 40, 0.04);
+      border: 1px solid #e2eaf3;
+    }
 
-  /* ---- QUIZ ---- */
-  .quiz-box {
-    background: #f8fafc;
-    border: 2px solid #b21f1f;
-    border-radius: 16px;
-    padding: 1.5rem 1.8rem;
-    margin: 16px 0;
-  }
-  .quiz-box h3 { color: #b21f1f; margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-  .quiz-q {
-    margin-bottom: 1.2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  .quiz-q:last-of-type { border-bottom: none; }
-  .quiz-q p { font-weight: 600; color: #0b2a4a; font-size: 0.92rem; margin-bottom: 8px; }
-  .quiz-opt {
-    display: block;
-    background: #fff;
-    border: 1.5px solid #dce4ed;
-    border-radius: 10px;
-    padding: 9px 14px;
-    margin: 6px 0;
-    cursor: pointer;
-    font-size: 0.88rem;
-    transition: 0.15s;
-  }
-  .quiz-opt:hover { border-color: #1a5f87; background: #f1f6fc; }
-  .quiz-opt.correct { background: #e6f7e6; border-color: #2d7d46; color: #1a6b33; font-weight: 600; }
-  .quiz-opt.wrong { background: #fdeaea; border-color: #b13a3a; color: #a13232; }
-  .quiz-opt.disabled { pointer-events: none; opacity: 0.7; }
-  .quiz-feedback {
-    font-size: 0.82rem;
-    margin-top: 6px;
-    min-height: 20px;
-    font-weight: 500;
-  }
-  .quiz-feedback.ok { color: #2d7d46; }
-  .quiz-feedback.no { color: #b13a3a; }
-  .quiz-score {
-    text-align: center;
-    font-weight: 700;
-    color: #0b2a4a;
-    font-size: 1rem;
-    margin-top: 10px;
-    padding-top: 12px;
-    border-top: 2px solid #e2e8f0;
-  }
+    .card h2 {
+      font-size: 1.4rem;
+      color: #0b2a4a;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 5px solid #b21f1f;
+      padding-left: 14px;
+    }
 
-  /* ---- RESOURCE PILLS ---- */
-  .resource-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 14px 0;
-  }
-  .resource-pills a {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: #ecf3fa;
-    color: #13416b;
-    padding: 0.45rem 1.1rem;
-    border-radius: 30px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    text-decoration: none;
-    border: 1px solid #dce4ed;
-    transition: 0.15s;
-  }
-  .resource-pills a:hover { background: #d6e4f2; border-color: #b6cfe5; transform: translateY(-1px); }
-  .resource-pills a i { color: #1a5f87; }
+    .card h2 i {
+      color: #1f6390;
+      font-size: 1.2rem;
+    }
 
-  /* ---- SCENARIO CARDS ---- */
-  .scenario-grid {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin: 16px 0;
-  }
-  .scenario-card {
-    flex: 1;
-    min-width: 220px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 16px 18px;
-  }
-  .scenario-card h4 {
-    font-size: 0.95rem;
-    color: #0b2a4a;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .scenario-card h4 i { color: #1f6390; }
-  .scenario-card p { font-size: 0.85rem; margin-bottom: 10px; }
-  .scenario-reveal {
-    background: #0b2a4a;
-    color: #fdbb2d;
-    border: none;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 0.78rem;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .scenario-reveal:hover { background: #1f4b6e; }
-  .scenario-answer {
-    display: none;
-    margin-top: 10px;
-    padding: 10px 12px;
-    background: #e8f5e9;
-    border-left: 4px solid #2e7d32;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #1b5e20;
-  }
-  .scenario-answer.show { display: block; }
+    .card h3 {
+      font-size: 1.05rem;
+      color: #0b2a4a;
+      margin: 1.3rem 0 0.5rem;
+    }
 
-  /* ---- NAV FOOTER ---- */
-  .lesson-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    padding-top: 1.4rem;
-    border-top: 2px solid #e2e8f0;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .lesson-nav a {
-    color: #b21f1f;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .lesson-nav a:hover { color: #0b2a4a; }
+    /* ---- COMPARISON VISUAL ---- */
+    .model-comparison {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
 
-  .footer-meta {
-    margin-top: 1.6rem;
-    font-size: 0.8rem;
-    color: #4a5568;
-    text-align: center;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1.2rem;
-  }
+    .model-card {
+      flex: 1;
+      min-width: 180px;
+      background: #fafdff;
+      border-radius: 18px;
+      padding: 1.2rem 1.2rem 1.4rem;
+      border: 1px solid #dbe6f0;
+      transition: 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
 
-  @media (max-width: 640px) {
-    body { padding: 1rem; }
-    h1 { font-size: 1.7rem; }
-    .card { padding: 1.2rem 1.3rem; }
-    table { font-size: 0.8rem; }
-    th, td { padding: 8px 10px; }
-    .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
-    .nav .brand { margin-right: 0; }
-    .dnd-container { flex-direction: column; }
-  }
-</style>
+    .model-card:hover {
+      border-color: #9bb8d4;
+      box-shadow: 0 8px 16px rgba(0, 50, 90, 0.06);
+      transform: translateY(-2px);
+    }
+
+    .model-card .model-icon {
+      font-size: 2rem;
+      margin-bottom: 0.6rem;
+      color: #1f6390;
+    }
+
+    .model-card h3 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+      color: #0b2a4a;
+    }
+
+    .model-card .delivered {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      color: #ffffff;
+      background: #2a6f97;
+      display: inline-block;
+      padding: 2px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .model-card ul {
+      list-style: none;
+      font-size: 0.88rem;
+      margin: 10px 0 12px;
+      padding-left: 0;
+    }
+
+    .model-card ul li {
+      margin-bottom: 6px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .model-card ul li i {
+      color: #2e7d32;
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .model-card .control-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 30px;
+      display: inline-block;
+      background: #eef2f6;
+      color: #1e3a5f;
+    }
+
+    /* ---- INFO / EXAMPLE BOXES ---- */
+    .info-box {
+      background: #f1f6fc;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-left: 5px solid #1a5f87;
+      font-size: 0.92rem;
+    }
+
+    .info-box strong {
+      color: #0b2a4a;
+    }
+
+    .example-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 15px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+    }
+
+    .example-box .label {
+      font-family: inherit;
+      font-weight: 700;
+      color: #0b2a4a;
+      font-size: 0.8rem;
+      display: block;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    code {
+      background: #eef2f7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+    }
+
+    /* ---- DND ACTIVITY (REDESIGNED) ---- */
+    .dnd-new {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .dnd-pool-new {
+      background: #f1f5f9;
+      border: 2px dashed #94a3b8;
+      border-radius: 18px;
+      padding: 18px 18px 14px;
+      transition: 0.15s;
+    }
+
+    .dnd-pool-new h4 {
+      font-size: 0.9rem;
+      color: #475569;
+      margin-bottom: 12px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .dnd-pool-new .pool-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      min-height: 50px;
+    }
+
+    .dnd-item-new {
+      background: #ffffff;
+      border: 1.5px solid #cddae6;
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: grab;
+      transition: 0.15s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      user-select: none;
+    }
+
+    .dnd-item-new:hover {
+      border-color: #1a5f87;
+      background: #f1f6fc;
+    }
+
+    .dnd-item-new.dragging {
+      opacity: 0.4;
+      cursor: grabbing;
+    }
+
+    .dnd-item-new.correct {
+      background: #e0f2e0;
+      border-color: #2d7d46;
+      color: #1a6b33;
+    }
+
+    .dnd-item-new.wrong {
+      background: #fdeaea;
+      border-color: #b13a3a;
+      color: #a13232;
+    }
+
+    .dnd-columns-new {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .dnd-col-new {
+      flex: 1;
+      min-width: 200px;
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 18px;
+      padding: 16px 12px 14px;
+      transition: 0.15s;
+    }
+
+    .dnd-col-new.drag-over {
+      background: #e0f2fe;
+      border-color: #3b82f6;
+    }
+
+    .dnd-col-new h4 {
+      font-size: 0.95rem;
+      color: #0b2a4a;
+      text-align: center;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .dnd-col-new h4 i {
+      margin-right: 6px;
+      color: #1f6390;
+    }
+
+    .dnd-col-new .drop-zone-new {
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dnd-col-new .drop-zone-new .dnd-item-new {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .dnd-actions-new {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .dnd-btn-new {
+      border: none;
+      padding: 0.65rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dnd-btn-check-new {
+      background: #fdbb2d;
+      color: #0b2a4a;
+    }
+
+    .dnd-btn-check-new:hover {
+      background: #ffd45e;
+      transform: translateY(-1px);
+    }
+
+    .dnd-btn-reset-new {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .dnd-btn-reset-new:hover {
+      background: #cbd5e1;
+    }
+
+    .dnd-feedback-new {
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 12px;
+      min-height: 28px;
+    }
+
+    .dnd-feedback-new.ok {
+      color: #2d7d46;
+    }
+
+    .dnd-feedback-new.no {
+      color: #b13a3a;
+    }
+
+    /* ---- TABLE ---- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.88rem;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #0b2a4a;
+      color: #fff;
+      font-weight: 600;
+      padding: 12px 14px;
+      text-align: left;
+    }
+
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background: #f7fafc;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ---- SCENARIO / REVEAL ---- */
+    .scenario-grid {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+
+    .scenario-card {
+      flex: 1;
+      min-width: 220px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+    }
+
+    .scenario-card h4 {
+      font-size: 0.95rem;
+      color: #0b2a4a;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scenario-card h4 i {
+      color: #1f6390;
+    }
+
+    .scenario-card p {
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .scenario-reveal {
+      background: #0b2a4a;
+      color: #fdbb2d;
+      border: none;
+      padding: 0.45rem 1.2rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .scenario-reveal:hover {
+      background: #1f4b6e;
+    }
+
+    .scenario-answer {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: #e8f5e9;
+      border-left: 4px solid #2e7d32;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1b5e20;
+    }
+
+    .scenario-answer.show {
+      display: block;
+    }
+
+    /* ---- ACCORDION ---- */
+    .accordion {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 16px 0 0;
+    }
+
+    .accordion-header {
+      background: #f1f6fc;
+      padding: 14px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.92rem;
+      transition: 0.2s;
+      user-select: none;
+    }
+
+    .accordion-header:hover {
+      background: #e3eef8;
+    }
+
+    .accordion-header .chevron {
+      transition: transform 0.3s;
+      color: #1f6390;
+    }
+
+    .accordion.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      padding: 0 20px;
+      background: #fff;
+    }
+
+    .accordion.open .accordion-body {
+      max-height: 500px;
+      padding: 16px 20px;
+    }
+
+    /* ---- QUIZ ---- */
+    .quiz-box {
+      background: #f8fafc;
+      border: 2px solid #b21f1f;
+      border-radius: 20px;
+      padding: 1.6rem 1.8rem;
+      margin: 16px 0 0;
+    }
+
+    .quiz-box h3 {
+      color: #b21f1f;
+      margin-top: 0;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quiz-q {
+      margin-bottom: 1.4rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .quiz-q:last-of-type {
+      border-bottom: none;
+    }
+
+    .quiz-q p {
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.92rem;
+      margin-bottom: 8px;
+    }
+
+    .quiz-opt {
+      display: block;
+      background: #fff;
+      border: 1.5px solid #dce4ed;
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin: 6px 0;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: 0.15s;
+    }
+
+    .quiz-opt:hover {
+      border-color: #1a5f87;
+      background: #f1f6fc;
+    }
+
+    .quiz-opt.correct {
+      background: #e6f7e6;
+      border-color: #2d7d46;
+      color: #1a6b33;
+      font-weight: 600;
+    }
+
+    .quiz-opt.wrong {
+      background: #fdeaea;
+      border-color: #b13a3a;
+      color: #a13232;
+    }
+
+    .quiz-opt.disabled {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .quiz-feedback {
+      font-size: 0.82rem;
+      margin-top: 8px;
+      min-height: 22px;
+      font-weight: 500;
+    }
+
+    .quiz-feedback.ok {
+      color: #2d7d46;
+    }
+
+    .quiz-feedback.no {
+      color: #b13a3a;
+    }
+
+    .quiz-score {
+      text-align: center;
+      font-weight: 700;
+      color: #0b2a4a;
+      font-size: 1rem;
+      margin-top: 12px;
+      padding-top: 14px;
+      border-top: 2px solid #e2e8f0;
+    }
+
+    /* ---- RESOURCE PILLS ---- */
+    .resource-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .resource-pills a {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #ecf3fa;
+      color: #13416b;
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid #dce4ed;
+      transition: 0.15s;
+    }
+
+    .resource-pills a:hover {
+      background: #d6e4f2;
+      border-color: #b6cfe5;
+      transform: translateY(-1px);
+    }
+
+    .resource-pills a i {
+      color: #1a5f87;
+    }
+
+    /* ---- FOOTER ---- */
+    .lesson-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 1.4rem;
+      border-top: 2px solid #e2e8f0;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .lesson-nav a {
+      color: #b21f1f;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lesson-nav a:hover {
+      color: #0b2a4a;
+    }
+
+    .footer-meta {
+      margin-top: 1.6rem;
+      font-size: 0.8rem;
+      color: #4a5568;
+      text-align: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1.2rem;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 1.7rem;
+      }
+      .card {
+        padding: 1.3rem 1.2rem;
+      }
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        border-radius: 30px;
+        gap: 0.6rem;
+      }
+      .nav .brand {
+        margin-right: 0;
+      }
+      .model-comparison {
+        flex-direction: column;
+      }
+      .dnd-columns-new {
+        flex-direction: column;
+      }
+      .dnd-col-new {
+        min-width: auto;
+      }
+      table {
+        font-size: 0.78rem;
+      }
+      th,
+      td {
+        padding: 8px 10px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
+  <div class="container">
 
-  <!-- NAV -->
-  <nav class="nav">
-    <span class="brand"><i class="fas fa-microchip"></i> IB CompSci</span>
-    <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to A1 Unit</a>
-    <a href="A1.1.8-summary.html"><i class="fas fa-chevron-left"></i> A1.1.8</a>
-    <a href="A1.2.0-summary.html">A1.2.0 <i class="fas fa-chevron-right"></i></a>
-    <span class="badge-nav"><i class="fas fa-graduation-cap"></i> Core · SL & HL</span>
-  </nav>
+    <!-- NAV -->
+    <nav class="nav">
+      <span class="brand"><i class="fas fa-microchip"></i> IB CompSci</span>
+      <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to A1 Unit</a>
+      <a href="A1.1.8-summary.html"><i class="fas fa-chevron-left"></i> A1.1.8</a>
+      <a href="A1.2.0-summary.html">A1.2.0 <i class="fas fa-chevron-right"></i></a>
+      <span class="badge-nav"><i class="fas fa-graduation-cap"></i> Core · SL &amp; HL</span>
+    </nav>
 
-  <!-- HEADER -->
-  <h1><i class="fas fa-cloud"></i> A1.1.9 – Types of Services in Cloud Computing</h1>
-  <div class="subtitle"><i class="fas fa-bullseye"></i> Describe the different types of services in cloud computing</div>
+    <!-- HEADER -->
+    <h1><i class="fas fa-cloud"></i> A1.1.9 – Cloud Service Models</h1>
+    <div class="subtitle"><i class="fas fa-bullseye"></i> SaaS · PaaS · IaaS — who manages what, and when to use each</div>
 
-  <!-- ============ LEARNING OBJECTIVE ============ -->
-  <div class="card">
-    <h2><i class="fas fa-bullseye"></i> Learning Objective</h2>
-    <p>By the end of this lesson, you will be able to:</p>
-    <ul style="margin: 10px 0 0 20px;">
-      <li><strong>Describe</strong> the three main cloud service models: Software as a Service (SaaS), Platform as a Service (PaaS), and Infrastructure as a Service (IaaS)</li>
-      <li><strong>Describe</strong> the differences between SaaS, PaaS, and IaaS in terms of control, flexibility, and responsibility</li>
-      <li><strong>Describe</strong> real-world scenarios where each model is appropriate, recognising how different degrees of control influence resource management and availability</li>
-    </ul>
-  </div>
-
-  <!-- ============ COMMAND TERM ============ -->
-  <div class="card">
-    <h2><i class="fas fa-crosshairs"></i> IB Command Term: <span class="badge">Describe</span></h2>
-    <div class="command-term">
-      <strong>Describe</strong> – <em>"Give a detailed account."</em><br><br>
-      Simply naming a cloud model (e.g., "SaaS") is not describing it. This lesson builds the skill of providing a detailed account of what each model provides, who manages what, and the trade-offs between control and convenience.
-    </div>
-  </div>
-
-  <!-- ============ KEY TERMS ============ -->
-  <div class="card">
-    <h2><i class="fas fa-key"></i> Key Terms</h2>
-    <table>
-      <thead><tr><th>Term</th><th>Definition</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Cloud computing</strong></td><td>The delivery of computing services—including servers, storage, databases, networking, software, and analytics—over the internet ("the cloud").</td></tr>
-        <tr><td><strong>Software as a Service (SaaS)</strong></td><td>A cloud model where fully functional software applications are delivered over the internet, with the provider managing all infrastructure, platform, and application layers.</td></tr>
-        <tr><td><strong>Platform as a Service (PaaS)</strong></td><td>A cloud model that provides a development and deployment environment, including infrastructure, runtime environments, databases, and tools, so developers can focus on writing code.</td></tr>
-        <tr><td><strong>Infrastructure as a Service (IaaS)</strong></td><td>A cloud model that provides virtualized computing resources—virtual machines, storage, and networks—giving users full control from the operating system up.</td></tr>
-        <tr><td><strong>Elastic pricing</strong></td><td>A usage-based billing model where you pay only for the compute, storage, or bandwidth you actually consume, rather than for provisioned capacity.</td></tr>
-        <tr><td><strong>Vendor lock-in</strong></td><td>A situation where a customer becomes dependent on a cloud provider and cannot easily move to another without substantial cost or disruption.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- ============ THE BIG IDEA ============ -->
-  <div class="card">
-    <h2><i class="fas fa-lightbulb"></i> The Big Idea</h2>
-    <p>Cloud computing is a model that enables on-demand access to shared computing resources—such as storage, applications, development platforms, and virtual machines—over the internet. It is built on the principle of <strong>resource abstraction</strong>, where physical infrastructure is hidden from the user and offered as a service.</p>
-    <div class="info-box">
-      <strong>Cloud services are generally categorised into three core models:</strong>
-      <ul style="margin-top: 8px; margin-left: 18px;">
-        <li><strong>Software as a Service (SaaS)</strong> — for end users</li>
-        <li><strong>Platform as a Service (PaaS)</strong> — for developers</li>
-        <li><strong>Infrastructure as a Service (IaaS)</strong> — for system administrators</li>
-      </ul>
-    </div>
-    <p>Each model provides a different level of abstraction, control, and flexibility, and is suited to different use cases and technical requirements.</p>
-  </div>
-
-  <!-- ============ SaaS ============ -->
-  <div class="card">
-    <h2><i class="fas fa-window-restore"></i> 1. Software as a Service (SaaS)</h2>
-    <p>SaaS delivers fully functional software applications over the internet. Users access the application via a browser or client without managing the underlying infrastructure, platform, or even application updates.</p>
-
-    <h3>Key Characteristics</h3>
-    <ul style="margin-left: 20px;">
-      <li>No installation required on the client side</li>
-      <li>Maintenance, security, and updates handled by the provider</li>
-      <li>Typically subscription-based (pay-per-user or tiered)</li>
-    </ul>
-
-    <h3>Examples</h3>
-    <ul style="margin-left: 20px;">
-      <li>Google Workspace (Docs, Sheets, Gmail)</li>
-      <li>Microsoft 365 (Word, Excel, Outlook)</li>
-      <li>Salesforce (CRM)</li>
-      <li>Zoom, Slack, Dropbox</li>
-    </ul>
-
-    <div class="example-box">
-      <span class="label">Use Case Scenario</span>
-      A marketing team needs a collaboration and email platform. Rather than deploying and maintaining their own mail servers or document editors, they use Google Workspace, which is instantly available and fully managed.
+    <!-- LEARNING OBJECTIVE (condensed) -->
+    <div class="card">
+      <h2><i class="fas fa-bullseye"></i> Learning Objective</h2>
+      <p>By the end of this lesson, you will be able to <strong>describe</strong> the three main cloud service models, explain the trade-offs in control and responsibility, and choose the right model for real-world scenarios.</p>
     </div>
 
-    <div class="info-box">
-      <strong>Degree of Control:</strong> Low control — users can configure settings but cannot access infrastructure or platform layers. High availability and low administrative overhead.
-    </div>
-
-    <div class="accordion" id="acc-saas">
-      <div class="accordion-header" onclick="toggleAccordion('acc-saas')">
-        <span><i class="fas fa-gear"></i> SaaS in detail</span>
-        <i class="fas fa-chevron-down chevron"></i>
+    <!-- BIG IDEA VISUAL -->
+    <div class="card">
+      <h2><i class="fas fa-lightbulb"></i> The Big Idea — One Spectrum, Three Models</h2>
+      <p>Cloud computing hides physical infrastructure and offers it as a service. The three core models differ in <strong>how much you manage</strong> versus <strong>how much the provider manages</strong>.</p>
+      <div class="model-comparison">
+        <div class="model-card">
+          <div class="model-icon"><i class="fas fa-window-restore"></i></div>
+          <h3>SaaS</h3>
+          <span class="delivered">For end users</span>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> Ready-to-use software</li>
+            <li><i class="fas fa-check-circle"></i> No installation or maintenance</li>
+            <li><i class="fas fa-check-circle"></i> Provider handles everything</li>
+          </ul>
+          <span class="control-badge"><i class="fas fa-sliders-h"></i> Low control</span>
+        </div>
+        <div class="model-card">
+          <div class="model-icon"><i class="fas fa-layer-group"></i></div>
+          <h3>PaaS</h3>
+          <span class="delivered">For developers</span>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> Development &amp; deployment platform</li>
+            <li><i class="fas fa-check-circle"></i> Focus on code, not servers</li>
+            <li><i class="fas fa-check-circle"></i> Auto-scaling built in</li>
+          </ul>
+          <span class="control-badge"><i class="fas fa-sliders-h"></i> Medium control</span>
+        </div>
+        <div class="model-card">
+          <div class="model-icon"><i class="fas fa-server"></i></div>
+          <h3>IaaS</h3>
+          <span class="delivered">For sysadmins</span>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> Virtual machines &amp; storage</li>
+            <li><i class="fas fa-check-circle"></i> Full OS-level control</li>
+            <li><i class="fas fa-check-circle"></i> You configure everything</li>
+          </ul>
+          <span class="control-badge"><i class="fas fa-sliders-h"></i> High control</span>
+        </div>
       </div>
-      <div class="accordion-body">
-        <p>SaaS provides a cost-effective and convenient solution for businesses and individuals, offering a wide range of applications from productivity tools to customer-relationship management systems. SaaS allows users to access their software from anywhere, on any device, as long as they have an internet connection. This eliminates the need for complex software installations.</p>
-        <p>Many SaaS providers charge a subscription fee, which is often less than the cost of purchasing software licences. Additionally, updates and new features are automatically added by the provider, ensuring that users always have the most up-to-date version of the software.</p>
-        <p><strong>Limitations:</strong> SaaS software relies on the user having an internet connection; without it, they cannot run the software, unlike locally installed software. Data security is also a concern, as users rely on the provider's security measures to protect sensitive data.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ PaaS ============ -->
-  <div class="card">
-    <h2><i class="fas fa-layer-group"></i> 2. Platform as a Service (PaaS)</h2>
-    <p>PaaS provides a development and deployment environment that includes infrastructure (servers, storage, networking) plus runtime environments, databases, and development tools. Developers focus on writing code, while the platform handles scalability, load balancing, and resource provisioning.</p>
-
-    <h3>Key Characteristics</h3>
-    <ul style="margin-left: 20px;">
-      <li>Abstracts hardware and OS-level concerns</li>
-      <li>Supports CI/CD, auto-scaling, and API integration</li>
-      <li>Allows faster development and deployment</li>
-    </ul>
-
-    <h3>Examples</h3>
-    <ul style="margin-left: 20px;">
-      <li>Google App Engine</li>
-      <li>Heroku</li>
-      <li>Microsoft Azure App Services</li>
-      <li>AWS Elastic Beanstalk</li>
-    </ul>
-
-    <div class="example-box">
-      <span class="label">Use Case Scenario</span>
-      A startup building a web application uses Heroku to deploy its backend written in Node.js. The team doesn't worry about provisioning servers, managing databases, or configuring operating systems. They push their code, and the PaaS handles the rest.
-    </div>
-
-    <div class="info-box">
-      <strong>Degree of Control:</strong> Moderate control — developers manage application code and data, but not OS or hardware. High flexibility in development; limited access to low-level system resources.
-    </div>
-
-    <div class="accordion" id="acc-paas">
-      <div class="accordion-header" onclick="toggleAccordion('acc-paas')">
-        <span><i class="fas fa-gear"></i> PaaS in detail</span>
-        <i class="fas fa-chevron-down chevron"></i>
-      </div>
-      <div class="accordion-body">
-        <p>PaaS accelerates software development by allowing developers to focus on coding rather than infrastructure management. It also makes it easier and cheaper to scale hardware as the user base increases.</p>
-        <p><strong>Limitations:</strong> This solution can lead to vendor lock-in, making it difficult to move applications to different platforms and offering less control over the hosting environment.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ IaaS ============ -->
-  <div class="card">
-    <h2><i class="fas fa-server"></i> 3. Infrastructure as a Service (IaaS)</h2>
-    <p>IaaS offers virtualized computing resources over the internet—such as virtual machines, storage, and networks. Users can provision and configure everything from the operating system up to the application layer.</p>
-
-    <h3>Key Characteristics</h3>
-    <ul style="margin-left: 20px;">
-      <li>High configurability and control</li>
-      <li>Pay-as-you-go pricing based on usage</li>
-      <li>Requires knowledge of systems administration and networking</li>
-    </ul>
-
-    <h3>Examples</h3>
-    <ul style="margin-left: 20px;">
-      <li>Amazon EC2 (AWS)</li>
-      <li>Google Compute Engine</li>
-      <li>Microsoft Azure Virtual Machines</li>
-      <li>DigitalOcean, Linode</li>
-    </ul>
-
-    <div class="example-box">
-      <span class="label">Use Case Scenario</span>
-      An enterprise hosting a custom financial analytics platform uses Amazon EC2 to provision virtual servers. They install their preferred OS, configure firewalls, deploy custom software, and monitor performance using internal tools.
-    </div>
-
-    <div class="info-box">
-      <strong>Degree of Control:</strong> High control — users manage OS, middleware, and runtime. High flexibility, but more responsibility for configuration, patching, and monitoring.
-    </div>
-
-    <div class="accordion" id="acc-iaas">
-      <div class="accordion-header" onclick="toggleAccordion('acc-iaas')">
-        <span><i class="fas fa-gear"></i> IaaS in detail</span>
-        <i class="fas fa-chevron-down chevron"></i>
-      </div>
-      <div class="accordion-body">
-        <p>Unlike PaaS, IaaS gives users full control over their virtual machines and networks. This reduces the need for upfront investment in hardware and allows businesses to rent solutions at a lower initial cost using a subscription model. IaaS is also scalable, making it easy to adjust resources as the user base grows.</p>
-        <p><strong>Limitations:</strong> IaaS requires more technical knowledge than PaaS, as users must manage their own devices and secure their own data and applications.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ INTERACTIVE: WHO MANAGES WHAT? ============ -->
-  <div class="card">
-    <h2><i class="fas fa-hand-pointer"></i> Interactive Activity: Who Manages What?</h2>
-    <p>Drag each component into the correct column to show who is responsible for managing it in each cloud model. Use the <strong>Check Answers</strong> button when you are done.</p>
-
-    <div class="dnd-pool" id="dndPool">
-      <h4><i class="fas fa-arrows-alt"></i> Drag these components:</h4>
-      <div class="pool-items" id="poolItems">
-        <div class="dnd-item" draggable="true" data-item="hardware"><i class="fas fa-microchip"></i> Hardware</div>
-        <div class="dnd-item" draggable="true" data-item="os"><i class="fas fa-desktop"></i> Operating System</div>
-        <div class="dnd-item" draggable="true" data-item="runtime"><i class="fas fa-cogs"></i> Runtime Environment</div>
-        <div class="dnd-item" draggable="true" data-item="databases"><i class="fas fa-database"></i> Databases</div>
-        <div class="dnd-item" draggable="true" data-item="applications"><i class="fas fa-window-maximize"></i> Applications</div>
-        <div class="dnd-item" draggable="true" data-item="userdata"><i class="fas fa-user-lock"></i> User Data</div>
+      <div class="info-box">
+        <strong>💡 Quick rule of thumb:</strong> SaaS = you just use it · PaaS = you build on it · IaaS = you control the foundations.
       </div>
     </div>
 
-    <div class="dnd-container">
-      <div class="dnd-column" data-model="saas">
-        <h4><i class="fas fa-window-restore"></i> SaaS</h4>
-        <div class="drop-zone" data-model="saas"></div>
+    <!-- SAAS DETAIL -->
+    <div class="card">
+      <h2><i class="fas fa-window-restore"></i> 1. Software as a Service (SaaS)</h2>
+      <p>Fully functional software delivered over the internet. You access it via a browser or app — the provider handles infrastructure, platform, and updates.</p>
+      <div class="info-box">
+        <strong>Examples:</strong> Google Workspace, Microsoft 365, Salesforce, Zoom, Dropbox.
       </div>
-      <div class="dnd-column" data-model="paas">
-        <h4><i class="fas fa-layer-group"></i> PaaS</h4>
-        <div class="drop-zone" data-model="paas"></div>
+      <div class="example-box">
+        <span class="label">Real‑world use</span>
+        A 20‑person marketing agency uses Google Workspace for email, docs, and video calls. No servers, no software installation, no patching — just a monthly subscription.
       </div>
-      <div class="dnd-column" data-model="iaas">
-        <h4><i class="fas fa-server"></i> IaaS</h4>
-        <div class="drop-zone" data-model="iaas"></div>
+      <div class="accordion" id="acc-saas">
+        <div class="accordion-header" onclick="toggleAccordion('acc-saas')">
+          <span><i class="fas fa-gear"></i> SaaS in detail</span>
+          <i class="fas fa-chevron-down chevron"></i>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Pros:</strong> Cost‑effective, instantly available, automatic updates, accessible from anywhere.</p>
+          <p><strong>Cons:</strong> Requires internet; data security relies on the provider; limited customisation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAAS DETAIL -->
+    <div class="card">
+      <h2><i class="fas fa-layer-group"></i> 2. Platform as a Service (PaaS)</h2>
+      <p>A ready‑made environment for building, testing, and deploying applications. The provider manages servers, OS, runtime, and databases — you write code.</p>
+      <div class="info-box">
+        <strong>Examples:</strong> Heroku, Google App Engine, Microsoft Azure App Services, AWS Elastic Beanstalk.
+      </div>
+      <div class="example-box">
+        <span class="label">Real‑world use</span>
+        A startup deploys a Node.js web app on Heroku. They push code, and the platform handles scaling, load balancing, and database provisioning automatically.
+      </div>
+      <div class="accordion" id="acc-paas">
+        <div class="accordion-header" onclick="toggleAccordion('acc-paas')">
+          <span><i class="fas fa-gear"></i> PaaS in detail</span>
+          <i class="fas fa-chevron-down chevron"></i>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Pros:</strong> Fast development, built‑in scalability, lower operational overhead.</p>
+          <p><strong>Cons:</strong> Risk of vendor lock‑in; less control over the underlying environment.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- IAAS DETAIL -->
+    <div class="card">
+      <h2><i class="fas fa-server"></i> 3. Infrastructure as a Service (IaaS)</h2>
+      <p>Virtualised computing resources — VMs, storage, networks. You control the OS, middleware, runtime, and applications.</p>
+      <div class="info-box">
+        <strong>Examples:</strong> Amazon EC2, Google Compute Engine, Microsoft Azure VMs, DigitalOcean.
+      </div>
+      <div class="example-box">
+        <span class="label">Real‑world use</span>
+        A financial firm provisions AWS EC2 instances, installs a custom OS, configures firewalls, and deploys in‑house analytics software to meet compliance rules.
+      </div>
+      <div class="accordion" id="acc-iaas">
+        <div class="accordion-header" onclick="toggleAccordion('acc-iaas')">
+          <span><i class="fas fa-gear"></i> IaaS in detail</span>
+          <i class="fas fa-chevron-down chevron"></i>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Pros:</strong> Maximum control, pay‑as‑you‑go, scalable, no upfront hardware costs.</p>
+          <p><strong>Cons:</strong> Requires deep technical knowledge; you handle patching, security, and monitoring.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE: WHO MANAGES WHAT? (REDESIGNED) -->
+    <div class="card">
+      <h2><i class="fas fa-hand-pointer"></i> Interactive: Who manages what?</h2>
+      <p style="margin-bottom: 12px;">Drag each component into the column where the <strong>customer</strong> is responsible for managing it. Some components are never managed by the customer — leave those in the pool.</p>
+
+      <div class="dnd-new">
+        <div class="dnd-pool-new" id="dndPoolNew">
+          <h4><i class="fas fa-arrows-alt"></i> Drag these components</h4>
+          <div class="pool-items" id="poolItemsNew">
+            <div class="dnd-item-new" draggable="true" data-item="hardware"><i class="fas fa-microchip"></i> Hardware</div>
+            <div class="dnd-item-new" draggable="true" data-item="os"><i class="fas fa-desktop"></i> Operating System</div>
+            <div class="dnd-item-new" draggable="true" data-item="runtime"><i class="fas fa-cogs"></i> Runtime Environment</div>
+            <div class="dnd-item-new" draggable="true" data-item="databases"><i class="fas fa-database"></i> Databases</div>
+            <div class="dnd-item-new" draggable="true" data-item="applications"><i class="fas fa-window-maximize"></i> Applications</div>
+            <div class="dnd-item-new" draggable="true" data-item="userdata"><i class="fas fa-user-lock"></i> User Data</div>
+          </div>
+        </div>
+
+        <div class="dnd-columns-new">
+          <div class="dnd-col-new" data-model="saas">
+            <h4><i class="fas fa-window-restore"></i> SaaS</h4>
+            <div class="drop-zone-new" data-model="saas"></div>
+          </div>
+          <div class="dnd-col-new" data-model="paas">
+            <h4><i class="fas fa-layer-group"></i> PaaS</h4>
+            <div class="drop-zone-new" data-model="paas"></div>
+          </div>
+          <div class="dnd-col-new" data-model="iaas">
+            <h4><i class="fas fa-server"></i> IaaS</h4>
+            <div class="drop-zone-new" data-model="iaas"></div>
+          </div>
+        </div>
+
+        <div class="dnd-actions-new">
+          <button class="dnd-btn-new dnd-btn-check-new" onclick="checkDnDNew()"><i class="fas fa-check"></i> Check Answers</button>
+          <button class="dnd-btn-new dnd-btn-reset-new" onclick="resetDnDNew()"><i class="fas fa-redo"></i> Reset</button>
+        </div>
+        <div class="dnd-feedback-new" id="dndFeedbackNew"></div>
+      </div>
+      <div class="info-box" style="margin-top: 16px; font-size: 0.85rem;">
+        <strong>Hint:</strong> The customer always manages their own <em>User Data</em>. In PaaS and IaaS, the customer also manages <em>Applications</em>. Everything else (hardware, OS, runtime, databases) is provider‑managed in SaaS and PaaS.
       </div>
     </div>
 
-    <div class="dnd-actions">
-      <button class="dnd-btn dnd-btn-check" onclick="checkDnD()"><i class="fas fa-check"></i> Check Answers</button>
-      <button class="dnd-btn dnd-btn-reset" onclick="resetDnD()"><i class="fas fa-redo"></i> Reset</button>
-    </div>
-    <div class="dnd-feedback" id="dndFeedback"></div>
-  </div>
-
-  <!-- ============ COMPARATIVE SUMMARY ============ -->
-  <div class="card">
-    <h2><i class="fas fa-table-columns"></i> Comparative Summary</h2>
-    <table>
-      <thead><tr><th>Feature</th><th>SaaS</th><th>PaaS</th><th>IaaS</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Delivered To</strong></td><td>End users</td><td>Developers</td><td>System administrators</td></tr>
-        <tr><td><strong>Manages Infrastructure</strong></td><td>Cloud Provider</td><td>Cloud Provider</td><td>User</td></tr>
-        <tr><td><strong>Manages Platform</strong></td><td>Cloud Provider</td><td>Cloud Provider</td><td>User</td></tr>
-        <tr><td><strong>Manages Application</strong></td><td>Cloud Provider</td><td>User</td><td>User</td></tr>
-        <tr><td><strong>Flexibility</strong></td><td>Low</td><td>Medium</td><td>High</td></tr>
-        <tr><td><strong>Example Use</strong></td><td>Email, CRM</td><td>Web app development</td><td>Custom app hosting</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- ============ ELASTIC PRICING ============ -->
-  <div class="card">
-    <h2><i class="fas fa-chart-line"></i> Elastic Pricing: Pay Only for What You Use</h2>
-    <p>One of the most powerful features of cloud computing—especially in IaaS and PaaS models—is the concept of <strong>elastic pricing</strong>. This model is based on usage-based billing, meaning you are charged only for the compute, storage, or bandwidth you actually use, not for provisioned capacity.</p>
-
-    <h3>Why Is This Important?</h3>
-    <div class="info-box">
-      <strong>In traditional on-premise infrastructure:</strong>
-      <ul style="margin-top: 8px; margin-left: 18px;">
-        <li>You purchase and maintain fixed resources (servers, storage, cooling) up front.</li>
-        <li>Even when systems are idle, you pay for underutilised capacity.</li>
-        <li>Scaling requires hardware procurement, which is slow and expensive.</li>
-      </ul>
-    </div>
-    <div class="info-box" style="border-left-color: #2e7d32;">
-      <strong>In the cloud:</strong>
-      <ul style="margin-top: 8px; margin-left: 18px;">
-        <li>Resources scale dynamically based on demand.</li>
-        <li>You can spin up a virtual machine for 15 minutes and pay only for those minutes.</li>
-        <li>You can scale out during peak load and scale in when idle, avoiding wasted costs.</li>
-      </ul>
+    <!-- COMPARATIVE SUMMARY TABLE -->
+    <div class="card">
+      <h2><i class="fas fa-table-columns"></i> Comparative summary</h2>
+      <table>
+        <thead><tr><th>Feature</th><th>SaaS</th><th>PaaS</th><th>IaaS</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Delivered to</strong></td><td>End users</td><td>Developers</td><td>System administrators</td></tr>
+          <tr><td><strong>Manages infrastructure</strong></td><td>Cloud provider</td><td>Cloud provider</td><td>User</td></tr>
+          <tr><td><strong>Manages platform</strong></td><td>Cloud provider</td><td>Cloud provider</td><td>User</td></tr>
+          <tr><td><strong>Manages application</strong></td><td>Cloud provider</td><td>User</td><td>User</td></tr>
+          <tr><td><strong>Flexibility</strong></td><td>Low</td><td>Medium</td><td>High</td></tr>
+          <tr><td><strong>Example use</strong></td><td>Email, CRM</td><td>Web app development</td><td>Custom app hosting</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <h3>Examples</h3>
-    <ul style="margin-left: 20px;">
-      <li>A web application hosted on AWS EC2 auto-scales based on traffic. During off-hours, fewer instances are running—lowering the bill.</li>
-      <li>A developer using Google Cloud Functions pays per function invocation, not for idle time.</li>
-      <li>Azure Storage charges based on actual data stored and accessed, not for theoretical capacity.</li>
-    </ul>
-
-    <h3>Elastic Pricing in Each Model</h3>
-    <table>
-      <thead><tr><th>Model</th><th>Elasticity</th><th>Billing Unit</th><th>Example</th></tr></thead>
-      <tbody>
-        <tr><td><strong>SaaS</strong></td><td>Low–None</td><td>Subscription</td><td>Monthly per user (e.g., Google Workspace)</td></tr>
-        <tr><td><strong>PaaS</strong></td><td>Medium</td><td>Compute hours, database queries, API calls</td><td>Heroku dyno-hours, Firebase reads/writes</td></tr>
-        <tr><td><strong>IaaS</strong></td><td>High</td><td>Per VM-hour, GB-month, bandwidth GB</td><td>EC2 hourly billing, S3 storage GB/month</td></tr>
-      </tbody>
-    </table>
-
-    <div class="info-box">
-      <strong>Strategic Benefit:</strong> Elastic pricing aligns cost with real usage, enabling cost efficiency, agility, and experimentation. This model is especially crucial for startups, enterprises optimising large-scale infrastructure, and event-driven workloads with variable traffic (e.g., Black Friday, product launches).
-    </div>
-  </div>
-
-  <!-- ============ SCENARIO CHALLENGE ============ -->
-  <div class="card">
-    <h2><i class="fas fa-tasks"></i> Scenario Challenge</h2>
-    <p>Read each scenario and decide which cloud model is most appropriate. Click <strong>Reveal Answer</strong> to check your thinking.</p>
-
-    <div class="scenario-grid">
-      <div class="scenario-card">
-        <h4><i class="fas fa-envelope"></i> Scenario 1</h4>
-        <p>A small business needs email, document editing, and video conferencing for 20 staff. They have no IT department.</p>
-        <button class="scenario-reveal" onclick="revealScenario(this)">Reveal Answer</button>
-        <div class="scenario-answer">✅ <strong>SaaS</strong> — Google Workspace or Microsoft 365 provides everything with no infrastructure to manage.</div>
+    <!-- ELASTIC PRICING -->
+    <div class="card">
+      <h2><i class="fas fa-chart-line"></i> Elastic pricing — pay only for what you use</h2>
+      <p>Cloud models (especially IaaS &amp; PaaS) often use <strong>usage‑based billing</strong>: you pay for compute, storage, or bandwidth actually consumed.</p>
+      <div class="info-box">
+        <strong>Traditional on‑premise:</strong> buy fixed hardware → pay even when idle. <br>
+        <strong>Cloud:</strong> scale up/down dynamically → pay for 15 minutes of a VM if that’s all you use.
       </div>
+      <table>
+        <thead><tr><th>Model</th><th>Elasticity</th><th>Billing unit</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SaaS</strong></td><td>Low–None</td><td>Subscription</td><td>Monthly per user</td></tr>
+          <tr><td><strong>PaaS</strong></td><td>Medium</td><td>Compute hours, DB queries</td><td>Heroku dyno‑hours</td></tr>
+          <tr><td><strong>IaaS</strong></td><td>High</td><td>Per VM‑hour, GB‑month</td><td>EC2 hourly billing</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-      <div class="scenario-card">
-        <h4><i class="fas fa-code"></i> Scenario 2</h4>
-        <p>A startup wants to deploy a Node.js web app quickly without worrying about servers or databases.</p>
-        <button class="scenario-reveal" onclick="revealScenario(this)">Reveal Answer</button>
-        <div class="scenario-answer">✅ <strong>PaaS</strong> — Heroku or Azure App Service handles the platform so the team can focus on code.</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4><i class="fas fa-shield-halved"></i> Scenario 3</h4>
-        <p>A bank needs full control over its operating system, security configuration, and custom software for compliance.</p>
-        <button class="scenario-reveal" onclick="revealScenario(this)">Reveal Answer</button>
-        <div class="scenario-answer">✅ <strong>IaaS</strong> — AWS EC2 or Azure VMs give the bank full control from the OS up.</div>
+    <!-- SCENARIO CHALLENGE -->
+    <div class="card">
+      <h2><i class="fas fa-tasks"></i> Scenario challenge — pick the right model</h2>
+      <div class="scenario-grid">
+        <div class="scenario-card">
+          <h4><i class="fas fa-envelope"></i> Scenario 1</h4>
+          <p>A small business needs email, document editing, and video conferencing for 20 staff. No IT department.</p>
+          <button class="scenario-reveal" onclick="revealScenario(this)">Reveal answer</button>
+          <div class="scenario-answer">✅ <strong>SaaS</strong> — Google Workspace or Microsoft 365. Zero infrastructure to manage.</div>
+        </div>
+        <div class="scenario-card">
+          <h4><i class="fas fa-code"></i> Scenario 2</h4>
+          <p>A startup wants to deploy a Node.js web app quickly without worrying about servers or databases.</p>
+          <button class="scenario-reveal" onclick="revealScenario(this)">Reveal answer</button>
+          <div class="scenario-answer">✅ <strong>PaaS</strong> — Heroku or Azure App Service. The platform handles scaling and databases.</div>
+        </div>
+        <div class="scenario-card">
+          <h4><i class="fas fa-shield-halved"></i> Scenario 3</h4>
+          <p>A bank needs full control over its OS, security configuration, and custom software for compliance.</p>
+          <button class="scenario-reveal" onclick="revealScenario(this)">Reveal answer</button>
+          <div class="scenario-answer">✅ <strong>IaaS</strong> — AWS EC2 or Azure VMs. Full control from the OS up.</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ============ CONTROL VS RESPONSIBILITY ============ -->
-  <div class="card">
-    <h2><i class="fas fa-balance-scale"></i> Control vs. Responsibility</h2>
-    <p>The main difference across SaaS, PaaS, and IaaS lies in the division of responsibility between the cloud provider and the user.</p>
-    <table>
-      <thead><tr><th>Model</th><th>Abstraction Level</th><th>User Manages</th><th>Provider Manages</th></tr></thead>
-      <tbody>
-        <tr><td><strong>SaaS</strong></td><td>Maximum abstraction</td><td>Application data and configuration only</td><td>Everything else</td></tr>
-        <tr><td><strong>PaaS</strong></td><td>Balanced</td><td>Code and data</td><td>Platform services, infrastructure</td></tr>
-        <tr><td><strong>IaaS</strong></td><td>Minimal abstraction</td><td>OS, middleware, runtime, apps, data</td><td>Bare physical hardware</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- ============ TASK 1: READ & LEARN ============ -->
-  <div class="card">
-    <h2><i class="fas fa-book-reader"></i> Task 1: Read &amp; Learn</h2>
-    <p>Use the resources below to learn about cloud computing services.</p>
-    <div class="resource-pills">
-      <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.1.9.pdf" target="_blank" rel="noopener noreferrer"><i class="fas fa-book"></i> 📘 eBook (A1.1.9)</a>
-      <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.1.9-describe-the-different-types-of-services-in-cloud-computing" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe"></i> 🌐 CS Wiki (A1.1.9)</a>
-      <a href="https://docs.google.com/presentation/d/e/2PACX-1vQrzY3hgd2hnWE8OxxABllsbk3OHXNGkKscL5JMpc_wRMIlKiyRw4kIk186oRSs6d0ZDRmAQxUhkkOS/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank" rel="noopener noreferrer"><i class="fas fa-chalkboard"></i> 📊 Lesson Slides</a>
+    <!-- CONTROL VS RESPONSIBILITY -->
+    <div class="card">
+      <h2><i class="fas fa-balance-scale"></i> Control vs. responsibility</h2>
+      <table>
+        <thead><tr><th>Model</th><th>Abstraction</th><th>User manages</th><th>Provider manages</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SaaS</strong></td><td>Maximum</td><td>Data &amp; some settings</td><td>Everything else</td></tr>
+          <tr><td><strong>PaaS</strong></td><td>Balanced</td><td>Code &amp; data</td><td>Platform, infrastructure</td></tr>
+          <tr><td><strong>IaaS</strong></td><td>Minimal</td><td>OS, runtime, apps, data</td><td>Physical hardware</td></tr>
+        </tbody>
+      </table>
     </div>
-    <p style="margin-top: 12px;">Take notes on each cloud service model, why it is designed that way, and how it affects control, flexibility, and responsibility.</p>
-  </div>
 
-  <!-- ============ TASK 2: MAIN TASK (GREEN) ============ -->
-  <div class="card green-task">
-    <h2><i class="fas fa-play-circle"></i> Task 2 <span class="badge main-task" style="margin-left: 8px;">Main Task</span></h2>
-    <div class="resource-pills">
-      <a href="https://docs.google.com/presentation/d/e/2PACX-1vQe-ehQDMGvfO9jdTB_vWqIUiJjH9-a_c_uJ0FbPY_IIcpDfdyqRnWTfUpIDGTCAAs42ocaOI9_jsMX/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-powerpoint"></i> Lesson Starter PowerPoint</a>
+    <!-- REVIEW QUESTIONS -->
+    <div class="card">
+      <h2><i class="fas fa-clipboard-list"></i> Review questions</h2>
+      <ol style="margin-left: 20px; font-size: 0.92rem;">
+        <li>What is SaaS and how does it differ from traditional software installation?</li>
+        <li>Explain how PaaS benefits software developers.</li>
+        <li>Why might a business choose IaaS over buying physical hardware?</li>
+      </ol>
     </div>
-    <p>Answer the mild, medium and spicy questions from the Lesson Starter PowerPoint.</p>
-    <p>Use <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" style="color: #1b5e20; font-weight: 600;"><i class="fas fa-flask"></i> 🐍 Python Code Lab</a> to write your questions and answers in a text file.</p>
-    <div class="info-box">
-      <strong>📌 Important:</strong> Save your code as a <code>.txt</code> file. You will submit all starter activity answers to Schoolbox at the end of A1.1.9 Debugging Techniques.
+
+    <!-- SUMMARY TABLE -->
+    <div class="card">
+      <h2><i class="fas fa-list-check"></i> Summary — when to use what</h2>
+      <table>
+        <thead><tr><th>Model</th><th>Delivered to</th><th>Control</th><th>Best for</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SaaS</strong></td><td>End users</td><td>Low</td><td>Email, CRM, productivity</td><td>Google Workspace, M365</td></tr>
+          <tr><td><strong>PaaS</strong></td><td>Developers</td><td>Medium</td><td>Web app development, APIs</td><td>Heroku, Azure App Services</td></tr>
+          <tr><td><strong>IaaS</strong></td><td>Sysadmins</td><td>High</td><td>Custom hosting, enterprise</td><td>AWS EC2, Google Compute</td></tr>
+        </tbody>
+      </table>
     </div>
-  </div>
 
-  <!-- ============ REVIEW QUESTIONS ============ -->
-  <div class="card">
-    <h2><i class="fas fa-clipboard-list"></i> Review Questions</h2>
-    <ol style="margin-left: 20px;">
-      <li>What is Software as a Service (SaaS) and how does it differ from traditional software installation?</li>
-      <li>Explain how Platform as a Service (PaaS) benefits software developers.</li>
-      <li>Why might a business choose Infrastructure as a Service (IaaS) over purchasing physical hardware?</li>
-    </ol>
-  </div>
+    <!-- QUIZ (UPDATED with clearer feedback and 5 questions) -->
+    <div class="card">
+      <h2><i class="fas fa-circle-question"></i> Quick check — test yourself</h2>
+      <div class="quiz-box" id="quiz">
+        <h3><i class="fas fa-pen-to-square"></i> 5 questions</h3>
 
-  <!-- ============ SUMMARY ============ -->
-  <div class="card">
-    <h2><i class="fas fa-list-check"></i> Summary</h2>
-    <table>
-      <thead><tr><th>Model</th><th>Delivered To</th><th>Control Level</th><th>Best For</th><th>Examples</th></tr></thead>
-      <tbody>
-        <tr><td><strong>SaaS</strong></td><td>End users</td><td>Low</td><td>Email, CRM, productivity tools</td><td>Google Workspace, Microsoft 365</td></tr>
-        <tr><td><strong>PaaS</strong></td><td>Developers</td><td>Medium</td><td>Web app development, APIs</td><td>Heroku, Azure App Services</td></tr>
-        <tr><td><strong>IaaS</strong></td><td>System administrators</td><td>High</td><td>Custom app hosting, enterprise workloads</td><td>AWS EC2, Google Compute Engine</td></tr>
-      </tbody>
-    </table>
-    <div class="info-box">
-      <strong>Conclusion:</strong> Cloud computing services exist on a spectrum of abstraction, and choosing between SaaS, PaaS, and IaaS depends on the technical skillset, performance requirements, and desired level of control. SaaS is ideal for productivity and collaboration tools, PaaS accelerates development cycles, and IaaS is optimal for custom, highly configurable solutions.
+        <div class="quiz-q" data-answer="b">
+          <p>1. Which cloud model delivers fully functional software applications over the internet?</p>
+          <div class="quiz-opt" data-opt="a">a) Infrastructure as a Service (IaaS)</div>
+          <div class="quiz-opt" data-opt="b">b) Software as a Service (SaaS)</div>
+          <div class="quiz-opt" data-opt="c">c) Platform as a Service (PaaS)</div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-q" data-answer="c">
+          <p>2. Which model gives developers a ready‑made environment for building, testing, and deploying applications?</p>
+          <div class="quiz-opt" data-opt="a">a) SaaS</div>
+          <div class="quiz-opt" data-opt="b">b) IaaS</div>
+          <div class="quiz-opt" data-opt="c">c) PaaS</div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-q" data-answer="a">
+          <p>3. Which model provides virtualized computing resources such as virtual machines, storage, and networks?</p>
+          <div class="quiz-opt" data-opt="a">a) IaaS</div>
+          <div class="quiz-opt" data-opt="b">b) SaaS</div>
+          <div class="quiz-opt" data-opt="c">c) PaaS</div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-q" data-answer="b">
+          <p>4. What is a major disadvantage of SaaS?</p>
+          <div class="quiz-opt" data-opt="a">a) It requires users to manage their own servers.</div>
+          <div class="quiz-opt" data-opt="b">b) It requires an internet connection and relies on the provider for security.</div>
+          <div class="quiz-opt" data-opt="c">c) It does not support automatic updates.</div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-q" data-answer="c">
+          <p>5. Which cloud model is most likely to lead to vendor lock‑in?</p>
+          <div class="quiz-opt" data-opt="a">a) IaaS</div>
+          <div class="quiz-opt" data-opt="b">b) SaaS</div>
+          <div class="quiz-opt" data-opt="c">c) PaaS</div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-score" id="quizScore">Score: 0 / 5</div>
+      </div>
     </div>
-  </div>
 
-  <!-- ============ QUIZ ============ -->
-  <div class="card">
-    <h2><i class="fas fa-circle-question"></i> Quick Check</h2>
-    <div class="quiz-box" id="quiz">
-      <h3><i class="fas fa-pen-to-square"></i> Test yourself</h3>
-
-      <div class="quiz-q" data-answer="b">
-        <p>1. Which cloud service model delivers fully functional software applications over the internet?</p>
-        <div class="quiz-opt" data-opt="a">a) Infrastructure as a Service (IaaS)</div>
-        <div class="quiz-opt" data-opt="b">b) Software as a Service (SaaS)</div>
-        <div class="quiz-opt" data-opt="c">c) Platform as a Service (PaaS)</div>
-        <div class="quiz-feedback"></div>
-      </div>
-
-      <div class="quiz-q" data-answer="c">
-        <p>2. Which model gives developers a ready-made environment for building, testing, and deploying applications?</p>
-        <div class="quiz-opt" data-opt="a">a) SaaS</div>
-        <div class="quiz-opt" data-opt="b">b) IaaS</div>
-        <div class="quiz-opt" data-opt="c">c) PaaS</div>
-        <div class="quiz-feedback"></div>
-      </div>
-
-      <div class="quiz-q" data-answer="a">
-        <p>3. Which model provides virtualized computing resources such as virtual machines, storage, and networks?</p>
-        <div class="quiz-opt" data-opt="a">a) IaaS</div>
-        <div class="quiz-opt" data-opt="b">b) SaaS</div>
-        <div class="quiz-opt" data-opt="c">c) PaaS</div>
-        <div class="quiz-feedback"></div>
-      </div>
-
-      <div class="quiz-q" data-answer="b">
-        <p>4. What is a major disadvantage of SaaS?</p>
-        <div class="quiz-opt" data-opt="a">a) It requires users to manage their own servers.</div>
-        <div class="quiz-opt" data-opt="b">b) It requires an internet connection and relies on the provider for security.</div>
-        <div class="quiz-opt" data-opt="c">c) It does not support automatic updates.</div>
-        <div class="quiz-feedback"></div>
-      </div>
-
-      <div class="quiz-q" data-answer="c">
-        <p>5. Which cloud model is most likely to lead to vendor lock-in?</p>
-        <div class="quiz-opt" data-opt="a">a) IaaS</div>
-        <div class="quiz-opt" data-opt="b">b) SaaS</div>
-        <div class="quiz-opt" data-opt="c">c) PaaS</div>
-        <div class="quiz-feedback"></div>
-      </div>
-
-      <div class="quiz-score" id="quizScore">Score: 0 / 5</div>
+    <!-- NAV FOOTER -->
+    <div class="lesson-nav">
+      <a href="A1.1.8-summary.html"><i class="fas fa-arrow-left"></i> Previous: A1.1.8</a>
+      <a href="A1.2.0-summary.html">Next: A1.2.0 <i class="fas fa-arrow-right"></i></a>
     </div>
+
+    <div class="footer-meta">
+      A1.1.9 – Types of Services in Cloud Computing • IB Computer Science • Year 12
+    </div>
+
   </div>
 
-  <!-- ============ NAV FOOTER ============ -->
-  <div class="lesson-nav">
-    <a href="A1.1.8-summary.html"><i class="fas fa-arrow-left"></i> Previous: A1.1.8</a>
-    <a href="A1.2.0-summary.html">Next: A1.2.0 <i class="fas fa-arrow-right"></i></a>
-  </div>
-
-  <div class="footer-meta">
-    A1.1.9 – Types of Services in Cloud Computing • IB Computer Science • Year 12
-  </div>
-
-</div>
-
-<script>
-  /* ---- Accordion toggle ---- */
-  function toggleAccordion(id) {
-    document.getElementById(id).classList.toggle('open');
-  }
-
-  /* ---- Drag & Drop Activity ---- */
-  const dndState = {
-    hardware:      { saas: 'provider', paas: 'provider', iaas: 'user' },
-    os:            { saas: 'provider', paas: 'provider', iaas: 'user' },
-    runtime:       { saas: 'provider', paas: 'provider', iaas: 'user' },
-    databases:     { saas: 'provider', paas: 'provider', iaas: 'user' },
-    applications:  { saas: 'provider', paas: 'user',     iaas: 'user' },
-    userdata:      { saas: 'user',     paas: 'user',     iaas: 'user' }
-  };
-
-  function initDnD() {
-    const items = document.querySelectorAll('.dnd-item');
-    const columns = document.querySelectorAll('.dnd-column');
-    const pool = document.getElementById('poolItems');
-
-    items.forEach(item => {
-      item.addEventListener('dragstart', handleDragStart);
-      item.addEventListener('dragend', handleDragEnd);
-    });
-
-    columns.forEach(col => {
-      col.addEventListener('dragover', handleDragOver);
-      col.addEventListener('dragleave', handleDragLeave);
-      col.addEventListener('drop', handleDrop);
-    });
-
-    pool.addEventListener('dragover', handleDragOver);
-    pool.addEventListener('dragleave', handleDragLeave);
-    pool.addEventListener('drop', handlePoolDrop);
-  }
-
-  let draggedItem = null;
-
-  function handleDragStart(e) {
-    draggedItem = this;
-    this.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-  }
-
-  function handleDragEnd() {
-    this.classList.remove('dragging');
-    draggedItem = null;
-  }
-
-  function handleDragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    const col = this.closest('.dnd-column') || this;
-    if (col.classList.contains('dnd-column')) col.classList.add('drag-over');
-  }
-
-  function handleDragLeave() {
-    const col = this.closest('.dnd-column') || this;
-    if (col.classList.contains('dnd-column')) col.classList.remove('drag-over');
-  }
-
-  function handleDrop(e) {
-    e.preventDefault();
-    const col = this.closest('.dnd-column') || this;
-    col.classList.remove('drag-over');
-    if (!draggedItem) return;
-    const dropZone = col.querySelector('.drop-zone');
-    if (dropZone) {
-      dropZone.appendChild(draggedItem);
-      draggedItem.classList.remove('correct', 'wrong');
+  <script>
+    /* ---- Accordion toggle ---- */
+    function toggleAccordion(id) {
+      document.getElementById(id).classList.toggle('open');
     }
-  }
 
-  function handlePoolDrop(e) {
-    e.preventDefault();
-    this.classList.remove('drag-over');
-    if (!draggedItem) return;
-    this.appendChild(draggedItem);
-    draggedItem.classList.remove('correct', 'wrong');
-  }
+    /* ---- REDESIGNED DRAG & DROP (logic: place only where customer manages) ---- */
+    // Customer manages: userdata (all models), applications (PaaS & IaaS)
+    const customerManaged = {
+      userdata: ['saas', 'paas', 'iaas'],
+      applications: ['paas', 'iaas']
+    };
 
-  function checkDnD() {
-    const feedback = document.getElementById('dndFeedback');
-    const columns = document.querySelectorAll('.dnd-column');
-    let correct = 0;
-    let total = 0;
+    // Everything else should NOT be placed in any column (stays in pool)
+    const neverCustomerManaged = ['hardware', 'os', 'runtime', 'databases'];
 
-    columns.forEach(col => {
-      const model = col.dataset.model;
-      const items = col.querySelectorAll('.dnd-item');
+    function initDnDNew() {
+      const items = document.querySelectorAll('.dnd-item-new');
+      const columns = document.querySelectorAll('.dnd-col-new');
+      const pool = document.getElementById('poolItemsNew');
+
       items.forEach(item => {
-        total++;
-        const itemKey = item.dataset.item;
-        const expected = dndState[itemKey][model];
-        const expectedLabel = expected === 'provider' ? 'Provider' : 'Customer';
-        // The user places the item in a column; the item itself doesn't carry "provider/user"
-        // We instead check that the item is in the CORRECT column for its expected owner.
-        // For simplicity: an item belongs in a column if that column's model expects the matching owner.
-        // We'll mark correct if the item is in ANY column, then tell them the right answer.
-        // Better: compare against a map of where each item SHOULD go.
+        item.addEventListener('dragstart', handleDragStartNew);
+        item.addEventListener('dragend', handleDragEndNew);
       });
-    });
 
-    // Simpler approach: each item should be in exactly one column, and we check against the expected model mapping.
-    const expectedPlacement = {
-      hardware:     ['provider', 'provider', 'user'],
-      os:           ['provider', 'provider', 'user'],
-      runtime:      ['provider', 'provider', 'user'],
-      databases:    ['provider', 'provider', 'user'],
-      applications: ['provider', 'user',     'user'],
-      userdata:     ['user',     'user',     'user']
-    };
-
-    const modelIndex = { saas: 0, paas: 1, iaas: 2 };
-
-    columns.forEach(col => {
-      const model = col.dataset.model;
-      const items = col.querySelectorAll('.dnd-item');
-      items.forEach(item => {
-        total++;
-        const itemKey = item.dataset.item;
-        const expectedOwner = expectedPlacement[itemKey][modelIndex[model]];
-        // We can't know "owner" from the item alone — the activity is about placing items in the right column.
-        // Since every item belongs to every column (with a different owner), the drag-and-drop doesn't map cleanly.
-        // Instead, we treat the activity as: the item belongs in the column where the CUSTOMER manages it.
-        // Let's just check that the item is in the column where the customer is responsible.
+      columns.forEach(col => {
+        col.addEventListener('dragover', handleDragOverNew);
+        col.addEventListener('dragleave', handleDragLeaveNew);
+        col.addEventListener('drop', handleDropNew);
       });
-    });
 
-    // Final simplified logic: check that each item is in the column where the user/customer manages it.
-    const customerManages = {
-      hardware: [],
-      os: [],
-      runtime: [],
-      databases: [],
-      applications: ['paas', 'iaas'],
-      userdata: ['saas', 'paas', 'iaas']
-    };
+      pool.addEventListener('dragover', handleDragOverNew);
+      pool.addEventListener('dragleave', handleDragLeaveNew);
+      pool.addEventListener('drop', handlePoolDropNew);
+    }
 
-    const providerManages = {
-      hardware: ['saas', 'paas', 'iaas'],
-      os: ['saas', 'paas', 'iaas'],
-      runtime: ['saas', 'paas', 'iaas'],
-      databases: ['saas', 'paas', 'iaas'],
-      applications: ['saas'],
-      userdata: []
-    };
+    let draggedItemNew = null;
 
-    // For this activity, we want: where does the CUSTOMER manage each component?
-    // Hardware: never (provider manages in all)
-    // OS: never
-    // Runtime: never
-    // Databases: never
-    // Applications: PaaS, IaaS
-    // User Data: SaaS, PaaS, IaaS
+    function handleDragStartNew(e) {
+      draggedItemNew = this;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
 
-    // So the correct placement is:
-    const correctPlacement = {
-      hardware: [],
-      os: [],
-      runtime: [],
-      databases: [],
-      applications: ['paas', 'iaas'],
-      userdata: ['saas', 'paas', 'iaas']
-    };
+    function handleDragEndNew() {
+      this.classList.remove('dragging');
+      draggedItemNew = null;
+    }
 
-    let correctCount = 0;
-    let totalItems = 0;
+    function handleDragOverNew(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const col = this.closest('.dnd-col-new') || this;
+      if (col.classList.contains('dnd-col-new')) col.classList.add('drag-over');
+    }
 
-    columns.forEach(col => {
-      const model = col.dataset.model;
-      const items = col.querySelectorAll('.dnd-item');
-      items.forEach(item => {
-        totalItems++;
+    function handleDragLeaveNew() {
+      const col = this.closest('.dnd-col-new') || this;
+      if (col.classList.contains('dnd-col-new')) col.classList.remove('drag-over');
+    }
+
+    function handleDropNew(e) {
+      e.preventDefault();
+      const col = this.closest('.dnd-col-new') || this;
+      col.classList.remove('drag-over');
+      if (!draggedItemNew) return;
+      const dropZone = col.querySelector('.drop-zone-new');
+      if (dropZone) {
+        dropZone.appendChild(draggedItemNew);
+        draggedItemNew.classList.remove('correct', 'wrong');
+      }
+    }
+
+    function handlePoolDropNew(e) {
+      e.preventDefault();
+      this.classList.remove('drag-over');
+      if (!draggedItemNew) return;
+      this.appendChild(draggedItemNew);
+      draggedItemNew.classList.remove('correct', 'wrong');
+    }
+
+    function checkDnDNew() {
+      const feedback = document.getElementById('dndFeedbackNew');
+      const columns = document.querySelectorAll('.dnd-col-new');
+      let correctCount = 0;
+      let totalPlaced = 0;
+
+      // Clear previous marks
+      document.querySelectorAll('.dnd-item-new').forEach(item => {
+        item.classList.remove('correct', 'wrong');
+      });
+
+      columns.forEach(col => {
+        const model = col.dataset.model;
+        const itemsInCol = col.querySelectorAll('.dnd-item-new');
+        itemsInCol.forEach(item => {
+          totalPlaced++;
+          const itemKey = item.dataset.item;
+          const shouldBeHere = customerManaged[itemKey] && customerManaged[itemKey].includes(model);
+          if (shouldBeHere) {
+            item.classList.add('correct');
+            correctCount++;
+          } else {
+            item.classList.add('wrong');
+          }
+        });
+      });
+
+      // Items left in pool: if they are 'neverCustomerManaged', that's correct (they should stay in pool)
+      const poolItems = document.querySelectorAll('#poolItemsNew .dnd-item-new');
+      let correctInPool = 0;
+      poolItems.forEach(item => {
         const itemKey = item.dataset.item;
-        const shouldBeHere = correctPlacement[itemKey].includes(model);
-        if (shouldBeHere) {
-          item.classList.add('correct');
-          item.classList.remove('wrong');
-          correctCount++;
+        if (neverCustomerManaged.includes(itemKey)) {
+          correctInPool++;
         } else {
+          // If an item that should be placed is still in the pool, mark it as wrong (but subtle)
           item.classList.add('wrong');
-          item.classList.remove('correct');
         }
       });
-    });
 
-    if (totalItems === 0) {
-      feedback.textContent = 'Drag some items into the columns first!';
-      feedback.className = 'dnd-feedback no';
-      return;
+      const totalCorrect = correctCount + correctInPool;
+      const totalExpected = 6; // 6 components total
+
+      if (totalPlaced === 0 && correctInPool === 6) {
+        feedback.textContent = '✅ Perfect! You left all provider‑managed components in the pool.';
+        feedback.className = 'dnd-feedback-new ok';
+      } else if (totalCorrect === totalExpected) {
+        feedback.textContent = '🎉 Perfect! You correctly identified every component.';
+        feedback.className = 'dnd-feedback-new ok';
+      } else {
+        feedback.textContent = `You got ${totalCorrect} out of ${totalExpected} correct. Green = correctly placed (or correctly left in pool). Red = misplaced.`;
+        feedback.className = 'dnd-feedback-new no';
+      }
     }
 
-    if (correctCount === totalItems && totalItems === 6) {
-      feedback.textContent = '🎉 Perfect! You correctly identified who manages each component.';
-      feedback.className = 'dnd-feedback ok';
-    } else {
-      feedback.textContent = `You got ${correctCount} out of ${totalItems} correct. Green = correct, red = incorrect.`;
-      feedback.className = 'dnd-feedback no';
+    function resetDnDNew() {
+      const pool = document.getElementById('poolItemsNew');
+      const items = document.querySelectorAll('.dnd-item-new');
+      items.forEach(item => {
+        item.classList.remove('correct', 'wrong', 'dragging');
+        pool.appendChild(item);
+      });
+      document.getElementById('dndFeedbackNew').textContent = '';
+      document.getElementById('dndFeedbackNew').className = 'dnd-feedback-new';
     }
-  }
 
-  function resetDnD() {
-    const pool = document.getElementById('poolItems');
-    const items = document.querySelectorAll('.dnd-item');
-    items.forEach(item => {
-      item.classList.remove('correct', 'wrong', 'dragging');
-      pool.appendChild(item);
-    });
-    document.getElementById('dndFeedback').textContent = '';
-    document.getElementById('dndFeedback').className = 'dnd-feedback';
-  }
+    initDnDNew();
 
-  initDnD();
+    /* ---- Scenario Reveal ---- */
+    function revealScenario(btn) {
+      const answer = btn.nextElementSibling;
+      answer.classList.toggle('show');
+      btn.textContent = answer.classList.contains('show') ? 'Hide answer' : 'Reveal answer';
+    }
 
-  /* ---- Scenario Reveal ---- */
-  function revealScenario(btn) {
-    const answer = btn.nextElementSibling;
-    answer.classList.toggle('show');
-    btn.textContent = answer.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
-  }
+    /* ---- QUIZ ---- */
+    const quiz = document.getElementById('quiz');
+    const questions = quiz.querySelectorAll('.quiz-q');
+    let score = 0;
+    let answered = 0;
 
-  /* ---- Quiz ---- */
-  const quiz = document.getElementById('quiz');
-  const questions = quiz.querySelectorAll('.quiz-q');
-  let score = 0;
-  let answered = 0;
+    questions.forEach(q => {
+      const correct = q.dataset.answer;
+      const opts = q.querySelectorAll('.quiz-opt');
+      const feedback = q.querySelector('.quiz-feedback');
 
-  questions.forEach(q => {
-    const correct = q.dataset.answer;
-    const opts = q.querySelectorAll('.quiz-opt');
-    const feedback = q.querySelector('.quiz-feedback');
+      opts.forEach(opt => {
+        opt.addEventListener('click', () => {
+          if (q.classList.contains('done')) return;
+          q.classList.add('done');
 
-    opts.forEach(opt => {
-      opt.addEventListener('click', () => {
-        if (q.classList.contains('done')) return;
-        q.classList.add('done');
+          const chosen = opt.dataset.opt;
+          opts.forEach(o => o.classList.add('disabled'));
 
-        const chosen = opt.dataset.opt;
-        opts.forEach(o => o.classList.add('disabled'));
+          if (chosen === correct) {
+            opt.classList.add('correct');
+            feedback.textContent = '✓ Correct!';
+            feedback.className = 'quiz-feedback ok';
+            score++;
+          } else {
+            opt.classList.add('wrong');
+            opts.forEach(o => { if (o.dataset.opt === correct) o.classList.add('correct'); });
+            feedback.textContent = '✗ Not quite — correct answer is highlighted.';
+            feedback.className = 'quiz-feedback no';
+          }
+          answered++;
+          document.getElementById('quizScore').textContent = `Score: ${score} / ${questions.length}`;
 
-        if (chosen === correct) {
-          opt.classList.add('correct');
-          feedback.textContent = '✓ Correct!';
-          feedback.className = 'quiz-feedback ok';
-          score++;
-        } else {
-          opt.classList.add('wrong');
-          opts.forEach(o => { if (o.dataset.opt === correct) o.classList.add('correct'); });
-          feedback.textContent = '✗ Not quite — the correct answer is highlighted.';
-          feedback.className = 'quiz-feedback no';
-        }
-        answered++;
-        document.getElementById('quizScore').textContent = `Score: ${score} / ${questions.length}`;
-
-        if (answered === questions.length) {
-          const msg = score === questions.length ? ' 🎉 Perfect!' : (score >= 3 ? ' 👍 Good work!' : ' 📖 Review the page and try again.');
-          document.getElementById('quizScore').textContent += msg;
-        }
+          if (answered === questions.length) {
+            const msg = score === questions.length ? ' 🎉 Perfect!' : (score >= 3 ? ' 👍 Good work!' : ' 📖 Review the page and try again.');
+            document.getElementById('quizScore').textContent += msg;
+          }
+        });
       });
     });
-  });
-</script>
+  </script>
 
 </body>
 </html>
