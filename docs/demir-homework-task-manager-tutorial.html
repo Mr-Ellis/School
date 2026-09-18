@@ -142,7 +142,7 @@
     color: var(--green);
   }
 
-  .lesson-link:not(.done)::before {
+  .lesson-link:not(.done):not(.locked)::before {
     content: '';
     display: inline-block;
     width: 14px;
@@ -150,6 +150,19 @@
     border: 1.5px solid var(--border);
     border-radius: 4px;
     flex-shrink: 0;
+  }
+
+  .lesson-link.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .lesson-link.locked::before {
+    content: '🔒';
+    font-size: 11px;
+    display: inline-block;
+    width: 14px;
   }
 
   main { min-width: 0; }
@@ -219,6 +232,35 @@
   }
 
   .lesson:hover { border-color: #3a4260; }
+
+  .lesson.locked {
+    position: relative;
+    opacity: 0.5;
+    filter: grayscale(0.7);
+  }
+
+  .lesson.locked > *:not(.lesson-header) {
+    pointer-events: none;
+  }
+
+  .lesson.locked::after {
+    content: '🔒 Complete the previous lesson to unlock';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(15, 17, 23, 0.95);
+    color: #fbbf24;
+    padding: 16px 26px;
+    border-radius: 12px;
+    border: 1px solid var(--yellow);
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+    z-index: 5;
+    pointer-events: none;
+    white-space: nowrap;
+  }
 
   .lesson-header {
     display: flex;
@@ -313,9 +355,9 @@
   }
 
   .copy-btn.copied {
-    background: var(--green);
-    color: #0f1117;
-    border-color: var(--green);
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
   }
 
   pre {
@@ -497,6 +539,11 @@
     to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
 
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
   .to-top {
     position: fixed;
     bottom: 24px;
@@ -535,13 +582,14 @@
   <div class="progress-wrap">
     <div class="progress-bar" id="progressBar"></div>
   </div>
-  <div class="progress-text" id="progressText">0 / 11 lessons</div>
+  <div class="progress-text" id="progressText">0 / 12 lessons</div>
 </div>
 
 <div class="container">
 
   <aside class="sidebar" id="sidebar">
     <h3>Lessons</h3>
+    <a class="lesson-link" data-target="lesson-0">0. Setup</a>
     <a class="lesson-link" data-target="lesson-1">1. First Window</a>
     <a class="lesson-link" data-target="lesson-2">2. Buttons</a>
     <a class="lesson-link" data-target="lesson-3">3. Input Fields</a>
@@ -561,12 +609,245 @@
       <h1>Build a Homework Task Manager</h1>
       <p>A complete IB Computer Science IA project, taught step by step. By the end, you'll have a working desktop app with automatic priority scoring, JSON storage, and a polished GUI.</p>
       <div class="hero-badges">
-        <span class="badge green">11 Lessons</span>
+        <span class="badge green">12 Lessons</span>
         <span class="badge purple">Python + CustomTkinter</span>
         <span class="badge">OOP + JSON</span>
         <span class="badge">Covers all 10 Success Criteria</span>
       </div>
     </div>
+
+    <!-- LESSON 0 -->
+    <section class="lesson" id="lesson-0">
+      <div class="lesson-header">
+        <div class="lesson-num">0</div>
+        <div class="lesson-title">Setting Up Your Computer</div>
+        <span class="lesson-goal">Install everything first</span>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">🎯 Do This Before Lesson 1</div>
+        <p>You can't build anything until your computer is ready. This lesson takes about 20 minutes. Do every step in order. Don't skip anything.</p>
+      </div>
+
+      <h3>Step 1 — Install Python</h3>
+
+      <p>Python is the programming language we're going to use. If you don't have it, you need to install it.</p>
+
+      <p><strong>First, check if you already have it:</strong></p>
+
+      <ol>
+        <li>Press the <strong>Windows key</strong> on your keyboard (or click the Start button)</li>
+        <li>Type <code>powershell</code></li>
+        <li>Click <strong>Windows PowerShell</strong> — a blue window opens</li>
+        <li>Type this and press Enter:</li>
+      </ol>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py --version</code></pre>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">✅ If you see something like "Python 3.14.7"</div>
+        <p>Great — Python is already installed. Skip to <strong>Step 2</strong>.</p>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-title">❌ If you see a red error message</div>
+        <p>Python is not installed. Follow the installation steps below.</p>
+      </div>
+
+      <p><strong>To install Python:</strong></p>
+
+      <ol>
+        <li>Open your browser and go to: <code>https://www.python.org/downloads/</code></li>
+        <li>Click the big yellow <strong>"Download Python 3.x.x"</strong> button</li>
+        <li>When the file downloads, <strong>double-click it</strong> to run the installer</li>
+        <li>
+          <strong>⚠️ CRITICAL:</strong> On the first screen of the installer, tick the checkbox at the bottom that says
+          <strong>"Add python.exe to PATH"</strong>. If you miss this, nothing will work later.
+        </li>
+        <li>Click <strong>"Install Now"</strong></li>
+        <li>Wait for it to finish, then click <strong>Close</strong></li>
+        <li><strong>Close PowerShell</strong> and open it again (this refreshes the PATH)</li>
+        <li>Type <code>py --version</code> again — you should now see a version number</li>
+      </ol>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ If it still doesn't work after installing</div>
+        <p>Restart your computer. Then try again in a fresh PowerShell window.</p>
+      </div>
+
+      <h3>Step 2 — Install CustomTkinter</h3>
+
+      <p>CustomTkinter is a library that lets Python draw nice-looking windows. Python doesn't include it by default, so we install it manually.</p>
+
+      <p>In PowerShell, type this and press Enter:</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py -m pip install customtkinter</code></pre>
+      </div>
+
+      <p>You'll see lots of text scroll past. When it stops, look for the line that says <strong>"Successfully installed customtkinter-..."</strong>. That means it worked.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 Why "py -m pip" instead of just "pip"?</div>
+        <p>Using <code>py -m pip</code> guarantees you're installing into the same Python that <code>py</code> runs. Using just <code>pip</code> can install to a different Python by mistake — a common beginner trap.</p>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ If you see "pip is not recognized"</div>
+        <p>Try this instead:</p>
+        <pre><code>python -m pip install customtkinter</code></pre>
+      </div>
+
+      <h3>Step 3 — Install a Code Editor</h3>
+
+      <p>You need somewhere to type your code. Notepad <em>technically</em> works but it's terrible for programming. Use a real code editor.</p>
+
+      <p><strong>Recommended: Visual Studio Code (VS Code)</strong> — it's free, made by Microsoft, and used by millions of developers.</p>
+
+      <ol>
+        <li>Go to: <code>https://code.visualstudio.com/</code></li>
+        <li>Click the big blue <strong>Download</strong> button</li>
+        <li>Run the installer</li>
+        <li>
+          On the "Select Additional Tasks" screen, tick these:
+          <ul>
+            <li>✅ <strong>Add "Open with Code" action to Windows Explorer file context menu</strong></li>
+            <li>✅ <strong>Add "Open with Code" action to Windows Explorer directory context menu</strong></li>
+            <li>✅ <strong>Register Code as an editor for supported file types</strong></li>
+            <li>✅ <strong>Add to PATH</strong></li>
+          </ul>
+        </li>
+        <li>Click <strong>Next → Install → Finish</strong></li>
+      </ol>
+
+      <p><strong>Optional but recommended:</strong> After VS Code opens, click the <strong>Extensions</strong> icon in the left sidebar (looks like four squares). Search for and install:</p>
+
+      <ul>
+        <li><strong>Python</strong> (by Microsoft) — gives you syntax highlighting and error checking</li>
+        <li><strong>Pylance</strong> (by Microsoft) — autocomplete and type hints</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 Other editors that work fine</div>
+        <p><strong>PyCharm Community</strong> (free, heavier) or <strong>Thonny</strong> (very beginner-friendly, lightweight). Any of them work for this project. VS Code is the most popular.</p>
+      </div>
+
+      <h3>Step 4 — Create Your Project Folder</h3>
+
+      <p>You need a folder to keep all your code in. Let's make one.</p>
+
+      <ol>
+        <li>Open <strong>File Explorer</strong> (the yellow folder icon in your taskbar)</li>
+        <li>Go to <code>C:\Users\&lt;your-name&gt;\</code> — this is your home folder</li>
+        <li>If there's no <code>PythonProjects</code> folder, create one:
+          <ul>
+            <li>Right-click in the empty space → <strong>New → Folder</strong></li>
+            <li>Name it <code>PythonProjects</code></li>
+          </ul>
+        </li>
+        <li>Open <code>PythonProjects</code></li>
+        <li>Inside it, create another folder called <code>HomeworkManager</code></li>
+      </ol>
+
+      <p>Your folder now lives at:</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Path</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>C:\Users\&lt;your-name&gt;\PythonProjects\HomeworkManager</code></pre>
+      </div>
+
+      <h3>Step 5 — Open the Folder in VS Code</h3>
+
+      <ol>
+        <li>Right-click the <code>HomeworkManager</code> folder</li>
+        <li>Click <strong>"Open with Code"</strong> (you enabled this in Step 3)</li>
+        <li>VS Code opens with your folder loaded — you'll see the folder name in the left sidebar</li>
+      </ol>
+
+      <p>Now you're ready to write code. When Lesson 1 says "create <code>main.py</code>":</p>
+
+      <ol>
+        <li>In VS Code, hover over the folder name in the left sidebar</li>
+        <li>Click the <strong>new file icon</strong> (a page with a + on it)</li>
+        <li>Type <code>main.py</code> and press Enter</li>
+        <li>Paste the code from the lesson into the new file</li>
+        <li>Press <strong>Ctrl + S</strong> to save</li>
+      </ol>
+
+      <h3>Step 6 — Open a Terminal Inside VS Code</h3>
+
+      <p>You don't need to switch to PowerShell anymore — VS Code has one built in.</p>
+
+      <ol>
+        <li>In VS Code, click <strong>Terminal → New Terminal</strong> in the top menu (or press <strong>Ctrl + `</strong> — the backtick key, above Tab)</li>
+        <li>A terminal opens at the bottom</li>
+        <li>It should already be inside your <code>HomeworkManager</code> folder</li>
+        <li>Type <code>py main.py</code> and press Enter to run your program</li>
+      </ol>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 The terminal is your friend</div>
+        <p>Every time a lesson says "run it", this is what you do: open the terminal (if it's not already open) and type <code>py main.py</code>. If you see a red error, read it carefully — the last line usually tells you what went wrong.</p>
+      </div>
+
+      <h3>Step 7 — Run a Quick Test</h3>
+
+      <p>Let's confirm everything works before you start Lesson 1.</p>
+
+      <p>In your VS Code terminal, type each of these and press Enter after each one:</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py --version
+py -m pip show customtkinter</code></pre>
+      </div>
+
+      <p>You should see:</p>
+
+      <ul>
+        <li>A Python version number (like <code>Python 3.14.7</code>)</li>
+        <li>Information about customtkinter, including a <code>Version:</code> line</li>
+      </ul>
+
+      <p>If both appear, you're ready. Move on to Lesson 1.</p>
+
+      <div class="callout danger">
+        <div class="callout-title">🆘 If something is wrong</div>
+        <p>Copy the <strong>full error message</strong> — including the first line and the last line — and show your teacher. Don't try to fix it by guessing. Most setup problems are one of these:</p>
+        <ul>
+          <li><strong>"py is not recognized"</strong> → Python isn't on your PATH. Reinstall Python and tick "Add python.exe to PATH".</li>
+          <li><strong>"No module named customtkinter"</strong> → CustomTkinter didn't install. Run <code>py -m pip install customtkinter</code> again and watch for errors.</li>
+          <li><strong>Nothing happens when I run py main.py</strong> → Check you're in the right folder. In the terminal, type <code>dir</code> — you should see <code>main.py</code> in the list.</li>
+        </ul>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>In your own words, why do we tick "Add python.exe to PATH" during installation?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> "PATH" is the list of folders Windows searches when you type a command. If Python isn't on the PATH, typing <code>py</code> gives an error because Windows doesn't know where to look. Ticking the box adds Python's install folder to that list.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 0)">
+        <span class="check-icon"></span> Mark Lesson 0 Complete
+      </button>
+    </section>
 
     <!-- LESSON 1 -->
     <section class="lesson" id="lesson-1">
@@ -583,7 +864,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">main.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
 
@@ -606,7 +887,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">PowerShell</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code>py main.py</code></pre>
       </div>
@@ -641,7 +922,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">main.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
 
@@ -688,7 +969,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">main.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
 
@@ -740,7 +1021,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">Folder structure</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code>models\
 ├── __init__.py     (empty file)
@@ -755,7 +1036,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">models/task.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime, date
 
@@ -799,7 +1080,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">main.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">from</span> models.task <span class="kw">import</span> Task
 
@@ -834,7 +1115,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">Folder structure</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code>HomeworkManager\
 ├── tasks.json          (contains just: [])
@@ -846,7 +1127,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">tasks.json</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code>[]</code></pre>
       </div>
@@ -854,7 +1135,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">managers/storage_manager.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> json
 <span class="kw">import</span> os
@@ -900,7 +1181,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">Folder structure</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code>utilities\
 ├── __init__.py     (empty)
@@ -910,7 +1191,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">utilities/validation.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime
 
@@ -957,7 +1238,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">managers/task_manager.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">from</span> models.task <span class="kw">import</span> Task
 <span class="kw">from</span> managers.storage_manager <span class="kw">import</span> StorageManager
@@ -983,7 +1264,7 @@
                 task.priority <span class="op">=</span> task.<span class="fn">calculate_priority</span>()
                 <span class="kw">break</span>
         <span class="self">self</span>.<span class="fn">sort_tasks</span>()
-        <span class="self">self</span>.<span class="fn">save_tasks</span>()
+        <span class="self">.<span class="fn">save_tasks</span>()
 
     <span class="kw">def</span> <span class="fn">delete_task</span>(<span class="self">self</span>, task_id):
         <span class="self">self</span>.tasks <span class="op">=</span> [t <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.tasks <span class="kw">if</span> t.task_id <span class="op">!=</span> task_id]
@@ -1034,7 +1315,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">gui/main_window.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> tkinter <span class="kw">as</span> tk
 <span class="kw">from</span> tkinter <span class="kw">import</span> ttk
@@ -1102,7 +1383,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">gui/task_dialog.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
 
@@ -1144,7 +1425,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">gui/main_window.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> tkinter <span class="kw">as</span> tk
 <span class="kw">from</span> tkinter <span class="kw">import</span> ttk, messagebox
@@ -1269,7 +1550,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">gui/main_window.py — inside create_widgets</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"Overdue"</span>, background<span class="op">=</span><span class="str">"#8B0000"</span>, foreground<span class="op">=</span><span class="str">"white"</span>)
 <span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"High"</span>,    background<span class="op">=</span><span class="str">"#B22222"</span>, foreground<span class="op">=</span><span class="str">"white"</span>)
@@ -1282,7 +1563,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">gui/main_window.py — inside refresh_table</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks:
     <span class="self">self</span>.tree.<span class="fn">insert</span>(<span class="str">""</span>, tk.END, iid<span class="op">=</span>t.task_id,
@@ -1296,7 +1577,7 @@
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">gui/main_window.py — inside refresh_table</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code>overdue <span class="op">=</span> <span class="fn">sum</span>(<span class="num">1</span> <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks <span class="kw">if</span> t.priority <span class="op">==</span> <span class="str">"Overdue"</span>)
 high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">1</span> <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks <span class="kw">if</span> t.priority <span class="op">==</span> <span class="str">"High"</span>)
@@ -1336,7 +1617,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">Formula</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code>score = (urgency × 0.5) + (difficulty × 2) + (estimated_hours × 0.8)</code></pre>
       </div>
@@ -1369,7 +1650,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">models/task.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime, date
 
@@ -1426,7 +1707,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">managers/task_manager.py — add_task</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">def</span> <span class="fn">add_task</span>(<span class="self">self</span>, title, subject, due_date, difficulty<span class="op">=</span><span class="num">2</span>, estimated_hours<span class="op">=</span><span class="num">1.0</span>):
     task_id <span class="op">=</span> <span class="self">self</span>.<span class="fn">get_next_id</span>()
@@ -1439,7 +1720,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">managers/task_manager.py — edit_task</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">def</span> <span class="fn">edit_task</span>(<span class="self">self</span>, task_id, title, subject, due_date,
               difficulty<span class="op">=</span><span class="num">2</span>, estimated_hours<span class="op">=</span><span class="num">1.0</span>):
@@ -1460,7 +1741,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">managers/task_manager.py — sort_tasks</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">def</span> <span class="fn">sort_tasks</span>(<span class="self">self</span>):
     <span class="cmt"># Highest score first. Tie-break by due date.</span>
@@ -1470,7 +1751,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">managers/task_manager.py — load_tasks</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">def</span> <span class="fn">load_tasks</span>(<span class="self">self</span>):
     <span class="self">self</span>.tasks.<span class="fn">clear</span>()
@@ -1496,7 +1777,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">gui/task_dialog.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
 
@@ -1563,7 +1844,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">gui/main_window.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> tkinter <span class="kw">as</span> tk
 <span class="kw">from</span> tkinter <span class="kw">import</span> ttk, messagebox
@@ -1693,7 +1974,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
         task_id <span class="op">=</span> <span class="fn">int</span>(sel[<span class="num">0</span>])
         <span class="kw">if</span> messagebox.<span class="fn">askyesno</span>(<span class="str">"Delete"</span>, <span class="str">"Delete selected task?"</span>):
             <span class="self">self</span>.manager.<span class="fn">delete_task</span>(task_id)
-            <span class="self">self</span>.<span class="fn">refresh_table</span>()
+            <span class="self">.</span><span class="fn">refresh_table</span>()
             messagebox.<span class="fn">showinfo</span>(<span class="str">"Deleted"</span>, <span class="str">"Task removed."</span>)</code></pre>
       </div>
 
@@ -1702,7 +1983,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="code-wrap">
         <div class="code-head">
           <span class="code-lang">main.py</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
 <span class="kw">from</span> gui.main_window <span class="kw">import</span> MainWindow
@@ -1742,29 +2023,69 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
 <button class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-  const totalLessons = 11;
+  const totalLessons = 12;
   const completed = new Set();
 
   function copyCode(btn) {
-    const pre = btn.closest('.code-wrap').querySelector('pre');
-    const text = pre.innerText;
-    navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = 'Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copy';
-        btn.classList.remove('copied');
-      }, 1500);
+    btn.textContent = '✏️ Type it yourself!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Show Hint';
+      btn.classList.remove('copied');
+    }, 1400);
+  }
+
+  document.querySelectorAll('pre').forEach(pre => {
+    pre.addEventListener('copy', e => {
+      e.preventDefault();
+      showToast('🚫 Copying is disabled — type the code out!');
     });
+    pre.addEventListener('contextmenu', e => e.preventDefault());
+    pre.style.userSelect = 'none';
+  });
+
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = `
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f87171;
+      color: #0f1117;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      z-index: 9999;
+      box-shadow: 0 8px 24px #00000066;
+      animation: toastIn 0.3s;
+    `;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
   }
 
   function toggleAnswer(btn) {
     const answer = btn.nextElementSibling;
     answer.classList.toggle('show');
     btn.textContent = answer.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+
+    if (answer.classList.contains('show')) {
+      const lesson = btn.closest('.lesson');
+      if (lesson) lesson.dataset.revealed = 'true';
+    }
   }
 
   function markComplete(btn, lessonNum) {
+    const lesson = document.getElementById('lesson-' + lessonNum);
+    const hasRevealed = lesson.dataset.revealed === 'true';
+
+    if (!hasRevealed && !completed.has(lessonNum)) {
+      showToast('⚠️ Reveal the "Your Turn" answer before marking complete.');
+      return;
+    }
+
     if (completed.has(lessonNum)) {
       completed.delete(lessonNum);
       btn.classList.remove('done');
@@ -1778,6 +2099,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
     updateProgress();
     saveProgress();
     updateSidebar();
+    updateLocks();
   }
 
   function updateProgress() {
@@ -1798,14 +2120,24 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
   function saveProgress() {
     try {
       localStorage.setItem('htm-progress', JSON.stringify([...completed]));
+      const reveals = [];
+      document.querySelectorAll('.lesson').forEach(l => {
+        if (l.dataset.revealed === 'true') reveals.push(l.id);
+      });
+      localStorage.setItem('htm-reveals', JSON.stringify(reveals));
     } catch(e) {}
   }
 
   function loadProgress() {
     try {
       const saved = localStorage.getItem('htm-progress');
-      if (saved) {
-        JSON.parse(saved).forEach(n => completed.add(n));
+      if (saved) JSON.parse(saved).forEach(n => completed.add(n));
+      const reveals = localStorage.getItem('htm-reveals');
+      if (reveals) {
+        JSON.parse(reveals).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.dataset.revealed = 'true';
+        });
       }
     } catch(e) {}
   }
@@ -1818,10 +2150,28 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
     });
   }
 
+  function updateLocks() {
+    const lessonIds = [];
+    document.querySelectorAll('.lesson').forEach(l => lessonIds.push(l.id));
+    lessonIds.sort((a, b) => parseInt(a.split('-')[1]) - parseInt(b.split('-')[1]));
+
+    lessonIds.forEach((id, i) => {
+      const lesson = document.getElementById(id);
+      const link = document.querySelector(`.lesson-link[data-target="${id}"]`);
+
+      const unlocked = i === 0 || completed.has(parseInt(lessonIds[i - 1].split('-')[1]));
+
+      lesson.classList.toggle('locked', !unlocked);
+      if (link) link.classList.toggle('locked', !unlocked);
+    });
+  }
+
   document.querySelectorAll('.lesson-link').forEach(link => {
     link.addEventListener('click', () => {
       const target = document.getElementById(link.dataset.target);
-      if (target) target.scrollIntoView({behavior: 'smooth'});
+      if (target && !target.classList.contains('locked')) {
+        target.scrollIntoView({behavior: 'smooth'});
+      }
     });
   });
 
@@ -1859,6 +2209,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
   loadProgress();
   updateProgress();
   updateSidebar();
+  updateLocks();
 </script>
 
 </body>
