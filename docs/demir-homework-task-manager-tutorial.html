@@ -565,6 +565,23 @@
   .to-top.show { opacity: 1; pointer-events: auto; }
   .to-top:hover { transform: translateY(-4px); }
 
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .reset-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
   @media (max-width: 900px) {
     .container { grid-template-columns: 1fr; padding: 20px 16px; gap: 20px; }
     .sidebar { position: static; max-height: none; display: none; }
@@ -582,6 +599,7 @@
     <div class="progress-bar" id="progressBar"></div>
   </div>
   <div class="progress-text" id="progressText">0 / 13 lessons</div>
+  <button class="reset-btn" onclick="resetProgress()">Reset</button>
 </div>
 
 <div class="container">
@@ -1287,7 +1305,7 @@ py -m pip show customtkinter</code></pre>
             <span class="self">self</span>.tree.<span class="fn">column</span>(col, width<span class="op">=</span><span class="num">150</span>)
         <span class="self">self</span>.tree.<span class="fn">pack</span>(fill<span class="op">=</span><span class="str">"both"</span>, expand<span class="op">=</span><span class="kw">True</span>, padx<span class="op">=</span><span class="num">20</span>, pady<span class="op">=</span><span class="num">20</span>)
 
-        <span class="self">self</span>.<span class="fn">refresh_table</span>()
+        <span class="self">.<span class="fn">refresh_table</span>()
 
     <span class="kw">def</span> <span class="fn">refresh_table</span>(<span class="self">self</span>):
         <span class="kw">for</span> row <span class="kw">in</span> <span class="self">self</span>.tree.<span class="fn">get_children</span>():
@@ -1382,7 +1400,7 @@ py -m pip show customtkinter</code></pre>
         <span class="self">self</span>.<span class="fn">geometry</span>(<span class="str">"900x600"</span>)
         <span class="self">self</span>.manager <span class="op">=</span> <span class="cls">TaskManager</span>()
         <span class="self">self</span>.<span class="fn">create_widgets</span>()
-        <span class="self">self</span>.<span class="fn">refresh_table</span>()
+        <span class="self">.<span class="fn">refresh_table</span>()
 
     <span class="kw">def</span> <span class="fn">create_widgets</span>(<span class="self">self</span>):
         ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Homework Task Manager"</span>,
@@ -1428,7 +1446,7 @@ py -m pip show customtkinter</code></pre>
             messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Date must be YYYY-MM-DD."</span>); <span class="kw">return</span>
 
         <span class="self">self</span>.manager.<span class="fn">add_task</span>(title, subject, due_date)
-        <span class="self">self</span>.<span class="fn">refresh_table</span>()
+        <span class="self">.<span class="fn">refresh_table</span>()
         messagebox.<span class="fn">showinfo</span>(<span class="str">"Success"</span>, <span class="str">"Task added!"</span>)
 
     <span class="kw">def</span> <span class="fn">edit_task</span>(<span class="self">self</span>):
@@ -1460,7 +1478,7 @@ py -m pip show customtkinter</code></pre>
         task_id <span class="op">=</span> <span class="fn">int</span>(sel[<span class="num">0</span>])
         <span class="kw">if</span> messagebox.<span class="fn">askyesno</span>(<span class="str">"Delete"</span>, <span class="str">"Delete selected task?"</span>):
             <span class="self">self</span>.manager.<span class="fn">delete_task</span>(task_id)
-            <span class="self">self</span>.<span class="fn">refresh_table</span>()
+            <span class="self">.<span class="fn">refresh_table</span>()
             messagebox.<span class="fn">showinfo</span>(<span class="str">"Deleted"</span>, <span class="str">"Task removed."</span>)</code></pre>
       </div>
 
@@ -1550,7 +1568,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       <div class="callout info">
         <div class="callout-title">🎯 Why We're Doing This</div>
         <p>Your current priority uses a simple <code>if/elif</code> chain. It ignores difficulty and time estimates. A 30-minute quiz and a 4-hour essay due on the same day get the same priority.</p>
-        <p>We're replacing it with a <strong>weighted scoring algorithm</strong> — a real algorithmic approach that IB moderators reward in Criterion C.</p>
+        <p>We're replacing it with a <strong>weighted scoring algorithm</strong>.</p>
       </div>
 
       <p><strong>The formula:</strong></p>
@@ -1561,21 +1579,6 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
           <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
         </div>
         <pre><code>score = (urgency × 0.5) + (difficulty × 2) + (estimated_hours × 0.8)</code></pre>
-      </div>
-
-      <div class="callout warn">
-        <div class="callout-title">📝 Design Justification — Read Before Coding</div>
-        <p><strong>This is the part that earns IB marks.</strong></p>
-        <ul>
-          <li><strong>Urgency × 0.5</strong> — ranges 0–5 points. Matters, but not alone.</li>
-          <li><strong>Difficulty × 2</strong> — heaviest weight. Hard (3) adds 6 points, easy (1) adds 2.</li>
-          <li><strong>Estimated hours × 0.8</strong> — a 3-hour task adds 2.4 points; a 0.5-hour task adds 0.4.</li>
-        </ul>
-      </div>
-
-      <div class="callout danger">
-        <div class="callout-title">⚠️ Do Not Copy This Text Into Your IA</div>
-        <p>You'll write your own justification in October. This is just for your understanding.</p>
       </div>
 
       <h3>Step 1 — Replace <code>models/task.py</code></h3>
@@ -1634,8 +1637,6 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       </div>
 
       <h3>Step 2 — Update <code>managers/task_manager.py</code></h3>
-
-      <p>Replace these four methods only.</p>
 
       <div class="code-wrap">
         <div class="code-head">
@@ -1697,7 +1698,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
             item.<span class="fn">get</span>(<span class="str">"difficulty"</span>, <span class="num">2</span>),
             item.<span class="fn">get</span>(<span class="str">"estimated_hours"</span>, <span class="num">1.0</span>)
         ))
-    <span class="self">self</span>.<span class="fn">sort_tasks</span>()</code></pre>
+    <span class="self">.<span class="fn">sort_tasks</span>()</code></pre>
       </div>
 
       <h3>Step 3 — Replace <code>gui/task_dialog.py</code></h3>
@@ -1789,7 +1790,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
         <span class="self">self</span>.<span class="fn">geometry</span>(<span class="str">"1000x600"</span>)
         <span class="self">self</span>.manager <span class="op">=</span> <span class="cls">TaskManager</span>()
         <span class="self">self</span>.<span class="fn">create_widgets</span>()
-        <span class="self">self</span>.<span class="fn">refresh_table</span>()
+        <span class="self">.<span class="fn">refresh_table</span>()
 
     <span class="kw">def</span> <span class="fn">create_widgets</span>(<span class="self">self</span>):
         ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Homework Task Manager"</span>,
@@ -1858,7 +1859,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
             <span class="kw">return</span>
 
         <span class="self">self</span>.manager.<span class="fn">add_task</span>(title, subject, due_date, difficulty, estimated_hours)
-        <span class="self">self</span>.<span class="fn">refresh_table</span>()
+        <span class="self">.<span class="fn">refresh_table</span>()
         messagebox.<span class="fn">showinfo</span>(<span class="str">"Success"</span>, <span class="str">"Task added!"</span>)
 
     <span class="kw">def</span> <span class="fn">edit_task</span>(<span class="self">self</span>):
@@ -1902,7 +1903,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
         task_id <span class="op">=</span> <span class="fn">int</span>(sel[<span class="num">0</span>])
         <span class="kw">if</span> messagebox.<span class="fn">askyesno</span>(<span class="str">"Delete"</span>, <span class="str">"Delete selected task?"</span>):
             <span class="self">self</span>.manager.<span class="fn">delete_task</span>(task_id)
-            <span class=".<span class="fn">refresh_table</span>()
+            <span class="self">.<span class="fn">refresh_table</span>()
             messagebox.<span class="fn">showinfo</span>(<span class="str">"Deleted"</span>, <span class="str">"Task removed."</span>)</code></pre>
       </div>
 
@@ -1927,7 +1928,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
         <div class="question-label">❓ Your Turn</div>
         <p>Change the weights in <code>calculate_priority_score()</code>. What happens if you double the urgency weight to <code>1.0</code>?</p>
         <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
-        <div class="answer"><strong>Answer:</strong> It depends on the tasks. If several tasks are due soon, their scores all rise together, so the order stays the same. But if some tasks are urgent and others aren't, the urgent ones now score much higher and will move to the top — even if they're easy or short. This shows why weights matter: they encode your priorities.</div>
+        <div class="answer"><strong>Answer:</strong> It depends on the tasks. If several tasks are due soon, their scores all rise together, so the order stays the same. But if some tasks are urgent and others aren't, the urgent ones now score much higher and will move to the top — even if they're easy or short.</div>
       </div>
 
       <button class="complete-btn" onclick="markComplete(this, 11)">
@@ -2053,6 +2054,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
   const totalLessons = 13;
   const completed = new Set();
 
+  // ---------- COPY DISABLED ----------
   function copyCode(btn) {
     btn.textContent = '✏️ Type it yourself!';
     btn.classList.add('copied');
@@ -2093,6 +2095,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
     setTimeout(() => t.remove(), 2500);
   }
 
+  // ---------- ANSWER REVEAL ----------
   function toggleAnswer(btn) {
     const answer = btn.nextElementSibling;
     answer.classList.toggle('show');
@@ -2104,11 +2107,22 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
     }
   }
 
+  // ---------- GET ALL LESSON NUMBERS IN ORDER ----------
+  function getAllLessonNumbers() {
+    const nums = [];
+    document.querySelectorAll('.lesson').forEach(l => {
+      const n = parseInt(l.id.split('-')[1]);
+      if (!isNaN(n)) nums.push(n);
+    });
+    return nums.sort((a, b) => a - b);
+  }
+
+  // ---------- MARK COMPLETE ----------
   function markComplete(btn, lessonNum) {
     const lesson = document.getElementById('lesson-' + lessonNum);
-    const hasRevealed = lesson.dataset.revealed === 'true';
+    if (!lesson) return;
 
-    if (!hasRevealed && !completed.has(lessonNum)) {
+    if (!completed.has(lessonNum) && lesson.dataset.revealed !== 'true') {
       showToast('⚠️ Reveal the "Your Turn" answer before marking complete.');
       return;
     }
@@ -2123,10 +2137,16 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
       btn.innerHTML = '<span class="check-icon"></span> Lesson ' + lessonNum + ' Complete!';
       fireConfetti();
     }
-    updateProgress();
+
     saveProgress();
+    refreshAll();
+  }
+
+  // ---------- REFRESH ----------
+  function refreshAll() {
+    updateProgress();
     updateSidebar();
-    updateLocks();
+    applyLocks();
   }
 
   function updateProgress() {
@@ -2136,14 +2156,41 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
 
     if (completed.size === totalLessons) {
       document.getElementById('final-card').style.display = 'block';
-      setTimeout(() => {
-        document.getElementById('final-card').scrollIntoView({behavior:'smooth'});
-      }, 400);
     } else {
       document.getElementById('final-card').style.display = 'none';
     }
   }
 
+  function updateSidebar() {
+    document.querySelectorAll('.lesson-link').forEach(link => {
+      const num = parseInt(link.dataset.target.split('-')[1]);
+      link.classList.toggle('done', completed.has(num));
+    });
+  }
+
+  // ---------- LOCK / UNLOCK ----------
+  function applyLocks() {
+    const allNums = getAllLessonNumbers();
+
+    allNums.forEach((num, index) => {
+      const lessonEl = document.getElementById('lesson-' + num);
+      const linkEl = document.querySelector('.lesson-link[data-target="lesson-' + num + '"]');
+      if (!lessonEl) return;
+
+      let unlocked;
+      if (index === 0) {
+        unlocked = true;
+      } else {
+        const prevNum = allNums[index - 1];
+        unlocked = completed.has(prevNum);
+      }
+
+      lessonEl.classList.toggle('locked', !unlocked);
+      if (linkEl) linkEl.classList.toggle('locked', !unlocked);
+    });
+  }
+
+  // ---------- SAVE / LOAD ----------
   function saveProgress() {
     try {
       localStorage.setItem('htm-progress', JSON.stringify([...completed]));
@@ -2169,30 +2216,27 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
     } catch(e) {}
   }
 
-  function updateSidebar() {
-    document.querySelectorAll('.lesson-link').forEach(link => {
-      const target = link.dataset.target;
-      const num = parseInt(target.split('-')[1]);
-      link.classList.toggle('done', completed.has(num));
+  // ---------- RESET ----------
+  window.resetProgress = function() {
+    if (!confirm('Reset all progress? This cannot be undone.')) return;
+    localStorage.removeItem('htm-progress');
+    localStorage.removeItem('htm-reveals');
+    completed.clear();
+    document.querySelectorAll('.lesson').forEach(l => {
+      delete l.dataset.revealed;
     });
-  }
-
-  function updateLocks() {
-    const lessonIds = [];
-    document.querySelectorAll('.lesson').forEach(l => lessonIds.push(l.id));
-    lessonIds.sort((a, b) => parseInt(a.split('-')[1]) - parseInt(b.split('-')[1]));
-
-    lessonIds.forEach((id, i) => {
-      const lesson = document.getElementById(id);
-      const link = document.querySelector(`.lesson-link[data-target="${id}"]`);
-
-      const unlocked = i === 0 || completed.has(parseInt(lessonIds[i - 1].split('-')[1]));
-
-      lesson.classList.toggle('locked', !unlocked);
-      if (link) link.classList.toggle('locked', !unlocked);
+    document.querySelectorAll('.complete-btn').forEach(btn => {
+      const match = btn.getAttribute('onclick').match(/markComplete\(this,\s*(\d+)\)/);
+      if (match) {
+        btn.classList.remove('done');
+        btn.innerHTML = '<span class="check-icon"></span> Mark Lesson ' + match[1] + ' Complete';
+      }
     });
-  }
+    refreshAll();
+    showToast('✅ Progress reset');
+  };
 
+  // ---------- SIDEBAR CLICKS ----------
   document.querySelectorAll('.lesson-link').forEach(link => {
     link.addEventListener('click', () => {
       const target = document.getElementById(link.dataset.target);
@@ -2202,6 +2246,7 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
     });
   });
 
+  // ---------- SCROLL OBSERVER ----------
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -2214,10 +2259,12 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
 
   document.querySelectorAll('.lesson').forEach(l => observer.observe(l));
 
+  // ---------- TO TOP ----------
   window.addEventListener('scroll', () => {
     document.getElementById('toTop').classList.toggle('show', window.scrollY > 500);
   });
 
+  // ---------- CONFETTI ----------
   function fireConfetti() {
     const colors = ['#7c8aff', '#a78bfa', '#4ade80', '#fbbf24', '#f87171'];
     for (let i = 0; i < 30; i++) {
@@ -2233,10 +2280,9 @@ high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">
     }
   }
 
+  // ---------- INIT ----------
   loadProgress();
-  updateProgress();
-  updateSidebar();
-  updateLocks();
+  refreshAll();
 </script>
 
 </body>
