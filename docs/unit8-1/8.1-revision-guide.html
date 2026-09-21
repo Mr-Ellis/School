@@ -167,7 +167,6 @@
             overflow: hidden;
         }
 
-        /* coloured top accent per card */
         .card::before {
             content: "";
             position: absolute;
@@ -188,6 +187,16 @@
         .card[data-card="7"] { --accent: #2a9d8f; }
         .card[data-card="8"] { --accent: #6a4c93; }
         .card[data-card="9"] { --accent: #ff8fab; }
+
+        .card[data-card="1"] { --accent-light: #fde2e8; }
+        .card[data-card="2"] { --accent-light: #fde6db; }
+        .card[data-card="3"] { --accent-light: #fff3d6; }
+        .card[data-card="4"] { --accent-light: #d9f7ec; }
+        .card[data-card="5"] { --accent-light: #d7eef6; }
+        .card[data-card="6"] { --accent-light: #fbdde0; }
+        .card[data-card="7"] { --accent-light: #d8f0ec; }
+        .card[data-card="8"] { --accent-light: #e8def4; }
+        .card[data-card="9"] { --accent-light: #ffe2eb; }
 
         .card:hover {
             box-shadow: 0 18px 36px -12px rgba(20, 60, 100, 0.18), 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -282,16 +291,6 @@
             font-size: 0.83rem;
             letter-spacing: 0.02em;
         }
-
-        .card[data-card="1"] { --accent-light: #fde2e8; }
-        .card[data-card="2"] { --accent-light: #fde6db; }
-        .card[data-card="3"] { --accent-light: #fff3d6; }
-        .card[data-card="4"] { --accent-light: #d9f7ec; }
-        .card[data-card="5"] { --accent-light: #d7eef6; }
-        .card[data-card="6"] { --accent-light: #fbdde0; }
-        .card[data-card="7"] { --accent-light: #d8f0ec; }
-        .card[data-card="8"] { --accent-light: #e8def4; }
-        .card[data-card="9"] { --accent-light: #ffe2eb; }
 
         td {
             padding: 0.6rem 0.8rem;
@@ -422,7 +421,7 @@
         }
 
         .self-check-content.open {
-            max-height: 500px;
+            max-height: 600px;
             opacity: 1;
             margin-top: 0.7rem;
             padding: 0.8rem 1rem;
@@ -439,7 +438,52 @@
             margin-bottom: 0;
         }
 
-        .self-check-content .answer {
+        /* ---------- ANSWER TOGGLE ---------- */
+        .answer-toggle-btn {
+            background: transparent;
+            border: 1px dashed var(--accent, #9bb8d4);
+            color: var(--accent, #1f4a73);
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background 0.15s ease, border-color 0.15s ease;
+            font-family: inherit;
+            margin-top: 0.5rem;
+        }
+
+        .answer-toggle-btn:hover {
+            background: var(--accent-light, #eef4fa);
+        }
+
+        .answer-toggle-btn i {
+            font-size: 0.75rem;
+            transition: transform 0.2s ease;
+        }
+
+        .answer-toggle-btn.open i {
+            transform: rotate(90deg);
+        }
+
+        .answer-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.2s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .answer-content.open {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 0.4rem;
+        }
+
+        .answer-content .answer {
             color: #1f6e43;
             font-weight: 600;
         }
@@ -600,7 +644,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> What type of network is the Internet?</p>
-                            <p><span class="answer">A:</span> WAN — it's the biggest WAN.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> WAN — it's the biggest WAN.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -636,7 +683,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> Which is faster: copper or fibre‑optic?</p>
-                            <p><span class="answer">A:</span> Fibre‑optic.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Fibre‑optic.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -668,7 +718,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> What does a router do?</p>
-                            <p><span class="answer">A:</span> Connects different networks and provides internet access; finds the fastest route for data.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Connects different networks and provides internet access; finds the fastest route for data.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -705,7 +758,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> Which transmission method sends one bit at a time?</p>
-                            <p><span class="answer">A:</span> Serial transmission.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Serial transmission.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -749,7 +805,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> What does ARQ stand for?</p>
-                            <p><span class="answer">A:</span> Automatic Repeat reQuest.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Automatic Repeat reQuest.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -783,7 +842,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> What type of malware pretends to be something it is not?</p>
-                            <p><span class="answer">A:</span> Trojan.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Trojan.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -816,7 +878,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> What does antivirus software do if it detects a harmful file?</p>
-                            <p><span class="answer">A:</span> It quarantines the file and lets the user know.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> It quarantines the file and lets the user know.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -856,7 +921,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> Are operating systems required on smartphones?</p>
-                            <p><span class="answer">A:</span> Yes — they are required on all modern devices.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Yes — they are required on all modern devices.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -897,7 +965,10 @@
                         <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
                         <div class="self-check-content">
                             <p><strong>Q:</strong> Name one disadvantage of networks.</p>
-                            <p><span class="answer">A:</span> Networking hardware can be very expensive; managing a network is complicated; viruses can spread to all devices.</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Networking hardware can be very expensive; managing a network is complicated; viruses can spread to all devices.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card-progress">
@@ -930,6 +1001,21 @@
             } else {
                 content.classList.add('open');
                 btn.classList.add('open');
+            }
+        }
+
+        /* ---------- TOGGLE ANSWER ---------- */
+        function toggleAnswer(btn) {
+            const content = btn.nextElementSibling;
+            const isOpen = content.classList.contains('open');
+            if (isOpen) {
+                content.classList.remove('open');
+                btn.classList.remove('open');
+                btn.innerHTML = '<i class="fas fa-chevron-right"></i> Show answer';
+            } else {
+                content.classList.add('open');
+                btn.classList.add('open');
+                btn.innerHTML = '<i class="fas fa-chevron-down"></i> Hide answer';
             }
         }
 
