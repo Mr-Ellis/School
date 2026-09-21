@@ -1,1 +1,2299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Study Buddy — Grade 11 Mini Programming Project</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  :root {
+    --bg: #0f1117;
+    --bg-alt: #161923;
+    --card: #1c2030;
+    --card-hover: #242a3d;
+    --border: #2a3048;
+    --text: #e4e7f1;
+    --text-dim: #9aa2b8;
+    --accent: #7c8aff;
+    --accent-glow: #7c8aff33;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --code-bg: #0a0c12;
+    --code-border: #1e2433;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 17, 23, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .topbar-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    min-width: 150px;
+    height: 8px;
+    background: var(--bg-alt);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #a78bfa);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-text {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 40px;
+    padding: 32px 24px;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .sidebar h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .lesson-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: 1px solid transparent;
+    margin-bottom: 2px;
+  }
+
+  .lesson-link:hover {
+    background: var(--card);
+    color: var(--text);
+  }
+
+  .lesson-link.active {
+    background: var(--accent-glow);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .lesson-link.done {
+    color: var(--green);
+  }
+
+  .lesson-link.done::before {
+    content: '✓';
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .lesson-link:not(.done):not(.locked)::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .lesson-link.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .lesson-link.locked::before {
+    content: '🔒';
+    font-size: 11px;
+    display: inline-block;
+    width: 14px;
+  }
+
+  main { min-width: 0; }
+
+  .hero {
+    text-align: center;
+    padding: 40px 20px 56px;
+    background: radial-gradient(ellipse at top, var(--accent-glow), transparent 70%);
+    border-radius: 20px;
+    margin-bottom: 40px;
+    border: 1px solid var(--border);
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #e4e7f1, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+
+  .hero p {
+    color: var(--text-dim);
+    font-size: 17px;
+    max-width: 620px;
+    margin: 0 auto 24px;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-dim);
+  }
+
+  .badge.green { color: var(--green); border-color: #4ade8044; background: #4ade8011; }
+  .badge.purple { color: var(--accent); border-color: #7c8aff44; background: #7c8aff11; }
+
+  .lesson {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 28px;
+    transition: border-color 0.3s, transform 0.3s;
+    scroll-margin-top: 90px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .lesson:hover { border-color: #3a4260; }
+
+  .lesson.locked {
+    position: relative;
+    opacity: 0.5;
+    filter: grayscale(0.7);
+  }
+
+  .lesson.locked > *:not(.lesson-header) {
+    pointer-events: none;
+  }
+
+  .lesson.locked::after {
+    content: '🔒 Complete the previous lesson to unlock';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(15, 17, 23, 0.95);
+    color: #fbbf24;
+    padding: 16px 26px;
+    border-radius: 12px;
+    border: 1px solid var(--yellow);
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+    z-index: 5;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .lesson-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .lesson-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px var(--accent-glow);
+  }
+
+  .lesson-title {
+    font-size: 22px;
+    font-weight: 700;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .lesson-goal {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--bg-alt);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  .lesson p { margin-bottom: 14px; color: var(--text-dim); }
+  .lesson p strong { color: var(--text); }
+  .lesson ul, .lesson ol { margin: 14px 0 14px 24px; color: var(--text-dim); }
+  .lesson li { margin-bottom: 8px; }
+  .lesson li strong { color: var(--text); }
+  .lesson h3 { margin: 24px 0 12px; font-size: 17px; color: var(--text); }
+
+  .code-wrap {
+    position: relative;
+    margin: 18px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--code-border);
+    background: var(--code-bg);
+  }
+
+  .code-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #12151e;
+    border-bottom: 1px solid var(--code-border);
+  }
+
+  .code-lang {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .copy-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .copy-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .copy-btn.copied {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+
+  pre {
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #c9d1e4;
+  }
+
+  pre::-webkit-scrollbar { height: 8px; }
+  pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .num { color: #f78c6c; }
+  .cmt { color: #5c6370; font-style: italic; }
+  .cls { color: #ffcb6b; }
+  .self { color: #f07178; }
+  .op { color: #89ddff; }
+
+  .callout {
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 18px 0;
+    border-left: 4px solid;
+    font-size: 14.5px;
+  }
+
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .callout p:last-child { margin-bottom: 0; }
+
+  .callout.tip { background: #4ade800f; border-color: var(--green); }
+  .callout.tip .callout-title { color: var(--green); }
+
+  .callout.warn { background: #fbbf240f; border-color: var(--yellow); }
+  .callout.warn .callout-title { color: var(--yellow); }
+
+  .callout.info { background: #7c8aff0f; border-color: var(--accent); }
+  .callout.info .callout-title { color: var(--accent); }
+
+  .callout.danger { background: #f871710f; border-color: var(--red); }
+  .callout.danger .callout-title { color: var(--red); }
+
+  .question {
+    background: linear-gradient(135deg, #1c2030, #1a1d2b);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  .question-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .question p { color: var(--text); font-weight: 500; margin-bottom: 12px; }
+
+  .reveal-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .reveal-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .answer {
+    display: none;
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: var(--bg-alt);
+    border-radius: 8px;
+    border-left: 3px solid var(--green);
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  .answer.show { display: block; animation: fadeIn 0.3s; }
+  .answer strong { color: var(--green); }
+
+  .complete-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 12px 22px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .complete-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .complete-btn.done {
+    background: #4ade8011;
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .check-icon {
+    width: 20px;
+    height: 20px;
+    border: 2px solid currentColor;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .complete-btn.done .check-icon::after { content: '✓'; font-weight: 700; }
+
+  .final {
+    text-align: center;
+    padding: 48px 32px;
+    background: radial-gradient(ellipse at center, var(--accent-glow), transparent 70%);
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    margin-bottom: 40px;
+  }
+
+  .final h2 {
+    font-size: 30px;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .final p { color: var(--text-dim); max-width: 600px; margin: 0 auto 20px; }
+
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: fall 3s linear forwards;
+  }
+
+  @keyframes fall {
+    to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  .to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px var(--accent-glow);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 200;
+  }
+
+  .to-top.show { opacity: 1; pointer-events: auto; }
+  .to-top:hover { transform: translateY(-4px); }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .reset-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  @media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; padding: 20px 16px; gap: 20px; }
+    .sidebar { position: static; max-height: none; display: none; }
+    .sidebar.mobile-open { display: block; }
+    .lesson { padding: 22px 18px; }
+    .lesson-title { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">🤖 AI Study Buddy · Grade 11 Mini Project</div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-text" id="progressText">0 / 13 lessons</div>
+  <button class="reset-btn" onclick="resetProgress()">Reset</button>
+</div>
+
+<div class="container">
+
+  <aside class="sidebar" id="sidebar">
+    <h3>Lessons</h3>
+    <a class="lesson-link" data-target="lesson-0">0. Setup</a>
+    <a class="lesson-link" data-target="lesson-1">1. First Window</a>
+    <a class="lesson-link" data-target="lesson-2">2. Buttons</a>
+    <a class="lesson-link" data-target="lesson-3">3. Input Fields</a>
+    <a class="lesson-link" data-target="lesson-4">4. Task &amp; AIRule Classes</a>
+    <a class="lesson-link" data-target="lesson-5">5. JSON Storage</a>
+    <a class="lesson-link" data-target="lesson-6">6. Validation</a>
+    <a class="lesson-link" data-target="lesson-7">7. Study Buddy Manager</a>
+    <a class="lesson-link" data-target="lesson-8">8. Table Display</a>
+    <a class="lesson-link" data-target="lesson-9">9. Add/Edit/Delete</a>
+    <a class="lesson-link" data-target="lesson-10">10. Polish: Colours &amp; Stats</a>
+    <a class="lesson-link" data-target="lesson-11">11. Your First AI Engine</a>
+    <a class="lesson-link" data-target="lesson-12">12. Make It Your Own</a>
+  </aside>
+
+  <main>
+
+    <div class="hero">
+      <h1>Build an AI Study Buddy</h1>
+      <p>Your Grade 11 mini project, taught step by step. By the end you'll have a working desktop app with a small AI engine that scores, ranks, and advises on your homework — plus your own extensions.</p>
+      <div class="hero-badges">
+        <span class="badge green">13 Lessons</span>
+        <span class="badge purple">Python + CustomTkinter</span>
+        <span class="badge">Rule-based AI</span>
+        <span class="badge">OOP + JSON</span>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-title">🤖 What "AI" means in this project</div>
+      <p>You're not training a neural network. You're building a <strong>rule-based AI</strong> — a small engine that takes features of a task (how soon it's due, how hard it is, how long it'll take) and produces a score, a label, and a recommendation. This is the same idea behind real recommendation systems. It's honest AI, and you can explain it in your write-up.</p>
+    </div>
+
+    <!-- LESSON 0 -->
+    <section class="lesson" id="lesson-0">
+      <div class="lesson-header">
+        <div class="lesson-num">0</div>
+        <div class="lesson-title">Setting Up Your Computer</div>
+        <span class="lesson-goal">Install everything first</span>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">🎯 Do This Before Lesson 1</div>
+        <p>You can't build anything until your computer is ready. This lesson takes about 20 minutes. Do every step in order. Don't skip anything.</p>
+      </div>
+
+      <h3>Step 1 — Install Python</h3>
+
+      <p>Python is the programming language we're going to use. If you don't have it, you need to install it.</p>
+
+      <p><strong>First, check if you already have it:</strong></p>
+
+      <ol>
+        <li>Press the <strong>Windows key</strong> on your keyboard (or click the Start button)</li>
+        <li>Type <code>powershell</code></li>
+        <li>Click <strong>Windows PowerShell</strong> — a blue window opens</li>
+        <li>Type this and press Enter:</li>
+      </ol>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py --version</code></pre>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">✅ If you see something like "Python 3.14.7"</div>
+        <p>Great — Python is already installed. Skip to <strong>Step 2</strong>.</p>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-title">❌ If you see a red error message</div>
+        <p>Python is not installed. Follow the installation steps below.</p>
+      </div>
+
+      <p><strong>To install Python:</strong></p>
+
+      <ol>
+        <li>Open your browser and go to: <code>https://www.python.org/downloads/</code></li>
+        <li>Click the big yellow <strong>"Download Python 3.x.x"</strong> button</li>
+        <li>When the file downloads, <strong>double-click it</strong> to run the installer</li>
+        <li>
+          <strong>⚠️ CRITICAL:</strong> On the first screen of the installer, tick the checkbox at the bottom that says
+          <strong>"Add python.exe to PATH"</strong>. If you miss this, nothing will work later.
+        </li>
+        <li>Click <strong>"Install Now"</strong></li>
+        <li>Wait for it to finish, then click <strong>Close</strong></li>
+        <li><strong>Close PowerShell</strong> and open it again (this refreshes the PATH)</li>
+        <li>Type <code>py --version</code> again — you should now see a version number</li>
+      </ol>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ If it still doesn't work after installing</div>
+        <p>Restart your computer. Then try again in a fresh PowerShell window.</p>
+      </div>
+
+      <h3>Step 2 — Install CustomTkinter</h3>
+
+      <p>CustomTkinter is a library that lets Python draw nice-looking windows. Python doesn't include it by default, so we install it manually.</p>
+
+      <p>In PowerShell, type this and press Enter:</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py -m pip install customtkinter</code></pre>
+      </div>
+
+      <p>You'll see lots of text scroll past. When it stops, look for the line that says <strong>"Successfully installed customtkinter-..."</strong>. That means it worked.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 Why "py -m pip" instead of just "pip"?</div>
+        <p>Using <code>py -m pip</code> guarantees you're installing into the same Python that <code>py</code> runs. Using just <code>pip</code> can install to a different Python by mistake — a common beginner trap.</p>
+      </div>
+
+      <h3>Step 3 — Install a Code Editor</h3>
+
+      <p>You need somewhere to type your code. Notepad <em>technically</em> works but it's terrible for programming. Use a real code editor.</p>
+
+      <p><strong>Recommended: Visual Studio Code (VS Code)</strong> — it's free, made by Microsoft, and used by millions of developers.</p>
+
+      <ol>
+        <li>Go to: <code>https://code.visualstudio.com/</code></li>
+        <li>Click the big blue <strong>Download</strong> button</li>
+        <li>Run the installer</li>
+        <li>
+          On the "Select Additional Tasks" screen, tick these:
+          <ul>
+            <li>✅ <strong>Add "Open with Code" action to Windows Explorer file context menu</strong></li>
+            <li>✅ <strong>Add "Open with Code" action to Windows Explorer directory context menu</strong></li>
+            <li>✅ <strong>Register Code as an editor for supported file types</strong></li>
+            <li>✅ <strong>Add to PATH</strong></li>
+          </ul>
+        </li>
+        <li>Click <strong>Next → Install → Finish</strong></li>
+      </ol>
+
+      <p><strong>Optional but recommended:</strong> After VS Code opens, click the <strong>Extensions</strong> icon in the left sidebar (looks like four squares). Search for and install:</p>
+
+      <ul>
+        <li><strong>Python</strong> (by Microsoft) — syntax highlighting and error checking</li>
+        <li><strong>Pylance</strong> (by Microsoft) — autocomplete and type hints</li>
+      </ul>
+
+      <h3>Step 4 — Create Your Project Folder</h3>
+
+      <ol>
+        <li>Open <strong>File Explorer</strong></li>
+        <li>Go to <code>C:\Users\&lt;your-name&gt;\</code></li>
+        <li>If there's no <code>PythonProjects</code> folder, create one</li>
+        <li>Inside it, create another folder called <code>AIStudyBuddy</code></li>
+      </ol>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Path</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>C:\Users\&lt;your-name&gt;\PythonProjects\AIStudyBuddy</code></pre>
+      </div>
+
+      <h3>Step 5 — Open the Folder in VS Code</h3>
+
+      <ol>
+        <li>Right-click the <code>AIStudyBuddy</code> folder</li>
+        <li>Click <strong>"Open with Code"</strong></li>
+        <li>VS Code opens with your folder loaded</li>
+      </ol>
+
+      <h3>Step 6 — Open a Terminal Inside VS Code</h3>
+
+      <ol>
+        <li>Click <strong>Terminal → New Terminal</strong> (or press <strong>Ctrl + `</strong>)</li>
+        <li>A terminal opens at the bottom</li>
+        <li>It should already be inside your <code>AIStudyBuddy</code> folder</li>
+        <li>Type <code>py main.py</code> to run your program</li>
+      </ol>
+
+      <h3>Step 7 — Run a Quick Test</h3>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py --version
+py -m pip show customtkinter</code></pre>
+      </div>
+
+      <p>If both commands show output, you're ready. Move on to Lesson 1.</p>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>In your own words, why do we tick "Add python.exe to PATH" during installation?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> "PATH" is the list of folders Windows searches when you type a command. If Python isn't on the PATH, typing <code>py</code> gives an error because Windows doesn't know where to look. Ticking the box adds Python's install folder to that list.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 0)">
+        <span class="check-icon"></span> Mark Lesson 0 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 1 -->
+    <section class="lesson" id="lesson-1">
+      <div class="lesson-header">
+        <div class="lesson-num">1</div>
+        <div class="lesson-title">Your First Window</div>
+        <span class="lesson-goal">Open a GUI window</span>
+      </div>
+
+      <p>Every AI Study Buddy session has to start somewhere — and that somewhere is a blank window. Don't worry about the AI yet. Get the window on screen first.</p>
+
+      <p><strong>What is CustomTkinter?</strong> It's a library that lets Python draw windows, buttons, and text boxes. It's built on top of the standard Tkinter library, but looks much nicer.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    ctk.<span class="fn">set_appearance_mode</span>(<span class="str">"dark"</span>)
+    ctk.<span class="fn">set_default_color_theme</span>(<span class="str">"blue"</span>)
+
+    app <span class="op">=</span> ctk.<span class="cls">CTk</span>()
+    app.<span class="fn">title</span>(<span class="str">"AI Study Buddy"</span>)
+    app.<span class="fn">geometry</span>(<span class="str">"600x400"</span>)
+
+    label <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(app, text<span class="op">=</span><span class="str">"Hello, AI Study Buddy!"</span>)
+    label.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">40</span>)
+
+    app.<span class="fn">mainloop</span>()</code></pre>
+      </div>
+
+      <p><strong>Run it:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py main.py</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why do we need <code>app.mainloop()</code> at the end?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> <code>mainloop()</code> starts the event loop — it keeps the window open and waits for user actions like clicks and key presses. Without it, the program would create the window and immediately close it.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 1)">
+        <span class="check-icon"></span> Mark Lesson 1 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 2 -->
+    <section class="lesson" id="lesson-2">
+      <div class="lesson-header">
+        <div class="lesson-num">2</div>
+        <div class="lesson-title">Buttons That Do Something</div>
+        <span class="lesson-goal">Handle clicks</span>
+      </div>
+
+      <p>Buttons are how users will interact with your Study Buddy. When clicked, they run a <strong>callback function</strong>.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+<span class="kw">def</span> <span class="fn">on_click</span>():
+    label.<span class="fn">configure</span>(text<span class="op">=</span><span class="str">"You clicked the button!"</span>)
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    ctk.<span class="fn">set_appearance_mode</span>(<span class="str">"dark"</span>)
+    app <span class="op">=</span> ctk.<span class="cls">CTk</span>()
+    app.<span class="fn">title</span>(<span class="str">"AI Study Buddy"</span>)
+    app.<span class="fn">geometry</span>(<span class="str">"600x400"</span>)
+
+    label <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(app, text<span class="op">=</span><span class="str">"Press the button below"</span>)
+    label.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">20</span>)
+
+    button <span class="op">=</span> ctk.<span class="cls">CTkButton</span>(app, text<span class="op">=</span><span class="str">"Click Me"</span>, command<span class="op">=</span>on_click)
+    button.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">10</span>)
+
+    app.<span class="fn">mainloop</span>()</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>What happens if you write <code>command=on_click()</code> with brackets instead of <code>command=on_click</code>?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> With brackets, Python calls the function immediately when the button is created — not when it's clicked. The button would do nothing when clicked, and the label would change before you even press it.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 2)">
+        <span class="check-icon"></span> Mark Lesson 2 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 3 -->
+    <section class="lesson" id="lesson-3">
+      <div class="lesson-header">
+        <div class="lesson-num">3</div>
+        <div class="lesson-title">Reading What the User Types</div>
+        <span class="lesson-goal">Use entry fields</span>
+      </div>
+
+      <p>An <strong>Entry field</strong> is a text box the user can type into. We read its contents with <code>.get()</code>.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+<span class="kw">def</span> <span class="fn">show_input</span>():
+    text <span class="op">=</span> entry.<span class="fn">get</span>()
+    label.<span class="fn">configure</span>(text<span class="op">=</span><span class="str">f"You typed: {text}"</span>)
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    ctk.<span class="fn">set_appearance_mode</span>(<span class="str">"dark"</span>)
+    app <span class="op">=</span> ctk.<span class="cls">CTk</span>()
+    app.<span class="fn">title</span>(<span class="str">"AI Study Buddy"</span>)
+    app.<span class="fn">geometry</span>(<span class="str">"600x400"</span>)
+
+    entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(app, placeholder_text<span class="op">=</span><span class="str">"Type something here"</span>)
+    entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">20</span>)
+
+    button <span class="op">=</span> ctk.<span class="cls">CTkButton</span>(app, text<span class="op">=</span><span class="str">"Show"</span>, command<span class="op">=</span>show_input)
+    button.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">10</span>)
+
+    label <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(app, text<span class="op">=</span><span class="str">""</span>)
+    label.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">20</span>)
+
+    app.<span class="fn">mainloop</span>()</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why must <code>.get()</code> be inside <code>show_input()</code>, not outside?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> Outside the function, <code>.get()</code> would run before the user has typed anything. Inside the function, it runs only when the button is clicked — after the user has entered text.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 3)">
+        <span class="check-icon"></span> Mark Lesson 3 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 4 -->
+    <section class="lesson" id="lesson-4">
+      <div class="lesson-header">
+        <div class="lesson-num">4</div>
+        <div class="lesson-title">The Task and AIRule Classes</div>
+        <span class="lesson-goal">Meet your AI's building blocks</span>
+      </div>
+
+      <p>Now we build the <strong>engine</strong>. Two classes do the heavy lifting:</p>
+
+      <ul>
+        <li><strong>Task</strong> — stores everything about one homework task and knows how to describe itself.</li>
+        <li><strong>AIRule</strong> — a single rule that inspects a task and contributes to its score. This is the foundation of your AI engine (Lesson 11 will use it heavily).</li>
+      </ul>
+
+      <div class="callout info">
+        <div class="callout-title">🤖 Why a separate AIRule class?</div>
+        <p>Real AI systems are built from many small rules or "features" that each contribute to a final decision. By making each rule its own object, you can add, remove, or tune rules without rewriting the whole engine. That's the beginning of <strong>modular AI design</strong>.</p>
+      </div>
+
+      <p><strong>Create these files:</strong></p>
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Folder structure</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>models\
+├── __init__.py     (empty file)
+├── task.py
+└── ai_rule.py</code></pre>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Important</div>
+        <p>The <code>__init__.py</code> file must exist even if empty. It tells Python to treat <code>models</code> as a package so you can import from it.</p>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">models/task.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime, date
+
+
+<span class="kw">class</span> <span class="cls">Task</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>, task_id, title, subject, due_date):
+        <span class="self">self</span>.task_id <span class="op">=</span> task_id
+        <span class="self">self</span>.title <span class="op">=</span> title
+        <span class="self">self</span>.subject <span class="op">=</span> subject
+        <span class="self">self</span>.due_date <span class="op">=</span> due_date
+
+    <span class="kw">def</span> <span class="fn">days_left</span>(<span class="self">self</span>):
+        due <span class="op">=</span> datetime.<span class="fn">strptime</span>(<span class="self">self</span>.due_date, <span class="str">"%Y-%m-%d"</span>).<span class="fn">date</span>()
+        <span class="kw">return</span> (due <span class="op">-</span> date.<span class="fn">today</span>()).days
+
+    <span class="kw">def</span> <span class="fn">to_dict</span>(<span class="self">self</span>):
+        <span class="kw">return</span> {
+            <span class="str">"id"</span>: <span class="self">self</span>.task_id,
+            <span class="str">"title"</span>: <span class="self">self</span>.title,
+            <span class="str">"subject"</span>: <span class="self">self</span>.subject,
+            <span class="str">"due_date"</span>: <span class="self">self</span>.due_date
+        }</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">models/ai_rule.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="cmt"># models/ai_rule.py
+# A small building block for our rule-based AI.
+# Each AIRule looks at a task and returns a contribution to the score.
+
+<span class="kw">class</span> <span class="cls">AIRule</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>, name, feature_fn, weight):
+        <span class="self">self</span>.name <span class="op">=</span> name
+        <span class="self">self</span>.feature_fn <span class="op">=</span> feature_fn
+        <span class="self">self</span>.weight <span class="op">=</span> weight
+
+    <span class="kw">def</span> <span class="fn">evaluate</span>(<span class="self">self</span>, task):
+        feature_value <span class="op">=</span> <span class="self">self</span>.<span class="fn">feature_fn</span>(task)
+        <span class="kw">return</span> feature_value <span class="op">*</span> <span class="self">self</span>.weight</code></pre>
+      </div>
+
+      <p><strong>Test it with <code>main.py</code>:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> models.task <span class="kw">import</span> Task
+<span class="kw">from</span> models.ai_rule <span class="kw">import</span> AIRule
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    t <span class="op">=</span> <span class="cls">Task</span>(<span class="num">1</span>, <span class="str">"Math homework"</span>, <span class="str">"Math"</span>, <span class="str">"2026-09-20"</span>)
+    <span class="fn">print</span>(t.title, <span class="str">"|"</span>, t.subject, <span class="str">"|"</span>, t.<span class="fn">days_left</span>(), <span class="str">"days left"</span>)
+
+    <span class="cmt"># A quick sanity check on our rule class</span>
+    urgency_rule <span class="op">=</span> <span class="cls">AIRule</span>(
+        name<span class="op">=</span><span class="str">"urgency"</span>,
+        feature_fn<span class="op">=</span><span class="kw">lambda</span> t: <span class="fn">max</span>(<span class="num">0</span>, <span class="num">10</span> <span class="op">-</span> t.<span class="fn">days_left</span>()),
+        weight<span class="op">=</span><span class="num">0.5</span>
+    )
+    <span class="fn">print</span>(<span class="str">"Urgency contribution:"</span>, urgency_rule.<span class="fn">evaluate</span>(t))</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>What are <code>self.title</code> and <code>self.subject</code> called in OOP?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> They're called <strong>instance attributes</strong> (or instance variables). Each Task object has its own copy of them.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 4)">
+        <span class="check-icon"></span> Mark Lesson 4 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 5 -->
+    <section class="lesson" id="lesson-5">
+      <div class="lesson-header">
+        <div class="lesson-num">5</div>
+        <div class="lesson-title">Saving to a File</div>
+        <span class="lesson-goal">JSON persistence</span>
+      </div>
+
+      <p>If your program closes, you don't want to lose all your tasks. We save them to a <strong>JSON file</strong>.</p>
+
+      <p><strong>Create these files:</strong></p>
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Folder structure</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>AIStudyBuddy\
+├── tasks.json          (contains just: [])
+└── managers\
+    ├── __init__.py     (empty)
+    └── storage_manager.py</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">tasks.json</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>[]</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">managers/storage_manager.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> json
+<span class="kw">import</span> os
+
+<span class="kw">class</span> <span class="cls">StorageManager</span>:
+    FILE_PATH <span class="op">=</span> <span class="str">"tasks.json"</span>
+
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">load_tasks</span>():
+        <span class="kw">if</span> <span class="kw">not</span> os.path.<span class="fn">exists</span>(<span class="cls">StorageManager</span>.FILE_PATH):
+            <span class="kw">return</span> []
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="cls">StorageManager</span>.FILE_PATH, <span class="str">"r"</span>, encoding<span class="op">=</span><span class="str">"utf-8"</span>) <span class="kw">as</span> file:
+            <span class="kw">return</span> json.<span class="fn">load</span>(file)
+
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">save_tasks</span>(tasks):
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="cls">StorageManager</span>.FILE_PATH, <span class="str">"w"</span>, encoding<span class="op">=</span><span class="str">"utf-8"</span>) <span class="kw">as</span> file:
+            json.<span class="fn">dump</span>(tasks, file, indent<span class="op">=</span><span class="num">4</span>)</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why JSON instead of a plain <code>.txt</code> file?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> JSON understands structure (lists, dictionaries, numbers, strings). A plain text file only stores raw characters. With JSON, we can save a whole list of task dictionaries and load them back as real Python objects, without writing our own parser.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 5)">
+        <span class="check-icon"></span> Mark Lesson 5 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 6 -->
+    <section class="lesson" id="lesson-6">
+      <div class="lesson-header">
+        <div class="lesson-num">6</div>
+        <div class="lesson-title">Rejecting Bad Input</div>
+        <span class="lesson-goal">Validation</span>
+      </div>
+
+      <p>Users make mistakes. Your program should catch them <strong>before</strong> saving garbage data.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Folder structure</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>utilities\
+├── __init__.py     (empty)
+└── validation.py</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">utilities/validation.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+<span class="kw">class</span> <span class="cls">Validation</span>:
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">validate_title</span>(title):
+        <span class="kw">return</span> title.<span class="fn">strip</span>() <span class="op">!=</span> <span class="str">""</span>
+
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">validate_subject</span>(subject):
+        <span class="kw">return</span> subject.<span class="fn">strip</span>() <span class="op">!=</span> <span class="str">""</span>
+
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">validate_date</span>(date_text):
+        <span class="kw">try</span>:
+            datetime.<span class="fn">strptime</span>(date_text, <span class="str">"%Y-%m-%d"</span>)
+            <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">except</span> <span class="cls">ValueError</span>:
+            <span class="kw">return</span> <span class="kw">False</span></code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why validate before saving rather than after?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> If you save first, invalid data ends up in your JSON file, and you'll have to detect and clean it later. Validating first prevents bad data from ever entering the system. AI systems care about this too — garbage in, garbage out.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 6)">
+        <span class="check-icon"></span> Mark Lesson 6 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 7 -->
+    <section class="lesson" id="lesson-7">
+      <div class="lesson-header">
+        <div class="lesson-num">7</div>
+        <div class="lesson-title">The Study Buddy Manager</div>
+        <span class="lesson-goal">Tie it all together</span>
+      </div>
+
+      <p>The <strong>StudyBuddyManager</strong> is the brain. It ties together the Task model, the storage, and the AI engine.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">managers/study_buddy_manager.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> models.task <span class="kw">import</span> Task
+<span class="kw">from</span> managers.storage_manager <span class="kw">import</span> StorageManager
+<span class="kw">from</span> models.ai_rule <span class="kw">import</span> AIRule
+
+
+<span class="kw">class</span> <span class="cls">StudyBuddyManager</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>):
+        <span class="self">self</span>.tasks <span class="op">=</span> []
+        <span class="self">.<span class="fn">load_tasks</span>()
+
+    <span class="kw">def</span> <span class="fn">add_task</span>(<span class="self">self</span>, title, subject, due_date):
+        task_id <span class="op">=</span> <span class="self">.<span class="fn">get_next_id</span>()
+        task <span class="op">=</span> <span class="cls">Task</span>(task_id, title, subject, due_date)
+        <span class="self">self</span>.tasks.<span class="fn">append</span>(task)
+        <span class="self">.<span class="fn">save_tasks</span>()
+
+    <span class="kw">def</span> <span class="fn">edit_task</span>(<span class="self">self</span>, task_id, title, subject, due_date):
+        <span class="kw">for</span> task <span class="kw">in</span> <span class="self">self</span>.tasks:
+            <span class="kw">if</span> task.task_id <span class="op">==</span> task_id:
+                task.title <span class="op">=</span> title
+                task.subject <span class="op">=</span> subject
+                task.due_date <span class="op">=</span> due_date
+                <span class="kw">break</span>
+        <span class="self">.<span class="fn">save_tasks</span>()
+
+    <span class="kw">def</span> <span class="fn">delete_task</span>(<span class="self">self</span>, task_id):
+        <span class="self">self</span>.tasks <span class="op">=</span> [t <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.tasks <span class="kw">if</span> t.task_id <span class="op">!=</span> task_id]
+        <span class="self">.<span class="fn">save_tasks</span>()
+
+    <span class="kw">def</span> <span class="fn">get_next_id</span>(<span class="self">self</span>):
+        <span class="kw">if</span> <span class="kw">not</span> <span class="self">self</span>.tasks:
+            <span class="kw">return</span> <span class="num">1</span>
+        <span class="kw">return</span> <span class="fn">max</span>(t.task_id <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.tasks) <span class="op">+</span> <span class="num">1</span>
+
+    <span class="kw">def</span> <span class="fn">save_tasks</span>(<span class="self">self</span>):
+        StorageManager.<span class="fn">save_tasks</span>([t.<span class="fn">to_dict</span>() <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.tasks])
+
+    <span class="kw">def</span> <span class="fn">load_tasks</span>(<span class="self">self</span>):
+        <span class="self">self</span>.tasks.<span class="fn">clear</span>()
+        <span class="kw">for</span> item <span class="kw">in</span> StorageManager.<span class="fn">load_tasks</span>():
+            <span class="self">self</span>.tasks.<span class="fn">append</span>(<span class="cls">Task</span>(item[<span class="str">"id"</span>], item[<span class="str">"title"</span>],
+                                   item[<span class="str">"subject"</span>], item[<span class="str">"due_date"</span>]))</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why is it useful to keep all task operations in one manager class rather than scattering them across the GUI code?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> Separation of concerns. The GUI handles display and user interaction; the manager handles logic and storage. If you later add an AI suggestion engine or a new interface (web, CLI), the manager stays the same.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 7)">
+        <span class="check-icon"></span> Mark Lesson 7 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 8 -->
+    <section class="lesson" id="lesson-8">
+      <div class="lesson-header">
+        <div class="lesson-num">8</div>
+        <div class="lesson-title">Showing Tasks in a Table</div>
+        <span class="lesson-goal">Display</span>
+      </div>
+
+      <p>We use a <code>Treeview</code> widget to show all tasks in a table. Later, the AI engine will sort this table so the smartest move is always at the top.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/main_window.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> tkinter <span class="kw">as</span> tk
+<span class="kw">from</span> tkinter <span class="kw">import</span> ttk
+<span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+<span class="kw">from</span> managers.study_buddy_manager <span class="kw">import</span> StudyBuddyManager
+
+
+<span class="kw">class</span> <span class="cls">MainWindow</span>(ctk.CTk):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        <span class="self">.<span class="fn">title</span>(<span class="str">"AI Study Buddy"</span>)
+        <span class="self">.<span class="fn">geometry</span>(<span class="str">"900x600"</span>)
+        <span class="self">self</span>.manager <span class="op">=</span> <span class="cls">StudyBuddyManager</span>()
+
+        title <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"AI Study Buddy"</span>,
+                             font<span class="op">=</span>(<span class="str">"Arial"</span>, <span class="num">24</span>, <span class="str">"bold"</span>))
+        title.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">10</span>)
+
+        columns <span class="op">=</span> (<span class="str">"Title"</span>, <span class="str">"Subject"</span>, <span class="str">"Due Date"</span>, <span class="str">"Days Left"</span>)
+        <span class="self">self</span>.tree <span class="op">=</span> ttk.<span class="cls">Treeview</span>(<span class="self">self</span>, columns<span class="op">=</span>columns, show<span class="op">=</span><span class="str">"headings"</span>)
+        <span class="kw">for</span> col <span class="kw">in</span> columns:
+            <span class="self">self</span>.tree.<span class="fn">heading</span>(col, text<span class="op">=</span>col)
+            <span class="self">self</span>.tree.<span class="fn">column</span>(col, width<span class="op">=</span><span class="num">180</span>)
+        <span class="self">self</span>.tree.<span class="fn">pack</span>(fill<span class="op">=</span><span class="str">"both"</span>, expand<span class="op">=</span><span class="kw">True</span>, padx<span class="op">=</span><span class="num">20</span>, pady<span class="op">=</span><span class="num">20</span>)
+
+        <span class="self">.<span class="fn">refresh_table</span>()
+
+    <span class="kw">def</span> <span class="fn">refresh_table</span>(<span class="self">self</span>):
+        <span class="kw">for</span> row <span class="kw">in</span> <span class="self">self</span>.tree.<span class="fn">get_children</span>():
+            <span class="self">self</span>.tree.<span class="fn">delete</span>(row)
+        <span class="kw">for</span> task <span class="kw">in</span> <span class="self">self</span>.manager.tasks:
+            <span class="self">self</span>.tree.<span class="fn">insert</span>(<span class="str">""</span>, tk.END, iid<span class="op">=</span>task.task_id,
+                             values<span class="op">=</span>(task.title, task.subject,
+                                     task.due_date, task.<span class="fn">days_left</span>()))</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Where does the table get its data from?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> From <code>self.manager.tasks</code> — the list of Task objects loaded by the StudyBuddyManager from the JSON file.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 8)">
+        <span class="check-icon"></span> Mark Lesson 8 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 9 -->
+    <section class="lesson" id="lesson-9">
+      <div class="lesson-header">
+        <div class="lesson-num">9</div>
+        <div class="lesson-title">Add, Edit, Delete</div>
+        <span class="lesson-goal">Full CRUD cycle</span>
+      </div>
+
+      <p>Now we add buttons and a dialog window for entering task details.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/task_dialog.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+
+<span class="kw">class</span> <span class="cls">TaskDialog</span>(ctk.CTkToplevel):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>, parent, title, task<span class="op">=</span><span class="kw">None</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(parent)
+        <span class="self">self</span>.result <span class="op">=</span> <span class="kw">None</span>
+        <span class="self">.<span class="fn">title</span>(title)
+        <span class="self">.<span class="fn">geometry</span>(<span class="str">"350x300"</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Task Title"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.title_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>)
+        <span class="self">self</span>.title_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Subject"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.subject_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>)
+        <span class="self">self</span>.subject_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Due Date (YYYY-MM-DD)"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.date_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>)
+        <span class="self">self</span>.date_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        <span class="kw">if</span> task:
+            <span class="self">self</span>.title_entry.<span class="fn">insert</span>(<span class="num">0</span>, task.title)
+            <span class="self">self</span>.subject_entry.<span class="fn">insert</span>(<span class="num">0</span>, task.subject)
+            <span class="self">self</span>.date_entry.<span class="fn">insert</span>(<span class="num">0</span>, task.due_date)
+
+        ctk.<span class="cls">CTkButton</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Save"</span>, command<span class="op">=</span><span class="self">self</span>.save).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">15</span>)
+
+    <span class="kw">def</span> <span class="fn">save</span>(<span class="self">self</span>):
+        <span class="self">self</span>.result <span class="op">=</span> (<span class="self">self</span>.title_entry.<span class="fn">get</span>(),
+                       <span class="self">self</span>.subject_entry.<span class="fn">get</span>(),
+                       <span class="self">self</span>.date_entry.<span class="fn">get</span>())
+        <span class="self">.<span class="fn">destroy</span>()</code></pre>
+      </div>
+
+      <p><strong>Now replace <code>gui/main_window.py</code> with the full version:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/main_window.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> tkinter <span class="kw">as</span> tk
+<span class="kw">from</span> tkinter <span class="kw">import</span> ttk, messagebox
+<span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+<span class="kw">from</span> gui.task_dialog <span class="kw">import</span> TaskDialog
+<span class="kw">from</span> managers.study_buddy_manager <span class="kw">import</span> StudyBuddyManager
+<span class="kw">from</span> utilities.validation <span class="kw">import</span> Validation
+
+
+<span class="kw">class</span> <span class="cls">MainWindow</span>(ctk.CTk):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        <span class="self">.<span class="fn">title</span>(<span class="str">"AI Study Buddy"</span>)
+        <span class="self">.<span class="fn">geometry</span>(<span class="str">"900x600"</span>)
+        <span class="self">self</span>.manager <span class="op">=</span> <span class="cls">StudyBuddyManager</span>()
+        <span class="self">.<span class="fn">create_widgets</span>()
+        <span class="self">.<span class="fn">refresh_table</span>()
+
+    <span class="kw">def</span> <span class="fn">create_widgets</span>(<span class="self">self</span>):
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"AI Study Buddy"</span>,
+                     font<span class="op">=</span>(<span class="str">"Arial"</span>, <span class="num">24</span>, <span class="str">"bold"</span>)).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">10</span>)
+
+        btn_frame <span class="op">=</span> ctk.<span class="cls">CTkFrame</span>(<span class="self">self</span>)
+        btn_frame.<span class="fn">pack</span>(fill<span class="op">=</span><span class="str">"x"</span>, padx<span class="op">=</span><span class="num">20</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Add"</span>, command<span class="op">=</span><span class="self">self</span>.add_task).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>, pady<span class="op">=</span><span class="num">10</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Edit"</span>, command<span class="op">=</span><span class="self">self</span>.edit_task).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Delete"</span>, command<span class="op">=</span><span class="self">self</span>.delete_task).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>)
+
+        columns <span class="op">=</span> (<span class="str">"Title"</span>, <span class="str">"Subject"</span>, <span class="str">"Due Date"</span>, <span class="str">"Days Left"</span>)
+        <span class="self">self</span>.tree <span class="op">=</span> ttk.<span class="cls">Treeview</span>(<span class="self">self</span>, columns<span class="op">=</span>columns, show<span class="op">=</span><span class="str">"headings"</span>)
+        <span class="kw">for</span> col <span class="kw">in</span> columns:
+            <span class="self">self</span>.tree.<span class="fn">heading</span>(col, text<span class="op">=</span>col)
+            <span class="self">self</span>.tree.<span class="fn">column</span>(col, width<span class="op">=</span><span class="num">180</span>)
+        <span class="self">self</span>.tree.<span class="fn">pack</span>(fill<span class="op">=</span><span class="str">"both"</span>, expand<span class="op">=</span><span class="kw">True</span>, padx<span class="op">=</span><span class="num">20</span>, pady<span class="op">=</span><span class="num">20</span>)
+
+        <span class="self">self</span>.status <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">""</span>)
+        <span class="self">self</span>.status.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+    <span class="kw">def</span> <span class="fn">refresh_table</span>(<span class="self">self</span>):
+        <span class="kw">for</span> row <span class="kw">in</span> <span class="self">self</span>.tree.<span class="fn">get_children</span>():
+            <span class="self">self</span>.tree.<span class="fn">delete</span>(row)
+        <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks:
+            <span class="self">self</span>.tree.<span class="fn">insert</span>(<span class="str">""</span>, tk.END, iid<span class="op">=</span>t.task_id,
+                             values<span class="op">=</span>(t.title, t.subject, t.due_date,
+                                     t.<span class="fn">days_left</span>()))
+        <span class="self">self</span>.status.<span class="fn">configure</span>(text<span class="op">=</span><span class="str">f"{len(self.manager.tasks)} tasks loaded"</span>)
+
+    <span class="kw">def</span> <span class="fn">add_task</span>(<span class="self">self</span>):
+        dialog <span class="op">=</span> <span class="cls">TaskDialog</span>(<span class="self">self</span>, <span class="str">"Add Task"</span>)
+        <span class="self">.<span class="fn">wait_window</span>(dialog)
+        <span class="kw">if</span> <span class="kw">not</span> dialog.result:
+            <span class="kw">return</span>
+        title, subject, due_date <span class="op">=</span> dialog.result
+
+        <span class="kw">if</span> <span class="kw">not</span> Validation.<span class="fn">validate_title</span>(title):
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Title cannot be empty."</span>); <span class="kw">return</span>
+        <span class="kw">if</span> <span class="kw">not</span> Validation.<span class="fn">validate_subject</span>(subject):
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Subject cannot be empty."</span>); <span class="kw">return</span>
+        <span class="kw">if</span> <span class="kw">not</span> Validation.<span class="fn">validate_date</span>(due_date):
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Date must be YYYY-MM-DD."</span>); <span class="kw">return</span>
+
+        <span class="self">self</span>.manager.<span class="fn">add_task</span>(title, subject, due_date)
+        <span class="self">.<span class="fn">refresh_table</span>()
+        messagebox.<span class="fn">showinfo</span>(<span class="str">"Success"</span>, <span class="str">"Task added!"</span>)
+
+    <span class="kw">def</span> <span class="fn">edit_task</span>(<span class="self">self</span>):
+        sel <span class="op">=</span> <span class="self">self</span>.tree.<span class="fn">selection</span>()
+        <span class="kw">if</span> <span class="kw">not</span> sel:
+            messagebox.<span class="fn">showwarning</span>(<span class="str">"Warning"</span>, <span class="str">"Select a task first."</span>); <span class="kw">return</span>
+        task_id <span class="op">=</span> <span class="fn">int</span>(sel[<span class="num">0</span>])
+        task <span class="op">=</span> <span class="fn">next</span>(t <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks <span class="kw">if</span> t.task_id <span class="op">==</span> task_id)
+
+        dialog <span class="op">=</span> <span class="cls">TaskDialog</span>(<span class="self">self</span>, <span class="str">"Edit Task"</span>, task)
+        <span class="self">.<span class="fn">wait_window</span>(dialog)
+        <span class="kw">if</span> <span class="kw">not</span> dialog.result:
+            <span class="kw">return</span>
+        title, subject, due_date <span class="op">=</span> dialog.result
+
+        <span class="kw">if</span> <span class="kw">not</span> (Validation.<span class="fn">validate_title</span>(title)
+                <span class="kw">and</span> Validation.<span class="fn">validate_subject</span>(subject)
+                <span class="kw">and</span> Validation.<span class="fn">validate_date</span>(due_date)):
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Invalid input."</span>); <span class="kw">return</span>
+
+        <span class="self">self</span>.manager.<span class="fn">edit_task</span>(task_id, title, subject, due_date)
+        <span class="self">.<span class="fn">refresh_table</span>()
+        messagebox.<span class="fn">showinfo</span>(<span class="str">"Success"</span>, <span class="str">"Task updated!"</span>)
+
+    <span class="kw">def</span> <span class="fn">delete_task</span>(<span class="self">self</span>):
+        sel <span class="op">=</span> <span class="self">self</span>.tree.<span class="fn">selection</span>()
+        <span class="kw">if</span> <span class="kw">not</span> sel:
+            messagebox.<span class="fn">showwarning</span>(<span class="str">"Warning"</span>, <span class="str">"Select a task first."</span>); <span class="kw">return</span>
+        task_id <span class="op">=</span> <span class="fn">int</span>(sel[<span class="num">0</span>])
+        <span class="kw">if</span> messagebox.<span class="fn">askyesno</span>(<span class="str">"Delete"</span>, <span class="str">"Delete selected task?"</span>):
+            <span class="self">manager.<span class="fn">delete_task</span>(task_id)
+            <span class="self">.<span class="fn">refresh_table</span>()
+            messagebox.<span class="fn">showinfo</span>(<span class="str">"Deleted"</span>, <span class="str">"Task removed."</span>)</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why do we call <code>self.wait_window(dialog)</code>?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> It pauses the main window until the dialog closes. Without it, the program would continue immediately and try to read <code>dialog.result</code> before the user has entered anything.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 9)">
+        <span class="check-icon"></span> Mark Lesson 9 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 10 -->
+    <section class="lesson" id="lesson-10">
+      <div class="lesson-header">
+        <div class="lesson-num">10</div>
+        <div class="lesson-title">Polish: Colours and Stats</div>
+        <span class="lesson-goal">Make it look good</span>
+      </div>
+
+      <p>Functional is good. Pretty is better. Let's colour-code priorities and add a summary bar that shows how many tasks need urgent attention.</p>
+
+      <p><strong>Add this to <code>create_widgets()</code> right after creating <code>self.tree</code>:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/main_window.py — inside create_widgets</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"Overdue"</span>, background<span class="op">=</span><span class="str">"#8B0000"</span>, foreground<span class="op">=</span><span class="str">"white"</span>)
+<span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"High"</span>,    background<span class="op">=</span><span class="str">"#B22222"</span>, foreground<span class="op">=</span><span class="str">"white"</span>)
+<span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"Medium"</span>,  background<span class="op">=</span><span class="str">"#DAA520"</span>, foreground<span class="op">=</span><span class="str">"black"</span>)
+<span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"Low"</span>,     background<span class="op">=</span><span class="str">"#2E8B57"</span>, foreground<span class="op">=</span><span class="str">"white"</span>)</code></pre>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Note</div>
+        <p>Right now nothing uses these tags yet. They'll be used in Lesson 11 when the AI engine assigns a priority label to each task.</p>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why colour-code priority rather than just showing text?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> Colour is processed faster than text by the human eye. A user scanning the list instantly sees red rows and knows which tasks are urgent — this is a small example of good <em>human-computer interaction</em>, and it's worth mentioning in your write-up.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 10)">
+        <span class="check-icon"></span> Mark Lesson 10 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 11 -->
+    <section class="lesson" id="lesson-11">
+      <div class="lesson-header">
+        <div class="lesson-num">11</div>
+        <div class="lesson-title">Your First AI Engine</div>
+        <span class="lesson-goal">Rule-based scoring</span>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">🎯 Why We're Doing This</div>
+        <p>This is the AI core of your project. Your Study Buddy will look at every task and decide — using rules you write — how urgent it is. The higher the score, the more the app recommends doing it first.</p>
+        <p>This is <strong>rule-based AI</strong>: you define features, weights, and decision thresholds. No neural networks required, but the same idea: features in, score out.</p>
+      </div>
+
+      <p><strong>The formula:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Formula</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>score = (urgency × 0.5) + (difficulty × 2) + (estimated_hours × 0.8)</code></pre>
+      </div>
+
+      <h3>Step 1 — Replace <code>models/task.py</code></h3>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">models/task.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime, date
+<span class="kw">from</span> models.ai_rule <span class="kw">import</span> AIRule
+
+
+<span class="kw">class</span> <span class="cls">Task</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>, task_id, title, subject, due_date,
+                 difficulty<span class="op">=</span><span class="num">2</span>, estimated_hours<span class="op">=</span><span class="num">1.0</span>):
+        <span class="self">self</span>.task_id <span class="op">=</span> task_id
+        <span class="self">self</span>.title <span class="op">=</span> title
+        <span class="self">self</span>.subject <span class="op">=</span> subject
+        <span class="self">self</span>.due_date <span class="op">=</span> due_date
+        <span class="self">self</span>.difficulty <span class="op">=</span> <span class="fn">int</span>(difficulty)
+        <span class="self">self</span>.estimated_hours <span class="op">=</span> <span class="fn">float</span>(estimated_hours)
+
+        <span class="self">self</span>.rules <span class="op">=</span> [
+            <span class="cls">AIRule</span>(<span class="str">"urgency"</span>,
+                    <span class="kw">lambda</span> t: <span class="fn">max</span>(<span class="num">0</span>, <span class="num">10</span> <span class="op">-</span> t.<span class="fn">days_left</span>()),
+                    weight<span class="op">=</span><span class="num">0.5</span>),
+            <span class="cls">AIRule</span>(<span class="str">"difficulty"</span>,
+                    <span class="kw">lambda</span> t: t.difficulty,
+                    weight<span class="op">=</span><span class="num">2.0</span>),
+            <span class="cls">AIRule</span>(<span class="str">"time"</span>,
+                    <span class="kw">lambda</span> t: t.estimated_hours,
+                    weight<span class="op">=</span><span class="num">0.8</span>),
+        ]
+
+        <span class="self">self</span>.priority_score <span class="op">=</span> <span class="self">.<span class="fn">calculate_priority_score</span>()
+        <span class="self">self</span>.priority <span class="op">=</span> <span class="self">.<span class="fn">score_to_label</span>(<span class="self">self</span>.priority_score)
+
+    <span class="kw">def</span> <span class="fn">days_left</span>(<span class="self">self</span>):
+        due <span class="op">=</span> datetime.<span class="fn">strptime</span>(<span class="self">self</span>.due_date, <span class="str">"%Y-%m-%d"</span>).<span class="fn">date</span>()
+        <span class="kw">return</span> (due <span class="op">-</span> date.<span class="fn">today</span>()).days
+
+    <span class="kw">def</span> <span class="fn">calculate_priority_score</span>(<span class="self">self</span>):
+        score <span class="op">=</span> <span class="fn">sum</span>(rule.<span class="fn">evaluate</span>(<span class="self">self</span>) <span class="kw">for</span> rule <span class="kw">in</span> <span class="self">self</span>.rules)
+        <span class="kw">return</span> <span class="fn">round</span>(score, <span class="num">2</span>)
+
+    <span class="kw">def</span> <span class="fn">score_to_label</span>(<span class="self">self</span>, score):
+        <span class="kw">if</span> <span class="self">.<span class="fn">days_left</span>() <span class="op">&lt;</span> <span class="num">0</span>:
+            <span class="kw">return</span> <span class="str">"Overdue"</span>
+        <span class="kw">elif</span> score <span class="op">&gt;=</span> <span class="num">9</span>:
+            <span class="kw">return</span> <span class="str">"High"</span>
+        <span class="kw">elif</span> score <span class="op">&gt;=</span> <span class="num">6</span>:
+            <span class="kw">return</span> <span class="str">"Medium"</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> <span class="str">"Low"</span>
+
+    <span class="kw">def</span> <span class="fn">to_dict</span>(<span class="self">self</span>):
+        <span class="kw">return</span> {
+            <span class="str">"id"</span>: <span class="self">self</span>.task_id,
+            <span class="str">"title"</span>: <span class="self">self</span>.title,
+            <span class="str">"subject"</span>: <span class="self">self</span>.subject,
+            <span class="str">"due_date"</span>: <span class="self">self</span>.due_date,
+            <span class="str">"difficulty"</span>: <span class="self">self</span>.difficulty,
+            <span class="str">"estimated_hours"</span>: <span class="self">self</span>.estimated_hours,
+            <span class="str">"priority_score"</span>: <span class="self">self</span>.priority_score,
+            <span class="str">"priority"</span>: <span class="self">self</span>.priority
+        }</code></pre>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">🤖 This is the AI moment</div>
+        <p>The <code>self.rules</code> list <em>is</em> your AI engine. Each rule is a feature extractor plus a weight. The score is just the weighted sum. If you want to add a new "AI insight" later, you add one more <code>AIRule</code>. You don't rewrite the scoring logic — that's the power of modular AI design.</p>
+      </div>
+
+      <h3>Step 2 — Update <code>managers/study_buddy_manager.py</code></h3>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">managers/study_buddy_manager.py — add_task</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">def</span> <span class="fn">add_task</span>(<span class="self">self</span>, title, subject, due_date, difficulty<span class="op">=</span><span class="num">2</span>, estimated_hours<span class="op">=</span><span class="num">1.0</span>):
+    task_id <span class="op">=</span> <span class="self">.<span class="fn">get_next_id</span>()
+    task <span class="op">=</span> <span class="cls">Task</span>(task_id, title, subject, due_date, difficulty, estimated_hours)
+    <span class="self">self</span>.tasks.<span class="fn">append</span>(task)
+    <span class="self">.<span class="fn">sort_tasks</span>()
+    <span class="self">.<span class="fn">save_tasks</span>()</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">managers/study_buddy_manager.py — edit_task</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">def</span> <span class="fn">edit_task</span>(<span class="self">self</span>, task_id, title, subject, due_date,
+              difficulty<span class="op">=</span><span class="num">2</span>, estimated_hours<span class="op">=</span><span class="num">1.0</span>):
+    <span class="kw">for</span> task <span class="kw">in</span> <span class="self">self</span>.tasks:
+        <span class="kw">if</span> task.task_id <span class="op">==</span> task_id:
+            task.title <span class="op">=</span> title
+            task.subject <span class="op">=</span> subject
+            task.due_date <span class="op">=</span> due_date
+            task.difficulty <span class="op">=</span> <span class="fn">int</span>(difficulty)
+            task.estimated_hours <span class="op">=</span> <span class="fn">float</span>(estimated_hours)
+            task.priority_score <span class="op">=</span> task.<span class="fn">calculate_priority_score</span>()
+            task.priority <span class="op">=</span> task.<span class="fn">score_to_label</span>(task.priority_score)
+            <span class="kw">break</span>
+    <span class="self">.<span class="fn">sort_tasks</span>()
+    <span class="self">.<span class="fn">save_tasks</span>()</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">managers/study_buddy_manager.py — sort_tasks</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">def</span> <span class="fn">sort_tasks</span>(<span class="self">self</span>):
+    <span class="cmt"># Highest score first. Tie-break by due date.</span>
+    <span class="self">self</span>.tasks.<span class="fn">sort</span>(key<span class="op">=</span><span class="kw">lambda</span> t: (<span class="op">-</span>t.priority_score, t.due_date))</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">managers/study_buddy_manager.py — load_tasks</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">def</span> <span class="fn">load_tasks</span>(<span class="self">self</span>):
+    <span class="self">self</span>.tasks.<span class="fn">clear</span>()
+    <span class="kw">for</span> item <span class="kw">in</span> StorageManager.<span class="fn">load_tasks</span>():
+        <span class="self">self</span>.tasks.<span class="fn">append</span>(<span class="cls">Task</span>(
+            item[<span class="str">"id"</span>],
+            item[<span class="str">"title"</span>],
+            item[<span class="str">"subject"</span>],
+            item[<span class="str">"due_date"</span>],
+            item.<span class="fn">get</span>(<span class="str">"difficulty"</span>, <span class="num">2</span>),
+            item.<span class="fn">get</span>(<span class="str">"estimated_hours"</span>, <span class="num">1.0</span>)
+        ))
+    <span class="self">.<span class="fn">sort_tasks</span>()</code></pre>
+      </div>
+
+      <h3>Step 3 — Replace <code>gui/task_dialog.py</code></h3>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/task_dialog.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+
+<span class="kw">class</span> <span class="cls">TaskDialog</span>(ctk.CTkToplevel):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>, parent, title, task<span class="op">=</span><span class="kw">None</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(parent)
+        <span class="self">self</span>.result <span class="op">=</span> <span class="kw">None</span>
+        <span class="self">.<span class="fn">title</span>(title)
+        <span class="self">.<span class="fn">geometry</span>(<span class="str">"400x500"</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Task Title"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.title_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>)
+        <span class="self">self</span>.title_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Subject"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.subject_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>)
+        <span class="self">self</span>.subject_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Due Date (YYYY-MM-DD)"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.date_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>)
+        <span class="self">self</span>.date_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Difficulty"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.difficulty_menu <span class="op">=</span> ctk.<span class="cls">CTkOptionMenu</span>(
+            <span class="self">self</span>,
+            values<span class="op">=</span>[<span class="str">"1 - Easy"</span>, <span class="str">"2 - Medium"</span>, <span class="str">"3 - Hard"</span>]
+        )
+        <span class="self">self</span>.difficulty_menu.<span class="fn">set</span>(<span class="str">"2 - Medium"</span>)
+        <span class="self">self</span>.difficulty_menu.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Estimated Hours"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.hours_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>, placeholder_text<span class="op">=</span><span class="str">"e.g. 1.5"</span>)
+        <span class="self">self</span>.hours_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        <span class="kw">if</span> task:
+            <span class="self">self</span>.title_entry.<span class="fn">insert</span>(<span class="num">0</span>, task.title)
+            <span class="self">self</span>.subject_entry.<span class="fn">insert</span>(<span class="num">0</span>, task.subject)
+            <span class="self">self</span>.date_entry.<span class="fn">insert</span>(<span class="num">0</span>, task.due_date)
+            <span class="self">self</span>.difficulty_menu.<span class="fn">set</span>(
+                <span class="str">f"{task.difficulty} - "</span>
+                <span class="str">f"{['Easy', 'Medium', 'Hard'][task.difficulty - 1]}"</span>
+            )
+            <span class="self">self</span>.hours_entry.<span class="fn">insert</span>(<span class="num">0</span>, <span class="fn">str</span>(task.estimated_hours))
+
+        ctk.<span class="cls">CTkButton</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Save"</span>, command<span class="op">=</span><span class="self">self</span>.save).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">20</span>)
+
+    <span class="kw">def</span> <span class="fn">save</span>(<span class="self">self</span>):
+        difficulty <span class="op">=</span> <span class="fn">int</span>(<span class="self">self</span>.difficulty_menu.<span class="fn">get</span>()[<span class="num">0</span>])
+        hours <span class="op">=</span> <span class="self">self</span>.hours_entry.<span class="fn">get</span>().<span class="fn">strip</span>() <span class="kw">or</span> <span class="str">"1.0"</span>
+
+        <span class="self">self</span>.result <span class="op">=</span> (
+            <span class="self">self</span>.title_entry.<span class="fn">get</span>(),
+            <span class="self">self</span>.subject_entry.<span class="fn">get</span>(),
+            <span class="self">self</span>.date_entry.<span class="fn">get</span>(),
+            difficulty,
+            hours
+        )
+        <span class="self">.<span class="fn">destroy</span>()</code></pre>
+      </div>
+
+      <h3>Step 4 — Replace <code>gui/main_window.py</code></h3>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/main_window.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> tkinter <span class="kw">as</span> tk
+<span class="kw">from</span> tkinter <span class="kw">import</span> ttk, messagebox
+<span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+<span class="kw">from</span> gui.task_dialog <span class="kw">import</span> TaskDialog
+<span class="kw">from</span> managers.study_buddy_manager <span class="kw">import</span> StudyBuddyManager
+<span class="kw">from</span> utilities.validation <span class="kw">import</span> Validation
+
+
+<span class="kw">class</span> <span class="cls">MainWindow</span>(ctk.CTk):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        <span class="self">.<span class="fn">title</span>(<span class="str">"AI Study Buddy"</span>)
+        <span class="self">.<span class="fn">geometry</span>(<span class="str">"1000x600"</span>)
+        <span class="self">self</span>.manager <span class="op">=</span> <span class="cls">StudyBuddyManager</span>()
+        <span class="self">.<span class="fn">create_widgets</span>()
+        <span class="self">.<span class="fn">refresh_table</span>()
+
+    <span class="kw">def</span> <span class="fn">create_widgets</span>(<span class="self">self</span>):
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"AI Study Buddy"</span>,
+                     font<span class="op">=</span>(<span class="str">"Arial"</span>, <span class="num">24</span>, <span class="str">"bold"</span>)).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">10</span>)
+
+        btn_frame <span class="op">=</span> ctk.<span class="cls">CTkFrame</span>(<span class="self">self</span>)
+        btn_frame.<span class="fn">pack</span>(fill<span class="op">=</span><span class="str">"x"</span>, padx<span class="op">=</span><span class="num">20</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Add"</span>, command<span class="op">=</span><span class="self">self</span>.add_task).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>, pady<span class="op">=</span><span class="num">10</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Edit"</span>, command<span class="op">=</span><span class="self">self</span>.edit_task).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Delete"</span>, command<span class="op">=</span><span class="self">self</span>.delete_task).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>)
+
+        columns <span class="op">=</span> (<span class="str">"Title"</span>, <span class="str">"Subject"</span>, <span class="str">"Due Date"</span>, <span class="str">"Priority"</span>, <span class="str">"Score"</span>, <span class="str">"Days Left"</span>)
+        <span class="self">self</span>.tree <span class="op">=</span> ttk.<span class="cls">Treeview</span>(<span class="self">self</span>, columns<span class="op">=</span>columns, show<span class="op">=</span><span class="str">"headings"</span>)
+        <span class="kw">for</span> col <span class="kw">in</span> columns:
+            <span class="self">self</span>.tree.<span class="fn">heading</span>(col, text<span class="op">=</span>col)
+            <span class="self">self</span>.tree.<span class="fn">column</span>(col, width<span class="op">=</span><span class="num">140</span>)
+        <span class="self">self</span>.tree.<span class="fn">pack</span>(fill<span class="op">=</span><span class="str">"both"</span>, expand<span class="op">=</span><span class="kw">True</span>, padx<span class="op">=</span><span class="num">20</span>, pady<span class="op">=</span><span class="num">20</span>)
+
+        <span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"Overdue"</span>, background<span class="op">=</span><span class="str">"#8B0000"</span>, foreground<span class="op">=</span><span class="str">"white"</span>)
+        <span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"High"</span>,    background<span class="op">=</span><span class="str">"#B22222"</span>, foreground<span class="op">=</span><span class="str">"white"</span>)
+        <span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"Medium"</span>,  background<span class="op">=</span><span class="str">"#DAA520"</span>, foreground<span class="op">=</span><span class="str">"black"</span>)
+        <span class="self">self</span>.tree.<span class="fn">tag_configure</span>(<span class="str">"Low"</span>,     background<span class="op">=</span><span class="str">"#2E8B57"</span>, foreground<span class="op">=</span><span class="str">"white"</span>)
+
+        <span class="self">self</span>.status <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">""</span>)
+        <span class="self">self</span>.status.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+    <span class="kw">def</span> <span class="fn">refresh_table</span>(<span class="self">self</span>):
+        <span class="kw">for</span> row <span class="kw">in</span> <span class="self">self</span>.tree.<span class="fn">get_children</span>():
+            <span class="self">self</span>.tree.<span class="fn">delete</span>(row)
+
+        <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks:
+            <span class="self">self</span>.tree.<span class="fn">insert</span>(<span class="str">""</span>, tk.END, iid<span class="op">=</span>t.task_id,
+                             values<span class="op">=</span>(t.title, t.subject, t.due_date,
+                                     t.priority, t.priority_score,
+                                     t.<span class="fn">days_left</span>()),
+                             tags<span class="op">=</span>(t.priority,))
+
+        overdue <span class="op">=</span> <span class="fn">sum</span>(<span class="num">1</span> <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks <span class="kw">if</span> t.priority <span class="op">==</span> <span class="str">"Overdue"</span>)
+        high    <span class="op">=</span> <span class="fn">sum</span>(<span class="num">1</span> <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks <span class="kw">if</span> t.priority <span class="op">==</span> <span class="str">"High"</span>)
+        <span class="self">self</span>.status.<span class="fn">configure</span>(
+            text<span class="op">=</span><span class="str">f"Total: {len(self.manager.tasks)}   "</span>
+                 <span class="str">f"Overdue: {overdue}   High: {high}"</span>
+        )
+
+    <span class="kw">def</span> <span class="fn">add_task</span>(<span class="self">self</span>):
+        dialog <span class="op">=</span> <span class="cls">TaskDialog</span>(<span class="self">self</span>, <span class="str">"Add Task"</span>)
+        <span class="self">.<span class="fn">wait_window</span>(dialog)
+        <span class="kw">if</span> <span class="kw">not</span> dialog.result:
+            <span class="kw">return</span>
+
+        title, subject, due_date, difficulty, hours_text <span class="op">=</span> dialog.result
+
+        <span class="kw">if</span> <span class="kw">not</span> Validation.<span class="fn">validate_title</span>(title):
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Title cannot be empty."</span>); <span class="kw">return</span>
+        <span class="kw">if</span> <span class="kw">not</span> Validation.<span class="fn">validate_subject</span>(subject):
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Subject cannot be empty."</span>); <span class="kw">return</span>
+        <span class="kw">if</span> <span class="kw">not</span> Validation.<span class="fn">validate_date</span>(due_date):
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Date must be YYYY-MM-DD."</span>); <span class="kw">return</span>
+
+        <span class="kw">try</span>:
+            estimated_hours <span class="op">=</span> <span class="fn">float</span>(hours_text)
+            <span class="kw">if</span> estimated_hours <span class="op">&lt;</span> <span class="num">0</span>:
+                <span class="kw">raise</span> <span class="cls">ValueError</span>
+        <span class="kw">except</span> <span class="cls">ValueError</span>:
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Estimated hours must be a positive number."</span>)
+            <span class="kw">return</span>
+
+        <span class="self">manager.<span class="fn">add_task</span>(title, subject, due_date, difficulty, estimated_hours)
+        <span class="self">.<span class="fn">refresh_table</span>()
+        messagebox.<span class="fn">showinfo</span>(<span class="str">"Success"</span>, <span class="str">"Task added!"</span>)
+
+    <span class="kw">def</span> <span class="fn">edit_task</span>(<span class="self">self</span>):
+        sel <span class="op">=</span> <span class="self">self</span>.tree.<span class="fn">selection</span>()
+        <span class="kw">if</span> <span class="kw">not</span> sel:
+            messagebox.<span class="fn">showwarning</span>(<span class="str">"Warning"</span>, <span class="str">"Select a task first."</span>); <span class="kw">return</span>
+
+        task_id <span class="op">=</span> <span class="fn">int</span>(sel[<span class="num">0</span>])
+        task <span class="op">=</span> <span class="fn">next</span>(t <span class="kw">for</span> t <span class="kw">in</span> <span class="self">self</span>.manager.tasks <span class="kw">if</span> t.task_id <span class="op">==</span> task_id)
+
+        dialog <span class="op">=</span> <span class="cls">TaskDialog</span>(<span class="self">self</span>, <span class="str">"Edit Task"</span>, task)
+        <span class="self">.<span class="fn">wait_window</span>(dialog)
+        <span class="kw">if</span> <span class="kw">not</span> dialog.result:
+            <span class="kw">return</span>
+
+        title, subject, due_date, difficulty, hours_text <span class="op">=</span> dialog.result
+
+        <span class="kw">if</span> <span class="kw">not</span> (Validation.<span class="fn">validate_title</span>(title)
+                <span class="kw">and</span> Validation.<span class="fn">validate_subject</span>(subject)
+                <span class="kw">and</span> Validation.<span class="fn">validate_date</span>(due_date)):
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Invalid input."</span>); <span class="kw">return</span>
+
+        <span class="kw">try</span>:
+            estimated_hours <span class="op">=</span> <span class="fn">float</span>(hours_text)
+            <span class="kw">if</span> estimated_hours <span class="op">&lt;</span> <span class="num">0</span>:
+                <span class="kw">raise</span> <span class="cls">ValueError</span>
+        <span class="kw">except</span> <span class="cls">ValueError</span>:
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="str">"Estimated hours must be a positive number."</span>)
+            <span class="kw">return</span>
+
+        <span class="self">manager.<span class="fn">edit_task</span>(task_id, title, subject, due_date,
+                               difficulty, estimated_hours)
+        <span class="self">.<span class="fn">refresh_table</span>()
+        messagebox.<span class="fn">showinfo</span>(<span class="str">"Success"</span>, <span class="str">"Task updated!"</span>)
+
+    <span class="kw">def</span> <span class="fn">delete_task</span>(<span class="self">self</span>):
+        sel <span class="op">=</span> <span class="self">self</span>.tree.<span class="fn">selection</span>()
+        <span class="kw">if</span> <span class="kw">not</span> sel:
+            messagebox.<span class="fn">showwarning</span>(<span class="str">"Warning"</span>, <span class="str">"Select a task first."</span>); <span class="kw">return</span>
+
+        task_id <span class="op">=</span> <span class="fn">int</span>(sel[<span class="num">0</span>])
+        <span class="kw">if</span> messagebox.<span class="fn">askyesno</span>(<span class="str">"Delete"</span>, <span class="str">"Delete selected task?"</span>):
+            <span class="self">manager.<span class="fn">delete_task</span>(task_id)
+            <span class="self">.<span class="fn">refresh_table</span>()
+            messagebox.<span class="fn">showinfo</span>(<span class="str">"Deleted"</span>, <span class="str">"Task removed."</span>)</code></pre>
+      </div>
+
+      <h3>Step 5 — Final <code>main.py</code></h3>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+<span class="kw">from</span> gui.main_window <span class="kw">import</span> MainWindow
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    ctk.<span class="fn">set_appearance_mode</span>(<span class="str">"dark"</span>)
+    ctk.<span class="fn">set_default_color_theme</span>(<span class="str">"blue"</span>)
+    app <span class="op">=</span> <span class="cls">MainWindow</span>()
+    app.<span class="fn">mainloop</span>()</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Change the weights in the <code>self.rules</code> list. What happens if you double the urgency weight from <code>0.5</code> to <code>1.0</code>?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> It depends on the tasks. If several tasks are due soon, their scores all rise together, so the order stays the same. But if some tasks are urgent and others aren't, the urgent ones now score much higher and will move to the top — even if they're easy or short. This is exactly how <strong>tuning</strong> works in real AI: you adjust weights until the system behaves the way you want.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 11)">
+        <span class="check-icon"></span> Mark Lesson 11 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 12 -->
+    <section class="lesson" id="lesson-12">
+      <div class="lesson-header">
+        <div class="lesson-num">12</div>
+        <div class="lesson-title">Make It Your Own</div>
+        <span class="lesson-goal">Required before submission</span>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-title">⚠️ Read This Carefully</div>
+        <p>What you've built so far is a <strong>teaching exercise</strong>, not your submitted project. If you submit this tutorial app as-is:</p>
+        <ul>
+          <li>You will not demonstrate independent design thinking</li>
+          <li>Your work will not stand out from the tutorial it came from</li>
+          <li>You will miss the marks that come from real extensions</li>
+        </ul>
+        <p>This final lesson fixes that. It's <strong>not optional</strong>. Every step below is required.</p>
+      </div>
+
+      <h3>Step 1 — Choose Your AI Extension</h3>
+
+      <p>Pick <strong>at least two</strong> from this list. One from Tier 1, one from Tier 2 or 3.</p>
+
+      <p><strong>Tier 1 — Straightforward (2–4 hours each)</strong></p>
+      <ul>
+        <li><strong>Search bar</strong> — filter tasks by title or subject as you type</li>
+        <li><strong>Subject filter dropdown</strong> — show only tasks for one subject</li>
+        <li><strong>Completed tasks toggle</strong> — mark tasks done and hide/show them</li>
+        <li><strong>Sort options</strong> — let the user choose: by due date, by score, by subject</li>
+        <li><strong>Import from CSV</strong> — bulk-add tasks from a spreadsheet</li>
+      </ul>
+
+      <p><strong>Tier 2 — Real design work (1–2 days each)</strong></p>
+      <ul>
+        <li><strong>Natural-language date parsing</strong> — "next Monday", "in 3 days" instead of YYYY-MM-DD (this is a small AI feature — you write the rules)</li>
+        <li><strong>Smart recommendation banner</strong> — the app tells the user "do X next, because it scores highest"</li>
+        <li><strong>Task categories/tags</strong> — free-form labels like "exam prep", "reading"</li>
+        <li><strong>Priority override</strong> — user can manually bump a task's priority</li>
+        <li><strong>Statistics dashboard</strong> — a second window showing tasks per subject and per priority</li>
+      </ul>
+
+      <p><strong>Tier 3 — Genuinely complex (3–5 days each)</strong></p>
+      <ul>
+        <li><strong>Learning from past tasks</strong> — remember how long each subject usually takes and adjust estimates automatically</li>
+        <li><strong>Auto-scheduling</strong> — given free hours per day, propose a study plan that fits the highest-scoring tasks first</li>
+        <li><strong>Multi-user support</strong> — different profiles, each with their own tasks and rules</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 Which to pick?</div>
+        <p><strong>Natural-language date parsing</strong> or <strong>smart recommendation banner</strong> are the sweet spots for an AI-themed project. Both are honest AI extensions, both touch multiple layers of the code, and both are easy to justify in writing.</p>
+      </div>
+
+      <h3>Step 2 — Plan Before You Code</h3>
+
+      <p>Answer these questions in a document first:</p>
+
+      <ol>
+        <li><strong>What exactly will the user see and do?</strong> Write a short user story.</li>
+        <li><strong>What data changes?</strong> Will you add fields to <code>Task</code>? Add new <code>AIRule</code>s? Create a new class?</li>
+        <li><strong>What logic changes?</strong> Where does the new code live?</li>
+        <li><strong>What could go wrong?</strong> List at least three edge cases.</li>
+        <li><strong>How will you test it?</strong> Give specific inputs and expected outputs.</li>
+      </ol>
+
+      <h3>Step 3 — Rewrite, Don't Just Add</h3>
+
+      <p>While you're adding your extension:</p>
+
+      <ul>
+        <li><strong>Refactor at least two methods</strong> that the extension makes awkward</li>
+        <li><strong>Add comments</strong> explaining your reasoning in your own words</li>
+        <li><strong>Change at least one AI rule weight</strong> and explain why in a comment</li>
+      </ul>
+
+      <h3>Step 4 — What You Submit</h3>
+
+      <div class="callout tip">
+        <div class="callout-title">✅ Your code must have these working</div>
+        <ul>
+          <li>All 13 lessons complete</li>
+          <li>Two AI-themed extensions implemented and working</li>
+          <li>App runs without errors</li>
+          <li>Tasks save and reload correctly</li>
+          <li>Invalid input is rejected</li>
+          <li>AI score recalculates on edit</li>
+        </ul>
+      </div>
+
+      <p><strong>Everything else — the write-up, UML diagram, test plan, video demo, and honesty form — is separate work.</strong> You'll get separate deadlines for those. Focus on getting working code submitted first.</p>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Which two AI extensions will you choose, and why? Write down your answer — that's the start of your plan.</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Good answer example:</strong> "I chose natural-language date parsing and a smart recommendation banner. The parsing rule will detect phrases like 'tomorrow' or 'next Monday' and convert them to YYYY-MM-DD before validation. The banner will show the single highest-scoring task at the top of the window with a short explanation of why it's ranked first."</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 12)">
+        <span class="check-icon"></span> Mark Lesson 12 Complete
+      </button>
+    </section>
+
+    <div class="final" id="final-card" style="display:none;">
+      <h2>🎉 AI Study Buddy Complete!</h2>
+      <p>You've built a working AI-themed app: a rule-based engine that scores, ranks, and recommends your homework, plus JSON persistence, validation, and your own extensions. Your code deadline work is done.</p>
+      <p style="margin-top: 20px; color: var(--yellow); font-weight: 600;">Next: the write-up, UML, test plan, and video demo. Separate deadlines to follow.</p>
+    </div>
+
+  </main>
+</div>
+
+<button class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  const totalLessons = 13;
+  const completed = new Set();
+
+  // ---------- COPY DISABLED ----------
+  function copyCode(btn) {
+    btn.textContent = '✏️ Type it yourself!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Show Hint';
+      btn.classList.remove('copied');
+    }, 1400);
+  }
+
+  document.querySelectorAll('pre').forEach(pre => {
+    pre.addEventListener('copy', e => {
+      e.preventDefault();
+      showToast('🚫 Copying is disabled — type the code out!');
+    });
+    pre.addEventListener('contextmenu', e => e.preventDefault());
+    pre.style.userSelect = 'none';
+  });
+
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = `
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f87171;
+      color: #0f1117;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      z-index: 9999;
+      box-shadow: 0 8px 24px #00000066;
+      animation: toastIn 0.3s;
+    `;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
+  }
+
+  // ---------- ANSWER REVEAL ----------
+  function toggleAnswer(btn) {
+    const answer = btn.nextElementSibling;
+    answer.classList.toggle('show');
+    btn.textContent = answer.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+
+    if (answer.classList.contains('show')) {
+      const lesson = btn.closest('.lesson');
+      if (lesson) lesson.dataset.revealed = 'true';
+    }
+  }
+
+  // ---------- GET ALL LESSON NUMBERS IN ORDER ----------
+  function getAllLessonNumbers() {
+    const nums = [];
+    document.querySelectorAll('.lesson').forEach(l => {
+      const n = parseInt(l.id.split('-')[1]);
+      if (!isNaN(n)) nums.push(n);
+    });
+    return nums.sort((a, b) => a - b);
+  }
+
+  // ---------- MARK COMPLETE ----------
+  function markComplete(btn, lessonNum) {
+    const lesson = document.getElementById('lesson-' + lessonNum);
+    if (!lesson) return;
+
+    if (!completed.has(lessonNum) && lesson.dataset.revealed !== 'true') {
+      showToast('⚠️ Reveal the "Your Turn" answer before marking complete.');
+      return;
+    }
+
+    if (completed.has(lessonNum)) {
+      completed.delete(lessonNum);
+      btn.classList.remove('done');
+      btn.innerHTML = '<span class="check-icon"></span> Mark Lesson ' + lessonNum + ' Complete';
+    } else {
+      completed.add(lessonNum);
+      btn.classList.add('done');
+      btn.innerHTML = '<span class="check-icon"></span> Lesson ' + lessonNum + ' Complete!';
+      fireConfetti();
+    }
+
+    saveProgress();
+    refreshAll();
+  }
+
+  // ---------- REFRESH ----------
+  function refreshAll() {
+    updateProgress();
+    updateSidebar();
+    applyLocks();
+  }
+
+  function updateProgress() {
+    const pct = (completed.size / totalLessons) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent = completed.size + ' / ' + totalLessons + ' lessons';
+
+    if (completed.size === totalLessons) {
+      document.getElementById('final-card').style.display = 'block';
+    } else {
+      document.getElementById('final-card').style.display = 'none';
+    }
+  }
+
+  function updateSidebar() {
+    document.querySelectorAll('.lesson-link').forEach(link => {
+      const num = parseInt(link.dataset.target.split('-')[1]);
+      link.classList.toggle('done', completed.has(num));
+    });
+  }
+
+  // ---------- LOCK / UNLOCK ----------
+  function applyLocks() {
+    const allNums = getAllLessonNumbers();
+
+    allNums.forEach((num, index) => {
+      const lessonEl = document.getElementById('lesson-' + num);
+      const linkEl = document.querySelector('.lesson-link[data-target="lesson-' + num + '"]');
+      if (!lessonEl) return;
+
+      let unlocked;
+      if (index === 0) {
+        unlocked = true;
+      } else {
+        const prevNum = allNums[index - 1];
+        unlocked = completed.has(prevNum);
+      }
+
+      lessonEl.classList.toggle('locked', !unlocked);
+      if (linkEl) linkEl.classList.toggle('locked', !unlocked);
+    });
+  }
+
+  // ---------- SAVE / LOAD ----------
+  function saveProgress() {
+    try {
+      localStorage.setItem('asb-progress', JSON.stringify([...completed]));
+      const reveals = [];
+      document.querySelectorAll('.lesson').forEach(l => {
+        if (l.dataset.revealed === 'true') reveals.push(l.id);
+      });
+      localStorage.setItem('asb-reveals', JSON.stringify(reveals));
+    } catch(e) {}
+  }
+
+  function loadProgress() {
+    try {
+      const saved = localStorage.getItem('asb-progress');
+      if (saved) JSON.parse(saved).forEach(n => completed.add(n));
+      const reveals = localStorage.getItem('asb-reveals');
+      if (reveals) {
+        JSON.parse(reveals).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.dataset.revealed = 'true';
+        });
+      }
+    } catch(e) {}
+  }
+
+  // ---------- RESET ----------
+  window.resetProgress = function() {
+    if (!confirm('Reset all progress? This cannot be undone.')) return;
+    localStorage.removeItem('asb-progress');
+    localStorage.removeItem('asb-reveals');
+    completed.clear();
+    document.querySelectorAll('.lesson').forEach(l => {
+      delete l.dataset.revealed;
+    });
+    document.querySelectorAll('.complete-btn').forEach(btn => {
+      const match = btn.getAttribute('onclick').match(/markComplete\(this,\s*(\d+)\)/);
+      if (match) {
+        btn.classList.remove('done');
+        btn.innerHTML = '<span class="check-icon"></span> Mark Lesson ' + match[1] + ' Complete';
+      }
+    });
+    refreshAll();
+    showToast('✅ Progress reset');
+  };
+
+  // ---------- SIDEBAR CLICKS ----------
+  document.querySelectorAll('.lesson-link').forEach(link => {
+    link.addEventListener('click', () => {
+      const target = document.getElementById(link.dataset.target);
+      if (target && !target.classList.contains('locked')) {
+        target.scrollIntoView({behavior: 'smooth'});
+      }
+    });
+  });
+
+  // ---------- SCROLL OBSERVER ----------
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.lesson-link').forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.lesson-link[data-target="${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  document.querySelectorAll('.lesson').forEach(l => observer.observe(l));
+
+  // ---------- TO TOP ----------
+  window.addEventListener('scroll', () => {
+    document.getElementById('toTop').classList.toggle('show', window.scrollY > 500);
+  });
+
+  // ---------- CONFETTI ----------
+  function fireConfetti() {
+    const colors = ['#7c8aff', '#a78bfa', '#4ade80', '#fbbf24', '#f87171'];
+    for (let i = 0; i < 30; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-20px';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDelay = Math.random() * 0.5 + 's';
+      c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }
+  }
+
+  // ---------- INIT ----------
+  loadProgress();
+  refreshAll();
+</script>
+
+</body>
+</html>
