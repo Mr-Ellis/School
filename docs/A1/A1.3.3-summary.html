@@ -1,1105 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A1.3.3 - Compare Different Approaches to Scheduling</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f4fb;
-            color: #1e293b;
-            padding: 24px;
-            line-height: 1.7;
-        }
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 40px 50px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #b21f1f;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
-        h1 {
-            font-size: 2.2rem;
-            color: #0b2a4a;
-            border-bottom: 4px solid #fdbb2d;
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-        }
-        h2 {
-            font-size: 1.5rem;
-            color: #0b2a4a;
-            margin-top: 35px;
-            margin-bottom: 15px;
-            border-left: 5px solid #b21f1f;
-            padding-left: 15px;
-        }
-        h3 {
-            font-size: 1.15rem;
-            color: #0b2a4a;
-            margin-top: 22px;
-            margin-bottom: 10px;
-        }
-        .badge {
-            display: inline-block;
-            background: #b21f1f;
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.8rem;
-            padding: 2px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-        }
-        .command-term {
-            background: #ebf4ff;
-            border-left: 5px solid #0b2a4a;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-style: italic;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95rem;
-        }
-        th {
-            background: #0b2a4a;
-            color: #fff;
-            font-weight: 600;
-            padding: 12px 15px;
-            text-align: left;
-        }
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #e2e8f0;
-            vertical-align: top;
-        }
-        tr:nth-child(even) { background: #f7fafc; }
-        a {
-            color: #b21f1f;
-            text-decoration: none;
-            border-bottom: 1px dotted #b21f1f;
-        }
-        a:hover {
-            color: #0b2a4a;
-            border-bottom: 2px solid #0b2a4a;
-        }
-        hr {
-            border: 0;
-            border-top: 2px solid #e2e8f0;
-            margin: 30px 0;
-        }
-        .footer-meta {
-            margin-top: 30px;
-            font-size: 0.85rem;
-            color: #4a5568;
-            text-align: center;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 20px;
-        }
-        .key-takeaway {
-            background: #fefcbf;
-            border-left: 5px solid #fdbb2d;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 25px 0;
-            font-weight: 500;
-        }
-        .lesson-nav {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .lesson-nav a { border-bottom: none; font-weight: 500; }
-
-        /* Blooket starter */
-        .blooket-box {
-            background: #eef4fc;
-            border: 2px solid #b21f1f;
-            border-radius: 14px;
-            padding: 16px 22px;
-            margin: 10px 0 25px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 14px 24px;
-        }
-        .blooket-box .blooket-btn {
-            background: #b21f1f;
-            color: white;
-            padding: 6px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 1rem;
-            border: none;
-            display: inline-block;
-        }
-        .blooket-box .blooket-btn a {
-            color: white;
-            border-bottom: none;
-        }
-        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
-
-        /* Task styles */
-        .task-block {
-            background: #f8fafc;
-            border-radius: 14px;
-            padding: 6px 0;
-            margin: 12px 0;
-        }
-        .task-row {
-            display: flex;
-            align-items: flex-start;
-            padding: 12px 16px;
-            border-bottom: 1px solid #e8eef4;
-            gap: 12px;
-        }
-        .task-row:last-child { border-bottom: none; }
-        .task-step {
-            font-weight: 700;
-            color: #0b2a4a;
-            background: #dce8f5;
-            padding: 0 12px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            min-width: 28px;
-            text-align: center;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        .task-row .task-desc { flex: 1; }
-        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
-
-        .task-row.task-starter {
-            background: #e6f5e6;
-            border-left: 4px solid #2d7d46;
-            border-radius: 0 8px 8px 0;
-            margin: 4px 0;
-        }
-        .task-row.task-starter .task-desc strong {
-            color: #1a6b33;
-        }
-
-        .task-1-resources {
-            background: #f1f6fc;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-top: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px 16px;
-        }
-        .task-1-resources .pill {
-            background: white;
-            padding: 2px 14px;
-            border-radius: 30px;
-            border: 1px solid #dce4ed;
-            font-size: 0.85rem;
-        }
-        .task-1-resources .teach-link {
-            background: #0b2a4a;
-            color: white;
-            padding: 3px 16px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            border: none;
-        }
-        .task-1-resources .teach-link a {
-            color: white;
-            border-bottom: 1px solid rgba(255,255,255,0.4);
-        }
-        .task-1-resources .teach-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
-
-        .code-lab-link {
-            background: #1a5f87;
-            color: white;
-            padding: 2px 14px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: inline-block;
-            margin: 4px 0;
-        }
-        .code-lab-link a {
-            color: white;
-            border-bottom: 1px solid rgba(255,255,255,0.4);
-        }
-        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
-
-        /* Unit-end reminder */
-        .unit-reminder {
-            background: #fff8e1;
-            border-left: 5px solid #fdbb2d;
-            border-radius: 0 10px 10px 0;
-            padding: 14px 20px;
-            margin: 20px 0;
-            font-size: 0.92rem;
-        }
-        .unit-reminder strong { color: #7a4a0a; }
-
-        /* Activity explanation box */
-        .activity-box {
-            background: #ebf4ff;
-            border-left: 5px solid #0b2a4a;
-            border-radius: 0 10px 10px 0;
-            padding: 14px 20px;
-            margin: 14px 0;
-            font-size: 0.92rem;
-        }
-        .activity-box h4 {
-            color: #0b2a4a;
-            font-size: 0.95rem;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .activity-box p { margin-bottom: 6px; }
-
-        /* Team cards */
-        .team-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin: 20px 0;
-        }
-        @media (max-width: 700px) { .team-grid { grid-template-columns: 1fr; } }
-
-        .team-card {
-            border-radius: 10px;
-            padding: 16px 18px;
-            background: #fff;
-            border: 2px solid;
-        }
-        .team-card h4 {
-            margin: 0 0 8px;
-            font-size: 1.05rem;
-        }
-        .team-card ul {
-            margin: 0.4rem 0 0;
-            padding-left: 1.2rem;
-            font-size: 0.88rem;
-        }
-        .team-card.fcfs { border-color: #0369a1; }
-        .team-card.fcfs h4 { color: #0369a1; }
-        .team-card.rr { border-color: #15803d; }
-        .team-card.rr h4 { color: #15803d; }
-        .team-card.pri { border-color: #b45309; }
-        .team-card.pri h4 { color: #b45309; }
-        .team-card.mlq { border-color: #6d28d9; }
-        .team-card.mlq h4 { color: #6d28d9; }
-
-        /* Flip cards */
-        .flip-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin: 20px 0;
-        }
-        @media (max-width: 700px) { .flip-grid { grid-template-columns: 1fr; } }
-
-        .flip-card {
-            perspective: 1000px;
-            height: 210px;
-            cursor: pointer;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 12px;
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .flip-card-front {
-            background: #0b2a4a;
-            color: #fff;
-        }
-        .flip-card-front .big-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-        .flip-card-front .big-name {
-            font-weight: 700;
-            font-size: 1.05rem;
-        }
-        .flip-card-front .flip-hint {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 8px;
-        }
-        .flip-card-back {
-            background: #fef3c7;
-            color: #7a4a0a;
-            transform: rotateY(180deg);
-            font-size: 0.88rem;
-            line-height: 1.5;
-            border: 2px solid #fdbb2d;
-            text-align: left;
-            justify-content: flex-start;
-        }
-        .flip-card-back strong { color: #b21f1f; }
-
-        /* Scenario explorer */
-        .scenario {
-            background: #f7fafc;
-            border-left: 5px solid #0b2a4a;
-            border-radius: 0 10px 10px 0;
-            padding: 14px 18px;
-            margin: 12px 0;
-        }
-        .scenario .scenario-q {
-            font-weight: 600;
-            color: #0b2a4a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-        .scenario .scenario-q:hover { color: #b21f1f; }
-        .scenario .reveal-btn {
-            font-size: 0.75rem;
-            background: #b21f1f;
-            color: white;
-            padding: 2px 12px;
-            border-radius: 20px;
-            border: none;
-            font-weight: 600;
-            flex-shrink: 0;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .scenario .reveal-btn:hover { background: #0b2a4a; }
-        .scenario .scenario-a {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, margin-top 0.3s ease;
-            margin-top: 0;
-            color: #1e293b;
-            font-size: 0.92rem;
-        }
-        .scenario.open .scenario-a {
-            max-height: 800px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed #cbd5e1;
-        }
-        .scenario .scenario-a ul { padding-left: 1.2rem; }
-        .scenario .scenario-a li { margin-bottom: 6px; }
-
-        /* Quick quiz */
-        .quiz {
-            background: #f1f6fc;
-            border-radius: 10px;
-            padding: 20px 24px;
-            margin: 20px 0;
-        }
-        .quiz h3 { margin-top: 0; }
-        .quiz-q { margin-bottom: 18px; }
-        .quiz-q .q-text {
-            font-weight: 600;
-            color: #0b2a4a;
-            margin-bottom: 8px;
-        }
-        .quiz-options { display: flex; flex-direction: column; gap: 6px; }
-        .quiz-option {
-            background: white;
-            border: 2px solid #dce4ed;
-            border-radius: 8px;
-            padding: 8px 14px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .quiz-option:hover { border-color: #0b2a4a; background: #ebf4ff; }
-        .quiz-option.correct {
-            border-color: #2d7d46;
-            background: #e6f5e6;
-            color: #1a6b33;
-            font-weight: 600;
-        }
-        .quiz-option.wrong {
-            border-color: #b21f1f;
-            background: #fdeaea;
-            color: #a13232;
-        }
-        .quiz-option .mark { font-weight: 700; }
-        .quiz-score {
-            text-align: center;
-            font-weight: 700;
-            color: #0b2a4a;
-            font-size: 1.05rem;
-            margin-top: 10px;
-        }
-
-        /* Match-up */
-        .match-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 20px 0;
-        }
-        @media (max-width: 700px) { .match-grid { grid-template-columns: 1fr; } }
-        .match-col h4 {
-            color: #0b2a4a;
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-        .match-item {
-            background: white;
-            border: 2px solid #dce4ed;
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            font-size: 0.88rem;
-            transition: all 0.15s ease;
-        }
-        .match-item:hover { border-color: #0b2a4a; }
-        .match-item.selected { border-color: #fdbb2d; background: #fefcbf; font-weight: 600; }
-        .match-item.matched { border-color: #2d7d46; background: #e6f5e6; color: #1a6b33; cursor: default; }
-        .match-item.matched::after { content: " ✓"; font-weight: 700; }
-        .match-feedback {
-            text-align: center;
-            margin-top: 10px;
-            font-weight: 600;
-            color: #2d7d46;
-            min-height: 24px;
-        }
-
-        /* Gantt chart */
-        .gantt {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin: 15px 0;
-            font-family: "Courier New", monospace;
-            font-size: 0.85rem;
-            color: #0c4a6e;
-            overflow-x: auto;
-            white-space: pre;
-            line-height: 1.5;
-        }
-        .gantt .label { color: #64748b; }
-        .gantt .p1 { color: #0369a1; font-weight: bold; }
-        .gantt .p2 { color: #15803d; font-weight: bold; }
-        .gantt .p3 { color: #b45309; font-weight: bold; }
-
-        @media (max-width: 640px) {
-            .container { padding: 20px; }
-            h1 { font-size: 1.8rem; }
-            table { font-size: 0.85rem; }
-            .task-1-resources { flex-direction: column; align-items: flex-start; }
-            .blooket-box { flex-direction: column; align-items: flex-start; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1.3.3 – Compare Different Approaches to Scheduling</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #f8fafc;
+    --panel-2: #eef2f7;
+    --text: #1e293b;
+    --muted: #64748b;
+    --accent: #0369a1;
+    --accent-2: #15803d;
+    --warn: #b45309;
+    --danger: #b91c1c;
+    --border: #cbd5e1;
+    --team-fcfs: #0369a1;
+    --team-rr: #15803d;
+    --team-pri: #b45309;
+    --team-mlq: #6d28d9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 0 1rem 4rem;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  a { color: var(--accent); }
+  .back { display: inline-block; margin: 1.5rem 0; color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+  .back:hover { color: var(--accent); }
+  h1 { font-size: 1.9rem; margin: 0.5rem 0 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.6rem; }
+  h2 { font-size: 1.3rem; margin: 2rem 0 0.9rem; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 0.7rem; }
+  h3 { font-size: 1.05rem; margin: 1.4rem 0 0.6rem; color: var(--accent-2); }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 1rem 0; }
+  .panel.accent { border-left: 4px solid var(--accent); }
+  .panel.warn { border-left: 4px solid var(--warn); background: #fffbeb; }
+  .panel.danger { border-left: 4px solid var(--danger); background: #fef2f2; }
+  .panel.good { border-left: 4px solid var(--accent-2); background: #f0fdf4; }
+  .panel.mission { border-left: 4px solid var(--accent); background: linear-gradient(135deg,#f0f9ff,#f8fafc); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: #fff; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
+  th, td { border: 1px solid var(--border); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
+  th { background: var(--panel-2); color: var(--accent); }
+  tr:nth-child(even) td { background: #fafbfc; }
+  code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: #0c4a6e; }
+  .btn { display: inline-block; background: var(--accent); color: #fff; font-weight: 700; padding: 0.55rem 1.1rem; border-radius: 8px; text-decoration: none; margin: 0.35rem 0.35rem 0.35rem 0; }
+  .btn:hover { background: #075985; }
+  .btn.green { background: var(--accent-2); }
+  .btn.green:hover { background: #166534; }
+  .btn.orange { background: var(--warn); }
+  .btn.orange:hover { background: #92400e; }
+  details { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; margin: 0.9rem 0; }
+  summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+  details[open] summary { margin-bottom: 0.6rem; }
+  .fig { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin: 1rem 0; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.78rem; color: #0c4a6e; overflow-x: auto; white-space: pre; }
+  .fig .label { color: var(--muted); }
+  .fig .p1 { color: #0369a1; font-weight: bold; }
+  .fig .p2 { color: #15803d; font-weight: bold; }
+  .fig .p3 { color: #b45309; font-weight: bold; }
+  .timing { display: inline-block; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 12px; margin-left: 0.5rem; vertical-align: middle; }
+  .takeaway { background: #f0fdf4; border: 1px solid var(--accent-2); border-radius: 10px; padding: 1.3rem; font-size: 1rem; font-style: italic; margin-top: 1.5rem; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding: 0.35rem 0 0.35rem 1.8rem; position: relative; }
+  .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); font-size: 1.05rem; }
+  .checklist li.done::before { content: "✅"; }
+  .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .team-grid { grid-template-columns: 1fr; } }
+  .team-card { border-radius: 10px; padding: 1rem 1.2rem; background: #fff; border: 2px solid var(--border); }
+  .team-card h4 { margin: 0 0 0.4rem; font-size: 1rem; }
+  .team-card.fcfs { border-color: var(--team-fcfs); }
+  .team-card.fcfs h4 { color: var(--team-fcfs); }
+  .team-card.rr { border-color: var(--team-rr); }
+  .team-card.rr h4 { color: var(--team-rr); }
+  .team-card.pri { border-color: var(--team-pri); }
+  .team-card.pri h4 { color: var(--team-pri); }
+  .team-card.mlq { border-color: var(--team-mlq); }
+  .team-card.mlq h4 { color: var(--team-mlq); }
+  .team-card ul { margin: 0.4rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; }
+  .scorecard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .scorecard { grid-template-columns: 1fr 1fr; } }
+  .scorecard .metric { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; text-align: center; }
+  .scorecard .metric strong { display: block; color: var(--accent); font-size: 0.85rem; }
+  .scorecard .metric small { color: var(--muted); font-size: 0.75rem; }
+  .corners { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .corners { grid-template-columns: 1fr; } }
+  .corner { border-radius: 8px; padding: 0.8rem 1rem; text-align: center; font-weight: 700; color: #fff; }
+  .corner.fcfs { background: var(--team-fcfs); }
+  .corner.rr { background: var(--team-rr); }
+  .corner.pri { background: var(--team-pri); }
+  .corner.mlq { background: var(--team-mlq); }
+  .twist { background: #fef2f2; border: 2px dashed var(--danger); border-radius: 10px; padding: 1.2rem; margin: 1.2rem 0; }
+  .twist h4 { margin: 0 0 0.5rem; color: var(--danger); }
+  .ai-prompt { background: #1e293b; color: #e2e8f0; border-radius: 10px; padding: 1.2rem 1.4rem; margin: 1rem 0; font-size: 0.95rem; }
+  .ai-prompt strong { color: #7dd3fc; }
+  .ai-prompt ol { padding-left: 1.2rem; margin: 0.5rem 0 0; }
+  .ai-prompt li { margin-bottom: 0.4rem; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+  .vs-box { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
+  .vs-box h4 { margin: 0 0 0.5rem; font-size: 1rem; }
+  .vs-box ul { margin: 0.3rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; }
+  .phase { display: flex; align-items: center; gap: 0.6rem; margin: 1.5rem 0 0.5rem; }
+  .phase-num { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .phase h2 { margin: 0; border: none; padding: 0; }
+</style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="container">
+  <a class="back" href="#">← Back to A1 Unit</a>
 
-    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+  <h1>A1.3.3 – Compare Different Approaches to Scheduling</h1>
 
-    <h1>A1.3.3 – Compare Different Approaches to Scheduling</h1>
+  <!-- ============ MISSION ============ -->
+  <div class="panel mission">
+    <h2 style="margin-top:0;border:none;padding:0;color:var(--accent)">🏢 Operating System Recruitment Challenge</h2>
+    <p><strong>Microsoft is hiring a new CPU scheduler.</strong></p>
+    <p>Four scheduling teams are competing. Your team must prove your algorithm deserves to run <strong>Windows 2030</strong>.</p>
+    <p>But there's a catch: Microsoft doesn't want to know what your algorithm does. They want to know <strong>how it compares to the competition</strong>.</p>
+    <p>Every round earns your team points. The team that builds the strongest <em>comparative</em> case wins the contract.</p>
+  </div>
 
-    <h2>📌 Learning Objective</h2>
-    <ul>
-        <li><strong>Describe</strong> the four scheduling algorithms: FCFS, Round Robin, Priority, and Multilevel Queue</li>
-        <li><strong>Compare</strong> them across key dimensions — pre-emptive status, response time, fairness, overhead, and starvation risk</li>
-        <li><strong>Justify</strong> which algorithm is best for a given workload, using comparative language</li>
-    </ul>
+  <!-- ============ PHASE 1: STARTER ============ -->
+  <div class="phase">
+    <span class="phase-num">1</span>
+    <h2>Starter — Know Your Command Term <span class="timing">5 min</span></h2>
+  </div>
 
-    <h2>🎯 IB Command Term: <span class="badge">Compare</span></h2>
-    <div class="command-term">
-        <strong>Compare</strong> – <em>"Give an account of the similarities <strong>and</strong> differences between two or more items, referring to both throughout."</em><br>
-        This is the key skill for this lesson. You must <strong>hold the algorithms side by side</strong> — say what they have in common and where they diverge. Describing each algorithm in turn without comparing them will not score full marks.
+  <p>Open the Command Terms page. Find <strong>Compare</strong> (Weight 3 — high demand).</p>
+  <a class="btn" href="https://mr-ellis.github.io/School/command-terms.html" target="_blank" rel="noopener">📖 Open Command Terms</a>
+
+  <div class="panel accent">
+    <strong>Today's mission brief:</strong> Your team's pitch must <strong>compare</strong> — not describe. Referring to both your algorithm and a rival's throughout. Your final 4-mark answer is the contract bid.
+  </div>
+
+  <div class="panel warn">
+    <strong>Quick check:</strong> In your own words, what does "Compare" mean?<br>
+    <em>If you can't answer this, you're not ready to move on.</em>
+  </div>
+
+  <!-- ============ PHASE 2: EXPERT GROUPS ============ -->
+  <div class="phase">
+    <span class="phase-num">2</span>
+    <h2>Expert Groups — Learn Your Algorithm <span class="timing">10 min</span></h2>
+  </div>
+
+  <p>Each team studies <strong>one</strong> scheduling algorithm using their <strong>Information Sheet</strong>. You must produce:</p>
+  <ol>
+    <li>A <strong>visual explanation</strong> (diagram or Gantt-style timeline)</li>
+    <li>A <strong>slogan</strong></li>
+    <li><strong>One strength</strong> and <strong>one weakness</strong></li>
+    <li>A <strong>prediction</strong>: where would this be used in the real world?</li>
+  </ol>
+
+  <div class="team-grid">
+    <div class="team-card fcfs">
+      <h4>Team FCFS</h4>
+      <ul>
+        <li>Runs in arrival order, to completion</li>
+        <li><strong>Non-pre-emptive</strong></li>
+        <li>Simple, minimal overhead</li>
+        <li>Convoy effect: long job blocks short ones</li>
+      </ul>
     </div>
-
-    <!-- Blooket Starter -->
-    <div class="blooket-box">
-        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket</span>
-        <span style="color:#3d5f7a;">Test your current knowledge before we begin!</span>
-        <span class="blooket-btn"><a href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank">🚀 Launch Blooket</a></span>
+    <div class="team-card rr">
+      <h4>Team Round Robin</h4>
+      <ul>
+        <li>Fixed time quantum, then rotate</li>
+        <li><strong>Pre-emptive</strong></li>
+        <li>Fair, responsive</li>
+        <li>Quantum too small → high context-switch overhead</li>
+      </ul>
     </div>
-
-    <h2>💡 Why Scheduling Matters</h2>
-    <p>When several processes are ready at once, <strong>only one can use the processor at a time</strong>. The OS must decide <em>which</em> process runs next and <em>for how long</em>. That decision changes:</p>
-    <ul>
-        <li>How long users wait for a response</li>
-        <li>How evenly work is shared between programs</li>
-        <li>How much time is lost switching between tasks</li>
-    </ul>
-
-    <h3>THINK FIRST — Before you read on</h3>
-    <div class="activity-box">
-        <p><strong>Scenario:</strong> Three programs all want the CPU at the same instant — a long video export, a text editor waiting for keystrokes, and a background backup.</p>
-        <p><strong>Decide what order you would run them in — and what "fair" should mean.</strong> Most disagreements about scheduling are disagreements about that word.</p>
+    <div class="team-card pri">
+      <h4>Team Priority</h4>
+      <ul>
+        <li>Highest priority runs first</li>
+        <li><strong>Either variant</strong></li>
+        <li>Critical work jumps the queue</li>
+        <li>Starvation without ageing</li>
+      </ul>
     </div>
-
-    <h2>📊 The Four Approaches — Click to Explore</h2>
-    <p><strong>Click any card</strong> to reveal how that algorithm works, its main strength, and its main weakness.</p>
-
-    <div class="flip-grid">
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <span class="big-icon">1️⃣</span>
-                    <span class="big-name">First-Come First-Served</span>
-                    <span class="flip-hint">Click to flip</span>
-                </div>
-                <div class="flip-card-back">
-                    <strong>How it works:</strong> Runs processes to completion in the order they arrive.<br><br>
-                    <strong>Non-pre-emptive.</strong><br><br>
-                    <strong>Strength:</strong> Simple and predictable — minimal overhead.<br><br>
-                    <strong>Weakness:</strong> <em>Convoy effect</em> — one long job at the front holds up every short job behind it.
-                </div>
-            </div>
-        </div>
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <span class="big-icon">🔄</span>
-                    <span class="big-name">Round Robin</span>
-                    <span class="flip-hint">Click to flip</span>
-                </div>
-                <div class="flip-card-back">
-                    <strong>How it works:</strong> Each process gets a fixed time slice (the <em>quantum</em>), then moves to the back of the queue.<br><br>
-                    <strong>Pre-emptive.</strong><br><br>
-                    <strong>Strength:</strong> Responsive — no process is left waiting indefinitely.<br><br>
-                    <strong>Weakness:</strong> Frequent context switching adds overhead. Quantum too short = thrashing; too long = behaves like FCFS.
-                </div>
-            </div>
-        </div>
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <span class="big-icon">⭐</span>
-                    <span class="big-name">Priority Scheduling</span>
-                    <span class="flip-hint">Click to flip</span>
-                </div>
-                <div class="flip-card-back">
-                    <strong>How it works:</strong> The highest-priority ready process runs first. Priorities can be static or dynamic (adjusted by <em>ageing</em>).<br><br>
-                    <strong>Either pre-emptive or non-pre-emptive.</strong><br><br>
-                    <strong>Strength:</strong> Urgent, real-time, and critical work gets served first.<br><br>
-                    <strong>Weakness:</strong> Low-priority processes can <em>starve</em> without ageing.
-                </div>
-            </div>
-        </div>
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front">
-                    <span class="big-icon">📚</span>
-                    <span class="big-name">Multilevel Queue</span>
-                    <span class="flip-hint">Click to flip</span>
-                </div>
-                <div class="flip-card-back">
-                    <strong>How it works:</strong> Processes are split into separate queues by type or priority, and each queue has its own algorithm.<br><br>
-                    <strong>Usually non-pre-emptive between queues.</strong><br><br>
-                    <strong>Strength:</strong> Clean separation of workloads — interactive work is served quickly.<br><br>
-                    <strong>Weakness:</strong> Rigid. Lower queues can starve; more complex to manage.
-                </div>
-            </div>
-        </div>
+    <div class="team-card mlq">
+      <h4>Team Multilevel Queue</h4>
+      <ul>
+        <li>Separate queues by class, own algorithm each</li>
+        <li><strong>Usually non-pre-emptive between queues</strong></li>
+        <li>Clean separation of workloads</li>
+        <li>Rigid; lower queues can starve</li>
+      </ul>
     </div>
+  </div>
 
-    <h2>📋 The Compare Table — Reference</h2>
-    <p>This is the key reference for the exam. Learn it as a <strong>comparison across dimensions</strong>, not four separate descriptions.</p>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Metric</th>
-                <th>FCFS</th>
-                <th>Round Robin</th>
-                <th>Priority</th>
-                <th>Multilevel Queue</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td><strong>Pre-emptive?</strong></td><td>No</td><td>Yes (quantum)</td><td>Either variant</td><td>Usually not between queues</td></tr>
-            <tr><td><strong>Queue structure</strong></td><td>Simple FIFO</td><td>FIFO + rotation</td><td>Priority heap</td><td>Several queues by class</td></tr>
-            <tr><td><strong>Response time</strong></td><td>Poor for short jobs</td><td>Good if quantum tuned</td><td>Excellent for high priority</td><td>Excellent for top class</td></tr>
-            <tr><td><strong>Overhead</strong></td><td>Minimal</td><td>Higher as quantum ↓</td><td>Low unless pre-empting</td><td>Extra per-queue bookkeeping</td></tr>
-            <tr><td><strong>Fairness</strong></td><td>Arrival order only</td><td>High (equal quanta)</td><td>Unfair across levels</td><td>Fair within a queue only</td></tr>
-            <tr><td><strong>Starvation risk</strong></td><td>None</td><td>None</td><td>High without ageing</td><td>High for lowest queue</td></tr>
-            <tr><td><strong>Best suited to</strong></td><td>Batch systems</td><td>Time-sharing, GUIs</td><td>Real-time workloads</td><td>Mixed workloads</td></tr>
-        </tbody>
-    </table>
-
-    <h2>🔍 Scenario Explorer — Which Algorithm Fits?</h2>
-    <p>For each scenario, <strong>click the question to reveal</strong> which algorithm is best and why. Remember to <em>compare</em> — reference the alternatives.</p>
-
-    <div class="scenario">
-        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>🖥️ A university computer lab running many interactive programs</span>
-            <button class="reveal-btn">Reveal</button>
-        </div>
-        <div class="scenario-a">
-            <ul>
-                <li><strong>Round Robin</strong> is best here — many users need frequent, fair access to the CPU.</li>
-                <li><strong>Why not FCFS?</strong> FCFS would let one long job block everyone else (the convoy effect).</li>
-                <li><strong>Why not Priority?</strong> Priority would be unfair to students running non-urgent work — they could starve.</li>
-                <li><strong>Why not MLQ?</strong> Could work, but Round Robin alone is simpler and sufficient when all users have similar needs.</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="scenario">
-        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>🏥 A hospital emergency system monitoring patient vitals</span>
-            <button class="reveal-btn">Reveal</button>
-        </div>
-        <div class="scenario-a">
-            <ul>
-                <li><strong>Priority Scheduling</strong> is best — life-critical processes must jump the queue.</li>
-                <li><strong>Why not Round Robin?</strong> Fairness is the wrong goal here. A critical alarm should not have to wait its turn behind a background log write.</li>
-                <li><strong>Why not FCFS?</strong> Same problem — a long routine task could delay a critical alert.</li>
-                <li><strong>Why not MLQ?</strong> Could work as a structured version — but Priority with ageing is the standard choice for real-time systems.</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="scenario">
-        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>📊 A batch system processing overnight payroll reports</span>
-            <button class="reveal-btn">Reveal</button>
-        </div>
-        <div class="scenario-a">
-            <ul>
-                <li><strong>FCFS</strong> works well here — batch jobs run to completion without user interaction, and the convoy effect matters less when total throughput is the goal.</li>
-                <li><strong>Why not Round Robin?</strong> Fairness is irrelevant — no user is waiting interactively. Round Robin just adds context-switching overhead.</li>
-                <li><strong>Why not Priority?</strong> Jobs are all similar, so priority adds complexity without benefit.</li>
-                <li><strong>Why not MLQ?</strong> Overkill — one queue is enough.</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="scenario">
-        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>📱 A modern smartphone running apps in the background</span>
-            <button class="reveal-btn">Reveal</button>
-        </div>
-        <div class="scenario-a">
-            <ul>
-                <li><strong>Multilevel Queue</strong> — the foreground app needs instant response, background syncs can wait.</li>
-                <li><strong>Why not FCFS?</strong> Foreground responsiveness would suffer badly.</li>
-                <li><strong>Why not Round Robin alone?</strong> It would treat background and foreground apps equally — the UI would feel sluggish.</li>
-                <li><strong>Why not pure Priority?</strong> Possible, but MLQ lets each queue use its own algorithm — Round Robin for interactive, FCFS for background — which matches reality.</li>
-            </ul>
-        </div>
-    </div>
-
-    <h2>🎮 Match-Up Challenge</h2>
-    <p>Click an <strong>algorithm</strong> on the left, then click its <strong>key characteristic</strong> on the right.</p>
-
-    <div class="match-grid">
-        <div class="match-col">
-            <h4>Algorithms</h4>
-            <div class="match-item" data-match="1">FCFS</div>
-            <div class="match-item" data-match="2">Round Robin</div>
-            <div class="match-item" data-match="3">Priority</div>
-            <div class="match-item" data-match="4">Multilevel Queue</div>
-        </div>
-        <div class="match-col">
-            <h4>Key characteristic</h4>
-            <div class="match-item" data-match="4">Separate queues by type, each with its own algorithm</div>
-            <div class="match-item" data-match="1">Runs to completion in arrival order — non-pre-emptive</div>
-            <div class="match-item" data-match="3">Critical work jumps the queue; can starve without ageing</div>
-            <div class="match-item" data-match="2">Uses a fixed time quantum and rotates the queue</div>
-        </div>
-    </div>
-    <div class="match-feedback" id="matchFeedback"></div>
-
-    <h2>🧠 Quick Quiz</h2>
-    <div class="quiz" id="quizContainer">
-        <div class="quiz-q" data-answer="2">
-            <div class="q-text">1. Which algorithm gives each process a fixed time slice before rotating it to the back of the queue?</div>
-            <div class="quiz-options">
-                <div class="quiz-option" data-opt="1"><span>FCFS</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="2"><span>Round Robin</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="3"><span>Priority</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="4"><span>Multilevel Queue</span><span class="mark"></span></div>
-            </div>
-        </div>
-        <div class="quiz-q" data-answer="4">
-            <div class="q-text">2. What is the <em>convoy effect</em>?</div>
-            <div class="quiz-options">
-                <div class="quiz-option" data-opt="1"><span>When a process never gets CPU time</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="2"><span>When two processes deadlock</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="3"><span>When the quantum is too small</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="4"><span>When a long job delays many short jobs behind it — a weakness of FCFS</span><span class="mark"></span></div>
-            </div>
-        </div>
-        <div class="quiz-q" data-answer="1">
-            <div class="q-text">3. Which algorithm is <em>most</em> suitable for a real-time hospital system?</div>
-            <div class="quiz-options">
-                <div class="quiz-option" data-opt="1"><span>Priority Scheduling — life-critical tasks jump the queue</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="2"><span>FCFS — it's simple and fair</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="3"><span>Round Robin — everyone gets a turn</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="4"><span>Any of them — the algorithm doesn't matter</span><span class="mark"></span></div>
-            </div>
-        </div>
-        <div class="quiz-q" data-answer="3">
-            <div class="q-text">4. Why is <em>comparative</em> language important in this topic?</div>
-            <div class="quiz-options">
-                <div class="quiz-option" data-opt="1"><span>Because the teacher wants longer answers</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="2"><span>Because it makes answers sound better</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="3"><span>Because the command term <em>Compare</em> requires similarities and differences — describing each separately fails the command term</span><span class="mark"></span></div>
-                <div class="quiz-option" data-opt="4"><span>Because it's a requirement of every exam</span><span class="mark"></span></div>
-            </div>
-        </div>
-        <div class="quiz-score" id="quizScore">Score: 0 / 4</div>
-    </div>
-
-    <h2>🚀 Activity 1 — Expert Groups <span style="font-size:0.8rem;color:#64748b;font-weight:500;">(8 minutes)</span></h2>
-
-    <div class="activity-box">
-        <h4>📖 What is this activity?</h4>
-        <p>You will be assigned to <strong>one</strong> of four expert teams. Your team becomes the class expert on a single scheduling algorithm.</p>
-        <p><strong>What your team must produce:</strong></p>
-        <ol style="padding-left:1.4rem; margin-top:6px;">
-            <li>A <strong>visual explanation</strong> — a diagram or a Gantt-style timeline showing how your algorithm works</li>
-            <li>A <strong>slogan</strong> — a one-line pitch for your algorithm</li>
-            <li><strong>One strength</strong> and <strong>one weakness</strong> — be specific</li>
-            <li>A <strong>prediction</strong> — where in the real world would this algorithm be used?</li>
-        </ol>
-        <p style="margin-top:8px;"><strong>How to use the team cards below:</strong> each card gives you the basics. Use the compare table above and the flip cards to fill in the detail. You have 8 minutes — assign roles within your team (one person for the visual, one for the slogan, etc.).</p>
-    </div>
-
-    <div class="team-grid">
-        <div class="team-card fcfs">
-            <h4>Team FCFS</h4>
-            <ul>
-                <li>Runs in arrival order, to completion</li>
-                <li><strong>Non-pre-emptive</strong></li>
-                <li>Simple, minimal overhead</li>
-                <li>Convoy effect: long job blocks short ones</li>
-            </ul>
-        </div>
-        <div class="team-card rr">
-            <h4>Team Round Robin</h4>
-            <ul>
-                <li>Fixed time quantum, then rotate</li>
-                <li><strong>Pre-emptive</strong></li>
-                <li>Fair, responsive</li>
-                <li>Quantum too small → high context-switch overhead</li>
-            </ul>
-        </div>
-        <div class="team-card pri">
-            <h4>Team Priority</h4>
-            <ul>
-                <li>Highest priority runs first</li>
-                <li><strong>Either variant</strong></li>
-                <li>Critical work jumps the queue</li>
-                <li>Starvation without ageing</li>
-            </ul>
-        </div>
-        <div class="team-card mlq">
-            <h4>Team Multilevel Queue</h4>
-            <ul>
-                <li>Separate queues by class, each with its own algorithm</li>
-                <li><strong>Usually non-pre-emptive between queues</strong></li>
-                <li>Clean separation of workloads</li>
-                <li>Rigid; lower queues can starve</li>
-            </ul>
-        </div>
-    </div>
-
-    <h2>🔀 Activity 2 — Jigsaw Teaching <span style="font-size:0.8rem;color:#64748b;font-weight:500;">(10 minutes)</span></h2>
-
-    <div class="activity-box">
-        <h4>📖 What is this activity?</h4>
-        <p>You are now going to <strong>re-form into new groups</strong> — each new group has <strong>one expert from each of the four algorithms</strong>.</p>
-        <p><strong>What you do:</strong> Each expert gets <strong>90 seconds</strong> to teach their algorithm to the rest of the group, then takes questions.</p>
-        <p><strong>The critical rule:</strong> You may <strong>not</strong> describe your algorithm in isolation. Every explanation must reference <strong>at least one other algorithm</strong>. Use comparative language like:</p>
-        <ul style="padding-left:1.4rem;">
-            <li>"<strong>Unlike FCFS</strong>, Round Robin…"</li>
-            <li>"<strong>Whereas</strong> FCFS runs to completion…"</li>
-            <li>"<strong>Both</strong> Priority and Multilevel Queue…"</li>
-            <li>"FCFS has minimal overhead, <strong>but</strong> Round Robin pays for fairness with…"</li>
-        </ul>
-        <p style="margin-top:8px;"><strong>Why this matters:</strong> the exam command term is <em>Compare</em>. This rule forces you to practise exactly what the exam requires.</p>
-        <p>As you listen to the other experts, <strong>add notes to the compare table</strong> above — this becomes your pitch evidence for the next activities.</p>
-    </div>
-
-    <div class="gantt"><span class="label">Reference example — Round Robin with quantum = 2.</span>
+  <div class="fig"><span class="label">Reference example — Round Robin with quantum = 2.</span>
 Time   0    1    2    3    4    5    6    7    8    9   10   11   12
       ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┐
       │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │
       └────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┘
 Each process gets an equal slice; the cycle repeats until all complete.</div>
 
-    <h2>💻 Activity 3 — Human Scheduling Simulation <span style="font-size:0.8rem;color:#64748b;font-weight:500;">(10 minutes)</span></h2>
+  <!-- ============ PHASE 3: MAIN TASK ============ -->
+  <div class="phase">
+    <span class="phase-num">3</span>
+    <h2>Main Task — A1.3 Starters <span class="timing">20 min</span></h2>
+  </div>
 
-    <div class="activity-box">
-        <h4>📖 What is this activity?</h4>
-        <p>A <strong>role-play</strong> to see how each algorithm behaves with real processes.</p>
-        <p><strong>The setup:</strong></p>
-        <ul style="padding-left:1.4rem;">
-            <li>The <strong>teacher is the CPU</strong> — only one process can "run" at a time.</li>
-            <li>Four students are the <strong>processes</strong> (P1, P2, P3, P4 — see the table below).</li>
-            <li>Everyone else is the <strong>scheduler panel</strong> — you score the algorithm after each round.</li>
-        </ul>
-        <p><strong>What you do:</strong> The teacher runs the four processes through each algorithm in turn. Between rounds, the panel <strong>scores the algorithm</strong> on four metrics:</p>
-        <ul style="padding-left:1.4rem;">
-            <li><strong>Fairness</strong> — did everyone get a reasonable share?</li>
-            <li><strong>Speed</strong> — how quickly did processes complete?</li>
-            <li><strong>Starvation risk</strong> — did any process get ignored?</li>
-            <li><strong>Overhead</strong> — how much switching happened?</li>
-        </ul>
-        <p><strong>The critical rule:</strong> When defending your score, you must reference a <strong>rival algorithm</strong>. For example: <em>"I gave Round Robin 4/5 for fairness, <strong>unlike</strong> FCFS, which would score 2/5 because the convoy effect means one long job blocks everything behind it."</em></p>
+  <p>Work through the <strong>A1.3 Starters presentation</strong> in your new groups. Each group must have at least one expert from each algorithm.</p>
+  <a class="btn green" href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_4" target="_blank" rel="noopener">📊 Open A1.3 Starters</a>
+
+  <div class="panel accent">
+    <strong>How to work through it:</strong>
+    <ul>
+      <li>Discuss each slide as a group.</li>
+      <li>Each expert contributes their specific knowledge.</li>
+      <li>You must reach a consensus on the answer.</li>
+      <li>Use <strong>comparative language</strong> in every answer: "Unlike FCFS…", "Whereas Round Robin…", "Both Priority and MLQ…"</li>
+    </ul>
+  </div>
+
+  <details>
+    <summary>🚀 Finished early? Optional AI Extension — Teach Jojo</summary>
+    <p>Use <strong>Revision Dojo's "Teach Jojo"</strong> to test your understanding. Jojo will act as a checker who asks comparative questions and identifies gaps in your knowledge.</p>
+    <a class="btn orange" href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank" rel="noopener">🤖 Launch Teach Jojo</a>
+    <div class="ai-prompt">
+      <strong>Prompt to use with Jojo:</strong>
+      <p>You are Jojo, an AI learning about CPU scheduling. I am an expert on <strong>[Your Algorithm]</strong>. Ask me questions to test my understanding. You must ask me:</p>
+      <ol>
+        <li>How my algorithm works.</li>
+        <li>If it's pre-emptive or not.</li>
+        <li>One strength and one weakness.</li>
+        <li><strong>How it compares to at least one other algorithm.</strong></li>
+        <li><strong>What is the consequence of that difference?</strong></li>
+      </ol>
     </div>
+  </details>
 
-    <table>
-        <thead>
-            <tr><th>Process</th><th>Role</th><th>Priority</th><th>Burst</th></tr>
-        </thead>
-        <tbody>
-            <tr><td><strong>P1</strong></td><td>Long video export</td><td>High</td><td>Long</td></tr>
-            <tr><td><strong>P2</strong></td><td>Text editor (keystrokes)</td><td>Medium</td><td>Short, frequent</td></tr>
-            <tr><td><strong>P3</strong></td><td>Background backup</td><td>Low</td><td>Long</td></tr>
-            <tr><td><strong>P4</strong></td><td>Music player</td><td>High</td><td>Short, regular</td></tr>
-        </tbody>
-    </table>
+  <!-- ============ PHASE 4: CHECK UNDERSTANDING ============ -->
+  <div class="phase">
+    <span class="phase-num">4</span>
+    <h2>Check Understanding & Address Misconceptions <span class="timing">10 min</span></h2>
+  </div>
 
-    <h2>🌀 Activity 4 — The Twist <span style="font-size:0.8rem;color:#64748b;font-weight:500;">(5 minutes)</span></h2>
+  <p><strong>Whole-class feedback:</strong> One group shares a strong comparison they made. Another group shares a point they found tricky.</p>
 
-    <div class="activity-box">
-        <h4>📖 What is this activity?</h4>
-        <p>The class will conclude that <strong>Round Robin wins</strong> for a general-purpose PC. Then the scenario changes.</p>
-        <p><strong>The new scenario:</strong> the target system is a <strong>hospital emergency system</strong>.</p>
-        <p><strong>What you do:</strong> Discuss in your team — <em>does your answer still stand?</em> Consider:</p>
-        <ul style="padding-left:1.4rem;">
-            <li>What if a life-critical process is waiting?</li>
-            <li>What if fairness causes a critical task to be delayed by a background job?</li>
-            <li>What does "predictability" mean in this context?</li>
-        </ul>
-        <p><strong>The point of this activity:</strong> the best algorithm <strong>depends on context</strong>. Comparison requires judgement — not just knowing the four options.</p>
+  <h3>🔍 Targeted Questions — Use the Compare Table</h3>
+
+  <div class="compare-grid">
+    <div class="vs-box">
+      <h4>❓ Is Round Robin always fair?</h4>
+      <ul>
+        <li><strong>No.</strong> It's fair in CPU time, but it pays for that fairness with <strong>context-switching overhead</strong>.</li>
+        <li>The smaller the quantum, the fairer it feels — but the more time is wasted switching.</li>
+        <li><em>Compare:</em> FCFS has almost no overhead, but it's not fair at all.</li>
+      </ul>
     </div>
-
-    <h2>🚶 Activity 5 — Four Corners Debate <span style="font-size:0.8rem;color:#64748b;font-weight:500;">(5 minutes)</span></h2>
-
-    <div class="activity-box">
-        <h4>📖 What is this activity?</h4>
-        <p>Four corners of the room are labelled <strong>FCFS · Round Robin · Priority · Multilevel Queue</strong>.</p>
-        <p><strong>What you do:</strong> Move to the corner you believe should run the <strong>school network</strong>.</p>
-        <p><strong>Rules when you speak:</strong></p>
-        <ol style="padding-left:1.4rem;">
-            <li>Justify your choice.</li>
-            <li>Mention at least one <strong>other</strong> algorithm.</li>
-            <li>Explain why yours is <em>better</em> for this context.</li>
-        </ol>
+    <div class="vs-box">
+      <h4>❓ Why is FCFS so simple? What's the downside?</h4>
+      <ul>
+        <li><strong>Simple:</strong> No decisions to make — just a FIFO queue.</li>
+        <li><strong>Downside:</strong> The <strong>convoy effect</strong>. One long job blocks every short job behind it.</li>
+        <li><em>Compare:</em> Round Robin would pre-empt that long job, so short jobs get a turn.</li>
+      </ul>
     </div>
-
-    <h2>✍️ Activity 6 — Contract Bid <span style="font-size:0.8rem;color:#64748b;font-weight:500;">(5 minutes)</span></h2>
-
-    <div class="activity-box">
-        <h4>📖 What is this activity?</h4>
-        <p>Your final assessment for the lesson. Silent, individual — <strong>not</strong> a group task.</p>
-        <p>Write a full answer to this exam-style question:</p>
+    <div class="vs-box">
+      <h4>❓ Hospital system — which algorithm?</h4>
+      <ul>
+        <li><strong>Priority</strong> with ageing.</li>
+        <li>A life-critical process must jump the queue.</li>
+        <li><em>Compare:</em> Round Robin is the wrong goal here — fairness would delay a critical alert behind a background log write.</li>
+      </ul>
     </div>
-
-    <div class="command-term">
-        <em>"Compare First-Come First-Served and Round Robin scheduling. [4 marks]"</em>
+    <div class="vs-box">
+      <h4>❓ Which algorithm can starve processes?</h4>
+      <ul>
+        <li><strong>Priority</strong> (without ageing) and <strong>Multilevel Queue</strong> (lower queues).</li>
+        <li>FCFS and Round Robin have <strong>no starvation risk</strong>.</li>
+        <li><em>Compare:</em> Priority serves urgent work first, but starves low-priority work. FCFS never starves anyone — but it can make everyone wait.</li>
+      </ul>
     </div>
+  </div>
 
-    <p><strong>📝 Sentence frame:</strong></p>
-    <p style="background:#f1f6fc; padding:12px 16px; border-radius:8px;">"Both ___ and ___ are ___. However, ___ is ___ and runs ___ whereas ___ is ___ and gives ___. The effect of this difference is that ___, while ___. ___ pays for this with ___."</p>
+  <div class="twist">
+    <h4>🌀 The Twist — 2 minutes</h4>
+    <p>The class has just concluded Round Robin wins for a general-purpose PC.</p>
+    <p>Now Microsoft reveals the real target system: a <strong>hospital emergency system</strong>.</p>
+    <p><strong>Does your answer still stand?</strong></p>
+    <p><em>Discuss in your team. The best algorithm depends on context. Comparison requires judgement — not just knowledge of the four options.</em></p>
+  </div>
 
-    <details>
-        <summary>📌 Click to see a model answer</summary>
-        <p>Both FCFS and Round Robin are processor scheduling algorithms that decide the order in which ready processes use the CPU <strong>[1]</strong>.</p>
-        <p>However, FCFS is non-pre-emptive and runs each process to completion, whereas Round Robin is pre-emptive and gives each a fixed time slice before moving it to the back of the queue <strong>[1]</strong>.</p>
-        <p>As a result, FCFS can make short processes wait behind a long one (the convoy effect), while Round Robin shares the CPU more evenly so short processes respond sooner <strong>[1]</strong>.</p>
-        <p>Round Robin pays for this with the overhead of frequent context switching, which FCFS largely avoids <strong>[1]</strong>.</p>
-    </details>
+  <!-- ============ PHASE 5: INDEPENDENT PROOF ============ -->
+  <div class="phase">
+    <span class="phase-num">5</span>
+    <h2>Contract Bid — Independent Proof <span class="timing">5 min</span></h2>
+  </div>
 
-    <!-- Tasks -->
-    <h2>📖 Your Tasks</h2>
-    <div class="task-block">
-        <div class="task-row">
-            <span class="task-step">1</span>
-            <span class="task-desc">
-                <strong>Read &amp; Teach</strong> — Use the resources below to learn about the four scheduling algorithms, then explain them to the AI.
-                <div class="task-1-resources">
-                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.3.1-1.3.5.pdf" target="_blank">📖 eBook</a></span>
-                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.3.3-compare-different-approaches-to-scheduling" target="_blank">🌐 CS Wiki</a></span>
-                    <span class="pill"><a href="#" target="_blank">📊 Lesson Slides</a></span>
-                    <span class="pill">📘 Textbook</span>
-                    <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
-                </div>
-            </span>
-        </div>
-        <div class="task-row task-starter">
-            <span class="task-step">2</span>
-            <span class="task-desc">
-                <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_0" target="_blank">Lesson Starter PowerPoint</a>.<br>
-                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.
-            </span>
-        </div>
-        <div class="task-row">
-            <span class="task-step">3</span>
-            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
-        </div>
-    </div>
+  <p>Silent, individual. This is your team's contract bid to Microsoft.</p>
+  <div class="panel accent">
+    <em>"Compare First-Come First-Served and Round Robin scheduling. [4 marks]"</em>
+  </div>
 
-    <!-- Unit-end reminder -->
-    <div class="unit-reminder">
-        📌 <strong>End-of-unit submission:</strong> Save your Lesson Questions as a <strong>.txt</strong> file. You will submit <strong>all</strong> starter activity answers to <strong>Schoolbox</strong> at the end of <strong>A1.1.9 Debugging Techniques</strong>.
-    </div>
+  <p><strong>📝 Sentence frame:</strong></p>
+  <p>"Both ___ and ___ are ___. However, ___ is ___ and runs ___ whereas ___ is ___ and gives ___. The effect of this difference is that ___, while ___. ___ pays for this with ___."</p>
 
-    <div class="key-takeaway">
-        <p><em>"No scheduling approach is best in every way. FCFS is simple but non-pre-emptive and suffers the convoy effect; Round Robin is pre-emptive and responsive but pays in context-switching overhead; Priority serves urgent work first but can starve low-priority processes; Multilevel Queue separates workloads cleanly but can starve lower queues. To <em>compare</em> them is to say which is more responsive, which carries more overhead, which can starve — and to justify your choice for the workload in front of you."</em></p>
-    </div>
+  <details>
+    <summary>📌 Click to see a model answer</summary>
+    <p>Both FCFS and Round Robin are processor scheduling algorithms that decide the order in which ready processes use the CPU <strong>[1]</strong>.</p>
+    <p>However, FCFS is non-pre-emptive and runs each process to completion, whereas Round Robin is pre-emptive and gives each a fixed time slice before moving it to the back of the queue <strong>[1]</strong>.</p>
+    <p>As a result, FCFS can make short processes wait behind a long one (the convoy effect), while Round Robin shares the CPU more evenly so short processes respond sooner <strong>[1]</strong>.</p>
+    <p>Round Robin pays for this with the overhead of frequent context switching, which FCFS largely avoids <strong>[1]</strong>.</p>
+  </details>
 
-    <hr>
+  <!-- ============ PHASE 6: PLENARY ============ -->
+  <div class="phase">
+    <span class="phase-num">6</span>
+    <h2>Plenary <span class="timing">5 min</span></h2>
+  </div>
 
-    <div class="lesson-nav">
-        <a href="A1.3.2-summary.html">← Previous: A1.3.2 Functions of an OS</a>
-        <a href="A1.3.4-summary.html">Next: A1.3.4 Polling vs Interrupts →</a>
-    </div>
+  <a class="btn green" href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank" rel="noopener">Launch Quizlet</a>
+  <a class="btn orange" href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">Launch Blooket</a>
 
-    <div class="footer-meta">
-        A1.3.3 – Compare Different Approaches to Scheduling • IB Computer Science • Year 12
-    </div>
+  <!-- ============ COMPARE TABLE ============ -->
+  <h2>📋 The Compare Table — Reference</h2>
+  <p>This is the key reference for the exam. Learn it as a comparison across dimensions, not four separate descriptions.</p>
+
+  <table>
+    <thead>
+      <tr><th>Metric</th><th>FCFS</th><th>Round Robin</th><th>Priority</th><th>Multilevel Queue</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Pre-emptive?</strong></td><td>No</td><td>Yes (quantum)</td><td>Either variant</td><td>Usually not between queues</td></tr>
+      <tr><td><strong>Queue structure</strong></td><td>Simple FIFO</td><td>FIFO + rotation</td><td>Priority heap</td><td>Several queues by class</td></tr>
+      <tr><td><strong>Response time</strong></td><td>Poor for short jobs</td><td>Good if quantum tuned</td><td>Excellent for high priority</td><td>Excellent for top class</td></tr>
+      <tr><td><strong>Overhead</strong></td><td>Minimal</td><td>Higher as quantum ↓</td><td>Low unless pre-empting</td><td>Extra per-queue bookkeeping</td></tr>
+      <tr><td><strong>Fairness</strong></td><td>Arrival order only</td><td>High (equal quanta)</td><td>Unfair across levels</td><td>Fair within a queue only</td></tr>
+      <tr><td><strong>Starvation risk</strong></td><td>None</td><td>None</td><td>High without ageing</td><td>High for lowest queue</td></tr>
+      <tr><td><strong>Best suited to</strong></td><td>Batch systems</td><td>Time-sharing, GUIs</td><td>Real-time workloads</td><td>Mixed workloads</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ EXTENSION ============ -->
+  <h2>⭐ Extension (if time / homework)</h2>
+  <ul>
+    <li><strong>Programming:</strong> Write a Python program to simulate FCFS and report waiting and turnaround times.</li>
+    <li><strong>Research ageing:</strong> How does it fix starvation in priority scheduling? One paragraph.</li>
+    <li><strong>Design challenge:</strong> Propose a hybrid scheduling policy for a school computer lab. Justify with three comparative points.</li>
+  </ul>
+
+  <div class="takeaway">
+    💡 <strong>Key Takeaway:</strong> "No scheduling approach is best in every way. FCFS is simple but non-pre-emptive and suffers the convoy effect; Round Robin is pre-emptive and responsive but pays in context-switching overhead; Priority serves urgent work first but can starve low-priority processes; Multilevel Queue separates workloads cleanly but can starve lower queues. To <em>compare</em> them is to say which is more responsive, which carries more overhead, which can starve — and to justify your choice for the workload in front of you."
+  </div>
+
+  <!-- ============ OBS FORM ============ -->
+  <h2>✅ Observation Form Coverage</h2>
+  <p>Every activity is timed to fit a <strong>45–50 minute</strong> lesson and mapped to your observation form.</p>
+
+  <h3>1. Learning</h3>
+  <ul class="checklist">
+    <li class="done"><strong>Guide Reference:</strong> A1.3.3 – Compare different approaches to scheduling</li>
+    <li class="done"><strong>Content to Be Taught:</strong> FCFS, RR, Priority, MLQ; pre-emptive vs non-pre-emptive; fairness, overhead, starvation-risk</li>
+    <li class="done"><strong>Student Outcome:</strong> Compare at least two approaches, giving a similarity and a difference, and justify a recommendation</li>
+    <li class="done"><strong>Proof:</strong> Completed compare table + independent 4-mark compare answer</li>
+    <li class="done"><strong>Secure Standard:</strong> Names approach + allocation method + pre-emptive status; gives similarity <em>and</em> difference; links difference to consequence; comparative judgement</li>
+    <li class="done"><strong>IB Connection:</strong> Command term "Compare"; 4-mark allocation modelled with sentence frame and exemplar</li>
+  </ul>
+
+  <h3>2. Plan</h3>
+  <ul class="checklist">
+    <li class="done"><strong>Connect (5 min):</strong> Command Terms starter — students retrieve the definition of <em>Compare</em> and set the mission brief</li>
+    <li class="done"><strong>Teach / Model (10 min):</strong> Expert groups — students become the teachers via information sheets and team cards</li>
+    <li class="done"><strong>Students Think / Do (20 min):</strong> A1.3 Starters presentation — groups work through comparative questions together</li>
+    <li class="done"><strong>Check Everyone (10 min):</strong> Whole-class feedback + targeted misconception questions + scenario twist</li>
+    <li class="done"><strong>Adapt:</strong> Support = information sheets + sentence stems + compare table; Challenge = Teach Jojo AI extension, hybrid design, Python simulation</li>
+    <li class="done"><strong>Feedback &amp; Improve (embedded):</strong> Group consensus + whole-class feedback before the independent proof</li>
+    <li class="done"><strong>Independent Proof (5 min):</strong> Silent individual 4-mark compare question, self-marked against the model answer</li>
+  </ul>
+
+  <h3>3. Planned Response and Follow-Through</h3>
+  <ul class="checklist">
+    <li class="done"><strong>If Learning Is Not Secure:</strong> Re-model with the two-tills supermarket analogy; reduce to FCFS vs RR only; re-teach one row of the compare table at a time</li>
+    <li class="done"><strong>Next Step:</strong> Extension tasks as homework (ageing research + Python FCFS); compare table posted to Schoolbox; deadline set</li>
+  </ul>
+
+  <h3>4. Observation Checklist</h3>
+  <ul class="checklist">
+    <li class="done">Accurate guide content</li>
+    <li class="done">Clear outcome and standard</li>
+    <li class="done">Every student actively learning</li>
+    <li class="done">Higher-order thinking / agency visible</li>
+    <li class="done">Every student checked</li>
+    <li class="done">Feedback will be used</li>
+    <li class="done">Time and expectations are clear</li>
+  </ul>
+
+  <div class="panel good">
+    <strong>What the observer will see and write:</strong>
+    <ul>
+      <li>✅ "Students were making decisions" — group consensus on presentation answers</li>
+      <li>✅ "Students were justifying choices" — comparative language required in every answer</li>
+      <li>✅ "Students challenged each other's reasoning" — expert groups defending their algorithm</li>
+      <li>✅ "The teacher facilitated rather than delivered" — expert groups + presentation replace teacher input</li>
+      <li>✅ "Higher-order thinking visible" — context twist forces reappraisal of the 'best' algorithm</li>
+    </ul>
+  </div>
+
 </div>
-
-<script>
-    // ===== Quick Quiz =====
-    (function() {
-        const quizQs = document.querySelectorAll('#quizContainer .quiz-q');
-        const scoreEl = document.getElementById('quizScore');
-        let correctCount = 0;
-        const answered = new Set();
-
-        quizQs.forEach((q, idx) => {
-            const answer = q.getAttribute('data-answer');
-            const options = q.querySelectorAll('.quiz-option');
-            options.forEach(opt => {
-                opt.addEventListener('click', () => {
-                    if (answered.has(idx)) return;
-                    answered.add(idx);
-
-                    const chosen = opt.getAttribute('data-opt');
-                    const mark = opt.querySelector('.mark');
-
-                    if (chosen === answer) {
-                        opt.classList.add('correct');
-                        mark.textContent = '✓';
-                        correctCount++;
-                    } else {
-                        opt.classList.add('wrong');
-                        mark.textContent = '✗';
-                        options.forEach(o => {
-                            if (o.getAttribute('data-opt') === answer) {
-                                o.classList.add('correct');
-                                o.querySelector('.mark').textContent = '✓';
-                            }
-                        });
-                    }
-                    scoreEl.textContent = 'Score: ' + correctCount + ' / ' + quizQs.length;
-                });
-            });
-        });
-    })();
-
-    // ===== Match-Up =====
-    (function() {
-        const items = document.querySelectorAll('.match-item');
-        const feedback = document.getElementById('matchFeedback');
-        let selected = null;
-        let matchedCount = 0;
-        const totalMatches = 4;
-
-        items.forEach(item => {
-            item.addEventListener('click', () => {
-                if (item.classList.contains('matched')) return;
-
-                if (!selected) {
-                    selected = item;
-                    item.classList.add('selected');
-                    return;
-                }
-
-                if (selected === item) {
-                    selected.classList.remove('selected');
-                    selected = null;
-                    return;
-                }
-
-                const selCol = selected.parentElement;
-                const curCol = item.parentElement;
-
-                if (selCol === curCol) {
-                    selected.classList.remove('selected');
-                    selected = item;
-                    item.classList.add('selected');
-                    return;
-                }
-
-                if (selected.getAttribute('data-match') === item.getAttribute('data-match')) {
-                    selected.classList.remove('selected');
-                    selected.classList.add('matched');
-                    item.classList.add('matched');
-                    matchedCount++;
-                    selected = null;
-
-                    if (matchedCount === totalMatches) {
-                        feedback.textContent = '🎉 All matched — challenge complete!';
-                    } else {
-                        feedback.textContent = '✅ Correct! (' + matchedCount + '/' + totalMatches + ')';
-                    }
-                } else {
-                    item.classList.add('wrong');
-                    setTimeout(() => {
-                        item.classList.remove('wrong');
-                        selected.classList.remove('selected');
-                        selected = null;
-                    }, 400);
-                    feedback.textContent = '❌ Not quite — try again.';
-                }
-            });
-        });
-    })();
-</script>
-
 </body>
 </html>
