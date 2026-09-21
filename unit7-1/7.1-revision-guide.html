@@ -1,1 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7.1 Revision Guide · Python Programming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255, 200, 120, 0.18) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(120, 200, 255, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(200, 160, 255, 0.10) 0%, transparent 60%),
+                linear-gradient(135deg, #fef9f3 0%, #eef6fb 50%, #f5f0fc 100%);
+            color: #1a2639;
+            line-height: 1.6;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ---------- HEADER ---------- */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 2.2rem;
+            background: linear-gradient(120deg, #1b3a5c 0%, #2a6f97 45%, #6a4c93 100%);
+            border-radius: 32px;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 14px 36px -10px rgba(20, 50, 90, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-left h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-left h1 i {
+            color: #ffd166;
+            font-size: 2.2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .header-left .subhead {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.98rem;
+            margin-top: 0.4rem;
+            padding-left: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .header-left .subhead span {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .progress-wrap {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 60px;
+            padding: 0.6rem 1.4rem 0.6rem 1rem;
+            box-shadow: 0 6px 18px rgba(0, 20, 40, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1b3a5c;
+            white-space: nowrap;
+        }
+
+        .progress-bar-bg {
+            width: 140px;
+            height: 10px;
+            background: #e2ebf5;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ef476f, #ffd166, #06d6a0, #118ab2, #6a4c93);
+            background-size: 300% 100%;
+            border-radius: 20px;
+            transition: width 0.4s ease;
+            animation: rainbowShift 4s linear infinite;
+        }
+
+        @keyframes rainbowShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .progress-pct {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #6a4c93;
+            min-width: 36px;
+            text-align: right;
+        }
+
+        /* ---------- GRID ---------- */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 1.6rem 1.6rem 1.8rem 1.6rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+            border: 1px solid #eef2f8;
+            transition: box-shadow 0.2s ease, transform 0.15s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--accent, #2a6f97);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .card[data-card="1"] { --accent: #ef476f; --accent-light: #fde2e8; }
+        .card[data-card="2"] { --accent: #f78c6b; --accent-light: #fde6db; }
+        .card[data-card="3"] { --accent: #ffd166; --accent-light: #fff3d6; }
+        .card[data-card="4"] { --accent: #06d6a0; --accent-light: #d9f7ec; }
+        .card[data-card="5"] { --accent: #118ab2; --accent-light: #d7eef6; }
+        .card[data-card="6"] { --accent: #e63946; --accent-light: #fbdde0; }
+        .card[data-card="7"] { --accent: #2a9d8f; --accent-light: #d8f0ec; }
+        .card[data-card="8"] { --accent: #6a4c93; --accent-light: #e8def4; }
+        .card[data-card="9"] { --accent: #ff8fab; --accent-light: #ffe2eb; }
+        .card[data-card="10"] { --accent: #457b9d; --accent-light: #dceaf2; }
+
+        .card:hover {
+            box-shadow: 0 18px 36px -12px rgba(20, 60, 100, 0.18), 0 2px 8px rgba(0, 0, 0, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .card-full {
+            grid-column: 1 / -1;
+        }
+
+        /* ---------- CARD HEADER / TOGGLE ---------- */
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 2px solid #eef2f8;
+            padding-bottom: 0.6rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .card-head h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f3b5c;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .card-head h2 .num {
+            background: var(--accent, #2a6f97);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            width: 1.9rem;
+            height: 1.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-head .toggle-icon {
+            color: #8aa2bc;
+            font-size: 1rem;
+            transition: transform 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        .card.collapsed .card-head .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .card-body {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.25s ease;
+            max-height: 3500px;
+            opacity: 1;
+        }
+
+        .card.collapsed .card-body {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ---------- TABLES ---------- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin: 0.8rem 0 0.6rem 0;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        th {
+            background: var(--accent-light, #e9f1f9);
+            color: #0b2b4b;
+            font-weight: 600;
+            text-align: left;
+            padding: 0.65rem 0.8rem;
+            font-size: 0.83rem;
+            letter-spacing: 0.02em;
+        }
+
+        td {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid #f1f5fa;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ---------- TEXT ELEMENTS ---------- */
+        h3 {
+            font-size: 1.02rem;
+            font-weight: 600;
+            color: #1e3f60;
+            margin: 1.2rem 0 0.5rem 0;
+        }
+
+        h3:first-of-type {
+            margin-top: 0.2rem;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin: 0.5rem 0 0.7rem 0;
+        }
+
+        li {
+            margin-bottom: 0.3rem;
+        }
+
+        .note {
+            background: var(--accent-light, #eef4fa);
+            border-left: 6px solid var(--accent, #2a6f97);
+            padding: 0.9rem 1.1rem;
+            border-radius: 12px;
+            margin: 1rem 0 0.4rem 0;
+            font-size: 0.9rem;
+            color: #17324d;
+        }
+
+        .note strong {
+            color: #0b2b4b;
+        }
+
+        code {
+            background: #f0f4f8;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.88rem;
+            color: #b5305a;
+            font-weight: 600;
+        }
+
+        pre {
+            background: #1e2a3a;
+            color: #e8eef7;
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0.8rem 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        pre .kw { color: #ff9eb5; }
+        pre .fn { color: #7ee0c0; }
+        pre .str { color: #ffd166; }
+        pre .num { color: #a8d8ff; }
+        pre .com { color: #7f9ab5; font-style: italic; }
+
+        /* ---------- SELF CHECK ---------- */
+        .self-check {
+            margin-top: 1.2rem;
+            border-top: 1px dashed #cbddee;
+            padding-top: 0.9rem;
+        }
+
+        .self-check-btn {
+            background: #f5f9fe;
+            border: 1px solid var(--accent, #c7d9ea);
+            color: #1f4a73;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+            font-family: inherit;
+        }
+
+        .self-check-btn:hover {
+            background: var(--accent-light, #d9e6f2);
+            border-color: var(--accent, #9bb8d4);
+            transform: translateY(-1px);
+        }
+
+        .self-check-btn i {
+            font-size: 0.8rem;
+            transition: transform 0.2s ease;
+        }
+
+        .self-check-btn.open i {
+            transform: rotate(90deg);
+        }
+
+        .self-check-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.2s ease;
+            opacity: 0;
+            margin-top: 0;
+            background: #f9fbfe;
+            border-radius: 12px;
+            padding: 0 1rem;
+            border: 1px solid transparent;
+        }
+
+        .self-check-content.open {
+            max-height: 600px;
+            opacity: 1;
+            margin-top: 0.7rem;
+            padding: 0.8rem 1rem;
+            border-color: var(--accent-light, #e0ecf8);
+        }
+
+        .self-check-content p {
+            font-size: 0.88rem;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+
+        .self-check-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .answer-toggle-btn {
+            background: transparent;
+            border: 1px dashed var(--accent, #9bb8d4);
+            color: var(--accent, #1f4a73);
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background 0.15s ease, border-color 0.15s ease;
+            font-family: inherit;
+            margin-top: 0.5rem;
+        }
+
+        .answer-toggle-btn:hover {
+            background: var(--accent-light, #eef4fa);
+        }
+
+        .answer-toggle-btn i {
+            font-size: 0.75rem;
+            transition: transform 0.2s ease;
+        }
+
+        .answer-toggle-btn.open i {
+            transform: rotate(90deg);
+        }
+
+        .answer-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.2s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .answer-content.open {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 0.4rem;
+        }
+
+        .answer-content .answer {
+            color: #1f6e43;
+            font-weight: 600;
+        }
+
+        /* ---------- CHECKBOX PROGRESS ---------- */
+        .card-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.2rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #eef4fa;
+        }
+
+        .card-progress label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #5d7f9a;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .card-progress input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent, #1f6e9c);
+            cursor: pointer;
+        }
+
+        /* ---------- FOOTER ---------- */
+        .footer-note {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #d4e2f0;
+            font-size: 0.88rem;
+            color: #3d556b;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .footer-note i {
+            color: #6a4c93;
+            margin-right: 6px;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 800px) {
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1.4rem 1.4rem;
+                border-radius: 24px;
+            }
+
+            .header-left h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-left h1 i {
+                font-size: 1.6rem;
+            }
+
+            .progress-wrap {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .progress-bar-bg {
+                flex: 1;
+                width: auto;
+            }
+
+            .card {
+                padding: 1.2rem 1.1rem 1.4rem 1.1rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .header-left h1 {
+                font-size: 1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .progress-label {
+                font-size: 0.72rem;
+            }
+
+            .card-head h2 {
+                font-size: 1rem;
+            }
+
+            .card-head h2 .num {
+                width: 1.5rem;
+                height: 1.5rem;
+                font-size: 0.68rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ========== HEADER ========== -->
+        <div class="header">
+            <div class="header-left">
+                <h1>
+                    <i class="fas fa-code"></i> 7.1 Revision Guide
+                </h1>
+                <div class="subhead">
+                    <i class="fas fa-laptop-code" style="color:#ffd166;"></i>
+                    Python Programming · Key knowledge for the test
+                    <span>Self‑study</span>
+                </div>
+            </div>
+
+            <div class="progress-wrap">
+                <span class="progress-label"><i class="fas fa-tasks" style="margin-right:6px;color:#6a4c93;"></i>Progress</span>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-pct" id="progressPct">0%</span>
+            </div>
+        </div>
+
+        <!-- ========== GRID START ========== -->
+        <div class="grid">
+
+            <!-- 1. DATA TYPES -->
+            <div class="card" data-card="1">
+                <div class="card-head" onclick="toggleCard(this)">
+                    <h2><span class="num">1</span> Data Types</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr><th>Data Type</th><th>What it stores</th><th>Example</th></tr>
+                        <tr><td><strong>String</strong></td><td>Text — letters, numbers, symbols (always in quotes)</td><td><code>"Hello"</code>, <code>"city"</code>, <code>"April"</code></td></tr>
+                        <tr><td><strong>Integer</strong></td><td>Whole numbers (positive or negative, no decimal point)</td><td><code>15</code>, <code>-5</code>, <code>3</code></td></tr>
+                        <tr><td><strong>Real / Float</strong></td><td>Decimal numbers</td><td><code>3.14</code>, <code>1.75</code>, <code>-0.5</code></td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Remember:</strong> In Python, the real data type is referred to as <code>float</code>. Integers can be positive <em>or</em> negative — not just positive.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which data type would store a decimal number like 3.14?</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Real / Float.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="1"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. CHOOSING THE RIGHT DATA TYPE -->
+            <div class="card" data-card="2">
+                <div class="card-head" onclick="toggleCard(this)">
+                    <h2><span class="num">2</span> Choosing the Right Data Type</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>When you see a variable name, think about what kind of data it would sensibly hold:</p>
+                    <table>
+                        <tr><th>Variable</th><th>Sensible type</th><th>Why</th></tr>
+                        <tr><td><code>city</code></td><td>String</td><td>It's a name made of letters</td></tr>
+                        <tr><td><code>month</code></td><td>String</td><td>Month names are text (e.g. "April")</td></tr>
+                        <tr><td><code>house number</code></td><td>Integer</td><td>Whole numbers</td></tr>
+                        <tr><td><code>cost</code></td><td>Real/Float</td><td>Money often has decimals (e.g. 4.99)</td></tr>
+                        <tr><td><code>school stage</code></td><td>Integer</td><td>Year group is a whole number</td></tr>
+                        <tr><td><code>temperature</code></td><td>Real/Float</td><td>Temperatures have decimals (e.g. 21.5)</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Tip:</strong> If it's a label, name, or category → String. If it's a count of whole things → Integer. If it can have a decimal point → Real/Float.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> What data type would the variable <code>cost</code> most likely be?</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Real / Float (prices usually have decimals).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="2"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. PYTHON COMMANDS -->
+            <div class="card" data-card="3">
+                <div class="card-head" onclick="toggleCard(this)">
+                    <h2><span class="num">3</span> Python Commands</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr><th>Command</th><th>What it does</th></tr>
+                        <tr><td><code>print()</code></td><td>Displays information on the screen</td></tr>
+                        <tr><td><code>input()</code></td><td>Asks the user for information (returns a string)</td></tr>
+                        <tr><td><code>int()</code></td><td>Casts a variable to an integer</td></tr>
+                        <tr><td><code>float()</code></td><td>Casts a variable to a real/float</td></tr>
+                        <tr><td><code>str()</code></td><td>Casts a variable to a string</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Important:</strong> <code>input()</code> is for getting data <em>in</em>. <code>print()</code> is for showing data <em>out</em>. Don't mix them up!
+                    </div>
+                    <h3>Variables</h3>
+                    <ul>
+                        <li>Variable names <strong>cannot</strong> have spaces — use underscores instead (e.g. <code>first_name</code>).</li>
+                        <li>Variables can be used to store data and reuse it later.</li>
+                        <li>You can join strings and variables together in a <code>print()</code> using a comma.</li>
+                    </ul>
+                    <div class="self-check">
+                        <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which command displays information on the screen?</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> <code>print()</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="3"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. FLOWCHART SYMBOLS -->
+            <div class="card" data-card="4">
+                <div class="card-head" onclick="toggleCard(this)">
+                    <h2><span class="num">4</span> Flowchart Symbols</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr><th>Symbol</th><th>Name</th><th>What it shows</th></tr>
+                        <tr><td>⬭</td><td>Terminator</td><td>Start or end of the flowchart</td></tr>
+                        <tr><td>▱</td><td>Input/Output</td><td>Information being entered or displayed</td></tr>
+                        <tr><td>▭</td><td>Process</td><td>Something needs to happen / a calculation</td></tr>
+                        <tr><td>◇</td><td>Decision</td><td>A yes/no question to determine what to do next</td></tr>
+                        <tr><td>▯▯</td><td>Sub-routine</td><td>Jump into a mini-program, then return</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Remember:</strong> The sub-routine symbol has <em>double vertical lines</em> on the left and right edges. It means the flowchart is jumping into a mini-program and coming back.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which flowchart symbol is used to check a condition and decide what to do?</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> Decision (diamond).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="4"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. COMPARISON OPERATORS -->
+            <div class="card" data-card="5">
+                <div class="card-head" onclick="toggleCard(this)">
+                    <h2><span class="num">5</span> Comparison Operators</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr><th>Operator</th><th>Meaning</th></tr>
+                        <tr><td><code>==</code></td><td>Equal to</td></tr>
+                        <tr><td><code>!=</code></td><td>Not equal to</td></tr>
+                        <tr><td><code>&lt;</code></td><td>Less than</td></tr>
+                        <tr><td><code>&gt;</code></td><td>Greater than</td></tr>
+                        <tr><td><code>&lt;=</code></td><td>Less than or equal to</td></tr>
+                        <tr><td><code>&gt;=</code></td><td>Greater than or equal to</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Watch out:</strong> <code>=</code> means "assign a value", but <code>==</code> means "is equal to". They are not the same!
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" onclick="toggleSelfCheck(this)"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which operator means "not equal to"?</p>
+                            <button class="answer-toggle-btn" onclick="toggleAnswer(this)"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content">
+                                <p><span class="answer">A:</span> <code>!=</code></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="5"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. BIDMAS -->
+            <div class="card" data-card="6">
+                <div class="card-head" onclick="toggleCard(this)">
+                    <h2><span class="num">6</span> BIDMAS — Order of Operations</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>Python follows the same order of operations as maths. BIDMAS tells you which part to work out first:</p>
+                    <ul>
+                        <li><strong>B</strong>rackets</li>
+                        <li><strong>I</strong>ndices (powers)</li>
+                        <li><strong>D</strong>ivision</li>
+                        <li><strong>M</strong>ultiplication</li>
+                        <li><strong>A</strong>ddition</li>
+                        <li><strong>S</strong>ubtraction</li>
+                    </ul>
+                    <h3>Worked example</h3>
+                    <pre><span class="num">3</span> + <span class="num">4</span> * <span class="num">5</span>   →  multiplication first: <span class="num">4</span> × <span class="num">5</span> = <span class="num">20</span>, then <span class="num">3</span> + <span class="num">20</span> = <span class="num">23</span>
+<span class="num">5</span> * (<span class="num">8</span> + <span class="num">6</span>) →  brackets first: <span class="num">8</span> + <span class="
