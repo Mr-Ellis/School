@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lamees — Habit & Mood Tracker Tutorial</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0f1117;
+    --bg-alt: #161923;
+    --card: #1c2030;
+    --card-hover: #242a3d;
+    --border: #2a3048;
+    --text: #e4e7f1;
+    --text-dim: #9aa2b8;
+    --accent: #7c8aff;
+    --accent-glow: #7c8aff33;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --code-bg: #0a0c12;
+    --code-border: #1e2433;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 17, 23, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .topbar-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    min-width: 150px;
+    height: 8px;
+    background: var(--bg-alt);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #a78bfa);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-text {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 40px;
+    padding: 32px 24px;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .sidebar h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .lesson-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: 1px solid transparent;
+    margin-bottom: 2px;
+  }
+
+  .lesson-link:hover { background: var(--card); color: var(--text); }
+  .lesson-link.active { background: var(--accent-glow); color: var(--accent); border-color: var(--accent); }
+  .lesson-link.done { color: var(--green); }
+
+  .lesson-link.done::before {
+    content: '✓';
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .lesson-link:not(.done):not(.locked)::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .lesson-link.locked { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+  .lesson-link.locked::before {
+    content: '🔒';
+    font-size: 11px;
+    display: inline-block;
+    width: 14px;
+  }
+
+  main { min-width: 0; }
+
+  .hero {
+    text-align: center;
+    padding: 40px 20px 56px;
+    background: radial-gradient(ellipse at top, var(--accent-glow), transparent 70%);
+    border-radius: 20px;
+    margin-bottom: 40px;
+    border: 1px solid var(--border);
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #e4e7f1, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+
+  .hero p { color: var(--text-dim); font-size: 17px; max-width: 620px; margin: 0 auto 24px; }
+
+  .hero-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  .badge {
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-dim);
+  }
+
+  .badge.green { color: var(--green); border-color: #4ade8044; background: #4ade8011; }
+  .badge.purple { color: var(--accent); border-color: #7c8aff44; background: #7c8aff11; }
+
+  .lesson {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 28px;
+    transition: border-color 0.3s, transform 0.3s;
+    scroll-margin-top: 90px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s forwards;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+  .lesson:hover { border-color: #3a4260; }
+
+  .lesson.locked { position: relative; opacity: 0.5; filter: grayscale(0.7); }
+  .lesson.locked > *:not(.lesson-header) { pointer-events: none; }
+
+  .lesson.locked::after {
+    content: '🔒 Complete the previous lesson to unlock';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(15, 17, 23, 0.95);
+    color: #fbbf24;
+    padding: 16px 26px;
+    border-radius: 12px;
+    border: 1px solid var(--yellow);
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+    z-index: 5;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .lesson-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .lesson-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px var(--accent-glow);
+  }
+
+  .lesson-title { font-size: 22px; font-weight: 700; flex: 1; min-width: 200px; }
+
+  .lesson-goal {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--bg-alt);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  .lesson p { margin-bottom: 14px; color: var(--text-dim); }
+  .lesson p strong { color: var(--text); }
+  .lesson ul, .lesson ol { margin: 14px 0 14px 24px; color: var(--text-dim); }
+  .lesson li { margin-bottom: 8px; }
+  .lesson li strong { color: var(--text); }
+  .lesson h3 { margin: 24px 0 12px; font-size: 17px; color: var(--text); }
+
+  .code-wrap {
+    position: relative;
+    margin: 18px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--code-border);
+    background: var(--code-bg);
+  }
+
+  .code-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #12151e;
+    border-bottom: 1px solid var(--code-border);
+  }
+
+  .code-lang {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .copy-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .copy-btn.copied { background: var(--red); color: #fff; border-color: var(--red); }
+
+  pre {
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #c9d1e4;
+  }
+
+  pre::-webkit-scrollbar { height: 8px; }
+  pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .num { color: #f78c6c; }
+  .cmt { color: #5c6370; font-style: italic; }
+  .cls { color: #ffcb6b; }
+  .self { color: #f07178; }
+  .op { color: #89ddff; }
+
+  .callout {
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 18px 0;
+    border-left: 4px solid;
+    font-size: 14.5px;
+  }
+
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .callout p:last-child { margin-bottom: 0; }
+
+  .callout.tip { background: #4ade800f; border-color: var(--green); }
+  .callout.tip .callout-title { color: var(--green); }
+  .callout.warn { background: #fbbf240f; border-color: var(--yellow); }
+  .callout.warn .callout-title { color: var(--yellow); }
+  .callout.info { background: #7c8aff0f; border-color: var(--accent); }
+  .callout.info .callout-title { color: var(--accent); }
+  .callout.danger { background: #f871710f; border-color: var(--red); }
+  .callout.danger .callout-title { color: var(--red); }
+
+  .question {
+    background: linear-gradient(135deg, #1c2030, #1a1d2b);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  .question-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .question p { color: var(--text); font-weight: 500; margin-bottom: 12px; }
+
+  .reveal-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .reveal-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .answer {
+    display: none;
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: var(--bg-alt);
+    border-radius: 8px;
+    border-left: 3px solid var(--green);
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  .answer.show { display: block; animation: fadeIn 0.3s; }
+  .answer strong { color: var(--green); }
+
+  .complete-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 12px 22px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .complete-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .complete-btn.done { background: #4ade8011; border-color: var(--green); color: var(--green); }
+
+  .check-icon {
+    width: 20px;
+    height: 20px;
+    border: 2px solid currentColor;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .complete-btn.done .check-icon::after { content: '✓'; font-weight: 700; }
+
+  .final {
+    text-align: center;
+    padding: 48px 32px;
+    background: radial-gradient(ellipse at center, var(--accent-glow), transparent 70%);
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    margin-bottom: 40px;
+  }
+
+  .final h2 {
+    font-size: 30px;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .final p { color: var(--text-dim); max-width: 600px; margin: 0 auto 20px; }
+
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: fall 3s linear forwards;
+  }
+
+  @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  .to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px var(--accent-glow);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 200;
+  }
+
+  .to-top.show { opacity: 1; pointer-events: auto; }
+  .to-top:hover { transform: translateY(-4px); }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  @media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; padding: 20px 16px; gap: 20px; }
+    .sidebar { position: static; max-height: none; display: none; }
+    .sidebar.mobile-open { display: block; }
+    .lesson { padding: 22px 18px; }
+    .lesson-title { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">📚 Habit &amp; Mood Tracker</div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-text" id="progressText">0 / 14 lessons</div>
+  <button class="reset-btn" onclick="resetProgress()">Reset</button>
+</div>
+
+<div class="container">
+
+  <aside class="sidebar" id="sidebar">
+    <h3>Lessons</h3>
+    <a class="lesson-link" data-target="lesson-0">0. Setup</a>
+    <a class="lesson-link" data-target="lesson-1">1. First Window</a>
+    <a class="lesson-link" data-target="lesson-2">2. Buttons &amp; Inputs</a>
+    <a class="lesson-link" data-target="lesson-3">3. The Habit Class</a>
+    <a class="lesson-link" data-target="lesson-4">4. SQLite Setup</a>
+    <a class="lesson-link" data-target="lesson-5">5. Validation</a>
+    <a class="lesson-link" data-target="lesson-6">6. The Tracker</a>
+    <a class="lesson-link" data-target="lesson-7">7. Streak Algorithm</a>
+    <a class="lesson-link" data-target="lesson-8">8. Mood Average</a>
+    <a class="lesson-link" data-target="lesson-9">9. Trend Detection</a>
+    <a class="lesson-link" data-target="lesson-10">10. Feedback Engine</a>
+    <a class="lesson-link" data-target="lesson-11">11. Full GUI</a>
+    <a class="lesson-link" data-target="lesson-12">12. Polish &amp; Charts</a>
+    <a class="lesson-link" data-target="lesson-13">13. Make It Your Own</a>
+  </aside>
+
+  <main>
+
+    <div class="hero">
+      <h1>Build a Habit &amp; Mood Tracker</h1>
+      <p>Your project, taught step by step. By the end you'll have a working desktop app with streak tracking, mood analytics, trend detection, and personalised feedback — plus your own extensions.</p>
+      <div class="hero-badges">
+        <span class="badge green">14 Lessons</span>
+        <span class="badge purple">Python + CustomTkinter</span>
+        <span class="badge">OOP + SQLite</span>
+        <span class="badge">Extensions Required</span>
+      </div>
+    </div>
+
+    <!-- LESSON 0 -->
+    <section class="lesson" id="lesson-0">
+      <div class="lesson-header">
+        <div class="lesson-num">0</div>
+        <div class="lesson-title">Setting Up Your Computer</div>
+        <span class="lesson-goal">Install everything first</span>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">🎯 Do This Before Lesson 1</div>
+        <p>You can't build anything until your computer is ready. This lesson takes about 20 minutes. Do every step in order. Don't skip anything.</p>
+      </div>
+
+      <h3>Step 1 — Install Python</h3>
+
+      <p>Python is the programming language we're going to use. If you don't have it, you need to install it.</p>
+
+      <p><strong>First, check if you already have it:</strong></p>
+
+      <ol>
+        <li>Press the <strong>Windows key</strong> on your keyboard (or click the Start button)</li>
+        <li>Type <code>powershell</code></li>
+        <li>Click <strong>Windows PowerShell</strong> — a blue window opens</li>
+        <li>Type this and press Enter:</li>
+      </ol>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py --version</code></pre>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">✅ If you see something like "Python 3.14.7"</div>
+        <p>Great — Python is already installed. Skip to <strong>Step 2</strong>.</p>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-title">❌ If you see a red error message</div>
+        <p>Python is not installed. Follow the installation steps below.</p>
+      </div>
+
+      <p><strong>To install Python:</strong></p>
+
+      <ol>
+        <li>Open your browser and go to: <code>https://www.python.org/downloads/</code></li>
+        <li>Click the big yellow <strong>"Download Python 3.x.x"</strong> button</li>
+        <li>When the file downloads, <strong>double-click it</strong> to run the installer</li>
+        <li><strong>⚠️ CRITICAL:</strong> On the first screen of the installer, tick the checkbox at the bottom that says <strong>"Add python.exe to PATH"</strong>. If you miss this, nothing will work later.</li>
+        <li>Click <strong>"Install Now"</strong></li>
+        <li>Wait for it to finish, then click <strong>Close</strong></li>
+        <li><strong>Close PowerShell</strong> and open it again (this refreshes the PATH)</li>
+        <li>Type <code>py --version</code> again — you should now see a version number</li>
+      </ol>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ If it still doesn't work after installing</div>
+        <p>Restart your computer. Then try again in a fresh PowerShell window.</p>
+      </div>
+
+      <h3>Step 2 — Install CustomTkinter</h3>
+
+      <p>CustomTkinter is a library that lets Python draw nice-looking windows. Python doesn't include it by default, so we install it manually.</p>
+
+      <p>In PowerShell, type this and press Enter:</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py -m pip install customtkinter</code></pre>
+      </div>
+
+      <p>You'll see lots of text scroll past. When it stops, look for the line that says <strong>"Successfully installed customtkinter-..."</strong>. That means it worked.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 Why "py -m pip" instead of just "pip"?</div>
+        <p>Using <code>py -m pip</code> guarantees you're installing into the same Python that <code>py</code> runs. Using just <code>pip</code> can install to a different Python by mistake — a common beginner trap.</p>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ If you see "pip is not recognized"</div>
+        <p>Try this instead:</p>
+        <pre><code>python -m pip install customtkinter</code></pre>
+      </div>
+
+      <h3>Step 3 — Install a Code Editor</h3>
+
+      <p>You need somewhere to type your code. Notepad <em>technically</em> works but it's terrible for programming. Use a real code editor.</p>
+
+      <p><strong>Recommended: Visual Studio Code (VS Code)</strong> — it's free, made by Microsoft, and used by millions of developers.</p>
+
+      <ol>
+        <li>Go to: <code>https://code.visualstudio.com/</code></li>
+        <li>Click the big blue <strong>Download</strong> button</li>
+        <li>Run the installer</li>
+        <li>On the "Select Additional Tasks" screen, tick these:
+          <ul>
+            <li>✅ <strong>Add "Open with Code" action to Windows Explorer file context menu</strong></li>
+            <li>✅ <strong>Add "Open with Code" action to Windows Explorer directory context menu</strong></li>
+            <li>✅ <strong>Register Code as an editor for supported file types</strong></li>
+            <li>✅ <strong>Add to PATH</strong></li>
+          </ul>
+        </li>
+        <li>Click <strong>Next → Install → Finish</strong></li>
+      </ol>
+
+      <p><strong>Optional but recommended:</strong> After VS Code opens, click the <strong>Extensions</strong> icon in the left sidebar (looks like four squares). Search for and install:</p>
+
+      <ul>
+        <li><strong>Python</strong> (by Microsoft) — gives you syntax highlighting and error checking</li>
+        <li><strong>Pylance</strong> (by Microsoft) — autocomplete and type hints</li>
+      </ul>
+
+      <h3>Step 4 — Create Your Project Folder</h3>
+
+      <ol>
+        <li>Open <strong>File Explorer</strong> (the yellow folder icon in your taskbar)</li>
+        <li>Go to <code>C:\Users\&lt;your-name&gt;\</code> — this is your home folder</li>
+        <li>If there's no <code>PythonProjects</code> folder, create one</li>
+        <li>Inside it, create another folder called <code>HabitTracker</code></li>
+      </ol>
+
+      <p>Your folder now lives at:</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Path</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>C:\Users\&lt;your-name&gt;\PythonProjects\HabitTracker</code></pre>
+      </div>
+
+      <h3>Step 5 — Open the Folder in VS Code</h3>
+
+      <ol>
+        <li>Right-click the <code>HabitTracker</code> folder</li>
+        <li>Click <strong>"Open with Code"</strong></li>
+        <li>VS Code opens with your folder loaded</li>
+      </ol>
+
+      <h3>Step 6 — Open a Terminal Inside VS Code</h3>
+
+      <ol>
+        <li>Click <strong>Terminal → New Terminal</strong> (or press <strong>Ctrl + `</strong>)</li>
+        <li>A terminal opens at the bottom</li>
+        <li>It should already be inside your <code>HabitTracker</code> folder</li>
+        <li>Type <code>py main.py</code> to run your program</li>
+      </ol>
+
+      <h3>Step 7 — Run a Quick Test</h3>
+
+      <p>In your VS Code terminal, type each of these and press Enter after each one:</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py --version
+py -m pip show customtkinter</code></pre>
+      </div>
+
+      <p>If both commands show output, you're ready. Move on to Lesson 1.</p>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>In your own words, why do we tick "Add python.exe to PATH" during installation?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> "PATH" is the list of folders Windows searches when you type a command. If Python isn't on the PATH, typing <code>py</code> gives an error because Windows doesn't know where to look. Ticking the box adds Python's install folder to that list.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 0)">
+        <span class="check-icon"></span> Mark Lesson 0 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 1 -->
+    <section class="lesson" id="lesson-1">
+      <div class="lesson-header">
+        <div class="lesson-num">1</div>
+        <div class="lesson-title">Your First Window</div>
+        <span class="lesson-goal">Open a GUI window</span>
+      </div>
+
+      <p>Welcome to your first lesson. You're going to make a window appear on screen. That's it. Don't worry about the rest yet — every big app starts with a blank window.</p>
+
+      <p><strong>What is CustomTkinter?</strong> It's a library that lets Python draw windows, buttons, and text boxes. It's built on top of the standard Tkinter library, but looks much nicer.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    ctk.<span class="fn">set_appearance_mode</span>(<span class="str">"dark"</span>)
+    ctk.<span class="fn">set_default_color_theme</span>(<span class="str">"blue"</span>)
+
+    app <span class="op">=</span> ctk.<span class="cls">CTk</span>()
+    app.<span class="fn">title</span>(<span class="str">"Habit Tracker"</span>)
+    app.<span class="fn">geometry</span>(<span class="str">"700x500"</span>)
+
+    label <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(app, text<span class="op">=</span><span class="str">"Hello, Habit Tracker!"</span>)
+    label.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">40</span>)
+
+    app.<span class="fn">mainloop</span>()</code></pre>
+      </div>
+
+      <p><strong>Run it:</strong> In your terminal:</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>py main.py</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why do we need <code>app.mainloop()</code> at the end?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> <code>mainloop()</code> starts the event loop — it keeps the window open and waits for user actions like clicks and key presses. Without it, the program would create the window and immediately close it.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 1)">
+        <span class="check-icon"></span> Mark Lesson 1 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 2 -->
+    <section class="lesson" id="lesson-2">
+      <div class="lesson-header">
+        <div class="lesson-num">2</div>
+        <div class="lesson-title">Buttons, Inputs and Dropdowns</div>
+        <span class="lesson-goal">Handle user interaction</span>
+      </div>
+
+      <p>Buttons run a function when clicked. Entry fields let the user type. Dropdowns let them choose from a fixed list. We need all three for habit tracking.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+<span class="kw">def</span> <span class="fn">log_habit</span>():
+    habit <span class="op">=</span> habit_entry.<span class="fn">get</span>()
+    mood <span class="op">=</span> mood_menu.<span class="fn">get</span>()
+    result_label.<span class="fn">configure</span>(text<span class="op">=</span><span class="str">f"Logged: {habit} | Mood: {mood}/10"</span>)
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    ctk.<span class="fn">set_appearance_mode</span>(<span class="str">"dark"</span>)
+    app <span class="op">=</span> ctk.<span class="cls">CTk</span>()
+    app.<span class="fn">title</span>(<span class="str">"Habit Tracker"</span>)
+    app.<span class="fn">geometry</span>(<span class="str">"700x500"</span>)
+
+    ctk.<span class="cls">CTkLabel</span>(app, text<span class="op">=</span><span class="str">"Habit name"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+    habit_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(app, placeholder_text<span class="op">=</span><span class="str">"e.g. Study"</span>)
+    habit_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+    ctk.<span class="cls">CTkLabel</span>(app, text<span class="op">=</span><span class="str">"Mood today"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+    mood_menu <span class="op">=</span> ctk.<span class="cls">CTkOptionMenu</span>(
+        app, values<span class="op">=</span>[<span class="fn">str</span>(n) <span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>)]
+    )
+    mood_menu.<span class="fn">set</span>(<span class="str">"5"</span>)
+    mood_menu.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+    ctk.<span class="cls">CTkButton</span>(app, text<span class="op">=</span><span class="str">"Log Habit"</span>, command<span class="op">=</span>log_habit).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">20</span>)
+
+    result_label <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(app, text<span class="op">=</span><span class="str">""</span>)
+    result_label.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">10</span>)
+
+    app.<span class="fn">mainloop</span>()</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why must <code>.get()</code> be inside <code>log_habit()</code>, not outside?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> Outside the function, <code>.get()</code> would run before the user has typed anything. Inside the function, it runs only when the button is clicked — after the user has entered their habit and mood.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 2)">
+        <span class="check-icon"></span> Mark Lesson 2 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 3 -->
+    <section class="lesson" id="lesson-3">
+      <div class="lesson-header">
+        <div class="lesson-num">3</div>
+        <div class="lesson-title">The Habit Class</div>
+        <span class="lesson-goal">SC1 — Store one record</span>
+      </div>
+
+      <p>Now we build the <strong>engine</strong>. A <code>Habit</code> class stores everything about one habit entry: the date, the habit name, the mood score, and whether the habit was completed.</p>
+
+      <p><strong>Create these files:</strong></p>
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Folder structure</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>models\
+├── __init__.py     (empty file)
+└── habit.py</code></pre>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Important</div>
+        <p>The <code>__init__.py</code> file must exist even if empty. It tells Python to treat <code>models</code> as a package so you can import from it.</p>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">models/habit.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime, date
+
+
+<span class="kw">class</span> <span class="cls">Habit</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>, habit_id, date_str, habit_name, mood, completed):
+        <span class="self">self</span>.habit_id <span class="op">=</span> habit_id
+        <span class="self">self</span>.date <span class="op">=</span> date_str
+        <span class="self">self</span>.habit_name <span class="op">=</span> habit_name
+        <span class="self">self</span>.mood <span class="op">=</span> <span class="fn">int</span>(mood)
+        <span class="self">self</span>.completed <span class="op">=</span> <span class="fn">bool</span>(completed)
+
+    <span class="kw">def</span> <span class="fn">to_dict</span>(<span class="self">self</span>):
+        <span class="kw">return</span> {
+            <span class="str">"id"</span>: <span class="self">self</span>.habit_id,
+            <span class="str">"date"</span>: <span class="self">self</span>.date,
+            <span class="str">"habit_name"</span>: <span class="self">self</span>.habit_name,
+            <span class="str">"mood"</span>: <span class="self">self</span>.mood,
+            <span class="str">"completed"</span>: <span class="self">self</span>.completed,
+        }
+
+    <span class="kw">def</span> <span class="fn">__repr__</span>(<span class="self">self</span>):
+        status <span class="op">=</span> <span class="str">"✓"</span> <span class="kw">if</span> <span class="self">self</span>.completed <span class="kw">else</span> <span class="str">"✗"</span>
+        <span class="kw">return</span> <span class="str">f"&lt;Habit {self.habit_name} {self.date} mood={self.mood} {status}&gt;"</span></code></pre>
+      </div>
+
+      <p><strong>Test it with <code>main.py</code>:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> models.habit <span class="kw">import</span> Habit
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    h <span class="op">=</span> <span class="cls">Habit</span>(<span class="num">1</span>, <span class="str">"2026-09-20"</span>, <span class="str">"Study"</span>, <span class="num">7</span>, <span class="kw">True</span>)
+    <span class="fn">print</span>(h)
+    <span class="fn">print</span>(h.<span class="fn">to_dict</span>())</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>What are <code>self.date</code> and <code>self.mood</code> called in OOP?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> They're called <strong>instance attributes</strong> (or instance variables). Each Habit object has its own copy of them.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 3)">
+        <span class="check-icon"></span> Mark Lesson 3 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 4 -->
+    <section class="lesson" id="lesson-4">
+      <div class="lesson-header">
+        <div class="lesson-num">4</div>
+        <div class="lesson-title">SQLite Setup</div>
+        <span class="lesson-goal">SC10 — Persistent storage</span>
+      </div>
+
+      <p>If your program closes, you don't want to lose all your habits. We save them to a <strong>SQLite database</strong> — a single file called <code>habits.db</code>.</p>
+
+      <p><strong>Why SQLite instead of JSON?</strong> SQLite supports date-range queries (SC2), average calculations (SC4), and it's designed for exactly this kind of structured data. It's also built into Python — no installation needed.</p>
+
+      <p><strong>Create these files:</strong></p>
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Folder structure</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>HabitTracker\
+└── managers\
+    ├── __init__.py     (empty)
+    └── database.py</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">managers/database.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> sqlite3
+
+DB_PATH <span class="op">=</span> <span class="str">"habits.db"</span>
+
+
+<span class="kw">class</span> <span class="cls">Database</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>, path<span class="op">=</span>DB_PATH):
+        <span class="self">self</span>.conn <span class="op">=</span> sqlite3.<span class="fn">connect</span>(path)
+        <span class="self">self</span>.conn.row_factory <span class="op">=</span> sqlite3.Row
+        <span class="self">self</span>.<span class="fn">create_table</span>()
+
+    <span class="kw">def</span> <span class="fn">create_table</span>(<span class="self">self</span>):
+        <span class="self">self</span>.conn.<span class="fn">execute</span>(<span class="str">"""
+            CREATE TABLE IF NOT EXISTS habits (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                date        TEXT    NOT NULL,
+                habit_name  TEXT    NOT NULL,
+                mood        INTEGER NOT NULL,
+                completed   INTEGER NOT NULL
+            )
+        """</span>)
+        <span class="self">.conn.<span class="fn">commit</span>()
+
+    <span class="kw">def</span> <span class="fn">insert</span>(<span class="self">self</span>, habit):
+        cursor <span class="op">=</span> <span class="self">self</span>.conn.<span class="fn">cursor</span>()
+        cursor.<span class="fn">execute</span>(
+            <span class="str">"INSERT INTO habits (date, habit_name, mood, completed) VALUES (?, ?, ?, ?)"</span>,
+            (habit.date, habit.habit_name, habit.mood, <span class="fn">int</span>(habit.completed))
+        )
+        <span class="self">.conn.<span class="fn">commit</span>()
+        <span class="kw">return</span> cursor.lastrowid
+
+    <span class="kw">def</span> <span class="fn">get_all</span>(<span class="self">self</span>):
+        <span class="kw">return</span> <span class="self">self</span>.conn.<span class="fn">execute</span>(<span class="str">"SELECT * FROM habits ORDER BY date DESC"</span>).<span class="fn">fetchall</span>()
+
+    <span class="kw">def</span> <span class="fn">get_between</span>(<span class="self">self</span>, start_date, end_date):
+        <span class="kw">return</span> <span class="self">self</span>.conn.<span class="fn">execute</span>(
+            <span class="str">"SELECT * FROM habits WHERE date BETWEEN ? AND ? ORDER BY date DESC"</span>,
+            (start_date, end_date)
+        ).<span class="fn">fetchall</span>()
+
+    <span class="kw">def</span> <span class="fn">update</span>(<span class="self">self</span>, habit_id, habit):
+        <span class="self">self</span>.conn.<span class="fn">execute</span>(
+            <span class="str">"UPDATE habits SET date = ?, habit_name = ?, mood = ?, completed = ? WHERE id = ?"</span>,
+            (habit.date, habit.habit_name, habit.mood, <span class="fn">int</span>(habit.completed), habit_id)
+        )
+        <span class="self">.conn.<span class="fn">commit</span>()
+
+    <span class="kw">def</span> <span class="fn">delete</span>(<span class="self">self</span>, habit_id):
+        <span class="self">self</span>.conn.<span class="fn">execute</span>(<span class="str">"DELETE FROM habits WHERE id = ?"</span>, (habit_id,))
+        <span class="self">.conn.<span class="fn">commit</span>()</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why store <code>completed</code> as <code>0/1</code> instead of <code>True/False</code>?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> SQLite doesn't have a native boolean type — it stores booleans as integers (0 or 1). We convert with <code>int()</code> when writing and <code>bool()</code> when reading.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 4)">
+        <span class="check-icon"></span> Mark Lesson 4 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 5 -->
+    <section class="lesson" id="lesson-5">
+      <div class="lesson-header">
+        <div class="lesson-num">5</div>
+        <div class="lesson-title">Rejecting Bad Input</div>
+        <span class="lesson-goal">SC7 — Validation</span>
+      </div>
+
+      <p>Users make mistakes. Your program should catch them <strong>before</strong> saving garbage data.</p>
+
+      <p><strong>Create this file:</strong></p>
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Folder structure</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code>utilities\
+├── __init__.py     (empty)
+└── validation.py</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">utilities/validation.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+
+<span class="kw">class</span> <span class="cls">Validation</span>:
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">validate_habit_entry</span>(date_text, habit_name, mood, completed):
+        <span class="cmt"># Date must parse as YYYY-MM-DD</span>
+        <span class="kw">try</span>:
+            datetime.<span class="fn">strptime</span>(date_text, <span class="str">"%Y-%m-%d"</span>)
+        <span class="kw">except</span> <span class="cls">ValueError</span>:
+            <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Date must be in YYYY-MM-DD format."</span>)
+
+        <span class="cmt"># Habit name must be non-empty and short</span>
+        <span class="kw">if</span> <span class="kw">not</span> habit_name <span class="kw">or</span> <span class="kw">not</span> habit_name.<span class="fn">strip</span>():
+            <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Habit name cannot be empty."</span>)
+        <span class="kw">if</span> <span class="fn">len</span>(habit_name.<span class="fn">strip</span>()) <span class="op">&gt;</span> <span class="num">50</span>:
+            <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Habit name must be 50 characters or fewer."</span>)
+
+        <span class="cmt"># Mood must be a whole number from 1 to 10</span>
+        <span class="kw">try</span>:
+            mood_int <span class="op">=</span> <span class="fn">int</span>(mood)
+        <span class="kw">except</span> (<span class="cls">TypeError</span>, <span class="cls">ValueError</span>):
+            <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Mood must be a whole number."</span>)
+        <span class="kw">if</span> <span class="kw">not</span> <span class="num">1</span> <span class="op">&lt;=</span> mood_int <span class="op">&lt;=</span> <span class="num">10</span>:
+            <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Mood must be between 1 and 10."</span>)
+
+        <span class="cmt"># Completion must be a boolean-ish value</span>
+        <span class="kw">if</span> completed <span class="kw">not</span> <span class="kw">in</span> (<span class="kw">True</span>, <span class="kw">False</span>, <span class="num">0</span>, <span class="num">1</span>):
+            <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Completion must be yes or no."</span>)
+
+        <span class="kw">return</span> {
+            <span class="str">"date"</span>: date_text,
+            <span class="str">"habit_name"</span>: habit_name.<span class="fn">strip</span>(),
+            <span class="str">"mood"</span>: mood_int,
+            <span class="str">"completed"</span>: <span class="fn">bool</span>(completed),
+        }</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why validate before saving rather than after?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> If you save first, invalid data ends up in your database, and you'll have to detect and clean it later. Validating first prevents bad data from ever entering the system.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 5)">
+        <span class="check-icon"></span> Mark Lesson 5 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 6 -->
+    <section class="lesson" id="lesson-6">
+      <div class="lesson-header">
+        <div class="lesson-num">6</div>
+        <div class="lesson-title">The Tracker</div>
+        <span class="lesson-goal">SC1, SC2, SC8 — CRUD</span>
+      </div>
+
+      <p>The <strong>HabitTracker</strong> is the brain. It ties together the Habit model, the database, and the analytics.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">managers/habit_tracker.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> models.habit <span class="kw">import</span> Habit
+<span class="kw">from</span> managers.database <span class="kw">import</span> Database
+
+
+<span class="kw">class</span> <span class="cls">HabitTracker</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>):
+        <span class="self">self</span>.db <span class="op">=</span> <span class="cls">Database</span>()
+
+    <span class="kw">def</span> <span class="fn">add_habit</span>(<span class="self">self</span>, date_str, habit_name, mood, completed):
+        habit <span class="op">=</span> <span class="cls">Habit</span>(<span class="kw">None</span>, date_str, habit_name, mood, completed)
+        habit_id <span class="op">=</span> <span class="self">self</span>.db.<span class="fn">insert</span>(habit)
+        habit.habit_id <span class="op">=</span> habit_id
+        <span class="kw">return</span> habit
+
+    <span class="kw">def</span> <span class="fn">get_all_habits</span>(<span class="self">self</span>):
+        rows <span class="op">=</span> <span class="self">self</span>.db.<span class="fn">get_all</span>()
+        <span class="kw">return</span> [
+            <span class="cls">Habit</span>(r[<span class="str">"id"</span>], r[<span class="str">"date"</span>], r[<span class="str">"habit_name"</span>],
+                  r[<span class="str">"mood"</span>], <span class="fn">bool</span>(r[<span class="str">"completed"</span>]))
+            <span class="kw">for</span> r <span class="kw">in</span> rows
+        ]
+
+    <span class="kw">def</span> <span class="fn">search_by_date_range</span>(<span class="self">self</span>, start, end):
+        rows <span class="op">=</span> <span class="self">self</span>.db.<span class="fn">get_between</span>(start, end)
+        <span class="kw">return</span> [
+            <span class="cls">Habit</span>(r[<span class="str">"id"</span>], r[<span class="str">"date"</span>], r[<span class="str">"habit_name"</span>],
+                  r[<span class="str">"mood"</span>], <span class="fn">bool</span>(r[<span class="str">"completed"</span>]))
+            <span class="kw">for</span> r <span class="kw">in</span> rows
+        ]
+
+    <span class="kw">def</span> <span class="fn">edit_habit</span>(<span class="self">self</span>, habit_id, date_str, habit_name, mood, completed):
+        habit <span class="op">=</span> <span class="cls">Habit</span>(habit_id, date_str, habit_name, mood, completed)
+        <span class="self">self</span>.db.<span class="fn">update</span>(habit_id, habit)
+
+    <span class="kw">def</span> <span class="fn">delete_habit</span>(<span class="self">self</span>, habit_id):
+        <span class="self">.db.<span class="fn">delete</span>(habit_id)</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Where does <code>get_all_habits()</code> get its data from?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> From the SQLite database via <code>self.db.get_all()</code>, which runs a <code>SELECT * FROM habits</code> query. Each row is converted back into a <code>Habit</code> object.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 6)">
+        <span class="check-icon"></span> Mark Lesson 6 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 7 -->
+    <section class="lesson" id="lesson-7">
+      <div class="lesson-header">
+        <div class="lesson-num">7</div>
+        <div class="lesson-title">Streak Algorithm</div>
+        <span class="lesson-goal">SC3 — Consecutive days</span>
+      </div>
+
+      <p>A streak is the number of consecutive days a habit was completed. This is the feature that neither Habitica nor Daylio does well.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ The Edge Case Everyone Gets Wrong</div>
+        <p>If Julia logged Study on Monday, Tuesday, Wednesday, and it's now Thursday morning before she's logged anything, a naive algorithm returns 0. But her real streak is 3 — she just hasn't logged today yet. Handle this or she'll be demotivated by a wrong number.</p>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">utilities/analytics.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime, timedelta
+
+
+<span class="kw">class</span> <span class="cls">Analytics</span>:
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">streak</span>(records, habit_name, today<span class="op">=</span><span class="kw">None</span>):
+        <span class="str">"""Return the current consecutive-day streak for one habit."""</span>
+        today <span class="op">=</span> today <span class="kw">or</span> datetime.<span class="fn">today</span>().<span class="fn">date</span>()
+
+        <span class="cmt"># Collect dates where this habit was completed</span>
+        completed_dates <span class="op">=</span> {
+            datetime.<span class="fn">strptime</span>(r.date, <span class="str">"%Y-%m-%d"</span>).<span class="fn">date</span>()
+            <span class="kw">for</span> r <span class="kw">in</span> records
+            <span class="kw">if</span> r.habit_name <span class="op">==</span> habit_name <span class="kw">and</span> r.completed
+        }
+
+        <span class="kw">if</span> <span class="kw">not</span> completed_dates:
+            <span class="kw">return</span> <span class="num">0</span>
+
+        <span class="cmt"># Start from today, or yesterday if today isn't logged yet</span>
+        check <span class="op">=</span> today
+        <span class="kw">if</span> check <span class="kw">not</span> <span class="kw">in</span> completed_dates:
+            check <span class="op">=</span> today <span class="op">-</span> timedelta(days<span class="op">=</span><span class="num">1</span>)
+
+        streak <span class="op">=</span> <span class="num">0</span>
+        <span class="kw">while</span> check <span class="kw">in</span> completed_dates:
+            streak <span class="op">+=</span> <span class="num">1</span>
+            check <span class="op">-=</span> timedelta(days<span class="op">=</span><span class="num">1</span>)
+        <span class="kw">return</span> streak</code></pre>
+      </div>
+
+      <p><strong>Test it:</strong></p>
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">Test in main.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> date, timedelta
+<span class="kw">from</span> utilities.analytics <span class="kw">import</span> Analytics
+<span class="kw">from</span> models.habit <span class="kw">import</span> Habit
+
+today <span class="op">=</span> date.<span class="fn">today</span>()
+records <span class="op">=</span> [
+    <span class="cls">Habit</span>(<span class="num">1</span>, <span class="fn">str</span>(today <span class="op">-</span> timedelta(days<span class="op">=</span>i)), <span class="str">"Study"</span>, <span class="num">7</span>, <span class="kw">True</span>)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>)
+]
+<span class="fn">print</span>(<span class="str">"Streak:"</span>, Analytics.<span class="fn">streak</span>(records, <span class="str">"Study"</span>))  <span class="cmt"># Expected: 3</span></code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why do we convert to a <code>set</code> of dates instead of a list?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> A <code>set</code> automatically removes duplicates and makes <code>in</code> checks O(1). If Julia logs the same habit twice on one day, the streak only counts it once.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 7)">
+        <span class="check-icon"></span> Mark Lesson 7 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 8 -->
+    <section class="lesson" id="lesson-8">
+      <div class="lesson-header">
+        <div class="lesson-num">8</div>
+        <div class="lesson-title">Mood Average</div>
+        <span class="lesson-goal">SC4 — Average over a period</span>
+      </div>
+
+      <p>SC4 says "calculate the average mood score over a selected period of time". This is straightforward, but you have to handle the case where there are no records in that period.</p>
+
+      <p><strong>Add to <code>utilities/analytics.py</code>:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">utilities/analytics.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="op">@</span><span class="fn">staticmethod</span>
+<span class="kw">def</span> <span class="fn">mood_average</span>(records, start_date, end_date):
+    <span class="str">"""Return the average mood between two dates (inclusive),
+    or None if there are no records in that range."""</span>
+    moods <span class="op">=</span> [
+        r.mood <span class="kw">for</span> r <span class="kw">in</span> records
+        <span class="kw">if</span> start_date <span class="op">&lt;=</span> r.date <span class="op">&lt;=</span> end_date
+    ]
+    <span class="kw">if</span> <span class="kw">not</span> moods:
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">return</span> <span class="fn">round</span>(<span class="fn">sum</span>(moods) <span class="op">/</span> <span class="fn">len</span>(moods), <span class="num">2</span>)</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>What happens if you remove the <code>if not moods: return None</code> line?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> Python raises a <code>ZeroDivisionError</code> because you'd be dividing by <code>len(moods) == 0</code>. The guard prevents a crash when a period has no records.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 8)">
+        <span class="check-icon"></span> Mark Lesson 8 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 9 -->
+    <section class="lesson" id="lesson-9">
+      <div class="lesson-header">
+        <div class="lesson-num">9</div>
+        <div class="lesson-title">Trend Detection</div>
+        <span class="lesson-goal">SC6 — Improving or declining?</span>
+      </div>
+
+      <p>SC6 says "detect trends in mood and habit consistency to determine whether the user's progress is improving or declining". We compare this week's average mood to last week's.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">utilities/analytics.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="op">@</span><span class="fn">staticmethod</span>
+<span class="kw">def</span> <span class="fn">detect_trend</span>(records, today<span class="op">=</span><span class="kw">None</span>):
+    <span class="str">"""Return 'improving', 'declining', 'stable', or 'not enough data'."""</span>
+    today <span class="op">=</span> today <span class="kw">or</span> datetime.<span class="fn">today</span>().<span class="fn">date</span>()
+    this_start <span class="op">=</span> <span class="fn">str</span>(today <span class="op">-</span> timedelta(days<span class="op">=</span><span class="num">6</span>))
+    this_end   <span class="op">=</span> <span class="fn">str</span>(today)
+    last_start <span class="op">=</span> <span class="fn">str</span>(today <span class="op">-</span> timedelta(days<span class="op">=</span><span class="num">13</span>))
+    last_end   <span class="op">=</span> <span class="fn">str</span>(today <span class="op">-</span> timedelta(days<span class="op">=</span><span class="num">7</span>))
+
+    this_avg <span class="op">=</span> Analytics.<span class="fn">mood_average</span>(records, this_start, this_end)
+    last_avg <span class="op">=</span> Analytics.<span class="fn">mood_average</span>(records, last_start, last_end)
+
+    <span class="kw">if</span> this_avg <span class="kw">is</span> <span class="kw">None</span> <span class="kw">or</span> last_avg <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="kw">return</span> <span class="str">"not enough data"</span>
+
+    diff <span class="op">=</span> this_avg <span class="op">-</span> last_avg
+    <span class="kw">if</span> diff <span class="op">&gt;=</span> <span class="num">0.5</span>:
+        <span class="kw">return</span> <span class="str">"improving"</span>
+    <span class="kw">elif</span> diff <span class="op">&lt;=</span> <span class="op">-</span><span class="num">0.5</span>:
+        <span class="kw">return</span> <span class="str">"declining"</span>
+    <span class="kw">return</span> <span class="str">"stable"</span></code></pre>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Why 0.5?</div>
+        <p>A 0.5-point difference on a 10-point scale is meaningful without being noise. If you set the threshold to 0.1, tiny mood fluctuations would flip the trend back and forth every day.</p>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>What does the trend return if the user only has records from this week?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> <code>"not enough data"</code> — because <code>last_avg</code> is <code>None</code> with no records last week. This is the safe default; better than misleading the user with a fake trend.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 9)">
+        <span class="check-icon"></span> Mark Lesson 9 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 10 -->
+    <section class="lesson" id="lesson-10">
+      <div class="lesson-header">
+        <div class="lesson-num">10</div>
+        <div class="lesson-title">Feedback Engine</div>
+        <span class="lesson-goal">SC5 — Personalised motivational feedback</span>
+      </div>
+
+      <p>SC5 says feedback must be based on the user's actual mood score, recent progress, and streak length. If the message is generic ("Great job!"), you've rebuilt the problem you set out to solve.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">utilities/feedback.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">class</span> <span class="cls">Feedback</span>:
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">generate</span>(mood_avg, streak, trend):
+        parts <span class="op">=</span> []
+
+        <span class="cmt"># Reference the streak</span>
+        <span class="kw">if</span> streak <span class="op">&gt;=</span> <span class="num">7</span>:
+            parts.<span class="fn">append</span>(<span class="str">f"🔥 {streak}-day streak — you're building real momentum."</span>)
+        <span class="kw">elif</span> streak <span class="op">&gt;=</span> <span class="num">3</span>:
+            parts.<span class="fn">append</span>(<span class="str">f"Nice — {streak} days in a row. Keep it going."</span>)
+        <span class="kw">else</span>:
+            parts.<span class="fn">append</span>(<span class="str">"Try to log today — every streak starts with day one."</span>)
+
+        <span class="cmt"># Reference the mood average</span>
+        <span class="kw">if</span> mood_avg <span class="kw">is</span> <span class="kw">None</span>:
+            parts.<span class="fn">append</span>(<span class="str">"Log a few mood scores and I'll show you patterns."</span>)
+        <span class="kw">elif</span> mood_avg <span class="op">&gt;=</span> <span class="num">8</span>:
+            parts.<span class="fn">append</span>(<span class="str">f"Your average mood this period is {mood_avg:.1f}/10 — strong."</span>)
+        <span class="kw">elif</span> mood_avg <span class="op">&gt;=</span> <span class="num">5</span>:
+            parts.<span class="fn">append</span>(<span class="str">f"Mood average is {mood_avg:.1f}/10 — steady, with room to grow."</span>)
+        <span class="kw">else</span>:
+            parts.<span class="fn">append</span>(<span class="str">f"Mood average is {mood_avg:.1f}/10 — be kind to yourself this week."</span>)
+
+        <span class="cmt"># Reference the trend</span>
+        <span class="kw">if</span> trend <span class="op">==</span> <span class="str">"improving"</span>:
+            parts.<span class="fn">append</span>(<span class="str">"Trend: improving compared to last week."</span>)
+        <span class="kw">elif</span> trend <span class="op">==</span> <span class="str">"declining"</span>:
+            parts.<span class="fn">append</span>(<span class="str">"Trend: down from last week — consider a lighter schedule."</span>)
+        <span class="kw">elif</span> trend <span class="op">==</span> <span class="str">"stable"</span>:
+            parts.<span class="fn">append</span>(<span class="str">"Trend: holding steady."</span>)
+
+        <span class="kw">return</span> <span class="str">" "</span>.<span class="fn">join</span>(parts)</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why does this count as "personalised" feedback?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> Because every sentence references a number from the user's own data — their actual streak, their actual mood average, their actual trend. No two users see the same message unless their data is identical.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 10)">
+        <span class="check-icon"></span> Mark Lesson 10 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 11 -->
+    <section class="lesson" id="lesson-11">
+      <div class="lesson-header">
+        <div class="lesson-num">11</div>
+        <div class="lesson-title">Full GUI</div>
+        <span class="lesson-goal">Bring it all together</span>
+      </div>
+
+      <p>Now we build the window that shows the habits table, the feedback message, and buttons for Add/Edit/Delete.</p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/habit_dialog.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+
+<span class="kw">class</span> <span class="cls">HabitDialog</span>(ctk.CTkToplevel):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>, parent, title, habit<span class="op">=</span><span class="kw">None</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(parent)
+        <span class="self">self</span>.result <span class="op">=</span> <span class="kw">None</span>
+        <span class="self">.<span class="fn">title</span>(title)
+        <span class="self">.<span class="fn">geometry</span>(<span class="str">"400x480"</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Date (YYYY-MM-DD)"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.date_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>)
+        <span class="self">self</span>.date_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Habit name"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.name_entry <span class="op">=</span> ctk.<span class="cls">CTkEntry</span>(<span class="self">self</span>)
+        <span class="self">self</span>.name_entry.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Mood (1–10)"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.mood_menu <span class="op">=</span> ctk.<span class="cls">CTkOptionMenu</span>(
+            <span class="self">self</span>, values<span class="op">=</span>[<span class="fn">str</span>(n) <span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>)]
+        )
+        <span class="self">self</span>.mood_menu.<span class="fn">set</span>(<span class="str">"5"</span>)
+        <span class="self">self</span>.mood_menu.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Completed?"</span>).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+        <span class="self">self</span>.completed_menu <span class="op">=</span> ctk.<span class="cls">CTkOptionMenu</span>(
+            <span class="self">self</span>, values<span class="op">=</span>[<span class="str">"Yes"</span>, <span class="str">"No"</span>]
+        )
+        <span class="self">self</span>.completed_menu.<span class="fn">set</span>(<span class="str">"Yes"</span>)
+        <span class="self">self</span>.completed_menu.<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">5</span>)
+
+        <span class="kw">if</span> habit:
+            <span class="self">self</span>.date_entry.<span class="fn">insert</span>(<span class="num">0</span>, habit.date)
+            <span class="self">self</span>.name_entry.<span class="fn">insert</span>(<span class="num">0</span>, habit.habit_name)
+            <span class="self">self</span>.mood_menu.<span class="fn">set</span>(<span class="fn">str</span>(habit.mood))
+            <span class="self">self</span>.completed_menu.<span class="fn">set</span>(<span class="str">"Yes"</span> <span class="kw">if</span> habit.completed <span class="kw">else</span> <span class="str">"No"</span>)
+
+        ctk.<span class="cls">CTkButton</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Save"</span>, command<span class="op">=</span><span class="self">self</span>.save).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">20</span>)
+
+    <span class="kw">def</span> <span class="fn">save</span>(<span class="self">self</span>):
+        <span class="self">self</span>.result <span class="op">=</span> (
+            <span class="self">self</span>.date_entry.<span class="fn">get</span>().<span class="fn">strip</span>(),
+            <span class="self">self</span>.name_entry.<span class="fn">get</span>().<span class="fn">strip</span>(),
+            <span class="self">self</span>.mood_menu.<span class="fn">get</span>(),
+            <span class="self">self</span>.completed_menu.<span class="fn">get</span>() <span class="op">==</span> <span class="str">"Yes"</span>
+        )
+        <span class="self">.<span class="fn">destroy</span>()</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/main_window.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> tkinter <span class="kw">as</span> tk
+<span class="kw">from</span> tkinter <span class="kw">import</span> ttk, messagebox
+<span class="kw">from</span> datetime <span class="kw">import</span> date, timedelta
+<span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+
+<span class="kw">from</span> gui.habit_dialog <span class="kw">import</span> HabitDialog
+<span class="kw">from</span> managers.habit_tracker <span class="kw">import</span> HabitTracker
+<span class="kw">from</span> utilities.validation <span class="kw">import</span> Validation
+<span class="kw">from</span> utilities.analytics <span class="kw">import</span> Analytics
+<span class="kw">from</span> utilities.feedback <span class="kw">import</span> Feedback
+
+
+<span class="kw">class</span> <span class="cls">MainWindow</span>(ctk.CTk):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="self">self</span>):
+        <span class="fn">super</span>().<span class="fn">__init__</span>()
+        <span class="self">.<span class="fn">title</span>(<span class="str">"Habit &amp; Mood Tracker"</span>)
+        <span class="self">.<span class="fn">geometry</span>(<span class="str">"1000x650"</span>)
+        <span class="self">self</span>.tracker <span class="op">=</span> <span class="cls">HabitTracker</span>()
+        <span class="self">.<span class="fn">create_widgets</span>()
+        <span class="self">.<span class="fn">refresh</span>()
+
+    <span class="kw">def</span> <span class="fn">create_widgets</span>(<span class="self">self</span>):
+        ctk.<span class="cls">CTkLabel</span>(<span class="self">self</span>, text<span class="op">=</span><span class="str">"Habit &amp; Mood Tracker"</span>,
+                     font<span class="op">=</span>(<span class="str">"Arial"</span>, <span class="num">24</span>, <span class="str">"bold"</span>)).<span class="fn">pack</span>(pady<span class="op">=</span><span class="num">10</span>)
+
+        btn_frame <span class="op">=</span> ctk.<span class="cls">CTkFrame</span>(<span class="self">self</span>)
+        btn_frame.<span class="fn">pack</span>(fill<span class="op">=</span><span class="str">"x"</span>, padx<span class="op">=</span><span class="num">20</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Add"</span>, command<span class="op">=</span><span class="self">self</span>.add_habit).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>, pady<span class="op">=</span><span class="num">10</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Edit"</span>, command<span class="op">=</span><span class="self">self</span>.edit_habit).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>)
+        ctk.<span class="cls">CTkButton</span>(btn_frame, text<span class="op">=</span><span class="str">"Delete"</span>, command<span class="op">=</span><span class="self">self</span>.delete_habit).<span class="fn">pack</span>(side<span class="op">=</span><span class="str">"left"</span>, padx<span class="op">=</span><span class="num">5</span>)
+
+        columns <span class="op">=</span> (<span class="str">"Date"</span>, <span class="str">"Habit"</span>, <span class="str">"Mood"</span>, <span class="str">"Completed"</span>)
+        <span class="self">self</span>.tree <span class="op">=</span> ttk.<span class="cls">Treeview</span>(<span class="self">self</span>, columns<span class="op">=</span>columns, show<span class="op">=</span><span class="str">"headings"</span>)
+        <span class="kw">for</span> col <span class="kw">in</span> columns:
+            <span class="self">self</span>.tree.<span class="fn">heading</span>(col, text<span class="op">=</span>col)
+            <span class="self">self</span>.tree.<span class="fn">column</span>(col, width<span class="op">=</span><span class="num">200</span>)
+        <span class="self">self</span>.tree.<span class="fn">pack</span>(fill<span class="op">=</span><span class="str">"both"</span>, expand<span class="op">=</span><span class="kw">True</span>, padx<span class="op">=</span><span class="num">20</span>, pady<span class="op">=</span><span class="num">20</span>)
+
+        <span class="self">self</span>.feedback_label <span class="op">=</span> ctk.<span class="cls">CTkLabel</span>(
+            <span class="self">self</span>, text<span class="op">=</span><span class="str">""</span>, wraplength<span class="op">=</span><span class="num">900</span>,
+            font<span class="op">=</span>(<span class="str">"Arial"</span>, <span class="num">14</span>), justify<span class="op">=</span><span class="str">"left"</span>
+        )
+        <span class="self">.feedback_label.<span class="fn">pack</span>(padx<span class="op">=</span><span class="num">20</span>, pady<span class="op">=</span><span class="num">10</span>, fill<span class="op">=</span><span class="str">"x"</span>)
+
+    <span class="kw">def</span> <span class="fn">refresh</span>(<span class="self">self</span>):
+        <span class="kw">for</span> row <span class="kw">in</span> <span class="self">self</span>.tree.<span class="fn">get_children</span>():
+            <span class="self">.tree.<span class="fn">delete</span>(row)
+
+        records <span class="op">=</span> <span class="self">.tracker.<span class="fn">get_all_habits</span>()
+        <span class="kw">for</span> h <span class="kw">in</span> records:
+            <span class="self">.tree.<span class="fn">insert</span>(<span class="str">""</span>, tk.END, iid<span class="op">=</span>h.habit_id,
+                         values<span class="op">=</span>(h.date, h.habit_name, h.mood,
+                                 <span class="str">"✓"</span> <span class="kw">if</span> h.completed <span class="kw">else</span> <span class="str">"✗"</span>))
+
+        <span class="cmt"># Pick the most common habit name for the summary</span>
+        <span class="kw">if</span> records:
+            habit_name <span class="op">=</span> records[<span class="num">0</span>].habit_name
+            streak <span class="op">=</span> Analytics.<span class="fn">streak</span>(records, habit_name)
+            today <span class="op">=</span> date.<span class="fn">today</span>()
+            week_ago <span class="op">=</span> <span class="fn">str</span>(today <span class="op">-</span> timedelta(days<span class="op">=</span><span class="num">6</span>))
+            avg <span class="op">=</span> Analytics.<span class="fn">mood_average</span>(records, week_ago, <span class="fn">str</span>(today))
+            trend <span class="op">=</span> Analytics.<span class="fn">detect_trend</span>(records)
+            message <span class="op">=</span> Feedback.<span class="fn">generate</span>(avg, streak, trend)
+            <span class="self">.feedback_label.<span class="fn">configure</span>(text<span class="op">=</span><span class="str">f"💬 {message}"</span>)
+        <span class="kw">else</span>:
+            <span class="self">.feedback_label.<span class="fn">configure</span>(text<span class="op">=</span><span class="str">"Add your first habit to see personalised feedback."</span>)
+
+    <span class="kw">def</span> <span class="fn">add_habit</span>(<span class="self">self</span>):
+        dialog <span class="op">=</span> <span class="cls">HabitDialog</span>(<span class="self">self</span>, <span class="str">"Add Habit"</span>)
+        <span class="self">.wait_window(dialog)
+        <span class="kw">if</span> <span class="kw">not</span> dialog.result:
+            <span class="kw">return</span>
+
+        date_str, name, mood, completed <span class="op">=</span> dialog.result
+        <span class="kw">try</span>:
+            <span class="cls">Validation</span>.<span class="fn">validate_habit_entry</span>(date_str, name, mood, completed)
+        <span class="kw">except</span> <span class="cls">ValueError</span> <span class="kw">as</span> err:
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="fn">str</span>(err))
+            <span class="kw">return</span>
+
+        <span class="self">.tracker.<span class="fn">add_habit</span>(date_str, name, mood, completed)
+        <span class="self">.<span class="fn">refresh</span>()
+
+    <span class="kw">def</span> <span class="fn">edit_habit</span>(<span class="self">self</span>):
+        sel <span class="op">=</span> <span class="self">.tree.<span class="fn">selection</span>()
+        <span class="kw">if</span> <span class="kw">not</span> sel:
+            messagebox.<span class="fn">showwarning</span>(<span class="str">"Warning"</span>, <span class="str">"Select a record first."</span>)
+            <span class="kw">return</span>
+
+        habit_id <span class="op">=</span> <span class="fn">int</span>(sel[<span class="num">0</span>])
+        record <span class="op">=</span> <span class="fn">next</span>((h <span class="kw">for</span> h <span class="kw">in</span> <span class="self">.tracker.<span class="fn">get_all_habits</span>() <span class="kw">if</span> h.habit_id <span class="op">==</span> habit_id), <span class="kw">None</span>)
+
+        dialog <span class="op">=</span> <span class="cls">HabitDialog</span>(<span class="self">self</span>, <span class="str">"Edit Habit"</span>, record)
+        <span class="self">.wait_window(dialog)
+        <span class="kw">if</span> <span class="kw">not</span> dialog.result:
+            <span class="kw">return</span>
+
+        date_str, name, mood, completed <span class="op">=</span> dialog.result
+        <span class="kw">try</span>:
+            <span class="cls">Validation</span>.<span class="fn">validate_habit_entry</span>(date_str, name, mood, completed)
+        <span class="kw">except</span> <span class="cls">ValueError</span> <span class="kw">as</span> err:
+            messagebox.<span class="fn">showerror</span>(<span class="str">"Error"</span>, <span class="fn">str</span>(err))
+            <span class="kw">return</span>
+
+        <span class="self">.tracker.<span class="fn">edit_habit</span>(habit_id, date_str, name, mood, completed)
+        <span class="self">.<span class="fn">refresh</span>()
+
+    <span class="kw">def</span> <span class="fn">delete_habit</span>(<span class="self">self</span>):
+        sel <span class="op">=</span> <span class="self">.tree.<span class="fn">selection</span>()
+        <span class="kw">if</span> <span class="kw">not</span> sel:
+            messagebox.<span class="fn">showwarning</span>(<span class="str">"Warning"</span>, <span class="str">"Select a record first."</span>)
+            <span class="kw">return</span>
+
+        <span class="kw">if</span> messagebox.<span class="fn">askyesno</span>(<span class="str">"Delete"</span>, <span class="str">"Delete this record?"</span>):
+            <span class="self">.tracker.<span class="fn">delete_habit</span>(<span class="fn">int</span>(sel[<span class="num">0</span>]))
+            <span class="self">.<span class="fn">refresh</span>()</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">main.py — final</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">import</span> customtkinter <span class="kw">as</span> ctk
+<span class="kw">from</span> gui.main_window <span class="kw">import</span> MainWindow
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="str">"__main__"</span>:
+    ctk.<span class="fn">set_appearance_mode</span>(<span class="str">"dark"</span>)
+    ctk.<span class="fn">set_default_color_theme</span>(<span class="str">"blue"</span>)
+    app <span class="op">=</span> <span class="cls">MainWindow</span>()
+    app.<span class="fn">mainloop</span>()</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Why do we call <code>self.wait_window(dialog)</code>?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> It pauses the main window until the dialog closes. Without it, the program would continue immediately and try to read <code>dialog.result</code> before the user has entered anything.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 11)">
+        <span class="check-icon"></span> Mark Lesson 11 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 12 -->
+    <section class="lesson" id="lesson-12">
+      <div class="lesson-header">
+        <div class="lesson-num">12</div>
+        <div class="lesson-title">Polish &amp; Charts</div>
+        <span class="lesson-goal">Make it look good</span>
+      </div>
+
+      <p>Functional is good. Pretty is better. Let's add colour coding and a simple text-based mood chart.</p>
+
+      <p><strong>Colour-code completed rows in <code>refresh()</code>:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/main_window.py — inside create_widgets</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="self">.tree.<span class="fn">tag_configure</span>(<span class="str">"done"</span>, background<span class="op">=</span><span class="str">"#1a3a2a"</span>, foreground<span class="op">=</span><span class="str">"#4ade80"</span>)
+<span class="self">.tree.<span class="fn">tag_configure</span>(<span class="str">"missed"</span>, background<span class="op">=</span><span class="str">"#3a1a1a"</span>, foreground<span class="op">=</span><span class="str">"#f87171"</span>)</code></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">gui/main_window.py — inside refresh</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="kw">for</span> h <span class="kw">in</span> records:
+    tag <span class="op">=</span> <span class="str">"done"</span> <span class="kw">if</span> h.completed <span class="kw">else</span> <span class="str">"missed"</span>
+    <span class="self">.tree.<span class="fn">insert</span>(<span class="str">""</span>, tk.END, iid<span class="op">=</span>h.habit_id,
+                 values<span class="op">=</span>(h.date, h.habit_name, h.mood,
+                         <span class="str">"✓"</span> <span class="kw">if</span> h.completed <span class="kw">else</span> <span class="str">"✗"</span>),
+                 tags<span class="op">=</span>(tag,))</code></pre>
+      </div>
+
+      <p><strong>Add a text-based mood chart at the end of <code>refresh()</code>:</strong></p>
+
+      <div class="code-wrap">
+        <div class="code-head">
+          <span class="code-lang">utilities/analytics.py — add this method</span>
+          <button class="copy-btn" onclick="copyCode(this)">Show Hint</button>
+        </div>
+        <pre><code><span class="op">@</span><span class="fn">staticmethod</span>
+<span class="kw">def</span> <span class="fn">mood_chart</span>(records, days<span class="op">=</span><span class="num">14</span>):
+    <span class="str">"""Return a simple text chart of the last N days of mood."""</span>
+    today <span class="op">=</span> date.<span class="fn">today</span>()
+    lines <span class="op">=</span> []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(days <span class="op">-</span> <span class="num">1</span>, <span class="op">-</span><span class="num">1</span>, <span class="op">-</span><span class="num">1</span>):
+        d <span class="op">=</span> <span class="fn">str</span>(today <span class="op">-</span> timedelta(days<span class="op">=</span>i))
+        day_moods <span class="op">=</span> [r.mood <span class="kw">for</span> r <span class="kw">in</span> records <span class="kw">if</span> r.date <span class="op">==</span> d]
+        <span class="kw">if</span> day_moods:
+            avg <span class="op">=</span> <span class="fn">sum</span>(day_moods) <span class="op">/</span> <span class="fn">len</span>(day_moods)
+            bar <span class="op">=</span> <span class="str">"█"</span> <span class="op">*</span> <span class="fn">int</span>(<span class="fn">round</span>(avg))
+            lines.<span class="fn">append</span>(<span class="str">f"{d[5:]}  {bar} {avg:.1f}"</span>)
+        <span class="kw">else</span>:
+            lines.<span class="fn">append</span>(<span class="str">f"{d[5:]}  (no data)"</span>)
+    <span class="kw">return</span> <span class="str">"\n"</span>.<span class="fn">join</span>(lines)</code></pre>
+      </div>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Which success criteria do colour coding and the mood chart support?</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Answer:</strong> SC6 (trend visibility) and SC5 (personalised feedback). Both make patterns visible that would be hidden in a plain table — which is exactly what Julia said she was missing.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 12)">
+        <span class="check-icon"></span> Mark Lesson 12 Complete
+      </button>
+    </section>
+
+    <!-- LESSON 13 -->
+    <section class="lesson" id="lesson-13">
+      <div class="lesson-header">
+        <div class="lesson-num">13</div>
+        <div class="lesson-title">Make It Your Own</div>
+        <span class="lesson-goal">Required before submission</span>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-title">⚠️ Read This Carefully</div>
+        <p>What you've built so far is a <strong>teaching exercise</strong>, not your submitted project. If you submit this tutorial app as-is:</p>
+        <ul>
+          <li>You will not demonstrate independent design thinking</li>
+          <li>Your work will not stand out from the tutorial it came from</li>
+          <li>You will miss the marks that come from real extensions</li>
+        </ul>
+        <p>This final lesson fixes that. It's <strong>not optional</strong>. Every step below is required.</p>
+      </div>
+
+      <h3>Step 1 — Choose Your Extension</h3>
+
+      <p>Pick <strong>at least two</strong> from this list. One from Tier 1, one from Tier 2 or 3.</p>
+
+      <p><strong>Tier 1 — Straightforward (2–4 hours each)</strong></p>
+      <ul>
+        <li><strong>Search bar</strong> — filter records by habit name as you type</li>
+        <li><strong>Date range picker</strong> — show only records between two dates (this supports SC2 more explicitly)</li>
+        <li><strong>Export to CSV</strong> — download all records as a spreadsheet</li>
+        <li><strong>Sort options</strong> — by date, by mood, by habit name</li>
+        <li><strong>Habit colour tags</strong> — assign a colour to each habit name</li>
+      </ul>
+
+      <p><strong>Tier 2 — Real design work (1–2 days each)</strong></p>
+      <ul>
+        <li><strong>Recurring habits</strong> — mark a habit as "daily" and it auto-fills tomorrow</li>
+        <li><strong>Mood-habit correlation</strong> — show average mood on completed days vs missed days</li>
+        <li><strong>Calendar view</strong> — monthly grid showing which days each habit was done</li>
+        <li><strong>Weekly summary email/message</strong> — generated text summary of the past week</li>
+        <li><strong>Notes per entry</strong> — free-form text alongside each habit record</li>
+      </ul>
+
+      <p><strong>Tier 3 — Genuinely complex (3–5 days each)</strong></p>
+      <ul>
+        <li><strong>Predictive mood</strong> — use the last 14 days of mood to predict tomorrow's mood</li>
+        <li><strong>Multi-habit view</strong> — track 3+ habits simultaneously with individual streaks</li>
+        <li><strong>Streak milestones</strong> — badges when a user hits 7, 30, 100-day streaks</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 Which to pick?</div>
+        <p><strong>Mood-habit correlation</strong> is the sweet spot. It's the feature that neither Habitica nor Daylio does — which directly supports your whole Criterion A argument. It touches the database (a JOIN or a Python-side comparison), the analytics layer (a new method), and the GUI (a new panel).</p>
+      </div>
+
+      <h3>Step 2 — Plan Before You Code</h3>
+
+      <p>Answer these questions in a document first:</p>
+
+      <ol>
+        <li><strong>What exactly will the user see and do?</strong> Write a short user story.</li>
+        <li><strong>What data changes?</strong> Will you add fields to <code>Habit</code>? Create a new class?</li>
+        <li><strong>What logic changes?</strong> Where does the new code live?</li>
+        <li><strong>What could go wrong?</strong> List at least three edge cases.</li>
+        <li><strong>How will you test it?</strong> Give specific inputs and expected outputs.</li>
+      </ol>
+
+      <h3>Step 3 — Rewrite, Don't Just Add</h3>
+
+      <p>While you're adding your extension:</p>
+
+      <ul>
+        <li><strong>Refactor at least two methods</strong> that the extension makes awkward</li>
+        <li><strong>Add comments</strong> explaining your reasoning in your own words</li>
+        <li><strong>Change at least one threshold</strong> (e.g. the 0.5 in trend detection) and explain why in a comment</li>
+      </ul>
+
+      <h3>Step 4 — What You Submit by 30 September</h3>
+
+      <div class="callout tip">
+        <div class="callout-title">✅ Your code must have these working</div>
+        <ul>
+          <li>All 13 lessons complete</li>
+          <li>Two extensions implemented and working</li>
+          <li>App runs without errors</li>
+          <li>Records save and reload correctly</li>
+          <li>Invalid input is rejected</li>
+          <li>Streaks recalculate on edit</li>
+          <li>Trend detection shows something meaningful</li>
+        </ul>
+      </div>
+
+      <p><strong>Everything else — the write-up, UML diagram, test plan, video demo, and honesty form — is October work.</strong> You'll get separate deadlines for those. Focus on getting working code by 30 September.</p>
+
+      <div class="question">
+        <div class="question-label">❓ Your Turn</div>
+        <p>Which two extensions will you choose, and why? Write down your answer — that's the start of your plan.</p>
+        <button class="reveal-btn" onclick="toggleAnswer(this)">Reveal Answer</button>
+        <div class="answer"><strong>Good answer example:</strong> "I chose mood-habit correlation because my client Julia said she wants to understand the link between her mood and productivity. I'll add a method to Analytics that compares the average mood on completed days to missed days, and show it as a new panel. The main challenge is that correlation needs at least 10 records on both sides to be meaningful, so I need to handle the 'not enough data' case."</div>
+      </div>
+
+      <button class="complete-btn" onclick="markComplete(this, 13)">
+        <span class="check-icon"></span> Mark Lesson 13 Complete
+      </button>
+    </section>
+
+    <div class="final" id="final-card" style="display:none;">
+      <h2>🎉 Code Complete!</h2>
+      <p>You've built a complete Habit &amp; Mood Tracker with streak calculation, mood analytics, trend detection, rule-based feedback, SQLite persistence, and your own extensions. Your code deadline work is done.</p>
+      <p style="margin-top: 20px; color: var(--yellow); font-weight: 600;">Next: October — write-up, UML, test plan, and video demo. Separate deadlines to follow.</p>
+    </div>
+
+  </main>
+</div>
+
+<button class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  const totalLessons = 14;
+  const completed = new Set();
+
+  function copyCode(btn) {
+    btn.textContent = '✏️ Type it yourself!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Show Hint';
+      btn.classList.remove('copied');
+    }, 1400);
+  }
+
+  document.querySelectorAll('pre').forEach(pre => {
+    pre.addEventListener('copy', e => {
+      e.preventDefault();
+      showToast('🚫 Copying is disabled — type the code out!');
+    });
+    pre.addEventListener('contextmenu', e => e.preventDefault());
+    pre.style.userSelect = 'none';
+  });
+
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = `
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f87171;
+      color: #0f1117;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      z-index: 9999;
+      box-shadow: 0 8px 24px #00000066;
+      animation: toastIn 0.3s;
+    `;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
+  }
+
+  function toggleAnswer(btn) {
+    const answer = btn.nextElementSibling;
+    answer.classList.toggle('show');
+    btn.textContent = answer.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+
+    if (answer.classList.contains('show')) {
+      const lesson = btn.closest('.lesson');
+      if (lesson) lesson.dataset.revealed = 'true';
+    }
+  }
+
+  function getAllLessonNumbers() {
+    const nums = [];
+    document.querySelectorAll('.lesson').forEach(l => {
+      const n = parseInt(l.id.split('-')[1]);
+      if (!isNaN(n)) nums.push(n);
+    });
+    return nums.sort((a, b) => a - b);
+  }
+
+  function markComplete(btn, lessonNum) {
+    const lesson = document.getElementById('lesson-' + lessonNum);
+    if (!lesson) return;
+
+    if (!completed.has(lessonNum) && lesson.dataset.revealed !== 'true') {
+      showToast('⚠️ Reveal the "Your Turn" answer before marking complete.');
+      return;
+    }
+
+    if (completed.has(lessonNum)) {
+      completed.delete(lessonNum);
+      btn.classList.remove('done');
+      btn.innerHTML = '<span class="check-icon"></span> Mark Lesson ' + lessonNum + ' Complete';
+    } else {
+      completed.add(lessonNum);
+      btn.classList.add('done');
+      btn.innerHTML = '<span class="check-icon"></span> Lesson ' + lessonNum + ' Complete!';
+      fireConfetti();
+    }
+
+    saveProgress();
+    refreshAll();
+  }
+
+  function refreshAll() {
+    updateProgress();
+    updateSidebar();
+    applyLocks();
+  }
+
+  function updateProgress() {
+    const pct = (completed.size / totalLessons) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent = completed.size + ' / ' + totalLessons + ' lessons';
+
+    if (completed.size === totalLessons) {
+      document.getElementById('final-card').style.display = 'block';
+    } else {
+      document.getElementById('final-card').style.display = 'none';
+    }
+  }
+
+  function updateSidebar() {
+    document.querySelectorAll('.lesson-link').forEach(link => {
+      const num = parseInt(link.dataset.target.split('-')[1]);
+      link.classList.toggle('done', completed.has(num));
+    });
+  }
+
+  function applyLocks() {
+    const allNums = getAllLessonNumbers();
+
+    allNums.forEach((num, index) => {
+      const lessonEl = document.getElementById('lesson-' + num);
+      const linkEl = document.querySelector('.lesson-link[data-target="lesson-' + num + '"]');
+      if (!lessonEl) return;
+
+      let unlocked;
+      if (index === 0) {
+        unlocked = true;
+      } else {
+        const prevNum = allNums[index - 1];
+        unlocked = completed.has(prevNum);
+      }
+
+      lessonEl.classList.toggle('locked', !unlocked);
+      if (linkEl) linkEl.classList.toggle('locked', !unlocked);
+    });
+  }
+
+  function saveProgress() {
+    try {
+      localStorage.setItem('lht-progress', JSON.stringify([...completed]));
+      const reveals = [];
+      document.querySelectorAll('.lesson').forEach(l => {
+        if (l.dataset.revealed === 'true') reveals.push(l.id);
+      });
+      localStorage.setItem('lht-reveals', JSON.stringify(reveals));
+    } catch(e) {}
+  }
+
+  function loadProgress() {
+    try {
+      const saved = localStorage.getItem('lht-progress');
+      if (saved) JSON.parse(saved).forEach(n => completed.add(n));
+      const reveals = localStorage.getItem('lht-reveals');
+      if (reveals) {
+        JSON.parse(reveals).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.dataset.revealed = 'true';
+        });
+      }
+    } catch(e) {}
+  }
+
+  window.resetProgress = function() {
+    if (!confirm('Reset all progress? This cannot be undone.')) return;
+    localStorage.removeItem('lht-progress');
+    localStorage.removeItem('lht-reveals');
+    completed.clear();
+    document.querySelectorAll('.lesson').forEach(l => {
+      delete l.dataset.revealed;
+    });
+    document.querySelectorAll('.complete-btn').forEach(btn => {
+      const match = btn.getAttribute('onclick').match(/markComplete\(this,\s*(\d+)\)/);
+      if (match) {
+        btn.classList.remove('done');
+        btn.innerHTML = '<span class="check-icon"></span> Mark Lesson ' + match[1] + ' Complete';
+      }
+    });
+    refreshAll();
+    showToast('✅ Progress reset');
+  };
+
+  document.querySelectorAll('.lesson-link').forEach(link => {
+    link.addEventListener('click', () => {
+      const target = document.getElementById(link.dataset.target);
+      if (target && !target.classList.contains('locked')) {
+        target.scrollIntoView({behavior: 'smooth'});
+      }
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.lesson-link').forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.lesson-link[data-target="${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  document.querySelectorAll('.lesson').forEach(l => observer.observe(l));
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('toTop').classList.toggle('show', window.scrollY > 500);
+  });
+
+  function fireConfetti() {
+    const colors = ['#7c8aff', '#a78bfa', '#4ade80', '#fbbf24', '#f87171'];
+    for (let i = 0; i < 30; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-20px';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDelay = Math.random() * 0.5 + 's';
+      c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }
+  }
+
+  loadProgress();
+  refreshAll();
+</script>
+
+</body>
+</html>
