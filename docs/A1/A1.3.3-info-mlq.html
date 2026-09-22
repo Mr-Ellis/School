@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1.3.3 Info Sheet — Multilevel Queue</title>
+<style>
+  :root {
+    --bg: #ffffff; --panel: #f8fafc; --panel-2: #eef2f7;
+    --text: #1e293b; --muted: #64748b;
+    --accent: #0369a1; --accent-2: #15803d;
+    --warn: #b45309; --danger: #b91c1c; --border: #cbd5e1;
+    --team: #6d28d9;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 0 1rem 4rem; }
+  .wrap { max-width: 820px; margin: 0 auto; }
+  a { color: var(--accent); }
+  .back { display: inline-block; margin: 1.5rem 0; color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+  .back:hover { color: var(--accent); }
+  .header { background: var(--team); color: #fff; border-radius: 10px; padding: 1.4rem 1.6rem; margin: 1rem 0; }
+  .header h1 { margin: 0 0 0.3rem; font-size: 1.7rem; border: none; padding: 0; }
+  .header p { margin: 0; opacity: 0.9; font-size: 1rem; }
+  .badge { display: inline-block; background: rgba(255,255,255,0.2); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 12px; margin-top: 0.5rem; }
+  h2 { font-size: 1.2rem; margin: 1.8rem 0 0.8rem; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 0.7rem; }
+  h3 { font-size: 1rem; margin: 1.2rem 0 0.5rem; color: var(--accent-2); }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .panel.accent { border-left: 4px solid var(--accent); }
+  .panel.good { border-left: 4px solid var(--accent-2); background: #f0fdf4; }
+  .panel.warn { border-left: 4px solid var(--warn); background: #fffbeb; }
+  .panel.danger { border-left: 4px solid var(--danger); background: #fef2f2; }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; background: #fff; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
+  th, td { border: 1px solid var(--border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--panel-2); color: var(--accent); }
+  code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: #0c4a6e; }
+  .fig { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin: 1rem 0; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.78rem; color: #0c4a6e; overflow-x: auto; white-space: pre; }
+  .fig .label { color: var(--muted); }
+  .fig .p1 { color: #0369a1; font-weight: bold; }
+  .fig .p2 { color: #15803d; font-weight: bold; }
+  .fig .p3 { color: #b45309; font-weight: bold; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+  @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+  .compare-box { background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; }
+  .compare-box h4 { margin: 0 0 0.4rem; font-size: 0.95rem; }
+  .compare-box.fcfs { border-color: #0369a1; } .compare-box.fcfs h4 { color: #0369a1; }
+  .compare-box.rr { border-color: #15803d; } .compare-box.rr h4 { color: #15803d; }
+  .compare-box.pri { border-color: #b45309; } .compare-box.pri h4 { color: #b45309; }
+  .compare-box.mlq { border-color: #6d28d9; } .compare-box.mlq h4 { color: #6d28d9; }
+  .compare-box ul { margin: 0.3rem 0 0; padding-left: 1.1rem; font-size: 0.85rem; }
+  .slogan { background: #4c1d95; color: #fff; border-radius: 10px; padding: 1rem 1.3rem; font-size: 1.1rem; font-style: italic; font-weight: 600; margin: 1rem 0; text-align: center; }
+  .keypoint { background: #fef3c7; border-left: 4px solid var(--warn); border-radius: 8px; padding: 0.8rem 1rem; margin: 0.8rem 0; font-size: 0.92rem; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding: 0.3rem 0 0.3rem 1.6rem; position: relative; font-size: 0.92rem; }
+  .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
 
+  <a class="back" href="A1.3.3-summary.html">← Back to A1.3.3</a>
+
+  <div class="header">
+    <h1>Team Multilevel Queue</h1>
+    <p>Multilevel Queue (MLQ)</p>
+    <span class="badge">Information Sheet</span>
+  </div>
+
+  <div class="slogan">"Different queues for different jobs — clean separation, but don't let the bottom queue starve."</div>
+
+  <!-- HOW IT WORKS -->
+  <h2>🔧 How It Works</h2>
+  <p>Processes are split into <strong>separate queues</strong> based on their type or priority — for example, interactive work in one queue, batch work in another. Each queue can have its <strong>own scheduling algorithm</strong>.</p>
+  <p>Usually, MLQ is <strong>non-pre-emptive between queues</strong>: a process in a higher-level queue must finish before a lower-level queue can run. Within a queue, the queue's own algorithm decides the order.</p>
+
+  <div class="fig"><span class="label">Multilevel Queue example — three queues, each with its own algorithm.</span>
+┌─────────────────────────────────────────┐
+│ System queue       │ Priority scheduling │
+├─────────────────────────────────────────┤
+│ Interactive queue  │ Round Robin         │
+├─────────────────────────────────────────┤
+│ Batch queue        │ FCFS                │
+└─────────────────────────────────────────┘
+Higher queues must be empty before lower queues run.</div>
+
+  <div class="keypoint">
+    <strong>🔑 Why separate queues?</strong> A background backup (batch) shouldn't slow down a user typing in a text editor (interactive). MLQ gives each type of work its own queue and its own rules.
+  </div>
+
+  <!-- KEY FACTS -->
+  <h2>📌 Key Facts</h2>
+  <table>
+    <tr><th>Property</th><th>Multilevel Queue</th></tr>
+    <tr><td><strong>Pre-emptive?</strong></td><td><strong>Usually not between queues</strong> — higher queues must empty first.</td></tr>
+    <tr><td><strong>Queue structure</strong></td><td>Several queues by class, each with its own algorithm.</td></tr>
+    <tr><td><strong>Response time</strong></td><td>Excellent for the top queue; poor for the lowest queue.</td></tr>
+    <tr><td><strong>Overhead</strong></td><td>Extra bookkeeping per queue — more complex than a single queue.</td></tr>
+    <tr><td><strong>Fairness</strong></td><td>Fair within a queue only; unfair across queues.</td></tr>
+    <tr><td><strong>Starvation risk</strong></td><td>High for the lowest queue if higher queues are always busy.</td></tr>
+    <tr><td><strong>Best suited to</strong></td><td>Mixed workloads — modern operating systems, smartphones.</td></tr>
+  </table>
+
+  <!-- STRENGTHS & WEAKNESSES -->
+  <h2>⚖️ Strengths & Weaknesses</h2>
+  <div class="compare">
+    <div class="compare-box mlq">
+      <h4>✅ Strengths</h4>
+      <ul>
+        <li><strong>Clean separation</strong> — interactive work isn't blocked by background work.</li>
+        <li><strong>Flexible</strong> — each queue can use a different algorithm.</li>
+        <li><strong>Excellent for top queue</strong> — system and interactive work respond quickly.</li>
+        <li><strong>Matches reality</strong> — modern OSes use multiple queues.</li>
+      </ul>
+    </div>
+    <div class="compare-box mlq" style="border-color:#b91c1c">
+      <h4 style="color:#b91c1c">❌ Weaknesses</h4>
+      <ul>
+        <li><strong>Rigid</strong> — a process can't move between queues.</li>
+        <li><strong>Lower queues can starve</strong> — if higher queues are always busy.</li>
+        <li><strong>More complex</strong> — extra bookkeeping per queue.</li>
+        <li><strong>Unfair across queues</strong> — by design.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- COMPARISONS -->
+  <h2>🔄 How Multilevel Queue Compares to the Others</h2>
+  <p>This is the most important section. You must be able to compare MLQ to each rival algorithm.</p>
+
+  <div class="compare">
+    <div class="compare-box fcfs">
+      <h4>MLQ vs FCFS</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both can be non-pre-emptive and both can use FCFS as the algorithm inside a queue.</li>
+        <li><strong>Difference:</strong> FCFS has <strong>one queue</strong>; MLQ has <strong>several queues</strong> by class.</li>
+        <li><strong>Consequence:</strong> MLQ separates interactive work from background work, so a background job can't block a foreground one. FCFS can't do this — the convoy effect applies to everyone.</li>
+        <li><strong>Trade-off:</strong> MLQ is more complex and lower queues can starve; FCFS is simple and never starves.</li>
+      </ul>
+    </div>
+    <div class="compare-box rr">
+      <h4>MLQ vs Round Robin</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both can use Round Robin as the scheduling algorithm inside a queue.</li>
+        <li><strong>Difference:</strong> RR has <strong>one queue</strong> for all processes; MLQ has <strong>several queues</strong> by class.</li>
+        <li><strong>Consequence:</strong> MLQ gives interactive work a different algorithm (e.g. RR) than background work (e.g. FCFS), so the UI stays responsive. RR treats them equally, which can feel sluggish.</li>
+        <li><strong>Trade-off:</strong> MLQ is more complex and lower queues can starve; RR is simpler and never starves.</li>
+      </ul>
+    </div>
+    <div class="compare-box pri">
+      <h4>MLQ vs Priority</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both use priority-like concepts to decide which work runs first, and both can starve lower-priority work.</li>
+        <li><strong>Difference:</strong> Priority uses a <strong>single value per process</strong>; MLQ uses <strong>separate queues by class</strong>, each with its own algorithm.</li>
+        <li><strong>Consequence:</strong> MLQ can apply different rules to different types of work. Priority applies the same rule to all.</li>
+        <li><strong>Trade-off:</strong> MLQ is more structured but more complex; Priority is simpler but less flexible.</li>
+      </ul>
+    </div>
+    <div class="compare-box mlq">
+      <h4>MLQ — The Bottom Line</h4>
+      <ul>
+        <li>Best when <strong>workloads are mixed</strong> — interactive + background.</li>
+        <li>Worst when <strong>simplicity</strong> is needed or <strong>lower queues must not starve</strong>.</li>
+        <li>Excellent for <strong>top queue</strong>; risky for <strong>bottom queue</strong>.</li>
+        <li>Use it for <strong>modern operating systems and smartphones</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EXAM PHRASES -->
+  <h2>✍️ Comparative Language — Use These Phrases</h2>
+  <div class="panel accent">
+    <ul>
+      <li>"<strong>Unlike</strong> FCFS, Multilevel Queue uses several queues rather than one…"</li>
+      <li>"<strong>Whereas</strong> Round Robin treats all processes equally, MLQ separates them by class…"</li>
+      <li>"<strong>Both</strong> Priority and Multilevel Queue can starve lower-priority work…"</li>
+      <li>"MLQ gives excellent response for the top queue, <strong>but</strong> it can starve lower queues…"</li>
+      <li>"<strong>The effect of this difference</strong> is that interactive work stays responsive in MLQ, while in a single-queue system it would compete with background work…"</li>
+    </ul>
+  </div>
+
+  <!-- GROUP TASK CHECKLIST -->
+  <h2>✅ Your Group Task — Checklist</h2>
+  <ul class="checklist">
+    <li>Draw a <strong>visual explanation</strong> (diagram or Gantt-style timeline) of MLQ.</li>
+    <li>Write a <strong>slogan</strong> for MLQ.</li>
+    <li>Identify <strong>one strength</strong> and <strong>one weakness</strong>.</li>
+    <li>Predict <strong>where in the real world</strong> MLQ would be used.</li>
+    <li>Be ready to explain MLQ to your new group in <strong>2 minutes</strong>.</li>
+    <li>Be ready to answer: <strong>"How is MLQ different from FCFS?"</strong></li>
+  </ul>
+
+  <!-- QUICK QUIZ -->
+  <h2>🧠 Quick Check — Can You Answer These?</h2>
+  <div class="panel warn">
+    <ol>
+      <li>Is MLQ pre-emptive between queues? Explain.</li>
+      <li>Why does MLQ separate processes into different queues?</li>
+      <li>Which queue can starve in MLQ, and why?</li>
+      <li>Which algorithm would be better for a smartphone — MLQ or FCFS? Why?</li>
+      <li>Does MLQ cause starvation? Explain your answer.</li>
+    </ol>
+  </div>
+
+</div>
+</body>
+</html>
