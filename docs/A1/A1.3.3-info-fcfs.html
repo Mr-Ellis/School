@@ -1,1 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1.3.3 Info Sheet — FCFS</title>
+<style>
+  :root {
+    --bg: #ffffff; --panel: #f8fafc; --panel-2: #eef2f7;
+    --text: #1e293b; --muted: #64748b;
+    --accent: #0369a1; --accent-2: #15803d;
+    --warn: #b45309; --danger: #b91c1c; --border: #cbd5e1;
+    --team: #0369a1;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 0 1rem 4rem; }
+  .wrap { max-width: 820px; margin: 0 auto; }
+  a { color: var(--accent); }
+  .back { display: inline-block; margin: 1.5rem 0; color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+  .back:hover { color: var(--accent); }
+  .header { background: var(--team); color: #fff; border-radius: 10px; padding: 1.4rem 1.6rem; margin: 1rem 0; }
+  .header h1 { margin: 0 0 0.3rem; font-size: 1.7rem; border: none; padding: 0; }
+  .header p { margin: 0; opacity: 0.9; font-size: 1rem; }
+  .badge { display: inline-block; background: rgba(255,255,255,0.2); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 12px; margin-top: 0.5rem; }
+  h2 { font-size: 1.2rem; margin: 1.8rem 0 0.8rem; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 0.7rem; }
+  h3 { font-size: 1rem; margin: 1.2rem 0 0.5rem; color: var(--accent-2); }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .panel.accent { border-left: 4px solid var(--accent); }
+  .panel.good { border-left: 4px solid var(--accent-2); background: #f0fdf4; }
+  .panel.warn { border-left: 4px solid var(--warn); background: #fffbeb; }
+  .panel.danger { border-left: 4px solid var(--danger); background: #fef2f2; }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; background: #fff; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
+  th, td { border: 1px solid var(--border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--panel-2); color: var(--accent); }
+  code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: #0c4a6e; }
+  .fig { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin: 1rem 0; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.78rem; color: #0c4a6e; overflow-x: auto; white-space: pre; }
+  .fig .label { color: var(--muted); }
+  .fig .p1 { color: #0369a1; font-weight: bold; }
+  .fig .p2 { color: #15803d; font-weight: bold; }
+  .fig .p3 { color: #b45309; font-weight: bold; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+  @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+  .compare-box { background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; }
+  .compare-box h4 { margin: 0 0 0.4rem; font-size: 0.95rem; }
+  .compare-box.fcfs { border-color: #0369a1; } .compare-box.fcfs h4 { color: #0369a1; }
+  .compare-box.rr { border-color: #15803d; } .compare-box.rr h4 { color: #15803d; }
+  .compare-box.pri { border-color: #b45309; } .compare-box.pri h4 { color: #b45309; }
+  .compare-box.mlq { border-color: #6d28d9; } .compare-box.mlq h4 { color: #6d28d9; }
+  .compare-box ul { margin: 0.3rem 0 0; padding-left: 1.1rem; font-size: 0.85rem; }
+  .slogan { background: #0c4a6e; color: #fff; border-radius: 10px; padding: 1rem 1.3rem; font-size: 1.1rem; font-style: italic; font-weight: 600; margin: 1rem 0; text-align: center; }
+  .keypoint { background: #fef3c7; border-left: 4px solid var(--warn); border-radius: 8px; padding: 0.8rem 1rem; margin: 0.8rem 0; font-size: 0.92rem; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding: 0.3rem 0 0.3rem 1.6rem; position: relative; font-size: 0.92rem; }
+  .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
 
+  <a class="back" href="A1.3.3-summary.html">← Back to A1.3.3</a>
+
+  <div class="header">
+    <h1>Team FCFS</h1>
+    <p>First-Come, First-Served</p>
+    <span class="badge">Information Sheet</span>
+  </div>
+
+  <div class="slogan">"First in line, first to finish — simple, but beware the long job at the front."</div>
+
+  <!-- HOW IT WORKS -->
+  <h2>🔧 How It Works</h2>
+  <p>FCFS is the simplest scheduling algorithm. Processes are placed in a single <strong>FIFO queue</strong> as they arrive. The CPU picks the process at the front of the queue and runs it <strong>to completion</strong>. Only then does it move to the next process.</p>
+  <p>There is no decision-making. No priorities. No time slices. Just arrival order.</p>
+
+  <div class="fig"><span class="label">FCFS example — P1 arrives first, then P2, then P3. All run to completion.</span>
+Time   0    1    2    3    4    5    6    7    8    9   10   11   12
+      ┌──────────────┬────────┬──────────────┐
+      │ <span class="p1">P1 (long)</span>    │ <span class="p2">P2</span>     │ <span class="p3">P3 (long)</span>    │
+      └──────────────┴────────┴──────────────┘
+P2 (short) must wait for P1 to finish entirely — this is the convoy effect.</div>
+
+  <!-- KEY FACTS -->
+  <h2>📌 Key Facts</h2>
+  <table>
+    <tr><th>Property</th><th>FCFS</th></tr>
+    <tr><td><strong>Pre-emptive?</strong></td><td><strong>No</strong> — once a process starts, it runs until it finishes.</td></tr>
+    <tr><td><strong>Queue structure</strong></td><td>Simple FIFO (first in, first out).</td></tr>
+    <tr><td><strong>Response time</strong></td><td>Poor for short jobs — they can be stuck behind a long one.</td></tr>
+    <tr><td><strong>Overhead</strong></td><td>Minimal — no context switching unless a process finishes.</td></tr>
+    <tr><td><strong>Fairness</strong></td><td>Fair by arrival order only. A short job arriving after a long one is not treated fairly.</td></tr>
+    <tr><td><strong>Starvation risk</strong></td><td>None — every process eventually reaches the front of the queue.</td></tr>
+    <tr><td><strong>Best suited to</strong></td><td>Batch systems (overnight payroll, background jobs) where no user is waiting interactively.</td></tr>
+  </table>
+
+  <!-- STRENGTHS & WEAKNESSES -->
+  <h2>⚖️ Strengths & Weaknesses</h2>
+  <div class="compare">
+    <div class="compare-box fcfs">
+      <h4>✅ Strengths</h4>
+      <ul>
+        <li><strong>Simple to implement</strong> — just a queue.</li>
+        <li><strong>Minimal overhead</strong> — no context switching mid-process.</li>
+        <li><strong>No starvation</strong> — everyone gets a turn eventually.</li>
+        <li><strong>Predictable</strong> — you know the order processes will run.</li>
+      </ul>
+    </div>
+    <div class="compare-box fcfs" style="border-color:#b91c1c">
+      <h4 style="color:#b91c1c">❌ Weaknesses</h4>
+      <ul>
+        <li><strong>Convoy effect</strong> — one long job blocks every short job behind it.</li>
+        <li><strong>Poor response time</strong> — interactive users wait too long.</li>
+        <li><strong>Not suitable for time-sharing</strong> — one user can hog the CPU.</li>
+        <li><strong>No prioritisation</strong> — critical work can't jump the queue.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="keypoint">
+    <strong>🔑 The Convoy Effect:</strong> Imagine a supermarket with one till and no express lane. Someone with a full trolley is at the front. Everyone behind them — even someone with one item — must wait. That's FCFS.
+  </div>
+
+  <!-- COMPARISONS -->
+  <h2>🔄 How FCFS Compares to the Others</h2>
+  <p>This is the most important section. You must be able to compare FCFS to each rival algorithm.</p>
+
+  <div class="compare">
+    <div class="compare-box rr">
+      <h4>FCFS vs Round Robin</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both use a FIFO queue and serve processes in arrival order.</li>
+        <li><strong>Difference:</strong> FCFS is <strong>non-pre-emptive</strong> (runs to completion); RR is <strong>pre-emptive</strong> (fixed time quantum, then rotate).</li>
+        <li><strong>Consequence:</strong> FCFS suffers the convoy effect — short jobs wait behind long ones. RR avoids this by giving everyone a turn.</li>
+        <li><strong>Trade-off:</strong> RR pays for its fairness with <strong>context-switching overhead</strong>; FCFS has almost none.</li>
+      </ul>
+    </div>
+    <div class="compare-box pri">
+      <h4>FCFS vs Priority</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both can be non-pre-emptive — a running process may finish before the next is chosen.</li>
+        <li><strong>Difference:</strong> FCFS uses <strong>arrival order</strong>; Priority uses a <strong>priority value</strong> to decide who runs next.</li>
+        <li><strong>Consequence:</strong> FCFS can't rush critical work. Priority can — but low-priority work can <strong>starve</strong> without ageing.</li>
+        <li><strong>Trade-off:</strong> FCFS never starves anyone; Priority does.</li>
+      </ul>
+    </div>
+    <div class="compare-box mlq">
+      <h4>FCFS vs Multilevel Queue</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both can be non-pre-emptive and both can use FCFS as the algorithm inside a queue.</li>
+        <li><strong>Difference:</strong> FCFS has <strong>one queue</strong>; MLQ has <strong>several queues</strong> by class, each with its own algorithm.</li>
+        <li><strong>Consequence:</strong> MLQ separates interactive work from background work, so a background job can't block a foreground one. FCFS can't do this.</li>
+        <li><strong>Trade-off:</strong> MLQ is more complex and lower queues can starve; FCFS is simple and never starves.</li>
+      </ul>
+    </div>
+    <div class="compare-box fcfs">
+      <h4>FCFS — The Bottom Line</h4>
+      <ul>
+        <li>Best when <strong>simplicity and throughput</strong> matter more than response time.</li>
+        <li>Worst when <strong>interactive users</strong> are waiting.</li>
+        <li>Never starves, but can make <strong>everyone</strong> wait.</li>
+        <li>Use it for <strong>batch systems</strong>, not for a general-purpose PC.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EXAM PHRASES -->
+  <h2>✍️ Comparative Language — Use These Phrases</h2>
+  <div class="panel accent">
+    <ul>
+      <li>"<strong>Unlike</strong> Round Robin, FCFS is non-pre-emptive…"</li>
+      <li>"<strong>Whereas</strong> Round Robin gives each process a time slice, FCFS runs each to completion…"</li>
+      <li>"<strong>Both</strong> FCFS and Priority can be non-pre-emptive…"</li>
+      <li>"FCFS has minimal overhead, <strong>but</strong> it pays for this with poor response time…"</li>
+      <li>"<strong>The effect of this difference</strong> is that short jobs wait behind long ones in FCFS, while…"</li>
+    </ul>
+  </div>
+
+  <!-- GROUP TASK CHECKLIST -->
+  <h2>✅ Your Group Task — Checklist</h2>
+  <ul class="checklist">
+    <li>Draw a <strong>visual explanation</strong> (diagram or Gantt-style timeline) of FCFS.</li>
+    <li>Write a <strong>slogan</strong> for FCFS.</li>
+    <li>Identify <strong>one strength</strong> and <strong>one weakness</strong>.</li>
+    <li>Predict <strong>where in the real world</strong> FCFS would be used.</li>
+    <li>Be ready to explain FCFS to your new group in <strong>2 minutes</strong>.</li>
+    <li>Be ready to answer: <strong>"How is FCFS different from Round Robin?"</strong></li>
+  </ul>
+
+  <!-- QUICK QUIZ -->
+  <h2>🧠 Quick Check — Can You Answer These?</h2>
+  <div class="panel warn">
+    <ol>
+      <li>Is FCFS pre-emptive or non-pre-emptive?</li>
+      <li>What is the convoy effect?</li>
+      <li>Why does FCFS have low overhead?</li>
+      <li>Which algorithm would be better for a short interactive job — FCFS or Round Robin? Why?</li>
+      <li>Does FCFS cause starvation? Explain your answer.</li>
+    </ol>
+  </div>
+
+</div>
+</body>
+</html>
