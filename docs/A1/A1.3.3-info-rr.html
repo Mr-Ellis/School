@@ -1,1 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1.3.3 Info Sheet — Round Robin</title>
+<style>
+  :root {
+    --bg: #ffffff; --panel: #f8fafc; --panel-2: #eef2f7;
+    --text: #1e293b; --muted: #64748b;
+    --accent: #0369a1; --accent-2: #15803d;
+    --warn: #b45309; --danger: #b91c1c; --border: #cbd5e1;
+    --team: #15803d;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 0 1rem 4rem; }
+  .wrap { max-width: 820px; margin: 0 auto; }
+  a { color: var(--accent); }
+  .back { display: inline-block; margin: 1.5rem 0; color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+  .back:hover { color: var(--accent); }
+  .header { background: var(--team); color: #fff; border-radius: 10px; padding: 1.4rem 1.6rem; margin: 1rem 0; }
+  .header h1 { margin: 0 0 0.3rem; font-size: 1.7rem; border: none; padding: 0; }
+  .header p { margin: 0; opacity: 0.9; font-size: 1rem; }
+  .badge { display: inline-block; background: rgba(255,255,255,0.2); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 12px; margin-top: 0.5rem; }
+  h2 { font-size: 1.2rem; margin: 1.8rem 0 0.8rem; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 0.7rem; }
+  h3 { font-size: 1rem; margin: 1.2rem 0 0.5rem; color: var(--accent-2); }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .panel.accent { border-left: 4px solid var(--accent); }
+  .panel.good { border-left: 4px solid var(--accent-2); background: #f0fdf4; }
+  .panel.warn { border-left: 4px solid var(--warn); background: #fffbeb; }
+  .panel.danger { border-left: 4px solid var(--danger); background: #fef2f2; }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; background: #fff; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
+  th, td { border: 1px solid var(--border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--panel-2); color: var(--accent); }
+  code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: #0c4a6e; }
+  .fig { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin: 1rem 0; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.78rem; color: #0c4a6e; overflow-x: auto; white-space: pre; }
+  .fig .label { color: var(--muted); }
+  .fig .p1 { color: #0369a1; font-weight: bold; }
+  .fig .p2 { color: #15803d; font-weight: bold; }
+  .fig .p3 { color: #b45309; font-weight: bold; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+  @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+  .compare-box { background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; }
+  .compare-box h4 { margin: 0 0 0.4rem; font-size: 0.95rem; }
+  .compare-box.fcfs { border-color: #0369a1; } .compare-box.fcfs h4 { color: #0369a1; }
+  .compare-box.rr { border-color: #15803d; } .compare-box.rr h4 { color: #15803d; }
+  .compare-box.pri { border-color: #b45309; } .compare-box.pri h4 { color: #b45309; }
+  .compare-box.mlq { border-color: #6d28d9; } .compare-box.mlq h4 { color: #6d28d9; }
+  .compare-box ul { margin: 0.3rem 0 0; padding-left: 1.1rem; font-size: 0.85rem; }
+  .slogan { background: #14532d; color: #fff; border-radius: 10px; padding: 1rem 1.3rem; font-size: 1.1rem; font-style: italic; font-weight: 600; margin: 1rem 0; text-align: center; }
+  .keypoint { background: #fef3c7; border-left: 4px solid var(--warn); border-radius: 8px; padding: 0.8rem 1rem; margin: 0.8rem 0; font-size: 0.92rem; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding: 0.3rem 0 0.3rem 1.6rem; position: relative; font-size: 0.92rem; }
+  .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
 
+  <a class="back" href="A1.3.3-summary.html">← Back to A1.3.3</a>
+
+  <div class="header">
+    <h1>Team Round Robin</h1>
+    <p>Round Robin (RR)</p>
+    <span class="badge">Information Sheet</span>
+  </div>
+
+  <div class="slogan">"Everyone gets a turn — fair, responsive, but beware the overhead of switching."</div>
+
+  <!-- HOW IT WORKS -->
+  <h2>🔧 How It Works</h2>
+  <p>Round Robin gives each process a fixed <strong>time slice</strong> — called a <strong>quantum</strong> — to use the CPU. When the quantum expires, the process is <strong>pre-empted</strong> and moved to the back of the queue. The next process in line gets its turn.</p>
+  <p>This cycle repeats until all processes have finished. No process waits indefinitely.</p>
+
+  <div class="fig"><span class="label">Round Robin with quantum = 2. Each process gets 2 time units, then rotates.</span>
+Time   0    1    2    3    4    5    6    7    8    9   10   11   12
+      ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┐
+      │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │ <span class="p1">P1</span> │ <span class="p2">P2</span> │ <span class="p3">P3</span> │
+      └────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┴────┘
+Each process gets an equal slice; the cycle repeats until all complete.</div>
+
+  <div class="keypoint">
+    <strong>🔑 Quantum size matters:</strong> Too small → high context-switch overhead (thrashing). Too large → behaves like FCFS. A good quantum balances fairness and efficiency.
+  </div>
+
+  <!-- KEY FACTS -->
+  <h2>📌 Key Facts</h2>
+  <table>
+    <tr><th>Property</th><th>Round Robin</th></tr>
+    <tr><td><strong>Pre-emptive?</strong></td><td><strong>Yes</strong> — the quantum forces pre-emption.</td></tr>
+    <tr><td><strong>Queue structure</strong></td><td>FIFO + rotation (circular queue).</td></tr>
+    <tr><td><strong>Response time</strong></td><td>Good if the quantum is tuned — short jobs get a turn quickly.</td></tr>
+    <tr><td><strong>Overhead</strong></td><td>Higher than FCFS — every quantum expiry is a context switch.</td></tr>
+    <tr><td><strong>Fairness</strong></td><td>High — every process gets equal CPU time.</td></tr>
+    <tr><td><strong>Starvation risk</strong></td><td>None — every process is guaranteed a turn.</td></tr>
+    <tr><td><strong>Best suited to</strong></td><td>Time-sharing systems and general-purpose PCs (GUIs, multi-user systems).</td></tr>
+  </table>
+
+  <!-- STRENGTHS & WEAKNESSES -->
+  <h2>⚖️ Strengths & Weaknesses</h2>
+  <div class="compare">
+    <div class="compare-box rr">
+      <h4>✅ Strengths</h4>
+      <ul>
+        <li><strong>Fair</strong> — every process gets equal CPU time.</li>
+        <li><strong>Responsive</strong> — short jobs get a turn quickly.</li>
+        <li><strong>No starvation</strong> — every process eventually runs.</li>
+        <li><strong>Good for interactive systems</strong> — users see fast responses.</li>
+      </ul>
+    </div>
+    <div class="compare-box rr" style="border-color:#b91c1c">
+      <h4 style="color:#b91c1c">❌ Weaknesses</h4>
+      <ul>
+        <li><strong>Context-switch overhead</strong> — every quantum expiry costs time.</li>
+        <li><strong>Quantum tuning is critical</strong> — too small = thrashing; too large = FCFS-like.</li>
+        <li><strong>No prioritisation</strong> — critical work can't jump the queue.</li>
+        <li><strong>Throughput can suffer</strong> — more switching means less useful work.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- COMPARISONS -->
+  <h2>🔄 How Round Robin Compares to the Others</h2>
+  <p>This is the most important section. You must be able to compare Round Robin to each rival algorithm.</p>
+
+  <div class="compare">
+    <div class="compare-box fcfs">
+      <h4>Round Robin vs FCFS</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both use a FIFO queue and serve processes in arrival order.</li>
+        <li><strong>Difference:</strong> RR is <strong>pre-emptive</strong> (fixed quantum); FCFS is <strong>non-pre-emptive</strong> (runs to completion).</li>
+        <li><strong>Consequence:</strong> RR avoids the convoy effect — short jobs don't wait behind long ones. FCFS suffers badly from it.</li>
+        <li><strong>Trade-off:</strong> RR pays with context-switching overhead; FCFS has almost none.</li>
+      </ul>
+    </div>
+    <div class="compare-box pri">
+      <h4>Round Robin vs Priority</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both can be pre-emptive and both prevent any single process from hogging the CPU indefinitely.</li>
+        <li><strong>Difference:</strong> RR treats all processes <strong>equally</strong>; Priority serves <strong>high-priority</strong> work first.</li>
+        <li><strong>Consequence:</strong> RR is fair but can't rush critical work. Priority can rush critical work but can <strong>starve</strong> low-priority processes.</li>
+        <li><strong>Trade-off:</strong> RR has no starvation; Priority does (without ageing).</li>
+      </ul>
+    </div>
+    <div class="compare-box mlq">
+      <h4>Round Robin vs Multilevel Queue</h4>
+      <ul>
+        <li><strong>Similarity:</strong> Both can use Round Robin as the scheduling algorithm inside a queue.</li>
+        <li><strong>Difference:</strong> RR has <strong>one queue</strong> for all processes; MLQ has <strong>several queues</strong> by class.</li>
+        <li><strong>Consequence:</strong> MLQ separates interactive work from background work; RR treats them equally, which can make the UI feel sluggish if a background job is running.</li>
+        <li><strong>Trade-off:</strong> MLQ is more complex and lower queues can starve; RR is simpler and never starves.</li>
+      </ul>
+    </div>
+    <div class="compare-box rr">
+      <h4>Round Robin — The Bottom Line</h4>
+      <ul>
+        <li>Best when <strong>fairness and responsiveness</strong> matter most.</li>
+        <li>Worst when <strong>overhead</strong> must be minimised or <strong>priority</strong> matters.</li>
+        <li>Never starves, but pays for fairness with <strong>context switching</strong>.</li>
+        <li>Use it for <strong>time-sharing and general-purpose PCs</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EXAM PHRASES -->
+  <h2>✍️ Comparative Language — Use These Phrases</h2>
+  <div class="panel accent">
+    <ul>
+      <li>"<strong>Unlike</strong> FCFS, Round Robin is pre-emptive…"</li>
+      <li>"<strong>Whereas</strong> FCFS runs each process to completion, Round Robin gives each a fixed time slice…"</li>
+      <li>"<strong>Both</strong> Round Robin and Priority prevent any single process from hogging the CPU…"</li>
+      <li>"Round Robin is fair and responsive, <strong>but</strong> it pays for this with context-switching overhead…"</li>
+      <li>"<strong>The effect of this difference</strong> is that short jobs respond quickly in Round Robin, while in FCFS they can be stuck behind a long job…"</li>
+    </ul>
+  </div>
+
+  <!-- GROUP TASK CHECKLIST -->
+  <h2>✅ Your Group Task — Checklist</h2>
+  <ul class="checklist">
+    <li>Draw a <strong>visual explanation</strong> (diagram or Gantt-style timeline) of Round Robin.</li>
+    <li>Write a <strong>slogan</strong> for Round Robin.</li>
+    <li>Identify <strong>one strength</strong> and <strong>one weakness</strong>.</li>
+    <li>Predict <strong>where in the real world</strong> Round Robin would be used.</li>
+    <li>Be ready to explain Round Robin to your new group in <strong>2 minutes</strong>.</li>
+    <li>Be ready to answer: <strong>"How is Round Robin different from FCFS?"</strong></li>
+  </ul>
+
+  <!-- QUICK QUIZ -->
+  <h2>🧠 Quick Check — Can You Answer These?</h2>
+  <div class="panel warn">
+    <ol>
+      <li>Is Round Robin pre-emptive or non-pre-emptive?</li>
+      <li>What happens when the quantum expires?</li>
+      <li>What is the trade-off of a very small quantum?</li>
+      <li>Which algorithm would be better for a short interactive job — FCFS or Round Robin? Why?</li>
+      <li>Does Round Robin cause starvation? Explain your answer.</li>
+    </ol>
+  </div>
+
+</div>
+</body>
+</html>
