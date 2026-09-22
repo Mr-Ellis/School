@@ -6,116 +6,86 @@
 <title>A1.3.3 – Compare Different Approaches to Scheduling</title>
 <style>
   :root {
-    --bg: #ffffff;
-    --panel: #f8fafc;
-    --panel-2: #eef2f7;
+    --bg: #f0f4fb;
+    --panel: #ffffff;
+    --panel-2: #f7fafc;
     --text: #1e293b;
-    --muted: #64748b;
-    --accent: #0369a1;
-    --accent-2: #15803d;
-    --warn: #b45309;
-    --danger: #b91c1c;
-    --border: #cbd5e1;
-    --team-fcfs: #0369a1;
-    --team-rr: #15803d;
+    --muted: #4a5568;
+    --navy: #0b2a4a;
+    --crimson: #b21f1f;
+    --gold: #fdbb2d;
+    --border: #dce4ed;
+    --team-fcfs: #0b2a4a;
+    --team-rr: #2d7d46;
     --team-pri: #b45309;
     --team-mlq: #6d28d9;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.6;
-    padding: 0 1rem 4rem;
+    line-height: 1.7;
+    padding: 24px;
   }
-  .wrap { max-width: 980px; margin: 0 auto; }
-  a { color: var(--accent); }
-  .back { display: inline-block; margin: 1.5rem 0; color: var(--muted); text-decoration: none; font-size: 0.95rem; }
-  .back:hover { color: var(--accent); }
-  h1 { font-size: 1.9rem; margin: 0.5rem 0 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.6rem; }
-  h2 { font-size: 1.3rem; margin: 2rem 0 0.9rem; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 0.7rem; }
-  h3 { font-size: 1.05rem; margin: 1.4rem 0 0.6rem; color: var(--accent-2); }
-  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 1rem 0; }
-  .panel.accent { border-left: 4px solid var(--accent); }
-  .panel.warn { border-left: 4px solid var(--warn); background: #fffbeb; }
-  .panel.danger { border-left: 4px solid var(--danger); background: #fef2f2; }
-  .panel.good { border-left: 4px solid var(--accent-2); background: #f0fdf4; }
-  .panel.mission { border-left: 4px solid var(--accent); background: linear-gradient(135deg,#f0f9ff,#f8fafc); }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: #fff; border-radius: 8px; overflow: hidden; font-size: 0.88rem; }
-  th, td { border: 1px solid var(--border); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
-  th { background: var(--panel-2); color: var(--accent); }
-  tr:nth-child(even) td { background: #fafbfc; }
-  code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: #0c4a6e; }
-  .btn { display: inline-block; background: var(--accent); color: #fff; font-weight: 700; padding: 0.55rem 1.1rem; border-radius: 8px; text-decoration: none; margin: 0.35rem 0.35rem 0.35rem 0; }
-  .btn:hover { background: #075985; }
-  .btn.green { background: var(--accent-2); }
-  .btn.green:hover { background: #166534; }
-  .btn.orange { background: var(--warn); }
-  .btn.orange:hover { background: #92400e; }
-  .btn.purple { background: var(--team-mlq); }
-  .btn.purple:hover { background: #5b21b6; }
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  a { color: var(--crimson); text-decoration: none; border-bottom: 1px dotted var(--crimson); }
+  a:hover { color: var(--navy); border-bottom: 2px solid var(--navy); }
+  .back { display: inline-block; margin-bottom: 20px; color: var(--crimson); text-decoration: none; font-weight: 500; border-bottom: none; }
+  .back:hover { color: var(--navy); text-decoration: underline; border-bottom: none; }
+  h1 { font-size: 2.2rem; color: var(--navy); border-bottom: 4px solid var(--gold); padding-bottom: 10px; margin: 0 0 25px; }
+  h2 { font-size: 1.5rem; color: var(--navy); margin: 35px 0 15px; border-left: 5px solid var(--crimson); padding-left: 15px; }
+  h3 { font-size: 1.15rem; color: var(--navy); margin: 22px 0 10px; }
+  .badge { display: inline-block; background: var(--crimson); color: #fff; font-weight: 600; font-size: 0.8rem; padding: 2px 12px; border-radius: 20px; text-transform: uppercase; }
+  .command-term { background: #ebf4ff; border-left: 5px solid var(--navy); padding: 15px 20px; border-radius: 8px; margin: 15px 0; font-style: italic; }
+  .panel { background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 1rem 0; }
+  .panel.accent { border-left: 4px solid var(--navy); }
+  .panel.warn { border-left: 4px solid var(--gold); background: #fff8e1; }
+  .panel.danger { border-left: 4px solid var(--crimson); background: #fdeaea; }
+  .panel.good { border-left: 4px solid #2d7d46; background: #e6f5e6; }
+  .panel.mission { background: #fef3c7; border-left: 5px solid var(--gold); border-radius: 0 10px 10px 0; padding: 1.3rem 1.5rem; margin: 1rem 0; }
+  .btn { display: inline-block; background: var(--crimson); color: #fff; font-weight: 700; padding: 0.55rem 1.1rem; border-radius: 8px; text-decoration: none; margin: 0.35rem 0.35rem 0.35rem 0; border-bottom: none; }
+  .btn:hover { background: var(--navy); color: #fff; border-bottom: none; }
+  .btn.green { background: #2d7d46; }
+  .btn.green:hover { background: #1a6b33; }
+  .btn.gold { background: var(--gold); color: var(--navy); }
+  .btn.gold:hover { background: #e5a820; color: var(--navy); }
   details { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; margin: 0.9rem 0; }
-  summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+  summary { cursor: pointer; font-weight: 700; color: var(--crimson); }
   details[open] summary { margin-bottom: 0.6rem; }
-  .fig { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin: 1rem 0; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.78rem; color: #0c4a6e; overflow-x: auto; white-space: pre; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  th { background: var(--navy); color: #fff; font-weight: 600; padding: 0.55rem 0.75rem; text-align: left; }
+  td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.75rem; vertical-align: top; }
+  tr:nth-child(even) td { background: var(--panel-2); }
+  .fig { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin: 1rem 0; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.78rem; color: var(--navy); overflow-x: auto; white-space: pre; }
   .fig .label { color: var(--muted); }
-  .fig .p1 { color: #0369a1; font-weight: bold; }
-  .fig .p2 { color: #15803d; font-weight: bold; }
-  .fig .p3 { color: #b45309; font-weight: bold; }
-  .timing { display: inline-block; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 12px; margin-left: 0.5rem; vertical-align: middle; }
-  .takeaway { background: #f0fdf4; border: 1px solid var(--accent-2); border-radius: 10px; padding: 1.3rem; font-size: 1rem; font-style: italic; margin-top: 1.5rem; }
+  .fig .p1 { color: var(--team-fcfs); font-weight: bold; }
+  .fig .p2 { color: var(--team-rr); font-weight: bold; }
+  .fig .p3 { color: var(--team-pri); font-weight: bold; }
+  .timing { display: inline-block; background: var(--navy); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 12px; margin-left: 0.5rem; vertical-align: middle; }
+  .takeaway { background: #fefcbf; border-left: 5px solid var(--gold); padding: 15px 20px; border-radius: 8px; margin: 25px 0; font-weight: 500; font-style: italic; }
   .checklist { list-style: none; padding-left: 0; }
   .checklist li { padding: 0.35rem 0 0.35rem 1.8rem; position: relative; }
   .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); font-size: 1.05rem; }
   .checklist li.done::before { content: "✅"; }
-  .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-  @media (max-width: 700px) { .team-grid { grid-template-columns: 1fr; } }
-  .team-card { border-radius: 10px; padding: 1rem 1.2rem; background: #fff; border: 2px solid var(--border); }
-  .team-card h4 { margin: 0 0 0.4rem; font-size: 1rem; }
-  .team-card.fcfs { border-color: var(--team-fcfs); }
-  .team-card.fcfs h4 { color: var(--team-fcfs); }
-  .team-card.rr { border-color: var(--team-rr); }
-  .team-card.rr h4 { color: var(--team-rr); }
-  .team-card.pri { border-color: var(--team-pri); }
-  .team-card.pri h4 { color: var(--team-pri); }
-  .team-card.mlq { border-color: var(--team-mlq); }
-  .team-card.mlq h4 { color: var(--team-mlq); }
-  .team-card ul { margin: 0.4rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; }
-  .scorecard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin: 1rem 0; }
-  @media (max-width: 700px) { .scorecard { grid-template-columns: 1fr 1fr; } }
-  .scorecard .metric { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; text-align: center; }
-  .scorecard .metric strong { display: block; color: var(--accent); font-size: 0.85rem; }
-  .scorecard .metric small { color: var(--muted); font-size: 0.75rem; }
-  .corners { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
-  @media (max-width: 700px) { .corners { grid-template-columns: 1fr; } }
-  .corner { border-radius: 8px; padding: 0.8rem 1rem; text-align: center; font-weight: 700; color: #fff; }
-  .corner.fcfs { background: var(--team-fcfs); }
-  .corner.rr { background: var(--team-rr); }
-  .corner.pri { background: var(--team-pri); }
-  .corner.mlq { background: var(--team-mlq); }
-  .twist { background: #fef2f2; border: 2px dashed var(--danger); border-radius: 10px; padding: 1.2rem; margin: 1.2rem 0; }
-  .twist h4 { margin: 0 0 0.5rem; color: var(--danger); }
-  .ai-prompt { background: #1e293b; color: #e2e8f0; border-radius: 10px; padding: 1.2rem 1.4rem; margin: 1rem 0; font-size: 0.95rem; }
-  .ai-prompt strong { color: #7dd3fc; }
-  .ai-prompt ol { padding-left: 1.2rem; margin: 0.5rem 0 0; }
-  .ai-prompt li { margin-bottom: 0.4rem; }
-  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
-  .vs-box { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
-  .vs-box h4 { margin: 0 0 0.5rem; font-size: 1rem; }
-  .vs-box ul { margin: 0.3rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; }
   .phase { display: flex; align-items: center; gap: 0.6rem; margin: 1.5rem 0 0.5rem; }
-  .phase-num { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .phase-num { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--crimson); color: #fff; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
   .phase h2 { margin: 0; border: none; padding: 0; }
   .objective-list { list-style: none; padding-left: 0; }
   .objective-list li { padding: 0.4rem 0 0.4rem 1.8rem; position: relative; }
   .objective-list li::before { content: "🎯"; position: absolute; left: 0; }
   .info-links { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
   @media (max-width: 700px) { .info-links { grid-template-columns: 1fr; } }
-  .info-link { display: flex; align-items: center; gap: 0.8rem; background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; text-decoration: none; color: var(--text); transition: border-color 0.2s; }
-  .info-link:hover { border-color: var(--accent); }
+  .info-link { display: flex; align-items: center; gap: 0.8rem; background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; text-decoration: none; color: var(--text); transition: border-color 0.2s; border-bottom: none; }
+  .info-link:hover { border-color: var(--navy); border-bottom: none; }
   .info-link .icon { font-size: 1.5rem; }
   .info-link .text strong { display: block; font-size: 0.95rem; }
   .info-link .text small { color: var(--muted); font-size: 0.8rem; }
@@ -127,15 +97,30 @@
   @media (max-width: 700px) { .roles { grid-template-columns: 1fr; } }
   .role-box { background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
   .role-box h4 { margin: 0 0 0.5rem; font-size: 1rem; }
-  .role-box.a { border-color: var(--accent); }
-  .role-box.a h4 { color: var(--accent); }
-  .role-box.b { border-color: var(--accent-2); }
-  .role-box.b h4 { color: var(--accent-2); }
+  .role-box.a { border-color: var(--navy); }
+  .role-box.a h4 { color: var(--navy); }
+  .role-box.b { border-color: #2d7d46; }
+  .role-box.b h4 { color: #2d7d46; }
   .role-box ul { margin: 0.3rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; }
   .timeline { display: grid; gap: 0.6rem; margin: 1rem 0; }
   .timeline-item { display: flex; gap: 0.8rem; align-items: flex-start; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; }
-  .timeline-item .time { flex-shrink: 0; background: var(--accent); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 12px; }
+  .timeline-item .time { flex-shrink: 0; background: var(--navy); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 12px; }
   .timeline-item .desc { font-size: 0.92rem; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+  .vs-box { background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
+  .vs-box h4 { margin: 0 0 0.5rem; font-size: 1rem; color: var(--navy); }
+  .vs-box ul { margin: 0.3rem 0 0; padding-left: 1.1rem; font-size: 0.88rem; }
+  .unit-reminder { background: #fff8e1; border-left: 5px solid var(--gold); border-radius: 0 10px 10px 0; padding: 14px 20px; margin: 20px 0; font-size: 0.92rem; }
+  .unit-reminder strong { color: #7a4a0a; }
+  .lesson-nav { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
+  .lesson-nav a { border-bottom: none; font-weight: 500; }
+  .lesson-nav a:hover { border-bottom: none; }
+  .footer-meta { margin-top: 30px; font-size: 0.85rem; color: var(--muted); text-align: center; border-top: 1px solid var(--border); padding-top: 20px; }
+  @media (max-width: 640px) {
+    .wrap { padding: 20px; }
+    h1 { font-size: 1.8rem; }
+  }
 </style>
 </head>
 <body>
@@ -153,8 +138,8 @@
 
   <a class="btn" href="https://mr-ellis.github.io/School/command-terms.html" target="_blank" rel="noopener">📖 Open Command Terms</a>
 
-  <div class="panel accent">
-    <strong>Compare</strong> — "Give an account of the similarities and differences between two or more items, referring to both throughout."
+  <div class="command-term">
+    <strong>Compare</strong> – "Give an account of the similarities and differences between two or more items, referring to both throughout."
   </div>
 
   <!-- ============ LEARNING OBJECTIVES ============ -->
@@ -163,7 +148,7 @@
     <h2>Learning Objectives</h2>
   </div>
 
-  <div class="panel mission">
+  <div class="panel accent">
     <ul class="objective-list">
       <li><strong>Describe</strong> the four scheduling algorithms: FCFS, Round Robin, Priority, and Multilevel Queue.</li>
       <li><strong>Compare</strong> them across key dimensions — pre-emptive status, response time, fairness, overhead, and starvation risk.</li>
@@ -173,15 +158,10 @@
 
   <!-- ============ MISSION ============ -->
   <div class="panel mission">
-    <h2 style="margin-top:0;border:none;padding:0;color:var(--accent)">🏢 Operating System Recruitment Challenge</h2>
+    <h2 style="margin-top:0;border:none;padding:0;color:var(--navy)">🏢 Operating System Recruitment Challenge</h2>
     <p><strong>Microsoft is hiring a new CPU scheduler.</strong></p>
     <p>Four scheduling teams are competing. Your team must prove your algorithm deserves to run <strong>Windows 2030</strong>.</p>
-    <p><strong>Here's how it works:</strong></p>
-    <ul>
-      <li><strong>Poster Designer (Role A):</strong> Presents what your algorithm does — how it works, its slogan, one strength, one weakness, and where it's used.</li>
-      <li><strong>Note Taker (Role B):</strong> Listens to every poster presentation, then makes the <strong>comparative case</strong> — explaining why Microsoft should choose <em>your</em> algorithm over the competition.</li>
-    </ul>
-    <p>Microsoft already knows what each algorithm does. The contract goes to the team that makes the strongest <strong>comparative</strong> case.</p>
+    <p>Every round earns your team points. The team that builds the strongest <em>comparative</em> case wins the contract.</p>
   </div>
 
   <!-- ============ TASK INSTRUCTIONS ============ -->
@@ -293,7 +273,7 @@
 
   <p>Use <strong>Revision Dojo's "Teach Jojo"</strong> to test your understanding. Jojo is an AI that will ask you questions about your algorithm and how it compares to others.</p>
 
-  <a class="btn orange" href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank" rel="noopener">🤖 Launch Teach Jojo</a>
+  <a class="btn gold" href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank" rel="noopener">🤖 Launch Teach Jojo</a>
 
   <div class="panel danger">
     <strong>If Jojo does not work:</strong> Move straight to Task 4 below. Answer the questions in your book.
@@ -349,10 +329,21 @@
   </div>
 
   <a class="btn green" href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank" rel="noopener">Launch Quizlet</a>
-  <a class="btn orange" href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">Launch Blooket</a>
+  <a class="btn gold" href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">Launch Blooket</a>
 
   <div class="takeaway">
     💡 <strong>Key Takeaway:</strong> "No scheduling approach is best in every way. FCFS is simple but non-pre-emptive and suffers the convoy effect; Round Robin is pre-emptive and responsive but pays in context-switching overhead; Priority serves urgent work first but can starve low-priority processes; Multilevel Queue separates workloads cleanly but can starve lower queues. To <em>compare</em> them is to say which is more responsive, which carries more overhead, which can starve — and to justify your choice for the workload in front of you."
+  </div>
+
+  <hr>
+
+  <div class="lesson-nav">
+    <a href="A1.3.2-summary.html">← Previous: A1.3.2 Functions of an OS</a>
+    <a href="A1.3.4-summary.html">Next: A1.3.4 →</a>
+  </div>
+
+  <div class="footer-meta">
+    A1.3.3 – Compare Different Approaches to Scheduling • IB Computer Science • Year 12
   </div>
 
 </div>
