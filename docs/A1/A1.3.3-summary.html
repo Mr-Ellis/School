@@ -106,6 +106,8 @@
   .timeline-item { display: flex; gap: 0.8rem; align-items: flex-start; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; }
   .timeline-item .time { flex-shrink: 0; background: var(--navy); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 12px; }
   .timeline-item .desc { font-size: 0.92rem; }
+  .timeline-item.clickable { cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+  .timeline-item.clickable:hover { background: #fff8e1; border-color: var(--gold); }
   .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
   @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
   .vs-box { background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
@@ -120,6 +122,42 @@
   @media (max-width: 640px) {
     .wrap { padding: 20px; }
     h1 { font-size: 1.8rem; }
+  }
+
+  /* Task styles (matching A1.3.2) */
+  .task-block { background: #f8fafc; border-radius: 14px; padding: 6px 0; margin: 12px 0; }
+  .task-row { display: flex; align-items: flex-start; padding: 12px 16px; border-bottom: 1px solid #e8eef4; gap: 12px; }
+  .task-row:last-child { border-bottom: none; }
+  .task-step { font-weight: 700; color: var(--navy); background: #dce8f5; padding: 0 12px; border-radius: 30px; font-size: 0.75rem; min-width: 28px; text-align: center; flex-shrink: 0; margin-top: 2px; }
+  .task-row .task-desc { flex: 1; }
+  .task-row .task-desc a { border-bottom: 1px dotted var(--crimson); }
+  .task-1-resources { background: #f1f6fc; border-radius: 10px; padding: 12px 16px; margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .task-1-resources .pill { background: white; padding: 2px 14px; border-radius: 30px; border: 1px solid #dce4ed; font-size: 0.85rem; }
+  .task-1-resources .teach-link { background: var(--navy); color: white; padding: 3px 16px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; border: none; }
+  .task-1-resources .teach-link a { color: white; border-bottom: 1px solid rgba(255,255,255,0.4); }
+  .task-1-resources .teach-link a:hover { border-bottom: 2px solid white; color: var(--gold); }
+  .code-lab-link { background: #1a5f87; color: white; padding: 2px 14px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; display: inline-block; margin: 4px 0; }
+  .code-lab-link a { color: white; border-bottom: 1px solid rgba(255,255,255,0.4); }
+  .code-lab-link a:hover { border-bottom: 2px solid white; color: var(--gold); }
+
+  /* Feynman box */
+  .feynman-box { background: #ebf4ff; border-left: 5px solid var(--navy); border-radius: 0 10px 10px 0; padding: 15px 20px; margin: 15px 0; }
+  .feynman-box h4 { margin: 0 0 0.5rem; color: var(--navy); font-size: 1.05rem; }
+  .feynman-box p { margin: 0.4rem 0; }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    z-index: 9999;
+    pointer-events: none;
+    animation: confetti-fall linear forwards;
+  }
+  @keyframes confetti-fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
 </style>
 </head>
@@ -161,7 +199,7 @@
     <h2 style="margin-top:0;border:none;padding:0;color:var(--navy)">🏢 Operating System Recruitment Challenge</h2>
     <p><strong>Microsoft is hiring a new CPU scheduler.</strong></p>
     <p>Four scheduling teams are competing. Your team must prove your algorithm deserves to run <strong>Windows 2030</strong>.</p>
-    <p>Every round earns your team points. The team that builds the strongest <em>comparative</em> case wins the contract.</p>
+    <p>The team that builds the strongest <em>comparative</em> case wins the contract.</p>
   </div>
 
   <!-- ============ TASK INSTRUCTIONS ============ -->
@@ -187,7 +225,6 @@
             <li>Where it would be used in the real world</li>
           </ul>
         </li>
-        <li>You will present this poster in the corner of the room.</li>
       </ul>
     </div>
     <div class="role-box b">
@@ -198,6 +235,13 @@
           <ul>
             <li>Key facts (pre-emptive, response time, fairness, overhead, starvation risk)</li>
             <li>How your algorithm compares to the other three</li>
+          </ul>
+        </li>
+        <li>Prepare to use <strong>comparative language</strong>:
+          <ul>
+            <li>"Unlike FCFS…"</li>
+            <li>"Whereas Round Robin…"</li>
+            <li>"Both Priority and MLQ…"</li>
           </ul>
         </li>
       </ul>
@@ -250,13 +294,13 @@
     <div class="timeline-item">
       <span class="time">8 min</span>
       <div class="desc">
-        <strong>The Challenge:</strong> The note-takers (Role B) come forward. They must <strong>compare their algorithm against another team's</strong> and explain why Microsoft should choose theirs. Use comparative language: "Unlike FCFS…", "Whereas Round Robin…", "Both Priority and MLQ…"
+        <strong>The Challenge:</strong> The note-takers (Role B) come forward. They must <strong>compare their algorithm against another team's</strong> and explain why Microsoft should choose theirs.
       </div>
     </div>
-    <div class="timeline-item">
+    <div class="timeline-item clickable" id="decisionItem" onclick="fireConfetti()">
       <span class="time">2 min</span>
       <div class="desc">
-        <strong>The Decision:</strong> Sit down as a class. Vote on which algorithm won the contract. The winning team must have made the strongest <em>comparative</em> case — not just described their algorithm.
+        <strong>The Decision:</strong> Sit down as a class. Vote on which algorithm won the contract. The winning team must have made the strongest <em>comparative</em> case — not just described their algorithm. <span style="color:var(--crimson);font-weight:700;">👉 Click here to celebrate!</span>
       </div>
     </div>
   </div>
@@ -271,55 +315,54 @@
     <h2>Task 3 — Revision Dojo: Teach Jojo <span class="timing">7–10 min</span></h2>
   </div>
 
-  <p>Use <strong>Revision Dojo's "Teach Jojo"</strong> to test your understanding. Jojo is an AI that will ask you questions about your algorithm and how it compares to others.</p>
+  <div class="feynman-box">
+    <h4>🧠 What is the Feynman technique?</h4>
+    <p>Teaching a concept to someone else is one of the most effective ways to learn. It forces you to simplify, uncover gaps, and build deeper understanding that lasts.</p>
+    <h4 style="margin-top:1rem;">🤖 Teach Jojo</h4>
+    <p>Explain concepts in your own words. Jojo asks follow-up questions to test your understanding.</p>
+  </div>
 
   <a class="btn gold" href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank" rel="noopener">🤖 Launch Teach Jojo</a>
 
-  <div class="panel danger">
-    <strong>If Jojo does not work:</strong> Move straight to Task 4 below. Answer the questions in your book.
-  </div>
-
-  <!-- ============ TASK 4: STARTER ACTIVITY QUESTIONS ============ -->
+  <!-- ============ TASKS ============ -->
   <div class="phase">
     <span class="phase-num">5</span>
-    <h2>Task 4 — Starter Activity Questions <span class="timing">if Jojo unavailable</span></h2>
+    <h2>Task 4 — Your Tasks <span class="timing">remaining time</span></h2>
   </div>
 
-  <p>Answer these questions in your book. Use your Information Sheet to help you.</p>
+  <div class="task-block">
+    <!-- Task 1 -->
+    <div class="task-row">
+      <span class="task-step">1</span>
+      <span class="task-desc">
+        <strong>Read &amp; Learn</strong> — Use the resources below to learn about the role of scheduling, then explain it to the AI.
+        <div class="task-1-resources">
+          <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.3.1-1.3.5.pdf" target="_blank">📖 eBook</a></span>
+          <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.3.3-compare-different-approaches-to-scheduling" target="_blank">🌐 CS Wiki</a></span>
+          <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000" target="_blank">📊 Lesson Slides</a></span>
+          <span class="pill">📘 Textbook</span>
+          <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
+        </div>
+      </span>
+    </div>
+    <!-- Task 2 -->
+    <div class="task-row">
+      <span class="task-step">2</span>
+      <span class="task-desc">
+        <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_0" target="_blank">Lesson Starter PowerPoint</a>.<br>
+        Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.
+      </span>
+    </div>
+    <!-- Task 3 -->
+    <div class="task-row">
+      <span class="task-step">3</span>
+      <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
+    </div>
+  </div>
 
-  <div class="compare-grid">
-    <div class="vs-box">
-      <h4>❓ Is Round Robin always fair?</h4>
-      <ul>
-        <li><strong>No.</strong> It's fair in CPU time, but it pays for that fairness with <strong>context-switching overhead</strong>.</li>
-        <li>The smaller the quantum, the fairer it feels — but the more time is wasted switching.</li>
-        <li><em>Compare:</em> FCFS has almost no overhead, but it's not fair at all.</li>
-      </ul>
-    </div>
-    <div class="vs-box">
-      <h4>❓ Why is FCFS so simple? What's the downside?</h4>
-      <ul>
-        <li><strong>Simple:</strong> No decisions to make — just a FIFO queue.</li>
-        <li><strong>Downside:</strong> The <strong>convoy effect</strong>. One long job blocks every short job behind it.</li>
-        <li><em>Compare:</em> Round Robin would pre-empt that long job, so short jobs get a turn.</li>
-      </ul>
-    </div>
-    <div class="vs-box">
-      <h4>❓ Hospital system — which algorithm?</h4>
-      <ul>
-        <li><strong>Priority</strong> with ageing.</li>
-        <li>A life-critical process must jump the queue.</li>
-        <li><em>Compare:</em> Round Robin is the wrong goal here — fairness would delay a critical alert behind a background log write.</li>
-      </ul>
-    </div>
-    <div class="vs-box">
-      <h4>❓ Which algorithm can starve processes?</h4>
-      <ul>
-        <li><strong>Priority</strong> (without ageing) and <strong>Multilevel Queue</strong> (lower queues).</li>
-        <li>FCFS and Round Robin have <strong>no starvation risk</strong>.</li>
-        <li><em>Compare:</em> Priority serves urgent work first, but starves low-priority work. FCFS never starves anyone — but it can make everyone wait.</li>
-      </ul>
-    </div>
+  <!-- Unit-end submission reminder -->
+  <div class="unit-reminder">
+    📌 <strong>End-of-unit submission:</strong> Save your Lesson Questions as a <strong>.txt</strong> file. You will submit <strong>all</strong> starter activity answers to <strong>Schoolbox</strong> at the end of the unit.
   </div>
 
   <!-- ============ PLENARY ============ -->
@@ -347,5 +390,27 @@
   </div>
 
 </div>
+
+<script>
+function fireConfetti() {
+  var colors = ['#b21f1f', '#fdbb2d', '#0b2a4a', '#2d7d46', '#6d28d9'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (Math.random() * 8 + 6) + 'px';
+    piece.style.height = (Math.random() * 8 + 6) + 'px';
+    piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    piece.style.animationDelay = (Math.random() * 0.5) + 's';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    document.body.appendChild(piece);
+    setTimeout(function(p) {
+      return function() { p.remove(); };
+    }(piece), 4500);
+  }
+}
+</script>
+
 </body>
 </html>
