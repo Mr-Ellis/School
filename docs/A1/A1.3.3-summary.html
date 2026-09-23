@@ -15,6 +15,8 @@
     --crimson: #b21f1f;
     --gold: #fdbb2d;
     --border: #dce4ed;
+    --blue-pill: #1a5f87;
+    --red-pill: #b21f1f;
     --team-fcfs: #0b2a4a;
     --team-rr: #2d7d46;
     --team-pri: #b45309;
@@ -133,17 +135,63 @@
   .task-row .task-desc a { border-bottom: 1px dotted var(--crimson); }
   .task-1-resources { background: #f1f6fc; border-radius: 10px; padding: 12px 16px; margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
   .task-1-resources .pill { background: white; padding: 2px 14px; border-radius: 30px; border: 1px solid #dce4ed; font-size: 0.85rem; }
-  .task-1-resources .teach-link { background: var(--navy); color: white; padding: 3px 16px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; border: none; }
-  .task-1-resources .teach-link a { color: white; border-bottom: 1px solid rgba(255,255,255,0.4); }
-  .task-1-resources .teach-link a:hover { border-bottom: 2px solid white; color: var(--gold); }
   .code-lab-link { background: #1a5f87; color: white; padding: 2px 14px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; display: inline-block; margin: 4px 0; }
   .code-lab-link a { color: white; border-bottom: 1px solid rgba(255,255,255,0.4); }
   .code-lab-link a:hover { border-bottom: 2px solid white; color: var(--gold); }
 
-  /* Feynman box */
-  .feynman-box { background: #ebf4ff; border-left: 5px solid var(--navy); border-radius: 0 10px 10px 0; padding: 15px 20px; margin: 15px 0; }
-  .feynman-box h4 { margin: 0 0 0.5rem; color: var(--navy); font-size: 1.05rem; }
-  .feynman-box p { margin: 0.4rem 0; }
+  /* Combined Feynman + Jojo box */
+  .feynman-jojo-box {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+    background: #ebf4ff;
+    border-left: 5px solid var(--navy);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 22px;
+    margin: 15px 0;
+  }
+  .feynman-jojo-box .jojo-img {
+    flex-shrink: 0;
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+  .feynman-jojo-box .jojo-text { flex: 1; }
+  .feynman-jojo-box h4 { margin: 0 0 0.5rem; color: var(--navy); font-size: 1.05rem; }
+  .feynman-jojo-box p { margin: 0.3rem 0; font-size: 0.95rem; }
+  .feynman-jojo-box .launch-btn { margin-top: 0.6rem; }
+  @media (max-width: 600px) {
+    .feynman-jojo-box { flex-direction: column; align-items: flex-start; }
+    .feynman-jojo-box .jojo-img { width: 70px; height: 70px; }
+  }
+
+  /* Matrix pill plenary */
+  .matrix-choice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+  @media (max-width: 600px) { .matrix-choice { grid-template-columns: 1fr; } }
+  .pill-option {
+    display: block;
+    text-align: center;
+    padding: 1.4rem 1.2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-bottom: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .pill-option:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.2); border-bottom: none; }
+  .pill-option .pill-label { display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; opacity: 0.85; margin-bottom: 0.4rem; }
+  .pill-option.blue-pill { background: var(--blue-pill); color: #fff; }
+  .pill-option.blue-pill:hover { color: #fff; }
+  .pill-option.red-pill { background: var(--red-pill); color: #fff; }
+  .pill-option.red-pill:hover { color: #fff; }
+  .pill-option .pill-sub { display: block; font-size: 0.85rem; font-weight: 400; opacity: 0.9; margin-top: 0.4rem; }
 
   /* Confetti */
   .confetti-piece {
@@ -297,6 +345,13 @@
         <strong>The Challenge:</strong> The note-takers (Role B) come forward. They must <strong>compare their algorithm against another team's</strong> and explain why Microsoft should choose theirs.
       </div>
     </div>
+  </div>
+
+  <div class="panel warn">
+    <strong>Rule for the Challenge:</strong> You may not describe your algorithm in isolation. Every argument must reference <strong>at least one other algorithm</strong> — "unlike FCFS…", "whereas Round Robin…". This is the Compare command term in action.
+  </div>
+
+  <div class="timeline">
     <div class="timeline-item clickable" id="decisionItem" onclick="fireConfetti()">
       <span class="time">2 min</span>
       <div class="desc">
@@ -305,24 +360,23 @@
     </div>
   </div>
 
-  <div class="panel warn">
-    <strong>Rule for the Challenge:</strong> You may not describe your algorithm in isolation. Every argument must reference <strong>at least one other algorithm</strong> — "unlike FCFS…", "whereas Round Robin…". This is the Compare command term in action.
-  </div>
-
   <!-- ============ TASK 3: REVISION DOJO ============ -->
   <div class="phase">
     <span class="phase-num">4</span>
     <h2>Task 3 — Revision Dojo: Teach Jojo <span class="timing">7–10 min</span></h2>
   </div>
 
-  <div class="feynman-box">
-    <h4>🧠 What is the Feynman technique?</h4>
-    <p>Teaching a concept to someone else is one of the most effective ways to learn. It forces you to simplify, uncover gaps, and build deeper understanding that lasts.</p>
-    <h4 style="margin-top:1rem;">🤖 Teach Jojo</h4>
-    <p>Explain concepts in your own words. Jojo asks follow-up questions to test your understanding.</p>
+  <div class="feynman-jojo-box">
+    <img class="jojo-img" src="https://i.imgur.com/8Km9tLL.png" alt="Jojo AI mascot">
+    <div class="jojo-text">
+      <h4>🧠 The Feynman Technique + 🤖 Teach Jojo</h4>
+      <p>Teaching a concept to someone else is one of the most effective ways to learn. It forces you to simplify, uncover gaps, and build deeper understanding that lasts.</p>
+      <p><strong>Teach Jojo:</strong> Explain concepts in your own words. Jojo asks follow-up questions to test your understanding.</p>
+      <div class="launch-btn">
+        <a class="btn gold" href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank" rel="noopener">🤖 Launch Teach Jojo</a>
+      </div>
+    </div>
   </div>
-
-  <a class="btn gold" href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank" rel="noopener">🤖 Launch Teach Jojo</a>
 
   <!-- ============ TASKS ============ -->
   <div class="phase">
@@ -339,9 +393,8 @@
         <div class="task-1-resources">
           <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.3.1-1.3.5.pdf" target="_blank">📖 eBook</a></span>
           <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.3.3-compare-different-approaches-to-scheduling" target="_blank">🌐 CS Wiki</a></span>
-          <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000" target="_blank">📊 Lesson Slides</a></span>
+          <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vSWLm0eZ1TzXZvQTp-6UcN3gQ0BDHyZC1Ikyg4ELW4tIxBcRnVRJ_tSChZnqfdoD_tcmS45XYqszKd8/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
           <span class="pill">📘 Textbook</span>
-          <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
         </div>
       </span>
     </div>
@@ -349,14 +402,9 @@
     <div class="task-row">
       <span class="task-step">2</span>
       <span class="task-desc">
-        <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_0" target="_blank">Lesson Starter PowerPoint</a>.<br>
+        <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vSWLm0eZ1TzXZvQTp-6UcN3gQ0BDHyZC1Ikyg4ELW4tIxBcRnVRJ_tSChZnqfdoD_tcmS45XYqszKd8/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">Lesson Starter PowerPoint</a>.<br>
         Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.
       </span>
-    </div>
-    <!-- Task 3 -->
-    <div class="task-row">
-      <span class="task-step">3</span>
-      <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
     </div>
   </div>
 
@@ -365,14 +413,26 @@
     📌 <strong>End-of-unit submission:</strong> Save your Lesson Questions as a <strong>.txt</strong> file. You will submit <strong>all</strong> starter activity answers to <strong>Schoolbox</strong> at the end of the unit.
   </div>
 
-  <!-- ============ PLENARY ============ -->
+  <!-- ============ PLENARY (MATRIX PILL) ============ -->
   <div class="phase">
     <span class="phase-num">6</span>
     <h2>Plenary <span class="timing">5 min</span></h2>
   </div>
 
-  <a class="btn green" href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank" rel="noopener">Launch Quizlet</a>
-  <a class="btn gold" href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">Launch Blooket</a>
+  <p style="text-align:center;font-weight:600;color:var(--navy);">Choose your path. <em>There is no turning back.</em></p>
+
+  <div class="matrix-choice">
+    <a class="pill-option blue-pill" href="https://quizlet.com/pt/1066036290/a133-compare-different-approaches-to-scheduling-flash-cards/" target="_blank" rel="noopener">
+      <span class="pill-label">💊 Blue Pill</span>
+      Launch Quizlet
+      <span class="pill-sub">Test yourself with flashcards</span>
+    </a>
+    <a class="pill-option red-pill" href="https://play.blooket.com/host?id=68b0379dda963af6c9571984" target="_blank" rel="noopener">
+      <span class="pill-label">💊 Red Pill</span>
+      Launch Blooket
+      <span class="pill-sub">Compete in a live quiz game</span>
+    </a>
+  </div>
 
   <div class="takeaway">
     💡 <strong>Key Takeaway:</strong> "No scheduling approach is best in every way. FCFS is simple but non-pre-emptive and suffers the convoy effect; Round Robin is pre-emptive and responsive but pays in context-switching overhead; Priority serves urgent work first but can starve low-priority processes; Multilevel Queue separates workloads cleanly but can starve lower queues. To <em>compare</em> them is to say which is more responsive, which carries more overhead, which can starve — and to justify your choice for the workload in front of you."
