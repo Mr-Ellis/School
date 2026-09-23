@@ -1,1 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 6 · Representing Images</title>
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#161b22;
+    --panel-2:#1c2430;
+    --border:#30363d;
+    --text:#e6edf3;
+    --muted:#9aa7b4;
+    --accent:#58a6ff;
+    --accent-2:#3fb950;
+    --accent-3:#d29922;
+    --accent-4:#bc8cff;
+    --danger:#f85149;
+    --radius:14px;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(88,166,255,.10), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, rgba(188,140,255,.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    line-height:1.65;
+    padding:0 0 80px;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px;}
 
+  /* ---------- Header ---------- */
+  header{
+    padding:56px 0 28px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:36px;
+    position:relative;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:.78rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:rgba(88,166,255,.10);
+    border:1px solid rgba(88,166,255,.30);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:16px;
+    font-weight:600;
+  }
+  h1{
+    font-size:clamp(1.9rem,4.4vw,2.7rem);
+    line-height:1.15;
+    margin:0 0 10px;
+    letter-spacing:-.02em;
+  }
+  .subtitle{color:var(--muted);font-size:1.06rem;margin:0;}
+  .lesson-meta{
+    display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;
+  }
+  .pill{
+    font-size:.8rem;color:var(--muted);
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:5px 12px;border-radius:999px;
+  }
+  .pill strong{color:var(--text);font-weight:600;}
+
+  /* ---------- Sections & cards ---------- */
+  section{margin-bottom:46px;}
+  h2{
+    font-size:1.35rem;
+    margin:0 0 16px;
+    display:flex;align-items:center;gap:10px;
+    letter-spacing:-.01em;
+  }
+  h2 .ico{font-size:1.3rem;}
+  h3{font-size:1.05rem;margin:26px 0 10px;color:var(--text);}
+  p{margin:0 0 14px;}
+
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    box-shadow:var(--shadow);
+  }
+  .card + .card{margin-top:16px;}
+
+  /* ---------- Key fact / callouts ---------- */
+  .callout{
+    border-radius:var(--radius);
+    padding:18px 22px;
+    margin:20px 0;
+    border-left:4px solid var(--accent);
+    background:rgba(88,166,255,.08);
+  }
+  .callout.tip{border-left-color:var(--accent-2);background:rgba(63,185,80,.08);}
+  .callout.warn{border-left-color:var(--accent-3);background:rgba(210,153,34,.09);}
+  .callout.key{border-left-color:var(--accent-4);background:rgba(188,140,255,.09);}
+  .callout .label{
+    font-weight:700;font-size:.82rem;letter-spacing:.08em;
+    text-transform:uppercase;display:block;margin-bottom:6px;color:var(--accent);
+  }
+  .callout.tip .label{color:var(--accent-2);}
+  .callout.warn .label{color:var(--accent-3);}
+  .callout.key .label{color:var(--accent-4);}
+
+  /* ---------- Objectives ---------- */
+  ul.objectives{list-style:none;padding:0;margin:0;}
+  ul.objectives li{
+    position:relative;padding-left:32px;margin-bottom:10px;
+  }
+  ul.objectives li::before{
+    content:"✓";
+    position:absolute;left:0;top:0;
+    color:var(--accent-2);font-weight:700;
+    background:rgba(63,185,80,.12);
+    width:22px;height:22px;border-radius:6px;
+    display:grid;place-items:center;font-size:.8rem;
+  }
+
+  /* ---------- Tables ---------- */
+  .table-wrap{overflow-x:auto;margin:18px 0;}
+  table{
+    width:100%;border-collapse:collapse;
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);overflow:hidden;font-size:.95rem;
+  }
+  th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;}
+  th{
+    background:rgba(88,166,255,.10);
+    font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--accent);font-weight:700;
+  }
+  tr:last-child td{border-bottom:none;}
+  td strong{color:var(--text);}
+
+  /* ---------- Formula box ---------- */
+  .formula{
+    background:#0a0f16;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+    text-align:center;
+    font-family:"SF Mono",Consolas,Monaco,monospace;
+    font-size:1.02rem;
+    color:var(--accent-2);
+    margin:16px 0;
+    overflow-x:auto;
+  }
+  .formula .small{display:block;color:var(--muted);font-size:.82rem;margin-top:8px;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(88,166,255,.14);
+    color:var(--accent);
+    border:1px solid rgba(88,166,255,.35);
+    padding:10px 18px;border-radius:10px;
+    text-decoration:none;font-weight:600;font-size:.92rem;
+    transition:.18s;cursor:pointer;
+  }
+  .btn:hover{background:rgba(88,166,255,.24);transform:translateY(-1px);}
+  .btn.ghost{
+    background:transparent;color:var(--muted);
+    border-color:var(--border);
+  }
+  .btn.ghost:hover{color:var(--text);border-color:var(--accent);}
+  .btn.purple{
+    background:rgba(188,140,255,.14);
+    color:var(--accent-4);
+    border-color:rgba(188,140,255,.35);
+  }
+  .btn.purple:hover{background:rgba(188,140,255,.24);}
+  .btn.green{
+    background:rgba(63,185,80,.14);
+    color:var(--accent-2);
+    border-color:rgba(63,185,80,.35);
+  }
+  .btn.green:hover{background:rgba(63,185,80,.24);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;}
+
+  /* ---------- Activity tasks ---------- */
+  ol.tasks{padding-left:22px;margin:0;}
+  ol.tasks li{margin-bottom:12px;}
+  details.reveal{
+    margin-top:16px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--panel);
+    overflow:hidden;
+  }
+  details.reveal summary{
+    cursor:pointer;padding:13px 18px;font-weight:600;
+    color:var(--accent);list-style:none;
+    display:flex;align-items:center;gap:8px;
+  }
+  details.reveal summary::-webkit-details-marker{display:none;}
+  details.reveal summary::before{content:"▶";font-size:.7rem;transition:.2s;}
+  details.reveal[open] summary::before{transform:rotate(90deg);}
+  details.reveal .body{padding:4px 18px 18px;border-top:1px solid var(--border);}
+
+  /* ---------- PBM viewer ---------- */
+  .pbm-lab{
+    display:grid;grid-template-columns:1fr 1fr;gap:20px;
+    align-items:start;
+  }
+  @media(max-width:700px){.pbm-lab{grid-template-columns:1fr;}}
+  .pbm-screen{
+    background:#0a0f16;border:1px solid var(--border);border-radius:12px;
+    padding:14px;display:grid;place-items:center;min-height:200px;
+  }
+  .pbm-screen canvas{
+    image-rendering:pixelated;
+    border:1px solid var(--border);border-radius:6px;
+    max-width:100%;background:#fff;
+  }
+  textarea.pbm-input{
+    width:100%;min-height:190px;resize:vertical;
+    background:#0a0f16;color:var(--text);
+    border:1px solid var(--border);border-radius:12px;
+    padding:14px;font-family:"SF Mono",Consolas,Monaco,monospace;
+    font-size:.86rem;line-height:1.5;
+  }
+  .pbm-legend{
+    font-size:.85rem;color:var(--muted);margin-top:12px;
+  }
+  .pbm-legend code{
+    background:rgba(88,166,255,.12);color:var(--accent);
+    padding:2px 6px;border-radius:5px;
+  }
+
+  /* ---------- Calculator ---------- */
+  .calc-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;margin:18px 0;
+  }
+  .calc-field label{
+    display:block;font-size:.8rem;text-transform:uppercase;
+    letter-spacing:.07em;color:var(--muted);margin-bottom:6px;font-weight:600;
+  }
+  .calc-field input,.calc-field select{
+    width:100%;padding:11px 13px;border-radius:10px;
+    background:#0a0f16;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;font-family:inherit;
+  }
+  .calc-field input:focus,.calc-field select:focus{
+    outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(88,166,255,.15);
+  }
+  .calc-result{
+    background:#0a0f16;border:1px solid var(--border);
+    border-radius:12px;padding:18px;margin-top:6px;
+    font-family:"SF Mono",Consolas,Monaco,monospace;
+  }
+  .calc-result .line{
+    display:flex;justify-content:space-between;gap:16px;
+    padding:7px 0;border-bottom:1px dashed var(--border);
+    font-size:.92rem;
+  }
+  .calc-result .line:last-child{border-bottom:none;}
+  .calc-result .line span:first-child{color:var(--muted);}
+  .calc-result .line span:last-child{color:var(--accent-2);font-weight:600;}
+  .calc-result .big{
+    font-size:1.15rem;color:var(--accent);text-align:center;
+    padding-top:12px;margin-top:6px;border-top:1px solid var(--border);
+  }
+
+  /* ---------- Video grid ---------- */
+  .video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+  .video-card{
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:12px;padding:18px;text-decoration:none;color:inherit;
+    transition:.18s;
+  }
+  .video-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .video-card .tag{font-size:.72rem;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;font-weight:700;}
+  .video-card h4{margin:6px 0 4px;font-size:.98rem;}
+  .video-card p{margin:0;font-size:.85rem;color:var(--muted);}
+
+  /* ---------- Tool grid ---------- */
+  .tool-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:18px;margin-top:6px;
+  }
+  .tool-card{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px;display:flex;flex-direction:column;
+    box-shadow:var(--shadow);
+    transition:.2s;
+  }
+  .tool-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .tool-card .icon{
+    font-size:1.8rem;margin-bottom:10px;
+  }
+  .tool-card h3{
+    margin:0 0 8px;font-size:1.05rem;
+  }
+  .tool-card p{
+    font-size:.9rem;color:var(--muted);flex:1;
+    margin-bottom:16px;
+  }
+  .tool-card .btn{align-self:flex-start;}
+  .tool-card.pixel-art{
+    border-color:rgba(188,140,255,.35);
+  }
+  .tool-card.pixel-art:hover{
+    border-color:var(--accent-4);
+    box-shadow:0 10px 30px rgba(188,140,255,.15);
+  }
+  .tool-card.penalty{
+    border-color:rgba(63,185,80,.35);
+  }
+  .tool-card.penalty:hover{
+    border-color:var(--accent-2);
+    box-shadow:0 10px 30px rgba(63,185,80,.15);
+  }
+
+  /* ---------- Match game ---------- */
+  .match-game{
+    display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;
+  }
+  @media(max-width:640px){.match-game{grid-template-columns:1fr;}}
+  .match-col h4{
+    font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--muted);margin:0 0 10px;
+  }
+  .match-item{
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:10px;padding:12px 14px;margin-bottom:9px;
+    cursor:pointer;font-size:.9rem;transition:.15s;
+  }
+  .match-item:hover{border-color:var(--accent);}
+  .match-item.selected{
+    border-color:var(--accent);
+    background:rgba(88,166,255,.14);
+  }
+  .match-item.matched{
+    border-color:rgba(63,185,80,.6);
+    background:rgba(63,185,80,.12);
+    color:var(--accent-2);
+    cursor:default;opacity:.75;
+  }
+  .match-item.wrong{
+    animation:shake .35s;
+    border-color:var(--danger);
+    background:rgba(248,81,73,.12);
+  }
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    75%{transform:translateX(5px);}
+  }
+  .match-score{
+    text-align:center;margin-top:16px;font-size:.9rem;color:var(--muted);
+  }
+  .match-score strong{color:var(--accent-2);}
+
+  /* ---------- Progress ---------- */
+  .progress-note{
+    text-align:center;color:var(--muted);font-size:.82rem;
+    margin-top:60px;padding-top:22px;border-top:1px solid var(--border);
+  }
+
+  /* ---------- Protected / teacher ---------- */
+  .teacher-panel{
+    border:1px dashed var(--border);border-radius:var(--radius);
+    padding:20px 24px;background:rgba(188,140,255,.05);
+  }
+  .teacher-panel summary{
+    cursor:pointer;font-weight:700;color:var(--accent-4);
+    list-style:none;display:flex;align-items:center;gap:10px;
+  }
+  .teacher-panel summary::-webkit-details-marker{display:none;}
+  .teacher-panel[open] summary{margin-bottom:16px;}
+
+  .lock-screen{
+    text-align:center;padding:26px;
+  }
+  .lock-screen input{
+    padding:11px 14px;border-radius:10px;
+    background:#0a0f16;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;margin-right:8px;
+  }
+  .lock-screen input:focus{outline:none;border-color:var(--accent-4);}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <span class="eyebrow">IGCSE Computer Science · Unit 1</span>
+    <h1>Representing Images</h1>
+    <p class="subtitle">Lesson 6 · Pixels, Resolution, Colour Depth &amp; File Size</p>
+    <div class="lesson-meta">
+      <span class="pill"><strong>Topic:</strong> Data Representation</span>
+      <span class="pill"><strong>Duration:</strong> 60 min</span>
+      <span class="pill"><strong>Practical:</strong> PBM Image Lab</span>
+    </div>
+  </header>
+
+  <!-- ================= OBJECTIVES ================= -->
+  <section>
+    <h2><span class="ico">🎯</span> Learning Objectives</h2>
+    <div class="card">
+      <ul class="objectives">
+        <li>Explain what a pixel is and how digital images are built from pixels</li>
+        <li>Define resolution and colour depth, and explain how each affects quality and file size</li>
+        <li>Describe what metadata is and why it is stored in an image file</li>
+        <li>Calculate the file size of an image using the correct formula</li>
+        <li>Read and interpret a simple bitmap image file (PBM)</li>
+      </ul>
+    </div>
+
+    <div class="callout key">
+      <span class="label">💡 Key Fact</span>
+      A digital image is just a grid of numbers. Each <strong>pixel</strong> stores a binary value that tells the computer what colour to display. More pixels and more bits per pixel mean a better-looking image — but a much larger file.
+    </div>
+  </section>
+
+  <!-- ================= PIXELS ================= -->
+  <section>
+    <h2><span class="ico">🖼️</span> Pixels — The Building Blocks</h2>
+    <div class="card">
+      <p>A <strong>pixel</strong> (short for <em>picture element</em>) is the smallest unit of a digital image. Every photograph, icon, or emoji on a screen is really a rectangular grid of thousands — sometimes millions — of pixels.</p>
+      <p>Each pixel is given a binary code. The length of that code decides how many different colours the pixel can take:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Colour Depth</th><th>Binary codes available</th><th>Colours on screen</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1-bit</td><td>2<sup>1</sup></td><td>2 — black &amp; white</td></tr>
+            <tr><td>2-bit</td><td>2<sup>2</sup></td><td>4 colours</td></tr>
+            <tr><td>4-bit</td><td>2<sup>4</sup></td><td>16 colours</td></tr>
+            <tr><td>8-bit</td><td>2<sup>8</sup></td><td>256 colours</td></tr>
+            <tr><td>24-bit</td><td>2<sup>24</sup></td><td>≈16.7 million ("true colour")</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <span class="label">🔑 The Rule</span>
+        The number of colours is always <strong>2<sup>n</sup></strong>, where <em>n</em> is the colour depth in bits. Add one bit and you double the number of possible colours.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THE THREE FACTORS ================= -->
+  <section>
+    <h2><span class="ico">📐</span> The Three Key Factors</h2>
+    <div class="card">
+      <p>When an image is stored, three pieces of information decide how it looks and how big it is:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Term</th><th>Definition</th><th>Effect of increasing</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Resolution</strong></td>
+              <td>The number of pixels that make up an image — usually written as <em>width × height</em>.</td>
+              <td>More detail and sharper edges, but a larger file size.</td>
+            </tr>
+            <tr>
+              <td><strong>Colour Depth</strong></td>
+              <td>The number of bits used to represent the colour of a single pixel.</td>
+              <td>More colours and more realistic shading, but a larger file size.</td>
+            </tr>
+            <tr>
+              <td><strong>Metadata</strong></td>
+              <td>"Data about data" — stored at the start of the file so the computer knows how to reconstruct the image.</td>
+              <td>Adds only a tiny amount to file size, but is essential for correct display.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Metadata you will commonly see</h3>
+      <ul>
+        <li>Width and height (the resolution)</li>
+        <li>Colour depth</li>
+        <li>File format (e.g. JPEG, PNG, GIF)</li>
+        <li>Date and time the photo was taken</li>
+        <li>GPS location (on phone photos)</li>
+      </ul>
+
+      <div class="callout warn">
+        <span class="label">⚠️ The Trade-off</span>
+        Higher resolution and higher colour depth both mean better quality but bigger files. Bigger files need more storage, take longer to transmit over a network, and need more processing power to open.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FILE SIZE FORMULA ================= -->
+  <section>
+    <h2><span class="ico">🧮</span> Calculating Image File Size</h2>
+    <div class="card">
+      <p>For the exam you must be able to calculate the size of an image file. Use this formula:</p>
+
+      <div class="formula">
+        File Size (bits) = Width × Height × Colour Depth
+        <span class="small">To convert to Bytes, divide the result by 8.</span>
+      </div>
+
+      <h3>Worked Example</h3>
+      <p>An image is <strong>100 pixels wide</strong> and <strong>50 pixels high</strong>, with an <strong>8-bit colour depth</strong>.</p>
+      <div class="formula" style="text-align:left;color:var(--text);">
+        100 × 50 × 8 = <span style="color:var(--accent-2);">40,000 bits</span><br>
+        40,000 ÷ 8 = <span style="color:var(--accent-2);">5,000 bytes</span>
+      </div>
+
+      <div class="callout tip">
+        <span class="label">📝 Exam Tip</span>
+        Always check whether the question wants the answer in <strong>bits</strong> or <strong>bytes</strong>. If it says bytes and you have bits, divide by 8 — that's the only time you divide by 8 rather than 1024.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STARTER ================= -->
+  <section>
+    <h2><span class="ico">🎯</span> Starter Activity</h2>
+    <div class="card">
+      <p>Before we begin, test your current knowledge of how images and data are stored. Two options below — pick one or do both!</p>
+      <div class="btn-row">
+        <a href="https://jamesabela.github.io/reading/penalties.html?set=editor/samples/igcse-computing-data-representation.json"
+           target="_blank" rel="noopener" class="btn green">
+          ⚽ Penalty Shootout — Definition Master
+        </a>
+        <a href="#" class="btn ghost" onclick="return false;">
+          🎯 Quick 5-Question Recap
+        </a>
+      </div>
+      <p style="margin-top:14px;font-size:.88rem;color:var(--muted);">
+        <strong>Penalty Shootout</strong> loads 34 pre-set IGCSE Data Representation questions.
+        Answer correctly to score past the goalkeeper — answer wrong and the keeper saves your shot!
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= VIDEO ================= -->
+  <section>
+    <h2><span class="ico">🎬</span> Video Explanations</h2>
+    <div class="video-grid">
+      <a href="#" class="video-card" onclick="return false;">
+        <span class="tag">Video 1</span>
+        <h4>Pixels, Resolution &amp; Colour Depth</h4>
+        <p>A short walkthrough of how a bitmap image is built up from binary values.</p>
+      </a>
+      <a href="#" class="video-card" onclick="return false;">
+        <span class="tag">Video 2</span>
+        <h4>Calculating Image File Size</h4>
+        <p>Step-by-step examples of the width × height × colour depth formula.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= INTERACTIVE TOOLS ================= -->
+  <section>
+    <h2><span class="ico">🧰</span> Interactive Tools</h2>
+    <p>Two external tools to help you see how pixels and image data work in practice.</p>
+
+    <div class="tool-grid">
+
+      <!-- Pixel Art Creator -->
+      <div class="tool-card pixel-art">
+        <div class="icon">🎨</div>
+        <h3>Pixel Art Creator</h3>
+        <p>
+          Paint your own pixel art on an 8×8, 16×16, or 32×32 grid.
+          Every square you click is a pixel — exactly the same idea as a real bitmap image.
+          When you're finished, export your artwork as a PDF.
+        </p>
+        <a href="https://sethideclercq.com/tools/MyCreations/mypixelart.html"
+           target="_blank" rel="noopener" class="btn purple">
+          Open Pixel Art Creator →
+        </a>
+      </div>
+
+      <!-- Penalty Shootout -->
+      <div class="tool-card penalty">
+        <div class="icon">⚽</div>
+        <h3>Penalty Shootout: Definition Master</h3>
+        <p>
+          A two-player football game that tests your IGCSE Data Representation definitions.
+          Choose the correct answer to score a goal — get it wrong and the goalkeeper saves.
+          Use a clue if you're stuck, but beware: clues give the keeper a 50% chance to save!
+        </p>
+        <a href="https://jamesabela.github.io/reading/penalties.html?set=editor/samples/igcse-computing-data-representation.json"
+           target="_blank" rel="noopener" class="btn green">
+          Open Penalty Shootout →
+        </a>
+      </div>
+
+    </div>
+
+    <div class="callout tip" style="margin-top:22px;">
+      <span class="label">💡 How to Use These in the Lesson</span>
+      Use the <strong>Pixel Art Creator</strong> during the "Pixels" section so students can <em>feel</em> what a pixel grid is. Then use the <strong>Penalty Shootout</strong> as a starter or plenary to revise key definitions in a fun, competitive way.
+    </div>
+  </section>
+
+  <!-- ================= PBM IMAGE LAB ================= -->
+  <section>
+    <h2><span class="ico">🔬</span> Image Lab — Read a Real Bitmap</h2>
+    <div class="card">
+      <p>A <strong>PBM</strong> (Portable BitMap) file is one of the simplest image formats. It is <em>plain text</em>, so you can read it with your own eyes. Here is how it works:</p>
+      <ul>
+        <li>The first line is the <strong>magic number</strong> <code>P1</code> — it means "this is a plain-text bitmap".</li>
+        <li>The next line gives the <strong>width</strong> and <strong>height</strong> in pixels.</li>
+        <li>Then come the pixel values: <code>0</code> = white, <code>1</code> = black.</li>
+      </ul>
+      <p>Edit the box below and watch the image redraw itself. Try to make your own picture!</p>
+
+      <div class="pbm-lab">
+        <div>
+          <textarea id="pbmInput" class="pbm-input" spellcheck="false">P1
+# Boat.pbm - 24 x 14
+24 14
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0
+0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0
+0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</textarea>
+          <p class="pbm-legend">Lines starting with <code>#</code> are comments and are ignored.</p>
+        </div>
+        <div>
+          <div class="pbm-screen">
+            <canvas id="pbmCanvas" width="384" height="224"></canvas>
+          </div>
+          <p id="pbmStatus" class="pbm-legend" style="text-align:center;">Waiting for a valid PBM file…</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CLASS ACTIVITY ================= -->
+  <section>
+    <h2><span class="ico">🧮</span> Class Activity — Image File Size Calculator</h2>
+    <div class="card">
+      <p>Use the calculator below (or your own) to work through the tasks in pairs.</p>
+
+      <div class="calc-grid">
+        <div class="calc-field">
+          <label for="cWidth">Width (px)</label>
+          <input type="number" id="cWidth" value="100" min="1">
+        </div>
+        <div class="calc-field">
+          <label for="cHeight">Height (px)</label>
+          <input type="number" id="cHeight" value="50" min="1">
+        </div>
+        <div class="calc-field">
+          <label for="cDepth">Colour Depth (bits)</label>
+          <select id="cDepth">
+            <option value="1">1-bit (2 colours)</option>
+            <option value="2">2-bit (4 colours)</option>
+            <option value="4">4-bit (16 colours)</option>
+            <option value="8" selected>8-bit (256 colours)</option>
+            <option value="16">16-bit (65,536 colours)</option>
+            <option value="24">24-bit (16.7 million colours)</option>
+            <option value="32">32-bit (true colour + alpha)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="calc-result" id="calcOut">
+        <div class="line"><span>Pixels (width × height)</span><span id="rPixels">5,000</span></div>
+        <div class="line"><span>File size (bits)</span><span id="rBits">40,000</span></div>
+        <div class="line"><span>File size (bytes)</span><span id="rBytes">5,000</span></div>
+        <div class="line"><span>File size (KiB)</span><span id="rKib">4.88</span></div>
+        <div class="big" id="rHuman">40,000 bits ≈ 4.88 KiB</div>
+      </div>
+
+      <h3>Tasks</h3>
+      <ol class="tasks">
+        <li>An image is 200 × 150 pixels at 8-bit colour depth. What is its file size in <strong>bits</strong>?</li>
+        <li>An image is 640 × 480 pixels at 24-bit colour depth. What is its file size in <strong>bytes</strong>?</li>
+        <li>A logo is 50 × 50 pixels at 1-bit colour depth. How many <strong>colours</strong> can it show, and how big is the file?</li>
+        <li>Which has the larger file size, and why? Two images at 8-bit: one 100 × 100, one 200 × 200.</li>
+      </ol>
+
+      <details class="reveal">
+        <summary>Reveal answers</summary>
+        <div class="body">
+          <p><strong>1.</strong> 200 × 150 × 8 = <strong>240,000 bits</strong></p>
+          <p><strong>2.</strong> 640 × 480 × 24 = 7,372,800 bits ÷ 8 = <strong>921,600 bytes</strong></p>
+          <p><strong>3.</strong> 1-bit gives 2<sup>1</sup> = <strong>2 colours</strong> (black &amp; white). File size = 50 × 50 × 1 = <strong>2,500 bits</strong> = 312.5 bytes.</p>
+          <p><strong>4.</strong> The 200 × 200 image is larger. It has <strong>four times</strong> as many pixels (40,000 vs 10,000) at the same colour depth, so its file is four times the size.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= MAIN TASK ================= -->
+  <section>
+    <h2><span class="ico">📝</span> Main Task</h2>
+    <div class="card">
+      <p>Complete the worksheet on Schoolbox as the main task for this lesson. Use the resources below to help you.</p>
+      <div class="btn-row">
+        <a href="#" class="btn" onclick="return false;">📄 Open Worksheet 6</a>
+        <a href="#" class="btn ghost" onclick="return false;">📊 Lesson Presentation (T6 Images)</a>
+        <a href="#" class="btn ghost" onclick="return false;">🖼️ Boat.pbm Resource</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AI GUIDE ================= -->
+  <section>
+    <h2><span class="ico">🤖</span> AI Guide</h2>
+    <div class="card">
+      <p>Stuck on a file-size calculation? Not sure why metadata matters? Ask the AI tutor — it will explain any concept from this lesson in a different way.</p>
+      <div class="btn-row">
+        <a href="#" class="btn" onclick="return false;">💬 Ask the AI Tutor</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EXTENSION ================= -->
+  <section>
+    <h2><span class="ico">⭐</span> Extension Tasks</h2>
+    <div class="card">
+      <ul>
+        <li>Complete the extension task for this lesson.</li>
+        <li>Check that previous worksheets (Lessons 1–5) have also been submitted.</li>
+        <li><strong>Research:</strong> What is the difference between a <em>raster</em> image (like a JPEG) and a <em>vector</em> image (like an SVG)? Which one stores pixels, and which one stores shapes and coordinates?</li>
+        <li><strong>Challenge:</strong> Find a photo on your phone or computer. Look at its properties and find its resolution and file size. Can you work out the colour depth using the formula?</li>
+        <li><strong>Creative:</strong> Design a piece of pixel art in the <a href="https://sethideclercq.com/tools/MyCreations/mypixelart.html" target="_blank" rel="noopener" style="color:var(--accent-4);">Pixel Art Creator</a>. Count the number of pixels you filled and estimate the file size at 8-bit colour depth.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= PLENARY ================= -->
+  <section>
+    <h2><span class="ico">🔁</span> Plenary — Match the Definition</h2>
+    <div class="card">
+      <p>Click a term on the left, then click its definition on the right. Get them all right to complete the challenge.</p>
+
+      <div class="match-game" id="matchGame">
+        <div class="match-col">
+          <h4>Terms</h4>
+          <div class="match-item" data-id="pixel">Pixel</div>
+          <div class="match-item" data-id="resolution">Resolution</div>
+          <div class="match-item" data-id="depth">Colour Depth</div>
+          <div class="match-item" data-id="metadata">Metadata</div>
+          <div class="match-item" data-id="bitmap">Bitmap</div>
+        </div>
+        <div class="match-col">
+          <h4>Definitions</h4>
+          <div class="match-item" data-id="metadata">Data about data — stored so the computer can rebuild the image</div>
+          <div class="match-item" data-id="bitmap">An image made from a grid of individual pixels</div>
+          <div class="match-item" data-id="depth">The number of bits used to store the colour of one pixel</div>
+          <div class="match-item" data-id="pixel">The smallest unit of a digital image — short for picture element</div>
+          <div class="match-item" data-id="resolution">The number of pixels that make up an image (width × height)</div>
+        </div>
+      </div>
+
+      <p class="match-score" id="matchScore">Matched: <strong>0</strong> / 5</p>
+
+      <div class="callout tip" style="margin-top:22px;">
+        <span class="label">⚽ Want More?</span>
+        Continue revising with the
+        <a href="https://jamesabela.github.io/reading/penalties.html?set=editor/samples/igcse-computing-data-representation.json"
+           target="_blank" rel="noopener" style="color:var(--accent-2);font-weight:600;">Penalty Shootout</a>
+        — it has 34 questions covering the whole Data Representation unit.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TEACHER PANEL ================= -->
+  <section>
+    <details class="teacher-panel">
+      <summary>📋 Lesson Plan (Teacher only)</summary>
+
+      <div class="lock-screen" id="lockScreen">
+        <p style="color:var(--muted);margin-bottom:16px;">Enter password to view the full lesson plan.</p>
+        <input type="password" id="lockInput" placeholder="Password">
+        <button class="btn" id="lockBtn">Unlock</button>
+        <p id="lockMsg" style="color:var(--danger);font-size:.85rem;margin-top:12px;min-height:1.2em;"></p>
+      </div>
+
+      <div id="teacherContent" class="hidden">
+        <h3>Lesson Overview</h3>
+        <p>Students build on their understanding of binary representation from Lessons 1–5 and apply it to images. The lesson moves from the concrete (reading a real PBM file) to the abstract (calculating file sizes). Two external interactive tools are woven in for engagement and revision.</p>
+
+        <h3>Timing</h3>
+        <ul>
+          <li><strong>0–5 min</strong> — Starter: Penalty Shootout (Data Representation recap)</li>
+          <li><strong>5–15 min</strong> — Direct instruction: pixels, resolution, colour depth, metadata</li>
+          <li><strong>15–20 min</strong> — Pixel Art Creator: students draw a small image and count pixels</li>
+          <li><strong>20–30 min</strong> — Image Lab: students edit and interpret a PBM file</li>
+          <li><strong>30–45 min</strong> — Main task: Worksheet 6 (Schoolbox)</li>
+          <li><strong>45–55 min</strong> — Class activity: file size calculations</li>
+          <li><strong>55–60 min</strong> — Plenary match-the-definition game</li>
+        </ul>
+
+        <h3>Key Teaching Points</h3>
+        <ul>
+          <li>Always connect back to binary — each pixel is just a binary code.</li>
+          <li>Demonstrate the trade-off live: open two images of the same subject at different resolutions and compare file sizes in the file explorer.</li>
+          <li>Use the Pixel Art Creator to make "pixels" tangible — each painted square is one pixel with one binary colour code.</li>
+          <li>Common misconception: students think "higher resolution" means "higher quality" automatically. Clarify it means <em>more detail</em>, which usually looks better — but the file is bigger.</li>
+        </ul>
+
+        <h3>Differentiation</h3>
+        <ul>
+          <li><strong>Support:</strong> Provide the formula on a scaffolded worksheet with the multiplication steps pre-filled. Let students use the on-page calculator to check their working.</li>
+          <li><strong>Stretch:</strong> Ask students to calculate the file size of a 4K photo (3840 × 2160 at 24-bit) and compare it to a 1080p photo.</li>
+          <li><strong>EAL / Dyslexia support:</strong> The Penalty Shootout tool has built-in EAL and dyslexia-friendly settings, and the "Allow clues" option reduces the chance of a wrong answer.</li>
+        </ul>
+
+        <h3>Assessment</h3>
+        <ul>
+          <li>Formative: Pixel Art Creator observations, PBM lab work and file-size calculator answers.</li>
+          <li>Summative: Worksheet 6 submission on Schoolbox.</li>
+          <li>Retrieval: Penalty Shootout scores (as a low-stakes diagnostic).</li>
+        </ul>
+
+        <h3>External Tools Used</h3>
+        <ul>
+          <li><strong>Pixel Art Creator</strong> (sethideclercq.com) — practical pixel-grid activity.</li>
+          <li><strong>Penalty Shootout: Definition Master</strong> (jamesabela.github.io) — 34 IGCSE Data Representation questions, competitive revision.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= REFERENCE ================= -->
+  <section>
+    <h2><span class="ico">📚</span> Reference Material</h2>
+    <div class="card">
+      <p>Additional content on representing images — <strong>The Computer Science Lab</strong>.</p>
+      <div class="btn-row">
+        <a href="https://www.thecomputersciencelab.com/chapter-1-data-representation" target="_blank" rel="noopener" class="btn">Open Reference</a>
+      </div>
+    </div>
+  </section>
+
+  <p class="progress-note">progress saved automatically in your browser</p>
+</div>
+
+<script>
+/* ============================================================
+   PBM IMAGE LAB
+   ============================================================ */
+(function(){
+  const input  = document.getElementById('pbmInput');
+  const canvas = document.getElementById('pbmCanvas');
+  const status = document.getElementById('pbmStatus');
+  const ctx    = canvas.getContext('2d');
+
+  function renderPBM(text){
+    const lines = text.split(/\r?\n/);
+    const tokens = [];
+    for (const line of lines){
+      const clean = line.split('#')[0].trim();
+      if (clean) tokens.push(...clean.split(/\s+/));
+    }
+    if (tokens.length < 3) return fail('Not enough data.');
+
+    const magic = tokens[0].toUpperCase();
+    if (magic !== 'P1') return fail('Magic number must be P1 for a plain PBM.');
+
+    const w = parseInt(tokens[1], 10);
+    const h = parseInt(tokens[2], 10);
+    if (!w || !h || w < 1 || h < 1) return fail('Width and height must be positive integers.');
+    if (w * h > 40000) return fail('Image too large for the preview (max 40,000 pixels).');
+
+    const pixels = tokens.slice(3, 3 + w * h);
+    if (pixels.length < w * h) return fail(`Expected ${w*h} pixel values, found ${pixels.length}.`);
+
+    const scale = Math.max(1, Math.floor(Math.min(400 / w, 300 / h)));
+    canvas.width  = w * scale;
+    canvas.height = h * scale;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let y = 0; y < h; y++){
+      for (let x = 0; x < w; x++){
+        const v = pixels[y * w + x];
+        if (v === '1'){
+          ctx.fillStyle = '#000000';
+          ctx.fillRect(x * scale, y * scale, scale, scale);
+        }
+      }
+    }
+
+    status.textContent = `✅ Valid PBM — ${w} × ${h} pixels = ${w*h} bits = ${(w*h/8).toLocaleString()} bytes (1-bit depth)`;
+    status.style.color = 'var(--accent-2)';
+    return true;
+
+    function fail(msg){
+      status.textContent = '❌ ' + msg;
+      status.style.color = 'var(--danger)';
+      ctx.fillStyle = '#0a0f16';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return false;
+    }
+  }
+
+  input.addEventListener('input', () => renderPBM(input.value));
+  renderPBM(input.value);
+})();
+
+/* ============================================================
+   FILE SIZE CALCULATOR
+   ============================================================ */
+(function(){
+  const w = document.getElementById('cWidth');
+  const h = document.getElementById('cHeight');
+  const d = document.getElementById('cDepth');
+
+  const rPixels = document.getElementById('rPixels');
+  const rBits   = document.getElementById('rBits');
+  const rBytes  = document.getElementById('rBytes');
+  const rKib    = document.getElementById('rKib');
+  const rHuman  = document.getElementById('rHuman');
+
+  function fmt(n){ return n.toLocaleString('en-GB'); }
+
+  function human(bits){
+    if (bits < 8) return bits + ' bits';
+    const bytes = bits / 8;
+    if (bytes < 1024) return fmt(bytes) + ' bytes';
+    const kib = bytes / 1024;
+    if (kib < 1024) return kib.toFixed(2) + ' KiB';
+    const mib = kib / 1024;
+    return mib.toFixed(2) + ' MiB';
+  }
+
+  function update(){
+    const width  = Math.max(1, parseInt(w.value, 10) || 1);
+    const height = Math.max(1, parseInt(h.value, 10) || 1);
+    const depth  = parseInt(d.value, 10) || 1;
+
+    const pixels = width * height;
+    const bits   = pixels * depth;
+    const bytes  = bits / 8;
+    const kib    = bytes / 1024;
+
+    rPixels.textContent = fmt(pixels);
+    rBits.textContent   = fmt(bits);
+    rBytes.textContent  = fmt(bytes);
+    rKib.textContent    = kib.toFixed(2);
+    rHuman.textContent  = human(bits);
+  }
+
+  [w, h, d].forEach(el => el.addEventListener('input', update));
+  update();
+})();
+
+/* ============================================================
+   MATCH GAME
+   ============================================================ */
+(function(){
+  const items    = Array.from(document.querySelectorAll('#matchGame .match-item'));
+  const scoreEl  = document.getElementById('matchScore');
+  let selected   = null;
+  let matched    = 0;
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('matched')) return;
+
+      if (!selected){
+        selected = item;
+        item.classList.add('selected');
+        return;
+      }
+
+      if (selected === item){
+        item.classList.remove('selected');
+        selected = null;
+        return;
+      }
+
+      const selectedCol = selected.parentElement;
+      const itemCol     = item.parentElement;
+      if (selectedCol === itemCol){
+        selected.classList.remove('selected');
+        selected = item;
+        item.classList.add('selected');
+        return;
+      }
+
+      if (selected.dataset.id === item.dataset.id){
+        selected.classList.remove('selected');
+        selected.classList.add('matched');
+        item.classList.add('matched');
+        matched++;
+        scoreEl.innerHTML = `Matched: <strong>${matched}</strong> / 5`;
+        selected = null;
+        if (matched === 5){
+          scoreEl.innerHTML = `🎉 All matched! Well done.`;
+        }
+      } else {
+        const a = selected, b = item;
+        a.classList.remove('selected');
+        a.classList.add('wrong');
+        b.classList.add('wrong');
+        setTimeout(() => {
+          a.classList.remove('wrong');
+          b.classList.remove('wrong');
+        }, 400);
+        selected = null;
+      }
+    });
+  });
+})();
+
+/* ============================================================
+   TEACHER LOCK
+   ============================================================ */
+(function(){
+  const PASSWORD = 'teacher6';
+  const lockScreen = document.getElementById('lockScreen');
+  const content    = document.getElementById('teacherContent');
+  const input      = document.getElementById('lockInput');
+  const btn        = document.getElementById('lockBtn');
+  const msg        = document.getElementById('lockMsg');
+
+  function tryUnlock(){
+    if (input.value === PASSWORD){
+      lockScreen.classList.add('hidden');
+      content.classList.remove('hidden');
+      msg.textContent = '';
+    } else {
+      msg.textContent = 'Incorrect password. Try again.';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+})();
+</script>
+</body>
+</html>
