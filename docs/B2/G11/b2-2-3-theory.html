@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2.2.3 - Stacks (Theory)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        h4 {
+            color: #0b2a4a;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge.theory { background: #1a5f87; }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .code-block pre { margin: 0; white-space: pre; }
+        .comment { color: #6b8c9e; }
+        .keyword { color: #f7c948; }
+        .string { color: #a3d9a5; }
+        .function { color: #66b3ff; }
+        .error { color: #f87171; }
+
+        .code-output {
+            background: #0f1724;
+            color: #f7c948;
+            padding: 10px 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-top: 1px solid #2d3748;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+
+        .task-box {
+            background: #f7fafc;
+            border-left: 4px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .starter-box {
+            background: #ebf4ff;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .plenary-box {
+            background: #f0f7ee;
+            border-left: 5px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .scope-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: #0b2a4a;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: none !important;
+            transition: background 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+        .btn-link:hover {
+            background: #1a3f64;
+            color: #fff !important;
+            border-bottom: none !important;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .principle-box {
+            background: #0b2a4a;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .principle-box .highlight { color: #fdbb2d; }
+
+        .footnote { font-size: 0.85rem; color: #4a5568; margin-top: 4px; }
+
+        hr { border: 0; border-top: 2px solid #e2e8f0; margin: 30px 0; }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .btn-group { flex-direction: column; }
+            .btn-link { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="#" onclick="goBack(); return false;">← Back to B2 Programming</a>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '../B2.html';
+            }
+        }
+    </script>
+
+    <h1>B2.2.3 – Stacks <span class="badge theory">Theory</span></h1>
+
+    <!-- ==================== STARTER ==================== -->
+    <h2>🎯 Starter Activity</h2>
+    <div class="starter-box">
+        <p><strong>🃏 Quizlet Flashcards</strong></p>
+        <p>Test your understanding of stacks and the LIFO principle with this flashcard activity.</p>
+        <a href="https://quizlet.com/pt/1066086763/b-223-explain-the-concept-of-a-stack-as-a-last-in-first-out-lifo-data-structure-flash-cards/?funnelUUID=b56df6cc-453d-4950-8d74-beaf6106a878" target="_blank" class="btn-link">▶ Quizlet Flashcards</a>
+    </div>
+
+    <!-- ==================== LESSON CONTENT ==================== -->
+    <h2>📖 Lesson Content</h2>
+
+    <h3>The Big Idea</h3>
+    <p>Think of a stack of plates in a cafeteria. You add a new plate to the top, and you take a plate from the top. You would never pull a plate from the middle of the stack—that would be messy and inefficient. This "Last In, First Out" (LIFO) principle is the core of a fundamental data structure in Computer Science: the <strong>Stack</strong>.</p>
+    <p>A stack is an <strong>abstract data structure</strong> that works on the <strong>LIFO</strong> (Last In, First Out) or <strong>FILO</strong> (First In, Last Out) principle. This means the last element added to the stack is the first one to be removed. Only the top element is accessible at any time.</p>
+
+    <h3>Key Concepts</h3>
+
+    <h4>1. LIFO Principle</h4>
+    <p>Imagine a stack of coins. If you want to add a coin, you put it on top. If you want to take a coin, you take it from the top. The coin that was placed last is the first one to be taken out. This is the essence of LIFO.</p>
+
+    <h4>2. Core Operations</h4>
+    <p>Stacks are defined by a small set of essential operations:</p>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Push:</strong> Adding an item to the top of the stack.</li>
+        <li><strong>Pop:</strong> Removing the item from the top of the stack.</li>
+        <li><strong>Peek (or Top):</strong> Looking at the top item without removing it.</li>
+        <li><strong>isEmpty:</strong> Checking if the stack is empty.</li>
+        <li><strong>isFull:</strong> Checking if the stack is full (for a static, array-based stack).</li>
+    </ul>
+
+    <div class="info-box">
+        <p><strong>📌 Important:</strong> A stack <strong>pointer</strong> (often called <code>topIndex</code> or <code>top</code>) is a variable used to keep track of the index of the topmost element in the stack. It is crucial for all operations.</p>
+    </div>
+
+    <h3>Stack Operations in Detail</h3>
+
+    <h4>1. Push (Adding an Item)</h4>
+    <p>To push an item, the stack pointer is incremented (moved to the next free slot), and the new value is placed at that position. If the stack is already full, attempting to push causes an <strong>overflow error</strong>.</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Python - Push operation (simplified)</span>
+<span class="keyword">def</span> <span class="function">push</span>(stack, value):
+    <span class="keyword">if</span> <span class="function">len</span>(stack) == MAX_SIZE:
+        <span class="function">print</span>(<span class="string">"Stack Overflow!"</span>)
+    <span class="keyword">else</span>:
+        stack.<span class="function">append</span>(value)
+        <span class="function">print</span>(<span class="string">f"Pushed: {value}"</span>)
+</code></pre>
+    </div>
+
+    <h4>2. Pop (Removing an Item)</h4>
+    <p>To pop an item, the value at the top of the stack is returned, and the stack pointer is decremented. If the stack is empty, attempting to pop causes an <strong>underflow error</strong>.</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Python - Pop operation (simplified)</span>
+<span class="keyword">def</span> <span class="function">pop</span>(stack):
+    <span class="keyword">if</span> <span class="function">len</span>(stack) == <span class="string">0</span>:
+        <span class="function">print</span>(<span class="string">"Stack Underflow!"</span>)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> stack.<span class="function">pop</span>()
+</code></pre>
+    </div>
+
+    <h4>3. Peek (Looking at the Top)</h4>
+    <p>This operation returns the value of the top element without changing the stack. It's useful for checking what's next without committing to a pop.</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Python - Peek operation (simplified)</span>
+<span class="keyword">def</span> <span class="function">peek</span>(stack):
+    <span class="keyword">if</span> <span class="function">len</span>(stack) > <span class="string">0</span>:
+        <span class="keyword">return</span> stack[<span class="string">-1</span>]
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+</code></pre>
+    </div>
+
+    <h4>4. isEmpty and isFull</h4>
+    <p>These are boolean checks to prevent errors. <code>isEmpty</code> checks if the stack pointer is at -1 (or 0, depending on implementation). <code>isFull</code> checks if the stack pointer has reached the maximum size of the array.</p>
+
+    <div class="principle-box">
+        <p><span class="highlight">🔑 Key Principle:</span> A stack can be implemented as a <strong>static data structure</strong> (using an array with a fixed size) or as a <strong>dynamic data structure</strong> (using a linked list, which can grow and shrink as needed).</p>
+    </div>
+
+    <h3>Stack Operations Summary</h3>
+    <table>
+        <thead>
+            <tr><th>Operation</th><th>Description</th><th>Error Condition</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Push</strong></td><td>Adds an item to the top of the stack.</td><td>Overflow (if the stack is full)</td></tr>
+            <tr><td><strong>Pop</strong></td><td>Removes and returns the top item.</td><td>Underflow (if the stack is empty)</td></tr>
+            <tr><td><strong>Peek</strong></td><td>Returns the top item without removing it.</td><td>None (returns null/None if empty)</td></tr>
+            <tr><td><strong>isEmpty</strong></td><td>Checks if the stack is empty.</td><td>N/A</td></tr>
+            <tr><td><strong>isFull</strong></td><td>Checks if the stack is full.</td><td>N/A</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Uses of Stacks</h3>
+    <p>Stacks are incredibly useful in computer science for managing data in a specific order. Here are some key applications:</p>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Interrupt Handling:</strong> When the CPU is interrupted, the current state (variables, return address) is pushed onto a stack. After the interrupt is handled, the state is popped to resume the previous task.</li>
+        <li><strong>Recursion:</strong> When a function calls itself, the return addresses and parameters are stored on a stack to help "unwind" the recursive calls correctly.</li>
+        <li><strong>Undo Feature:</strong> In games or text editors, each action is pushed onto a stack. The "Undo" command pops the last action, reverting the state.</li>
+        <li><strong>Browser Back Button:</strong> Opening a new page pushes the URL onto a stack. Pressing "Back" pops the current URL to go to the previous one.</li>
+        <li><strong>Evaluating Arithmetic Expressions:</strong> Stacks are used to convert and evaluate expressions, especially in Reverse Polish Notation (RPN).</li>
+    </ul>
+
+    <h3>Key Terms</h3>
+    <table>
+        <thead>
+            <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Stack</strong></td><td>An abstract data structure that works on the LIFO principle.</td></tr>
+            <tr><td><strong>LIFO</strong></td><td>Last In, First Out. The last element inserted is the first one removed.</td></tr>
+            <tr><td><strong>Push</strong></td><td>A method for inserting an element at the top of a stack.</td></tr>
+            <tr><td><strong>Pop</strong></td><td>A method for deleting the element from the top of a stack.</td></tr>
+            <tr><td><strong>Peek</strong></td><td>Looking at the top element without removing it.</td></tr>
+            <tr><td><strong>Stack Pointer</strong></td><td>A variable (e.g., <code>topIndex</code>) that tracks the position of the top element.</td></tr>
+            <tr><td><strong>Overflow</strong></td><td>An error that occurs when trying to push onto a full stack.</td></tr>
+            <tr><td><strong>Underflow</strong></td><td>An error that occurs when trying to pop from an empty stack.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="info-box">
+        <p><strong>⚠️ Common Errors:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li><strong>Stack Overflow:</strong> Forgetting to check if a static stack is full before pushing.</li>
+            <li><strong>Stack Underflow:</strong> Forgetting to check if a stack is empty before popping.</li>
+            <li><strong>Losing Data:</strong> Not storing the popped value if it's needed later.</li>
+        </ul>
+    </div>
+
+    <!-- ==================== TASK 1 ==================== -->
+    <h2>📝 Task 1: Understanding</h2>
+    <div class="task-box">
+        <div class="task-title">📖 Read & Understand</div>
+        <div class="task-desc">Read through the detailed explanations of stacks on the Computer Science Wiki and review the lesson presentation.</div>
+        <div class="btn-group">
+            <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.2.3-explain-the-concept-of-a-stack-as-a-last-in-first-out-lifo-data-structure" target="_blank" class="btn-link">📄 Stacks Wiki</a>
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vSTG4qHzdYnFVdDoDwLnC0i6EPuMBFkb3kcL-OcrKaL16DLEkzsyG9wiYTmI9WM_So0Gqx_5JV4QtSq/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank" class="btn-link">📄 Lesson Presentation (Slides)</a>
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vTw8pN5mWeiL8CdXIArzCBXc_gI7PCURTVbXA_csQXeWNHl_jPcH0i6TLwvwGNYp0SN6ZBHtPfnTCHn/pub?start=false&loop=false&delayms=3000&slide=id.g3ab6a212515_0_14" target="_blank" class="btn-link">📄 Stack Operations (Slides)</a>
+        </div>
+    </div>
+
+    <!-- ==================== TASK 2 ==================== -->
+    <h2>🤖 Task 2: Teach the AI</h2>
+    <div class="task-box">
+        <div class="task-title">🧠 RevisionDojo "Teach the AI"</div>
+        <div class="task-desc">Explain the concept of a stack, the LIFO principle, and the push/pop operations to the AI. This will help consolidate your understanding.</div>
+        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=292&classroomId=7d9d7fc0-cf13-42eb-a277-77d2b675cb6a" target="_blank" class="btn-link">🤖 Teach the AI</a>
+    </div>
+
+    <!-- ==================== TASK 3 ==================== -->
+    <h2>💻 Task 3: Assessment</h2>
+    <div class="task-box">
+        <div class="task-title">📊 Code Practice & Assessment</div>
+        <div class="task-desc">Use the Parsons Problem to practice reordering stack operations. Then, test your knowledge with the quiz.</div>
+
+        <p style="margin-top: 10px;"><strong>Activities:</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Reorder the code blocks to create a working stack implementation.</li>
+            <li>Complete the quiz to check your understanding.</li>
+        </ul>
+
+        <div class="btn-group">
+            <a href="https://jamesabela.github.io/jsfun/reorder.html?data=IyBJbml0aWFsaXplIHN0YWNrCm15X2xpc3QgPSBbXQoKZGVmIHB1c2goc3RhY2ssIGl0ZW0pOgogICAgc3RhY2suYXBwZW5kKGl0ZW0pCiAgICBwcmludChmIlB1c2hlZDoge2l0ZW19IikKCmRlZiBwb3Aoc3RhY2spOgogICAgaWYgbm90IHN0YWNrOgogICAgICAgIHByaW50KCJTdGFjayBpcyBlbXB0eSEiKQogICAgICAgIHJldHVybiBOb25lCiAgICBpdGVtID0gc3RhY2sucG9wKCkKICAgIHByaW50KGYiUG9wcGVkOiB7aXRlbX0iKQogICAgcmV0dXJuIGl0ZW0KCiMgRXhhbXBsZSB1c2FnZToKcHVzaChteV9saXN0LCAiTmV3IEl0ZW0iKQpwb3AobXlfbGlzdCkKcHJpbnQoIlJlbWFpbmluZyBzdGFjazoiLCBteV9saXN0KQ%3D%3D&mode=2D&syntax=on" target="_blank" class="btn-link">🧩 Stack Reorder Puzzle</a>
+            <a href="https://play.blooket.com/host/fish?id=68b039cd9d570785d69cb829" target="_blank" class="btn-link">🐟 Blooket Quiz</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Important:</strong> Save your code as a .txt file. You will submit all starter activity answers to <strong>Schoolbox</strong>.</p>
+    </div>
+
+    <!-- ==================== PLENARY ==================== -->
+    <h2>🎯 Plenary</h2>
+    <div class="plenary-box">
+        <p><strong>🧪 JuiceMind Quiz</strong></p>
+        <p>Test your understanding of stacks with this final quiz.</p>
+        <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/5/topicNumber/1/quizId/explore&class=intro-python&unitNumber=5&topicNumber=1&quizNumber=2?tab=curriculum" target="_blank" class="btn-link">🧪 Take the Quiz</a>
+    </div>
+
+    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"A stack is a powerful and simple data structure that operates on the LIFO principle. By mastering the push and pop operations and understanding its real-world applications—from undo buttons to CPU interrupt handling—you gain a fundamental tool for solving a wide range of programming problems. Remember to always guard against overflow and underflow to build robust applications."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="footer-meta">
+        B2.2.3 – Stacks (Theory) • IB Computer Science
+    </div>
+
+</div>
+
+</body>
+</html>
