@@ -643,70 +643,70 @@
 
     <div class="scenario">
         <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>⌨️ Keyboard and mouse on a laptop</span>
+            <span>⌨️ Keyboard and mouse</span>
             <button class="reveal-btn">Reveal</button>
         </div>
         <div class="scenario-a">
             <ul>
-                <li><strong>Winner: Interrupts</strong> — human input is infrequent; waking on each key saves battery.</li>
-                <li>Polling would require the CPU to continuously check the keyboard and mouse, wasting cycles and draining the battery.</li>
-                <li>Gaming keyboards may add optional high-rate polling (≈ 1 kHz) on mains-powered PCs for sub-millisecond latency.</li>
+                <li><strong>Winner: Interrupts</strong> — human input is infrequent, so the CPU can sleep between key presses.</li>
+                <li>Polling would require the CPU to constantly check the keyboard and mouse, wasting cycles and draining the battery on a laptop.</li>
+                <li>Gaming keyboards may add optional high-rate polling on mains-powered PCs for ultra-low latency, but for normal use interrupts win.</li>
             </ul>
         </div>
     </div>
 
     <div class="scenario">
         <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>🌐 High-speed network interfaces (10–400 GbE)</span>
+            <span>📶 Wi-Fi card receiving data</span>
             <button class="reveal-btn">Reveal</button>
         </div>
         <div class="scenario-a">
             <ul>
-                <li><strong>Winner: Hybrid</strong> — start with an interrupt, then switch to adaptive polling ("poll mode") while the ring buffer stays above a threshold.</li>
-                <li>This reduces interrupt storms under load while avoiding wasted cycles when idle.</li>
-                <li>Pure polling would waste CPU when traffic is low; pure interrupts would cause excessive context switching when traffic is high.</li>
+                <li><strong>Winner: Hybrid</strong> — use an interrupt to wake the CPU when the first packet arrives, then switch to polling while data is flowing heavily.</li>
+                <li>This avoids interrupt storms during a big download, but still lets the CPU sleep when the network is quiet.</li>
+                <li>Pure polling would waste CPU when nothing is being downloaded; pure interrupts would cause too much overhead during heavy traffic.</li>
             </ul>
         </div>
     </div>
 
     <div class="scenario">
         <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>💾 NVMe SSD I/O</span>
+            <span>💾 Saving a file to a hard drive</span>
             <button class="reveal-btn">Reveal</button>
         </div>
         <div class="scenario-a">
             <ul>
-                <li><strong>Winner: Interrupts for normal workloads; polling for tail-latency-critical datacentres.</strong></li>
-                <li>Polling avoids the cost of interrupt delivery and context switches when thousands of I/O completions per core are pending.</li>
-                <li>For typical desktop use, interrupts are more efficient because I/O is sporadic.</li>
+                <li><strong>Winner: Interrupts</strong> — for normal use, the CPU can do other work while the disk writes, and the disk signals when it's done.</li>
+                <li>Polling would waste CPU cycles checking the disk over and over, especially during a large save.</li>
+                <li>In specialised data centres, polling can be faster when thousands of saves are happening every second.</li>
             </ul>
         </div>
     </div>
 
     <div class="scenario">
         <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>🔌 Small embedded sensor node</span>
+            <span>🚪 A door sensor in a smart home</span>
             <button class="reveal-btn">Reveal</button>
         </div>
         <div class="scenario-a">
             <ul>
-                <li><strong>Winner: Polling</strong> — a tight loop when the device has no MMU and runs a single control task at 100 Hz.</li>
-                <li>If energy is critical, designers often use timer interrupts to wake, poll quickly, then sleep again.</li>
-                <li>Pure polling is simple and predictable for this regular, low-rate task.</li>
+                <li><strong>Winner: Polling (or timer-based wake)</strong> — the sensor only needs to be checked a few times a second, which is simple and cheap.</li>
+                <li>Many smart-home devices use a timer interrupt to wake up briefly, poll the sensor, then go back to sleep to save battery.</li>
+                <li>Pure interrupts would also work, but polling is simpler to implement for such a low-rate, predictable task.</li>
             </ul>
         </div>
     </div>
 
     <div class="scenario">
         <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
-            <span>🤖 Hard real-time motor control (PLC, flight computer)</span>
+            <span>🚗 A car's airbag system</span>
             <button class="reveal-btn">Reveal</button>
         </div>
         <div class="scenario-a">
             <ul>
-                <li><strong>Winner: Polling or timer-driven cyclic executive</strong> for the control loop.</li>
-                <li>Asynchronous interrupts are disabled during the critical section to guarantee that no interrupt jitter violates control-law deadlines.</li>
-                <li>Predictability and controlled latency are more important than power efficiency here.</li>
+                <li><strong>Winner: Interrupts</strong> — the crash sensor must trigger the airbag <em>immediately</em>, with no waiting for the next poll.</li>
+                <li>If the system polled once every 10 ms, it could miss the critical moment of impact — that delay could be fatal.</li>
+                <li>The CPU drops everything else the instant the sensor fires, which is exactly what interrupts are designed for.</li>
             </ul>
         </div>
     </div>
