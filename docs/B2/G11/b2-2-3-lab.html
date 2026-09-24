@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2.2.3 - Stacks (Lab)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge.lab {
+            background: #2d8f2d;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre;
+        }
+        .comment { color: #6b8c9e; }
+        .keyword { color: #f7c948; }
+        .string { color: #a3d9a5; }
+        .function { color: #66b3ff; }
+
+        .code-output {
+            background: #0f1724;
+            color: #f7c948;
+            padding: 10px 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-top: 1px solid #2d3748;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .task-box {
+            background: #f7fafc;
+            border-left: 4px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .task-box .task-title {
+            font-weight: 600;
+            color: #0b2a4a;
+        }
+        .task-box .task-desc {
+            margin: 6px 0;
+        }
+
+        .starter-box {
+            background: #ebf4ff;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .plenary-box {
+            background: #f0f7ee;
+            border-left: 5px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: #0b2a4a;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: none !important;
+            transition: background 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+        .btn-link:hover {
+            background: #1a3f64;
+            color: #fff !important;
+            border-bottom: none !important;
+        }
+        .btn-link.python {
+            background: #2d8f2d;
+        }
+        .btn-link.python:hover {
+            background: #247024;
+        }
+        .btn-link.quizlet {
+            background: #4255ff;
+        }
+        .btn-link.quizlet:hover {
+            background: #3346e0;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        /* ===== Matrix choice panels ===== */
+        .matrix-intro {
+            text-align: center;
+            background: #0b0f19;
+            color: #d7e3f4;
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .matrix-intro h3 {
+            color: #7bd88f;
+            font-family: Arial, sans-serif;
+            margin-top: 0;
+        }
+        .matrix-intro p {
+            margin: 8px 0 0;
+            font-size: 0.95rem;
+        }
+
+        .pill-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin: 20px 0;
+        }
+        .pill-card {
+            border-radius: 14px;
+            padding: 22px 22px 24px;
+            color: #eaf1fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 260px;
+        }
+        .pill-blue {
+            background: linear-gradient(160deg, #10233d 0%, #143a63 100%);
+            border: 2px solid #2f6fbf;
+        }
+        .pill-red {
+            background: linear-gradient(160deg, #3b0d12 0%, #6e1119 100%);
+            border: 2px solid #d63b45;
+        }
+        .pill-card .pill-tag {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 6px;
+        }
+        .pill-card h4 {
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+            color: #ffffff;
+        }
+        .pill-card .pill-sub {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        .pill-card ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+            font-size: 0.92rem;
+        }
+        .pill-card ul li { margin-bottom: 4px; }
+        .pill-card .pill-btn {
+            margin-top: auto;
+            display: inline-block;
+            text-align: center;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-bottom: none !important;
+        }
+        .pill-blue .pill-btn {
+            background: #2f6fbf;
+            color: #fff !important;
+        }
+        .pill-blue .pill-btn:hover { background: #24589a; color: #fff !important; }
+        .pill-red .pill-btn {
+            background: #d63b45;
+            color: #fff !important;
+        }
+        .pill-red .pill-btn:hover { background: #b02c35; color: #fff !important; }
+
+        /* Locked path notice */
+        .locked-notice {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 14px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        .locked-notice strong {
+            color: #92400e;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .btn-group { flex-direction: column; }
+            .btn-link { text-align: center; }
+            .pill-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Back link -->
+    <a class="back-link" href="#" onclick="goBack(); return false;">← Back to B2 Programming</a>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '../B2.html';
+            }
+        }
+    </script>
+
+    <h1>B2.2.3 – Stacks <span class="badge lab">Lab Session</span></h1>
+
+    <!-- ==================== STARTER ==================== -->
+    <h2>🎯 Starter Activity</h2>
+    <div class="starter-box">
+        <p><strong>🃏 Quizlet Flashcards</strong></p>
+        <p>Test your understanding of stacks and the LIFO principle with this flashcard activity.</p>
+        <a href="https://quizlet.com/pt/1066086763/b-223-explain-the-concept-of-a-stack-as-a-last-in-first-out-lifo-data-structure-flash-cards/?funnelUUID=b56df6cc-453d-4950-8d74-beaf6106a878" target="_blank" class="btn-link quizlet">🃏 Quizlet Flashcards</a>
+    </div>
+
+    <!-- ==================== MAIN ACTIVITY ==================== -->
+    <h2>💻 Main Activity</h2>
+
+    <div class="info-box">
+        <p><strong>📝 Complete Your Theory Assessment</strong></p>
+        <p>If you haven't finished the assessment from the Theory lesson, complete it now:</p>
+        <div class="btn-group">
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vTw8pN5mWeiL8CdXIArzCBXc_gI7PCURTVbXA_csQXeWNHl_jPcH0i6TLwvwGNYp0SN6ZBHtPfnTCHn/pub?start=false&loop=false&delayms=3000&slide=id.g3ab6a212515_0_14" target="_blank" class="btn-link">📄 View Questions</a>
+            <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" class="btn-link python">💻 Online Python IDE</a>
+        </div>
+        <p style="margin-top: 8px; color: #4a5568; font-size: 0.9rem;">If you have already completed the assessment, move on to the practical stack activity below.</p>
+    </div>
+
+    <!-- ==================== PART 1: PRACTICAL STACK ACTIVITY ==================== -->
+    <h2>🧪 Part 1: Practical Stack Activity</h2>
+
+    <div class="task-box">
+        <div class="task-title">🐍 Build a Stack in Python</div>
+        <div class="task-desc">
+            Before you choose your path, you must complete this practical activity. You will write a Python program that implements a stack using a list, with <code>push</code>, <code>pop</code>, <code>peek</code>, and <code>isEmpty</code> functions.
+        </div>
+    </div>
+
+    <h3>Step 1: Set Up Your Stack</h3>
+    <p>Open the Python Copy tool and write the following code to create an empty stack:</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Initialize the stack</span>
+<span class="keyword">my_stack</span> = []
+<span class="function">print</span>(<span class="string">"Stack created:"</span>, my_stack)
+</code></pre>
+    </div>
+    <div class="code-output">▶ Output: Stack created: []</div>
+
+    <h3>Step 2: Write the Push Function</h3>
+    <p>The <code>push</code> function adds an item to the top of the stack. Add this code below your stack:</p>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">push</span>(stack, item):
+    stack.<span class="function">append</span>(item)
+    <span class="function">print</span>(<span class="string">f"Pushed: {item}"</span>)
+</code></pre>
+    </div>
+
+    <h3>Step 3: Write the Pop Function</h3>
+    <p>The <code>pop</code> function removes and returns the top item. Add this code:</p>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">pop</span>(stack):
+    <span class="keyword">if</span> <span class="function">len</span>(stack) == <span class="string">0</span>:
+        <span class="function">print</span>(<span class="string">"Stack Underflow!"</span>)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> stack.<span class="function">pop</span>()
+</code></pre>
+    </div>
+
+    <h3>Step 4: Write the Peek Function</h3>
+    <p>The <code>peek</code> function returns the top item without removing it. Add this code:</p>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">peek</span>(stack):
+    <span class="keyword">if</span> <span class="function">len</span>(stack) > <span class="string">0</span>:
+        <span class="keyword">return</span> stack[<span class="string">-1</span>]
+    <span class="keyword">else</span>:
+        <span class="function">print</span>(<span class="string">"Stack is empty!"</span>)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+</code></pre>
+    </div>
+
+    <h3>Step 5: Write the isEmpty Function</h3>
+    <p>The <code>isEmpty</code> function checks if the stack has no elements. Add this code:</p>
+    <div class="code-block">
+<pre><code>
+<span class="keyword">def</span> <span class="function">isEmpty</span>(stack):
+    <span class="keyword">return</span> <span class="function">len</span>(stack) == <span class="string">0</span>
+</code></pre>
+    </div>
+
+    <h3>Step 6: Test Your Stack</h3>
+    <p>Now test your stack by pushing and popping items. Add this code at the bottom of your program:</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Test the stack</span>
+<span class="function">push</span>(my_stack, <span class="string">"A"</span>)
+<span class="function">push</span>(my_stack, <span class="string">"B"</span>)
+<span class="function">push</span>(my_stack, <span class="string">"C"</span>)
+
+<span class="function">print</span>(<span class="string">"Top item:"</span>, <span class="function">peek</span>(my_stack))
+<span class="function">print</span>(<span class="string">"Popped:"</span>, <span class="function">pop</span>(my_stack))
+<span class="function">print</span>(<span class="string">"Popped:"</span>, <span class="function">pop</span>(my_stack))
+<span class="function">print</span>(<span class="string">"Is empty?"</span>, <span class="function">isEmpty</span>(my_stack))
+<span class="function">print</span>(<span class="string">"Popped:"</span>, <span class="function">pop</span>(my_stack))
+<span class="function">print</span>(<span class="string">"Is empty?"</span>, <span class="function">isEmpty</span>(my_stack))
+</code></pre>
+    </div>
+
+    <div class="code-output">
+        ▶ Expected Output:<br>
+        Pushed: A<br>
+        Pushed: B<br>
+        Pushed: C<br>
+        Top item: C<br>
+        Popped: C<br>
+        Popped: B<br>
+        Is empty? False<br>
+        Popped: A<br>
+        Is empty? True
+    </div>
+
+    <div class="info-box">
+        <p><strong>✅ Checkpoint:</strong> Before moving on, make sure your program runs and produces the expected output. If you see errors, check your indentation and function names. Ask your teacher for help if you get stuck.</p>
+        <p><strong>📌 Save your work</strong> as a .txt file and submit it to <strong>Schoolbox</strong> before continuing.</p>
+    </div>
+
+    <!-- ==================== PART 2: CHOOSE YOUR PATH ==================== -->
+    <h2>🟦 Part 2: Choose Your Path 🟥</h2>
+
+    <div class="locked-notice">
+        <strong>🔒 Prerequisite:</strong> You must complete the practical stack activity above and submit your code to Schoolbox before you can continue with the blue pill or red pill exercises.
+    </div>
+
+    <div class="matrix-intro">
+        <h3>🟦 Choose Your Path 🟥</h3>
+        <p>This is your last chance. After this, there is no turning back.</p>
+        <p>You take the <strong>blue pill</strong> — the story ends, you follow a guided tutorial and learn stacks step by step.<br>
+        You take the <strong>red pill</strong> — you stay in Wonderland, and explore stacks through games and puzzles.</p>
+        <p style="opacity:0.75; font-size:0.85rem;">Both paths cover the same skills. Choose the one that suits how you like to learn.</p>
+    </div>
+
+    <div class="pill-grid">
+
+        <!-- BLUE PILL -->
+        <div class="pill-card pill-blue">
+            <div class="pill-tag">Blue Pill</div>
+            <h4>📖 The Guided Path</h4>
+            <div class="pill-sub">"The story ends. You wake up and follow the tutorial."</div>
+            <ul>
+                <li>Interactive Python Stacks tutorial</li>
+                <li>Code examples you can try as you go</li>
+                <li>Step-by-step exercises</li>
+                <li>Great if you like clear structure</li>
+            </ul>
+            <a href="https://www.programiz.com/dsa/stack" target="_blank" class="pill-btn">📖 Take the Blue Pill</a>
+        </div>
+
+        <!-- RED PILL -->
+        <div class="pill-card pill-red">
+            <div class="pill-tag">Red Pill</div>
+            <h4>🎨 The Explorer's Path</h4>
+            <div class="pill-sub">"You stay in Wonderland, and I show you how deep the rabbit hole goes."</div>
+            <ul>
+                <li>Stack Explorer — theory tabs + games</li>
+                <li>Push/pop simulation challenges</li>
+                <li>Reverse Polish Notation puzzles</li>
+                <li>Scrambled code &amp; quick quizzes</li>
+            </ul>
+            <a href="https://www.cs.usfca.edu/~galles/visualization/StackArray.html" target="_blank" class="pill-btn">🎨 Take the Red Pill</a>
+        </div>
+
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 After you finish your chosen path:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li>Make notes on any new concepts you learn</li>
+            <li>Try out the code examples in your Python environment</li>
+            <li>Then move on to the Plenary quiz at the bottom of this page</li>
+        </ul>
+    </div>
+
+    <!-- ===== OPTIONAL EXTRA RESOURCES ===== -->
+    <h3>🔧 Extra Resources (Optional)</h3>
+    <p style="font-size:0.9rem; color:#4a5568; margin-bottom:10px;">
+        If you want more practice or a different way to explore the same ideas, these tools are here for you.
+    </p>
+
+    <div class="task-box">
+        <div class="task-title">🧩 Stack Reorder Puzzle</div>
+        <div class="task-desc">Practice reordering the code blocks to create a working stack implementation.</div>
+        <a href="https://jamesabela.github.io/jsfun/reorder.html?data=IyBJbml0aWFsaXplIHN0YWNrCm15X2xpc3QgPSBbXQoKZGVmIHB1c2goc3RhY2ssIGl0ZW0pOgogICAgc3RhY2suYXBwZW5kKGl0ZW0pCiAgICBwcmludChmIlB1c2hlZDoge2l0ZW19IikKCmRlZiBwb3Aoc3RhY2spOgogICAgaWYgbm90IHN0YWNrOgogICAgICAgIHByaW50KCJTdGFjayBpcyBlbXB0eSEiKQogICAgICAgIHJldHVybiBOb25lCiAgICBpdGVtID0gc3RhY2sucG9wKCkKICAgIHByaW50KGYiUG9wcGVkOiB7aXRlbX0iKQogICAgcmV0dXJuIGl0ZW0KCiMgRXhhbXBsZSB1c2FnZToKcHVzaChteV9saXN0LCAiTmV3IEl0ZW0iKQpwb3AobXlfbGlzdCkKcHJpbnQoIlJlbWFpbmluZyBzdGFjazoiLCBteV9saXN0KQ%3D%3D&mode=2D&syntax=on" target="_blank" class="btn-link">🧩 Stack Reorder Puzzle</a>
+    </div>
+
+    <div class="task-box">
+        <div class="task-title">🐍 Python Copy Tool</div>
+        <div class="task-desc">Use this tool to write and test your stack code online without installing Python.</div>
+        <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" class="btn-link python">🐍 Go to Python Copy Tool</a>
+    </div>
+
+    <!-- ==================== PLENARY ==================== -->
+    <h2>🎯 Plenary</h2>
+    <div class="plenary-box">
+        <p><strong>🧪 JuiceMind Quiz</strong></p>
+        <p>Test your understanding of stacks with this final JuiceMind quiz.</p>
+        <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/5/topicNumber/1/quizId/explore&class=intro-python&unitNumber=5&topicNumber=1&quizNumber=2?tab=curriculum" target="_blank" class="btn-link">🧪 Take the Quiz</a>
+    </div>
+
+    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"A stack is a powerful and simple data structure that operates on the LIFO principle. By building your own stack in Python and exploring its applications, you gain a fundamental tool for solving a wide range of programming problems. Remember to always guard against overflow and underflow to build robust applications."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="footer-meta">
+        B2.2.3 – Stacks (Lab) • IB Computer Science
+    </div>
+
+</div>
+
+</body>
+</html>
