@@ -1,1 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.3.4 – Evaluate Polling &amp; Interrupt Handling</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.15rem;
+            color: #0b2a4a;
+            margin-top: 22px;
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
 
+        /* Blooket starter */
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        /* Task styles */
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong {
+            color: #1a6b33;
+        }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+        .task-1-resources .teach-link {
+            background: #0b2a4a;
+            color: white;
+            padding: 3px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: none;
+        }
+        .task-1-resources .teach-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .task-1-resources .teach-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        /* Unit-end reminder */
+        .unit-reminder {
+            background: #fff8e1;
+            border-left: 5px solid #fdbb2d;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 20px;
+            margin: 20px 0;
+            font-size: 0.92rem;
+        }
+        .unit-reminder strong { color: #7a4a0a; }
+
+        /* Flip cards */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .flip-grid { grid-template-columns: 1fr; } }
+
+        .flip-card {
+            perspective: 1000px;
+            height: 190px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .flip-card-front {
+            background: #0b2a4a;
+            color: #fff;
+        }
+        .flip-card-front .big-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .flip-card-front .big-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        .flip-card-front .flip-hint {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+        .flip-card-back {
+            background: #fef3c7;
+            color: #7a4a0a;
+            transform: rotateY(180deg);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: 2px solid #fdbb2d;
+            overflow-y: auto;
+        }
+
+        /* Scenario explorer */
+        .scenario {
+            background: #f7fafc;
+            border-left: 5px solid #0b2a4a;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+        .scenario .scenario-q {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .scenario .scenario-q:hover { color: #b21f1f; }
+        .scenario .reveal-btn {
+            font-size: 0.75rem;
+            background: #b21f1f;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            flex-shrink: 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .scenario .reveal-btn:hover { background: #0b2a4a; }
+        .scenario .scenario-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.3s ease;
+            margin-top: 0;
+            color: #1e293b;
+            font-size: 0.92rem;
+        }
+        .scenario.open .scenario-a {
+            max-height: 800px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .scenario .scenario-a ul { padding-left: 1.2rem; }
+        .scenario .scenario-a li { margin-bottom: 6px; }
+
+        /* Quick quiz */
+        .quiz {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+        .quiz h3 { margin-top: 0; }
+        .quiz-q { margin-bottom: 18px; }
+        .quiz-q .q-text {
+            font-weight: 600;
+            color: #0b2a4a;
+            margin-bottom: 8px;
+        }
+        .quiz-options { display: flex; flex-direction: column; gap: 6px; }
+        .quiz-option {
+            background: white;
+            border: 2px solid #dce4ed;
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quiz-option:hover { border-color: #0b2a4a; background: #ebf4ff; }
+        .quiz-option.correct {
+            border-color: #2d7d46;
+            background: #e6f5e6;
+            color: #1a6b33;
+            font-weight: 600;
+        }
+        .quiz-option.wrong {
+            border-color: #b21f1f;
+            background: #fdeaea;
+            color: #a13232;
+        }
+        .quiz-option .mark { font-weight: 700; }
+        .quiz-score {
+            text-align: center;
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1.05rem;
+            margin-top: 10px;
+        }
+
+        /* Match-up */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        @media (max-width: 700px) { .match-grid { grid-template-columns: 1fr; } }
+        .match-col h4 {
+            color: #0b2a4a;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .match-item {
+            background: white;
+            border: 2px solid #dce4ed;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.15s ease;
+        }
+        .match-item:hover { border-color: #0b2a4a; }
+        .match-item.selected { border-color: #fdbb2d; background: #fefcbf; font-weight: 600; }
+        .match-item.matched { border-color: #2d7d46; background: #e6f5e6; color: #1a6b33; cursor: default; }
+        .match-item.matched::after { content: " ✓"; font-weight: 700; }
+        .match-feedback {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #2d7d46;
+            min-height: 24px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+
+    <h1>A1.3.4 – Evaluate Polling &amp; Interrupt Handling</h1>
+
+    <h2>📌 Learning Objective</h2>
+    <ul>
+        <li><strong>Evaluate</strong> the use of polling and interrupt handling in different scenarios</li>
+        <li><strong>Compare</strong> them across six criteria: event frequency, CPU overhead, power source, event predictability, controlled latency and security</li>
+        <li><strong>Justify</strong> which method is best for a given real-world system</li>
+    </ul>
+
+    <h2>🎯 IB Command Term: <span class="badge">Evaluate</span></h2>
+    <div class="command-term">
+        <strong>Evaluate</strong> – <em>"Make an appraisal by weighing up the strengths and limitations."</em><br>
+        Don't just describe polling and interrupts — you must compare them against specific criteria and reach a justified conclusion for a given context.
+    </div>
+
+    <!-- Blooket Starter Activity -->
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket</span>
+        <span style="color:#3d5f7a;">Test your current knowledge before we begin!</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/factory?id=68b0379dda963af6c9571984" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <h2>💡 The Big Idea — Two Strategies for Detecting Events</h2>
+    <p>An operating system must detect when a device needs attention. There are two fundamental strategies:</p>
+
+    <div class="command-term">
+        <strong>Polling</strong> – the CPU repeatedly checks a status register or memory location to see whether something has happened.<br><br>
+        <strong>Interrupt handling</strong> – the external device asserts a signal that asynchronously diverts the CPU to a service routine (ISR) when the event occurs.
+    </div>
+
+    <p>Choosing between them is an <strong>engineering trade-off</strong> that centres on how often the event occurs, how tight the latency budget is, and how expensive each check or context switch will be.</p>
+
+    <h2>📊 Comparison — The Six Evaluation Criteria</h2>
+    <p>Click any card to reveal the full comparison for that criterion.</p>
+
+    <div class="flip-grid">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">📈</span>
+                    <span class="big-name">Event Frequency</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    <strong>Polling:</strong> Suits high-rate or continuous streams where an event is almost always ready (e.g. 100 Gbit/s packet capture).<br><br>
+                    <strong>Interrupts:</strong> Best for sparse or bursty events (e.g. key presses, USB hot-plug) so the CPU can sleep between arrivals.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">⚙️</span>
+                    <span class="big-name">CPU Overhead</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    <strong>Polling:</strong> Each poll executes a branch and possibly a bus transaction even when nothing happened — overhead scales with polling rate.<br><br>
+                    <strong>Interrupts:</strong> None while idle; a context switch and ISR prologue on each interrupt. Overhead is amortised.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">🔋</span>
+                    <span class="big-name">Power Source</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    <strong>Polling:</strong> Continuous polling prevents deep sleep states — undesirable on battery-powered devices.<br><br>
+                    <strong>Interrupts:</strong> Allows the core to remain in low-power C-states until the interrupt fires; advantageous for mobile and IoT.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">🎯</span>
+                    <span class="big-name">Event Predictability</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    <strong>Polling:</strong> Latency is deterministic — at most the time between successive polls. Good for hard real-time if the interval is short enough.<br><br>
+                    <strong>Interrupts:</strong> Latency depends on masking, priority and ISR length. Generally low, but subject to jitter.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">⏱️</span>
+                    <span class="big-name">Controlled Latency</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    <strong>Polling:</strong> Minimum latency = 0 (tight loop); maximum = polling interval. Good for hard real-time.<br><br>
+                    <strong>Interrupts:</strong> Usually low (≈ µs–tens of µs on desktops) but subject to jitter from other interrupts and critical sections.
+                </div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <span class="big-icon">🔒</span>
+                    <span class="big-name">Security Concerns</span>
+                    <span class="flip-hint">Click to flip</span>
+                </div>
+                <div class="flip-card-back">
+                    <strong>Polling:</strong> No asynchronous control transfers, so fewer chances for interrupt vector hijacking or ISR stack smashing.<br><br>
+                    <strong>Interrupts:</strong> Adds a privileged entry point per vector; bugs in ISRs widen the attack surface (e.g. DMA attacks, spurious-interrupt DoS).
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>📋 Summary Comparison Table</h2>
+    <table>
+        <tr>
+            <th>Criterion</th>
+            <th>Polling</th>
+            <th>Interrupt Handling</th>
+        </tr>
+        <tr>
+            <td><strong>Event frequency</strong></td>
+            <td>Suits high-rate or continuous streams where an event is almost always ready.</td>
+            <td>Best for sparse or bursty events so the CPU can sleep between arrivals.</td>
+        </tr>
+        <tr>
+            <td><strong>CPU overhead</strong></td>
+            <td>Overhead scales with polling rate; wasted cycles when nothing happens.</td>
+            <td>None while idle; context switch and ISR prologue on each interrupt.</td>
+        </tr>
+        <tr>
+            <td><strong>Power consumption</strong></td>
+            <td>Prevents deep sleep — undesirable on battery-powered devices.</td>
+            <td>Core can remain in low-power states until the interrupt fires.</td>
+        </tr>
+        <tr>
+            <td><strong>Event predictability</strong></td>
+            <td>Latency is deterministic — at most the polling interval.</td>
+            <td>Latency depends on masking, priority and ISR length; subject to jitter.</td>
+        </tr>
+        <tr>
+            <td><strong>Controlled latency</strong></td>
+            <td>Min = 0; max = polling interval. Good for hard real-time.</td>
+            <td>Usually low but subject to jitter; may need priority management.</td>
+        </tr>
+        <tr>
+            <td><strong>Security surface</strong></td>
+            <td>Fewer chances for interrupt vector hijacking or ISR stack smashing.</td>
+            <td>Adds a privileged entry point per vector; wider attack surface.</td>
+        </tr>
+    </table>
+
+    <h2>🌍 Real-World Scenarios</h2>
+    <p>For each scenario, <strong>click the question to reveal</strong> which method dominates and why.</p>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>⌨️ Keyboard and mouse on a laptop</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Winner: Interrupts</strong> — human input is infrequent; waking on each key saves battery.</li>
+                <li>Polling would require the CPU to continuously check the keyboard and mouse, wasting cycles and draining the battery.</li>
+                <li>Gaming keyboards may add optional high-rate polling (≈ 1 kHz) on mains-powered PCs for sub-millisecond latency.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🌐 High-speed network interfaces (10–400 GbE)</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Winner: Hybrid</strong> — start with an interrupt, then switch to adaptive polling ("poll mode") while the ring buffer stays above a threshold.</li>
+                <li>This reduces interrupt storms under load while avoiding wasted cycles when idle.</li>
+                <li>Pure polling would waste CPU when traffic is low; pure interrupts would cause excessive context switching when traffic is high.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>💾 NVMe SSD I/O</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Winner: Interrupts for normal workloads; polling for tail-latency-critical datacentres.</strong></li>
+                <li>Polling avoids the cost of interrupt delivery and context switches when thousands of I/O completions per core are pending.</li>
+                <li>For typical desktop use, interrupts are more efficient because I/O is sporadic.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🔌 Small embedded sensor node</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Winner: Polling</strong> — a tight loop when the device has no MMU and runs a single control task at 100 Hz.</li>
+                <li>If energy is critical, designers often use timer interrupts to wake, poll quickly, then sleep again.</li>
+                <li>Pure polling is simple and predictable for this regular, low-rate task.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-q" onclick="this.parentElement.classList.toggle('open')">
+            <span>🤖 Hard real-time motor control (PLC, flight computer)</span>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <div class="scenario-a">
+            <ul>
+                <li><strong>Winner: Polling or timer-driven cyclic executive</strong> for the control loop.</li>
+                <li>Asynchronous interrupts are disabled during the critical section to guarantee that no interrupt jitter violates control-law deadlines.</li>
+                <li>Predictability and controlled latency are more important than power efficiency here.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>⚖️ When to Choose Which</h2>
+
+    <h3>Prefer polling when:</h3>
+    <ul>
+        <li>The event rate is high enough that most polls succeed (≈ &gt; 50% hit ratio).</li>
+        <li>You need a strictly bounded latency shorter than the platform's worst-case interrupt latency.</li>
+        <li>The CPU would be awake anyway (server core already pinned to 100% utilisation).</li>
+    </ul>
+
+    <h3>Prefer interrupt handling when:</h3>
+    <ul>
+        <li>Events are sparse or bursty, so wasted polls would dominate.</li>
+        <li>Battery life or thermal headroom matters.</li>
+        <li>Security auditors require minimal privileged code paths in the main loop.</li>
+    </ul>
+
+    <h2>🔄 Putting It Together</h2>
+    <div class="command-term">
+        Modern systems seldom commit exclusively to one style. Instead they <strong>blend both techniques</strong>, using interrupts to wake up a driver and then switching to short bursts of busy polling while a queue is non-empty. This adaptive approach balances power, throughput and latency across a wide dynamic range.
+    </div>
+
+    <h2>🎮 Match-Up Challenge</h2>
+    <p>Click a <strong>criterion</strong> on the left, then click its <strong>correct description</strong> on the right. Get them all right to complete the challenge.</p>
+
+    <div class="match-grid">
+        <div class="match-col">
+            <h4>Criteria</h4>
+            <div class="match-item" data-match="1">Event frequency</div>
+            <div class="match-item" data-match="2">CPU overhead</div>
+            <div class="match-item" data-match="3">Power source</div>
+            <div class="match-item" data-match="4">Controlled latency</div>
+            <div class="match-item" data-match="5">Security concerns</div>
+        </div>
+        <div class="match-col">
+            <h4>What it means</h4>
+            <div class="match-item" data-match="5">Adds a privileged entry point per vector; bugs in ISRs widen the attack surface</div>
+            <div class="match-item" data-match="3">Continuous polling prevents deep sleep states — undesirable on battery-powered devices</div>
+            <div class="match-item" data-match="1">Suits high-rate streams where an event is almost always ready; interrupts best for sparse events</div>
+            <div class="match-item" data-match="4">Minimum latency = 0; maximum = polling interval. Good for hard real-time.</div>
+            <div class="match-item" data-match="2">Overhead scales with polling rate; interrupts have none while idle but context switch on each event</div>
+        </div>
+    </div>
+    <div class="match-feedback" id="matchFeedback"></div>
+
+    <h2>🧠 Quick Quiz</h2>
+    <div class="quiz" id="quizContainer">
+        <div class="quiz-q" data-answer="2">
+            <div class="q-text">1. Which method is more power-efficient for a battery-powered device with infrequent events?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Polling, because the CPU stays active</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Interrupt handling, because the CPU can sleep until an event occurs</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Polling, because it checks devices at regular intervals</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Both are equally power-efficient</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="3">
+            <div class="q-text">2. What is the main CPU overhead disadvantage of interrupt handling when events are very frequent?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>It wastes cycles checking devices when nothing happens</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>It cannot handle multiple devices</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Context switching overhead from saving and restoring state</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>It requires more memory than polling</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="1">
+            <div class="q-text">3. Which method provides deterministic, controlled latency?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Polling, because checks occur at regular intervals</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Interrupt handling, because events are handled immediately</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Both provide identical latency guarantees</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Neither method provides controlled latency</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="4">
+            <div class="q-text">4. Why might a high-speed network interface use a hybrid approach?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>To avoid using any interrupts at all</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>To increase power consumption</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>To make the system less secure</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>To reduce interrupt storms under load while avoiding wasted cycles when idle</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-q" data-answer="2">
+            <div class="q-text">5. Which security concern is more associated with interrupt handling?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-opt="1"><span>Slower response to critical events</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="2"><span>Privileged entry points that widen the attack surface</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="3"><span>Predictable timing that can be exploited</span><span class="mark"></span></div>
+                <div class="quiz-option" data-opt="4"><span>Lack of asynchronous control transfers</span><span class="mark"></span></div>
+            </div>
+        </div>
+        <div class="quiz-score" id="quizScore">Score: 0 / 5</div>
+    </div>
+
+    <!-- Tasks -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+        <!-- Task 1 -->
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Teach</strong> — Use the resources below to learn about polling and interrupt handling, then explain the trade-offs to the AI.
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20A%201.3.1-1.3.5.pdf" target="_blank">📖 eBook</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.3.4-evaluate-the-use-of-polling-and-interrupt-handling" target="_blank">🌐 CS Wiki</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_8" target="_blank">📊 Starters</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vRXwOynqJxNakqA7UmLHmk74h98g2rcyJR2TMOvL8a5zK8SabvtG51XKP6IMnjt3y7JWuSKBraOSVHd/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.3.1-7.pdf" target="_blank">📘 Textbook</a></span>
+                    <span class="teach-link"><a href="https://www.revisiondojo.com/teach-jojo?subjectId=6523&classroomId=cd512bbe-da19-4a8c-a8cb-c05f014c20ce" target="_blank">🤖 Teach the AI</a></span>
+                </div>
+            </span>
+        </div>
+        <!-- Task 2 – green -->
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Lesson Questions</strong> — Answer the <strong>mild, medium and spicy</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQFLteyjVLO8ueCDAu5J4kweFN3pJetwD7zCzYp8uToWLk3Hl5SBcqyaIzlVemK21Ur3FMGNfUQDAu-/pub?start=false&loop=false&delayms=3000&slide=id.g3f6a1cb117f_0_8" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your questions and answers in a text file.
+            </span>
+        </div>
+        <!-- Task 3 -->
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1066036523/a-134-evaluate-the-use-of-polling-and-interrupt-handling-flash-cards/" target="_blank">Quizlet flashcards</a>.</span>
+        </div>
+    </div>
+
+    <!-- Unit-end submission reminder -->
+    <div class="unit-reminder">
+        📌 <strong>End-of-unit submission:</strong> Save your Lesson Questions as a <strong>.txt</strong> file. You will submit <strong>all</strong> starter activity answers to <strong>Schoolbox</strong> at the end of <strong>A1.1.9 Debugging Techniques</strong>.
+    </div>
+
+    <div class="key-takeaway">
+        <p><em>"Polling and interrupt handling are two fundamental strategies for detecting external events. Neither is universally better — the choice depends on event frequency, CPU overhead, power source, predictability, latency requirements and security concerns. Modern systems often blend both, using interrupts to wake a driver and then switching to short bursts of busy polling while a queue is non-empty."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.3.3-summary.html">← Previous: A1.3.3 Scheduling</a>
+        <a href="A1.3.5-summary.html">Next: A1.3.5 Virtual Memory →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.3.4 – Evaluate Polling &amp; Interrupt Handling • IB Computer Science • Year 12
+    </div>
+</div>
+
+<script>
+    // ===== Quick Quiz =====
+    (function() {
+        const quizQs = document.querySelectorAll('#quizContainer .quiz-q');
+        const scoreEl = document.getElementById('quizScore');
+        let correctCount = 0;
+        const answered = new Set();
+
+        quizQs.forEach((q, idx) => {
+            const answer = q.getAttribute('data-answer');
+            const options = q.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (answered.has(idx)) return;
+                    answered.add(idx);
+
+                    const chosen = opt.getAttribute('data-opt');
+                    const mark = opt.querySelector('.mark');
+
+                    if (chosen === answer) {
+                        opt.classList.add('correct');
+                        mark.textContent = '✓';
+                        correctCount++;
+                    } else {
+                        opt.classList.add('wrong');
+                        mark.textContent = '✗';
+                        options.forEach(o => {
+                            if (o.getAttribute('data-opt') === answer) {
+                                o.classList.add('correct');
+                                o.querySelector('.mark').textContent = '✓';
+                            }
+                        });
+                    }
+                    scoreEl.textContent = 'Score: ' + correctCount + ' / ' + quizQs.length;
+                });
+            });
+        });
+    })();
+
+    // ===== Match-Up =====
+    (function() {
+        const items = document.querySelectorAll('.match-item');
+        const feedback = document.getElementById('matchFeedback');
+        let selected = null;
+        let matchedCount = 0;
+        const totalMatches = 5;
+
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                if (item.classList.contains('matched')) return;
+
+                if (!selected) {
+                    selected = item;
+                    item.classList.add('selected');
+                    return;
+                }
+
+                if (selected === item) {
+                    selected.classList.remove('selected');
+                    selected = null;
+                    return;
+                }
+
+                const selCol = selected.parentElement;
+                const curCol = item.parentElement;
+
+                if (selCol === curCol) {
+                    selected.classList.remove('selected');
+                    selected = item;
+                    item.classList.add('selected');
+                    return;
+                }
+
+                if (selected.getAttribute('data-match') === item.getAttribute('data-match')) {
+                    selected.classList.remove('selected');
+                    selected.classList.add('matched');
+                    item.classList.add('matched');
+                    matchedCount++;
+                    selected = null;
+
+                    if (matchedCount === totalMatches) {
+                        feedback.textContent = '🎉 All matched — challenge complete!';
+                    } else {
+                        feedback.textContent = '✅ Correct! (' + matchedCount + '/' + totalMatches + ')';
+                    }
+                } else {
+                    item.classList.add('wrong');
+                    setTimeout(() => {
+                        item.classList.remove('wrong');
+                        selected.classList.remove('selected');
+                        selected = null;
+                    }, 400);
+                    feedback.textContent = '❌ Not quite — try again.';
+                }
+            });
+        });
+    })();
+</script>
+
+</body>
+</html>
