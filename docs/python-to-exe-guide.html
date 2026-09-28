@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-PY-to-EXE student guide · Tkinter, CustomTkinter & PyQt</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #f8fafc;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #0b1b2f;
+      padding: 2rem 1rem;
+    }
+    .page {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 4px 10px rgba(0, 0, 0, 0.02);
+      padding: 2.5rem 2.5rem 3rem;
+      border: 1px solid #e2e8f0;
+    }
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+      color: #0a2942;
+      border-left: 8px solid #2563eb;
+      padding-left: 1.5rem;
+    }
+    .subhead {
+      font-size: 1.1rem;
+      color: #2c3e4e;
+      margin-bottom: 2rem;
+      padding-left: 2rem;
+      border-bottom: 1px solid #dbe4ee;
+      padding-bottom: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .subhead a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+      background: #eef4ff;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+      border: 1px solid #b9cef0;
+    }
+    .subhead a:hover {
+      background: #d9e6ff;
+    }
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 650;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: #0a2942;
+      padding-bottom: 0.25rem;
+      border-bottom: 2px solid #cbd5e1;
+      display: inline-block;
+    }
+    h2:first-of-type {
+      margin-top: 1rem;
+    }
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.6rem;
+      color: #1e3a5f;
+    }
+    p {
+      margin-bottom: 1rem;
+    }
+    .card {
+      background: #f1f6fe;
+      border-left: 6px solid #2563eb;
+      padding: 1.2rem 1.5rem;
+      border-radius: 14px;
+      margin: 1.2rem 0;
+      font-size: 0.98rem;
+      color: #0a2942;
+    }
+    .card code {
+      background: #e1e9f5;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+    .warning {
+      background: #fff8e7;
+      border-left: 6px solid #e6a700;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.2rem 0;
+      font-weight: 500;
+      color: #4d3b00;
+    }
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+      background: #eef2f6;
+      padding: 0.2rem 0.5rem;
+      border-radius: 8px;
+      font-size: 0.9em;
+      border: 1px solid #d0dbe8;
+    }
+    pre {
+      background: #0b1e2f;
+      color: #e3eaf1;
+      padding: 1.3rem 1.6rem;
+      border-radius: 16px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      margin: 1.2rem 0;
+      border: 1px solid #1e3348;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+      line-height: 1.5;
+    }
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-size: 0.9rem;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      margin: 2rem 0 1.5rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      background: #2563eb;
+      color: white;
+      font-weight: 700;
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+      margin-top: 0.2rem;
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.25);
+    }
+    .step-content {
+      flex: 1;
+    }
+    .step-content h3 {
+      margin-top: 0;
+      margin-bottom: 0.4rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    th {
+      background: #1e3a5f;
+      color: white;
+      padding: 0.9rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      background: white;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .checklist {
+      list-style: none;
+      margin: 1.5rem 0;
+      background: #f0f6ff;
+      padding: 1.6rem 2rem;
+      border-radius: 20px;
+      border: 1px solid #b9cef0;
+    }
+    .checklist li {
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .checklist li::before {
+      content: "✓";
+      font-weight: 800;
+      color: #2563eb;
+      background: white;
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #a0bce0;
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+    .badge {
+      background: #dbeafe;
+      color: #1e40af;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #dbe4ee;
+      font-size: 0.9rem;
+      color: #446688;
+      text-align: center;
+    }
+    .footer-note a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+    .inline-icon {
+      font-size: 1.2rem;
+      vertical-align: middle;
+      margin-right: 0.2rem;
+    }
+    @media (max-width: 640px) {
+      .page {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+        padding-left: 1rem;
+      }
+      .subhead {
+        padding-left: 1rem;
+      }
+      .step {
+        gap: 0.8rem;
+      }
+      .step-num {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+      }
+      pre {
+        padding: 1rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>📦 Auto‑PY‑to‑EXE student guide</h1>
+    <div class="subhead">
+      <span>Packaging <strong>Tkinter</strong>, <strong>CustomTkinter</strong>, and <strong>PyQt</strong> projects with resource folders</span>
+      <a href="https://pypi.org/project/auto-py-to-exe/" target="_blank" rel="noopener noreferrer">auto‑py‑to‑exe on PyPI →</a>
+    </div>
+
+    <p>This guide shows you how to use <strong>Auto‑PY‑to‑EXE</strong> to turn your Python GUI project — <em>including resource folders</em> — into a standalone <code>.exe</code> file. The steps are almost identical whether you used Tkinter, CustomTkinter, or PyQt.</p>
+
+    <!-- Step 1 -->
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Install Auto‑PY‑to‑EXE</h3>
+        <p>Open the command prompt (CMD) and type:</p>
+        <pre><code>pip install auto-py-to-exe</code></pre>
+        <p>Once installed, launch it:</p>
+        <pre><code>auto-py-to-exe</code></pre>
+        <p>A window will open with the interface. (If you have multiple Python versions, you can also use <code>python -m auto_py_to_exe</code>.)</p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Select your main script</h3>
+        <p>At the top of the interface, in the <strong>“Script Location”</strong> box, click <strong>“Browse”</strong> and select your main program file (usually <code>main.py</code> or <code>app.py</code>).</p>
+        <p>When selected correctly, the input box border will turn <span style="color:#2563eb; font-weight:600;">blue</span>.</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Choose the packaging mode</h3>
+        <p>Under the <strong>“Onefile”</strong> option, choose based on your project type:</p>
+        <table>
+          <thead>
+            <tr><th>Your project type</th><th>Choose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Single <code>.py</code> file, no external resources</td><td>✅ Check <strong>“Onefile”</strong> (produces a single .exe)</td></tr>
+            <tr><td>Multi‑file project or has resource folders</td><td>❌ <strong>Leave unchecked</strong> (produces a folder — more reliable)</td></tr>
+          </tbody>
+        </table>
+        <div class="card">
+          <strong>💡 Recommendation:</strong> If your project contains an <code>assets/</code> folder, theme files (like CustomTkinter <code>.json</code> themes), or images, <strong>do not</strong> check Onefile. Packaging as a folder is more reliable, and double‑clicking the <code>.exe</code> inside still runs normally.
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Hide the console window (important)</h3>
+        <p>Under the <strong>“Console Window”</strong> option, select <strong>“Window Based (hide the console)”</strong>.</p>
+        <p>This makes your program run <strong>without the black command‑line window</strong> — only your GUI appears. This is required for Tkinter, CustomTkinter, and PyQt projects.</p>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h3>Add resource folders (the most important step)</h3>
+        <p>This is where things most often go wrong. If your project has folders like <code>assets/</code>, <code>images/</code>, or <code>themes/</code>, you must add them here manually — otherwise the packaged exe won’t find them.</p>
+        <p>In the <strong>“Additional Files”</strong> section, click <strong>“Add Folder”</strong>:</p>
+        <ol style="margin-left:1.5rem; margin-bottom:1rem;">
+          <li>Select the resource folder in your project (e.g. <code>assets</code>)</li>
+          <li>Set the destination path to the same name (e.g. <code>assets</code>)</li>
+        </ol>
+        <div class="card">
+          <strong>📁 Example:</strong> If your image is at <code>assets/logo.png</code>, add the <code>assets</code> folder and set the destination to <code>assets</code>. This way, the exe will find it in the right place at runtime.
+        </div>
+        <div class="warning">
+          <strong>⚠️ CustomTkinter users:</strong> If your program uses a custom theme <code>.json</code> file, make sure the folder containing that file is also added.
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h3>Fix resource paths in your code (must do!)</h3>
+        <p>Adding folders alone is not enough. After packaging, the program runs from a temporary directory, so <strong>relative paths will fail</strong>. You must add a <code>resource_path</code> function to your code and replace every place that loads a resource.</p>
+        <p><strong>Add this to the top of your main script:</strong></p>
+        <pre><code>import sys
+import os
+
+def resource_path(relative_path):
+    """Get the absolute path to a resource, compatible with dev and packaged exe"""
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)</code></pre>
+        <p><strong>Then update your loading code:</strong></p>
+        <pre><code># ❌ Wrong (won't be found after packaging)
+image = tk.PhotoImage(file="assets/logo.png")
+
+# ✅ Correct
+image = tk.PhotoImage(file=resource_path("assets/logo.png"))</code></pre>
+        <p>Same idea for CustomTkinter themes:</p>
+        <pre><code># ❌ Wrong
+customtkinter.set_default_color_theme("assets/myTheme.json")
+
+# ✅ Correct
+customtkinter.set_default_color_theme(resource_path("assets/myTheme.json"))</code></pre>
+        <p>Use the same approach for loading images/icons in PyQt.</p>
+        <div class="warning">
+          <strong>🚨 If you skip this step, the exe will throw <code>FileNotFoundError</code> or crash immediately.</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <h3>Set an icon (optional)</h3>
+        <p>In the <strong>“Icon”</strong> section, select your <code>.ico</code> file. Note it must be <code>.ico</code> format — you cannot use a <code>.png</code> directly.</p>
+      </div>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-content">
+        <h3>Click Convert</h3>
+        <p>Click the big <strong>“CONVERT .PY TO EXE”</strong> button at the bottom.</p>
+        <p>When it finishes, find the result in the <code>output/</code> folder:</p>
+        <ul style="margin-left:1.5rem;">
+          <li><strong>If you checked Onefile:</strong> you get a single <code>.exe</code> file</li>
+          <li><strong>If you didn’t check Onefile:</strong> you get a folder — double‑click the <code>.exe</code> inside to run</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Framework-specific notes -->
+    <h2>🔧 Framework‑specific notes</h2>
+    <table>
+      <thead>
+        <tr><th>Framework</th><th>Special notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Tkinter</strong></td><td>Basically nothing extra needed — just follow the steps above</td></tr>
+        <tr><td><strong>CustomTkinter</strong></td><td>If you use a custom <code>.json</code> theme, make sure the folder containing the theme file is added in Additional Files</td></tr>
+        <tr><td><strong>PyQt / PySide</strong></td><td>Usually auto‑detected, but if you get a missing module error, add it manually under Advanced → Hidden Imports (e.g. <code>PyQt5.QtSvg</code>)</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Quick checklist -->
+    <h2>✅ Quick checklist</h2>
+    <ul class="checklist">
+      <li>The main script runs correctly</li>
+      <li>Onefile choice matches your project (leave unchecked if you have resource folders)</li>
+      <li>Console Window is set to <strong>Window Based</strong></li>
+      <li><strong>All resource folders</strong> are added in Additional Files</li>
+      <li><strong>Every</strong> place that loads a resource uses the <code>resource_path()</code> function</li>
+      <li>After packaging, test the exe <strong>on another computer</strong></li>
+    </ul>
+
+    <p style="background:#f0f6ff; padding:1rem 1.5rem; border-radius:14px; border-left:6px solid #2563eb; margin-top:2rem;">
+      <strong>💡 Troubleshooting tip:</strong> If the exe crashes or throws errors, rebuild without <code>--windowed</code> and run it from the command line to see the exact error message.
+    </p>
+
+    <!-- footer with link -->
+    <div class="footer-note">
+      <p>
+        <span class="badge">official</span> 
+        <a href="https://pypi.org/project/auto-py-to-exe/" target="_blank" rel="noopener noreferrer">https://pypi.org/project/auto-py-to-exe/</a>
+      </p>
+      <p style="margin-top:0.5rem; opacity:0.8;">Auto‑PY‑to‑EXE version 2.50.1 · A simple GUI for PyInstaller</p>
+    </div>
+  </div>
+</body>
+</html>
