@@ -10,17 +10,10 @@
         --border-color: #e0e0e0;
         --text-main: #333;
         --text-light: #777;
-        
-        /* Event Colors matching your original image */
-        --color-9a-9b: #e8c2b3; /* Salmon/Peach */
-        --color-ib: #d4c8f0; /* Light Purple */
-        --color-12ib: #fce8b2; /* Light Yellow */
-        --color-7b-7d: #bcebf2; /* Light Cyan */
-        --color-8a-8c: #e8b3dc; /* Light Pink/Magenta */
-        --color-10igcse: #d4ebc2; /* Light Green */
-        --color-9c: #f2d1c2; /* Slightly darker peach */
-        --color-meeting: #666666; /* Dark Grey */
-        --color-cas: #666666; /* Dark Grey */
+        --event-bg: #ffffff;
+        --event-border: #555555;
+        --event-text: #222222;
+        --event-detail: #555555;
     }
 
     * {
@@ -107,7 +100,7 @@
         border-bottom: 1px solid var(--border-color);
     }
 
-    /* Events */
+    /* Events - Unified Style */
     .event {
         position: absolute;
         left: 4px;
@@ -117,38 +110,30 @@
         font-size: 0.75em;
         line-height: 1.3;
         overflow: hidden;
-        border-left: 4px solid rgba(0,0,0,0.2);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        background-color: var(--event-bg);
+        border-left: 4px solid var(--event-border);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        min-height: 45px; /* Prevents text from being cut off */
     }
 
     .event-title {
         font-weight: 700;
         margin-bottom: 2px;
+        color: var(--event-text);
     }
     .event-details {
-        color: #444;
+        color: var(--event-detail);
     }
-
-    /* Specific Colors */
-    .e-9a-9b { background-color: var(--color-9a-9b); }
-    .e-ib { background-color: var(--color-ib); }
-    .e-12ib { background-color: var(--color-12ib); }
-    .e-7b-7d { background-color: var(--color-7b-7d); }
-    .e-8a-8c { background-color: var(--color-8a-8c); }
-    .e-10igcse { background-color: var(--color-10igcse); }
-    .e-9c { background-color: var(--color-9c); }
-    .e-meeting { background-color: var(--color-meeting); color: white; border-left-color: #444; }
-    .e-cas { background-color: var(--color-cas); color: white; border-left-color: #444; }
-    .e-meeting .event-details, .e-cas .event-details { color: #ddd; }
 
     /* Time Mapping Helpers (Based on 8:00 AM start = 0px) */
     /* Each hour is 60px. 15 mins = 15px */
     .t-0840 { top: 40px; height: 45px; } /* 8:40 - 9:25 */
     .t-0925 { top: 85px; height: 45px; } /* 9:25 - 10:10 */
     .t-1010 { top: 130px; height: 45px; } /* 10:10 - 10:55 */
+    .t-1100 { top: 180px; height: 20px; } /* 11:00 - 11:20 (New Dept Meeting) */
     .t-1120 { top: 200px; height: 45px; } /* 11:20 - 12:05 */
     .t-1205 { top: 245px; height: 45px; } /* 12:05 - 12:50 */
     .t-1250 { top: 290px; height: 45px; } /* 12:50 - 13:35 */
@@ -158,9 +143,7 @@
     .t-1515 { top: 435px; height: 45px; } /* 15:15 - 16:00 */
     
     /* Special durations */
-    .t-dept { top: 200px; height: 135px; } /* 11:20 - 12:50 */
-    .t-12ib-hl-1 { top: 245px; height: 45px; } /* 12:05 - 12:50 */
-    .t-12ib-hl-2 { top: 290px; height: 45px; } /* 12:50 - 13:35 */
+    .t-dept { top: 180px; height: 20px; } /* 11:00 - 11:20 */
 
 </style>
 </head>
@@ -209,31 +192,31 @@
         <div class="day-col">
             <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
             
-            <div class="event e-9a-9b t-0840">
+            <div class="event t-0840">
                 <div class="event-title">9A Computing</div>
                 <div class="event-details">08:40 - 09:25<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-ib t-0925">
+            <div class="event t-0925">
                 <div class="event-title">11 IB1 HL</div>
                 <div class="event-details">09:25 - 10:10<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-ib t-1010">
+            <div class="event t-1010">
                 <div class="event-title">11 IB1 HL</div>
                 <div class="event-details">10:10 - 10:55<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-12ib t-1120">
+            <div class="event t-1120">
                 <div class="event-title">12 IB2 SL</div>
                 <div class="event-details">11:20 - 12:05<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-9a-9b t-1205">
+            <div class="event t-1205">
                 <div class="event-title">9B Computing</div>
                 <div class="event-details">12:05 - 12:50<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-ib t-1420">
+            <div class="event t-1420">
                 <div class="event-title">11 IB1 SL</div>
                 <div class="event-details">14:20 - 15:05<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-10igcse t-1515">
+            <div class="event t-1515">
                 <div class="event-title">10 IGCSE</div>
                 <div class="event-details">15:15 - 16:00<br>2051 (DE) Craig Ellis</div>
             </div>
@@ -243,31 +226,31 @@
         <div class="day-col">
             <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
             
-            <div class="event e-7b-7d t-0925">
+            <div class="event t-0925">
                 <div class="event-title">7B Computing</div>
                 <div class="event-details">09:25 - 10:10<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-meeting t-dept">
+            <div class="event t-dept">
                 <div class="event-title">Dept Meeting</div>
-                <div class="event-details">11:20 - 12:50</div>
+                <div class="event-details">11:00 - 11:20</div>
             </div>
-            <div class="event e-12ib t-1205">
+            <div class="event t-1205">
                 <div class="event-title">12 IB2 SL</div>
                 <div class="event-details">12:05 - 12:50<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-9c t-1250">
+            <div class="event t-1250">
                 <div class="event-title">9C Computing</div>
                 <div class="event-details">12:50 - 13:35<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-8a-8c t-1335">
+            <div class="event t-1335">
                 <div class="event-title">8A Computing</div>
                 <div class="event-details">13:35 - 14:20<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-8a-8c t-1420">
+            <div class="event t-1420">
                 <div class="event-title">8C Computing</div>
                 <div class="event-details">14:20 - 15:00<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-cas t-1515">
+            <div class="event t-1515">
                 <div class="event-title">CAS</div>
                 <div class="event-details">15:15 - 16:00</div>
             </div>
@@ -277,23 +260,23 @@
         <div class="day-col">
             <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
             
-            <div class="event e-10igcse t-0840">
+            <div class="event t-0840">
                 <div class="event-title">10 IGCSE Computing</div>
                 <div class="event-details">08:40 - 09:25<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-10igcse t-0925">
+            <div class="event t-0925">
                 <div class="event-title">10 IGCSE Computing</div>
                 <div class="event-details">09:25 - 10:10<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-9c t-1010">
+            <div class="event t-1010">
                 <div class="event-title">9C Computing</div>
                 <div class="event-details">10:10 - 10:55<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-ib t-1420">
+            <div class="event t-1420">
                 <div class="event-title">11 IB1 SL</div>
                 <div class="event-details">14:20 - 15:05<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-ib t-1515">
+            <div class="event t-1515">
                 <div class="event-title">11 IB1 SL</div>
                 <div class="event-details">15:15 - 16:00<br>2051 (DE) Craig Ellis</div>
             </div>
@@ -303,19 +286,19 @@
         <div class="day-col">
             <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
             
-            <div class="event e-7b-7d t-0925">
+            <div class="event t-0925">
                 <div class="event-title">7D Computing</div>
                 <div class="event-details">09:25 - 10:10<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-9a-9b t-1010">
+            <div class="event t-1010">
                 <div class="event-title">9B Computing</div>
                 <div class="event-details">10:10 - 10:55<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-12ib t-1120">
+            <div class="event t-1120">
                 <div class="event-title">12 IB2 SL</div>
                 <div class="event-details">11:20 - 12:05<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-7b-7d t-1420">
+            <div class="event t-1420">
                 <div class="event-title">7A Computing</div>
                 <div class="event-details">14:20 - 15:05<br>2051 (DE) Craig Ellis</div>
             </div>
@@ -325,27 +308,27 @@
         <div class="day-col">
             <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
             
-            <div class="event e-10igcse t-0840">
+            <div class="event t-0840">
                 <div class="event-title">10 IGCSE Computing</div>
                 <div class="event-details">08:40 - 09:25<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-9a-9b t-1010">
+            <div class="event t-1010">
                 <div class="event-title">9A Computing</div>
                 <div class="event-details">10:10 - 10:55<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-12ib t-1205">
+            <div class="event t-1205">
                 <div class="event-title">12 IB2 HL</div>
                 <div class="event-details">12:05 - 12:50<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-12ib t-1250">
+            <div class="event t-1250">
                 <div class="event-title">12 IB2 HL</div>
                 <div class="event-details">12:50 - 13:35<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-8a-8c t-1335">
+            <div class="event t-1335">
                 <div class="event-title">8B Computing</div>
                 <div class="event-details">13:35 - 14:20<br>2051 (DE) Craig Ellis</div>
             </div>
-            <div class="event e-7b-7d t-1420">
+            <div class="event t-1420">
                 <div class="event-title">7C Computing</div>
                 <div class="event-details">14:20 - 15:05<br>2051 (DE) Craig Ellis</div>
             </div>
