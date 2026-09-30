@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 7 · Compression</title>
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#12315a;
+    --page-bg:#eef2f8;
+    --card:#ffffff;
+    --text:#1a2332;
+    --muted:#5a6b82;
+    --border:#dbe3ee;
+    --accent:#2563eb;
+    --accent-soft:#dbeafe;
+    --green:#15803d;
+    --green-soft:#dcfce7;
+    --amber:#b45309;
+    --amber-soft:#fef3c7;
+    --radius:20px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    line-height:1.65;
+    font-size:16px;
+    font-weight:400;
+    padding:0;
+  }
+
+  /* ---------- Top nav bar (floating rounded) ---------- */
+  .topbar-wrap{
+    max-width:1080px;
+    margin:18px auto 0;
+    padding:0 28px;
+  }
+  .topbar{
+    background:var(--navy);
+    color:#fff;
+    padding:14px 26px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    box-shadow:0 4px 18px rgba(11,37,69,.14);
+  }
+  .topbar .brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:700;font-size:1.05rem;
+    color:#fff;text-decoration:none;
+    letter-spacing:-.005em;
+  }
+  .topbar .brand .cap{font-size:1.25rem;}
+  .topbar .navlinks{
+    display:flex;gap:26px;flex-wrap:wrap;
+  }
+  .topbar .navlinks a{
+    color:#e6edf7;text-decoration:none;
+    font-size:.95rem;font-weight:500;
+    display:inline-flex;align-items:center;gap:6px;
+    opacity:.92;transition:opacity .15s;
+  }
+  .topbar .navlinks a:hover{opacity:1;text-decoration:underline;}
+
+  /* ---------- Page wrapper ---------- */
+  .page{
+    max-width:1080px;
+    margin:0 auto;
+    padding:36px 28px 80px;
+  }
+
+  /* ---------- Hero title ---------- */
+  .hero{margin-bottom:32px;}
+  .hero h1{
+    font-size:clamp(2.1rem,4.5vw,3.1rem);
+    line-height:1.15;
+    margin:0 0 20px;
+    font-weight:700;
+    color:var(--navy);
+    letter-spacing:-.025em;
+    display:flex;align-items:center;gap:16px;
+    flex-wrap:wrap;
+  }
+  .hero h1 .emoji{
+    font-size:1em;
+    font-weight:400;
+    font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  }
+  .hero .pill{
+    display:inline-flex;align-items:center;gap:12px;
+    background:#e2e8f2;
+    color:var(--navy);
+    border-radius:999px;
+    padding:10px 24px 10px 10px;
+    font-size:1rem;
+    font-weight:400;
+    border-left:5px solid #2b8a9b;
+  }
+  .hero .pill .dot{
+    width:24px;height:24px;border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    display:grid;place-items:center;
+    font-size:.8rem;font-weight:700;
+    flex-shrink:0;
+    line-height:1;
+  }
+
+  /* ---------- Cards ---------- */
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:34px 40px;
+    margin-bottom:26px;
+    box-shadow:0 2px 4px rgba(11,37,69,.04), 0 8px 24px rgba(11,37,69,.05);
+    border:1px solid rgba(219,227,238,.5);
+  }
+  @media(max-width:640px){
+    .card{padding:24px 20px;}
+    .topbar-wrap{padding:0 16px;}
+    .page{padding:28px 16px 60px;}
+  }
+
+  .card h2{
+    font-size:1.5rem;
+    margin:0 0 18px;
+    font-weight:600;
+    color:var(--navy);
+    display:flex;align-items:center;gap:10px;
+    letter-spacing:-.01em;
+  }
+  .card h3{
+    font-size:1.1rem;
+    margin:26px 0 12px;
+    font-weight:600;
+    color:var(--navy);
+    display:flex;align-items:center;gap:8px;
+    letter-spacing:-.005em;
+  }
+  .card p{margin:0 0 14px;}
+  .card ul,.card ol{margin:0 0 14px;padding-left:24px;}
+  .card ul li,.card ol li{margin-bottom:6px;}
+
+  /* ---------- Callout boxes ---------- */
+  .callout{
+    background:#e8f1fb;
+    border-left:4px solid var(--accent);
+    border-radius:10px;
+    padding:16px 20px;
+    margin:20px 0;
+    font-size:.98rem;
+    line-height:1.65;
+    font-weight:400;
+  }
+  .callout strong{color:var(--navy);font-weight:600;}
+  .callout.tip{background:#dcfce7;border-left-color:var(--green);}
+  .callout.warn{background:#fef3c7;border-left-color:var(--amber);}
+
+  /* ---------- Tables ---------- */
+  .table-wrap{overflow-x:auto;margin:18px 0;}
+  table{
+    width:100%;border-collapse:separate;border-spacing:0;
+    background:#fff;font-size:.95rem;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    overflow:hidden;
+  }
+  th,td{
+    padding:14px 18px;text-align:left;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+    font-weight:400;
+  }
+  th{
+    background:#f4f7fb;
+    font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--navy);font-weight:600;
+  }
+  tr:last-child td{border-bottom:none;}
+  td strong{font-weight:600;color:var(--navy);}
+
+  /* ---------- Formula box ---------- */
+  .formula{
+    background:#f4f7fb;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:20px;
+    text-align:center;
+    font-family:"SF Mono",Consolas,Monaco,monospace;
+    font-size:1rem;
+    color:var(--navy);
+    font-weight:500;
+    margin:18px 0;
+    overflow-x:auto;
+  }
+  .formula .small{display:block;color:var(--muted);font-size:.85rem;margin-top:8px;font-family:inherit;font-weight:400;}
+  .formula .hl{color:var(--green);font-weight:600;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--navy);
+    color:#fff;
+    border:1px solid var(--navy);
+    padding:10px 20px;border-radius:10px;
+    text-decoration:none;font-weight:500;font-size:.93rem;
+    transition:.15s;cursor:pointer;
+    line-height:1.4;
+    font-family:inherit;
+  }
+  .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;text-decoration:none;}
+  .btn.green{background:var(--green);border-color:var(--green);}
+  .btn.green:hover{background:#115e30;border-color:#115e30;}
+  .btn.purple{background:#6d28d9;border-color:#6d28d9;}
+  .btn.purple:hover{background:#5b21b6;border-color:#5b21b6;}
+  .btn.outline{
+    background:#fff;color:var(--navy);border-color:var(--border);
+  }
+  .btn.outline:hover{background:#f4f7fb;border-color:#b8c5d6;color:var(--navy);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+
+  /* ---------- Details / reveal ---------- */
+  details.reveal{
+    margin-top:16px;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    background:#f8fafd;
+    overflow:hidden;
+  }
+  details.reveal summary{
+    cursor:pointer;padding:13px 18px;font-weight:600;font-size:.95rem;
+    color:var(--accent);list-style:none;
+    display:flex;align-items:center;gap:8px;
+  }
+  details.reveal summary::-webkit-details-marker{display:none;}
+  details.reveal summary::before{content:"▶";font-size:.7rem;transition:.2s;}
+  details.reveal[open] summary::before{transform:rotate(90deg);}
+  details.reveal .body{
+    padding:6px 18px 18px;border-top:1px solid var(--border);background:#fff;
+  }
+
+  /* ---------- RLE lab ---------- */
+  .rle-lab{
+    display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;
+    margin-top:14px;
+  }
+  @media(max-width:760px){.rle-lab{grid-template-columns:1fr;}}
+  .rle-screen{
+    background:#f4f7fb;border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:14px;display:grid;place-items:center;min-height:220px;
+  }
+  .rle-screen canvas{
+    image-rendering:pixelated;border-radius:4px;background:#fff;
+    max-width:100%;
+  }
+  textarea.rle-input{
+    width:100%;height:220px;resize:vertical;
+    background:#fff;color:var(--text);
+    border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:12px;font-family:"SF Mono",Consolas,Monaco,monospace;
+    font-size:.8rem;line-height:1.4;
+    white-space:pre;overflow:auto;
+  }
+  textarea.rle-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+  .rle-legend{font-size:.83rem;color:var(--muted);margin-top:8px;}
+  .rle-legend code{
+    background:#eef2f8;color:var(--navy);padding:2px 6px;border-radius:5px;
+    font-family:"SF Mono",Consolas,Monaco,monospace;font-size:.85em;
+    border:1px solid var(--border);
+  }
+  .rle-output{
+    background:#f4f7fb;border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:16px;margin-top:12px;
+    font-family:"SF Mono",Consolas,Monaco,monospace;font-size:.85rem;
+    word-break:break-all;
+  }
+  .rle-output .pair{
+    background:#fff;border:1px solid var(--border);border-radius:8px;
+    padding:2px 10px;margin:3px;display:inline-block;
+  }
+
+  /* ---------- Calculator ---------- */
+  .calc-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:14px;margin:18px 0;
+  }
+  .calc-field label{
+    display:block;font-size:.78rem;text-transform:uppercase;
+    letter-spacing:.05em;color:var(--navy);margin-bottom:6px;font-weight:600;
+  }
+  .calc-field input,.calc-field select{
+    width:100%;padding:10px 12px;border-radius:10px;
+    background:#fff;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;font-family:inherit;
+    transition:.15s;
+  }
+  .calc-field input:focus,.calc-field select:focus{
+    outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15);
+  }
+  .calc-result{
+    background:#f4f7fb;border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:18px;margin-top:8px;
+    font-family:"SF Mono",Consolas,Monaco,monospace;
+  }
+  .calc-result .line{
+    display:flex;justify-content:space-between;gap:16px;
+    padding:7px 0;border-bottom:1px dashed var(--border);
+    font-size:.9rem;
+  }
+  .calc-result .line:last-child{border-bottom:none;}
+  .calc-result .line span:first-child{color:var(--muted);}
+  .calc-result .line span:last-child{color:var(--navy);font-weight:600;}
+  .calc-result .big{
+    font-size:1.05rem;color:var(--green);text-align:center;font-weight:600;
+    padding-top:12px;margin-top:8px;border-top:1px solid var(--border);
+    font-family:inherit;
+  }
+
+  /* ---------- Tool cards ---------- */
+  .tool-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:16px;margin-top:14px;
+  }
+  .tool-card{
+    background:#f8fafd;
+    border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:22px;display:flex;flex-direction:column;
+    transition:.15s;
+  }
+  .tool-card:hover{border-color:#b8c5d6;box-shadow:0 4px 14px rgba(11,37,69,.07);}
+  .tool-card .icon{font-size:1.7rem;margin-bottom:10px;}
+  .tool-card h3{margin:0 0 8px;font-size:1.05rem;font-weight:600;color:var(--navy);}
+  .tool-card p{font-size:.92rem;color:var(--muted);flex:1;margin-bottom:16px;}
+  .tool-card .btn{align-self:flex-start;}
+
+  /* ---------- Match game ---------- */
+  .match-game{
+    display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;
+  }
+  @media(max-width:640px){.match-game{grid-template-columns:1fr;}}
+  .match-col h4{
+    font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--navy);margin:0 0 10px;font-weight:600;
+  }
+  .match-item{
+    background:#fff;border:1.5px solid var(--border);
+    border-radius:10px;padding:12px 16px;margin-bottom:9px;
+    cursor:pointer;font-size:.93rem;transition:.15s;
+    font-weight:400;
+  }
+  .match-item:hover{border-color:var(--accent);background:#f8fafd;}
+  .match-item.selected{
+    border-color:var(--accent);background:var(--accent-soft);
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+  }
+  .match-item.matched{
+    border-color:var(--green);background:var(--green-soft);
+    color:var(--green);cursor:default;
+  }
+  .match-item.wrong{
+    animation:shake .35s;
+    border-color:#dc2626;background:#fee2e2;
+  }
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    75%{transform:translateX(5px);}
+  }
+  .match-score{
+    text-align:center;margin-top:18px;font-size:.95rem;color:var(--muted);
+    font-weight:500;
+  }
+  .match-score strong{color:var(--green);font-weight:600;}
+
+  /* ---------- Footer note ---------- */
+  .progress-note{
+    text-align:center;color:var(--muted);font-size:.85rem;
+    margin-top:40px;
+  }
+
+  /* ---------- Teacher panel ---------- */
+  .teacher-panel{
+    background:#fff;
+    border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:0;
+    overflow:hidden;
+  }
+  .teacher-panel summary{
+    cursor:pointer;font-weight:600;color:var(--navy);font-size:.98rem;
+    list-style:none;display:flex;align-items:center;gap:10px;
+    padding:18px 22px;
+  }
+  .teacher-panel summary::-webkit-details-marker{display:none;}
+  .teacher-panel summary::before{content:"🔒";font-size:1.05rem;}
+  .teacher-panel[open] summary{border-bottom:1px solid var(--border);}
+  .teacher-panel[open] summary::before{content:"🔓";}
+  .teacher-panel .panel-body{padding:22px;}
+
+  .lock-screen{text-align:center;padding:20px 12px;}
+  .lock-screen input{
+    padding:10px 14px;border-radius:10px;
+    background:#fff;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;margin-right:8px;
+    font-family:inherit;
+  }
+  .lock-screen input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+  .hidden{display:none !important;}
+
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- ================= TOP NAV (floating rounded bar) ================= -->
+<div class="topbar-wrap">
+  <div class="topbar">
+    <a href="#" class="brand"><span class="cap">🎓</span> IGCSE CompSci</a>
+    <nav class="navlinks">
+      <a href="#">← Back to Unit 1</a>
+      <a href="#">← Year 9</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1><span class="emoji">🗜️</span> Compression</h1>
+    <div class="pill">
+      <span class="dot">✓</span>
+      Lesson 7 · Lossy vs Lossless, RLE, File Size &amp; Streaming
+    </div>
+  </div>
+
+  <!-- ============ STARTER ============ -->
+  <section class="card">
+    <h2>🎯 Starter Activity – The Streaming Problem</h2>
+    <p>Consider this: a single second of uncompressed HD video (1920 × 1080, 24-bit colour, 25 fps) needs about <strong>1.25 gigabits</strong> of data.</p>
+    <p>Most home internet connections in the UK are under <strong>70 Mb/s</strong> — less than a twentieth of what's needed. So how does Netflix work at all?</p>
+    <div class="callout">
+      💡 <strong>Discuss with a partner:</strong> What has to happen to the video data before it can travel over a normal internet connection? What might we be able to throw away without you noticing?
+    </div>
+    <p style="margin-top:14px;font-size:.9rem;color:var(--muted);">
+      We'll come back to this at the end of the lesson — by then you'll know the answer.
+    </p>
+  </section>
+
+  <!-- ============ OBJECTIVES ============ -->
+  <section class="card">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+      <li>Explain the purpose and need for data compression</li>
+      <li>Describe the impact of compression: less bandwidth, less storage, shorter transmission time</li>
+      <li>Compare <strong>lossy</strong> and <strong>lossless</strong> compression methods</li>
+      <li>Explain how data can be compressed using <strong>Run Length Encoding (RLE)</strong> with frequency/data pairs</li>
+      <li>Explain how reducing resolution, colour depth, or sample rate permanently removes data</li>
+    </ul>
+
+    <div class="callout">
+      💡 <strong>Key Fact:</strong> Compression is the set of algorithms that reduce file sizes. Decompression restores the data to a usable format. There are two families: <strong>lossy</strong> (some data is thrown away permanently) and <strong>lossless</strong> (no data is lost).
+    </div>
+  </section>
+
+  <!-- ============ WHY COMPRESS ============ -->
+  <section class="card">
+    <h2>📉 Why Do We Need Compression?</h2>
+    <p>Digital media is huge. Without compression, most of the things you do online simply wouldn't work.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Media type</th><th>Uncompressed data rate / size</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>HD video (1920 × 1080, 24-bit, 25 fps)</td><td>≈ 1.25 Gb per second</td></tr>
+          <tr><td>CD-quality audio (1411 kbps)</td><td>≈ 39.8 MB for a 3m 51s track</td></tr>
+          <tr><td>MP3 audio (128 kbps)</td><td>≈ 3.6 MB for the same track</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>The impact of compression</h3>
+    <ul>
+      <li><strong>Less bandwidth required</strong> — more users can stream at once</li>
+      <li><strong>Less storage space required</strong> — more files fit on a disk or server</li>
+      <li><strong>Shorter transmission time</strong> — downloads and uploads finish faster</li>
+      <li><strong>Streaming becomes possible</strong> — data can be sent at the rate it's played</li>
+      <li><strong>Data allowances go further</strong> — important on mobile contracts</li>
+    </ul>
+
+    <div class="callout tip">
+      📝 <strong>Exam tip:</strong> When asked why compression matters, always link it to <em>bandwidth</em>, <em>storage</em>, and <em>transmission time</em>. These are the three impacts named in the specification.
+    </div>
+  </section>
+
+  <!-- ============ LOSSY VS LOSSLESS ============ -->
+  <section class="card">
+    <h2>🔀 Lossy vs Lossless Compression</h2>
+    <p>There are two families of compression, and each is suited to different types of data.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Method</th><th>What it does</th><th>Common formats</th><th>Best for</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Lossy</strong></td>
+            <td>Permanently removes some data. The file cannot be restored to its original form.</td>
+            <td>JPG, GIF, MP3, MP4</td>
+            <td>Photos, audio, video — where small differences aren't noticeable</td>
+          </tr>
+          <tr>
+            <td><strong>Lossless</strong></td>
+            <td>Reduces file size without losing any data. The original is restored exactly.</td>
+            <td>PNG, TIFF, ZIP, FLAC, ALAC</td>
+            <td>Text, program code, databases, spreadsheets, line art</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Why lossy compression can't be used for everything</h3>
+    <p>Imagine applying lossy compression to a computer program. A single missing character could stop the program from running, or worse, make it run incorrect instructions. The same applies to a text document (a lost character becomes a spelling mistake) or a database (a lost digit corrupts a record).</p>
+
+    <div class="callout warn">
+      ⚠️ <strong>Lossy artefacts:</strong> Lossy compression of images and video produces "digital artefacts" — small mistakes. Look for noise around hard edges, and blocky patches in heavily compressed video. Even streaming services sometimes show these for a frame or two.
+    </div>
+  </section>
+
+  <!-- ============ RLE ============ -->
+  <section class="card">
+    <h2>🔁 Run Length Encoding (RLE)</h2>
+    <p><strong>RLE</strong> is the compression method named in the specification. It is <strong>lossless</strong> — no data is lost.</p>
+    <p>The idea: instead of writing the same value over and over, record <strong>how many times</strong> it appears, followed by the value itself. This is a <strong>frequency/data pair</strong>.</p>
+
+    <h3>Worked example — one row of pixels</h3>
+    <p>Take this row, where <code>1</code> = white and <code>0</code> = black:</p>
+    <div class="formula">
+      1111000000000000
+      <span class="small">Uncompressed: 16 bits</span>
+    </div>
+    <p>Using RLE, we can write it as <strong>4 1 12 0</strong> — meaning "four 1s, then twelve 0s".</p>
+
+    <h3>Worked example — a small icon</h3>
+    <p>This 5 × 5 icon is stored row by row (top to bottom, left to right):</p>
+    <div class="formula" style="text-align:left;font-size:.92rem;">
+      Row 1: 11110<br>
+      Row 2: 11110<br>
+      Row 3: 00000<br>
+      Row 4: 00000<br>
+      Row 5: 00000
+    </div>
+    <p>Reading all 25 bits as one continuous run: <code>1111011110000000000000000</code>.</p>
+    <p>Using RLE: <strong>4 1 1 0 4 1 16 0</strong></p>
+    <p>That's 8 numbers instead of 25 bits — a much smaller file.</p>
+
+    <div class="callout tip">
+      📝 <strong>Exam tip:</strong> RLE works best when there are long runs of the same value. A photo with lots of noise or constant colour changes will barely compress at all. It's ideal for simple icons, line art, and black-and-white images.
+    </div>
+
+    <!-- RLE INTERACTIVE LAB -->
+    <h3>🧪 RLE Lab — Compress Your Own Row</h3>
+    <p>Type a row of <code>0</code>s and <code>1</code>s below. The RLE output updates automatically.</p>
+
+    <div class="rle-lab">
+      <div>
+        <label for="rleInput" style="font-size:.8rem;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;">Your pixel row</label>
+        <textarea id="rleInput" class="rle-input" spellcheck="false">1111000000000000</textarea>
+        <p class="rle-legend">Use <code>1</code> = white, <code>0</code> = black. Only 0s and 1s are counted.</p>
+      </div>
+      <div>
+        <div class="rle-output" id="rleOutput"></div>
+        <div class="rle-output" id="rleStats" style="font-family:inherit;font-size:.9rem;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LOSS OF DATA ============ -->
+  <section class="card">
+    <h2>🗑️ Loss of Data — Reducing Resolution &amp; Colour Depth</h2>
+    <p>There is another way to shrink a file: reduce the amount of data collected in the first place. This is not the same as compression, because the data is <strong>permanently lost</strong> — it can never be restored.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>What you reduce</th><th>Effect on file size</th><th>What is lost</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Resolution</strong> (number of pixels)</td>
+            <td>Smaller — fewer pixels to store</td>
+            <td>Fine detail. The image is blurrier if viewed at the same physical size.</td>
+          </tr>
+          <tr>
+            <td><strong>Colour depth</strong> (bits per pixel)</td>
+            <td>Smaller — fewer bits per pixel</td>
+            <td>Subtle colour shades. Gradients show sudden colour changes ("banding").</td>
+          </tr>
+          <tr>
+            <td><strong>Sample rate</strong> (audio)</td>
+            <td>Smaller — fewer samples per second</td>
+            <td>High frequencies. The sound becomes duller or "tinny".</td>
+          </tr>
+          <tr>
+            <td><strong>Sample resolution</strong> (bits per sample)</td>
+            <td>Smaller — fewer bits per sample</td>
+            <td>Dynamic range. Quiet sounds may be lost, loud sounds may distort.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Real example — the sunflower photo</h3>
+    <p>The PPT shows the same sunflower at two resolutions:</p>
+    <ul>
+      <li>225 × 150 px → file size ≈ <strong>100 kB</strong></li>
+      <li>113 × 75 px (half the width and half the height) → file size ≈ <strong>25 kB</strong></li>
+    </ul>
+    <p>Halving each dimension gives a quarter of the pixels, so the file is roughly a quarter of the size. The lower-resolution version will look blurred or pixelated if shown at the same size.</p>
+
+    <div class="callout warn">
+      ⚠️ <strong>Key distinction:</strong> Lossy compression can be undone (you can re-download or re-open the original). Reducing resolution or colour depth cannot — the data is gone forever. This is why professional photographers always keep their RAW originals.
+    </div>
+  </section>
+
+  <!-- ============ FILE FORMATS ============ -->
+  <section class="card">
+    <h2>📁 Common Compressed File Formats</h2>
+    <p>You need to know which formats are lossy and which are lossless.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Format</th><th>Type</th><th>Typical use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>JPEG</strong></td><td>Lossy</td><td>Photos — the most common image format on the web</td></tr>
+          <tr><td><strong>GIF</strong></td><td>Lossless</td><td>Simple images, animations, images with transparency</td></tr>
+          <tr><td><strong>PNG</strong></td><td>Lossless</td><td>Images that need crisp edges or transparency (logos, screenshots)</td></tr>
+          <tr><td><strong>MP3</strong></td><td>Lossy</td><td>Music — chosen when file size matters more than perfect fidelity</td></tr>
+          <tr><td><strong>FLAC / ALAC</strong></td><td>Lossless</td><td>Music archiving — the audio is preserved exactly</td></tr>
+          <tr><td><strong>MP4</strong></td><td>Lossy</td><td>Video — streaming, downloads, social media</td></tr>
+          <tr><td><strong>ZIP</strong></td><td>Lossless</td><td>Documents and folders — a general-purpose archive format</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      📝 <strong>Exam tip:</strong> If a question asks for a format for a specific scenario, think about whether the data must be reproduced exactly. A text document, program, or database must use <strong>lossless</strong>. A photo, song, or video clip can usually use <strong>lossy</strong>.
+    </div>
+  </section>
+
+  <!-- ============ CALCULATOR ============ -->
+  <section class="card">
+    <h2>🧮 Class Activity – Download Time Calculator</h2>
+    <p>Use this calculator to work through the tasks below. It compares an uncompressed file with a compressed one.</p>
+
+    <div class="calc-grid">
+      <div class="calc-field">
+        <label for="cSize">File size (MB)</label>
+        <input type="number" id="cSize" value="39.8" min="0.1" step="0.1">
+      </div>
+      <div class="calc-field">
+        <label for="cSpeed">Connection speed (Mbps)</label>
+        <select id="cSpeed">
+          <option value="24" selected>24 Mbps (home broadband)</option>
+          <option value="70">70 Mbps (fast fibre)</option>
+          <option value="3">3 Mbps (3G mobile)</option>
+          <option value="1.5">1.5 Mbps (older 3G)</option>
+          <option value="0.5">0.5 Mbps (slow connection)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="calc-result" id="calcOut">
+      <div class="line"><span>File size</span><span id="rSize">39.80 MB</span></div>
+      <div class="line"><span>Connection speed</span><span id="rSpeed">24 Mbps</span></div>
+      <div class="line"><span>Download time</span><span id="rTime">13.27 s</span></div>
+      <div class="big" id="rHuman">≈ 13.27 seconds</div>
+    </div>
+
+    <h3>Tasks</h3>
+    <ol>
+      <li>An album track is <strong>39.8 MB</strong> at CD quality. Using a 24 Mbps connection, how long does it take to download?</li>
+      <li>The same track as an <strong>MP3</strong> is 3.6 MB. How long does it take on the same connection? How much faster is it?</li>
+      <li>Now switch the connection to <strong>3G (3 Mbps)</strong>. What are the two download times? Which format would you rather stream on a mobile connection, and why?</li>
+      <li>If you had a data allowance of <strong>500 MB per month</strong>, how many CD-quality tracks could you download? How many MP3 tracks? Show your working.</li>
+    </ol>
+
+    <details class="reveal">
+      <summary>Reveal answers</summary>
+      <div class="body">
+        <p><strong>1.</strong> 39.8 MB ÷ 24 Mbps. Convert MB to Mb first: 39.8 × 8 = 318.4 Mb. Then 318.4 ÷ 24 ≈ <strong>13.3 seconds</strong>.</p>
+        <p><strong>2.</strong> 3.6 × 8 = 28.8 Mb. 28.8 ÷ 24 ≈ <strong>1.2 seconds</strong>. That's about <strong>11 times faster</strong>.</p>
+        <p><strong>3.</strong> At 3 Mbps: CD = 318.4 ÷ 3 ≈ <strong>106 s</strong>; MP3 = 28.8 ÷ 3 ≈ <strong>9.6 s</strong>. The MP3 is far more practical for streaming on a slow mobile connection, because it starts playing much sooner and is less likely to buffer.</p>
+        <p><strong>4.</strong> CD: 500 ÷ 39.8 ≈ <strong>12 tracks</strong>. MP3: 500 ÷ 3.6 ≈ <strong>138 tracks</strong>. Compression lets you carry far more music within the same data allowance.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ MAIN TASK ============ -->
+  <section class="card">
+    <h2>📝 Main Task – Worksheet 7</h2>
+    <p>📄 <strong>Worksheet 7: Data Compression</strong></p>
+    <p>Complete the tasks on Worksheet 7. Use the resources below to help you.</p>
+    <div class="btn-row">
+      <a href="https://lms.isr-school.com/" target="_blank" rel="noopener" class="btn">
+        📄 Open Worksheet 7
+      </a>
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F1%2520Data-representation%2FT7%2520Compression.pptx&wdOrigin=BROWSELINK"
+         target="_blank" rel="noopener" class="btn outline">
+        📊 Lesson Presentation (T7 Compression)
+      </a>
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F1%2520Data-representation%2FT7%2520Homework%25207.docx&wdOrigin=BROWSELINK"
+         target="_blank" rel="noopener" class="btn outline">
+        📝 Homework 7
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ INTERACTIVE TOOLS ============ -->
+  <section class="card">
+    <h2>🧰 Interactive Tools</h2>
+    <p>Two external tools to help you see compression in practice.</p>
+
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="icon">🗜️</div>
+        <h3>Compression Comparison</h3>
+        <p>Upload a photo and compare the file size and quality when saved as JPEG (lossy) versus PNG (lossless). See the digital artefacts for yourself at very high compression levels.</p>
+        <a href="https://www.iloveimg.com/compress-image" target="_blank" rel="noopener" class="btn purple">
+          Open Comparison Tool →
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <div class="icon">⚽</div>
+        <h3>Penalty Shootout: Compression Edition</h3>
+        <p>A revision game covering compression, file formats, RLE, and lossy vs lossless. Answer correctly to score past the goalkeeper.</p>
+        <a href="https://jamesabela.github.io/reading/penalties.html?set=editor/samples/igcse-computing-compression.json"
+           target="_blank" rel="noopener" class="btn green">
+          Open Penalty Shootout →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AI GUIDE ============ -->
+  <section class="card">
+    <h2>🤖 AI Guide</h2>
+    <p>Your personal tutor! Ask the AI any question about data compression.</p>
+    <div class="btn-row">
+      <a href="#" class="btn" onclick="return false;">💬 Ask the AI Tutor</a>
+    </div>
+  </section>
+
+  <!-- ============ EXTENSION ============ -->
+  <section class="card">
+    <h2>⭐ Extension Tasks</h2>
+    <ul>
+      <li>Complete the extension task for this lesson.</li>
+      <li>Check that previous worksheets (Lessons 1–6) have also been submitted.</li>
+      <li><strong>Research task:</strong> What is the difference between a <em>lossy</em> codec and a <em>lossless</em> codec for video? Which is used by YouTube? Which by a film studio archiving a master copy?</li>
+      <li><strong>Challenge:</strong> Find a music file on your computer. Look at its properties. Is it MP3, AAC, FLAC, or another format? What bitrate does it use? If it's lossy, what do you think was thrown away?</li>
+      <li><strong>Creative:</strong> Design a small 8 × 8 black-and-white icon and write out its RLE encoding. Compare the number of RLE pairs to the original 64 bits. How much did you save?</li>
+    </ul>
+  </section>
+
+  <!-- ============ PLENARY ============ -->
+  <section class="card">
+    <h2>🔁 Plenary – Match the Definition</h2>
+    <p>Click a term on the left, then click its definition on the right. Get them all right to complete the challenge.</p>
+
+    <div class="match-game" id="matchGame">
+      <div class="match-col">
+        <h4>Terms</h4>
+        <div class="match-item" data-id="compression">Compression</div>
+        <div class="match-item" data-id="lossy">Lossy compression</div>
+        <div class="match-item" data-id="lossless">Lossless compression</div>
+        <div class="match-item" data-id="rle">Run Length Encoding</div>
+        <div class="match-item" data-id="artifact">Digital artefact</div>
+      </div>
+      <div class="match-col">
+        <h4>Definitions</h4>
+        <div class="match-item" data-id="lossless">Reduces file size without losing any data — the original is restored exactly</div>
+        <div class="match-item" data-id="rle">A lossless technique that records frequency/data pairs to encode runs of identical values</div>
+        <div class="match-item" data-id="compression">The name given to algorithms that reduce file sizes</div>
+        <div class="match-item" data-id="artifact">A small visual mistake introduced by lossy compression, such as noise or blockiness</div>
+        <div class="match-item" data-id="lossy">Permanently removes some data; the file cannot be restored to its original form</div>
+      </div>
+    </div>
+
+    <p class="match-score" id="matchScore">Matched: <strong>0</strong> / 5</p>
+    <p style="text-align:center;font-size:.85rem;color:var(--muted);">Click a term to begin.</p>
+  </section>
+
+  <!-- ============ ADDITIONAL RESOURCES ============ -->
+  <section class="card">
+    <h2>Additional Resources</h2>
+
+    <details class="teacher-panel">
+      <summary>📋 Lesson Plan (Teacher only) — click to toggle</summary>
+      <div class="panel-body">
+
+        <div class="lock-screen" id="lockScreen">
+          <p style="color:var(--muted);margin-bottom:14px;">Enter password to view the full lesson plan.</p>
+          <input type="password" id="lockInput" placeholder="Password">
+          <button class="btn" id="lockBtn">Unlock</button>
+          <p id="lockMsg" style="color:#dc2626;font-size:.85rem;margin-top:10px;min-height:1.2em;"></p>
+        </div>
+
+        <div id="teacherContent" class="hidden">
+          <h3>Lesson Overview</h3>
+          <p>This lesson introduces data compression. Students start with a striking numerical example of uncompressed HD video to see why compression is essential, then move through lossy vs lossless, RLE, loss of data through reducing resolution/colour depth, and finally the benefits of compression for streaming. RLE is the only compression method named on the specification, so it should be given the most attention.</p>
+
+          <h3>Timing</h3>
+          <ul>
+            <li><strong>0–5 min</strong> — Starter: the streaming problem (HD video numbers)</li>
+            <li><strong>5–15 min</strong> — Direct instruction: what compression is, lossy vs lossless, formats</li>
+            <li><strong>15–25 min</strong> — Direct instruction + RLE worked examples; students encode the 5×5 icon</li>
+            <li><strong>25–35 min</strong> — Worksheet 7 Task 1 (RLE)</li>
+            <li><strong>35–45 min</strong> — Direct instruction: loss of data through reduced resolution/colour depth; Worksheet 7 Task 2</li>
+            <li><strong>45–55 min</strong> — Class activity: download time calculations; Worksheet 7 Tasks 3 &amp; 4</li>
+            <li><strong>55–60 min</strong> — Plenary match-the-definition game; hand out Homework 7</li>
+          </ul>
+
+          <h3>Key Teaching Points</h3>
+          <ul>
+            <li>Always connect the abstract idea of compression to something concrete — a phone downloading a song, or Netflix buffering on a slow connection.</li>
+            <li>RLE is <em>lossless</em> — this is often a source of confusion. Emphasise that the image is restored exactly.</li>
+            <li>Reducing resolution or colour depth is <em>not</em> compression in the same sense — the data is permanently gone and cannot be recovered.</li>
+            <li>Common misconception: students think "lossy" means "low quality". Clarify that well-chosen lossy compression can be almost indistinguishable from the original to the human eye or ear — but the file is much smaller.</li>
+          </ul>
+
+          <h3>Differentiation</h3>
+          <ul>
+            <li><strong>Support:</strong> Provide the RLE pair exercise with the first pair completed as an example. Allow students to use the on-page RLE lab to check their working.</li>
+            <li><strong>Stretch:</strong> Ask students to compare the file size of a 4K photo saved as JPEG at 90% quality vs 50% quality, and describe the trade-off.</li>
+            <li><strong>EAL / Dyslexia:</strong> Use the on-page RLE lab and download calculator as concrete, hands-on demonstrations before asking for written explanations.</li>
+          </ul>
+
+          <h3>Assessment</h3>
+          <ul>
+            <li>Formative: RLE lab output, download calculator answers, match-the-definition score.</li>
+            <li>Summative: Worksheet 7 submission on Schoolbox.</li>
+            <li>Retrieval: Penalty Shootout scores (low-stakes diagnostic).</li>
+          </ul>
+
+          <h3>Resources</h3>
+          <ul>
+            <li><strong>T7 Compression PowerPoint</strong> — the main lesson slides.</li>
+            <li><strong>Worksheet 7</strong> — four tasks covering RLE, image properties, download times, and lossy/lossless decisions.</li>
+            <li><strong>Homework 7</strong> — consolidation of compression, RLE, and lossy/lossless choice.</li>
+            <li><strong>Penalty Shootout</strong> — competitive revision of the definitions.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ REFERENCE ============ -->
+  <section class="card">
+    <h2>📚 Reference Material</h2>
+    <p>Additional content on data compression — The Computer Science Lab.</p>
+    <div class="btn-row">
+      <a href="https://www.thecomputersciencelab.com/chapter-1-data-representation" target="_blank" rel="noopener" class="btn outline">
+        Open Reference →
+      </a>
+    </div>
+  </section>
+
+  <p class="progress-note">progress saved automatically in your browser</p>
+</div>
+
+<script>
+/* RLE LAB */
+(function(){
+  const input  = document.getElementById('rleInput');
+  const output = document.getElementById('rleOutput');
+  const stats  = document.getElementById('rleStats');
+
+  function encodeRLE(text){
+    const cleaned = text.replace(/\s+/g, '');
+    const bits = cleaned.split('').filter(c => c === '0' || c === '1');
+    if (!bits.length){
+      output.innerHTML = '<em>Waiting for input…</em>';
+      stats.textContent = '';
+      return;
+    }
+    const pairs = [];
+    let current = bits[0];
+    let count = 1;
+    for (let i = 1; i < bits.length; i++){
+      if (bits[i] === current){
+        count++;
+      } else {
+        pairs.push([count, current]);
+        current = bits[i];
+        count = 1;
+      }
+    }
+    pairs.push([count, current]);
+
+    const pairsHTML = pairs.map(p =>
+      `<span class="pair"><strong>${p[0]}</strong> ${p[1]}</span>`
+    ).join('');
+    const rleString = pairs.map(p => `${p[0]} ${p[1]}`).join('  ');
+
+    output.innerHTML = `<div style="margin-bottom:8px;color:#5a6b82;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;font-family:inherit;">RLE output</div>${pairsHTML}<div style="margin-top:12px;font-family:inherit;font-size:.9rem;color:#0b2545;"><strong>Frequency/data pairs:</strong> ${rleString}</div>`;
+
+    const original = bits.length;
+    const encoded = pairs.length * 2;
+    const saved = original - encoded;
+    const pct = original ? ((saved / original) * 100).toFixed(1) : 0;
+
+    stats.innerHTML = `<div class="line" style="display:flex;justify-content:space-between;padding:4px 0;"><span style="color:#5a6b82;">Original bits</span><span style="font-weight:600;color:#0b2545;">${original}</span></div>
+    <div class="line" style="display:flex;justify-content:space-between;padding:4px 0;"><span style="color:#5a6b82;">RLE values (pairs × 2)</span><span style="font-weight:600;color:#0b2545;">${encoded}</span></div>
+    <div class="line" style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px dashed #dbe3ee;margin-top:6px;padding-top:8px;"><span style="color:#5a6b82;">Saved</span><span style="font-weight:600;color:#15803d;">${saved} (${pct}%)</span></div>`;
+  }
+
+  input.addEventListener('input', () => encodeRLE(input.value));
+  encodeRLE(input.value);
+})();
+
+/* DOWNLOAD TIME CALCULATOR */
+(function(){
+  const size   = document.getElementById('cSize');
+  const speed  = document.getElementById('cSpeed');
+  const rSize  = document.getElementById('rSize');
+  const rSpeed = document.getElementById('rSpeed');
+  const rTime  = document.getElementById('rTime');
+  const rHuman = document.getElementById('rHuman');
+
+  function fmtTime(seconds){
+    if (seconds < 1) return (seconds * 1000).toFixed(0) + ' ms';
+    if (seconds < 60) return seconds.toFixed(2) + ' s';
+    const mins = Math.floor(seconds / 60);
+    const secs = (seconds % 60).toFixed(1);
+    return `${mins} min ${secs} s`;
+  }
+
+  function update(){
+    const s = Math.max(0.1, parseFloat(size.value) || 0.1);
+    const sp = parseFloat(speed.value) || 1;
+    const megabits = s * 8;
+    const seconds = megabits / sp;
+    rSize.textContent  = s.toFixed(2) + ' MB';
+    rSpeed.textContent = sp + ' Mbps';
+    rTime.textContent  = fmtTime(seconds);
+    rHuman.textContent = '≈ ' + fmtTime(seconds);
+  }
+
+  [size, speed].forEach(el => el.addEventListener('input', update));
+  update();
+})();
+
+/* MATCH GAME */
+(function(){
+  const items    = Array.from(document.querySelectorAll('#matchGame .match-item'));
+  const scoreEl  = document.getElementById('matchScore');
+  let selected   = null;
+  let matched    = 0;
+  const TOTAL    = 5;
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('matched')) return;
+      if (!selected){
+        selected = item;
+        item.classList.add('selected');
+        return;
+      }
+      if (selected === item){
+        item.classList.remove('selected');
+        selected = null;
+        return;
+      }
+      const selectedCol = selected.parentElement;
+      const itemCol     = item.parentElement;
+      if (selectedCol === itemCol){
+        selected.classList.remove('selected');
+        selected = item;
+        item.classList.add('selected');
+        return;
+      }
+      if (selected.dataset.id === item.dataset.id){
+        selected.classList.remove('selected');
+        selected.classList.add('matched');
+        item.classList.add('matched');
+        matched++;
+        scoreEl.innerHTML = `Matched: <strong>${matched}</strong> / ${TOTAL}`;
+        selected = null;
+        if (matched === TOTAL){
+          scoreEl.innerHTML = `🎉 All matched! Well done.`;
+        }
+      } else {
+        const a = selected, b = item;
+        a.classList.remove('selected');
+        a.classList.add('wrong');
+        b.classList.add('wrong');
+        setTimeout(() => {
+          a.classList.remove('wrong');
+          b.classList.remove('wrong');
+        }, 400);
+        selected = null;
+      }
+    });
+  });
+})();
+
+/* TEACHER LOCK */
+(function(){
+  const PASSWORD = 'teacher7';
+  const lockScreen = document.getElementById('lockScreen');
+  const content    = document.getElementById('teacherContent');
+  const input      = document.getElementById('lockInput');
+  const btn        = document.getElementById('lockBtn');
+  const msg        = document.getElementById('lockMsg');
+
+  function tryUnlock(){
+    if (input.value === PASSWORD){
+      lockScreen.classList.add('hidden');
+      content.classList.remove('hidden');
+      msg.textContent = '';
+    } else {
+      msg.textContent = 'Incorrect password. Try again.';
+      input.value = '';
+      input.focus();
+    }
+  }
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+})();
+</script>
+
+</body>
+</html>
