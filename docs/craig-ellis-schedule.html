@@ -40,8 +40,7 @@
 
     .calendar {
         display: grid;
-        /* Added a 50px column for Periods */
-        grid-template-columns: 60px 50px repeat(5, minmax(200px, 1fr));
+        grid-template-columns: 60px 55px repeat(5, minmax(200px, 1fr));
         min-width: 1100px;
     }
 
@@ -68,40 +67,40 @@
 
     /* Period Column */
     .period-col {
-        display: flex;
-        flex-direction: column;
+        position: relative;
         border-right: 1px solid var(--border-color);
         background-color: #fafafa;
-        text-align: center;
     }
     .period-slot {
-        height: 60px; /* Represents 1 hour */
-        border-bottom: 1px solid var(--border-color);
+        position: absolute;
+        left: 0;
+        right: 0;
         display: flex;
         justify-content: center;
-        align-items: flex-start;
-        padding-top: 5px;
+        align-items: center;
         font-size: 0.8em;
-        color: var(--text-light);
         font-weight: 600;
+        color: #666;
+        border-bottom: 1px solid var(--border-color);
     }
 
     /* Time Column */
     .time-col {
-        display: flex;
-        flex-direction: column;
+        position: relative;
         border-right: 1px solid var(--border-color);
         background-color: #fafafa;
     }
     .time-slot {
-        height: 60px; /* Represents 1 hour */
-        border-bottom: 1px solid var(--border-color);
+        position: absolute;
+        left: 0;
+        right: 0;
         display: flex;
         justify-content: flex-end;
         padding-right: 10px;
         font-size: 0.8em;
         color: var(--text-light);
         padding-top: 5px;
+        border-bottom: 1px solid var(--border-color);
     }
 
     /* Day Columns */
@@ -137,7 +136,7 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        min-height: 45px; /* Prevents text from being cut off */
+        min-height: 45px;
     }
 
     .event-title {
@@ -151,20 +150,19 @@
 
     /* Time Mapping Helpers (Based on 8:00 AM start = 0px) */
     /* Each hour is 60px. 15 mins = 15px */
-    .t-0840 { top: 40px; height: 45px; } /* 8:40 - 9:25 */
-    .t-0925 { top: 85px; height: 45px; } /* 9:25 - 10:10 */
-    .t-1010 { top: 130px; height: 45px; } /* 10:10 - 10:55 */
-    .t-1100 { top: 180px; height: 20px; } /* 11:00 - 11:20 (New Dept Meeting) */
-    .t-1120 { top: 200px; height: 45px; } /* 11:20 - 12:05 */
-    .t-1205 { top: 245px; height: 45px; } /* 12:05 - 12:50 */
-    .t-1250 { top: 290px; height: 45px; } /* 12:50 - 13:35 */
-    .t-1335 { top: 335px; height: 45px; } /* 13:35 - 14:20 */
-    .t-1420 { top: 380px; height: 45px; } /* 14:20 - 15:05 */
-    .t-1500 { top: 420px; height: 40px; } /* 15:00 - 15:40 (approx) */
-    .t-1515 { top: 435px; height: 45px; } /* 15:15 - 16:00 */
+    .t-0840 { top: 40px; height: 45px; } /* Period 1: 8:40 - 9:25 */
+    .t-0925 { top: 85px; height: 45px; } /* Period 2: 9:25 - 10:10 */
+    .t-1010 { top: 130px; height: 45px; } /* Period 3: 10:10 - 10:55 */
+    .t-1100 { top: 180px; height: 20px; } /* Dept Meeting: 11:00 - 11:20 */
+    .t-1120 { top: 200px; height: 45px; } /* Period 4: 11:20 - 12:05 */
+    .t-1205 { top: 245px; height: 45px; } /* Period 5: 12:05 - 12:50 */
+    .t-1250 { top: 290px; height: 45px; } /* Period 6: 12:50 - 13:35 */
+    .t-1335 { top: 335px; height: 45px; } /* Period 7: 13:35 - 14:20 */
+    .t-1420 { top: 380px; height: 45px; } /* Period 8: 14:20 - 15:05 */
+    .t-1515 { top: 435px; height: 45px; } /* Period 9: 15:15 - 16:00 */
     
     /* Special durations */
-    .t-dept { top: 180px; height: 20px; } /* 11:00 - 11:20 */
+    .t-dept { top: 180px; height: 20px; }
 
 </style>
 </head>
@@ -174,8 +172,8 @@
     <div class="calendar">
         
         <!-- Header Row -->
-        <div class="header-cell" style="background:#fafafa;"></div> <!-- Time Header -->
-        <div class="header-cell" style="background:#fafafa;"></div> <!-- Period Header -->
+        <div class="header-cell" style="background:#fafafa;"></div>
+        <div class="header-cell" style="background:#fafafa; font-size:0.75em; color:#999; text-align:center;">Period</div>
         <div class="header-cell">
             <div class="header-date">12</div>
             <div class="header-day">Monday</div>
@@ -197,30 +195,30 @@
             <div class="header-day">Friday</div>
         </div>
 
-        <!-- Time Column -->
+        <!-- Time Column (absolute positioned) -->
         <div class="time-col">
-            <div class="time-slot">8</div>
-            <div class="time-slot">9</div>
-            <div class="time-slot">10</div>
-            <div class="time-slot">11</div>
-            <div class="time-slot">12</div>
-            <div class="time-slot">13</div>
-            <div class="time-slot">14</div>
-            <div class="time-slot">15</div>
-            <div class="time-slot">16</div>
+            <div class="time-slot" style="top: 0; height: 60px;">8</div>
+            <div class="time-slot" style="top: 60px; height: 60px;">9</div>
+            <div class="time-slot" style="top: 120px; height: 60px;">10</div>
+            <div class="time-slot" style="top: 180px; height: 60px;">11</div>
+            <div class="time-slot" style="top: 240px; height: 60px;">12</div>
+            <div class="time-slot" style="top: 300px; height: 60px;">13</div>
+            <div class="time-slot" style="top: 360px; height: 60px;">14</div>
+            <div class="time-slot" style="top: 420px; height: 60px;">15</div>
+            <div class="time-slot" style="top: 480px; height: 60px;">16</div>
         </div>
 
-        <!-- Period Column -->
+        <!-- Period Column (absolute positioned to match actual periods) -->
         <div class="period-col">
-            <div class="period-slot"></div> <!-- 8:00 - 9:00 -->
-            <div class="period-slot">1</div> <!-- 9:00 - 10:00 -->
-            <div class="period-slot">2</div> <!-- 10:00 - 11:00 -->
-            <div class="period-slot">3</div> <!-- 11:00 - 12:00 -->
-            <div class="period-slot">4</div> <!-- 12:00 - 13:00 -->
-            <div class="period-slot">5</div> <!-- 13:00 - 14:00 -->
-            <div class="period-slot">6</div> <!-- 14:00 - 15:00 -->
-            <div class="period-slot">7</div> <!-- 15:00 - 16:00 -->
-            <div class="period-slot">8</div> <!-- 16:00 - 17:00 -->
+            <div class="period-slot" style="top: 40px; height: 45px;">1</div>
+            <div class="period-slot" style="top: 85px; height: 45px;">2</div>
+            <div class="period-slot" style="top: 130px; height: 45px;">3</div>
+            <div class="period-slot" style="top: 200px; height: 45px;">4</div>
+            <div class="period-slot" style="top: 245px; height: 45px;">5</div>
+            <div class="period-slot" style="top: 290px; height: 45px;">6</div>
+            <div class="period-slot" style="top: 335px; height: 45px;">7</div>
+            <div class="period-slot" style="top: 380px; height: 45px;">8</div>
+            <div class="period-slot" style="top: 435px; height: 45px;">9</div>
         </div>
 
         <!-- Monday -->
