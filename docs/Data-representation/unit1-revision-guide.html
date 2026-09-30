@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 Data Representation — Revision Guide</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    background: #f3f6fc;
+    color: #1e2b3c;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+
+  .guide-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+    padding: 2rem 2rem 2.5rem;
+    border: 1px solid #d9e2ef;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #0a2a4a;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 4px solid #ffc857;
+    padding-bottom: 0.65rem;
+    margin-bottom: 2rem;
+  }
+
+  h1 small {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #4b6a8b;
+    margin-left: auto;
+    background: #e9f0fa;
+    padding: 0.3rem 1rem;
+    border-radius: 40px;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #1a3e6b;
+    margin: 2.5rem 0 1rem;
+    padding-left: 0.75rem;
+    border-left: 6px solid #ffc857;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #214a7a;
+    margin: 1.5rem 0 0.6rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #214a7a;
+    margin: 1.2rem 0 0.4rem;
+  }
+
+  .card {
+    background: #f9fbfe;
+    border-radius: 1.2rem;
+    padding: 1.5rem 1.8rem;
+    margin: 1.2rem 0;
+    border: 1px solid #d0ddeb;
+  }
+
+  .tip-box {
+    background: #fff8e7;
+    border-left: 5px solid #ffc857;
+    border-radius: 0.8rem;
+    padding: 1rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+
+  .tip-box strong {
+    color: #8a6d1f;
+  }
+
+  .check-box {
+    background: #e8f5e9;
+    border-left: 5px solid #4caf50;
+    border-radius: 0.8rem;
+    padding: 1rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+
+  .check-box strong {
+    color: #2e7d32;
+  }
+
+  .key-fact {
+    background: #e8f1fb;
+    border-left: 5px solid #2563eb;
+    border-radius: 0.8rem;
+    padding: 1rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+
+  .keyword {
+    font-weight: 600;
+    color: #1f4973;
+    background: #eef5ff;
+    padding: 0.1rem 0.4rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  .highlight {
+    background: #fff3d6;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  code, .mono {
+    font-family: "SF Mono", Consolas, Monaco, monospace;
+    background: #eef2f8;
+    color: #0b2545;
+    padding: 0.1rem 0.4rem;
+    border-radius: 5px;
+    font-size: 0.9em;
+    border: 1px solid #dbe3ee;
+  }
+
+  .qa-toggle {
+    background: #e9f0fa;
+    border: none;
+    border-radius: 40px;
+    padding: 0.4rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #1f4973;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    border: 1px solid #bed3ec;
+    transition: background 0.15s;
+    font-family: inherit;
+  }
+
+  .qa-toggle:hover {
+    background: #d4e3fc;
+  }
+
+  .qa-content {
+    display: none;
+    margin-top: 0.8rem;
+    background: white;
+    border-radius: 0.8rem;
+    padding: 1rem 1.4rem;
+    border-left: 4px solid #ffc857;
+    font-size: 0.95rem;
+  }
+
+  .qa-content.show {
+    display: block;
+  }
+
+  ul, ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+  }
+
+  li {
+    margin-bottom: 0.3rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border: 1px solid #dbe3ee;
+    border-radius: 0.8rem;
+    overflow: hidden;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+
+  th, td {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #dbe3ee;
+    vertical-align: top;
+  }
+
+  th {
+    background: #f4f7fb;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #0b2545;
+    font-weight: 600;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td strong {
+    font-weight: 600;
+    color: #0b2545;
+  }
+
+  .footer-note {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed #b8cee8;
+    font-size: 0.9rem;
+    color: #4b6a8b;
+    text-align: center;
+  }
+
+  @media (max-width: 700px) {
+    .guide-container { padding: 1.5rem; }
+    h1 { font-size: 1.6rem; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+  <div class="guide-container">
+    <h1>
+      Unit 1 Data Representation — Revision Guide
+      <small>IGCSE Computer Science</small>
+    </h1>
+
+    <p style="margin-bottom: 2rem; color: #2c4b6e;">
+      This guide teaches you the <strong>concepts</strong> you need to understand for the Unit 1 Data Representation exam.
+      It explains key ideas, gives exam technique tips, and provides practice questions so you can
+      test your understanding. Work through each section, then try the practice questions at the end
+      without looking at the notes.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: BINARY SYSTEMS -->
+    <!-- ============================================================ -->
+    <h2>1. Binary Systems</h2>
+
+    <div class="card">
+      <h3>Why do computers use binary?</h3>
+      <p>Computers are built from <strong>transistors</strong> — tiny switches that can only be in one of two states: <strong>ON</strong> (represented by 1) or <strong>OFF</strong> (represented by 0). Because of this, all data inside a computer is stored and processed in <strong>binary</strong> (base-2).</p>
+      <p>Humans use <strong>denary</strong> (base-10) because we have ten fingers, but a computer has no concept of "ten" — it only knows two states.</p>
+
+      <div class="key-fact">
+        A <strong>bit</strong> is the smallest unit of data — a single 1 or 0.<br>
+        A <strong>byte</strong> is 8 bits.<br>
+        A <strong>nibble</strong> is 4 bits (half a byte).
+      </div>
+
+      <h3>Units of storage</h3>
+      <p>You need to know the following units — all based on powers of 2:</p>
+
+      <table>
+        <thead>
+          <tr><th>Unit</th><th>Abbreviation</th><th>Bytes</th><th>Power of 2</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Kibibyte</td><td>KiB</td><td>1,024</td><td>2<sup>10</sup></td></tr>
+          <tr><td>Mebibyte</td><td>MiB</td><td>1,048,576</td><td>2<sup>20</sup></td></tr>
+          <tr><td>Gibibyte</td><td>GiB</td><td>1,073,741,824</td><td>2<sup>30</sup></td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        <strong>Exam tip:</strong> Don't confuse "kilobyte" (KB = 1,000 bytes) with "kibibyte" (KiB = 1,024 bytes). The specification asks you to use the <em>kibibyte</em> family — they are multiples of 2<sup>10</sup>, 2<sup>20</sup>, etc.
+      </div>
+
+      <h3>The 8-bit place value grid</h3>
+      <p>To convert between denary and binary, use the place value grid. Each column is a power of 2:</p>
+      <p class="mono" style="text-align:center; padding: 0.8rem; background: #f4f7fb; border-radius: 8px;">128 &nbsp; 64 &nbsp; 32 &nbsp; 16 &nbsp; 8 &nbsp; 4 &nbsp; 2 &nbsp; 1</p>
+
+      <h4>Denary → Binary</h4>
+      <p>Place a 1 in the columns that add up to your target number. Place a 0 in all others.</p>
+      <p><strong>Example:</strong> Convert <code>42</code> to binary.</p>
+      <p>42 = 32 + 8 + 2 → <code>00101010</code></p>
+
+      <h4>Binary → Denary</h4>
+      <p>Add up the column values where there is a 1.</p>
+      <p><strong>Example:</strong> <code>10110101</code> = 128 + 32 + 16 + 4 + 1 = <strong>181</strong></p>
+
+      <h4>Key facts to remember</h4>
+      <ul>
+        <li>The largest denary number you can store in 8 bits is <strong>255</strong> (all 8 bits set to 1).</li>
+        <li>The number of different values you can represent with <em>n</em> bits is <strong>2<sup>n</sup></strong>.</li>
+        <li>The <strong>most significant bit</strong> (MSB) is on the left; the <strong>least significant bit</strong> (LSB) is on the right.</li>
+      </ul>
+
+      <div class="check-box">
+        <strong>Check your understanding:</strong>
+        <ul>
+          <li>Can you convert 200 to binary and back again?</li>
+          <li>How many different values can 5 bits represent?</li>
+          <li>What is the largest denary number you can store in 4 bits?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: HEXADECIMAL -->
+    <!-- ============================================================ -->
+    <h2>2. Hexadecimal</h2>
+
+    <div class="card">
+      <h3>What is hexadecimal?</h3>
+      <p><strong>Hexadecimal</strong> (or "hex") is a base-16 number system. It uses sixteen symbols: <code>0</code>–<code>9</code> and <code>A</code>–<code>F</code>, where A = 10, B = 11, C = 12, D = 13, E = 14, and F = 15.</p>
+
+      <div class="key-fact">
+        Hex is useful because <strong>one hex digit = one nibble</strong> (4 bits). This makes it much more compact than binary — a byte can be written as just two hex digits instead of eight bits.
+      </div>
+
+      <h3>Converting hex ↔ denary</h3>
+      <p><strong>Hex → Denary:</strong> multiply the left digit by 16 and add the right digit.</p>
+      <p>Example: <code>2A</code> = (2 × 16) + 10 = 32 + 10 = <strong>42</strong>.</p>
+
+      <p><strong>Denary → Hex:</strong> divide by 16. The quotient is the first digit; the remainder is the second.</p>
+      <p>Example: <code>27</code> ÷ 16 = 1 remainder 11 → <code>1B</code> (because 11 = B).</p>
+
+      <h3>Converting binary ↔ hex</h3>
+      <p>Split the binary into <strong>nibbles</strong> (4-bit groups), then convert each nibble to a single hex digit.</p>
+      <p>Example: <code>1110 0101</code> → E (14) then 5 → <code>E5</code>.</p>
+
+      <h3>Why is hex used?</h3>
+      <ul>
+        <li>Shorter and easier to read than binary.</li>
+        <li>Less chance of making an error when writing or typing.</li>
+        <li>Two hex digits neatly represent one byte (8 bits).</li>
+      </ul>
+
+      <div class="tip-box">
+        <strong>Exam tip:</strong> When converting, always write the nibble values out. Common mistakes include forgetting that A–F start at 10 (not 11) and misaligning the binary when splitting into nibbles.
+      </div>
+
+      <div class="check-box">
+        <strong>Check your understanding:</strong>
+        <ul>
+          <li>Convert <code>FF</code> to denary. What do you notice?</li>
+          <li>Convert <code>1010 1100</code> to hex.</li>
+          <li>What is the largest denary number you can represent with two hex digits?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: BINARY SHIFTS & TWO'S COMPLEMENT -->
+    <!-- ============================================================ -->
+    <h2>3. Binary Shifts &amp; Two's Complement</h2>
+
+    <div class="card">
+      <h3>Logical binary shifts</h3>
+      <p>A <strong>logical shift</strong> moves all bits left or right by a specified number of places. Vacated spaces are filled with 0s, and bits shifted off the end are <strong>lost</strong>.</p>
+
+      <table>
+        <thead>
+          <tr><th>Operation</th><th>Effect</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Left shift by 1</strong></td>
+            <td>Multiplies by 2</td>
+            <td><code>00111100</code> → <code>01111000</code></td>
+          </tr>
+          <tr>
+            <td><strong>Right shift by 1</strong></td>
+            <td>Divides by 2</td>
+            <td><code>01011010</code> → <code>00101101</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Loss of precision</h3>
+      <p>When you right-shift an odd number, the least significant bit (the 1 on the right) is lost. The result is effectively rounded <em>down</em>.</p>
+      <p><strong>Example:</strong> 45 (<code>00101101</code>) right-shifted by 1 gives 22 (<code>00010110</code>) — the fractional part (22.5) is lost.</p>
+
+      <div class="tip-box">
+        <strong>Exam tip:</strong> You may be asked to calculate the effect of a shift <em>and</em> explain what happens to the bits. Don't forget to mention that the shifted-off bits are <strong>lost</strong> and that this causes <strong>loss of precision</strong>.
+      </div>
+
+      <h3>Two's complement</h3>
+      <p>Two's complement is how computers represent <strong>negative</strong> integers in binary.</p>
+      <p>To convert a positive binary number into its negative equivalent:</p>
+      <ol>
+        <li>Write the positive binary number.</li>
+        <li><strong>Invert</strong> all bits (0 → 1, 1 → 0).</li>
+        <li><strong>Add 1</strong> to the result.</li>
+      </ol>
+      <p><strong>Example:</strong> −15 in 8-bit two's complement:</p>
+      <ul>
+        <li>15 = <code>00001111</code></li>
+        <li>Invert = <code>11110000</code></li>
+        <li>Add 1 = <code>11110001</code></li>
+      </ul>
+
+      <h3>Range of two's complement</h3>
+      <p>With <em>n</em> bits, the range of values is from <strong>−2<sup>n−1</sup></strong> to <strong>2<sup>n−1</sup> − 1</strong>.</p>
+      <p>For 8 bits: <strong>−128 to +127</strong>.</p>
+
+      <div class="check-box">
+        <strong>Check your understanding:</strong>
+        <ul>
+          <li>What is the effect of a left shift by two places?</li>
+          <li>What is −1 in 8-bit two's complement?</li>
+          <li>What is the most negative number you can store in 8-bit two's complement?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: CHARACTER SETS -->
+    <!-- ============================================================ -->
+    <h2>4. Character Sets</h2>
+
+    <div class="card">
+      <h3>What is a character set?</h3>
+      <p>A <strong>character set</strong> is a defined list of characters that a computer recognises — each character is given a unique binary code. Without character sets, computers couldn't convert binary back into readable text.</p>
+
+      <h3>ASCII</h3>
+      <p><strong>ASCII</strong> (American Standard Code for Information Interchange) is one of the oldest character sets. It originally used <strong>7 bits</strong>, which allows 2<sup>7</sup> = <strong>128 characters</strong> — enough for the English alphabet, digits, and common punctuation.</p>
+      <p><strong>Extended ASCII</strong> uses <strong>8 bits</strong>, allowing 2<sup>8</sup> = <strong>256 characters</strong>. The extra 128 spaces were used for accented letters and additional symbols.</p>
+
+      <h3>Unicode</h3>
+      <p><strong>Unicode</strong> was designed to overcome ASCII's limitations. It typically uses <strong>8, 16, or 32 bits</strong>, which allows for over 100,000 characters — covering almost every alphabet in the world, plus emojis and symbols.</p>
+
+      <table>
+        <thead>
+          <tr><th>Character set</th><th>Bits per character</th><th>Characters available</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ASCII</td><td>7</td><td>128</td></tr>
+          <tr><td>Extended ASCII</td><td>8</td><td>256</td></tr>
+          <tr><td>Unicode</td><td>8, 16 or 32</td><td>over 100,000 (16-bit gives 65,536)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        <strong>Exam tip:</strong> When asked about a limitation of ASCII, always mention that it can only represent the English alphabet and a few symbols — it cannot handle Arabic, Chinese, Cyrillic, or other writing systems. Unicode was created to solve this.
+      </div>
+
+      <div class="check-box">
+        <strong>Check your understanding:</strong>
+        <ul>
+          <li>How many characters can 8-bit ASCII represent?</li>
+          <li>How many bits are needed to represent 1,024 characters?</li>
+          <li>Which character set includes emojis?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5: REPRESENTING SOUND -->
+    <!-- ============================================================ -->
+    <h2>5. Representing Sound</h2>
+
+    <div class="card">
+      <h3>Analogue vs digital</h3>
+      <p>Sound waves in the real world are <strong>analogue</strong> — they vary continuously. Computers cannot store analogue data directly, so sound must be <strong>sampled</strong>: measured at regular intervals and converted into binary numbers.</p>
+
+      <div class="key-fact">
+        <strong>Sampling</strong> = taking regular measurements of an analogue sound wave.<br>
+        <strong>Sample rate</strong> = the number of samples taken per second (measured in Hz).<br>
+        <strong>Sample resolution</strong> (bit depth) = the number of bits used to store each sample.
+      </div>
+
+      <h3>Effect of sample rate</h3>
+      <ul>
+        <li><strong>Higher sample rate</strong> → more samples per second → better-quality sound, but larger file size.</li>
+        <li><strong>Lower sample rate</strong> → fewer samples → worse quality, but smaller file size.</li>
+      </ul>
+
+      <h3>Effect of sample resolution</h3>
+      <ul>
+        <li><strong>Higher resolution</strong> → more bits per sample → more accurate representation of the sound wave, but larger file size.</li>
+        <li><strong>Lower resolution</strong> → fewer bits → less accurate, but smaller file size.</li>
+      </ul>
+
+      <h3>Calculating file size</h3>
+      <p>The formula for an uncompressed sound file is:</p>
+      <p class="mono" style="text-align:center; padding: 0.8rem; background: #f4f7fb; border-radius: 8px;">File size (bits) = sample rate × duration × sample resolution</p>
+
+      <p><strong>Example:</strong> 2 seconds of audio at 1,000 Hz, 8-bit resolution.</p>
+      <p>1,000 × 2 × 8 = <strong>16,000 bits</strong> = 2,000 bytes.</p>
+
+      <h3>ADC and DAC</h3>
+      <ul>
+        <li><strong>ADC</strong> (Analogue-to-Digital Converter) — converts analogue sound from a microphone into digital data.</li>
+        <li><strong>DAC</strong> (Digital-to-Analogue Converter) — converts digital data back into analogue sound for speakers or headphones.</li>
+      </ul>
+
+      <div class="tip-box">
+        <strong>Exam tip:</strong> Don't mix up sample rate (samples per second) with sample resolution (bits per sample). Read the question carefully — one is measured in Hz, the other in bits.
+      </div>
+
+      <div class="check-box">
+        <strong>Check your understanding:</strong>
+        <ul>
+          <li>If a sound file has a sample rate of 500 Hz and lasts 4 seconds, how many samples are taken in total?</li>
+          <li>Which device converts digital data back into analogue sound?</li>
+          <li>What happens to the quality of a sound file if you halve the sample rate?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6: REPRESENTING IMAGES -->
+    <!-- ============================================================ -->
+    <h2>6. Representing Images</h2>
+
+    <div class="card">
+      <h3>Pixels</h3>
+      <p>A <strong>pixel</strong> (picture element) is the smallest unit of a digital image. Every image is a grid of pixels, and each pixel stores a binary code that represents its colour.</p>
+
+      <h3>Key image concepts</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Resolution</strong></td><td>The number of pixels in the image (width × height).</td></tr>
+          <tr><td><strong>Colour depth</strong></td><td>The number of bits used to represent the colour of a single pixel.</td></tr>
+          <tr><td><strong>Metadata</strong></td><td>Data about the data — e.g., width, height, colour depth, format, date taken, GPS location.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Colour depth and number of colours</h3>
+      <p>Number of colours available = <strong>2<sup>colour depth</sup></strong>.</p>
+      <ul>
+        <li>1 bit → 2 colours (black &amp; white)</li>
+        <li>2 bits → 4 colours</li>
+        <li>8 bits → 256 colours</li>
+        <li>24 bits → ~16.7 million colours ("true colour")</li>
+      </ul>
+
+      <h3>Calculating image file size</h3>
+      <p>The formula for an uncompressed image file is:</p>
+      <p class="mono" style="text-align:center; padding: 0.8rem; background: #f4f7fb; border-radius: 8px;">File size (bits) = width × height × colour depth</p>
+      <p>Divide by 8 to get the file size in bytes.</p>
+      <p><strong>Example:</strong> 10 × 10 pixels at 8-bit colour depth = 10 × 10 × 8 = 800 bits = 100 bytes.</p>
+
+      <h3>Effect of changing resolution or colour depth</h3>
+      <ul>
+        <li><strong>Higher resolution</strong> → more detail, larger file.</li>
+        <li><strong>Higher colour depth</strong> → more colours, larger file.</li>
+        <li><strong>Lower resolution or colour depth</strong> → smaller file, but the lost data is <strong>permanently gone</strong>. It cannot be restored by reversing the change.</li>
+      </ul>
+
+      <div class="tip-box">
+        <strong>Exam tip:</strong> If a question asks about the effect of reducing resolution or colour depth, mention <em>both</em> that the file size decreases <em>and</em> that data is lost permanently. This distinction is often worth a mark.
+      </div>
+
+      <div class="check-box">
+        <strong>Check your understanding:</strong>
+        <ul>
+          <li>How many colours can be represented with a 24-bit colour depth?</li>
+          <li>What is the file size in bytes of a 10 × 10 image with 8-bit colour depth?</li>
+          <li>Why can't you recover the original image after reducing its resolution?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 7: COMPRESSION -->
+    <!-- ============================================================ -->
+    <h2>7. Compression</h2>
+
+    <div class="card">
+      <h3>Why compress?</h3>
+      <p><strong>Compression</strong> reduces the size of a file using algorithms. Without it, most digital media (images, video, audio) would be far too large to store or send over the internet.</p>
+      <p>Compression reduces:</p>
+      <ul>
+        <li><strong>Storage space</strong> needed.</li>
+        <li><strong>Bandwidth</strong> required to transmit the file.</li>
+        <li><strong>Transmission time</strong> — downloads and uploads finish faster.</li>
+      </ul>
+
+      <h3>Lossy vs lossless compression</h3>
+      <table>
+        <thead>
+          <tr><th>Method</th><th>What it does</th><th>Common formats</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Lossy</strong></td>
+            <td>Permanently removes some data. The file cannot be restored to its original form.</td>
+            <td>JPG, GIF, MP3, MP4</td>
+          </tr>
+          <tr>
+            <td><strong>Lossless</strong></td>
+            <td>Reduces file size without losing any data. The original is restored exactly.</td>
+            <td>PNG, TIFF, ZIP, FLAC, ALAC</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Run Length Encoding (RLE)</h3>
+      <p><strong>RLE</strong> is a <strong>lossless</strong> compression method. Instead of writing the same value over and over, it records the number of times a value repeats, then the value itself. This is called a <strong>frequency/data pair</strong>.</p>
+      <p><strong>Example:</strong> the row <code>11110000</code> becomes <strong>4 1 4 0</strong> — four 1s, then four 0s.</p>
+
+      <h3>Reducing resolution, colour depth or sample rate</h3>
+      <p>Another way to make a file smaller is to reduce the amount of data collected in the first place:</p>
+      <ul>
+        <li>Reducing <strong>resolution</strong> → fewer pixels → blurred image.</li>
+        <li>Reducing <strong>colour depth</strong> → fewer colours → banding and less accuracy.</li>
+        <li>Reducing <strong>sample rate</strong> → fewer samples per second → less accurate sound.</li>
+      </ul>
+      <p>The data removed by reducing these is <strong>permanently lost</strong> — it cannot be restored by decompression.</p>
+
+      <div class="tip-box">
+        <strong>Exam tip:</strong> RLE is <em>lossless</em>. A very common mistake is to assume all compression loses data. RLE restores the image or sound exactly. Only <em>lossy</em> compression throws data away for good.
+      </div>
+
+      <div class="check-box">
+        <strong>Check your understanding:</strong>
+        <ul>
+          <li>Give one advantage and one disadvantage of lossy compression.</li>
+          <li>What is the RLE encoding of the row <code>000111</code>?</li>
+          <li>Why can't lossy compression be used for a computer program?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 8: EXAM TECHNIQUE -->
+    <!-- ============================================================ -->
+    <h2>8. Exam Technique</h2>
+
+    <div class="card">
+      <h3>Command words</h3>
+      <p>Pay attention to the command word — it tells you how much detail is needed:</p>
+      <ul>
+        <li><strong>State / Give / Name</strong> — a short answer, often one word or phrase. No explanation needed.</li>
+        <li><strong>Describe</strong> — say what happens or what something is. More detail than "state," but no need to explain why.</li>
+        <li><strong>Explain</strong> — say <em>how</em> or <em>why</em>. You need to give reasons and make connections.</li>
+        <li><strong>Compare</strong> — give similarities and differences.</li>
+        <li><strong>Calculate</strong> — show your working. Always check the units (bits, bytes, KiB).</li>
+      </ul>
+
+      <div class="tip-box">
+        <strong>Mark allocation:</strong> Look at the number of marks. A 2-mark question usually needs two distinct points. A 3-mark question might need three points, or one point with three stages. Don't write one sentence for a 4-mark question — you won't get full marks.
+      </div>
+
+      <h3>Common mistakes to avoid</h3>
+      <ul>
+        <li>Forgetting to divide by 8 when converting bits to bytes.</li>
+        <li>Mixing up sample rate (samples per second) with sample resolution (bits per sample).</li>
+        <li>Saying the shifted-off bits are "kept somewhere" — they are <strong>lost</strong>.</li>
+        <li>Confusing lossy with lossless compression. RLE is lossless.</li>
+        <li>Saying "ASCII can represent any character" — it can't. That's what Unicode is for.</li>
+        <li>Forgetting that reducing resolution or colour depth <strong>permanently removes data</strong>.</li>
+      </ul>
+
+      <h3>How to tackle a calculation question</h3>
+      <ol>
+        <li>Write down the formula.</li>
+        <li>Substitute the numbers from the question.</li>
+        <li>Do the multiplication carefully — you are not allowed a calculator.</li>
+        <li>Check the units the question asks for (bits? bytes? KiB?).</li>
+        <li>If it asks for bytes, divide by 8. If it asks for KiB, divide by 1024.</li>
+      </ol>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 9: PRACTICE QUESTIONS -->
+    <!-- ============================================================ -->
+    <h2>9. Practice Questions</h2>
+    <p style="margin-bottom: 1rem; color: #2c4b6e;">
+      Try these questions <strong>without</strong> looking at your notes. Then check your answers by clicking the button.
+    </p>
+
+    <div class="card">
+      <h3>Question 1</h3>
+      <p>Convert the denary number 156 to 8-bit binary. Show your working. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="p1">Show answer ▼</button>
+      <div id="p1" class="qa-content">
+        <p>156 = 128 + 16 + 8 + 4 → <code>10011100</code></p>
+        <p><em>(1 mark for correct place values, 1 mark for final answer.)</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 2</h3>
+      <p>Convert the hexadecimal number 5E to denary. <em>(1 mark)</em></p>
+      <button class="qa-toggle" data-target="p2">Show answer ▼</button>
+      <div id="p2" class="qa-content">
+        <p>5E = (5 × 16) + 14 = 80 + 14 = <strong>94</strong>.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 3</h3>
+      <p>Perform a left shift by one place on the binary number 00110011. Then state the effect on the denary value. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="p3">Show answer ▼</button>
+      <div id="p3" class="qa-content">
+        <p>00110011 → <code>01100110</code>.</p>
+        <p>The value is multiplied by 2 (from 51 to 102).</p>
+        <p><em>(1 mark for shifted binary, 1 mark for effect on value.)</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 4</h3>
+      <p>Convert the denary number −7 into 8-bit two's complement. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="p4">Show answer ▼</button>
+      <div id="p4" class="qa-content">
+        <p>7 = <code>00000111</code></p>
+        <p>Invert = <code>11111000</code></p>
+        <p>Add 1 = <code>11111001</code></p>
+        <p><em>(1 mark for inverting, 1 mark for adding 1.)</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 5</h3>
+      <p>Explain one reason why Unicode is more suitable than ASCII for a website that is used internationally. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="p5">Show answer ▼</button>
+      <div id="p5" class="qa-content">
+        <p>Unicode can represent characters from many different alphabets — including Arabic, Chinese, and Cyrillic — whereas ASCII can only represent the English alphabet and a few symbols. An international audience needs a character set that supports their language.</p>
+        <p><em>(1 mark for stating Unicode supports more alphabets, 1 mark for linking it to the international context.)</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 6</h3>
+      <p>A sound file is recorded at a sample rate of 2,000 Hz, for 5 seconds, with a resolution of 16 bits. Calculate the file size in <strong>bytes</strong>. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="p6">Show answer ▼</button>
+      <div id="p6" class="qa-content">
+        <p>File size = 2,000 × 5 × 16 = <strong>160,000 bits</strong>.</p>
+        <p>160,000 ÷ 8 = <strong>20,000 bytes</strong>.</p>
+        <p><em>(1 mark for formula, 1 mark for correct calculation in bits, 1 mark for converting to bytes.)</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 7</h3>
+      <p>An image is 20 × 20 pixels with a 4-bit colour depth. <em>(2 marks)</em></p>
+      <p>(a) How many colours can the image use?<br>
+      (b) Calculate the file size in bits.</p>
+      <button class="qa-toggle" data-target="p7">Show answer ▼</button>
+      <div id="p7" class="qa-content">
+        <p>(a) 2<sup>4</sup> = <strong>16 colours</strong>.</p>
+        <p>(b) 20 × 20 × 4 = <strong>1,600 bits</strong>.</p>
+        <p><em>(1 mark each.)</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 8</h3>
+      <p>Explain the difference between lossy and lossless compression. Give one example of a file format for each. <em>(4 marks)</em></p>
+      <button class="qa-toggle" data-target="p8">Show answer ▼</button>
+      <div id="p8" class="qa-content">
+        <p><strong>Lossy compression</strong> permanently removes some data from the file — the original can never be restored. Example: JPEG (or MP3).</p>
+        <p><strong>Lossless compression</strong> reduces the file size without losing any data — the original is restored exactly when decompressed. Example: PNG (or ZIP or FLAC).</p>
+        <p><em>(4 marks: 1 for lossy definition, 1 for lossy example, 1 for lossless definition, 1 for lossless example.)</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 9</h3>
+      <p>Using RLE, encode the following row of pixels where 1 = white and 0 = black: <code>11100000011</code> <em>(1 mark)</em></p>
+      <button class="qa-toggle" data-target="p9">Show answer ▼</button>
+      <div id="p9" class="qa-content">
+        <p><strong>3 1 6 0 2 1</strong></p>
+        <p><em>(1 mark for all three pairs correct.)</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 10</h3>
+      <p>A student says "I reduce the resolution of my photos to make them smaller, and I can just increase it again later if I need the quality back." Explain why this is incorrect. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="p10">Show answer ▼</button>
+      <div id="p10" class="qa-content">
+        <p>Reducing the resolution of an image <strong>permanently removes data</strong> — the pixels that were discarded are gone forever. Increasing the resolution again would only stretch the remaining pixels, giving a blurry, low-quality image rather than restoring the original detail.</p>
+        <p><em>(1 mark for stating data is permanently lost, 1 mark for explaining that restoring resolution cannot bring back lost detail.)</em></p>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Unit 1 Data Representation · Revision Guide · IGCSE Computer Science
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const buttons = document.querySelectorAll('.qa-toggle');
+      buttons.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          const key = this.nextElementSibling;
+          if (!key) return;
+          const isShown = key.classList.contains('show');
+          if (isShown){
+            key.classList.remove('show');
+            this.textContent = 'Show answer ▼';
+          } else {
+            key.classList.add('show');
+            this.textContent = 'Hide answer ▲';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
