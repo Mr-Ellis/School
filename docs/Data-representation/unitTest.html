@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 Data Representation · 100-Question Exam</title>
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#12315a;
+    --page-bg:#eef2f8;
+    --card:#ffffff;
+    --text:#1a2332;
+    --muted:#5a6b82;
+    --border:#dbe3ee;
+    --accent:#2563eb;
+    --accent-soft:#dbeafe;
+    --green:#15803d;
+    --green-soft:#dcfce7;
+    --amber:#b45309;
+    --amber-soft:#fef3c7;
+    --radius:20px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    line-height:1.65;
+    font-size:16px;
+    font-weight:400;
+    padding:0;
+  }
+
+  .topbar-wrap{max-width:1080px;margin:18px auto 0;padding:0 28px;}
+  .topbar{
+    background:var(--navy);color:#fff;padding:14px 26px;border-radius:999px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    box-shadow:0 4px 18px rgba(11,37,69,.14);
+  }
+  .topbar .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;color:#fff;text-decoration:none;letter-spacing:-.005em;}
+  .topbar .brand .cap{font-size:1.25rem;}
+  .topbar .navlinks{display:flex;gap:26px;flex-wrap:wrap;}
+  .topbar .navlinks a{color:#e6edf7;text-decoration:none;font-size:.95rem;font-weight:500;display:inline-flex;align-items:center;gap:6px;opacity:.92;transition:opacity .15s;}
+  .topbar .navlinks a:hover{opacity:1;text-decoration:underline;}
+
+  .page{max-width:1080px;margin:0 auto;padding:36px 28px 80px;}
+
+  .hero{margin-bottom:32px;}
+  .hero h1{
+    font-size:clamp(2.1rem,4.5vw,3.1rem);line-height:1.15;margin:0 0 20px;
+    font-weight:700;color:var(--navy);letter-spacing:-.025em;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .hero h1 .emoji{font-size:1em;font-weight:400;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;}
+  .hero .pill{
+    display:inline-flex;align-items:center;gap:12px;background:#e2e8f2;color:var(--navy);
+    border-radius:999px;padding:10px 24px 10px 10px;font-size:1rem;font-weight:400;
+    border-left:5px solid #2b8a9b;
+  }
+  .hero .pill .dot{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700;flex-shrink:0;line-height:1;}
+
+  .card{
+    background:var(--card);border-radius:var(--radius);padding:34px 40px;margin-bottom:26px;
+    box-shadow:0 2px 4px rgba(11,37,69,.04), 0 8px 24px rgba(11,37,69,.05);
+    border:1px solid rgba(219,227,238,.5);
+  }
+  @media(max-width:640px){.card{padding:24px 20px;}.topbar-wrap{padding:0 16px;}.page{padding:28px 16px 60px;}}
+
+  .card h2{
+    font-size:1.5rem;margin:0 0 18px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:10px;letter-spacing:-.01em;
+  }
+  .card h3{
+    font-size:1.1rem;margin:26px 0 12px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:8px;letter-spacing:-.005em;
+  }
+  .card p{margin:0 0 14px;}
+  .card ul,.card ol{margin:0 0 14px;padding-left:24px;}
+  .card ul li,.card ol li{margin-bottom:6px;}
+
+  .callout{
+    background:#e8f1fb;border-left:4px solid var(--accent);border-radius:10px;
+    padding:16px 20px;margin:20px 0;font-size:.98rem;line-height:1.65;font-weight:400;
+  }
+  .callout strong{color:var(--navy);font-weight:600;}
+  .callout.tip{background:#dcfce7;border-left-color:var(--green);}
+  .callout.warn{background:#fef3c7;border-left-color:var(--amber);}
+
+  .table-wrap{overflow-x:auto;margin:18px 0;}
+  table{
+    width:100%;border-collapse:separate;border-spacing:0;background:#fff;font-size:.95rem;
+    border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;
+  }
+  th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-weight:400;}
+  th{background:#f4f7fb;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--navy);font-weight:600;}
+  tr:last-child td{border-bottom:none;}
+  td strong{font-weight:600;color:var(--navy);}
+
+  .formula{
+    background:#f4f7fb;border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:20px;text-align:center;font-family:"SF Mono",Consolas,Monaco,monospace;
+    font-size:1rem;color:var(--navy);font-weight:500;margin:18px 0;overflow-x:auto;
+  }
+  .formula .small{display:block;color:var(--muted);font-size:.85rem;margin-top:8px;font-family:inherit;font-weight:400;}
+  .formula .hl{color:var(--green);font-weight:600;}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;
+    border:1px solid var(--navy);padding:10px 20px;border-radius:10px;text-decoration:none;
+    font-weight:500;font-size:.93rem;transition:.15s;cursor:pointer;line-height:1.4;font-family:inherit;
+  }
+  .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;text-decoration:none;}
+  .btn.green{background:var(--green);border-color:var(--green);}
+  .btn.green:hover{background:#115e30;border-color:#115e30;}
+  .btn.purple{background:#6d28d9;border-color:#6d28d9;}
+  .btn.purple:hover{background:#5b21b6;border-color:#5b21b6;}
+  .btn.outline{background:#fff;color:var(--navy);border-color:var(--border);}
+  .btn.outline:hover{background:#f4f7fb;border-color:#b8c5d6;color:var(--navy);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+
+  details.reveal{
+    margin-top:16px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    background:#f8fafd;overflow:hidden;
+  }
+  details.reveal summary{
+    cursor:pointer;padding:13px 18px;font-weight:600;font-size:.95rem;color:var(--accent);
+    list-style:none;display:flex;align-items:center;gap:8px;
+  }
+  details.reveal summary::-webkit-details-marker{display:none;}
+  details.reveal summary::before{content:"▶";font-size:.7rem;transition:.2s;}
+  details.reveal[open] summary::before{transform:rotate(90deg);}
+  details.reveal .body{padding:6px 18px 18px;border-top:1px solid var(--border);background:#fff;}
+
+  /* Question styling */
+  .question{
+    background:#f9fbfe;border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:18px 22px;margin-bottom:16px;
+  }
+  .question .qnum{
+    display:inline-block;background:var(--navy);color:#fff;font-weight:700;font-size:.75rem;
+    padding:2px 10px;border-radius:20px;margin-right:8px;
+  }
+  .question .qtext{font-weight:600;color:var(--navy);display:inline;}
+  .options{margin-top:10px;padding-left:0;list-style:none;}
+  .options li{
+    padding:6px 0 6px 34px;position:relative;font-size:.95rem;border-bottom:1px dashed #eef2f8;
+  }
+  .options li:last-child{border-bottom:none;}
+  .options li::before{
+    content:attr(data-letter);position:absolute;left:0;top:6px;
+    width:22px;height:22px;border-radius:50%;background:#e2e8f2;color:var(--navy);
+    font-size:.75rem;font-weight:700;display:grid;place-items:center;
+  }
+  .answer-key{
+    background:#dcfce7;border-left:4px solid var(--green);border-radius:8px;
+    padding:10px 16px;margin-top:10px;font-size:.9rem;color:#0b3d1f;
+  }
+  .answer-key strong{color:var(--green);}
+
+  .progress-note{text-align:center;color:var(--muted);font-size:.85rem;margin-top:40px;}
+
+  .teacher-panel{
+    background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:0;overflow:hidden;
+  }
+  .teacher-panel summary{
+    cursor:pointer;font-weight:600;color:var(--navy);font-size:.98rem;
+    list-style:none;display:flex;align-items:center;gap:10px;padding:18px 22px;
+  }
+  .teacher-panel summary::-webkit-details-marker{display:none;}
+  .teacher-panel summary::before{content:"🔒";font-size:1.05rem;}
+  .teacher-panel[open] summary{border-bottom:1px solid var(--border);}
+  .teacher-panel[open] summary::before{content:"🔓";}
+  .teacher-panel .panel-body{padding:22px;}
+
+  .lock-screen{text-align:center;padding:20px 12px;}
+  .lock-screen input{
+    padding:10px 14px;border-radius:10px;background:#fff;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;margin-right:8px;font-family:inherit;
+  }
+  .lock-screen input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+  .hidden{display:none !important;}
+
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="topbar-wrap">
+  <div class="topbar">
+    <a href="#" class="brand"><span class="cap">🎓</span> IGCSE CompSci</a>
+    <nav class="navlinks">
+      <a href="#">← Back to Unit 1</a>
+      <a href="#">← Year 9</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <h1><span class="emoji">📝</span> Unit 1 Data Representation</h1>
+    <div class="pill">
+      <span class="dot">✓</span>
+      100-Question Exam · Binary, Hex, Shifts, Character Sets, Sound, Images &amp; Compression
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>📋 Instructions</h2>
+    <ul>
+      <li>This exam contains <strong>100 multiple-choice questions</strong> covering the entire Unit 1 Data Representation specification.</li>
+      <li>Each question has four options: <strong>A, B, C, or D</strong>. Choose the best answer.</li>
+      <li>All questions are equally weighted. The total mark is out of 100.</li>
+      <li>Answer keys are provided at the end of each section (hidden behind a toggle so you can self-assess).</li>
+    </ul>
+    <div class="callout tip">
+      📝 <strong>Exam tip:</strong> Work through each section, then check your answers. Use the hidden answer key to mark your work and identify topics to revise.
+    </div>
+  </section>
+
+  <!-- ================= SECTION 1: BINARY SYSTEMS ================= -->
+  <section class="card">
+    <h2>🔢 Section 1: Binary Systems (Questions 1–15)</h2>
+
+    <div class="question">
+      <span class="qnum">1</span><span class="qtext">Why do computers use binary?</span>
+      <ul class="options">
+        <li data-letter="A">Because binary is easier for humans to read</li>
+        <li data-letter="B">Because computers are made of transistors that have two states: on and off</li>
+        <li data-letter="C">Because binary allows for more colours than denary</li>
+        <li data-letter="D">Because binary uses ten digits like the denary system</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Transistors have two states, ON (1) and OFF (0).</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">2</span><span class="qtext">How many bits are in one byte?</span>
+      <ul class="options">
+        <li data-letter="A">4</li>
+        <li data-letter="B">8</li>
+        <li data-letter="C">16</li>
+        <li data-letter="D">1024</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A byte is 8 bits.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">3</span><span class="qtext">What is the denary value of the binary number 10110101?</span>
+      <ul class="options">
+        <li data-letter="A">169</li>
+        <li data-letter="B">181</li>
+        <li data-letter="C">197</li>
+        <li data-letter="D">203</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 128 + 32 + 16 + 4 + 1 = 181.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">4</span><span class="qtext">Convert the denary number 42 to binary.</span>
+      <ul class="options">
+        <li data-letter="A">00101010</li>
+        <li data-letter="B">00101100</li>
+        <li data-letter="C">01010100</li>
+        <li data-letter="D">00100110</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 42 = 32 + 8 + 2 = 00101010.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">5</span><span class="qtext">What is the smallest unit of data in a computer?</span>
+      <ul class="options">
+        <li data-letter="A">A byte</li>
+        <li data-letter="B">A bit</li>
+        <li data-letter="C">A nibble</li>
+        <li data-letter="D">A kilobyte</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A bit (binary digit) is a single 1 or 0.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">6</span><span class="qtext">What is the largest denary number that can be represented with 8 bits?</span>
+      <ul class="options">
+        <li data-letter="A">128</li>
+        <li data-letter="B">255</li>
+        <li data-letter="C">256</li>
+        <li data-letter="D">1024</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 2^8 − 1 = 255 (all 8 bits set to 1).</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">7</span><span class="qtext">Which of the following is the correct binary representation of the denary number 100?</span>
+      <ul class="options">
+        <li data-letter="A">01100100</li>
+        <li data-letter="B">01101000</li>
+        <li data-letter="C">01010100</li>
+        <li data-letter="D">01100010</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 64 + 32 + 4 = 100 = 01100100.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">8</span><span class="qtext">How many different values can be represented with 4 bits?</span>
+      <ul class="options">
+        <li data-letter="A">4</li>
+        <li data-letter="B">8</li>
+        <li data-letter="C">16</li>
+        <li data-letter="D">32</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — 2^4 = 16 different values.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">9</span><span class="qtext">What is the denary value of the binary number 11111111?</span>
+      <ul class="options">
+        <li data-letter="A">127</li>
+        <li data-letter="B">128</li>
+        <li data-letter="C">255</li>
+        <li data-letter="D">256</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — 128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = 255.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">10</span><span class="qtext">Which term describes half a byte (4 bits)?</span>
+      <ul class="options">
+        <li data-letter="A">A bit</li>
+        <li data-letter="B">A nibble</li>
+        <li data-letter="C">A word</li>
+        <li data-letter="D">A kilobyte</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A nibble is 4 bits (half a byte).</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">11</span><span class="qtext">What is the denary value of the binary number 00111001?</span>
+      <ul class="options">
+        <li data-letter="A">45</li>
+        <li data-letter="B">57</li>
+        <li data-letter="C">63</li>
+        <li data-letter="D">71</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 32 + 16 + 8 + 1 = 57.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">12</span><span class="qtext">How many bytes are in a kibibyte (KiB)?</span>
+      <ul class="options">
+        <li data-letter="A">1000</li>
+        <li data-letter="B">1024</li>
+        <li data-letter="C">2048</li>
+        <li data-letter="D">512</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A kibibyte is 2^10 = 1024 bytes.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">13</span><span class="qtext">The number of bytes in a mebibyte can be written as 2^x. What is the value of x?</span>
+      <ul class="options">
+        <li data-letter="A">10</li>
+        <li data-letter="B">15</li>
+        <li data-letter="C">20</li>
+        <li data-letter="D">24</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — A mebibyte is 2^20 bytes.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">14</span><span class="qtext">Which of the following is the binary representation of the denary number 200?</span>
+      <ul class="options">
+        <li data-letter="A">11001000</li>
+        <li data-letter="B">11010000</li>
+        <li data-letter="C">10101000</li>
+        <li data-letter="D">11100000</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 128 + 64 + 8 = 200 = 11001000.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">15</span><span class="qtext">What is the denary value of the binary number 01011010?</span>
+      <ul class="options">
+        <li data-letter="A">86</li>
+        <li data-letter="B">90</li>
+        <li data-letter="C">94</li>
+        <li data-letter="D">98</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 64 + 16 + 8 + 2 = 90.</div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 2: HEXADECIMAL ================= -->
+  <section class="card">
+    <h2>🔷 Section 2: Hexadecimal (Questions 16–30)</h2>
+
+    <div class="question">
+      <span class="qnum">16</span><span class="qtext">What is hexadecimal base?</span>
+      <ul class="options">
+        <li data-letter="A">Base 2</li>
+        <li data-letter="B">Base 8</li>
+        <li data-letter="C">Base 10</li>
+        <li data-letter="D">Base 16</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: D</strong> — Hexadecimal is base-16.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">17</span><span class="qtext">In hexadecimal, what denary value does the letter F represent?</span>
+      <ul class="options">
+        <li data-letter="A">10</li>
+        <li data-letter="B">14</li>
+        <li data-letter="C">15</li>
+        <li data-letter="D">16</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — F = 15.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">18</span><span class="qtext">Convert the hexadecimal number 2A to denary.</span>
+      <ul class="options">
+        <li data-letter="A">32</li>
+        <li data-letter="B">40</li>
+        <li data-letter="C">42</li>
+        <li data-letter="D">44</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — (2 × 16) + 10 = 42.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">19</span><span class="qtext">Convert the denary number 27 to hexadecimal.</span>
+      <ul class="options">
+        <li data-letter="A">1A</li>
+        <li data-letter="B">1B</li>
+        <li data-letter="C">1C</li>
+        <li data-letter="D">27</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 27 ÷ 16 = 1 remainder 11 (B) → 1B.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">20</span><span class="qtext">Convert the binary number 11100101 to hexadecimal.</span>
+      <ul class="options">
+        <li data-letter="A">E5</li>
+        <li data-letter="B">D5</li>
+        <li data-letter="C">E3</li>
+        <li data-letter="D">F5</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 1110 = E, 0101 = 5 → E5.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">21</span><span class="qtext">Why is hexadecimal often used in computing instead of binary?</span>
+      <ul class="options">
+        <li data-letter="A">It is easier to read and less error-prone</li>
+        <li data-letter="B">It allows more colours than binary</li>
+        <li data-letter="C">It uses fewer bits per value than binary</li>
+        <li data-letter="D">It is faster for the CPU to process</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — Hex is more compact and easier to read than binary.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">22</span><span class="qtext">What is the largest denary number that can be represented with two hex digits?</span>
+      <ul class="options">
+        <li data-letter="A">15</li>
+        <li data-letter="B">255</li>
+        <li data-letter="C">256</li>
+        <li data-letter="D">1024</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — FF = 255.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">23</span><span class="qtext">Convert the hexadecimal number 3C to binary.</span>
+      <ul class="options">
+        <li data-letter="A">0011 1100</li>
+        <li data-letter="B">0011 1010</li>
+        <li data-letter="C">0100 1100</li>
+        <li data-letter="D">0011 1110</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 3 = 0011, C = 1100 → 0011 1100.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">24</span><span class="qtext">Convert the denary number 42 to hexadecimal.</span>
+      <ul class="options">
+        <li data-letter="A">2A</li>
+        <li data-letter="B">2B</li>
+        <li data-letter="C">2C</li>
+        <li data-letter="D">3A</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 42 ÷ 16 = 2 remainder 10 (A) → 2A.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">25</span><span class="qtext">What is the denary value of the hexadecimal number 7F?</span>
+      <ul class="options">
+        <li data-letter="A">112</li>
+        <li data-letter="B">127</li>
+        <li data-letter="C">128</li>
+        <li data-letter="D">255</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — (7 × 16) + 15 = 127.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">26</span><span class="qtext">Which of the following is the hexadecimal equivalent of the binary number 10101111?</span>
+      <ul class="options">
+        <li data-letter="A">AF</li>
+        <li data-letter="B">BF</li>
+        <li data-letter="C">9F</li>
+        <li data-letter="D">AE</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 1010 = A, 1111 = F → AF.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">27</span><span class="qtext">In hexadecimal, what comes after 19?</span>
+      <ul class="options">
+        <li data-letter="A">20</li>
+        <li data-letter="B">1A</li>
+        <li data-letter="C">1B</li>
+        <li data-letter="D">21</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — After 19 comes 1A.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">28</span><span class="qtext">What is the denary value of the hexadecimal number FF?</span>
+      <ul class="options">
+        <li data-letter="A">15</li>
+        <li data-letter="B">128</li>
+        <li data-letter="C">255</li>
+        <li data-letter="D">256</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — (15 × 16) + 15 = 255.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">29</span><span class="qtext">Which of the following is the binary equivalent of the hexadecimal number A5?</span>
+      <ul class="options">
+        <li data-letter="A">1010 0101</li>
+        <li data-letter="B">1010 0110</li>
+        <li data-letter="C">1011 0101</li>
+        <li data-letter="D">1001 0101</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — A = 1010, 5 = 0101 → 1010 0101.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">30</span><span class="qtext">Convert the denary number 200 to hexadecimal.</span>
+      <ul class="options">
+        <li data-letter="A">C8</li>
+        <li data-letter="B">B8</li>
+        <li data-letter="C">D8</li>
+        <li data-letter="D">CA</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 200 ÷ 16 = 12 remainder 8 → C8.</div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 3: BINARY SHIFTS & TWO'S COMPLEMENT ================= -->
+  <section class="card">
+    <h2>↔️ Section 3: Binary Shifts &amp; Two's Complement (Questions 31–45)</h2>
+
+    <div class="question">
+      <span class="qnum">31</span><span class="qtext">What is the effect of a logical left shift by one place on a binary number?</span>
+      <ul class="options">
+        <li data-letter="A">Divides by 2</li>
+        <li data-letter="B">Multiplies by 2</li>
+        <li data-letter="C">Adds 2</li>
+        <li data-letter="D">Subtracts 2</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A left shift multiplies by 2.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">32</span><span class="qtext">What is the effect of a logical right shift by one place on a binary number?</span>
+      <ul class="options">
+        <li data-letter="A">Multiplies by 2</li>
+        <li data-letter="B">Divides by 2</li>
+        <li data-letter="C">Adds 2</li>
+        <li data-letter="D">Subtracts 2</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A right shift divides by 2.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">33</span><span class="qtext">Perform a left shift by one place on the binary number 00111100.</span>
+      <ul class="options">
+        <li data-letter="A">01111000</li>
+        <li data-letter="B">00011110</li>
+        <li data-letter="C">01111100</li>
+        <li data-letter="D">00111100</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 00111100 → 01111000.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">34</span><span class="qtext">Perform a right shift by one place on the binary number 01011010.</span>
+      <ul class="options">
+        <li data-letter="A">00101101</li>
+        <li data-letter="B">10110100</li>
+        <li data-letter="C">00101010</li>
+        <li data-letter="D">01011010</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 01011010 → 00101101.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">35</span><span class="qtext">What is 45 in binary, then right shifted by one place?</span>
+      <ul class="options">
+        <li data-letter="A">22</li>
+        <li data-letter="B">23</li>
+        <li data-letter="C">45</li>
+        <li data-letter="D">90</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 45 ÷ 2 = 22.5, but binary cannot store 0.5, so it becomes 22.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">36</span><span class="qtext">What is the effect of a right shift on an odd number?</span>
+      <ul class="options">
+        <li data-letter="A">It is rounded up</li>
+        <li data-letter="B">It is rounded down (loss of precision)</li>
+        <li data-letter="C">It stays the same</li>
+        <li data-letter="D">It becomes negative</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — The fractional part is lost, so it rounds down.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">37</span><span class="qtext">What is two's complement used for?</span>
+      <ul class="options">
+        <li data-letter="A">Converting denary to binary</li>
+        <li data-letter="B">Representing negative integers in binary</li>
+        <li data-letter="C">Adding binary numbers</li>
+        <li data-letter="D">Compressing binary data</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Two's complement represents negative integers.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">38</span><span class="qtext">What is -15 in 8-bit two's complement?</span>
+      <ul class="options">
+        <li data-letter="A">11110000</li>
+        <li data-letter="B">11110001</li>
+        <li data-letter="C">10001111</li>
+        <li data-letter="D">00001111</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 15 = 00001111, invert = 11110000, add 1 = 11110001.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">39</span><span class="qtext">What is the denary value of the two's complement number 11111011?</span>
+      <ul class="options">
+        <li data-letter="A">-5</li>
+        <li data-letter="B">-4</li>
+        <li data-letter="C">-3</li>
+        <li data-letter="D">-1</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — Invert: 00000100, add 1: 00000101 = 5, so the value is -5.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">40</span><span class="qtext">What is the range of values that can be represented with 8-bit two's complement?</span>
+      <ul class="options">
+        <li data-letter="A">0 to 255</li>
+        <li data-letter="B">-127 to 127</li>
+        <li data-letter="C">-128 to 127</li>
+        <li data-letter="D">-128 to 128</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — The range is -128 to 127.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">41</span><span class="qtext">Perform a left shift by two places on the binary number 00001111.</span>
+      <ul class="options">
+        <li data-letter="A">00111100</li>
+        <li data-letter="B">00011110</li>
+        <li data-letter="C">11110000</li>
+        <li data-letter="D">00001111</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 00001111 << 2 = 00111100.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">42</span><span class="qtext">What is the denary value of 00001111 after a left shift by two places?</span>
+      <ul class="options">
+        <li data-letter="A">15</li>
+        <li data-letter="B">30</li>
+        <li data-letter="C">60</li>
+        <li data-letter="D">120</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — 15 × 4 = 60.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">43</span><span class="qtext">What happens to the bits shifted off the end of a binary register?</span>
+      <ul class="options">
+        <li data-letter="A">They are stored in a separate register</li>
+        <li data-letter="B">They are lost</li>
+        <li data-letter="C">They wrap around to the other end</li>
+        <li data-letter="D">They are added to the result</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Bits shifted off the end are discarded (lost).</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">44</span><span class="qtext">What is -1 in 8-bit two's complement?</span>
+      <ul class="options">
+        <li data-letter="A">10000000</li>
+        <li data-letter="B">11111111</li>
+        <li data-letter="C">00000001</li>
+        <li data-letter="D">11111110</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 1 = 00000001, invert = 11111110, add 1 = 11111111.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">45</span><span class="qtext">What is the denary value of the two's complement number 10000000?</span>
+      <ul class="options">
+        <li data-letter="A">-128</li>
+        <li data-letter="B">-127</li>
+        <li data-letter="C">0</li>
+        <li data-letter="D">128</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — The most negative value in 8-bit two's complement is -128.</div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 4: CHARACTER SETS ================= -->
+  <section class="card">
+    <h2>🔤 Section 4: Character Sets (Questions 46–60)</h2>
+
+    <div class="question">
+      <span class="qnum">46</span><span class="qtext">What is a character set?</span>
+      <ul class="options">
+        <li data-letter="A">A set of binary numbers used for arithmetic</li>
+        <li data-letter="B">A defined list of characters recognised by a computer, each with a unique binary code</li>
+        <li data-letter="C">A group of fonts used for displaying text</li>
+        <li data-letter="D">A compression method for text files</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A character set maps characters to unique binary codes.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">47</span><span class="qtext">How many bits does standard ASCII use per character?</span>
+      <ul class="options">
+        <li data-letter="A">4</li>
+        <li data-letter="B">7</li>
+        <li data-letter="C">8</li>
+        <li data-letter="D">16</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Standard ASCII uses 7 bits per character.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">48</span><span class="qtext">How many characters can standard 7-bit ASCII represent?</span>
+      <ul class="options">
+        <li data-letter="A">64</li>
+        <li data-letter="B">128</li>
+        <li data-letter="C">256</li>
+        <li data-letter="D">512</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 2^7 = 128 characters.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">49</span><span class="qtext">What is one limitation of the ASCII character set?</span>
+      <ul class="options">
+        <li data-letter="A">It cannot represent numbers</li>
+        <li data-letter="B">It cannot represent characters from other alphabets such as Arabic or Chinese</li>
+        <li data-letter="C">It uses too many bits per character</li>
+        <li data-letter="D">It is not compatible with modern computers</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — ASCII cannot represent non-Latin alphabets.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">50</span><span class="qtext">What character set was designed to overcome the limitations of ASCII?</span>
+      <ul class="options">
+        <li data-letter="A">Extended ASCII</li>
+        <li data-letter="B">Unicode</li>
+        <li data-letter="C">EBCDIC</li>
+        <li data-letter="D">BCD</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Unicode overcomes ASCII's limitations.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">51</span><span class="qtext">How many bits does Unicode typically use?</span>
+      <ul class="options">
+        <li data-letter="A">7</li>
+        <li data-letter="B">8</li>
+        <li data-letter="C">8, 16, or 32</li>
+        <li data-letter="D">64</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — Unicode can use 8, 16, or 32 bits.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">52</span><span class="qtext">How many characters can 16-bit Unicode represent?</span>
+      <ul class="options">
+        <li data-letter="A">128</li>
+        <li data-letter="B">256</li>
+        <li data-letter="C">65,536</li>
+        <li data-letter="D">1,024</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — 2^16 = 65,536 characters.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">53</span><span class="qtext">The binary code 01000001 represents which character in ASCII?</span>
+      <ul class="options">
+        <li data-letter="A">A</li>
+        <li data-letter="B">B</li>
+        <li data-letter="C">a</li>
+        <li data-letter="D">1</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 01000001 = 65 = 'A'.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">54</span><span class="qtext">If 'A' is represented by 65 in denary, what is 'C'?</span>
+      <ul class="options">
+        <li data-letter="A">66</li>
+        <li data-letter="B">67</li>
+        <li data-letter="C">68</li>
+        <li data-letter="D">69</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A = 65, B = 66, C = 67.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">55</span><span class="qtext">How many bytes are needed to store the message "Hello" in 8-bit extended ASCII?</span>
+      <ul class="options">
+        <li data-letter="A">4</li>
+        <li data-letter="B">5</li>
+        <li data-letter="C">6</li>
+        <li data-letter="D">8</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 5 characters = 5 bytes.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">56</span><span class="qtext">Extended ASCII uses 8 bits. How many characters can it represent?</span>
+      <ul class="options">
+        <li data-letter="A">128</li>
+        <li data-letter="B">256</li>
+        <li data-letter="C">512</li>
+        <li data-letter="D">1,024</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 2^8 = 256 characters.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">57</span><span class="qtext">Why can't you perform arithmetic directly on ASCII values of digits?</span>
+      <ul class="options">
+        <li data-letter="A">Because ASCII only stores letters</li>
+        <li data-letter="B">Because the ASCII code for '7' is different from the numeric binary value 7</li>
+        <li data-letter="C">Because ASCII values are too large</li>
+        <li data-letter="D">Because computers cannot add ASCII values</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — '7' in ASCII is 00110111 (55 denary), not 00000111 (7 denary).</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">58</span><span class="qtext">What is the ASCII code for the space character?</span>
+      <ul class="options">
+        <li data-letter="A">00100000</li>
+        <li data-letter="B">00000000</li>
+        <li data-letter="C">01000000</li>
+        <li data-letter="D">00010000</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — Space = 32 denary = 00100000.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">59</span><span class="qtext">Which character set includes emojis?</span>
+      <ul class="options">
+        <li data-letter="A">ASCII</li>
+        <li data-letter="B">Extended ASCII</li>
+        <li data-letter="C">Unicode</li>
+        <li data-letter="D">BCD</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — Unicode includes emojis and symbols from many languages.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">60</span><span class="qtext">How many bits are needed to represent 256 different characters?</span>
+      <ul class="options">
+        <li data-letter="A">7</li>
+        <li data-letter="B">8</li>
+        <li data-letter="C">16</li>
+        <li data-letter="D">32</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 2^8 = 256, so 8 bits.</div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 5: REPRESENTING SOUND ================= -->
+  <section class="card">
+    <h2>🔊 Section 5: Representing Sound (Questions 61–75)</h2>
+
+    <div class="question">
+      <span class="qnum">61</span><span class="qtext">What is the process of converting analogue sound into digital data called?</span>
+      <ul class="options">
+        <li data-letter="A">Modulation</li>
+        <li data-letter="B">Sampling</li>
+        <li data-letter="C">Amplification</li>
+        <li data-letter="D">Compression</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Sampling is the process of taking measurements of a sound wave at regular intervals.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">62</span><span class="qtext">What is the sample rate?</span>
+      <ul class="options">
+        <li data-letter="A">The number of bits used to represent each sample</li>
+        <li data-letter="B">The number of samples taken per second</li>
+        <li data-letter="C">The total duration of the recording</li>
+        <li data-letter="D">The frequency of the sound wave</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Sample rate is the number of samples per second (measured in Hz).</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">63</span><span class="qtext">What is the sample resolution?</span>
+      <ul class="options">
+        <li data-letter="A">The number of samples per second</li>
+        <li data-letter="B">The number of bits used to represent each sample</li>
+        <li data-letter="C">The highest frequency that can be recorded</li>
+        <li data-letter="D">The amplitude of the sound wave</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Sample resolution is the number of bits per sample.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">64</span><span class="qtext">What effect does increasing the sample rate have on the sound file?</span>
+      <ul class="options">
+        <li data-letter="A">It decreases the file size and improves quality</li>
+        <li data-letter="B">It increases the file size and improves quality</li>
+        <li data-letter="C">It decreases the file size and reduces quality</li>
+        <li data-letter="D">It has no effect on file size or quality</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — More samples per second = better quality but larger file.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">65</span><span class="qtext">What effect does increasing the sample resolution have on the sound file?</span>
+      <ul class="options">
+        <li data-letter="A">It decreases the file size and improves quality</li>
+        <li data-letter="B">It increases the file size and improves accuracy of each sample</li>
+        <li data-letter="C">It decreases the file size and reduces quality</li>
+        <li data-letter="D">It has no effect on file size or quality</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — More bits per sample = more accurate samples, but larger file.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">66</span><span class="qtext">What is the formula for calculating the file size of an uncompressed sound file?</span>
+      <ul class="options">
+        <li data-letter="A">Sample rate × duration × resolution</li>
+        <li data-letter="B">Sample rate × resolution ÷ duration</li>
+        <li data-letter="C">Duration × resolution ÷ sample rate</li>
+        <li data-letter="D">Sample rate + duration + resolution</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — File size = sample rate × duration × resolution.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">67</span><span class="qtext">A sound is recorded for 30 seconds at a sample rate of 10 kHz with a resolution of 16 bits. What is the file size in bits?</span>
+      <ul class="options">
+        <li data-letter="A">4,800,000 bits</li>
+        <li data-letter="B">480,000 bits</li>
+        <li data-letter="C">48,000,000 bits</li>
+        <li data-letter="D">4,800 bits</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 10,000 × 30 × 16 = 4,800,000 bits.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">68</span><span class="qtext">A sound is recorded for 30 seconds at a sample rate of 10 kHz with a resolution of 16 bits. What is the file size in kilobytes?</span>
+      <ul class="options">
+        <li data-letter="A">600 kB</li>
+        <li data-letter="B">60 kB</li>
+        <li data-letter="C">6000 kB</li>
+        <li data-letter="D">4800 kB</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 4,800,000 bits ÷ 8 = 600,000 bytes = 600 kB.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">69</span><span class="qtext">What is the typical hearing range for humans?</span>
+      <ul class="options">
+        <li data-letter="A">20 Hz to 20,000 Hz</li>
+        <li data-letter="B">0 Hz to 10,000 Hz</li>
+        <li data-letter="C">100 Hz to 100,000 Hz</li>
+        <li data-letter="D">1 Hz to 1,000 Hz</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — Human hearing range is roughly 20 Hz to 20,000 Hz.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">70</span><span class="qtext">Which device converts analogue sound signals into digital data?</span>
+      <ul class="options">
+        <li data-letter="A">DAC (Digital-to-Analogue Converter)</li>
+        <li data-letter="B">ADC (Analogue-to-Digital Converter)</li>
+        <li data-letter="C">Amplifier</li>
+        <li data-letter="D">Speaker</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — An ADC converts analogue to digital.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">71</span><span class="qtext">Which device converts digital data back into an analogue sound signal?</span>
+      <ul class="options">
+        <li data-letter="A">DAC (Digital-to-Analogue Converter)</li>
+        <li data-letter="B">ADC (Analogue-to-Digital Converter)</li>
+        <li data-letter="C">Microphone</li>
+        <li data-letter="D">Sound card</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — A DAC converts digital to analogue.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">72</span><span class="qtext">What happens to the quality of a sound recording if the sample rate is too low?</span>
+      <ul class="options">
+        <li data-letter="A">The sound is more accurate</li>
+        <li data-letter="B">The sound is less accurate and may miss high frequencies</li>
+        <li data-letter="C">The sound file is larger</li>
+        <li data-letter="D">The sound is unchanged</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A low sample rate misses detail and high frequencies.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">73</span><span class="qtext">Which of the following is a lossy audio file format?</span>
+      <ul class="options">
+        <li data-letter="A">FLAC</li>
+        <li data-letter="B">WAV</li>
+        <li data-letter="C">MP3</li>
+        <li data-letter="D">ALAC</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — MP3 is lossy; FLAC, WAV, and ALAC are lossless.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">74</span><span class="qtext">What is the main advantage of lossless audio compression?</span>
+      <ul class="options">
+        <li data-letter="A">It produces much smaller files than lossy compression</li>
+        <li data-letter="B">It preserves the original audio exactly</li>
+        <li data-letter="C">It is faster to stream</li>
+        <li data-letter="D">It requires less storage space than lossy</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Lossless preserves the original audio exactly.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">75</span><span class="qtext">If a sound file has a sample rate of 44,100 Hz, how many samples are taken in 2 seconds?</span>
+      <ul class="options">
+        <li data-letter="A">44,100</li>
+        <li data-letter="B">88,200</li>
+        <li data-letter="C">22,050</li>
+        <li data-letter="D">132,300</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 44,100 × 2 = 88,200 samples.</div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 6: REPRESENTING IMAGES ================= -->
+  <section class="card">
+    <h2>🖼️ Section 6: Representing Images (Questions 76–88)</h2>
+
+    <div class="question">
+      <span class="qnum">76</span><span class="qtext">What is a pixel?</span>
+      <ul class="options">
+        <li data-letter="A">A type of image file format</li>
+        <li data-letter="B">The smallest unit of a digital image</li>
+        <li data-letter="C">A colour code used in HTML</li>
+        <li data-letter="D">A compression algorithm for images</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — A pixel is the smallest unit of a digital image.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">77</span><span class="qtext">What is the resolution of an image?</span>
+      <ul class="options">
+        <li data-letter="A">The number of colours in the image</li>
+        <li data-letter="B">The number of pixels in the image (width × height)</li>
+        <li data-letter="C">The file size of the image</li>
+        <li data-letter="D">The number of bits per pixel</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Resolution is the number of pixels in the image.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">78</span><span class="qtext">What is colour depth?</span>
+      <ul class="options">
+        <li data-letter="A">The number of pixels in the image</li>
+        <li data-letter="B">The number of bits used to represent the colour of a single pixel</li>
+        <li data-letter="C">The physical size of the image on screen</li>
+        <li data-letter="D">The file format of the image</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Colour depth is the number of bits per pixel.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">79</span><span class="qtext">How many colours can be represented with a 1-bit colour depth?</span>
+      <ul class="options">
+        <li data-letter="A">1</li>
+        <li data-letter="B">2</li>
+        <li data-letter="C">4</li>
+        <li data-letter="D">8</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 2^1 = 2 colours (black and white).</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">80</span><span class="qtext">How many colours can be represented with a 24-bit colour depth?</span>
+      <ul class="options">
+        <li data-letter="A">256</li>
+        <li data-letter="B">65,536</li>
+        <li data-letter="C">16.7 million</li>
+        <li data-letter="D">1 billion</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — 2^24 ≈ 16.7 million colours.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">81</span><span class="qtext">What is the formula for calculating the file size of an uncompressed image?</span>
+      <ul class="options">
+        <li data-letter="A">Width × Height × Colour Depth</li>
+        <li data-letter="B">Width + Height + Colour Depth</li>
+        <li data-letter="C">Width × Height ÷ Colour Depth</li>
+        <li data-letter="D">Colour Depth ÷ (Width × Height)</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — File size = width × height × colour depth.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">82</span><span class="qtext">An image is 100 × 50 pixels with 8-bit colour depth. What is its file size in bits?</span>
+      <ul class="options">
+        <li data-letter="A">5,000 bits</li>
+        <li data-letter="B">40,000 bits</li>
+        <li data-letter="C">400,000 bits</li>
+        <li data-letter="D">4,000 bits</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — 100 × 50 × 8 = 40,000 bits.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">83</span><span class="qtext">An image is 100 × 50 pixels with 8-bit colour depth. What is its file size in bytes?</span>
+      <ul class="options">
+        <li data-letter="A">5,000 bytes</li>
+        <li data-letter="B">40,000 bytes</li>
+        <li data-letter="C">4,000 bytes</li>
+        <li data-letter="D">500 bytes</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — 40,000 ÷ 8 = 5,000 bytes.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">84</span><span class="qtext">What effect does increasing the colour depth have on the image file size?</span>
+      <ul class="options">
+        <li data-letter="A">It decreases the file size</li>
+        <li data-letter="B">It increases the file size</li>
+        <li data-letter="C">It has no effect on file size</li>
+        <li data-letter="D">It halves the file size</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — More bits per pixel = larger file.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">85</span><span class="qtext">What effect does reducing the resolution have on an image?</span>
+      <ul class="options">
+        <li data-letter="A">The image becomes sharper</li>
+        <li data-letter="B">The image loses fine detail and may appear blurred</li>
+        <li data-letter="C">The image gains more colours</li>
+        <li data-letter="D">The image file size increases</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Fewer pixels = less detail, blurrier image.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">86</span><span class="qtext">What is metadata in an image file?</span>
+      <ul class="options">
+        <li data-letter="A">The pixel data itself</li>
+        <li data-letter="B">Data about the data — such as width, height, colour depth, and format</li>
+        <li data-letter="C">The compression algorithm used</li>
+        <li data-letter="D">The colour palette of the image</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Metadata is data about the data.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">87</span><span class="qtext">Which of the following is a lossless image format?</span>
+      <ul class="options">
+        <li data-letter="A">JPEG</li>
+        <li data-letter="B">PNG</li>
+        <li data-letter="C">MP3</li>
+        <li data-letter="D">MP4</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — PNG is lossless; JPEG is lossy.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">88</span><span class="qtext">What does RLE stand for?</span>
+      <ul class="options">
+        <li data-letter="A">Run Length Encoding</li>
+        <li data-letter="B">Random Loss Encoding</li>
+        <li data-letter="C">Reduced Loss Encoding</li>
+        <li data-letter="D">Real Loss Encoding</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — RLE = Run Length Encoding.</div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 7: COMPRESSION ================= -->
+  <section class="card">
+    <h2>🗜️ Section 7: Compression (Questions 89–100)</h2>
+
+    <div class="question">
+      <span class="qnum">89</span><span class="qtext">What is compression?</span>
+      <ul class="options">
+        <li data-letter="A">The process of increasing file size for better quality</li>
+        <li data-letter="B">The process of reducing file size using algorithms</li>
+        <li data-letter="C">The process of converting files to binary</li>
+        <li data-letter="D">The process of encrypting files</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Compression reduces file size.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">90</span><span class="qtext">What is decompression?</span>
+      <ul class="options">
+        <li data-letter="A">The process of compressing a file further</li>
+        <li data-letter="B">The process of restoring compressed data to a usable format</li>
+        <li data-letter="C">The process of deleting compressed files</li>
+        <li data-letter="D">The process of copying compressed files</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Decompression restores compressed data.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">91</span><span class="qtext">What is the main difference between lossy and lossless compression?</span>
+      <ul class="options">
+        <li data-letter="A">Lossy reduces file size; lossless does not</li>
+        <li data-letter="B">Lossy permanently removes some data; lossless does not</li>
+        <li data-letter="C">Lossless is faster than lossy</li>
+        <li data-letter="D">Lossy is used only for text files</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Lossy removes data permanently; lossless preserves all data.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">92</span><span class="qtext">Which of the following file formats uses lossy compression?</span>
+      <ul class="options">
+        <li data-letter="A">PNG</li>
+        <li data-letter="B">JPEG</li>
+        <li data-letter="C">ZIP</li>
+        <li data-letter="D">FLAC</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — JPEG is lossy; PNG, ZIP, and FLAC are lossless.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">93</span><span class="qtext">Which of the following file formats uses lossless compression?</span>
+      <ul class="options">
+        <li data-letter="A">MP3</li>
+        <li data-letter="B">MP4</li>
+        <li data-letter="C">PNG</li>
+        <li data-letter="D">JPEG</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — PNG is lossless; MP3, MP4, and JPEG are lossy.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">94</span><span class="qtext">How does Run Length Encoding (RLE) compress data?</span>
+      <ul class="options">
+        <li data-letter="A">By removing every other bit</li>
+        <li data-letter="B">By recording frequency/data pairs for runs of identical values</li>
+        <li data-letter="C">By converting binary to hexadecimal</li>
+        <li data-letter="D">By randomly discarding data</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — RLE records how many times a value repeats, then the value.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">95</span><span class="qtext">Using RLE, how would the row 11110000 be encoded (where 1 = white, 0 = black)?</span>
+      <ul class="options">
+        <li data-letter="A">4 1 4 0</li>
+        <li data-letter="B">1 4 0 4</li>
+        <li data-letter="C">8 1 0</li>
+        <li data-letter="D">4 0 4 1</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: A</strong> — Four 1s, then four 0s → 4 1 4 0.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">96</span><span class="qtext">What is a digital artefact in the context of lossy compression?</span>
+      <ul class="options">
+        <li data-letter="A">A type of file format</li>
+        <li data-letter="B">A small visual mistake introduced by lossy compression</li>
+        <li data-letter="C">A compression algorithm</li>
+        <li data-letter="D">A type of metadata</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Digital artefacts are small mistakes from lossy compression.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">97</span><span class="qtext">Why is lossy compression unsuitable for compressing a computer program?</span>
+      <ul class="options">
+        <li data-letter="A">It would make the program run faster</li>
+        <li data-letter="B">A single missing character could stop the program from running</li>
+        <li data-letter="C">It would increase the file size</li>
+        <li data-letter="D">It would change the programming language</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Program code must be exact; missing data breaks it.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">98</span><span class="qtext">What is the effect of reducing the sample rate of an audio file?</span>
+      <ul class="options">
+        <li data-letter="A">It increases the file size and quality</li>
+        <li data-letter="B">It decreases the file size and permanently loses some sound data</li>
+        <li data-letter="C">It has no effect on the file</li>
+        <li data-letter="D">It increases the number of bits per sample</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Lower sample rate = smaller file but permanently lost data.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">99</span><span class="qtext">Which of the following is a benefit of compression?</span>
+      <ul class="options">
+        <li data-letter="A">Increased bandwidth required</li>
+        <li data-letter="B">Longer transmission time</li>
+        <li data-letter="C">Less storage space required</li>
+        <li data-letter="D">More data usage on mobile contracts</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: C</strong> — Compression reduces storage space needed.</div>
+    </div>
+
+    <div class="question">
+      <span class="qnum">100</span><span class="qtext">Which of the following is true about lossless compression?</span>
+      <ul class="options">
+        <li data-letter="A">It permanently removes some data</li>
+        <li data-letter="B">It restores the original data exactly</li>
+        <li data-letter="C">It is used only for video files</li>
+        <li data-letter="D">It always produces smaller files than lossy compression</li>
+      </ul>
+      <div class="answer-key"><strong>Answer: B</strong> — Lossless restores the original exactly.</div>
+    </div>
+  </section>
+
+  <!-- ============ ADDITIONAL RESOURCES ============ -->
+  <section class="card">
+    <h2>📚 Reference Material</h2>
+    <p>Additional content on data representation — The Computer Science Lab.</p>
+    <div class="btn-row">
+      <a href="https://www.thecomputersciencelab.com/chapter-1-data-representation" target="_blank" rel="noopener" class="btn outline">
+        Open Reference →
+      </a>
+    </div>
+  </section>
+
+  <p class="progress-note">progress saved automatically in your browser</p>
+</div>
+
+</body>
+</html>
