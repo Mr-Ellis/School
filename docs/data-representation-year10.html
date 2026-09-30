@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Representation · Year 9 &amp; Year 10</title>
+  <title>Data Representation · Year 9 & Year 10</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -156,7 +156,7 @@
       color: #0b2a4a;
       letter-spacing: -0.2px;
       line-height: 1.3;
-      margin-right: 110px;
+      margin-right: 110px; /* Space for the locks */
     }
     .card p {
       color: #475569;
@@ -435,8 +435,8 @@
     <!-- ========== NAVIGATION ========== -->
     <nav class="nav">
         <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
-        <a href="../year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9</a>
-        <a href="../year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
+        <a href="year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9</a>
+        <a href="year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
     </nav>
 
     <!-- ========== HEADER ========== -->
@@ -445,7 +445,7 @@
     </div>
     <div class="subhead">
         <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
-        Year 9 &amp; Year 10 · How computers store and process data
+        Year 9 & Year 10 · How computers store and process data
     </div>
 
     <!-- PROGRESS BARS -->
@@ -635,16 +635,16 @@
             </div>
         </a>
 
-        <!-- Lesson 7 - Data Compression -->
+        <!-- Lesson 7 - Data Compression & Revision -->
         <a href="Data-representation/lesson7-compression.html" class="card locked is-y9-locked is-y10-locked" data-lesson="DR7">
             <div class="lock-icons">
                 <span class="lock-icon lock-y9"><i class="fas fa-lock"></i> Y9</span>
                 <span class="lock-icon lock-y10"><i class="fas fa-lock"></i> Y10</span>
             </div>
             <div class="card-header">
-                <h4>Data Compression</h4>
+                <h4>Data Compression &amp; Revision</h4>
             </div>
-            <p>Lossy/lossless, RLE</p>
+            <p>Lossy/lossless, RLE, review</p>
             <div class="card-actions">
                 <span class="btn btn-theory" onclick="event.stopPropagation();"><i class="fas fa-book-open"></i> Theory</span>
             </div>
@@ -683,11 +683,12 @@
 
 <script>
     (function() {
+        // The single Master Password used for both Teacher Mode and Lesson Plans
         const TEACHER_PASSWORD = 'Password262026';
         
         const checkboxes = document.querySelectorAll('.cover-checkbox');
-        const GRADE_PREFIX = 'datarep_';
-        let currentModalMode = 'lesson';
+        const GRADE_PREFIX = 'datarep_'; // Shared prefix for the single file
+        let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
         let pendingPath = '';
 
         // ---- All lessons ----
@@ -695,7 +696,7 @@
         document.getElementById('y9TotalLessons').textContent = allLessons.length;
         document.getElementById('y10TotalLessons').textContent = allLessons.length;
 
-        // ---- Track which lessons are unlocked ----
+        // ---- Track which lessons are unlocked (based on checkboxes) ----
         function getUnlockedLessons(year) {
           const unlocked = [];
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
@@ -713,16 +714,18 @@
           const y9Unlocked = getUnlockedLessons('Y9');
           const y10Unlocked = getUnlockedLessons('Y10');
           
+          // Update card lock states
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
             const lesson = card.getAttribute('data-lesson');
             const checkboxes = card.querySelectorAll('.cover-checkbox');
             
-            // Skip cards without checkboxes (e.g. the revision card)
+            // Skip the revision card (no checkboxes)
             if (checkboxes.length === 0) return;
             
             const y9Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y9' && cb.checked);
             const y10Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y10' && cb.checked);
             
+            // Update the Y9 and Y10 lock states
             if (y9Checked) {
               card.classList.remove('is-y9-locked');
             } else {
@@ -737,20 +740,23 @@
             
             const anyChecked = y9Checked || y10Checked;
 
+            // Lock/unlock the main card
             if (anyChecked) {
               card.classList.remove('locked');
             } else {
               card.classList.add('locked');
             }
             
+            // Color coding
             card.classList.remove('fully-covered', 'partially-covered');
             if (y9Checked && y10Checked) {
-              card.classList.add('fully-covered');
+              card.classList.add('fully-covered'); // Green if both years done
             } else if (anyChecked) {
-              card.classList.add('partially-covered');
+              card.classList.add('partially-covered'); // Yellow-ish if one year done
             }
           });
           
+          // Update progress bars
           document.getElementById('y9UnlockedCount').textContent = y9Unlocked.length;
           document.getElementById('y10UnlockedCount').textContent = y10Unlocked.length;
           document.getElementById('y9ProgressFill').style.width = (y9Unlocked.length / allLessons.length * 100) + '%';
@@ -767,6 +773,7 @@
                 cb.checked = true;
             }
 
+            // Handle changes
             cb.addEventListener('change', function() {
                 localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
                 updateUI();
@@ -790,6 +797,7 @@
           });
         });
 
+        // Initial UI update
         updateUI();
 
         // ---- Password Modal Logic ----
@@ -799,6 +807,16 @@
         const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
         const modalType = document.getElementById('modalType');
         const modalText = document.getElementById('modalText');
+
+        const PDF_URLS = {
+            'DR1': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR1-Binary-Systems.pdf',
+            'DR2': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR2-Hexadecimal.pdf',
+            'DR3': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR3-Binary-Shifts.pdf',
+            'DR4': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR4-ASCII-Unicode.pdf',
+            'DR5': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR5-Sound.pdf',
+            'DR6': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR6-Images.pdf',
+            'DR7': 'https://mr-ellis.github.io/School/lessonplans/IGCSE/DR7-Compression.pdf'
+        };
 
         function openModal(mode, path) {
             currentModalMode = mode;
@@ -826,7 +844,7 @@
         function activateTeacherMode() {
             document.body.classList.add('is-teacher');
             sessionStorage.setItem('teacherMode', 'true');
-            
+
             // Inject the admin-only Answer Key / QP links into the Revision card
             const revisionCard = document.querySelector('.card[data-lesson="DRR"]');
             if (revisionCard && !revisionCard.querySelector('.admin-only-links')) {
@@ -840,6 +858,7 @@
                 revisionCard.appendChild(linksContainer);
             }
             
+            // Add a "Lock" button to exit teacher mode
             let existingBtn = document.getElementById('lockAdminBtn');
             if(!existingBtn) {
                 existingBtn = document.createElement('a');
@@ -892,10 +911,13 @@
             }
         });
 
+        // ---- INIT ----
+        // Check if teacher mode was previously active in this browser session
         if (sessionStorage.getItem('teacherMode') === 'true') {
             activateTeacherMode();
         }
 
+        // Add a small "Admin" button in the nav to enter Teacher Mode later
         let adminBtn = document.createElement('a');
         adminBtn.id = 'adminModeBtn';
         adminBtn.href = '#';
