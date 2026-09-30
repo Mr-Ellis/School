@@ -1,410 +1,536 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Calendar - Craig Ellis</title>
-<style>
-    :root {
-        --bg-color: #f0f2f5;
-        --border-color: #d1d5db;
-        --text-main: #1f2937;
-        --text-light: #6b7280;
-        
-        /* Event Colors */
-        --color-9a-9b: #fbd4c1; /* Salmon */
-        --color-ib: #dcd0f5;    /* Purple */
-        --color-12ib: #fef0b3;  /* Yellow */
-        --color-7b-7d: #c4eef7; /* Cyan */
-        --color-8a-8c: #f5c4e8; /* Pink */
-        --color-10igcse: #d9f2c4; /* Green */
-        --color-9c: #fce2cc;    /* Peach */
-        --color-meeting: #e5e7eb; /* Grey */
-        --color-cas: #e5e7eb;   /* Grey */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 20px;
+            color: #333;
+        }
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+        .timetable-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
 
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        padding: 30px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
 
-    .calendar-container {
-        max-width: 1500px;
-        margin: 0 auto;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-        overflow-x: auto;
-        border: 1px solid #e5e7eb;
-    }
+        th, td {
+            border: 1px solid #eaedf0;
+            vertical-align: top;
+            padding: 0;
+        }
 
-    .calendar {
-        display: grid;
-        grid-template-columns: 130px repeat(5, minmax(220px, 1fr));
-        min-width: 1200px;
-    }
+        /* Header Styling */
+        thead th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            height: 60px;
+        }
 
-    /* Header Row */
-    .header-cell {
-        padding: 20px 15px;
-        background: #f9fafb;
-        border-bottom: 2px solid var(--border-color);
-        border-right: 1px solid var(--border-color);
-        text-align: left;
-    }
-    .header-cell:last-child {
-        border-right: none;
-    }
-    .header-title {
-        font-size: 0.85em;
-        font-weight: 700;
-        color: #374151;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    .header-sub {
-        font-size: 0.8em;
-        color: var(--text-light);
-        margin-top: 4px;
-    }
+        .header-sub {
+            display: block;
+            font-size: 0.8em;
+            font-weight: 400;
+            color: #7f8c8d;
+            margin-top: 4px;
+        }
 
-    /* Combined Time & Period Column */
-    .time-period-col {
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid var(--border-color);
-        background-color: #f9fafb;
-    }
-    .time-period-slot {
-        height: 60px; /* Represents 1 hour */
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-size: 0.75em;
-        color: #4b5563;
-        font-weight: 600;
-    }
-    .tp-time {
-        font-weight: 500;
-        color: #6b7280;
-    }
-    .tp-period {
-        background: #e5e7eb;
-        color: #374151;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 0.9em;
-    }
+        /* Time Column Styling */
+        .time-col {
+            width: 80px;
+            background-color: #fcfcfc;
+            text-align: center;
+            border-right: 2px solid #eaedf0;
+        }
 
-    /* Day Columns */
-    .day-col {
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid var(--border-color);
-        position: relative;
-    }
-    .day-col:last-child {
-        border-right: none;
-    }
+        .time-label {
+            padding: 10px 5px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
 
-    /* Grid Lines (Background) */
-    .hour-line {
-        height: 60px;
-        border-bottom: 1px solid #f3f4f6;
-    }
+        .time-text {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-bottom: 4px;
+        }
 
-    /* Events */
-    .event {
-        position: absolute;
-        left: 6px;
-        right: 6px;
-        border-radius: 6px;
-        padding: 8px 10px;
-        font-size: 0.75em;
-        line-height: 1.4;
-        overflow: hidden;
-        border-left: 4px solid rgba(0,0,0,0.15);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        min-height: 50px; /* Prevents cut-off */
-    }
+        .period-badge {
+            font-size: 0.7em;
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
 
-    .event-title {
-        font-weight: 700;
-        margin-bottom: 3px;
-        color: #111827;
-    }
-    .event-details {
-        color: #4b5563;
-        font-size: 0.9em;
-    }
+        /* Lesson Block Styling */
+        .slot {
+            height: 100%;
+            min-height: 80px; /* Ensures height even if empty */
+            padding: 8px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Specific Colors */
-    .e-9a-9b { background-color: var(--color-9a-9b); border-left-color: #e07a5f; }
-    .e-ib { background-color: var(--color-ib); border-left-color: #7c5cbf; }
-    .e-12ib { background-color: var(--color-12ib); border-left-color: #d4a017; }
-    .e-7b-7d { background-color: var(--color-7b-7d); border-left-color: #3b9bb5; }
-    .e-8a-8c { background-color: var(--color-8a-8c); border-left-color: #b05a9e; }
-    .e-10igcse { background-color: var(--color-10igcse); border-left-color: #5a9e3b; }
-    .e-9c { background-color: var(--color-9c); border-left-color: #d97a3b; }
-    .e-meeting { background-color: var(--color-meeting); border-left-color: #6b7280; }
-    .e-cas { background-color: var(--color-cas); border-left-color: #6b7280; }
+        .lesson {
+            background-color: #dbeafe; /* Single color for all lessons */
+            border-left: 5px solid #3b82f6;
+            border-radius: 4px;
+            padding: 8px 10px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
 
-    /* Time Mapping Helpers (Based on 8:00 AM start = 0px) */
-    /* Each hour is 60px. 15 mins = 15px */
-    .t-0840 { top: 40px; height: 50px; } /* 8:40 - 9:25 */
-    .t-0925 { top: 85px; height: 50px; } /* 9:25 - 10:10 */
-    .t-1010 { top: 130px; height: 50px; } /* 10:10 - 10:55 */
-    .t-1100 { top: 180px; height: 25px; } /* 11:00 - 11:20 (Dept Meeting) */
-    .t-1120 { top: 205px; height: 50px; } /* 11:20 - 12:05 */
-    .t-1205 { top: 245px; height: 50px; } /* 12:05 - 12:50 */
-    .t-1250 { top: 290px; height: 50px; } /* 12:50 - 13:35 */
-    .t-1335 { top: 335px; height: 50px; } /* 13:35 - 14:20 */
-    .t-1420 { top: 380px; height: 50px; } /* 14:20 - 15:05 */
-    .t-1500 { top: 420px; height: 45px; } /* 15:00 - 15:40 (approx) */
-    .t-1515 { top: 435px; height: 50px; } /* 15:15 - 16:00 */
+        .lesson-title {
+            font-weight: 700;
+            font-size: 0.9em;
+            color: #1e3a8a;
+            margin-bottom: 2px;
+        }
 
-</style>
+        .lesson-time {
+            font-size: 0.75em;
+            color: #4b5563;
+        }
+
+        /* Non-Lesson Blocks (Meetings, CAS) */
+        .non-lesson {
+            background-color: #e5e7eb;
+            border-left: 5px solid #9ca3af;
+            border-radius: 4px;
+            padding: 8px 10px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .non-lesson .lesson-title {
+            color: #374151;
+        }
+
+        /* Row Height Control */
+        tr {
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 
-<div class="calendar-container">
-    <div class="calendar">
-        
-        <!-- Header Row -->
-        <div class="header-cell">
-            <div class="header-title">Time</div>
-            <div class="header-sub">Period</div>
-        </div>
-        <div class="header-cell">
-            <div class="header-title">Monday</div>
-            <div class="header-sub">12th</div>
-        </div>
-        <div class="header-cell">
-            <div class="header-title">Tuesday</div>
-            <div class="header-sub">13th</div>
-        </div>
-        <div class="header-cell">
-            <div class="header-title">Wednesday</div>
-            <div class="header-sub">14th</div>
-        </div>
-        <div class="header-cell">
-            <div class="header-title">Thursday</div>
-            <div class="header-sub">15th</div>
-        </div>
-        <div class="header-cell">
-            <div class="header-title">Friday</div>
-            <div class="header-sub">16th</div>
-        </div>
+<div class="timetable-container">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px; text-align: center;">TIME<br><span class="header-sub">Period</span></th>
+                <th>MONDAY</th>
+                <th>TUESDAY</th>
+                <th>WEDNESDAY</th>
+                <th>THURSDAY</th>
+                <th>FRIDAY</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Row 1: 08:40 - 09:25 -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">08:40</span>
+                        <span class="period-badge">P1</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">9A Computing</div>
+                            <div class="lesson-time">08:40 - 09:25</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">10 IGCSE Computing</div>
+                            <div class="lesson-time">08:40 - 09:25</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">10 IGCSE Computing</div>
+                            <div class="lesson-time">08:40 - 09:25</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
 
-        <!-- Combined Time & Period Column -->
-        <div class="time-period-col">
-            <!-- Period 1 -->
-            <div class="time-period-slot" style="margin-top: 40px;">
-                <span class="tp-time">08:40</span>
-                <span class="tp-period">P1</span>
-            </div>
-            <!-- Period 2 -->
-            <div class="time-period-slot" style="margin-top: 0px;">
-                <span class="tp-time">09:25</span>
-                <span class="tp-period">P2</span>
-            </div>
-            <!-- Period 3 -->
-            <div class="time-period-slot" style="margin-top: 0px;">
-                <span class="tp-time">10:10</span>
-                <span class="tp-period">P3</span>
-            </div>
-            <!-- Period 4 -->
-            <div class="time-period-slot" style="margin-top: 0px;">
-                <span class="tp-time">11:20</span>
-                <span class="tp-period">P4</span>
-            </div>
-            <!-- Period 5 -->
-            <div class="time-period-slot" style="margin-top: 0px;">
-                <span class="tp-time">12:05</span>
-                <span class="tp-period">P5</span>
-            </div>
-            <!-- Period 6 -->
-            <div class="time-period-slot" style="margin-top: 0px;">
-                <span class="tp-time">12:50</span>
-                <span class="tp-period">P6</span>
-            </div>
-            <!-- Period 7 -->
-            <div class="time-period-slot" style="margin-top: 0px;">
-                <span class="tp-time">13:35</span>
-                <span class="tp-period">P7</span>
-            </div>
-            <!-- Period 8 -->
-            <div class="time-period-slot" style="margin-top: 0px;">
-                <span class="tp-time">14:20</span>
-                <span class="tp-period">P8</span>
-            </div>
-            <!-- Period 9 -->
-            <div class="time-period-slot" style="margin-top: 0px;">
-                <span class="tp-time">15:15</span>
-                <span class="tp-period">P9</span>
-            </div>
-        </div>
+            <!-- Row 2: 09:25 - 10:10 -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">09:25</span>
+                        <span class="period-badge">P2</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">11 IB1 HL</div>
+                            <div class="lesson-time">09:25 - 10:10</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">7B Computing</div>
+                            <div class="lesson-time">09:25 - 10:10</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">10 IGCSE Computing</div>
+                            <div class="lesson-time">09:25 - 10:10</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">7D Computing</div>
+                            <div class="lesson-time">09:25 - 10:10</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">9A Computing</div>
+                            <div class="lesson-time">10:10 - 10:55</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
 
-        <!-- Monday -->
-        <div class="day-col">
-            <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
-            
-            <div class="event e-9a-9b t-0840">
-                <div class="event-title">9A Computing</div>
-                <div class="event-details">08:40 - 09:25<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-ib t-0925">
-                <div class="event-title">11 IB1 HL</div>
-                <div class="event-details">09:25 - 10:10<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-ib t-1010">
-                <div class="event-title">11 IB1 HL</div>
-                <div class="event-details">10:10 - 10:55<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-12ib t-1120">
-                <div class="event-title">12 IB2 SL</div>
-                <div class="event-details">11:20 - 12:05<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-9a-9b t-1205">
-                <div class="event-title">9B Computing</div>
-                <div class="event-details">12:05 - 12:50<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-ib t-1420">
-                <div class="event-title">11 IB1 SL</div>
-                <div class="event-details">14:20 - 15:05<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-10igcse t-1515">
-                <div class="event-title">10 IGCSE</div>
-                <div class="event-details">15:15 - 16:00<br>Room 2051 • Craig Ellis</div>
-            </div>
-        </div>
+            <!-- Row 3: 10:10 - 10:55 -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">10:10</span>
+                        <span class="period-badge">P3</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">11 IB1 HL</div>
+                            <div class="lesson-time">10:10 - 10:55</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">9C Computing</div>
+                            <div class="lesson-time">10:10 - 10:55</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">9B Computing</div>
+                            <div class="lesson-time">10:10 - 10:55</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+            </tr>
 
-        <!-- Tuesday -->
-        <div class="day-col">
-            <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
-            
-            <div class="event e-7b-7d t-0925">
-                <div class="event-title">7B Computing</div>
-                <div class="event-details">09:25 - 10:10<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-meeting t-1100">
-                <div class="event-title">Dept Meeting</div>
-                <div class="event-details">11:00 - 11:20</div>
-            </div>
-            <div class="event e-12ib t-1205">
-                <div class="event-title">12 IB2 SL</div>
-                <div class="event-details">12:05 - 12:50<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-9c t-1250">
-                <div class="event-title">9C Computing</div>
-                <div class="event-details">12:50 - 13:35<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-8a-8c t-1335">
-                <div class="event-title">8A Computing</div>
-                <div class="event-details">13:35 - 14:20<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-8a-8c t-1420">
-                <div class="event-title">8C Computing</div>
-                <div class="event-details">14:20 - 15:00<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-cas t-1515">
-                <div class="event-title">CAS</div>
-                <div class="event-details">15:15 - 16:00</div>
-            </div>
-        </div>
+            <!-- Row 4: 11:00 - 11:20 (Dept Meeting / Free) -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">11:00</span>
+                        <span class="period-badge">P4</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="non-lesson">
+                            <div class="lesson-title">Dept Meeting</div>
+                            <div class="lesson-time">11:00 - 11:20</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+            </tr>
 
-        <!-- Wednesday -->
-        <div class="day-col">
-            <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
-            
-            <div class="event e-10igcse t-0840">
-                <div class="event-title">10 IGCSE Computing</div>
-                <div class="event-details">08:40 - 09:25<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-10igcse t-0925">
-                <div class="event-title">10 IGCSE Computing</div>
-                <div class="event-details">09:25 - 10:10<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-9c t-1010">
-                <div class="event-title">9C Computing</div>
-                <div class="event-details">10:10 - 10:55<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-ib t-1420">
-                <div class="event-title">11 IB1 SL</div>
-                <div class="event-details">14:20 - 15:05<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-ib t-1515">
-                <div class="event-title">11 IB1 SL</div>
-                <div class="event-details">15:15 - 16:00<br>Room 2051 • Craig Ellis</div>
-            </div>
-        </div>
+            <!-- Row 5: 11:20 - 12:05 -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">11:20</span>
+                        <span class="period-badge">P5</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">12 IB2 SL</div>
+                            <div class="lesson-time">11:20 - 12:05</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">12 IB2 SL</div>
+                            <div class="lesson-time">12:05 - 12:50</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">12 IB2 SL</div>
+                            <div class="lesson-time">11:20 - 12:05</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">12 IB2 HL</div>
+                            <div class="lesson-time">12:05 - 12:50</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
 
-        <!-- Thursday -->
-        <div class="day-col">
-            <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
-            
-            <div class="event e-7b-7d t-0925">
-                <div class="event-title">7D Computing</div>
-                <div class="event-details">09:25 - 10:10<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-9a-9b t-1010">
-                <div class="event-title">9B Computing</div>
-                <div class="event-details">10:10 - 10:55<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-12ib t-1120">
-                <div class="event-title">12 IB2 SL</div>
-                <div class="event-details">11:20 - 12:05<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-7b-7d t-1420">
-                <div class="event-title">7A Computing</div>
-                <div class="event-details">14:20 - 15:05<br>Room 2051 • Craig Ellis</div>
-            </div>
-        </div>
+            <!-- Row 6: 12:05 - 12:50 -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">12:05</span>
+                        <span class="period-badge">P6</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">9B Computing</div>
+                            <div class="lesson-time">12:05 - 12:50</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">9C Computing</div>
+                            <div class="lesson-time">12:50 - 13:35</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">12 IB2 HL</div>
+                            <div class="lesson-time">12:50 - 13:35</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
 
-        <!-- Friday -->
-        <div class="day-col">
-            <div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div><div class="hour-line"></div>
-            
-            <div class="event e-10igcse t-0840">
-                <div class="event-title">10 IGCSE Computing</div>
-                <div class="event-details">08:40 - 09:25<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-9a-9b t-1010">
-                <div class="event-title">9A Computing</div>
-                <div class="event-details">10:10 - 10:55<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-12ib t-1205">
-                <div class="event-title">12 IB2 HL</div>
-                <div class="event-details">12:05 - 12:50<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-12ib t-1250">
-                <div class="event-title">12 IB2 HL</div>
-                <div class="event-details">12:50 - 13:35<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-8a-8c t-1335">
-                <div class="event-title">8B Computing</div>
-                <div class="event-details">13:35 - 14:20<br>Room 2051 • Craig Ellis</div>
-            </div>
-            <div class="event e-7b-7d t-1420">
-                <div class="event-title">7C Computing</div>
-                <div class="event-details">14:20 - 15:05<br>Room 2051 • Craig Ellis</div>
-            </div>
-        </div>
+            <!-- Row 7: 12:50 - 13:35 -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">12:50</span>
+                        <span class="period-badge">P7</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">8A Computing</div>
+                            <div class="lesson-time">13:35 - 14:20</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">8B Computing</div>
+                            <div class="lesson-time">13:35 - 14:20</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
 
-    </div>
+            <!-- Row 8: 13:35 - 14:20 -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">13:35</span>
+                        <span class="period-badge">P8</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">11 IB1 SL</div>
+                            <div class="lesson-time">14:20 - 15:05</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">8C Computing</div>
+                            <div class="lesson-time">14:20 - 15:00</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">11 IB1 SL</div>
+                            <div class="lesson-time">14:20 - 15:05</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">7A Computing</div>
+                            <div class="lesson-time">14:20 - 15:05</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">7C Computing</div>
+                            <div class="lesson-time">14:20 - 15:05</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- Row 9: 14:20 - 15:15 -->
+            <tr>
+                <td class="time-col">
+                    <div class="time-label">
+                        <span class="time-text">14:20</span>
+                        <span class="period-badge">P9</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">10 IGCSE</div>
+                            <div class="lesson-time">15:15 - 16:00</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="non-lesson">
+                            <div class="lesson-title">CAS</div>
+                            <div class="lesson-time">15:15 - 16:00</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot">
+                        <div class="lesson">
+                            <div class="lesson-title">11 IB1 SL</div>
+                            <div class="lesson-time">15:15 - 16:00</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+                <td>
+                    <div class="slot"></div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
 </div>
 
 </body>
