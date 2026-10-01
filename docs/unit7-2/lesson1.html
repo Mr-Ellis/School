@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.2 Lesson 1 · Smart Devices &amp; Simulators</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-header h1 i { color: #2a6f97; font-size: 2rem; }
+    .page-header .sub {
+      color: #475569;
+      font-size: 1rem;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.3rem 1.4rem;
+      border-radius: 40px;
+      margin-top: 0.3rem;
+    }
+
+    .lesson-content {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.8rem 0 0.8rem 0;
+      border-left: 5px solid #2a6f97;
+      padding-left: 15px;
+    }
+    .lesson-content h2:first-of-type { margin-top: 0; }
+    .lesson-content h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.2rem 0 0.4rem 0;
+    }
+    .lesson-content p { margin-bottom: 0.6rem; }
+    .lesson-content ul, .lesson-content ol {
+      padding-left: 1.6rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content li { margin-bottom: 0.25rem; }
+
+    .objectives-box {
+      background: #eef6fc;
+      border-radius: 16px;
+      padding: 0.8rem 1.4rem;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #2a6f97;
+    }
+    .objectives-box strong { color: #0b2a4a; }
+    .objectives-box ul {
+      margin: 0.2rem 0 0 1.2rem;
+      padding-left: 0.5rem;
+    }
+    .objectives-box ul li { list-style-type: disc; font-size: 0.95rem; }
+
+    .code-block {
+      background: #0b1e2e;
+      color: #e2edf7;
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 0.8rem 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .code-block .comment { color: #6a9fb5; }
+    .code-block .keyword { color: #ff9f7c; }
+    .code-block .string { color: #b5d6a8; }
+    .code-block .func { color: #7bb3ff; }
+
+    .highlight-box {
+      background: #eef6fc;
+      padding: 1rem 1.6rem;
+      border-radius: 16px;
+      border-left: 5px solid #2a6f97;
+      margin: 1rem 0;
+    }
+    .highlight-box strong { color: #0b2a4a; }
+    .highlight-box.green {
+      border-left-color: #4caf50;
+      background: #edf7ed;
+    }
+    .highlight-box.amber {
+      border-left-color: #f9a825;
+      background: #fff8e1;
+    }
+
+    .tasks-section {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1rem 1.6rem;
+      margin-top: 1.2rem;
+      border: 1px solid #dceaf7;
+    }
+    .tasks-section h4 {
+      font-weight: 600;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .tasks-section h4 i { color: #2a6f97; }
+    .tasks-section ol, .tasks-section ul {
+      margin: 0.2rem 0 0.2rem 1.2rem;
+    }
+    .tasks-section li { margin-bottom: 0.2rem; }
+
+    .resource-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      background: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid #d4e3f0;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+    .resource-bar a {
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .resource-bar a:hover { text-decoration: underline; }
+    .resource-bar .label {
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.85rem;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .compare-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1rem 1.4rem;
+      border: 1px solid #dceaf7;
+    }
+    .compare-card h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .compare-card.systems h3 i { color: #1f6390; }
+    .compare-card.apps h3 i { color: #2d8f2d; }
+
+    .io-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .io-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1rem 1.4rem;
+      border: 1px solid #dceaf7;
+    }
+    .io-card h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .io-card.inputs h3 i { color: #e65100; }
+    .io-card.outputs h3 i { color: #2d8f2d; }
+    .io-card ul { margin-bottom: 0; }
+
+    .keyword-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      background: #f1f6fc;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .keyword-row span {
+      background: white;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid #dce4ed;
+      font-size: 0.85rem;
+    }
+
+    .divider { margin: 2.5rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
+      .lesson-content { padding: 1.2rem 1.4rem; }
+      .code-block { font-size: 0.8rem; padding: 0.8rem 1rem; }
+      .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
+      .compare-grid, .io-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+    <a href="../year7-units.html"><i class="fas fa-arrow-left"></i> Year 7 Units</a>
+    <a href="../unit7-2-decomposing-problems.html"><i class="fas fa-puzzle-piece"></i> 7.2 Decomposing problems</a>
+  </nav>
+
+  <!-- ===== BACK LINK ===== -->
+  <a href="../unit7-2-decomposing-problems.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to 7.2 Decomposing problems</a>
+
+  <!-- ===== HEADER ===== -->
+  <div class="page-header">
+    <h1><i class="fas fa-microchip"></i> Lesson 1 · Smart Devices &amp; Simulators</h1>
+    <div class="sub"><i class="fas fa-arrow-right" style="margin-right:6px;"></i> Student's Book pages 44–49</div>
+  </div>
+
+  <!-- ===== RESOURCE BAR ===== -->
+  <div class="resource-bar">
+    <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+    <a href="https://createai.microbit.org/" target="_blank"><i class="fas fa-brain"></i> CreateAI (micro:bit)</a>
+    <a href="https://makecode.microbit.org" target="_blank"><i class="fas fa-cubes"></i> MakeCode</a>
+    <a href="https://python.microbit.org/v/2" target="_blank"><i class="fas fa-code"></i> MicroPython Editor</a>
+  </div>
+
+  <!-- ===== LESSON CONTENT ===== -->
+  <div class="lesson-content">
+
+    <!-- Learning Objectives -->
+    <div class="objectives-box">
+      <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+      <ul>
+        <li><strong>7MD.01</strong> Know that there are many systems that can be used to model real-life scenarios, such as simulators.</li>
+        <li><strong>7MD.07</strong> Know that data is used to model scenarios within a range of industries, including health, manufacture and retail.</li>
+        <li><strong>7CS.01</strong> Evaluate the design of digital devices or systems.</li>
+        <li><strong>7CS.02</strong> Understand the difference between application software and system software.</li>
+      </ul>
+    </div>
+
+    <!-- ===== GET STARTED ===== -->
+    <h2>🚀 Get started!</h2>
+    <p>A <strong>smart device</strong> uses <strong>sensors</strong> to gather data and then uses that data to decide the correct output. For example, a smart thermostat uses a temperature sensor. If the sensor detects the room is too cold, the heating turns on. When the required temperature is reached, the heating switches off — all without a human pressing a button.</p>
+    <p>This idea of letting a device make decisions on its own is called <strong>automation</strong>.</p>
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Think about it:</strong> What smart devices have you used today? What sensors do you think they use? How do you think the device decides what to do?
+    </div>
+
+    <!-- ===== SMART DEVICES & SENSORS ===== -->
+    <h2>📡 Smart Devices &amp; Sensors</h2>
+    <p>Smart devices are all around us — smart speakers, doorbells, lights, heating systems, security cameras and even smart watches. Each one uses one or more sensors to detect changes in its surroundings.</p>
+    <ul>
+      <li><strong>Temperature sensor</strong> — detects how hot or cold something is (e.g. a thermostat)</li>
+      <li><strong>Light sensor</strong> — detects light levels (e.g. automatic blinds or lights)</li>
+      <li><strong>Motion / accelerometer sensor</strong> — detects movement (e.g. a pedometer or burglar alarm)</li>
+      <li><strong>Touch sensor</strong> — detects when something is touched (e.g. a touchscreen or the micro:bit logo)</li>
+    </ul>
+    <p>The data collected by the sensor is used to make a decision, and that decision determines the output.</p>
+
+    <!-- ===== PLANNING WITH FLOWCHARTS ===== -->
+    <h2>🧭 Planning with Flowcharts</h2>
+    <p>Before writing any code, programmers plan their program using a <strong>flowchart</strong>. A flowchart is a diagram that shows the step-by-step sequence of actions in a program. It uses special symbols:</p>
+    <ul>
+      <li><strong>Oval</strong> — Start / Stop</li>
+      <li><strong>Parallelogram</strong> — Input / Output</li>
+      <li><strong>Rectangle</strong> — Process (an instruction)</li>
+      <li><strong>Diamond</strong> — Decision (a question with Yes / No answers)</li>
+      <li><strong>Arrows</strong> — show the direction of flow</li>
+    </ul>
+    <p>Flowcharts help break a problem down into smaller steps. This is called <strong>decomposition</strong>. Planning with a flowchart first makes it much easier to spot mistakes and to write the code afterwards.</p>
+    <div class="highlight-box">
+      <i class="fas fa-sitemap" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Selection:</strong> When a flowchart uses a diamond-shaped decision, the program follows different paths depending on the answer. This is called <strong>selection</strong>, and in code we write it as <code>IF ... THEN ... ELSE</code>.
+    </div>
+
+    <!-- ===== TESTING & DEBUGGING ===== -->
+    <h2>🛠️ Testing &amp; Debugging</h2>
+    <p><strong>Testing</strong> means trying different inputs to see whether the program works as expected. Programmers predict what the output <em>should</em> be, then run the program and compare.</p>
+    <p>If something doesn't work, the programmer finds and fixes the mistake. This is called <strong>debugging</strong>. Errors are a normal part of programming — every programmer has to debug their code!</p>
+
+    <!-- ===== SOFTWARE TYPES ===== -->
+    <h2>💻 Types of Software</h2>
+    <p>Software is the programs that run on a computing device. There are two main types:</p>
+    <div class="compare-grid">
+      <div class="compare-card systems">
+        <h3><i class="fas fa-cog"></i> Systems Software</h3>
+        <p>Runs the device and helps everything else work. The main example is the <strong>operating system (OS)</strong> — like Windows, macOS, Linux, Android or iOS.</p>
+        <p>The OS starts when you turn the device on and acts as the link between the hardware and the applications.</p>
+      </div>
+      <div class="compare-card apps">
+        <h3><i class="fas fa-window-restore"></i> Applications Software</h3>
+        <p>Programs that help you complete a specific task. Examples include web browsers, word processors, games, and simulators.</p>
+        <p>Some applications are <strong>general-purpose</strong> (like a word processor) and some are for a <strong>specific purpose</strong> (like a flight simulator).</p>
+      </div>
+    </div>
+
+    <!-- ===== SIMULATORS ===== -->
+    <h2>🎮 Simulators</h2>
+    <p>A <strong>simulator</strong> is a type of application software that copies a real-life situation. Simulators are used for training and testing because they are safe, cheap and repeatable.</p>
+    <ul>
+      <li><strong>Medical</strong> — trainee doctors can practise procedures without any risk to real patients.</li>
+      <li><strong>Military</strong> — soldiers can train in realistic scenarios without danger.</li>
+      <li><strong>Transport</strong> — pilots can log hours in flight simulators before flying a real plane.</li>
+      <li><strong>Agricultural</strong> — farmers can model crop systems before making real-world decisions.</li>
+      <li><strong>Gaming</strong> — many games include built-in simulators, like Microsoft Flight Simulator, Kerbal Space Program and Farming Simulator.</li>
+    </ul>
+    <div class="highlight-box amber">
+      <i class="fas fa-balance-scale" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Pros &amp; Cons:</strong> Simulators are safe, cheaper than real training, and easy to repeat — but they can be unrealistic, expensive to build, and may not fully capture the urgency of a real situation.
+    </div>
+
+    <!-- ===== INTRO TO MICRO:BIT ===== -->
+    <h2>🔌 Introducing the micro:bit</h2>
+    <p>The <strong>micro:bit</strong> is a small <strong>physical computing device</strong> — a tiny programmable computer. You can program it using block-based code (MakeCode) or text-based code (MicroPython).</p>
+    <p>The micro:bit has a range of built-in <strong>inputs</strong> and <strong>outputs</strong>:</p>
+    <div class="io-grid">
+      <div class="io-card inputs">
+        <h3><i class="fas fa-arrow-right-to-bracket"></i> Inputs</h3>
+        <ul>
+          <li>A button</li>
+          <li>B button</li>
+          <li>Light sensor</li>
+          <li>Temperature sensor</li>
+          <li>Compass</li>
+          <li>Accelerometer (motion sensor)</li>
+          <li>Touch sensor (on the logo)</li>
+          <li>Microphone (sound sensor)</li>
+        </ul>
+      </div>
+      <div class="io-card outputs">
+        <h3><i class="fas fa-arrow-right-from-bracket"></i> Outputs</h3>
+        <ul>
+          <li>LED display (25 lights)</li>
+          <li>Buzzer / sound output</li>
+          <li>Radio (to send messages)</li>
+        </ul>
+      </div>
+    </div>
+    <p>MakeCode has a built-in <strong>simulator</strong>, so you can test your program on screen before downloading it to the real micro:bit.</p>
+
+    <!-- ===== AI TASK ===== -->
+    <h2>🤖 AI Task: Train a Model</h2>
+    <p>You can even train a simple <strong>AI model</strong> to recognise two movements and make the micro:bit react differently depending on what the AI detects.</p>
+    <div class="highlight-box green">
+      <i class="fas fa-robot" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Go to:</strong> <a href="https://createai.microbit.org/" target="_blank" style="color:#1f6390;">createai.microbit.org</a> and train a model to recognise two gestures (for example, "shake" and "still"). Program the micro:bit to show a different icon for each one.
+    </div>
+
+    <!-- ===== TASKS ===== -->
+    <div class="tasks-section">
+      <h4><i class="fas fa-tasks"></i> Your Tasks</h4>
+      <ol>
+        <li><strong>Worksheet 1:</strong> Complete today's worksheet to review what you've learned about smart devices, software and simulators.</li>
+        <li><strong>AI Task:</strong> Go to <a href="https://createai.microbit.org/" target="_blank" style="color:#1f6390;">CreateAI</a> and train a model that recognises two movements (e.g. "shake" and "still"). Program the micro:bit to show different icons depending on what the AI detects.</li>
+        <li><strong>Homework:</strong> Investigate one industry that uses simulators (medical, military, transport, agricultural or gaming). Find out what the simulator does, how it helps the industry, and what systems and applications software it uses.</li>
+      </ol>
+    </div>
+
+    <!-- ===== KEYWORDS ===== -->
+    <h2>🔑 Keywords</h2>
+    <div class="keyword-row">
+      <span>smart device</span>
+      <span>sensor</span>
+      <span>automation</span>
+      <span>hardware</span>
+      <span>software</span>
+      <span>systems software</span>
+      <span>applications software</span>
+      <span>operating system</span>
+      <span>simulator</span>
+      <span>input</span>
+      <span>output</span>
+      <span>flowchart</span>
+      <span>selection</span>
+      <span>decomposition</span>
+      <span>debugging</span>
+      <span>physical computing device</span>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <hr class="divider" />
+  <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #5d7f9a; padding: 0.5rem 0; flex-wrap: wrap; gap: 0.5rem;">
+    <span><i class="fas fa-arrow-left" style="margin-right: 6px;"></i><a href="../unit7-2-decomposing-problems.html" style="color: #1f6390; text-decoration: none;">Back to 7.2 Decomposing problems</a></span>
+    <span>7.2 Lesson 1 · Smart Devices &amp; Simulators</span>
+  </div>
+
+</div>
+
+</body>
+</html>
