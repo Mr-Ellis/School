@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2.2.4 - Queues (Theory)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #0b2a4a;
+            text-decoration: underline;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #0b2a4a;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        h4 {
+            color: #0b2a4a;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .badge.theory { background: #1a5f87; }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .code-block pre { margin: 0; white-space: pre; }
+        .comment { color: #6b8c9e; }
+        .keyword { color: #f7c948; }
+        .string { color: #a3d9a5; }
+        .function { color: #66b3ff; }
+        .error { color: #f87171; }
+
+        .code-output {
+            background: #0f1724;
+            color: #f7c948;
+            padding: 10px 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-top: 1px solid #2d3748;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+
+        .task-box {
+            background: #f7fafc;
+            border-left: 4px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .starter-box {
+            background: #ebf4ff;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .plenary-box {
+            background: #f0f7ee;
+            border-left: 5px solid #2d8f2d;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .extension-box {
+            background: #fdf4ff;
+            border-left: 5px solid #a855f7;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        .info-box {
+            background: #f0f7ee;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-left: 4px solid #2a6f97;
+        }
+        .key-takeaway {
+            background: #fefcbf;
+            border-left: 5px solid #fdbb2d;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        .scope-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: #0b2a4a;
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: none !important;
+            transition: background 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+        .btn-link:hover {
+            background: #1a3f64;
+            color: #fff !important;
+            border-bottom: none !important;
+        }
+        .btn-link.blooket {
+            background: #f97316;
+        }
+        .btn-link.blooket:hover {
+            background: #ea580c;
+        }
+        .btn-link.quizlet {
+            background: #4255ff;
+        }
+        .btn-link.quizlet:hover {
+            background: #3346e0;
+        }
+        .btn-link.python {
+            background: #2d8f2d;
+        }
+        .btn-link.python:hover {
+            background: #247024;
+        }
+        .btn-link.extension {
+            background: #a855f7;
+        }
+        .btn-link.extension:hover {
+            background: #9333ea;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .principle-box {
+            background: #0b2a4a;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .principle-box .highlight { color: #fdbb2d; }
+
+        .footnote { font-size: 0.85rem; color: #4a5568; margin-top: 4px; }
+
+        hr { border: 0; border-top: 2px solid #e2e8f0; margin: 30px 0; }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .btn-group { flex-direction: column; }
+            .btn-link { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="#" onclick="goBack(); return false;">← Back to B2 Programming</a>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = '../B2.html';
+            }
+        }
+    </script>
+
+    <h1>B2.2.4 – Queues <span class="badge theory">Theory</span></h1>
+
+    <!-- ==================== STARTER ==================== -->
+    <h2>🎯 Starter Activity</h2>
+    <div class="starter-box">
+        <p><strong>🐟 Blooket Quiz</strong></p>
+        <p>Test your understanding of queues and the FIFO principle with this Blooket quiz.</p>
+        <!-- Placeholder for queue Blooket; use stacks link or replace with actual queue Blooket if available -->
+        <a href="https://play.blooket.com/host/fish?id=68b039cd9d570785d69cb829" target="_blank" class="btn-link blooket">🐟 Play Blooket</a>
+    </div>
+
+    <!-- ==================== LESSON CONTENT ==================== -->
+    <h2>📖 Lesson Content</h2>
+
+    <h3>The Big Idea</h3>
+    <p>Think of a queue at a grocery store checkout. The first person to join the line is the first person to be served. A new person who joins the line enters at the back. This "First In, First Out" (FIFO) principle is the core of a fundamental data structure in Computer Science: the <strong>Queue</strong>.</p>
+    <p>A queue is an <strong>abstract data structure</strong> that works on the <strong>FIFO</strong> (First In, First Out) principle. This means the first element added to the queue is the first one to be removed. Elements are added at one end (the rear) and removed from the other end (the front).</p>
+
+    <h3>Key Concepts</h3>
+
+    <h4>1. FIFO Principle</h4>
+    <p>Imagine a queue of people waiting to buy tickets. The person at the front of the line is served first. When they are done, they leave the queue, and the next person becomes the new front. A new person joining the queue goes to the back. This is the essence of FIFO.</p>
+
+    <h4>2. Core Operations</h4>
+    <p>Queues are defined by a small set of essential operations:</p>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Enqueue:</strong> Adding an item to the rear of the queue.</li>
+        <li><strong>Dequeue:</strong> Removing the item from the front of the queue.</li>
+        <li><strong>Front (or Peek):</strong> Looking at the front item without removing it.</li>
+        <li><strong>isEmpty:</strong> Checking if the queue is empty.</li>
+        <li><strong>isFull:</strong> Checking if the queue is full (for a static, array-based queue).</li>
+    </ul>
+
+    <div class="info-box">
+        <p><strong>📌 Important:</strong> A queue uses a <strong>front pointer</strong> (or <code>head</code>) to show where elements will be removed from, and a <strong>rear pointer</strong> (or <code>tail</code>) to show where elements will be added. These are crucial for all operations.</p>
+    </div>
+
+    <h3>Queue Operations in Detail</h3>
+
+    <h4>1. Enqueue (Adding an Item)</h4>
+    <p>To enqueue an item, the rear pointer is moved to the next free slot, and the new value is placed at that position. If the queue is already full, attempting to enqueue causes an <strong>overflow error</strong>.</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Python - Enqueue operation (simplified)</span>
+<span class="keyword">def</span> <span class="function">enqueue</span>(queue, value):
+    <span class="keyword">if</span> <span class="function">len</span>(queue) == MAX_SIZE:
+        <span class="function">print</span>(<span class="string">"Queue Overflow!"</span>)
+    <span class="keyword">else</span>:
+        queue.<span class="function">append</span>(value)
+        <span class="function">print</span>(<span class="string">f"Enqueued: {value}"</span>)
+</code></pre>
+    </div>
+
+    <h4>2. Dequeue (Removing an Item)</h4>
+    <p>To dequeue an item, the value at the front of the queue is returned, and the front pointer is advanced. If the queue is empty, attempting to dequeue causes an <strong>underflow error</strong>.</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Python - Dequeue operation (simplified)</span>
+<span class="keyword">def</span> <span class="function">dequeue</span>(queue):
+    <span class="keyword">if</span> <span class="function">len</span>(queue) == <span class="string">0</span>:
+        <span class="function">print</span>(<span class="string">"Queue Underflow!"</span>)
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> queue.<span class="function">pop</span>(<span class="string">0</span>)
+</code></pre>
+    </div>
+
+    <h4>3. Front (Looking at the Front)</h4>
+    <p>This operation returns the value of the front element without changing the queue. It's useful for checking what's next without committing to a dequeue.</p>
+    <div class="code-block">
+<pre><code>
+<span class="comment"># Python - Front operation (simplified)</span>
+<span class="keyword">def</span> <span class="function">front</span>(queue):
+    <span class="keyword">if</span> <span class="function">len</span>(queue) > <span class="string">0</span>:
+        <span class="keyword">return</span> queue[<span class="string">0</span>]
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+</code></pre>
+    </div>
+
+    <h4>4. isEmpty and isFull</h4>
+    <p>These are boolean checks to prevent errors. <code>isEmpty</code> checks if the front and rear pointers indicate an empty queue. <code>isFull</code> checks if the queue has reached its maximum size.</p>
+
+    <div class="principle-box">
+        <p><span class="highlight">🔑 Key Principle:</span> A queue can be implemented as a <strong>static data structure</strong> (using an array with a fixed size) or as a <strong>dynamic data structure</strong> (using a linked list, which can grow and shrink as needed). A common static implementation is the <strong>circular queue</strong>, which reuses empty spaces at the front of the array.</p>
+    </div>
+
+    <h3>Circular Queues</h3>
+    <p>When a queue is implemented as an array, it can often be managed as a <strong>circular queue</strong>. This allows the queue to wrap around when the rear pointer reaches the end of the array, reusing spaces that have been freed by dequeued elements.</p>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li>If the rear pointer becomes equal to the front pointer after an item is added, the queue becomes <strong>full</strong>.</li>
+        <li>If they become equal after an item is removed, the queue becomes <strong>empty</strong>.</li>
+    </ul>
+
+    <h3>Queue Operations Summary</h3>
+    <table>
+        <thead>
+            <tr><th>Operation</th><th>Description</th><th>Error Condition</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Enqueue</strong></td><td>Adds an item to the rear of the queue.</td><td>Overflow (if the queue is full)</td></tr>
+            <tr><td><strong>Dequeue</strong></td><td>Removes and returns the front item.</td><td>Underflow (if the queue is empty)</td></tr>
+            <tr><td><strong>Front</strong></td><td>Returns the front item without removing it.</td><td>None (returns null/None if empty)</td></tr>
+            <tr><td><strong>isEmpty</strong></td><td>Checks if the queue is empty.</td><td>N/A</td></tr>
+            <tr><td><strong>isFull</strong></td><td>Checks if the queue is full.</td><td>N/A</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Uses of Queues</h3>
+    <p>Queues are incredibly useful in computer science for managing data that needs to be processed in the order it arrives. Here are some key applications:</p>
+    <ul style="margin-left: 20px; margin-bottom: 15px;">
+        <li><strong>Printer Queues:</strong> Printing jobs are stored in a queue. The first job sent is the first to be printed. New jobs join at the rear.</li>
+        <li><strong>Keyboard Queues:</strong> The keyboard buffer stores characters as they are typed. The first key pressed is the first character to appear on screen.</li>
+        <li><strong>Simulations:</strong> Queues model real-life situations like checkout lines, car washes, and car park exits, where people or cars enter one side and exit the other.</li>
+        <li><strong>CPU Scheduling:</strong> Processes waiting for CPU time are often managed in a queue.</li>
+        <li><strong>Breadth-First Search:</strong> In graph algorithms, a queue is used to explore nodes level by level.</li>
+    </ul>
+
+    <h3>Key Terms</h3>
+    <table>
+        <thead>
+            <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Queue</strong></td><td>An abstract data structure that works on the FIFO principle.</td></tr>
+            <tr><td><strong>FIFO</strong></td><td>First In, First Out. The first element inserted is the first one removed.</td></tr>
+            <tr><td><strong>Enqueue</strong></td><td>A method for inserting an element at the rear of a queue.</td></tr>
+            <tr><td><strong>Dequeue</strong></td><td>A method for deleting the element from the front of a queue.</td></tr>
+            <tr><td><strong>Front Pointer</strong></td><td>A variable that tracks the position of the front element.</td></tr>
+            <tr><td><strong>Rear Pointer</strong></td><td>A variable that tracks the position of the rear element.</td></tr>
+            <tr><td><strong>Overflow</strong></td><td>An error that occurs when trying to enqueue onto a full queue.</td></tr>
+            <tr><td><strong>Underflow</strong></td><td>An error that occurs when trying to dequeue from an empty queue.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="info-box">
+        <p><strong>⚠️ Common Errors:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li><strong>Queue Overflow:</strong> Forgetting to check if a static queue is full before enqueuing.</li>
+            <li><strong>Queue Underflow:</strong> Forgetting to check if a queue is empty before dequeuing.</li>
+            <li><strong>Losing Data:</strong> Not storing the dequeued value if it's needed later.</li>
+        </ul>
+    </div>
+
+    <!-- ==================== TASK 1 ==================== -->
+    <h2>📝 Task 1: Understanding</h2>
+    <div class="task-box">
+        <div class="task-title">📖 Read & Understand</div>
+        <div class="task-desc">Read through the detailed explanations of queues on the Computer Science Wiki and review the lesson presentation.</div>
+        <div class="btn-group">
+            <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.2.4-explain-the-concept-of-a-queue-as-a-first-in-first-out-fifo-data-structure" target="_blank" class="btn-link">📄 Queues Wiki</a>
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vTw8pN5mWeiL8CdXIArzCBXc_gI7PCURTVbXA_csQXeWNHl_jPcH0i6TLwvwGNYp0SN6ZBHtPfnTCHn/pub?start=false&loop=false&delayms=3000&slide=id.g3ab6a212515_0_20" target="_blank" class="btn-link">📄 Lesson Presentation (Slides)</a>
+        </div>
+    </div>
+
+    <!-- ==================== TASK 2 ==================== -->
+    <h2>🤖 Task 2: Teach the AI</h2>
+    <div class="task-box">
+        <div class="task-title">🧠 RevisionDojo "Teach the AI"</div>
+        <div class="task-desc">Explain the concept of a queue, the FIFO principle, and the enqueue/dequeue operations to the AI. This will help consolidate your understanding.</div>
+        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=292&classroomId=7d9d7fc0-cf13-42eb-a277-77d2b675cb6a" target="_blank" class="btn-link">🤖 Teach the AI</a>
+    </div>
+
+    <!-- ==================== TASK 3 (ASSESSMENT) ==================== -->
+    <h2>💻 Task 3: Assessment</h2>
+    <div class="task-box">
+        <div class="task-title">📊 Queue Operations – Written Assessment</div>
+        <div class="task-desc">Review the Queue Operations slides. For each question on the slides, write your answers using the Python Copy tool below.</div>
+        <p style="margin-top: 10px;"><strong>Instructions:</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 10px;">
+            <li>Open the <strong>Queue Operations (Slides)</strong> link below.</li>
+            <li>Work through each question on the slides.</li>
+            <li>Write your answers using the <strong>Python Copy</strong> tool.</li>
+            <li>Save your work as a .txt file and submit to <strong>Schoolbox</strong>.</li>
+        </ul>
+        <div class="btn-group">
+            <!-- Using the queue-specific presentation link -->
+            <a href="https://docs.google.com/presentation/d/e/2PACX-1vRytJ3dif2_tQAmsV4QsCUmxNmFz3qkJMavDR4PPALq1PCBEtMcmJbKaXwh94ycRp8Fa-EXWZUPPHa0/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank" class="btn-link">📄 Queue Operations (Slides)</a>
+            <a href="https://jamesabela.github.io/jsfun/pythoncopy" target="_blank" class="btn-link python">💻 Python Copy Tool</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📌 Important:</strong> Save your code as a .txt file. You will submit all starter activity answers to <strong>Schoolbox</strong>.</p>
+    </div>
+
+    <!-- ==================== TASK 4 (PRACTICE) ==================== -->
+    <h2>🧩 Task 4: Practice</h2>
+    <div class="task-box">
+        <div class="task-title">🔧 Queue Reorder Puzzle</div>
+        <div class="task-desc">Practice reordering the code blocks to create a working queue implementation. This is a practice activity, not an assessment.</div>
+        <div class="btn-group">
+            <!-- Placeholder for queue reorder puzzle; replace with actual queue puzzle link if available -->
+            <a href="https://jamesabela.github.io/jsfun/reorder.html?data=IyBJbml0aWFsaXplIHF1ZXVlCm15X3F1ZXVlID0gW10KCmRlZiBlbnF1ZXVlKHF1ZXVlLCBpdGVtKToKICAgIHF1ZXVlLmFwcGVuZChpdGVtKQogICAgcHJpbnQoZiJFbnF1ZXVlZDoge2l0ZW19IikKCmRlZiBkZXF1ZXVlKHF1ZXVlKToKICAgIGlmIG5vdCBxdWV1ZToKICAgICAgICBwcmludCgiUXVldWUgaXMgZW1wdHkhIikKICAgICAgICByZXR1cm4gTm9uZQogICAgaXRlbSA9IHF1ZXVlLnBvcCgwKQogICAgcHJpbnQoZiJEZXF1ZXVlZDoge2l0ZW19IikKICAgIHJldHVybiBpdGVtCgojIEV4YW1wbGUgdXNhZ2U6CmVucXVldWUobXlfcXVldWUsICJOZXcgSXRlbSIpCmRlcXVldWUobXlfcXVldWUpCnByaW50KCJSZW1haW5pbmcgcXVldWU6IiwgbXlfcXVldWUp&mode=2D&syntax=on" target="_blank" class="btn-link">🧩 Queue Reorder Puzzle</a>
+        </div>
+    </div>
+
+    <!-- ==================== EXTENSION ==================== -->
+    <h2>🚀 Extension</h2>
+    <div class="extension-box">
+        <p><strong>🎮 Choose Your Path – Continue Your Lab Session</strong></p>
+        <p>If you have completed all tasks, continue with the Choose Your Path activity from the Arrays and Lists lab session. Both paths cover the same skills — choose the one that suits how you like to learn.</p>
+        <div class="btn-group">
+            <a href="https://mr-ellis.github.io/School/B2/G11/b2-2-2-lab.html" target="_blank" class="btn-link extension">🚀 Go to Choose Your Path Lab</a>
+        </div>
+    </div>
+
+    <!-- ==================== PLENARY ==================== -->
+    <h2>🎯 Plenary</h2>
+    <div class="plenary-box">
+        <p><strong>🃏 Quizlet Flashcards</strong></p>
+        <p>Test your understanding of queues and the FIFO principle with this flashcard activity.</p>
+        <a href="https://quizlet.com/pt/1066087496/b-224-explain-the-concept-of-a-queue-as-a-first-in-first-out-fifo-data-structure-flash-cards/?funnelUUID=9cf9cf80-ba79-4463-966d-da0797d9ce68" target="_blank" class="btn-link quizlet">🃏 Quizlet Flashcards</a>
+    </div>
+
+    <!-- ==================== KEY TAKEAWAY ==================== -->
+    <h2>💡 Key Takeaway</h2>
+    <div class="key-takeaway">
+        <p><em>"A queue is a powerful and simple data structure that operates on the FIFO principle. By mastering the enqueue and dequeue operations and understanding its real-world applications—from printer queues to keyboard buffers—you gain a fundamental tool for managing data in the order it arrives. Remember to always guard against overflow and underflow, and consider circular implementations for efficiency."</em></p>
+    </div>
+
+    <hr>
+
+    <div class="footer-meta">
+        B2.2.4 – Queues (Theory) • IB Computer Science
+    </div>
+
+</div>
+
+</body>
+</html>
