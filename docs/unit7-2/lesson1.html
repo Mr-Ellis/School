@@ -143,10 +143,6 @@
       border-left-color: #8e24aa;
       background: #f7edfa;
     }
-    .highlight-box.starter {
-      border-left-color: #e65100;
-      background: #fff3e0;
-    }
 
     /* ===== STARTER CALLOUT ===== */
     .starter-callout {
@@ -215,7 +211,7 @@
     }
     .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
 
-    /* ===== FLOWCHART SYMBOLS ===== */
+    /* ===== FLOWCHART SYMBOLS (FIXED DIAMOND) ===== */
     .flowchart-symbols {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -241,7 +237,7 @@
     }
     .fc-symbol .shape {
       width: 110px;
-      height: 50px;
+      height: 55px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -268,16 +264,30 @@
       border: 2.5px solid #1e88e5;
       border-radius: 6px;
     }
-    .fc-symbol .shape.diamond {
+    /* FIXED diamond: wrapper keeps layout, inner square is the rotated diamond */
+    .fc-symbol .shape.diamond-wrap {
+      width: 110px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fc-symbol .shape.diamond-wrap .diamond-inner {
+      width: 62px;
+      height: 62px;
       background: #fff8e1;
       border: 2.5px solid #f9a825;
-      transform: rotate(45deg) scale(0.7);
-      width: 90px;
-      height: 90px;
+      transform: rotate(45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .fc-symbol .shape.diamond span {
-      transform: rotate(-45deg) scale(1.4);
-      font-size: 0.65rem;
+    .fc-symbol .shape.diamond-wrap .diamond-inner span {
+      transform: rotate(-45deg);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      white-space: nowrap;
     }
     .fc-symbol .label {
       font-size: 0.85rem;
@@ -289,7 +299,7 @@
       color: #64748b;
     }
 
-    /* ===== INTERACTIVE MATCH GAME ===== */
+    /* ===== INTERACTIVE MATCH GAME (FIXED DIAMOND) ===== */
     .match-game {
       background: #f8fafc;
       border: 1px solid #dceaf7;
@@ -309,7 +319,7 @@
       gap: 0.8rem;
       margin: 1rem 0;
       align-items: center;
-      min-height: 70px;
+      min-height: 90px;
     }
     .match-game .match-row .shape-chip {
       display: inline-flex;
@@ -336,17 +346,42 @@
     .match-game .match-row .shape-chip.rectangle {
       background: #e3f2fd; border-color: #1e88e5; border-radius: 6px;
     }
-    .match-game .match-row .shape-chip.diamond {
-      background: #fff8e1; border-color: #f9a825;
-      transform: rotate(45deg);
-      border-radius: 4px;
-      padding: 0.6rem;
+    /* FIXED diamond chip: outer keeps layout, inner is the rotated square */
+    .match-game .match-row .shape-chip.diamond-chip-wrap {
+      background: transparent;
+      border: none;
+      padding: 0;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .match-game .match-row .shape-chip.diamond span {
+    .match-game .match-row .shape-chip.diamond-chip-wrap .diamond-chip-inner {
+      width: 56px;
+      height: 56px;
+      background: #fff8e1;
+      border: 2.5px solid #f9a825;
+      transform: rotate(45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+    .match-game .match-row .shape-chip.diamond-chip-wrap .diamond-chip-inner span {
       transform: rotate(-45deg);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #0b2a4a;
+    }
+    .match-game .match-row .shape-chip.diamond-chip-wrap:hover .diamond-chip-inner {
+      background: #ffecb3;
     }
     .match-game .match-row .shape-chip.selected {
+      box-shadow: 0 0 0 3px #2a6f97;
+      border-radius: 6px;
+    }
+    .match-game .match-row .shape-chip.diamond-chip-wrap.selected .diamond-chip-inner {
       box-shadow: 0 0 0 3px #2a6f97;
     }
 
@@ -586,10 +621,10 @@
     <div class="sub"><i class="fas fa-arrow-right" style="margin-right:6px;"></i> Student's Book pages 44–49</div>
   </div>
 
-  <!-- ===== RESOURCE BAR ===== -->
+  <!-- ===== RESOURCE BAR (transformer icon removed) ===== -->
   <div class="resource-bar">
     <span class="label"><i class="fas fa-tools"></i> Tools:</span>
-    <a href="https://createai.microbit.org/" target="_blank"><i class="fas fa-brain"></i> CreateAI</a>
+    <a href="https://createai.microbit.org/" target="_blank"><i class="fas fa-lightbulb"></i> CreateAI</a>
     <a href="https://makecode.microbit.org" target="_blank"><i class="fas fa-cubes"></i> MakeCode</a>
     <a href="https://python.microbit.org/v/2" target="_blank"><i class="fas fa-code"></i> MicroPython Editor</a>
   </div>
@@ -659,7 +694,9 @@
         <div class="desc">An instruction or calculation</div>
       </div>
       <div class="fc-symbol">
-        <div class="shape diamond"><span>Decision</span></div>
+        <div class="shape diamond-wrap">
+          <div class="diamond-inner"><span>Decision</span></div>
+        </div>
         <div class="label">Diamond</div>
         <div class="desc">A question with Yes / No answers</div>
       </div>
@@ -680,7 +717,9 @@
         <div class="shape-chip oval" data-answer="oval">Oval</div>
         <div class="shape-chip parallelogram" data-answer="para"><span>Parallelogram</span></div>
         <div class="shape-chip rectangle" data-answer="rect">Rectangle</div>
-        <div class="shape-chip diamond" data-answer="dia"><span>Diamond</span></div>
+        <div class="shape-chip diamond-chip-wrap" data-answer="dia">
+          <div class="diamond-chip-inner"><span>Diamond</span></div>
+        </div>
       </div>
 
       <div class="drop-zone" id="dropZone">
@@ -759,7 +798,17 @@
     </div>
     <p>MakeCode has a built-in <strong>simulator</strong>, so you can test your program on screen before downloading it to the real micro:bit.</p>
 
-    <!-- ===== AI PROJECT (PROJECT-BASED) ===== -->
+    <!-- ===== MAIN TASK — WORKSHEET (NOW ABOVE AI PROJECT) ===== -->
+    <div class="main-task">
+      <span class="badge">⭐ Main Task</span>
+      <div>
+        <h3>📝 Worksheet 1 — the focus of today's lesson</h3>
+        <p>Complete <strong>Worksheet 1</strong> to review what you have learned about smart devices, systems vs application software, and simulators.</p>
+        <p>This is the primary assessed task for this lesson — everything else on this page supports it.</p>
+      </div>
+    </div>
+
+    <!-- ===== AI PROJECT (JOINED TOGETHER) ===== -->
     <h2>🤖 AI Project: Train a Model (Project-Based)</h2>
 
     <div class="highlight-box purple">
@@ -775,10 +824,10 @@
       <li>At the end of <strong>next lesson</strong>, you should be able to <em>run the program</em> using the CreateAI simulator.</li>
     </ul>
 
-    <h3>🎒 Before the next lesson — bring your materials</h3>
+    <h3>🎒 Homework — bring your materials for next lesson</h3>
     <div class="highlight-box green">
       <i class="fas fa-box-open" style="color:#2d8f2d; margin-right:8px;"></i>
-      <strong>Homework / preparation:</strong> Bring in physical materials to build a real-world version of your AI project. Examples:
+      Bring in physical materials to build a real-world version of your AI project. Examples:
       <ul style="margin-top:0.4rem;">
         <li><strong>Elastic bands</strong> — to create a moving part or lever</li>
         <li><strong>Small toys</strong> or figures — to be moved by your device</li>
@@ -790,16 +839,6 @@
     <div class="highlight-box">
       <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
       <strong>Go to:</strong> <a href="https://createai.microbit.org/" target="_blank" style="color:#1f6390;">createai.microbit.org</a> to explore the tool. In future lessons you'll combine your trained AI model with the physical materials you bring in.
-    </div>
-
-    <!-- ===== MAIN TASK — WORKSHEET (sits above AI project? No — above was request; now placed at end near AI section) ===== -->
-    <div class="main-task">
-      <span class="badge">⭐ Main Task</span>
-      <div>
-        <h3>📝 Worksheet 1 — the focus of today's lesson</h3>
-        <p>Complete <strong>Worksheet 1</strong> to review what you have learned about smart devices, systems vs application software, and simulators.</p>
-        <p>This is the primary assessed task for this lesson — everything else on this page supports it.</p>
-      </div>
     </div>
 
     <!-- ===== SELF-CHECK QUIZ ===== -->
@@ -921,11 +960,12 @@
         const chipAnswer = selectedChip.getAttribute('data-answer');
         const slotAnswer = slot.getAttribute('data-slot');
         const slotLabel = slot.querySelector('span') ? slot.querySelector('span').textContent : slot.textContent;
+        const chipLabel = selectedChip.querySelector('span') ? selectedChip.querySelector('span').textContent : selectedChip.textContent;
 
         if (chipAnswer === slotAnswer) {
           slot.classList.add('correct');
           slot.classList.remove('incorrect');
-          slot.innerHTML = '<span style="font-weight:700;">✅ ' + selectedChip.textContent.trim() + ' → ' + slotLabel + '</span>';
+          slot.innerHTML = '<span style="font-weight:700;">✅ ' + chipLabel.trim() + ' → ' + slotLabel + '</span>';
           selectedChip.style.display = 'none';
           clearSelection();
           feedback.textContent = '✅ Correct!';
