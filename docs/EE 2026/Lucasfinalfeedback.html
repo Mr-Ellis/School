@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final EE Feedback · Lucas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f7f9fc;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.65;
+            color: #1e2b3a;
+            padding: 2rem 1rem;
+        }
+
+        .page {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -12px rgba(0, 20, 30, 0.15), 0 6px 18px rgba(0, 0, 0, 0.04);
+            padding: 2.8rem 2.8rem 3.2rem;
+            border: 1px solid #e9edf4;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.3rem;
+            color: #0a1c2f;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h1 small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #5f6c80;
+            background: #eef2f7;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            letter-spacing: 0.01em;
+            margin-left: 0.5rem;
+        }
+
+        .subhead {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #2e4057;
+            border-left: 5px solid #3b7a9e;
+            padding-left: 1rem;
+            margin: 0.5rem 0 2rem 0;
+            background: linear-gradient(to right, #f4f9ff, transparent);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .greeting {
+            background: #f0f6fe;
+            padding: 1rem 1.5rem;
+            border-radius: 18px;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            color: #103450;
+            border: 1px solid #d3e2f5;
+            font-size: 1.05rem;
+        }
+
+        .section {
+            margin-top: 2.4rem;
+        }
+
+        .section h2 {
+            font-size: 1.45rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.75rem;
+            color: #133753;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #dfe8f2;
+            padding-bottom: 0.65rem;
+        }
+
+        .section h2 span {
+            background: #1d5a8b;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.15rem 0.8rem;
+            border-radius: 30px;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: #fbfdff;
+            border: 1px solid #e2eaf3;
+            border-radius: 20px;
+            padding: 1.3rem 1.8rem;
+            margin: 1rem 0 1.5rem 0;
+            box-shadow: 0 4px 10px -4px rgba(0, 20, 30, 0.06);
+        }
+
+        .compare-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .compare-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem 1.5rem;
+            background: #ffffff;
+            padding: 0.9rem 1.2rem;
+            border-radius: 16px;
+            border: 1px solid #e6edf6;
+        }
+
+        .label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #4b6b8a;
+            min-width: 80px;
+        }
+
+        .current, .better {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 14px;
+            background: #f2f5f9;
+            color: #1f3a4e;
+            border-left: 3px solid #9bafc0;
+            flex: 1 1 260px;
+        }
+
+        .better {
+            background: #eaf6ef;
+            border-left-color: #2f8f5b;
+            color: #0d3d2b;
+        }
+
+        .arrow {
+            color: #6987a0;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin: 0 0.25rem;
+        }
+
+        code, .mono {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            background: #edf2f8;
+            padding: 0.1rem 0.4rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #1b3e5c;
+        }
+
+        .formula-block {
+            background: #f4f8fe;
+            border-radius: 16px;
+            padding: 0.8rem 1.5rem;
+            display: inline-block;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            border: 1px solid #cddef0;
+            margin: 0.4rem 0.2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #d9e6f5;
+            color: #17466b;
+            font-weight: 500;
+            font-size: 0.75rem;
+            padding: 0.15rem 0.9rem;
+            border-radius: 30px;
+            letter-spacing: 0.02em;
+            margin-right: 0.5rem;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin: 0.75rem 0 0.5rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        .highlight-box {
+            background: #fcf9e9;
+            border-left: 6px solid #e5b83c;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dashed #d4e0ec;
+            margin: 2rem 0 0.5rem;
+        }
+
+        .footer-note {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #d9e3ee;
+            font-size: 0.9rem;
+            color: #4c6079;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pill {
+            background: #eef4fa;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            color: #23547b;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.7rem;
+                flex-wrap: wrap;
+            }
+            .compare-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .arrow {
+                align-self: center;
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <h1>
+        Final EE Feedback
+        <small>Lucas</small>
+    </h1>
+    <div class="subhead">Final improvements before submission · Editing, precision &amp; polish</div>
+
+    <div class="greeting">
+        ✦ Lucas, congratulations. Your essay has improved significantly and is now comfortably beyond the "pass" stage. You have developed a genuine Computer Science investigation that demonstrates understanding of algorithms, image processing, computational trade-offs, and data analysis. The remaining improvements are mostly editing, precision, and polishing.
+    </div>
+
+    <!-- 1. Mathematical formatting -->
+    <div class="section">
+        <h2><span>1</span> Fix mathematical formatting throughout</h2>
+        <div class="card">
+            <p style="margin-bottom: 0.8rem;">Several formulas appear broken due to Word formatting. Correct these before final submission.</p>
+
+            <div class="compare-grid">
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">SNR = Signal Noise</div>
+                    <span class="arrow">→</span>
+                    <div class="better">SNR = Signal / Noise</div>
+                </div>
+                <div class="compare-item">
+                    <span class="label"></span>
+                    <div class="current" style="border-left-color: #b8c9db;">or preferably</div>
+                    <span class="arrow">→</span>
+                    <div class="better">SNR = Mean Signal / Standard Deviation of Noise</div>
+                </div>
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">f x = asinh a×x `</div>
+                    <span class="arrow">→</span>
+                    <div class="better">f(x) = asinh(a × x)</div>
+                </div>
+                <div class="compare-item">
+                    <span class="label"></span>
+                    <div class="current" style="border-left-color: #b8c9db;">or full form</div>
+                    <span class="arrow">→</span>
+                    <div class="better">f(x) = ln(ax + √(a²x² + 1))</div>
+                </div>
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">N ×S &nbsp;&nbsp; and &nbsp;&nbsp; N × σ</div>
+                    <span class="arrow">→</span>
+                    <div class="better">N × S &nbsp;&nbsp; and &nbsp;&nbsp; √N × σ</div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 1.2rem;">
+                <span class="badge">✦ note</span> Use proper spacing and formatting consistently. The corrected versions reflect the formulas you actually use in your methodology.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. √N theory -->
+    <div class="section">
+        <h2><span>2</span> Improve the explanation of √N theory</h2>
+        <div class="card">
+            <div class="compare-grid">
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">This effect perfectly represents the theory that signal improves through stacking by √N.</div>
+                    <span class="arrow">→</span>
+                    <div class="better">This effect supports the theoretical model that signal-to-noise ratio improves proportionally to the square root of the number of stacked frames (√N).</div>
+                </div>
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">strongly passes the theoretical prediction</div>
+                    <span class="arrow">→</span>
+                    <div class="better">exceeds the theoretical prediction</div>
+                </div>
+            </div>
+            <p style="margin-top: 0.9rem; color: #2e4d6e;"><span class="badge">✎</span> Academic writing tends to avoid phrases such as "strongly passes".</p>
+        </div>
+    </div>
+
+    <!-- 3. Figure 9 caption -->
+    <div class="section">
+        <h2><span>3</span> Improve Figure 9 caption</h2>
+        <div class="card">
+            <div class="compare-item" style="border: none; padding: 0;">
+                <span class="label">Current</span>
+                <div class="current">Figure 9: Image E displayed in Linear</div>
+                <span class="arrow">→</span>
+                <div class="better">Figure 9: Calibrated DSLR stack (Image E) displayed in linear format, showing reduced background noise after dark, flat and bias calibration.</div>
+            </div>
+            <p style="margin-top: 0.8rem;">This helps demonstrate that the figure contributes to your analysis.</p>
+        </div>
+    </div>
+
+    <!-- 4. Conclusion opening -->
+    <div class="section">
+        <h2><span>4</span> Strengthen the opening sentence of the conclusion</h2>
+        <div class="card">
+            <div class="compare-item" style="border: none; padding: 0;">
+                <span class="label">Current</span>
+                <div class="current">This investigation focused on to what extent does image stacking and contrast enhancement techniques improve...</div>
+                <span class="arrow">→</span>
+                <div class="better">This investigation examined the extent to which image stacking and contrast enhancement techniques improve the visibility of fine structural details in deep-sky astrophotography.</div>
+            </div>
+            <p style="margin-top: 0.8rem;">This sounds much more academic.</p>
+        </div>
+    </div>
+
+    <!-- 5. Calibration explanation -->
+    <div class="section">
+        <h2><span>5</span> Slightly improve the explanation of calibration</h2>
+        <div class="card">
+            <div class="compare-item" style="border: none; padding: 0;">
+                <span class="label">Current</span>
+                <div class="current">The measured Signal was lower in Image E because the dark frame calibration helps eliminate thermal noise that was previously recorded as gross pixel intensity.</div>
+                <span class="arrow">→</span>
+                <div class="better">The measured signal was lower in Image E because calibration removed thermal noise and systematic sensor artefacts that had previously contributed to pixel brightness values. This suggests that part of the original measured signal was not genuine astronomical information.</div>
+            </div>
+            <p style="margin-top: 0.8rem;">This strengthens your evaluation.</p>
+        </div>
+    </div>
+
+    <!-- 6. Image E limitation -->
+    <div class="section">
+        <h2><span>6</span> Improve the Image E limitation discussion</h2>
+        <div class="card">
+            <p>You already discuss uncertainty well. <strong>Add one additional sentence:</strong></p>
+            <div style="background: #e3f0fd; border-radius: 16px; padding: 1rem 1.5rem; margin-top: 0.8rem; border-left: 4px solid #1d5a8b;">
+                “Future work could use multiple measurement regions and calculate an average SNR to reduce the influence of region-selection bias.”
+            </div>
+            <p style="margin-top: 0.8rem;">This demonstrates stronger evaluation and methodological awareness.</p>
+        </div>
+    </div>
+
+    <!-- 7. Language issues -->
+    <div class="section">
+        <h2><span>7</span> Correct small language issues</h2>
+        <div class="card">
+            <div class="compare-grid">
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">The stacking solves our low light problem</div>
+                    <span class="arrow">→</span>
+                    <div class="better">Stacking helps address the low-light imaging problem.</div>
+                </div>
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">The process of Average stacking</div>
+                    <span class="arrow">→</span>
+                    <div class="better">The process of average stacking</div>
+                </div>
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">The imaging of deep sky objects such as Galaxies, nebulae or star clusters</div>
+                    <span class="arrow">→</span>
+                    <div class="better">The imaging of deep-sky objects such as galaxies, nebulae, and star clusters</div>
+                </div>
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">Earth’s rotation and the night sky rotation</div>
+                    <span class="arrow">→</span>
+                    <div class="better">Earth's rotation <span style="font-weight: 400; color: #3b5f7e;">(The second phrase is unnecessary.)</span></div>
+                </div>
+                <div class="compare-item">
+                    <span class="label">Current</span>
+                    <div class="current">making sure there are no outliers</div>
+                    <span class="arrow">→</span>
+                    <div class="better">reducing the impact of outliers</div>
+                </div>
+            </div>
+            <p style="margin-top: 1rem;"><span class="badge">✎</span> There can never be a guarantee that there are absolutely no outliers.</p>
+        </div>
+    </div>
+
+    <!-- 8. Future work -->
+    <div class="section">
+        <h2><span>8</span> Expand future work slightly</h2>
+        <div class="card">
+            <p>Your future work section is already good. You could add:</p>
+            <div style="background: #eef4fa; border-radius: 16px; padding: 1rem 1.5rem; margin-top: 0.6rem;">
+                “Future investigations could also compare median stacking, kappa-sigma clipping, and machine-learning denoising approaches to determine whether newer methods produce superior results for low-SNR astrophotography datasets.”
+            </div>
+            <p style="margin-top: 0.8rem;">This directly connects future work to your investigation.</p>
+        </div>
+    </div>
+
+    <!-- 9. Bibliography check -->
+    <div class="section">
+        <h2><span>9</span> Final bibliography check</h2>
+        <div class="card">
+            <p>Before submission, ensure:</p>
+            <ul>
+                <li>Every source cited in the text appears in the bibliography.</li>
+                <li>Every bibliography source appears at least once in the essay.</li>
+                <li>Standardise formatting: <strong>Author · Title · Publisher · Year · URL</strong></li>
+            </ul>
+            <p style="margin-top: 0.6rem;">Use one consistent format throughout.</p>
+        </div>
+    </div>
+
+    <!-- 10. RPPF reflection -->
+    <div class="section">
+        <h2><span>10</span> RPPF reflection <span style="background: #b2542c;">most important</span></h2>
+        <div class="card">
+            <p style="font-weight: 500; margin-bottom: 0.6rem;">This is now the single most important remaining mark.</p>
+            <p>Your reflection should focus on:</p>
+            <ul style="margin-bottom: 0.8rem;">
+                <li>How your understanding of image processing changed.</li>
+                <li>Why Image E forced you to rethink your interpretation of results.</li>
+                <li>What you learned about measuring data correctly.</li>
+                <li>The trade-off between computational cost and image quality.</li>
+                <li>How your understanding of Computer Science developed throughout the investigation.</li>
+            </ul>
+            <p><strong>Avoid:</strong></p>
+            <ul>
+                <li>Simply describing the steps you carried out.</li>
+                <li>Repeating the conclusion.</li>
+            </ul>
+            <div class="highlight-box" style="margin-top: 1.2rem; background: #eef4fe; border-left-color: #1f6ea0;">
+                ✦ Focus on <strong>what you learned</strong> rather than what you did.
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="footer-note">
+        <span class="pill">Final EE feedback · Lucas</span>
+        <span style="color: #7b8fa3;">Ready for submission after these polish steps.</span>
+    </div>
+</div>
+</body>
+</html>
