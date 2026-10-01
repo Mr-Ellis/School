@@ -167,6 +167,38 @@
     }
     .starter-callout a:hover { color: #7a3300; }
 
+    .main-task {
+      background: linear-gradient(135deg, #fff8e1, #ffecb3);
+      border: 2px solid #f9a825;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .main-task .badge {
+      background: #f9a825;
+      color: #4a2c00;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .main-task h3 { margin-top: 0; color: #7a4b00; font-size: 1.15rem; }
+    .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
+    .main-task ul { margin-top: 0.3rem; color: #5a3a00; }
+    .main-task a {
+      color: #7a4b00;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .tools-bar {
       display: flex;
       flex-wrap: wrap;
@@ -197,53 +229,93 @@
       background: #f0f7ff;
     }
     .tool-btn i { color: #2a6f97; }
+    .tool-btn.ppt i { color: #d24726; }
+    .tool-btn.doc i { color: #2b579a; }
+    .tool-btn.lab i { color: #43a047; }
 
-    /* ===== MALWARE GRID ===== */
-    .malware-grid {
+    /* ===== FLIP CARDS ===== */
+    .flip-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 1rem;
       margin: 1.2rem 0;
     }
-    .malware-card {
-      background: #f8fafc;
-      border: 1px solid #dceaf7;
-      border-radius: 16px;
-      padding: 1.1rem 1.2rem;
-      transition: 0.25s;
+    .flip-card {
+      perspective: 1000px;
+      height: 240px;
       cursor: pointer;
     }
-    .malware-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(31, 110, 156, 0.12);
-      border-color: #7bb3ff;
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
     }
-    .malware-card .icon {
-      font-size: 1.8rem;
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      padding: 1.2rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.06);
+    }
+    .flip-card-front {
+      background: white;
+      border: 2px solid #dceaf7;
+      text-align: center;
+    }
+    .flip-card-front .icon {
+      font-size: 2.4rem;
       margin-bottom: 0.4rem;
     }
-    .malware-card h4 {
-      font-size: 1rem;
+    .flip-card-front h4 {
+      font-size: 1.1rem;
       font-weight: 700;
       color: #0b2a4a;
       margin-bottom: 0.3rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-    .malware-card p {
-      font-size: 0.85rem;
-      color: #475569;
-      margin: 0;
+    .flip-card-front .flip-hint {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 0.4rem;
     }
-    .malware-card.virus .icon { color: #e53935; }
-    .malware-card.worm .icon { color: #f9a825; }
-    .malware-card.trojan .icon { color: #8e24aa; }
-    .malware-card.ransomware .icon { color: #b71c1c; }
-    .malware-card.spyware .icon { color: #1e88e5; }
-    .malware-card.adware .icon { color: #43a047; }
+    .flip-card-back {
+      background: #0b2a4a;
+      color: white;
+      transform: rotateY(180deg);
+      text-align: left;
+    }
+    .flip-card-back h5 {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+      color: #7bb3ff;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .flip-card-back p {
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #e2edf7;
+    }
 
-    /* ===== INTERACTIVE SCENARIO GAME ===== */
+    .flip-card.virus .flip-card-front .icon { color: #e53935; }
+    .flip-card.worm .flip-card-front .icon { color: #f9a825; }
+    .flip-card.trojan .flip-card-front .icon { color: #8e24aa; }
+    .flip-card.ransomware .flip-card-front .icon { color: #b71c1c; }
+    .flip-card.spyware .flip-card-front .icon { color: #1e88e5; }
+    .flip-card.adware .flip-card-front .icon { color: #43a047; }
+
+    /* ===== SCENARIO GAME ===== */
     .scenario-game {
       background: #f8fafc;
       border: 1px solid #dceaf7;
@@ -322,6 +394,74 @@
       width: 0%;
       transition: 0.3s;
     }
+
+    /* ===== PHISHING INSPECTOR ===== */
+    .phishing-inspector {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .phishing-inspector h3 { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+    .email-preview {
+      background: white;
+      border: 2px solid #dceaf7;
+      border-radius: 14px;
+      padding: 1.2rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .email-preview .email-header {
+      border-bottom: 1px solid #e5edf5;
+      padding-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.82rem;
+      color: #64748b;
+    }
+    .email-preview .email-header .email-field {
+      margin-bottom: 0.2rem;
+    }
+    .email-preview .email-header .email-field strong {
+      color: #475569;
+      display: inline-block;
+      min-width: 60px;
+    }
+    .email-preview .email-body {
+      color: #1e293b;
+    }
+    .flag-btn {
+      background: white;
+      border: 2px solid #dceaf7;
+      border-radius: 8px;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0.3rem 0.3rem 0 0;
+      transition: 0.2s;
+      color: #475569;
+    }
+    .flag-btn:hover { border-color: #f9a825; background: #fff8e1; }
+    .flag-btn.correct-flag {
+      background: #c8e6c9;
+      border-color: #2d8f2d;
+      color: #1b5e20;
+    }
+    .flag-btn.incorrect-flag {
+      background: #ffcdd2;
+      border-color: #e53935;
+      color: #b71c1c;
+    }
+    .phishing-feedback {
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-height: 1.4rem;
+      margin-top: 0.6rem;
+    }
+    .phishing-feedback.ok { color: #2d8f2d; }
+    .phishing-feedback.no { color: #b71c1c; }
 
     /* ===== MATCH GAME ===== */
     .match-game {
@@ -499,8 +639,8 @@
       .nav .brand { margin-right: 0; }
       .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
       .lesson-content { padding: 1.2rem 1.4rem; }
-      .starter-callout { flex-direction: column; gap: 0.6rem; }
-      .malware-grid { grid-template-columns: 1fr; }
+      .starter-callout, .main-task { flex-direction: column; gap: 0.6rem; }
+      .flip-grid { grid-template-columns: 1fr 1fr; }
       .match-game .match-cols { grid-template-columns: 1fr; }
     }
   </style>
@@ -546,62 +686,139 @@
       </div>
     </div>
 
-    <!-- ===== TOOLS BAR ===== -->
-    <h2>🛠️ Resources</h2>
+    <!-- ===== TOOLS & RESOURCES ===== -->
+    <h2>🛠️ Lesson Resources</h2>
+    <p>Everything you need for today's lesson — lesson plan, presentation, worksheets and reference sites.</p>
     <div class="tools-bar">
-      <a href="https://www.thecomputersciencelab.com/chapter-5-the-internet-and-its-uses" target="_blank" class="tool-btn">
-        <i class="fas fa-book"></i> The Computer Science Lab
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F5%2520Networks-internet%2FLesson%2520Plan%25205.docx&wdOrigin=BROWSELINK" target="_blank" class="tool-btn doc">
+        <i class="fas fa-file-word"></i> Lesson Plan 5
       </a>
-      <a href="https://www.bbc.co.uk/bitesize/guides/z8yg87h/revision/1" target="_blank" class="tool-btn">
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F5%2520Networks-internet%2FT5%2520Cyber%2520security%2520threats.pptx&wdOrigin=BROWSELINK" target="_blank" class="tool-btn ppt">
+        <i class="fas fa-file-powerpoint"></i> T5 Cyber Security PPT
+      </a>
+      <a href="https://www.thecomputersciencelab.com/chapter-5-the-internet-and-its-uses" target="_blank" class="tool-btn lab">
+        <i class="fas fa-flask"></i> The Computer Science Lab
+      </a>
+      <a href="https://www.bbc.co.uk/bitesize/topics/zf2f9j6" target="_blank" class="tool-btn">
         <i class="fas fa-graduation-cap"></i> BBC Bitesize
       </a>
-      <a href="https://app.diagrams.net/" target="_blank" class="tool-btn">
-        <i class="fas fa-project-diagram"></i> draw.io (diagrams)
-      </a>
     </div>
 
-    <!-- ===== WHAT IS MALWARE ===== -->
-    <h2>🦠 What is Malware?</h2>
-    <p><strong>Malware</strong> comes from two words: <strong>Mal</strong>icious + <strong>Soft</strong>ware. It is any executable program designed to harm a computer, network or data.</p>
-    <p>There are six main types of malware you need to know:</p>
-
-    <div class="malware-grid">
-      <div class="malware-card virus">
-        <div class="icon"><i class="fas fa-virus"></i></div>
-        <h4>Virus</h4>
-        <p>Replicates its code in other programs, infects other computers, and harms the computer by deleting, corrupting or modifying files.</p>
-      </div>
-      <div class="malware-card worm">
-        <div class="icon"><i class="fas fa-worm"></i></div>
-        <h4>Worm</h4>
-        <p>Replicates itself to spread to other computers. May cause no damage, but slows down networks and computers.</p>
-      </div>
-      <div class="malware-card trojan">
-        <div class="icon"><i class="fas fa-horse-head"></i></div>
-        <h4>Trojan Horse</h4>
-        <p>Hides malicious code inside a legitimate-looking program, game or file. When opened, the harmful code runs.</p>
-      </div>
-      <div class="malware-card ransomware">
-        <div class="icon"><i class="fas fa-lock"></i></div>
-        <h4>Ransomware</h4>
-        <p>Encrypts the hard drive so the user can't access files. A ransom (often in cryptocurrency) is demanded to restore access.</p>
-      </div>
-      <div class="malware-card spyware">
-        <div class="icon"><i class="fas fa-user-secret"></i></div>
-        <h4>Spyware</h4>
-        <p>Finds information about users, their computers or company information. Sends it to a hacker for misuse.</p>
-      </div>
-      <div class="malware-card adware">
-        <div class="icon"><i class="fas fa-rectangle-ad"></i></div>
-        <h4>Adware</h4>
-        <p>Displays large numbers of adverts, often through multiple windows. Hacker makes money when users click.</p>
+    <!-- ===== MAIN TASK ===== -->
+    <div class="main-task">
+      <span class="badge">⭐ Main Task</span>
+      <div>
+        <h3>📝 Worksheet 5 — the focus of today's lesson</h3>
+        <p>Complete <strong>Worksheet 5</strong> — the main assessed task for this lesson.</p>
+        <ul>
+          <li><strong>Task 1:</strong> Tick which hacking technique has been used in each scenario and underline the supporting parts.</li>
+          <li><strong>Task 2:</strong> Explain the security risk and advice for each user action.</li>
+          <li><strong>Task 3:</strong> Analyse the phishing text message — what action and why?</li>
+          <li><strong>Task 4:</strong> Draw a diagram to explain how pharming works.</li>
+          <li><strong>Task 5:</strong> Research DDoS attacks and a real-world example.</li>
+        </ul>
+        <p style="margin-top:0.6rem;">
+          <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F5%2520Networks-internet%2FT5%2520Worksheet%25205.docx&wdOrigin=BROWSELINK" target="_blank">
+            <i class="fas fa-file-word"></i> Open Worksheet 5
+          </a>
+        </p>
       </div>
     </div>
 
-    <!-- ===== INTERACTIVE SCENARIO GAME ===== -->
+    <!-- ===== FLIP CARDS ===== -->
+    <h2>🦠 Malware — Flip the Cards</h2>
+    <p><strong>Malware</strong> = <strong>Mal</strong>icious + <strong>Soft</strong>ware. Click each card to flip it and reveal what it does.</p>
+
+    <div class="flip-grid">
+      <div class="flip-card virus">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon"><i class="fas fa-virus"></i></div>
+            <h4>Virus</h4>
+            <div class="flip-hint">Click to flip →</div>
+          </div>
+          <div class="flip-card-back">
+            <h5>What it does</h5>
+            <p>Replicates its code inside other programs. Infects other computers and harms the computer by deleting, corrupting or modifying files.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card worm">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon"><i class="fas fa-worm"></i></div>
+            <h4>Worm</h4>
+            <div class="flip-hint">Click to flip →</div>
+          </div>
+          <div class="flip-card-back">
+            <h5>What it does</h5>
+            <p>Replicates itself to spread to other computers. May cause no damage, but slows down networks and computers significantly.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card trojan">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon"><i class="fas fa-horse-head"></i></div>
+            <h4>Trojan Horse</h4>
+            <div class="flip-hint">Click to flip →</div>
+          </div>
+          <div class="flip-card-back">
+            <h5>What it does</h5>
+            <p>Hides malicious code inside a legitimate-looking program, game or file. When the user opens it, the harmful code runs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card ransomware">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon"><i class="fas fa-lock"></i></div>
+            <h4>Ransomware</h4>
+            <div class="flip-hint">Click to flip →</div>
+          </div>
+          <div class="flip-card-back">
+            <h5>What it does</h5>
+            <p>Encrypts the hard drive so the user can't access files. A ransom (often cryptocurrency like Bitcoin) is demanded to restore access.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card spyware">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon"><i class="fas fa-user-secret"></i></div>
+            <h4>Spyware</h4>
+            <div class="flip-hint">Click to flip →</div>
+          </div>
+          <div class="flip-card-back">
+            <h5>What it does</h5>
+            <p>Secretly finds information about the user, their computer or their company. Sends it to a hacker for misuse (theft, fraud, ID theft).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card adware">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon"><i class="fas fa-rectangle-ad"></i></div>
+            <h4>Adware</h4>
+            <div class="flip-hint">Click to flip →</div>
+          </div>
+          <div class="flip-card-back">
+            <h5>What it does</h5>
+            <p>Displays large numbers of adverts, often in multiple windows. In worst cases, new adverts appear faster than you can close them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCENARIO GAME ===== -->
     <div class="scenario-game" id="scenarioGame">
       <h3><i class="fas fa-magnifying-glass" style="color:#2a6f97;"></i> Interactive: Identify the Attack</h3>
-      <p style="font-size:0.9rem; color:#475569;">Read each scenario and click the correct type of attack. You need to get all 6 right to unlock the worksheets.</p>
+      <p style="font-size:0.9rem; color:#475569;">Read each scenario and click the correct type of malware. You need to get all 6 right to unlock the worksheet.</p>
 
       <div class="progress">
         <span id="scenarioProgressText">0 / 6 correct</span>
@@ -643,10 +860,6 @@
 
     <h3>🎣 Phishing</h3>
     <p>Emails, texts or phone calls pretending to be from a <strong>bank or trusted website</strong>, trying to get personal information like usernames, passwords or credit card details.</p>
-    <div class="highlight-box red">
-      <i class="fas fa-triangle-exclamation" style="color:#b71c1c; margin-right:8px;"></i>
-      <strong>Watch out for:</strong> No personalised greeting · Sender address looks slightly off · Links that don't match the text · Requests for personal info · Urgency · Poor spelling or grammar
-    </div>
 
     <h3>🌾 Pharming</h3>
     <p>Combines <strong>phishing</strong> and <strong>farming</strong>. The user's computer or a DNS server is altered so that a domain name points to an <strong>incorrect IP address</strong> — the hacker's fake website.</p>
@@ -654,7 +867,39 @@
     <h3>🧠 Social engineering</h3>
     <p>Obtaining confidential information by <strong>asking people for it</strong> — often using confidence tricks. For example, phoning a receptionist, pretending to be IT support, and asking for their password.</p>
 
-    <!-- ===== INTERACTIVE MATCH GAME ===== -->
+    <!-- ===== PHISHING INSPECTOR ===== -->
+    <div class="phishing-inspector" id="phishingInspector">
+      <h3><i class="fas fa-fish" style="color:#2a6f97;"></i> Interactive: Spot the Phishing Email</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click on the parts of the email below that give away that it's a phishing scam. There are 4 red flags to find!</p>
+
+      <div class="email-preview">
+        <div class="email-header">
+          <div class="email-field"><strong>From:</strong> <span id="flagFrom">Halifax Bank Plc (no-reply@home.ne.jp)</span></div>
+          <div class="email-field"><strong>To:</strong> <span id="flagTo">Undisclosed recipients</span></div>
+          <div class="email-field"><strong>Subject:</strong> <span id="flagSubject">PROBLEM WITH YOUR BANK ACCOUNT</span></div>
+        </div>
+        <div class="email-body">
+          <p id="flagGreeting"><strong>Dear Customer,</strong></p>
+          <p id="flagBody">This e-mail has been sent to you by Direct Banking to inform you that we are unable to process your last bank statement and will no longer processes it until the error is rectified.</p>
+          <p id="flagRequest">Due to this, to ensure that your service is not interrupted, we request you to <strong>confirm and verify your billing information today</strong>.</p>
+          <p id="flagLink"><a href="#">VERIFY</a></p>
+          <p>Regards<br>Direct Banking Billing Department</p>
+        </div>
+      </div>
+
+      <p style="font-size:0.85rem; font-weight:600; margin-top:1rem;">Flag the problems you spot:</p>
+      <div>
+        <button class="flag-btn" data-flag="from">Sender's address doesn't match the bank</button>
+        <button class="flag-btn" data-flag="greeting">Generic greeting (not personalised)</button>
+        <button class="flag-btn" data-flag="body">Poor spelling / grammar</button>
+        <button class="flag-btn" data-flag="request">Asks for personal information</button>
+        <button class="flag-btn" data-flag="urgent">Creates a sense of urgency</button>
+        <button class="flag-btn" data-flag="link">Suspicious link</button>
+      </div>
+      <div class="phishing-feedback" id="phishingFeedback"></div>
+    </div>
+
+    <!-- ===== MATCH GAME ===== -->
     <div class="match-game" id="matchGame">
       <h3><i class="fas fa-puzzle-piece" style="color:#2a6f97;"></i> Interactive: Match the Attack to its Definition</h3>
       <p style="font-size:0.9rem; color:#475569;">Click an attack on the left, then click its matching definition on the right.</p>
@@ -687,7 +932,7 @@
     <!-- ===== QUIZ ===== -->
     <div class="quiz" id="quiz">
       <h3><i class="fas fa-circle-question" style="color:#2a6f97;"></i> Quick Self-Check</h3>
-      <p style="font-size:0.9rem; color:#475569;">Answer all 5 questions correctly to unlock the worksheet tasks below.</p>
+      <p style="font-size:0.9rem; color:#475569;">Answer all 5 questions correctly to unlock the homework tasks below.</p>
 
       <div class="progress" id="quizProgress">
         <span id="quizProgressText">0 / 5 correct</span>
@@ -740,102 +985,27 @@
       </div>
     </div>
 
-    <!-- ===== LOCKED WORKSHEET TASKS ===== -->
-    <div class="locked-section" id="lockedTask1">
-      <div class="locked-message">
-        <div class="lock-icon"><i class="fas fa-lock"></i></div>
-        <h3>🔒 Worksheet 5 — Task 1</h3>
-        <p>Complete the scenario game and quiz above to unlock.</p>
-      </div>
-      <div class="locked-content">
-        <h3 style="margin-top:0;"><i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i> Worksheet 5 — Task 1</h3>
-        <p>For each scenario in your worksheet, tick which hacking technique has been used and underline the parts of the scenario that support your choice.</p>
-        <ul>
-          <li>Virus</li>
-          <li>Worm</li>
-          <li>Trojan</li>
-          <li>Ransomware</li>
-          <li>Adware</li>
-          <li>Spyware</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="locked-section" id="lockedTask2">
-      <div class="locked-message">
-        <div class="lock-icon"><i class="fas fa-lock"></i></div>
-        <h3>🔒 Worksheet 5 — Task 2</h3>
-        <p>Complete the scenario game and quiz above to unlock.</p>
-      </div>
-      <div class="locked-content">
-        <h3 style="margin-top:0;"><i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i> Worksheet 5 — Task 2</h3>
-        <p>For each action taken by the user, explain the security risk and what you would advise them to do instead.</p>
-        <ul>
-          <li>The user ignores most app updates.</li>
-          <li>A user visits a legitimate-looking website for their bank — but the web address is slightly different.</li>
-          <li>The user is a receptionist and happily gives out staff information over the phone.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="locked-section" id="lockedTask3">
-      <div class="locked-message">
-        <div class="lock-icon"><i class="fas fa-lock"></i></div>
-        <h3>🔒 Worksheet 5 — Task 3</h3>
-        <p>Complete the scenario game and quiz above to unlock.</p>
-      </div>
-      <div class="locked-content">
-        <h3 style="margin-top:0;"><i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i> Worksheet 5 — Task 3</h3>
-        <p>Look at the text message in your worksheet. Answer:</p>
-        <ol>
-          <li>(a) What action should the recipient take?</li>
-          <li>(b) Give reasons for your answer.</li>
-        </ol>
-      </div>
-    </div>
-
-    <div class="locked-section" id="lockedTask4">
-      <div class="locked-message">
-        <div class="lock-icon"><i class="fas fa-lock"></i></div>
-        <h3>🔒 Worksheet 5 — Task 4</h3>
-        <p>Complete the scenario game and quiz above to unlock.</p>
-      </div>
-      <div class="locked-content">
-        <h3 style="margin-top:0;"><i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i> Worksheet 5 — Task 4</h3>
-        <p>Draw a diagram to explain how pharming works. Write an additional explanation of how pharming works beneath the diagram.</p>
-        <p><em>Hint: Think about what happens to DNS records, and where the user's browser ends up being sent.</em></p>
-      </div>
-    </div>
-
-    <div class="locked-section" id="lockedTask5">
-      <div class="locked-message">
-        <div class="lock-icon"><i class="fas fa-lock"></i></div>
-        <h3>🔒 Worksheet 5 — Task 5</h3>
-        <p>Complete the scenario game and quiz above to unlock.</p>
-      </div>
-      <div class="locked-content">
-        <h3 style="margin-top:0;"><i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i> Worksheet 5 — Task 5</h3>
-        <p>Carry out some research on Distributed Denial of Service attacks and write up your findings. Include:</p>
-        <ul>
-          <li>What is a DDoS attack?</li>
-          <li>Who is typically targeted?</li>
-          <li>Who does it typically affect?</li>
-          <li>How can it be countered?</li>
-        </ul>
-        <p>Then research one or more real examples of DoS attacks and write a short description covering: when, who, how many affected, who was responsible, motives, how it was accomplished, and how organisations can protect themselves.</p>
-      </div>
-    </div>
-
     <!-- ===== HOMEWORK ===== -->
-    <h2>📝 Homework 5</h2>
-    <div class="highlight-box">
-      <i class="fas fa-pen" style="color:#1f6390; margin-right:8px;"></i>
-      Complete <strong>Homework 5</strong>:
-      <ol style="margin-top:0.4rem;">
-        <li>Describe two different types of malware that exist.</li>
-        <li>Study the email on the next page. State three reasons which indicate that it is a phishing scam.</li>
-        <li>(a) Describe what is meant by a distributed denial of service attack. (b) Indicate whether each statement about DDoS is true or false.</li>
-      </ol>
+    <div class="locked-section" id="lockedHomework">
+      <div class="locked-message">
+        <div class="lock-icon"><i class="fas fa-lock"></i></div>
+        <h3>🔒 Homework 5</h3>
+        <p>Complete the scenario game, phishing inspector and quiz above to unlock.</p>
+      </div>
+      <div class="locked-content">
+        <h3 style="margin-top:0;"><i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i> Homework 5</h3>
+        <p>Complete <strong>Homework 5</strong>:</p>
+        <ol>
+          <li>Describe two different types of malware that exist.</li>
+          <li>Study the email on the following page. State three reasons which indicate that it is a phishing scam.</li>
+          <li>(a) Describe what is meant by a distributed denial of service attack. (b) Indicate whether each statement about DDoS is true or false.</li>
+        </ol>
+        <p style="margin-top:0.6rem;">
+          <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F5%2520Networks-internet%2FT5%2520Homework%25205.docx&wdOrigin=BROWSELINK" target="_blank">
+            <i class="fas fa-file-word"></i> Open Homework 5
+          </a>
+        </p>
+      </div>
     </div>
 
     <!-- ===== KEYWORDS ===== -->
@@ -869,40 +1039,24 @@
 </div>
 
 <script>
+  // ===== FLIP CARDS =====
+  (function() {
+    document.querySelectorAll('.flip-card').forEach(card => {
+      card.addEventListener('click', () => card.classList.toggle('flipped'));
+    });
+  })();
+
   // ===== SCENARIO GAME =====
   (function() {
     const scenarios = [
-      {
-        text: "Tyler goes to a website that says it will supply cracked software that doesn't need a licence. After installing the software, the user is pleased as it works as expected. They notice later that many adverts display on their computer.",
-        answer: "adware",
-        options: ["virus", "worm", "trojan", "ransomware", "adware", "spyware"]
-      },
-      {
-        text: "Leila clicked on a file in an email attachment. Today, when she turned on her computer it said that all her files are now encrypted. She has been given 24 hours to pay one bitcoin to unencrypt the files.",
-        answer: "ransomware",
-        options: ["virus", "worm", "trojan", "ransomware", "adware", "spyware"]
-      },
-      {
-        text: "Richard has downloaded a file from the Internet and run it. After a short while he has noticed that many of the files on his computer have been deleted or corrupted.",
-        answer: "virus",
-        options: ["virus", "worm", "trojan", "ransomware", "adware", "spyware"]
-      },
-      {
-        text: "A program has been written that targets computers on the Internet. It automatically replicates itself, and whilst it doesn't harm any individual computers, it does slow down the network.",
-        answer: "worm",
-        options: ["virus", "worm", "trojan", "ransomware", "adware", "spyware"]
-      },
-      {
-        text: "A user downloads what looks like a free game. When they install it, hidden code runs in the background that lets a hacker take control of the computer.",
-        answer: "trojan",
-        options: ["virus", "worm", "trojan", "ransomware", "adware", "spyware"]
-      },
-      {
-        text: "A user notices their computer is running slowly. Later they find out that a program has been secretly collecting their browsing habits and sending them to a third party.",
-        answer: "spyware",
-        options: ["virus", "worm", "trojan", "ransomware", "adware", "spyware"]
-      }
+      { text: "Tyler goes to a website that says it will supply cracked software that doesn't need a licence. After installing the software, the user is pleased as it works as expected. They notice later that many adverts display on their computer.", answer: "adware" },
+      { text: "Leila clicked on a file in an email attachment. Today, when she turned on her computer it said that all her files are now encrypted. She has been given 24 hours to pay one bitcoin to unencrypt the files.", answer: "ransomware" },
+      { text: "Richard has downloaded a file from the Internet and run it. After a short while he has noticed that many of the files on his computer have been deleted or corrupted.", answer: "virus" },
+      { text: "A program has been written that targets computers on the Internet. It automatically replicates itself, and whilst it doesn't harm any individual computers, it does slow down the network.", answer: "worm" },
+      { text: "A user downloads what looks like a free game. When they install it, hidden code runs in the background that lets a hacker take control of the computer.", answer: "trojan" },
+      { text: "A user notices their computer is running slowly. Later they find out that a program has been secretly collecting their browsing habits and sending them to a third party.", answer: "spyware" }
     ];
+    const options = ["virus", "worm", "trojan", "ransomware", "adware", "spyware"];
 
     const container = document.getElementById('scenarioContainer');
     const feedback = document.getElementById('scenarioFeedback');
@@ -911,7 +1065,7 @@
     const resetBtn = document.getElementById('resetScenarios');
     const correctAnswers = {};
 
-    function buildScenarios() {
+    function build() {
       container.innerHTML = '';
       scenarios.forEach((s, i) => {
         correctAnswers[i] = false;
@@ -921,7 +1075,7 @@
           <div class="scenario-num">Scenario ${i + 1}</div>
           <p>${s.text}</p>
           <div class="options" data-index="${i}">
-            ${s.options.map(opt => `<button data-opt="${opt}">${opt.charAt(0).toUpperCase() + opt.slice(1)}</button>`).join('')}
+            ${options.map(opt => `<button data-opt="${opt}">${opt.charAt(0).toUpperCase() + opt.slice(1)}</button>`).join('')}
           </div>
           <div class="feedback" id="fb-${i}"></div>
         `;
@@ -954,7 +1108,6 @@
           });
         });
       });
-
       updateProgress();
     }
 
@@ -969,12 +1122,37 @@
       }
     }
 
-    resetBtn.addEventListener('click', () => {
-      buildScenarios();
-      feedback.textContent = '';
-    });
+    resetBtn.addEventListener('click', () => { build(); feedback.textContent = ''; });
+    build();
+  })();
 
-    buildScenarios();
+  // ===== PHISHING INSPECTOR =====
+  (function() {
+    const correctFlags = ['from', 'greeting', 'body', 'request'];
+    const feedback = document.getElementById('phishingFeedback');
+    const found = new Set();
+
+    document.querySelectorAll('.flag-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const flag = btn.getAttribute('data-flag');
+        if (correctFlags.includes(flag)) {
+          if (!found.has(flag)) {
+            found.add(flag);
+            btn.classList.add('correct-flag');
+            feedback.textContent = '✅ Correct! Found ' + found.size + ' / ' + correctFlags.length + ' red flags.';
+            feedback.className = 'phishing-feedback ok';
+            if (found.size === correctFlags.length) {
+              feedback.textContent = '🎉 All 4 red flags found! Great work.';
+            }
+          }
+        } else {
+          btn.classList.add('incorrect-flag');
+          feedback.textContent = '❌ Not quite — that one is actually fine.';
+          feedback.className = 'phishing-feedback no';
+          setTimeout(() => btn.classList.remove('incorrect-flag'), 1000);
+        }
+      });
+    });
   })();
 
   // ===== MATCH GAME =====
@@ -985,7 +1163,7 @@
     const resetBtn = document.getElementById('resetMatch');
     let selectedLeft = null;
 
-    function clearSelection() {
+    function clearSel() {
       leftItems.forEach(i => i.classList.remove('selected'));
       selectedLeft = null;
     }
@@ -993,7 +1171,7 @@
     leftItems.forEach(item => {
       item.addEventListener('click', () => {
         if (item.classList.contains('matched')) return;
-        clearSelection();
+        clearSel();
         selectedLeft = item;
         item.classList.add('selected');
       });
@@ -1009,12 +1187,11 @@
         }
         const leftKey = selectedLeft.getAttribute('data-key');
         const rightKey = item.getAttribute('data-key');
-
         if (leftKey === rightKey) {
           selectedLeft.classList.add('matched');
           selectedLeft.classList.remove('selected');
           item.classList.add('matched');
-          clearSelection();
+          clearSel();
           feedback.textContent = '✅ Correct match!';
           feedback.className = 'feedback ok';
         } else {
@@ -1022,9 +1199,8 @@
           feedback.textContent = '❌ Not quite — try again.';
           feedback.className = 'feedback no';
           setTimeout(() => item.classList.remove('incorrect'), 800);
-          clearSelection();
+          clearSel();
         }
-
         const matched = document.querySelectorAll('#matchLeft .match-item.matched').length;
         if (matched === leftItems.length) {
           feedback.textContent = '🎉 All matched! Great work.';
@@ -1037,7 +1213,7 @@
       leftItems.forEach(i => i.classList.remove('matched', 'selected'));
       rightItems.forEach(i => i.classList.remove('matched', 'incorrect'));
       feedback.textContent = '';
-      clearSelection();
+      clearSel();
     });
   })();
 
@@ -1046,26 +1222,19 @@
     const questions = document.querySelectorAll('#quiz .q');
     const progressText = document.getElementById('quizProgressText');
     const progressFill = document.getElementById('quizFill');
-    const lockedTasks = [
-      document.getElementById('lockedTask1'),
-      document.getElementById('lockedTask2'),
-      document.getElementById('lockedTask3'),
-      document.getElementById('lockedTask4'),
-      document.getElementById('lockedTask5')
-    ];
+    const lockedHomework = document.getElementById('lockedHomework');
 
     const correctAnswers = {};
     questions.forEach((q, i) => { correctAnswers[i] = false; });
 
-    function updateProgress() {
+    function update() {
       const total = Object.keys(correctAnswers).length;
       const done = Object.values(correctAnswers).filter(Boolean).length;
       progressText.textContent = done + ' / ' + total + ' correct';
       progressFill.style.width = ((done / total) * 100) + '%';
-
       if (done === total) {
-        lockedTasks.forEach(t => t.classList.add('unlocked'));
-        progressText.textContent = '🎉 All 5 correct! Worksheet tasks unlocked.';
+        lockedHomework.classList.add('unlocked');
+        progressText.textContent = '🎉 All 5 correct! Homework unlocked.';
         progressText.style.color = '#2d8f2d';
       }
     }
@@ -1074,7 +1243,6 @@
       const correct = q.getAttribute('data-correct');
       const buttons = q.querySelectorAll('button');
       const fb = q.querySelector('.answer-feedback');
-
       buttons.forEach(btn => {
         btn.addEventListener('click', () => {
           const chosen = btn.getAttribute('data-opt');
@@ -1084,19 +1252,18 @@
             fb.textContent = '✅ Correct!';
             fb.className = 'answer-feedback ok';
             correctAnswers[i] = true;
-            updateProgress();
+            update();
           } else {
             btn.classList.add('incorrect');
             fb.textContent = '❌ Not quite. Try again.';
             fb.className = 'answer-feedback no';
             correctAnswers[i] = false;
-            updateProgress();
+            update();
           }
         });
       });
     });
-
-    updateProgress();
+    update();
   })();
 </script>
 
