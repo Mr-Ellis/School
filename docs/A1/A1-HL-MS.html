@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G11 A1 (A1.1) — HL Mark Scheme</title>
+<style>
+  :root{--ink:#1a1a1a;--muted:#5b6470;--line:#c9d1d9;--accent:#5b2a86;--band:#f3eef9;--ok:#1d6f42;}
+  body{font-family:Georgia,"Times New Roman",serif;color:var(--ink);background:#f4f6f8;margin:0;padding:24px;line-height:1.5;}
+  .sheet{max-width:860px;margin:0 auto 28px;background:#fff;padding:38px 44px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  header.exam{border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:18px;}
+  header.exam h1{margin:0 0 6px;font-size:1.45rem;color:var(--accent);}
+  header.exam .sub{color:var(--muted);font-size:.95rem;}
+  h2.section{background:var(--accent);color:#fff;font-size:1rem;padding:8px 14px;margin:28px 0 14px;}
+  .q{margin:0 0 18px;}
+  .q .head{font-weight:bold;}
+  .marks{float:right;color:var(--accent);font-weight:bold;}
+  .pt{margin:5px 0 5px 20px;padding-left:12px;border-left:3px solid var(--band);}
+  .pt .m{color:var(--ok);font-weight:bold;}
+  .note{background:var(--band);border-left:4px solid var(--accent);padding:10px 16px;font-size:.93rem;margin:14px 0;}
+  @media print{body{background:#fff;padding:0;}.sheet{box-shadow:none;margin:0;padding:18mm;}}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<header class="exam">
+  <h1>Grade 11 Assessment 1 — A1.1 Computer Architecture</h1>
+  <div class="sub">Higher Level · Mark Scheme · Total: 65 marks</div>
+</header>
+
+<div class="note">
+  <strong>How to use this mark scheme:</strong> one mark per distinct correct point unless stated.
+  For “Explain” questions credit requires a developed point (what happens <em>and</em> why).
+  Accept any other valid wording. Total: 65 marks.
+</div>
+
+<h2 class="section">Section A — CPU, GPU and Primary Memory (20 marks)</h2>
+
+<div class="q">
+  <p class="head">1. IR vs MDR <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> IR holds the instruction that has just been fetched from memory.</div>
+  <div class="pt"><span class="m">[1]</span> Its role: holds the instruction currently being decoded/executed by the Control Unit.</div>
+  <div class="pt"><span class="m">[1]</span> MDR holds the data value just read from, or about to be written to, RAM.</div>
+  <div class="pt"><span class="m">[1]</span> Its role: temporary buffer between the CPU and main memory during read/write.</div>
+</div>
+
+<div class="q">
+  <p class="head">2. Why ROM for startup <span class="marks">[2]</span></p>
+  <div class="pt"><span class="m">[1]</span> RAM is volatile — contents lost without power, so cannot hold startup instructions.</div>
+  <div class="pt"><span class="m">[1]</span> ROM is non-volatile and read-only, so instructions survive power loss and cannot be overwritten by software.</div>
+</div>
+
+<div class="q">
+  <p class="head">3. Cache hit/miss <span class="marks">[3]</span></p>
+  <div class="pt"><span class="m">[1]</span> Hit: data found in cache, CPU proceeds almost immediately.</div>
+  <div class="pt"><span class="m">[1]</span> Miss: data not in cache, CPU must fetch from RAM, which takes many times longer.</div>
+  <div class="pt"><span class="m">[1]</span> Higher hit rate = fewer slow RAM accesses = less CPU stalling = faster execution.</div>
+</div>
+
+<div class="q">
+  <p class="head">4. GPU for ML <span class="marks">[3]</span></p>
+  <div class="pt"><span class="m">[1]</span> Training = vast numbers of matrix operations split into independent calculations.</div>
+  <div class="pt"><span class="m">[1]</span> GPU’s thousands of simple cores perform these in parallel rather than one at a time.</div>
+  <div class="pt"><span class="m">[1]</span> High-bandwidth dedicated memory keeps all cores supplied with data, so training is far faster than on a CPU.</div>
+</div>
+
+<div class="q">
+  <p class="head">5. CPU/GPU coordination <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> CPU manages overall training process and prepares data (varied, sequential work).</div>
+  <div class="pt"><span class="m">[1]</span> CPU assigns parallel independent matrix operations to the GPU.</div>
+  <div class="pt"><span class="m">[1]</span> Data transferred over high-speed PCIe in large batches because transfers cost time.</div>
+  <div class="pt"><span class="m">[1]</span> CPU synchronises: waits for GPU to finish each batch before dependent steps (e.g. updating the model).</div>
+</div>
+
+<div class="q">
+  <p class="head">6. Fetch stage <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> Address in PC copied to MAR.</div>
+  <div class="pt"><span class="m">[1]</span> Address sent along address bus; read signal sent along control bus.</div>
+  <div class="pt"><span class="m">[1]</span> Instruction returns along data bus into MDR.</div>
+  <div class="pt"><span class="m">[1]</span> Copied into IR; PC incremented.</div>
+</div>
+
+<h2 class="section">Section B — Pipelining (HL Only) (12 marks)</h2>
+
+<div class="q">
+  <p class="head">7. Decode and write-back <span class="marks">[2]</span></p>
+  <div class="pt"><span class="m">[1]</span> Decode: control unit interprets the fetched instruction to determine the operation and required operands.</div>
+  <div class="pt"><span class="m">[1]</span> Write-back: the result of the executed operation is stored in a register or in memory.</div>
+</div>
+
+<div class="q">
+  <p class="head">8. Pipelining in a multi-core processor <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> Instruction execution split into stages (fetch, decode, execute, write-back).</div>
+  <div class="pt"><span class="m">[1]</span> Stages of consecutive instructions overlap, so a core completes up to one instruction per clock cycle → higher throughput.</div>
+  <div class="pt"><span class="m">[1]</span> Each core has its own pipeline, ALU and registers, so every core overlaps stages simultaneously.</div>
+  <div class="pt"><span class="m">[1]</span> Cores work independently/in parallel on tasks assigned by the OS, multiplying instructions completed per unit time.</div>
+</div>
+
+<div class="q">
+  <p class="head">9. Branch instructions in a pipeline <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> A branch means the next instruction to fetch is not known until the branch is evaluated.</div>
+  <div class="pt"><span class="m">[1]</span> The pipeline may have already fetched/decode instructions that turn out to be wrong, so they must be discarded (a pipeline flush) → lost cycles.</div>
+  <div class="pt"><span class="m">[1]</span> Technique named: branch prediction / speculative execution / delayed branch (branch delay slot) / dual pipeline.</div>
+  <div class="pt"><span class="m">[1]</span> Explanation of how the technique reduces the penalty: e.g. predicting the likely outcome and fetching ahead; if the prediction is correct the pipeline never stalls; only on misprediction is a flush needed.</div>
+</div>
+
+<div class="q">
+  <p class="head">10. More stages ≠ always better <span class="marks">[2]</span></p>
+  <div class="pt"><span class="m">[1]</span> Adding stages increases overhead: pipeline registers/latches between stages cost time, and clock skew/uneven stage lengths limit gains.</div>
+  <div class="pt"><span class="m">[1]</span> Diminishing returns — deeper pipelines increase branch misprediction penalty and not every instruction uses every stage, so throughput gain flattens.</div>
+  <div class="pt"><em>Accept either point; max 2.</em></div>
+</div>
+
+<h2 class="section">Section C — Secondary Memory, Compression and Cloud (18 marks)</h2>
+
+<div class="q">
+  <p class="head">11. Internal vs external <span class="marks">[2]</span></p>
+  <div class="pt"><span class="m">[1]</span> Internal: inside the case, direct motherboard connection, faster access.</div>
+  <div class="pt"><span class="m">[1]</span> External: connects via USB/network, portable, generally slower.</div>
+</div>
+
+<div class="q">
+  <p class="head">12. SSD <span class="marks">[3]</span></p>
+  <div class="pt"><span class="m">[1]</span> Stores data in flash memory.</div>
+  <div class="pt"><span class="m">[1]</span> No moving parts → faster access and more durable than HDD.</div>
+  <div class="pt"><span class="m">[1]</span> Preferred for OS: faster boot and program loading times.</div>
+</div>
+
+<div class="q">
+  <p class="head">13. RLE <span class="marks">[3]</span></p>
+  <div class="pt"><span class="m">[1]</span> Runs: AAAAAA, BBBB, CC, D.</div>
+  <div class="pt"><span class="m">[1]</span> Encoded: <code>6A4B2C1D</code>.</div>
+  <div class="pt"><span class="m">[1]</span> 13 characters before, 8 after → shorter.</div>
+</div>
+
+<div class="q">
+  <p class="head">14. Transform coding <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> Audio converted from raw samples into frequencies.</div>
+  <div class="pt"><span class="m">[1]</span> Encoder identifies imperceptible sounds (very quiet or masked by louder nearby frequencies).</div>
+  <div class="pt"><span class="m">[1]</span> Those components are permanently discarded → lossy.</div>
+  <div class="pt"><span class="m">[1]</span> Remaining data encoded compactly → much smaller file.</div>
+</div>
+
+<div class="q">
+  <p class="head">15. PaaS <span class="marks">[2]</span></p>
+  <div class="pt"><span class="m">[1]</span> Environment for developing/deploying apps over the internet.</div>
+  <div class="pt"><span class="m">[1]</span> Provider manages servers/storage/OS; customer manages only the app and its config.</div>
+</div>
+
+<div class="q">
+  <p class="head">16. SaaS vs IaaS <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> SaaS advantage: ready to use, no infrastructure to manage, team focuses on business.</div>
+  <div class="pt"><span class="m">[1]</span> SaaS disadvantage: cannot customise → unusual booking requirements may not fit.</div>
+  <div class="pt"><span class="m">[1]</span> IaaS advantage: full control, build exactly as required.</div>
+  <div class="pt"><span class="m">[1]</span> IaaS disadvantage: start-up must manage OS, security, capacity → time/expertise burden.</div>
+</div>
+
+<h2 class="section">Section D — Operating Systems and Control (HL Only) (15 marks)</h2>
+
+<div class="q">
+  <p class="head">17. FCFS vs round robin <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> Both are CPU scheduling algorithms deciding the order ready processes use the processor.</div>
+  <div class="pt"><span class="m">[1]</span> FCFS runs to completion; RR runs for a fixed time slice then moves to back of queue.</div>
+  <div class="pt"><span class="m">[1]</span> FCFS → convoy effect; RR → fairer sharing, shorter response time for short processes.</div>
+  <div class="pt"><span class="m">[1]</span> RR pays with context-switching overhead; FCFS largely avoids it.</div>
+</div>
+
+<div class="q">
+  <p class="head">18. Polling vs interrupts <span class="marks">[6]</span></p>
+  <div class="pt"><span class="m">[1]</span> Keystrokes are infrequent and unpredictable.</div>
+  <div class="pt"><span class="m">[1]</span> Polling repeatedly checks the keyboard even when idle → wasted cycles.</div>
+  <div class="pt"><span class="m">[1]</span> On battery this wastes charge because the processor can’t drop to a low-power state.</div>
+  <div class="pt"><span class="m">[1]</span> Interrupts let the processor sleep/do other work until a key is pressed.</div>
+  <div class="pt"><span class="m">[1]</span> Interrupts give low response latency → keyboard feels responsive.</div>
+  <div class="pt"><span class="m">[1]</span> Judgement: interrupts are better here; the per-interrupt overhead is negligible at typing speeds, so it wins on power, overhead and responsiveness. <em>(Award only with a justified conclusion.)</em></div>
+</div>
+
+<div class="q">
+  <p class="head">19. Deadlock <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> Deadlock occurs when two or more processes each hold a resource and wait for a resource the other holds, so none can proceed.</div>
+  <div class="pt"><span class="m">[1]</span> Example: P1 holds R1 and requests R2; P2 holds R2 and requests R1.</div>
+  <div class="pt"><span class="m">[1]</span> Neither releases what it holds until it gets what it wants → circular wait / indefinite waiting.</div>
+  <div class="pt"><span class="m">[1]</span> Requires all four Coffman conditions together (mutual exclusion, hold and wait, no preemption, circular wait); removing any one prevents deadlock.</div>
+</div>
+
+<div class="q">
+  <p class="head">20. Greenhouse closed-loop control <span class="marks">[4]</span></p>
+  <div class="pt"><span class="m">[1]</span> Temperature sensor measures greenhouse air and feeds the value back to the controller.</div>
+  <div class="pt"><span class="m">[1]</span> Controller compares the measurement with the 24 °C setpoint and decides (using its algorithm) whether to heat, ventilate or do nothing.</div>
+  <div class="pt"><span class="m">[1]</span> An actuator (heater or vent motor) carries out the decision, changing the temperature, which the sensor then measures again — closing the loop.</div>
+  <div class="pt"><span class="m">[1]</span> Closed-loop is used because feedback lets the system correct for disturbances (cold night, strong sun) that an open-loop timer could not respond to.</div>
+</div>
+
+<div class="q">
+  <p class="head">21. Compiled vs interpreted speed <span class="marks">[2]</span></p>
+  <div class="pt"><span class="m">[1]</span> Compiler translates the whole program into optimised machine code before it runs, so at run time the processor executes native instructions directly.</div>
+  <div class="pt"><span class="m">[1]</span> Interpreter translates each statement as it runs and repeats that work on every pass through a loop, adding overhead → slower execution.</div>
+</div>
+
+<div class="note">
+  <strong>Grade boundaries (suggested):</strong> 7 = 59–65 · 6 = 55–58 · 5 = 52–54 · 4 = 46–51 · 3 = 39–45 · 2 = 29–38 · 1 = 0–28.
+</div>
+
+</div>
+</body>
+</html>
