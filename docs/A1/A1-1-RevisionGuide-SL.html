@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A1.1 Computer Architecture — SL Revision Guide</title>
+<title>A1.1 &amp; A1.3 Revision Guide — SL</title>
 <style>
   :root{
     --ink:#1a1a1a;
@@ -14,7 +14,6 @@
     --tipb:#e6b800;
     --warn:#fdecea;
     --warnb:#c0392b;
-    --ok:#1d6f42;
   }
   *{box-sizing:border-box;}
   body{
@@ -54,6 +53,7 @@
   }
   h2:first-of-type{margin-top:12px;}
   h3{margin-top:26px;font-size:1rem;}
+  h4{margin:18px 0 8px;font-size:.95rem;font-style:italic;color:var(--muted);}
   p{margin:0 0 12px;}
   ul,ol{margin:8px 0 14px 22px;}
   li{margin:4px 0;}
@@ -126,6 +126,16 @@
   }
   summary:hover{color:#000;}
   details p{margin:10px 0 4px;}
+  .toc{
+    background:var(--band);
+    border-left:4px solid var(--line);
+    padding:14px 22px;
+    margin:18px 0 26px;
+    font-size:.94rem;
+  }
+  .toc h3{margin:0 0 8px;font-size:.95rem;}
+  .toc ol{margin:0 0 0 20px;padding:0;}
+  .toc li{margin:3px 0;}
   @media print{
     body{background:#fff;padding:0;}
     .sheet{box-shadow:none;margin:0;padding:16mm;max-width:none;}
@@ -136,222 +146,368 @@
 <body>
 <div class="sheet">
 
-<h1>A1.1 Computer Architecture — Revision Guide</h1>
-<p class="lead">IB Computer Science · First Assessment 2027 · Standard Level</p>
-<p>This guide teaches the concepts you need for the A1.1 SL exam. Each section explains the idea from scratch, gives a worked example or diagram, and points out common mistakes. Practice questions at the end have hidden answers.</p>
+<h1>A1.1 Computer Architecture &amp; A1.3 Operating Systems</h1>
+<p class="lead">IB Computer Science · First Assessment 2027 · Standard Level Revision Guide</p>
+<p>This guide teaches the concepts you need for the A1.1 and A1.3 topics. Each section explains the idea from first principles, works through a neutral example, and finishes with practice questions on a different scenario. The practice questions are written so that the underlying skill is the same as the exam but the surface details are not — you have to transfer what you have learned, not memorise wording.</p>
 
-<h2>1. The CPU and its registers</h2>
+<div class="toc">
+  <h3>What's in this guide</h3>
+  <ol>
+    <li>Inside the CPU — registers, buses, and the fetch–decode–execute cycle</li>
+    <li>Primary memory — RAM, ROM and cache</li>
+    <li>Specialist processors — the GPU and why parallelism matters</li>
+    <li>Secondary storage — internal vs external, HDD vs SSD</li>
+    <li>Compression — lossless, lossy, RLE, transform coding</li>
+    <li>Cloud computing — SaaS, PaaS, IaaS</li>
+    <li>Operating systems — scheduling, interrupts, memory, deadlock</li>
+    <li>Exam technique</li>
+    <li>Practice questions with model answers</li>
+  </ol>
+</div>
 
-<h3>What is the CPU?</h3>
-<p>The Central Processing Unit executes program instructions. It contains the Control Unit (CU), the Arithmetic Logic Unit (ALU), and a small set of very fast storage locations called <strong>registers</strong>.</p>
+<h2>1. Inside the CPU</h2>
 
-<h3>The registers you must know</h3>
+<h3>What the CPU is</h3>
+<p>The CPU executes program instructions. It contains the <strong>Control Unit</strong> (which coordinates everything), the <strong>Arithmetic Logic Unit</strong> (which does maths and logic), and a small number of very fast storage locations called <strong>registers</strong>. Registers are not the same as RAM — they sit inside the CPU, hold one value each, and are accessed in a single clock cycle.</p>
+
+<h3>The registers you need to know</h3>
 <table>
-  <tr><th>Register</th><th>What it holds</th><th>Role in the cycle</th></tr>
-  <tr><td><strong>PC</strong> — Program Counter</td><td>The address of the next instruction to fetch</td><td>Incremented after each fetch</td></tr>
-  <tr><td><strong>MAR</strong> — Memory Address Register</td><td>The address currently being read from or written to</td><td>Connected to the address bus</td></tr>
-  <tr><td><strong>MDR</strong> — Memory Data Register</td><td>The data just read from, or about to be written to, memory</td><td>Temporary buffer on the data bus</td></tr>
-  <tr><td><strong>IR</strong> — Instruction Register</td><td>The instruction currently being decoded/executed</td><td>Output feeds the Control Unit</td></tr>
-  <tr><td><strong>ACC</strong> — Accumulator</td><td>Intermediate results of ALU operations</td><td>Written back at execute stage</td></tr>
+  <tr><th>Register</th><th>Holds</th><th>Its job in the cycle</th></tr>
+  <tr><td>Program Counter (PC)</td><td>The address of the next instruction to fetch</td><td>Incremented after each fetch, so the next cycle looks at the following instruction</td></tr>
+  <tr><td>Memory Address Register (MAR)</td><td>The address currently being read from or written to</td><td>Sends that address onto the address bus</td></tr>
+  <tr><td>Memory Data Register (MDR)</td><td>Data in transit between the CPU and memory</td><td>Buffers the data arriving from or leaving for RAM</td></tr>
+  <tr><td>Instruction Register (IR)</td><td>The instruction currently being decoded or executed</td><td>Feeds the Control Unit with what needs to happen next</td></tr>
+  <tr><td>Accumulator (ACC)</td><td>Intermediate results of ALU operations</td><td>Written back to a register or memory at the end of execute</td></tr>
 </table>
 
-<div class="tip">💡 <strong>IR vs MDR — the classic question.</strong> The IR holds an <em>instruction</em> (a command to do something). The MDR holds <em>data</em> (the thing being worked on, or the instruction while it is in transit). The MDR is a buffer; the IR is where the instruction lives while it is decoded.</div>
+<div class="tip">
+  <strong>The MAR/PC distinction:</strong> the PC holds the address of the <em>next</em> instruction. The MAR holds the address that is <em>currently</em> on the bus. In fetch, the PC is copied into the MAR — for one moment they hold the same value — then the PC is incremented and the two diverge.
+</div>
+
+<div class="tip">
+  <strong>The IR/MDR distinction:</strong> the IR holds an <em>instruction</em> (a command). The MDR holds <em>data</em> — the thing being operated on, or the instruction while it is in transit along the bus. The MDR is a temporary buffer; the IR is where the instruction lives while the Control Unit decodes it.
+</div>
 
 <h3>The three buses</h3>
+<p>Buses are the wires that carry signals between the CPU, memory and I/O devices. There are three you need to know.</p>
 <table>
   <tr><th>Bus</th><th>Direction</th><th>Carries</th></tr>
-  <tr><td>Address bus</td><td>One-way (CPU → memory)</td><td>Address of the location being accessed</td></tr>
-  <tr><td>Data bus</td><td>Two-way</td><td>The data or instruction itself</td></tr>
-  <tr><td>Control bus</td><td>Two-way</td><td>Read/write signals, clock, interrupts</td></tr>
+  <tr><td>Address bus</td><td>One-way, CPU → memory</td><td>The address of the location being accessed</td></tr>
+  <tr><td>Data bus</td><td>Two-way</td><td>The actual data or instruction</td></tr>
+  <tr><td>Control bus</td><td>Two-way</td><td>Signals such as read/write, clock, interrupts</td></tr>
 </table>
 
 <h3>The fetch–decode–execute cycle</h3>
+<p>Every instruction the CPU runs goes through three stages. Fetch brings the instruction into the CPU, decode works out what it means, execute carries it out.</p>
 <div class="diagram">FETCH
-  1. PC → MAR
-  2. MAR → address bus → memory
-  3. read signal on control bus
-  4. instruction on data bus → MDR
-  5. MDR → IR
-  6. PC incremented
+  1. The address in the PC is copied into the MAR.
+  2. The MAR places that address on the address bus.
+  3. The Control Unit sends a read signal on the control bus.
+  4. Memory returns the instruction on the data bus into the MDR.
+  5. The MDR's contents are copied into the IR.
+  6. The PC is incremented, ready for the next cycle.
 
 DECODE
-  7. CU examines IR
-  8. Identifies opcode and operands
+  7. The Control Unit examines the instruction in the IR.
+  8. It identifies the operation (the opcode) and any operands.
+  9. It activates the components that will be needed for execution.
 
 EXECUTE
-  9. ALU/registers perform the operation
- 10. Result written to register or memory</div>
+ 10. The ALU or another unit performs the operation.
+ 11. The result is written back to a register or to memory.</div>
 
-<div class="warn">⚠️ <strong>Common mistake:</strong> saying the MDR “decodes” the instruction. Decoding is done by the Control Unit, which reads from the IR.</div>
+<div class="warn">
+  <strong>Common mistake:</strong> saying the MDR "decodes" the instruction. Decoding is done by the Control Unit, reading from the IR. The MDR's only job is to hold data in transit.
+</div>
 
-<h2>2. Performance: cache</h2>
+<h3>Worked example — where does the address come from?</h3>
+<p>A program is running and the CPU is about to fetch its fourth instruction. Walk through what happens.</p>
+<ol>
+  <li>The PC currently holds the address of that fourth instruction — say <code>0x0040</code>. It got there because the previous fetch incremented the PC from <code>0x003C</code> to <code>0x0040</code>.</li>
+  <li>The PC's value is copied into the MAR.</li>
+  <li>The MAR places <code>0x0040</code> on the address bus.</li>
+  <li>Memory returns whatever is stored at <code>0x0040</code> — the instruction bytes — back along the data bus, into the MDR.</li>
+  <li>The MDR's contents move into the IR. Now the Control Unit can decode them.</li>
+  <li>Meanwhile, the PC is incremented to <code>0x0044</code>, ready for instruction five.</li>
+</ol>
 
-<p><strong>Cache</strong> is small, very fast memory between the CPU and RAM. It holds recently used instructions and data.</p>
+<h2>2. Primary memory</h2>
 
-<ul>
-  <li><strong>Cache hit</strong> — the CPU finds what it needs in cache and proceeds almost immediately.</li>
-  <li><strong>Cache miss</strong> — the data isn’t in cache, so the CPU must fetch it from RAM, which takes many times longer.</li>
-</ul>
-
-<p>A higher <strong>hit rate</strong> means fewer slow RAM accesses, so the CPU spends less time stalled waiting for data and the program runs faster.</p>
-
-<div class="tip">💡 Think of cache as the books on your desk. RAM is the bookshelf across the room. A “hit” means the book is on your desk already.</div>
-
-<h2>3. Primary memory: RAM vs ROM</h2>
-
+<h3>RAM vs ROM</h3>
 <table>
   <tr><th></th><th>RAM</th><th>ROM</th></tr>
-  <tr><td>Volatility</td><td>Volatile (loses contents when power is off)</td><td>Non-volatile</td></tr>
-  <tr><td>Read/write</td><td>Read and write</td><td>Read-only</td></tr>
-  <tr><td>Typical use</td><td>Running programs and open files</td><td>Startup instructions (BIOS/firmware)</td></tr>
+  <tr><td>Volatility</td><td>Volatile — contents are lost when power is removed</td><td>Non-volatile — contents survive without power</td></tr>
+  <tr><td>Read/write</td><td>Both readable and writable</td><td>Read-only in normal operation</td></tr>
+  <tr><td>Typical use</td><td>Holding programs and data that are currently in use</td><td>Holding firmware — the startup instructions the machine needs before anything is loaded</td></tr>
 </table>
 
-<p><strong>Why ROM for startup?</strong> RAM is volatile, so anything stored there is lost when the power is off. Startup instructions must be available the moment the machine is switched on, before anything has been loaded. ROM is non-volatile and read-only, so the instructions survive without power and cannot be overwritten or corrupted by running software.</p>
+<div class="tip">
+  <strong>Why firmware lives in ROM:</strong> startup instructions must be available <em>the moment</em> the machine is switched on — before RAM has been populated, before any disk has been read. RAM can't do that job because it loses its contents when the power is off. ROM is non-volatile, so its contents are there instantly at power-on, and read-only, so software can't accidentally corrupt it.
+</div>
 
-<h2>4. The GPU</h2>
-
-<p>A GPU has hundreds or thousands of <strong>simple cores</strong>. Each core is weaker than a CPU core, but there are far more of them and they can work in parallel. A GPU also has its own high-bandwidth memory.</p>
-
-<h3>Why GPUs suit machine learning</h3>
+<h3>Cache</h3>
+<p>Cache is small, very fast memory sitting between the CPU and RAM. It holds copies of recently used instructions and data.</p>
 <ul>
-  <li>Training a model involves vast numbers of <strong>matrix operations</strong>.</li>
-  <li>Each calculation in a matrix operation is <strong>independent</strong> of the others.</li>
-  <li>Independent calculations can be done <strong>in parallel</strong>.</li>
-  <li>GPUs have thousands of cores → they process thousands of calculations at once.</li>
-  <li>High-bandwidth memory keeps the cores fed with data, so training finishes in a fraction of the time a CPU would need.</li>
+  <li><strong>Cache hit</strong> — the CPU finds what it needs in cache. It can proceed almost immediately, without a trip to RAM.</li>
+  <li><strong>Cache miss</strong> — the CPU doesn't find what it needs. It must fetch from RAM, which takes many times longer, and the CPU stalls while it waits.</li>
 </ul>
+<p>A higher <strong>hit rate</strong> means fewer of those slow RAM fetches. The CPU spends less time waiting and more time executing, so the program runs faster.</p>
 
-<h3>Why GPUs render frames fast</h3>
-<p>Rendering a frame means performing the same operations (lighting, texturing) on <strong>millions of independent pixels</strong>. A CPU’s few cores would process them in sequence; a GPU’s thousands of cores process them simultaneously. The simplicity of GPU cores is the <em>enabler</em> — because they don’t branch or decide, thousands fit on one chip and run in lockstep.</p>
+<div class="tip">
+  <strong>Mental model:</strong> cache is the small pile of books on your desk. RAM is the bookshelf across the room. A hit means the book you want is already on the desk.
+</div>
 
-<h3>How CPU and GPU work together on ML</h3>
-<ul>
-  <li>The <strong>CPU</strong> manages the overall training process and prepares the data (varied, sequential work).</li>
-  <li>The CPU <strong>assigns</strong> the parallel matrix operations to the GPU.</li>
-  <li>Data travels between them over a <strong>high-speed bus such as PCIe</strong>, batched into large chunks because transfers cost time.</li>
-  <li>The CPU <strong>synchronises</strong>: it waits for the GPU to finish each batch before doing dependent steps such as updating the model.</li>
-</ul>
+<h2>3. Specialist processors — the GPU</h2>
 
-<h2>5. Secondary memory</h2>
+<h3>Why a GPU is different from a CPU</h3>
+<p>A CPU has a small number of powerful cores (typically 4–16). Each core has complex logic to handle branching, prediction and varied work. A GPU has hundreds or thousands of much simpler cores. Each core is weak on its own, but the sheer number of them means the GPU can do vast numbers of small calculations at the same time. The GPU also has its own high-bandwidth memory to feed those cores.</p>
 
 <table>
+  <tr><th></th><th>CPU</th><th>GPU</th></tr>
+  <tr><td>Cores</td><td>Few (4–16)</td><td>Many (hundreds–thousands)</td></tr>
+  <tr><td>Per-core complexity</td><td>High — branching, prediction, caching</td><td>Low — simple arithmetic, no branching</td></tr>
+  <tr><td>Best at</td><td>Varied, sequential work</td><td>Repetitive, parallel work</td></tr>
+</table>
+
+<h3>Why GPUs suit parallel workloads</h3>
+<p>Any task made up of many <strong>independent</strong> calculations — ones where the result of one doesn't affect the next — can be run in parallel. Rendering, matrix multiplication and image processing all fit this pattern. The GPU hands one calculation to each core and runs them all at once.</p>
+
+<div class="tip">
+  <strong>Worked example — image filtering.</strong> Suppose you want to apply a blur to a 12-megapixel photo. Each pixel's new value depends only on the pixels immediately around it, not on what happens to any other pixel. So each pixel can be processed independently. On a CPU, 12 million pixels have to be processed in batches across 8 cores. On a GPU, thousands of cores work through them simultaneously, and the filter completes in a fraction of the time.
+</div>
+
+<div class="tip">
+  <strong>Why the simplicity is an advantage:</strong> because GPU cores don't need to branch or predict, they use far fewer transistors each. That's how thousands of them fit on a single chip. Simplicity isn't a weakness — it's what makes the parallelism possible.
+</div>
+
+<h3>How CPU and GPU work together</h3>
+<p>Neither processor is doing the whole job alone. In any GPU-accelerated task the two split the work:</p>
+<ul>
+  <li>The <strong>CPU</strong> manages the overall process, prepares the data, and handles anything that's sequential or conditional.</li>
+  <li>The <strong>CPU</strong> hands the parallel chunks over to the GPU.</li>
+  <li>Data travels between them over a <strong>high-speed bus</strong> (typically PCIe). This transfer is slow compared to compute, so data is batched into large chunks rather than sent piecemeal.</li>
+  <li>The <strong>CPU synchronises</strong> — it waits for the GPU to finish a batch before doing any step that depends on the result.</li>
+</ul>
+
+<h2>4. Secondary storage</h2>
+
+<h3>Internal vs external</h3>
+<table>
   <tr><th></th><th>Internal</th><th>External</th></tr>
-  <tr><td>Location</td><td>Inside the case</td><td>Outside, via USB/network</td></tr>
-  <tr><td>Connection</td><td>Direct to motherboard</td><td>Interface cable or network</td></tr>
-  <tr><td>Speed</td><td>Faster</td><td>Generally slower</td></tr>
-  <tr><td>Portability</td><td>Fixed</td><td>Portable</td></tr>
+  <tr><td>Location</td><td>Inside the case, on the motherboard's bus</td><td>Outside the case</td></tr>
+  <tr><td>Connection</td><td>Direct bus (SATA, NVMe)</td><td>USB, Thunderbolt, network</td></tr>
+  <tr><td>Speed</td><td>Faster — short path, high bandwidth</td><td>Slower — limited by the interface</td></tr>
+  <tr><td>Portability</td><td>Fixed in one machine</td><td>Portable — can move between machines</td></tr>
 </table>
 
 <h3>HDD vs SSD</h3>
 <table>
   <tr><th></th><th>HDD</th><th>SSD</th></tr>
-  <tr><td>Technology</td><td>Spinning magnetic platters + moving read/write head</td><td>Flash memory, no moving parts</td></tr>
-  <tr><td>Speed</td><td>Slower (mechanical seek time)</td><td>Much faster</td></tr>
-  <tr><td>Durability</td><td>Sensitive to shock</td><td>More robust</td></tr>
-  <tr><td>Best for OS?</td><td>No</td><td>Yes — quicker boot and program loading</td></tr>
+  <tr><td>Technology</td><td>Spinning magnetic platters, moving read/write head</td><td>Flash memory, no moving parts</td></tr>
+  <tr><td>Speed</td><td>Slower — mechanical seek time before any read</td><td>Much faster — no moving parts to position</td></tr>
+  <tr><td>Durability</td><td>Sensitive to shock and vibration</td><td>Robust — nothing to knock out of alignment</td></tr>
+  <tr><td>Noise / power</td><td>Audible, higher power draw</td><td>Silent, lower power</td></tr>
+  <tr><td>Best for an OS?</td><td>No — boot and load are slow</td><td>Yes — much faster boot and program loading</td></tr>
 </table>
 
-<h2>6. Compression</h2>
+<div class="tip">
+  <strong>Why SSDs suit operating systems:</strong> the OS is loaded at startup with thousands of small, scattered read operations. On an HDD each one requires a mechanical seek, adding up to tens of seconds. On an SSD each read is electronic and effectively instant, so boot time collapses to a few seconds.
+</div>
 
+<h2>5. Compression</h2>
+
+<h3>The two families</h3>
 <table>
   <tr><th></th><th>Lossless</th><th>Lossy</th></tr>
-  <tr><td>Original recoverable?</td><td>Yes, exactly</td><td>No</td></tr>
-  <tr><td>What happens</td><td>Redundant data is encoded more efficiently</td><td>Some data is permanently discarded</td></tr>
-  <tr><td>Examples</td><td>PNG, ZIP, FLAC</td><td>JPEG, MP3</td></tr>
-  <tr><td>Typical use</td><td>Text, code, archives</td><td>Images, audio, video</td></tr>
+  <tr><td>Original recoverable?</td><td>Yes — exactly</td><td>No — data is permanently discarded</td></tr>
+  <tr><td>What happens</td><td>Redundancy is encoded more efficiently</td><td>Some information is thrown away based on what the human senses won't miss</td></tr>
+  <tr><td>Typical examples</td><td>PNG, ZIP, FLAC</td><td>JPEG, MP3, most video codecs</td></tr>
+  <tr><td>Used for</td><td>Text, code, archives, anything that must be exact</td><td>Photos, audio, video — where approximate is acceptable</td></tr>
 </table>
 
 <h3>Run-length encoding (RLE)</h3>
-<p>RLE replaces a run of repeated characters with the count followed by the character.</p>
-<pre>Input:  AAAAAABBBBCCD
-Runs:   AAAAAA  BBBB  CC  D
-Output: 6A4B2C1D
-Before: 13 characters     After: 8 characters</pre>
+<p>RLE replaces each run of identical characters with a count followed by the character. It's lossless and simple, and works well on data with long repeats.</p>
 
-<h3>Transform coding (e.g. MP3)</h3>
+<div class="tip">
+  <strong>Worked example.</strong> Take the string <code>AAABBBBBBBCCD</code>:
+  <ul>
+    <li>Runs: <code>AAA</code>, <code>BBBBBBB</code>, <code>CC</code>, <code>D</code></li>
+    <li>Encoded: <code>3A7B2C1D</code></li>
+    <li>Original length: 13 characters. Encoded length: 8 characters. Saving: 5 characters.</li>
+  </ul>
+  Notice that the encoding is <em>shorter here but not always</em>. If a string has no repeats — <code>ABCDEF</code> — RLE makes it longer because every character gets a "1" in front of it. RLE only helps when runs are common.
+</div>
+
+<h3>Transform coding (MP3, JPEG)</h3>
+<p>Transform coding is a family of lossy compression methods that work by changing the representation of the data, then discarding parts the human ear or eye won't notice.</p>
 <ol>
-  <li>The audio is converted from raw samples into the <strong>frequencies</strong> it contains.</li>
-  <li>The encoder identifies sounds the listener <strong>cannot perceive</strong> — very quiet sounds, or sounds masked by louder nearby frequencies.</li>
-  <li>These components are <strong>permanently discarded</strong> (this is why MP3 is lossy).</li>
-  <li>The remaining data is encoded compactly, producing a much smaller file.</li>
+  <li>The raw signal is converted from time-domain samples into <strong>frequency components</strong> using a transform (MP3 uses the Modified Discrete Cosine Transform).</li>
+  <li>The encoder identifies components the listener <strong>cannot perceive</strong>: very quiet sounds, and sounds masked by louder nearby frequencies.</li>
+  <li>Those components are <strong>permanently discarded</strong>. This is why the method is lossy.</li>
+  <li>The remaining data is encoded compactly, producing a file far smaller than the original recording.</li>
 </ol>
 
-<h2>7. Cloud computing</h2>
+<div class="tip">
+  <strong>Why this works:</strong> human hearing has limits. Frequencies above ~20 kHz are inaudible to most adults, and quiet sounds next to loud ones at similar frequencies are completely masked. Discarding those components costs nothing perceptible but saves enormous space.
+</div>
+
+<h2>6. Cloud computing</h2>
+
+<p>Cloud computing means using someone else's servers, over the internet, instead of running everything locally. The <strong>service model</strong> determines how much of the stack the provider manages versus how much the customer manages.</p>
 
 <table>
-  <tr><th>Model</th><th>Provider manages</th><th>Customer manages</th><th>Example</th></tr>
-  <tr><td><strong>SaaS</strong></td><td>Everything</td><td>Just uses the software</td><td>Google Docs, Office 365</td></tr>
-  <tr><td><strong>PaaS</strong></td><td>Servers, storage, OS</td><td>The application and its configuration</td><td>Heroku, Google App Engine</td></tr>
-  <tr><td><strong>IaaS</strong></td><td>Physical hardware only</td><td>OS, runtime, apps, security, capacity</td><td>AWS EC2, Azure VMs</td></tr>
+  <tr><th>Model</th><th>Provider manages</th><th>Customer manages</th><th>Typical use</th></tr>
+  <tr><td><strong>SaaS</strong> — Software as a Service</td><td>Everything — hardware, OS, application</td><td>Just uses the software</td><td>Email, office apps, CRM systems</td></tr>
+  <tr><td><strong>PaaS</strong> — Platform as a Service</td><td>Hardware, OS, runtime, middleware</td><td>The application code and its configuration</td><td>Deploying a custom web app</td></tr>
+  <tr><td><strong>IaaS</strong> — Infrastructure as a Service</td><td>Physical hardware only</td><td>OS, runtime, apps, security, scaling</td><td>Running a bespoke server environment</td></tr>
 </table>
 
-<div class="tip">💡 <strong>Pizza analogy:</strong> SaaS = restaurant (they do everything). PaaS = ready-made base (you add toppings). IaaS = raw ingredients (you do the cooking).</div>
+<div class="tip">
+  <strong>Pizza analogy:</strong> SaaS is eating out — someone else does everything. PaaS is a ready-made pizza base — you add your own toppings. IaaS is buying the ingredients — the kitchen and the cooking are on you.
+</div>
 
-<h2>8. Operating systems</h2>
+<h3>Trading off the models</h3>
+<ul>
+  <li><strong>SaaS</strong> is fast to adopt and cheap to run, but you get whatever features the vendor offers. No customisation beyond settings.</li>
+  <li><strong>PaaS</strong> lets you build custom software without managing servers. You choose the language and framework; the provider keeps the infrastructure running.</li>
+  <li><strong>IaaS</strong> gives full control — you can install any OS, any runtime, any tooling — but you also carry the operational burden: patching, security, capacity planning.</li>
+</ul>
 
-<h3>CPU scheduling: FCFS vs Round Robin</h3>
+<div class="tip">
+  <strong>How to choose:</strong> the further down the stack you go (SaaS → PaaS → IaaS), the more control you get and the more responsibility you take on. Choose the highest level that still meets your requirements.
+</div>
+
+<h2>7. Operating systems</h2>
+
+<h3>What an operating system does</h3>
+<p>The OS sits between the user, the application software and the hardware. Its main jobs: managing processes (deciding which runs when), managing memory (deciding what lives where), managing I/O (talking to devices), managing files, and providing security.</p>
+
+<h3>Processor scheduling</h3>
+<p>Only one process can run on a core at a time. When several processes are ready, the scheduler decides who runs next. Two common algorithms:</p>
+
 <table>
-  <tr><th></th><th>FCFS</th><th>Round Robin</th></tr>
-  <tr><td>Rule</td><td>Run to completion</td><td>Fixed time slice, then back of queue</td></tr>
-  <tr><td>Fairness</td><td>Poor — convoy effect</td><td>Good — short jobs respond sooner</td></tr>
-  <tr><td>Overhead</td><td>Low (few context switches)</td><td>Higher (frequent context switches)</td></tr>
+  <tr><th></th><th>First-Come First-Served (FCFS)</th><th>Round Robin (RR)</th></tr>
+  <tr><td>Rule</td><td>Whoever arrives first runs until they finish</td><td>Each process runs for a fixed time slice, then goes to the back of the queue</td></tr>
+  <tr><td>Fairness</td><td>Poor — a long process can block everyone behind it</td><td>Better — short processes get a slice quickly, so response times are shared</td></tr>
+  <tr><td>Overhead</td><td>Low — few context switches</td><td>Higher — a context switch each time a time slice expires</td></tr>
+  <tr><td>Best for</td><td>Batch work where jobs are similar length</td><td>Interactive systems where responsiveness matters</td></tr>
 </table>
+
+<div class="tip">
+  <strong>Convoy effect:</strong> under FCFS, if a long process arrives first, all the short processes behind it have to wait until it finishes. Like a slow lorry on a single-lane road — everything queues behind it, even though the cars could have gone through much faster.
+</div>
 
 <h3>Polling vs interrupts</h3>
+<p>When a device needs the CPU's attention, there are two ways the CPU can find out.</p>
 <ul>
-  <li><strong>Polling:</strong> the CPU repeatedly checks a device. Simple, but wastes cycles when nothing is happening.</li>
-  <li><strong>Interrupts:</strong> the device signals the CPU when it needs attention. The CPU can sleep or do other work meanwhile.</li>
+  <li><strong>Polling:</strong> the CPU checks the device regularly, at fixed intervals. Simple, predictable, but wasteful — the CPU spends time checking even when the device has nothing to report.</li>
+  <li><strong>Interrupts:</strong> the device sends a signal to the CPU when it needs attention. The CPU can be doing other work or sleeping until the signal arrives.</li>
 </ul>
-<p>On a <strong>battery-powered laptop</strong>, interrupts win: polling drains the battery because the processor can never drop into a low-power state. Interrupts also give lower response latency to a keystroke. The only cost — per-interrupt overhead — is negligible at typing speeds.</p>
+
+<div class="tip">
+  <strong>Where each wins:</strong> polling suits situations where the device is busy almost all the time — the overhead of checking is small compared to the throughput. Interrupts suit situations where events are infrequent and unpredictable — the CPU isn't tied up checking for something that hasn't happened.
+</div>
+
+<h3>Memory management and paging</h3>
+<p>The OS divides memory into fixed-size <strong>pages</strong> (logical blocks of a program) and <strong>frames</strong> (physical blocks of RAM). Pages are loaded into any free frame, so a program doesn't need to occupy one contiguous chunk of memory.</p>
+<p>Benefits:</p>
+<ul>
+  <li>Reduces <strong>external fragmentation</strong> — memory that's free but not usable because it's split into lots of small gaps.</li>
+  <li>Enables <strong>virtual memory</strong> — pages not currently in use can be written to disk, so programs larger than physical RAM can still run.</li>
+  <li>Simplifies allocation — any free frame will do, so the OS doesn't have to find a matching gap.</li>
+</ul>
 
 <h3>Deadlock</h3>
-<p>Deadlock happens when two or more processes each hold a resource and each wait for a resource the other holds. None can proceed.</p>
-<pre>P1 holds R1, requests R2
-P2 holds R2, requests R1
-→ circular wait → deadlock</pre>
-<p>Four conditions must all hold: <strong>mutual exclusion, hold and wait, no preemption, circular wait</strong>. Removing any one prevents deadlock.</p>
+<p>Deadlock happens when processes each hold a resource and each wait for a resource another process holds. None can proceed.</p>
 
-<h3>Paging</h3>
-<p>Memory is divided into fixed-size <strong>pages</strong> (logical, in the program) and <strong>frames</strong> (physical, in RAM). Pages are loaded into any free frame, so a program need not occupy contiguous memory. Benefit: reduces external fragmentation and allows <em>virtual memory</em> — programs larger than physical RAM can run.</p>
+<div class="diagram">Process A holds resource R1 and requests R2.
+Process B holds resource R2 and requests R1.
+Neither releases what it holds until it gets what it wants.
+→ Circular wait. Neither can proceed. Deadlock.</div>
 
-<h2>9. Exam technique</h2>
+<p>For deadlock to occur, four conditions must all hold at once:</p>
+<ul>
+  <li><strong>Mutual exclusion</strong> — resources can't be shared; one process at a time.</li>
+  <li><strong>Hold and wait</strong> — a process holds one resource while waiting for another.</li>
+  <li><strong>No preemption</strong> — resources can't be forcibly taken back.</li>
+  <li><strong>Circular wait</strong> — a cycle of processes each waiting on the next.</li>
+</ul>
+<p>Preventing deadlock means breaking one of these conditions — for example, imposing a global order on resources so a circular wait can never form.</p>
 
+<h2>8. Exam technique</h2>
+
+<h3>Command terms</h3>
 <table>
-  <tr><th>Command word</th><th>What to do</th></tr>
-  <tr><td>State / Give</td><td>One short answer — no explanation</td></tr>
-  <tr><td>Outline</td><td>Brief summary — main points only</td></tr>
-  <tr><td>Describe</td><td>Say what happens — more detail, no reasons</td></tr>
-  <tr><td>Explain</td><td>Say how or why — give reasons and connections</td></tr>
-  <tr><td>Compare</td><td>Both similarities and differences</td></tr>
-  <tr><td>Evaluate</td><td>Advantages, disadvantages, <strong>and a justified conclusion</strong></td></tr>
+  <tr><th>Term</th><th>What the examiner wants</th></tr>
+  <tr><td>State / Give / Name</td><td>One short answer. No explanation. If it's 2 marks, give two distinct short facts.</td></tr>
+  <tr><td>Outline</td><td>Brief summary. Main points only. One sentence per mark is usually enough.</td></tr>
+  <tr><td>Describe</td><td>Say what happens or what it is. More detail than "outline", but no need to explain <em>why</em>.</td></tr>
+  <tr><td>Explain</td><td>Say <em>how</em> or <em>why</em>. Every mark needs a distinct reason or mechanism, not a restated fact.</td></tr>
+  <tr><td>Compare</td><td>Both similarities <em>and</em> differences. You need at least one of each.</td></tr>
+  <tr><td>Evaluate</td><td>Advantages, disadvantages, <strong>and a justified conclusion</strong>. Without the conclusion, you can't score the final mark.</td></tr>
 </table>
 
-<div class="warn">⚠️ <strong>Evaluate questions need a judgement at the end.</strong> Without a clear conclusion, you cannot get the final mark.</div>
+<h3>Marks → points</h3>
+<ul>
+  <li>2 marks = two distinct points, or one point developed with a reason.</li>
+  <li>3 marks = three distinct points, or one point developed in three stages.</li>
+  <li>4 marks = usually four distinct points, or two points each developed with a reason.</li>
+  <li>6 marks = typically three developed arguments plus a judgement.</li>
+</ul>
 
-<h2>10. Practice questions</h2>
+<div class="warn">
+  <strong>The most common cause of lost marks</strong> is writing one vague sentence for a multi-mark question. If a question is worth 4 marks, you need at least four distinct pieces of information. Count them in your head before you stop writing.
+</div>
 
-<details><summary>Q1. Describe the difference between the IR and the MDR. (4 marks) — Show answer ▼</summary>
-<p>The IR holds the instruction that has just been fetched from memory and is currently being decoded and executed by the Control Unit. The MDR acts as a temporary buffer that holds the actual data values that have either just been read from RAM or are waiting to be written back to RAM.</p>
+<h3>How to write an "explain" answer</h3>
+<p>Use a two-part structure: <strong>what happens</strong> + <strong>why / how it leads to the effect</strong>.</p>
+<ul>
+  <li>Weak: "Cache makes it faster."</li>
+  <li>Strong: "A cache hit means the CPU finds the data it needs in cache rather than fetching it from RAM, so it avoids a much longer memory access and doesn't stall waiting for data — the program runs faster."</li>
+</ul>
+
+<h2>9. Practice questions</h2>
+
+<p>Try each one without looking back at the notes. Write your answer first, then open the model to compare. The model is <em>one valid answer</em>, not the only one — as long as you hit the same points, you're fine.</p>
+
+<details>
+<summary>Q1. A processor executes an instruction using the fetch–decode–execute cycle. Describe the role of the MAR and the MDR during the fetch stage. (4 marks) — Show a model answer ▼</summary>
+<p>The MAR receives the value currently in the PC, which is the address of the instruction to be fetched. It places that address on the address bus so memory can be accessed. The MDR receives the instruction bytes that memory returns along the data bus. It holds that instruction briefly, then it is copied into the IR so the Control Unit can decode it.</p>
 </details>
 
-<details><summary>Q2. Explain why a GPU renders a frame faster than a CPU. (3 marks) — Show answer ▼</summary>
-<p>Rendering a frame means performing the same calculations (lighting, texturing) on millions of pixels, and each pixel can be processed independently. The GPU’s hundreds or thousands of cores process huge numbers of pixels simultaneously, while a CPU’s few cores would have to work through them in sequence. The simplicity of GPU cores is the enabler: because they do not branch or decide, thousands fit on one chip and run in lockstep.</p>
+<details>
+<summary>Q2. Explain why a graphics card is better suited to applying a real-time video filter than a CPU is. (3 marks) — Show a model answer ▼</summary>
+<p>A video filter applies the same operation to every pixel of every frame, and each pixel's result doesn't depend on any other pixel — the calculations are independent. The GPU has hundreds or thousands of simple cores, so it can process huge numbers of pixels simultaneously. A CPU has only a handful of cores, so it would have to work through the pixels in sequence and could not keep up with a real-time video stream.</p>
 </details>
 
-<details><summary>Q3. Explain the difference between a cache hit and a cache miss, and why a higher hit rate improves performance. (3 marks) — Show answer ▼</summary>
-<p>A cache hit occurs when the CPU finds the data it needs in cache and can proceed almost immediately. A cache miss occurs when the data is not in cache, forcing the CPU to fetch it from RAM, which takes many times longer. A higher hit rate means fewer slow RAM accesses, so the CPU spends less time stalled waiting for data and the program runs faster.</p>
+<details>
+<summary>Q3. Explain why a solid-state drive is preferred over a hard disk drive for storing an operating system. (3 marks) — Show a model answer ▼</summary>
+<p>An SSD stores data in flash memory and has no moving parts. Booting an operating system requires reading thousands of small, scattered files, and on an HDD each read requires a mechanical seek, adding up to a long wait. On an SSD each read is electronic and effectively instantaneous, so boot time and program loading time are dramatically shorter.</p>
 </details>
 
-<details><summary>Q4. Apply RLE to AAAAAABBBBCCD. State the encoded string and the length before/after. (3 marks) — Show answer ▼</summary>
-<p>Runs: AAAAAA, BBBB, CC, D. Encoded string: <code>6A4B2C1D</code>. Original length 13; encoded length 8 — the encoding is shorter.</p>
+<details>
+<summary>Q4. Apply run-length encoding to the string <code>AAABBBBBBBCCD</code>. State the encoded string and explain why RLE would not help with the string <code>ABCDEF</code>. (4 marks) — Show a model answer ▼</summary>
+<p>The runs in <code>AAABBBBBBBCCD</code> are <code>AAA</code>, <code>BBBBBBB</code>, <code>CC</code>, and <code>D</code>, so the encoded string is <code>3A7B2C1D</code>. RLE does not help with <code>ABCDEF</code> because there are no repeated characters — each character would need its own "1" prefix, giving <code>1A1B1C1D1E1F</code>, which is twice as long as the original. RLE only reduces size when the data contains long runs.</p>
 </details>
 
-<details><summary>Q5. Evaluate polling vs interrupts for a keyboard on a battery laptop. (6 marks) — Show answer ▼</summary>
-<p>Keystrokes are infrequent and unpredictable. Polling would make the processor check the keyboard repeatedly even when no key is pressed, wasting cycles; on a battery device that wasted activity drains charge because the processor cannot drop into a low-power state. Interrupt handling lets the processor sleep or do other work until a key is actually pressed, and response latency to a keystroke is low. <strong>Judgement:</strong> interrupt handling is the better choice; its only real cost, the per-interrupt overhead, is negligible at typing speeds, so it wins on power use, overhead and responsiveness.</p>
+<details>
+<summary>Q5. A small business is considering whether to use SaaS or IaaS for its accounting system. Describe one advantage and one disadvantage of each in this context. (4 marks) — Show a model answer ▼</summary>
+<p>SaaS advantage: the software is ready to use immediately with no infrastructure to set up, so the business can start working right away without technical staff. SaaS disadvantage: the accounting software cannot be modified beyond its settings, so if the business has unusual reporting requirements it may not fit. IaaS advantage: the business can install and configure exactly the software stack it wants, so a bespoke accounting system can be built. IaaS disadvantage: the business must manage the operating system, apply security updates and plan for capacity, which takes time and technical expertise a small business may not have.</p>
 </details>
 
-<details><summary>Q6. Compare FCFS and round robin scheduling. (4 marks) — Show answer ▼</summary>
-<p>Both are processor scheduling algorithms that decide the order in which ready processes use the processor. Under FCFS a process runs until it finishes, whereas under round robin a process runs only for a fixed time slice before being moved to the back of the queue. As a result FCFS can make short processes wait behind a long one (the convoy effect), while round robin shares the processor more evenly so short processes respond sooner. Round robin pays for this with the overhead of frequent context switching, which FCFS largely avoids.</p>
+<details>
+<summary>Q6. Explain how round robin scheduling differs from first-come first-served, and why round robin is usually preferred on a desktop computer. (4 marks) — Show a model answer ▼</summary>
+<p>Under FCFS each process runs until it completes, whereas under round robin each process runs for a fixed time slice and is then moved to the back of the queue. On a desktop computer, users run many processes at once and expect each to respond quickly — under FCFS a long process would block everything behind it (the convoy effect), making the desktop feel unresponsive. Round robin shares the processor between all ready processes, so short processes get a slice quickly and the system feels responsive. The trade-off is the overhead of frequent context switches, but on a desktop the improved responsiveness is worth it.</p>
+</details>
+
+<details>
+<summary>Q7. A laser printer driver and a temperature sensor both need to send data to the CPU. Explain which is more suited to polling and which to interrupts. (4 marks) — Show a model answer ▼</summary>
+<p>A laser printer that is actively printing produces a continuous stream of data and status updates, so the CPU will almost always find something to read when it polls. In this case polling wastes very little time, because the check usually succeeds — and the CPU can poll at a rate matched to the printer's data rate. A temperature sensor in a room produces a reading only every few seconds, and most polls would find nothing, wasting CPU cycles on checks that don't help. For the temperature sensor, interrupts are better — the sensor signals the CPU only when there is a new reading, so the CPU is free to do other work in between.</p>
+</details>
+
+<details>
+<summary>Q8. Two processes on a server have deadlocked. Explain the conditions that must have been present for the deadlock to occur, and describe one way a system could prevent it. (4 marks) — Show a model answer ▼</summary>
+<p>For deadlock to occur, four conditions must all have held at once: mutual exclusion (each resource could only be held by one process at a time), hold and wait (each process held one resource while requesting another), no preemption (nothing could take a resource away from a process while it held it), and circular wait (a cycle of processes each waiting for a resource held by the next). To prevent deadlock, the system could impose a global ordering on resources so a circular wait can never form: if every process requests resources in the same predefined order, no cycle can exist and deadlock becomes impossible.</p>
 </details>
 
 </div>
