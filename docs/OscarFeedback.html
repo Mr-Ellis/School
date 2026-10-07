@@ -233,6 +233,12 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
     <td><code>run_recommendation_process()</code></td>
     <td><span class="tag mod">Moderate</span></td>
   </tr>
+  <tr>
+    <td>9</td>
+    <td>Standalone packaging with PyInstaller — produces a distributable .exe</td>
+    <td>Build step, not source code</td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
 </table>
 
 <p>Optional addition if you refactor:</p>
@@ -244,7 +250,7 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
     <th>What unlocks it</th>
   </tr>
   <tr>
-    <td>9</td>
+    <td>10</td>
     <td>Classes and encapsulation for <code>University</code></td>
     <td>Replace the dictionaries returned by <code>generate_recommendations()</code> with typed objects</td>
   </tr>
@@ -371,22 +377,33 @@ Eight criteria are fully met. Two are partial or unverified. All ten become demo
 
 <h2>5. Required Code Changes</h2>
 
-<h3>5.1 The program must run — this is the top priority</h3>
+<h3>5.1 The program does not currently run</h3>
 
-<p>You reported <code>ModuleNotFoundError: No module named 'recommendation_system'</code> when running the program. This must be fixed before anything else. Common causes and fixes:</p>
+<p>Two problems currently prevent the program from starting and from being demonstrated as a finished product:</p>
 
 <ul>
-  <li><strong>Files in different folders.</strong> <code>program.py</code> must be in the same directory as <code>recommendation_system.py</code> and <code>validation.py</code>. If they are in subfolders, move them all into one folder.</li>
-  <li><strong>Wrong working directory.</strong> If you run from an IDE, the working directory might not be where the files are. In VS Code, right-click the folder containing all three files and choose "Open in Integrated Terminal", then run <code>python program.py</code>.</li>
-  <li><strong>Missing file.</strong> Confirm <code>recommendation_system.py</code> actually exists. If it was never created or was deleted, the imports will fail.</li>
-  <li><strong>Typos.</strong> Filenames are case-sensitive. <code>Recommendation_system.py</code> is not the same as <code>recommendation_system.py</code>.</li>
+  <li><strong>ModuleNotFoundError: No module named 'recommendation_system'</strong> at startup</li>
+  <li><strong>No standalone executable has been created</strong>, so the client cannot run the program without installing Python</li>
 </ul>
 
-<p>The Criterion D video cannot be recorded until the program runs. Fix this before anything else on this list.</p>
+<p>Both must be fixed before the video can be recorded. Section 5.2 covers the ModuleNotFoundError and Section 5.3 covers the executable.</p>
 
-<h3>5.2 Create a standalone executable</h3>
+<h3>5.2 Fixing the ModuleNotFoundError</h3>
 
-<p>A distributable executable lets the client use the program without installing Python or libraries, and it demonstrates that the product is a finished deliverable. The IA resource page has a tutorial for building one. The standard tool for Python is <code>PyInstaller</code>:</p>
+<p>Python raises this error when it cannot find one of the modules imported at the top of <code>program.py</code>. The cause is almost always one of the following:</p>
+
+<ul>
+  <li><strong>Files in different folders.</strong> <code>program.py</code> must be in the same directory as <code>recommendation_system.py</code> and <code>validation.py</code>. If they are in subfolders, move them into one folder.</li>
+  <li><strong>Wrong working directory.</strong> If the program is run from an IDE, the working directory might not be the folder containing the source files. In VS Code, right-click the folder containing all three files and choose "Open in Integrated Terminal", then run <code>python program.py</code>.</li>
+  <li><strong>Missing file.</strong> If <code>recommendation_system.py</code> was never created or has been deleted, the import will fail. Confirm the file exists.</li>
+  <li><strong>Filename case mismatch.</strong> Filenames are case-sensitive on most systems. <code>Recommendation_system.py</code> is not the same as <code>recommendation_system.py</code>.</li>
+</ul>
+
+<p>Once all three files sit in the same folder and the program is run from that folder, the error resolves. Verify by launching <code>python program.py</code> and confirming the window opens.</p>
+
+<h3>5.3 Building a standalone executable with PyInstaller</h3>
+
+<p>A distributable executable lets the client use the program without installing Python or any libraries, and it demonstrates that the product is a finished deliverable. The IA resource page has a tutorial for this. The standard tool is <code>PyInstaller</code>:</p>
 
 <pre>pip install pyinstaller
 pyinstaller --onefile --windowed --name "IBUniversityRecommender" program.py</pre>
@@ -394,27 +411,27 @@ pyinstaller --onefile --windowed --name "IBUniversityRecommender" program.py</pr
 <p>Notes:</p>
 <ul>
   <li><code>--onefile</code> produces a single .exe</li>
-  <li><code>--windowed</code> hides the console (use it for a GUI-only app)</li>
-  <li>Any data files (JSON files) that the program reads at runtime must be listed with <code>--add-data</code> or the executable will fail when it cannot find them</li>
-  <li>The executable will be in the <code>dist/</code> folder after the build</li>
-  <li>Test the executable on a machine without Python installed — that is the only way to confirm it works for the client</li>
+  <li><code>--windowed</code> hides the console, which is correct for a GUI-only app</li>
+  <li>Any data files (JSON files) that the program reads at runtime must be listed with <code>--add-data</code>, or the executable will fail when it cannot find them</li>
+  <li>The executable appears in the <code>dist/</code> folder after the build</li>
+  <li>Test the executable on a machine that does not have Python installed — that is the only way to confirm it works for the client</li>
 </ul>
 
-<p>Once it builds and runs, mention this in the write-up as a technique: "packaged the program into a standalone executable using PyInstaller so the client does not need to install Python". It supports SC9 (usability) and strengthens the "fully functional product" requirement.</p>
+<p>Once the executable builds and runs, record it as a technique in the Criterion D write-up: "packaged the program into a standalone executable using PyInstaller so the client does not need to install Python". This supports SC9 (usability) and strengthens the "fully functional product" requirement.</p>
 
-<h3>5.3 SC2 — Route sidebar inputs through the validator</h3>
+<h3>5.4 SC2 — Route sidebar inputs through the validator</h3>
 <p>The data editor validates university fields, but the sidebar score and fees entries are only stripped. In <code>run_recommendation_process()</code>, pass the raw strings through <code>self.validator</code> first. If it returns an error, call <code>self.show_error(error)</code> and return before calling <code>generate_recommendations()</code>. This makes SC2 provable on the main screen, not just the editor.</p>
 
-<h3>5.4 SC9 — Client evidence and splash guidance</h3>
+<h3>5.5 SC9 — Client evidence and splash guidance</h3>
 <p>Send the client a Microsoft Forms survey with one Likert question per SC. Record the responses and reference them in the video. Add the splash dialog described in Section 7 so the interface is self-explanatory on first launch.</p>
 
-<h3>5.5 SC7 — Record the response time</h3>
+<h3>5.6 SC7 — Record the response time</h3>
 <p>The code already measures and displays response time in <code>display_results()</code>. Add a <code>print()</code> so the value appears in the console during the video, and pause on the summary line long enough for the viewer to read it.</p>
 
-<h3>5.6 Storage consistency</h3>
+<h3>5.7 Storage consistency</h3>
 <p>Criterion A mentions "JSON or SQLite". Criterion B mentions "JSON/SQLite". The implementation uses JSON. Either commit to JSON in Criterion B (recommended, since it already works) or refactor to SQLite. Do not leave the storage choice ambiguous between criteria.</p>
 
-<h3>5.7 University dictionary consistency</h3>
+<h3>5.8 University dictionary consistency</h3>
 <p>The result cards read <code>university["ib_requirement"]</code>, <code>university["fees"]</code>, and <code>university["field_of_study"]</code>. Confirm that <code>recommendation_system.py</code> returns exactly those keys. A single mismatch causes a <code>KeyError</code> at runtime that would fail SC6 in the video.</p>
 
 <h2>6. Test Plan</h2>
@@ -562,7 +579,7 @@ Load UniversityRecommenderApp
 <h3>8.4 Immediate priority</h3>
 
 <div class="box">
-<p>The most urgent item is getting the program to run. <code>ModuleNotFoundError: No module named 'recommendation_system'</code> means Python cannot find one of your source files. Check that <code>program.py</code>, <code>recommendation_system.py</code>, and <code>validation.py</code> are in the same folder, and that you run the program from that folder. Until the program runs, no other improvement matters, and no video can be recorded.</p>
+<p>Two problems currently prevent the program from being demonstrated. First, the ModuleNotFoundError at startup means Python cannot find one of the source files — check that <code>program.py</code>, <code>recommendation_system.py</code>, and <code>validation.py</code> are in the same folder, and that the program is run from that folder. Second, no standalone executable has been created, so the client cannot run the program without installing Python. Both must be resolved before any other improvement matters, and before the video can be recorded.</p>
 <p>Once the program runs, build the executable with PyInstaller and test it on a machine that does not have Python installed. That is the strongest evidence that the product is finished and that SC9 is met.</p>
 </div>
 
