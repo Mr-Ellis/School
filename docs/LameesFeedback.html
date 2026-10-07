@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Julia Habit Tracker — Criterion D Guidance</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d0d0d0;
+    --accent: #1e4b8f;
+    --accent-soft: #eaf1fb;
+    --ok: #15631c;
+    --ok-soft: #e3f0e6;
+    --warn: #8a5a00;
+    --warn-soft: #fbf1dc;
+    --no: #a11313;
+    --no-soft: #fbe6e6;
+    --soft: #f7f8fa;
+  }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    max-width: 920px;
+    margin: 40px auto;
+    padding: 0 24px;
+    color: var(--ink);
+    line-height: 1.6;
+    background: #fdfdfd;
+  }
+  header {
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+  }
+  h1 { font-size: 1.8em; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); font-size: 0.95em; margin: 0; }
+  h2 {
+    font-size: 1.25em;
+    margin-top: 40px;
+    padding: 8px 12px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 3px;
+  }
+  h3 {
+    font-size: 1.05em;
+    margin-top: 26px;
+    margin-bottom: 6px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 3px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 14px 0;
+    font-size: 0.9em;
+  }
+  th, td {
+    border: 1px solid #bbb;
+    padding: 7px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--accent-soft);
+    font-weight: bold;
+    color: var(--accent);
+  }
+  td.met { color: var(--ok); font-weight: bold; }
+  td.partial { color: var(--warn); font-weight: bold; }
+  td.no { color: var(--no); font-weight: bold; }
+  code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    background: #eef0f3;
+    padding: 1px 5px;
+    font-size: 0.88em;
+    border-radius: 2px;
+  }
+  pre {
+    background: #f4f4f4;
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.86em;
+    overflow-x: auto;
+  }
+  ul, ol { padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  .note {
+    background: var(--warn-soft);
+    border-left: 4px solid #d4a017;
+    padding: 10px 16px;
+    margin: 16px 0;
+    font-size: 0.94em;
+  }
+  .box {
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 12px 18px;
+    margin: 14px 0;
+  }
+  .flow {
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px 20px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85em;
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.4;
+  }
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    font-size: 0.78em;
+    font-weight: bold;
+    border-radius: 3px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .strong { background: var(--ok-soft); color: var(--ok); }
+  .mod { background: var(--warn-soft); color: var(--warn); }
+  .lede {
+    font-size: 1.02em;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 12px 18px;
+    border-radius: 2px;
+    margin: 0 0 8px;
+  }
+  .toc {
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px 22px;
+    margin: 20px 0 8px;
+  }
+  .toc ol {
+    margin: 0;
+    padding-left: 20px;
+    columns: 2;
+    column-gap: 32px;
+  }
+  .toc li { margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Julia Habit Tracker — Criterion D Guidance</h1>
+  <p class="subtitle">Lamees · Internal Assessment · Development and testing</p>
+</header>
+
+<p class="lede">
+This document covers the eight things you need to complete Criterion D: the techniques to justify, the write-up structure, the success criteria audit, the required code changes, the test plan, the splash screen, the checklist, and the video plan.
+</p>
+
+<div class="toc">
+<strong>Contents</strong>
+<ol>
+  <li>Techniques to justify</li>
+  <li>How to write each technique</li>
+  <li>Write-up structure</li>
+  <li>Success criteria audit</li>
+  <li>Required code changes</li>
+  <li>Test plan</li>
+  <li>Splash screen</li>
+  <li>Checklist and video plan</li>
+</ol>
+</div>
+
+<h2>1. Techniques to Justify</h2>
+
+<div class="note">
+No fixed number is required. The rubric asks for <em>appropriate</em> techniques, judged on quality, not counted. For your project, <strong>six to nine</strong> is the right range. You already have nine in your code.
+</div>
+
+<table>
+  <tr>
+    <th></th>
+    <th>Technique</th>
+    <th>Where it appears</th>
+    <th>Strength</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Relational storage with SQLite — three normalised tables (<code>habits</code>, <code>moods</code>, <code>entries</code>) linked by foreign keys</td>
+    <td><code>Store.__init__</code>, <code>CREATE TABLE</code> script</td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Separation of concerns — <code>Store</code> class handles all persistence, <code>App</code> class handles all UI, helper functions handle analysis</td>
+    <td>File structure: <code>Store</code>, <code>App</code>, module-level helpers</td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Streak algorithm — walks backwards from today, then walks forward through sorted days to find the best run</td>
+    <td><code>Store.streaks()</code></td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Trend detection — compares the last 7 days against the previous 7 days and classifies each metric as improving, stable, or declining</td>
+    <td><code>trend_description()</code>, <code>trend_label()</code></td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Rule-based personalised feedback — advice is assembled from mood level, completion rate, and longest streak</td>
+    <td><code>motivational_feedback()</code></td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Input validation with a dedicated <code>valid_date()</code> helper that checks both parseability and canonical format</td>
+    <td><code>valid_date()</code>, called from <code>Store.save()</code></td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>Referential integrity and constraints enforced at the database level — <code>CHECK</code> clauses on mood range and done flag, <code>UNIQUE</code> on habit name and habit-day pair, <code>PRAGMA foreign_keys</code></td>
+    <td><code>CREATE TABLE</code> script, <code>PRAGMA foreign_keys = ON</code></td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Transactional writes with the context manager — using <code>with self.db:</code> so a failed insert rolls back atomically</td>
+    <td><code>Store.save()</code></td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Deduplication of a derived list — the habit picker repopulates from a single SQL <code>SELECT DISTINCT</code> query</td>
+    <td><code>Store.habit_names()</code>, bound to the combobox</td>
+    <td><span class="tag mod">Moderate</span></td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>Event-driven UI with <code>tkinter.ttk</code> — <code>Treeview</code> for records, <code>trace_add</code> on the date variable, double-click binding on the table</td>
+    <td><code>App.make_table()</code>, <code>App.load_daily_mood()</code></td>
+    <td><span class="tag strong">Strong</span></td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>Path handling with <code>pathlib</code> and an environment variable override for the data folder</td>
+    <td>Bottom of the file, <code>JULIA_TRACKER_DATA</code></td>
+    <td><span class="tag mod">Moderate</span></td>
+  </tr>
+</table>
+
+<p>Do not pad the list with basic syntax. Loops, <code>print()</code>, comments, and file names do not count as techniques. A technique earns a paragraph only when another programmer might have solved it differently.</p>
+
+<h2>2. How to Write Each Technique</h2>
+
+<p>Aim for 100 words per technique, using the same five-point structure:</p>
+
+<div class="box">
+  <ol>
+    <li><strong>What</strong> the technique is</li>
+    <li><strong>Where</strong> in your code it appears</li>
+    <li><strong>Why</strong> you chose it</li>
+    <li><strong>What benefit</strong> it gives the user</li>
+    <li><strong>What limitation</strong> it has</li>
+  </ol>
+</div>
+
+<p>Point five is what most students skip. It is also what turns a description into an evaluation, which is what the top band requires.</p>
+
+<h2>3. Write-Up Structure</h2>
+
+<p>Total length: <strong>1,000 words</strong>.</p>
+
+<table>
+  <tr>
+    <th>Part</th>
+    <th>Content</th>
+    <th>Words</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Structure justification — <code>Store</code> versus <code>App</code> split, SQLite over JSON, three-table schema, why helper functions sit outside the classes</td>
+    <td>200</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Techniques — one subsection per technique, five-point structure</td>
+    <td>600</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Testing strategy — why valid / invalid / extreme, why these cases, what failed, SC links, video timestamps</td>
+    <td>200</td>
+  </tr>
+</table>
+
+<h2>4. Success Criteria Audit</h2>
+
+<p>The following table checks each Criterion A success criterion against the current implementation. Note that your Criterion A lists SC8 and SC9 as the same text — this looks like a duplication and should be corrected before submission.</p>
+
+<table>
+<tr>
+  <th>SC</th><th>Success Criterion</th><th>Status</th><th>Evidence</th><th>Required action</th>
+</tr>
+<tr>
+  <td>1</td><td>Add and store habit entries with name, completion, date, mood</td>
+  <td class="met">Met</td>
+  <td><code>Store.save()</code>, form fields in <code>make_form()</code></td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>2</td><td>Search and retrieve records by date or range</td>
+  <td class="met">Met</td>
+  <td><code>Store.records(start, end)</code>, <code>make_search_bar()</code></td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>3</td><td>Calculate and display consecutive streaks per habit</td>
+  <td class="met">Met</td>
+  <td><code>Store.streaks()</code>, shown in the report box</td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>4</td><td>Calculate average mood over selected period</td>
+  <td class="met">Met</td>
+  <td><code>summarize()</code></td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Generate personalised motivational feedback</td>
+  <td class="met">Met</td>
+  <td><code>motivational_feedback()</code></td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Detect trends — improving or declining</td>
+  <td class="met">Met</td>
+  <td><code>trend_description()</code>, <code>trend_label()</code></td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>Validate user inputs — dates, mood 1–10, non-empty habit name</td>
+  <td class="met">Met</td>
+  <td><code>valid_date()</code>, <code>Store.save()</code> guard clauses</td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>Allow editing of habit and mood records</td>
+  <td class="met">Met</td>
+  <td><code>App.edit()</code>, <code>entry_id</code> parameter in <code>Store.save()</code></td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>Allow editing of habit and mood records <em>(duplicate of SC8)</em></td>
+  <td class="no">Duplicate</td>
+  <td>Criterion A lists SC9 with the same wording as SC8</td>
+  <td>Fix the duplication in Criterion A — likely SC9 was meant to be something else, perhaps "delete records"</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>Save records so data persists across sessions</td>
+  <td class="met">Met</td>
+  <td>SQLite file at <code>Documents/JuliaHabitTracker/data/habits.sqlite3</code></td>
+  <td>None</td>
+</tr>
+</table>
+
+<div class="note">
+Eight criteria are fully met. One is a duplicate in Criterion A itself. The duplicate must be fixed before submission — an assessor will notice that SC8 and SC9 say the same thing.
+</div>
+
+<h2>5. Required Code Changes</h2>
+
+<h3>5.1 Fix the SC8 / SC9 duplication in Criterion A</h3>
+<p>SC8 and SC9 in Criterion A use identical wording. Decide what SC9 should actually say. Two possibilities that match the current code:</p>
+<ul>
+  <li><strong>"The system allows the user to delete a previously entered record."</strong> — but this would require adding delete functionality that is not currently implemented</li>
+  <li><strong>"The system displays consecutive streak information for each habit."</strong> — but that overlaps with SC3</li>
+</ul>
+<p>The cleanest fix is to make SC9 a criterion the code already satisfies that is not currently covered. The strongest candidate is: <strong>"The system allows the user to view all records without a date range filter."</strong> This is implemented by <code>App.all_records()</code> but not stated in Criterion A. Alternatively, since the code already does everything else, make SC9 the delete function and add a delete button to the UI.</p>
+
+<h3>5.2 No standalone executable has been created</h3>
+
+<p>A distributable executable lets the client use the program without installing Python or any libraries, and it demonstrates that the product is a finished deliverable. The IA resource page has a tutorial for this. The standard tool is <code>PyInstaller</code>:</p>
+
+<pre>pip install pyinstaller
+pyinstaller --onefile --windowed --name "JuliaHabitTracker" JuliaHabitTracker.py</pre>
+
+<p>Notes:</p>
+<ul>
+  <li><code>--onefile</code> produces a single .exe</li>
+  <li><code>--windowed</code> hides the console, correct for a GUI-only app</li>
+  <li>The SQLite database is created at runtime in <code>Documents/JuliaHabitTracker/data/</code>, so no data files need to be bundled</li>
+  <li>Test the executable on a machine without Python installed — the database folder should still be created automatically</li>
+</ul>
+
+<h3>5.3 SC9 — Client evidence and splash guidance</h3>
+<p>Send the client a Microsoft Forms survey with one Likert question per SC. Record the responses and reference them in the video. Add the splash dialog described in Section 7 so the interface is self-explanatory on first launch.</p>
+
+<h3>5.4 Add a delete function</h3>
+<p>At present, records can only be added or edited, not removed. If SC9 is fixed as a delete requirement, add a <code>Store.delete(entry_id)</code> method that also cleans up the associated mood row when no other entries reference that day, and a "Delete selected" button in the search bar. This mirrors the cleanup logic already present in <code>Store.save()</code> and would strengthen the write-up.</p>
+
+<h3>5.5 Default date range hides recent data</h3>
+<p>The default start date is 29 days ago, so a record from 60 days ago is hidden until the user clicks "All records". The status message tells the user this, which is good, but consider setting the default range to cover a full year, or adding a "Last 30 days" / "Last 90 days" quick-select.</p>
+
+<h3>5.6 The trend threshold values are not justified</h3>
+<p><code>trend_label(change, threshold)</code> uses <code>0.5</code> for mood and <code>10</code> for completion. These are reasonable but arbitrary. State in the write-up where they come from, or acknowledge they are approximations chosen to avoid classifying noise as a trend. That turns a magic number into a justified decision.</p>
+
+<h3>5.7 The habit name limit is not enforced on input</h3>
+<p><code>Store.save()</code> rejects names longer than 80 characters, but the entry widget does not. The user types 90 characters, presses Save, and gets an error. Either add a character counter or accept the limit as it is. Documenting the limit is enough.</p>
+
+<h2>6. Test Plan</h2>
+
+<p>The rubric requires testing for correctness, reliability, and efficiency. Record each test in the table below and reference its timestamp in the video.</p>
+
+<table>
+<tr>
+  <th>ID</th><th>Test purpose</th><th>Input</th><th>Type</th><th>Expected output</th><th>SC</th><th>Category</th><th>Video time</th>
+</tr>
+<tr><td>T1</td><td>Add valid habit and mood</td><td>Habit "Read", today's date, mood 7, done</td><td>Valid</td><td>Record saved, appears in table</td><td>1</td><td>Correctness</td><td>1:00</td></tr>
+<tr><td>T2</td><td>Save another habit on same day</td><td>Habit "Exercise", same date, mood 7</td><td>Valid</td><td>New record saved, mood unchanged</td><td>1, 4</td><td>Correctness</td><td>1:15</td></tr>
+<tr><td>T3</td><td>Missing habit name</td><td>Empty habit field</td><td>Invalid</td><td>"Enter a habit name between 1 and 80 characters"</td><td>7</td><td>Reliability</td><td>1:30</td></tr>
+<tr><td>T4</td><td>Habit name too long</td><td>81-character name</td><td>Extreme</td><td>Rejected with error message</td><td>7</td><td>Reliability</td><td>1:40</td></tr>
+<tr><td>T5</td><td>Invalid date format</td><td>"2026/13/45"</td><td>Invalid</td><td>"Enter a valid date in YYYY-MM-DD format"</td><td>7</td><td>Reliability</td><td>1:50</td></tr>
+<tr><td>T6</td><td>Future date</td><td>Tomorrow's date</td><td>Extreme</td><td>"Choose today or a past date"</td><td>7</td><td>Reliability</td><td>2:00</td></tr>
+<tr><td>T7</td><td>Mood out of range — high</td><td>Mood = 11</td><td>Extreme</td><td>"Mood must be a whole number from 1 to 10"</td><td>7</td><td>Reliability</td><td>2:10</td></tr>
+<tr><td>T8</td><td>Mood out of range — zero</td><td>Mood = 0</td><td>Invalid</td><td>Same error</td><td>7</td><td>Reliability</td><td>2:20</td></tr>
+<tr><td>T9</td><td>Duplicate habit on same day</td><td>Same habit, same date, again</td><td>Invalid</td><td>IntegrityError caught, message shown</td><td>1, 7</td><td>Reliability</td><td>2:30</td></tr>
+<tr><td>T10</td><td>Search by date range</td><td>From = 7 days ago, To = today</td><td>Valid</td><td>Only records in range shown</td><td>2</td><td>Correctness</td><td>2:45</td></tr>
+<tr><td>T11</td><td>Invalid date range</td><td>From = today, To = yesterday</td><td>Invalid</td><td>"The start date must be on or before the end date"</td><td>2, 7</td><td>Reliability</td><td>3:00</td></tr>
+<tr><td>T12</td><td>All records view</td><td>Click "All records"</td><td>Valid</td><td>Every record shown, including older entries</td><td>2</td><td>Correctness</td><td>3:10</td></tr>
+<tr><td>T13</td><td>Average mood over period</td><td>3 different days with moods 6, 8, 10</td><td>Valid</td><td>Average displayed as 8.0/10</td><td>4</td><td>Correctness</td><td>3:20</td></tr>
+<tr><td>T14</td><td>Streak calculation</td><td>Mark the same habit done on 5 consecutive days</td><td>Valid</td><td>Streak shown as 5 / 5</td><td>3</td><td>Correctness</td><td>3:35</td></tr>
+<tr><td>T15</td><td>Streak broken by gap</td><td>Done on days 1–3, skip day 4, done on days 5–6</td><td>Extreme</td><td>Current streak 2, best streak 3</td><td>3</td><td>Correctness</td><td>3:50</td></tr>
+<tr><td>T16</td><td>Yesterday's streak still active</td><td>Done yesterday, not done today</td><td>Extreme</td><td>Current streak still includes yesterday's run</td><td>3</td><td>Correctness</td><td>4:00</td></tr>
+<tr><td>T17</td><td>Trend — improving</td><td>Recent week mood average 8, previous week 6</td><td>Valid</td><td>"Mood: improving (+2.0 points)"</td><td>6</td><td>Correctness</td><td>4:10</td></tr>
+<tr><td>T18</td><td>Trend — insufficient data</td><td>Only 2 logged days in one window</td><td>Extreme</td><td>"More data needed" message</td><td>6</td><td>Reliability</td><td>4:20</td></tr>
+<tr><td>T19</td><td>Feedback for low mood</td><td>Recent average mood 3</td><td>Extreme</td><td>Feedback includes "Choose a small, manageable step today"</td><td>5</td><td>Correctness</td><td>4:30</td></tr>
+<tr><td>T20</td><td>Edit existing record</td><td>Select a row, change mood from 5 to 9, save</td><td>Valid</td><td>Row updates, no duplicate created</td><td>8</td><td>Correctness</td><td>4:40</td></tr>
+<tr><td>T21</td><td>Persistence after restart</td><td>Close app, reopen</td><td>Valid</td><td>All records still present</td><td>10</td><td>Correctness</td><td>4:50</td></tr>
+<tr><td>T22</td><td>Client usability</td><td>Client uses app unaided</td><td>Valid</td><td>Client can log a habit and understand the report</td><td>9</td><td>Correctness</td><td>5:00</td></tr>
+</table>
+
+<h2>7. Splash Screen</h2>
+
+<p>A splash screen supports SC9 and provides a screenshot for the Criterion C wireframe. Keep it short.</p>
+
+<h3>7.1 Where to add it</h3>
+<p>In <code>App.__init__</code>, after the layout is built, call <code>self.show_splash()</code> once. Add a "Help" button to the search bar so the dialog can be re-displayed at any time.</p>
+
+<h3>7.2 The splash function</h3>
+
+<pre>def show_splash(self):
+    splash = tk.Toplevel(self.root)
+    splash.title("Welcome")
+    splash.geometry("460x320")
+    splash.transient(self.root)
+    splash.grab_set()
+
+    ttk.Label(
+        splash,
+        text="Julia • Habits & Mood",
+        font=("Helvetica", 16, "bold")
+    ).pack(padx=24, pady=(24, 6), anchor="w")
+
+    ttk.Label(
+        splash,
+        text=(
+            "Track your habits, reflect on your mood, and see\n"
+            "your progress over time.\n\n"
+            "HOW TO USE\n"
+            "  1. Fill in the daily check-in form and press Save.\n"
+            "  2. Use the date range to search past records.\n"
+            "  3. Read the report below the table for streaks,\n"
+            "     trends, and personalised feedback.\n\n"
+            "Your data stays on this computer."
+        ),
+        justify="left",
+        wraplength=420
+    ).pack(padx=24, pady=(0, 16), anchor="w")
+
+    ttk.Button(
+        splash,
+        text="Got it",
+        command=splash.destroy
+    ).pack(padx=24, pady=(0, 24), fill="x")</pre>
+
+<h3>7.3 User flow</h3>
+
+<div class="flow">Program starts
+     │
+     ▼
+Create data folder and open SQLite file
+     │
+     ▼
+┌──────────────────────┐
+│  SPLASH DIALOG       │  ← first-run guidance
+│  "How to use"        │
+└──────────────────────┘
+     │
+     ▼
+┌──────────────────────────────────────┐
+│  MAIN WINDOW                         │
+│  Title + subtitle                    │
+│  Daily check-in form                 │
+│  Date range search bar               │
+│  Records table (Treeview)            │
+│  Report box (mood, streaks, trends)  │
+└──────────────────────────────────────┘
+     │
+     │  user saves or searches
+     ▼
+┌──────────────────────┐
+│  Store methods       │
+│  save / records /    │
+│  streaks / mood      │
+└──────────────────────┘</div>
+
+<h2>8. Checklist and Video Plan</h2>
+
+<h3>8.1 Pre-recording checklist</h3>
+<ul>
+  <li>Fix the SC8 / SC9 duplication in Criterion A</li>
+  <li>Build a standalone executable using PyInstaller (SC9, deliverable)</li>
+  <li>Test the executable on a clean machine without Python installed (SC9, SC10)</li>
+  <li>Add the splash dialog and a Help button (SC9)</li>
+  <li>Collect client feedback via Microsoft Forms (SC9)</li>
+  <li>If SC9 becomes a delete requirement, add <code>Store.delete()</code> and a "Delete selected" button</li>
+  <li>Justify the trend threshold values in the write-up (0.5 for mood, 10 for completion)</li>
+  <li>Run all twenty-two tests; capture screenshots</li>
+  <li>Write Parts 1–3 of the Criterion D write-up</li>
+  <li>Record the video</li>
+</ul>
+
+<h3>8.2 Recording tools</h3>
+<p>ShareX (Windows) or QuickTime (macOS) are appropriate. Xbox Game Bar (Win + G) is also acceptable. OBS is unnecessary for a five-minute video.</p>
+
+<h3>8.3 Video plan — five minutes</h3>
+
+<table>
+<tr><th>Time</th><th>Content</th><th>Test / SC</th></tr>
+<tr><td>0:00–0:20</td><td>Intro: client Julia, purpose. Launch the executable. Show the splash dialog.</td><td>SC9</td></tr>
+<tr><td>0:20–0:50</td><td>Dismiss splash. Show the empty UI. Enter first check-in: habit "Read", today, mood 7.</td><td>T1</td></tr>
+<tr><td>0:50–1:20</td><td>Add a second habit same day. Point out that the mood is shared across both records.</td><td>T2, T13</td></tr>
+<tr><td>1:20–2:00</td><td>Test invalid inputs: blank habit, 81-character name, "2026/13/45", future date, mood 11, mood 0.</td><td>T3–T8</td></tr>
+<tr><td>2:00–2:30</td><td>Attempt to save a duplicate habit on the same day. Show the IntegrityError message.</td><td>T9</td></tr>
+<tr><td>2:30–3:00</td><td>Search by date range. Then click "All records". Then enter From &gt; To and show the error.</td><td>T10, T11, T12</td></tr>
+<tr><td>3:00–3:40</td><td>Mark the same habit done on 5 consecutive days. Show the streak in the report. Then break it and show the change.</td><td>T14, T15, T16</td></tr>
+<tr><td>3:40–4:10</td><td>Show trend messages — improving, stable, and the insufficient-data case.</td><td>T17, T18</td></tr>
+<tr><td>4:10–4:30</td><td>Show feedback for low mood. Show feedback for high completion rate.</td><td>T19</td></tr>
+<tr><td>4:30–4:50</td><td>Edit a record. Show that the row updates without a duplicate. Close and reopen to prove persistence.</td><td>T20, T21</td></tr>
+<tr><td>4:50–5:00</td><td>Client feedback; state which SC passed and which needs work.</td><td>T22</td></tr>
+</table>
+
+<p>During each test, state the SC number and the expected versus actual result.</p>
+
+<h3>8.4 Immediate priority</h3>
+
+<div class="box">
+<p>The most urgent item is the SC8 / SC9 duplication in Criterion A. Two of your ten success criteria say the same thing. An assessor will notice this immediately and it reduces the mark in Criterion A. Decide what SC9 should be — either "delete a record" (which requires adding a delete button) or "view all records without a filter" (which is already implemented by <code>App.all_records()</code>). Once fixed, the code already satisfies every remaining SC except for the missing executable and the missing client evidence.</p>
+<p>The second priority is packaging the app with PyInstaller and testing it on a clean machine. The database is created at runtime so no data files need to be bundled — this makes the build straightforward and gives you a clean demonstration for the video.</p>
+</div>
+
+</body>
+</html>
