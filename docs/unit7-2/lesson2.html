@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>7.2 Lesson 2 · Smart Devices &amp; Simulators</title>
+  <title>7.2 Lesson 2 · Using Sensors in Programming</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -666,15 +666,9 @@
     <div class="starter-callout">
       <span class="badge">🔥 Starter</span>
       <div>
-        <h3>How Do We Use Sensors?</h3>
-        <p>Think about how we use our senses to help us decide what to do. For example: <strong>If</strong> you see a wall, <strong>then</strong> you would move around it.</p>
-        <p>In pairs, make a list of sensors that could be used in a computer or smart device. Think about:</p>
-        <ul style="margin-top:0.4rem; color:#5a2900;">
-          <li>Using your voice to activate a personal assistant</li>
-          <li>Turning on lights when it gets dark</li>
-          <li>Detecting motion in a security camera</li>
-        </ul>
-        <p style="margin-top:0.6rem;"><em>This is an example of using a sound sensor to detect and use voice commands.</em></p>
+        <h3>Blooket Warm-Up</h3>
+        <p>Start with a quick <strong>Blooket</strong> game to recap key sensor and programming concepts.</p>
+        <p><a href="https://play.blooket.com/host?id=68e244ca47f77bb0eb77296e" target="_blank">▶ Open Blooket Starter</a></p>
       </div>
     </div>
 
@@ -731,7 +725,7 @@
       <div class="caption">A simple flowchart for a smart thermostat using selection.</div>
     </div>
 
-    <p>In MicroPython, the code for this would use an <code>if</code> statement:</p>
+    <p>In MicroPython, the code for this would use an <code>if</code> statement. The <code>temperature()</code> function is built into the <code>microbit</code> module, so you do <strong>not</strong> need to create it yourself:</p>
 
     <div class="highlight-box" style="background: #1e293b; border-left-color: #2a6f97; color: #e2e8f0; font-family: monospace; font-size: 0.9rem; padding: 1rem 1.4rem;">
       <span style="color: #7bb3ff;">from</span> microbit <span style="color: #7bb3ff;">import</span> *<br><br>
@@ -743,6 +737,11 @@
       &nbsp;&nbsp;&nbsp;&nbsp;pin0.write_digital(<span style="color: #f9a825;">0</span>)
     </div>
 
+    <div class="highlight-box green">
+      <i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Built-in functions:</strong> <code>temperature()</code>, <code>display.show()</code>, <code>pin0.write_digital()</code> and <code>sleep()</code> are all built into the <code>microbit</code> module. When you write <code>from microbit import *</code>, you get access to all of them automatically.
+    </div>
+
     <!-- ===== LIGHT SENSOR EXAMPLE ===== -->
     <h2>💡 Using the Light Sensor</h2>
     <p>The micro:bit's LED display can also work as a <strong>light sensor</strong>. The code to read the light level is:</p>
@@ -751,10 +750,11 @@
       display.read_light_level()
     </div>
 
-    <p>You can use this in an <code>if</code> statement to make decisions based on light levels. For example:</p>
+    <p>You can use this in an <code>if</code> statement to make decisions based on light levels. To play music, you must also <code>import music</code> — note that the module name is lowercase:</p>
 
     <div class="highlight-box" style="background: #1e293b; border-left-color: #2a6f97; color: #e2e8f0; font-family: monospace; font-size: 0.9rem; padding: 1rem 1.4rem;">
-      <span style="color: #7bb3ff;">from</span> microbit <span style="color: #7bb3ff;">import</span> *<br><br>
+      <span style="color: #7bb3ff;">from</span> microbit <span style="color: #7bb3ff;">import</span> *<br>
+      <span style="color: #7bb3ff;">import</span> music<br><br>
       <span style="color: #7bb3ff;">while</span> True:<br>
       &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #7bb3ff;">if</span> display.read_light_level() &lt; <span style="color: #f9a825;">100</span>:<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.CHESSBOARD)<br>
@@ -764,8 +764,14 @@
     </div>
 
     <div class="highlight-box amber">
-      <i class="fas fa-balance-scale" style="color:#b45309; margin-right:8px;"></i>
-      <strong>Debugging Challenge:</strong> If the light level is 67, the micro:bit would display a chessboard image and play the music 'Ba_ding'. If the light level is 130, the micro:bit will clear the screen. Can you spot the error if the code was showing <code>&gt;</code> instead of <code>&lt;</code>?
+      <i class="fas fa-exclamation-triangle" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Common error:</strong> Writing <code>Music.play(Music.BA_DING)</code> with capital letters will cause an error — "music is not defined." Python is <strong>case-sensitive</strong>, so you must use lowercase: <code>import music</code> and <code>music.play(music.BA_DING)</code>.
+    </div>
+
+    <div class="highlight-box purple">
+      <i class="fas fa-search" style="color:#8e24aa; margin-right:8px;"></i>
+      <strong>Debugging Challenge:</strong> If the light level is 67, the micro:bit displays a chessboard image and plays 'Ba_ding'. If the light level is 130, it clears the screen. What happens if the code uses <code>&gt;</code> instead of <code>&lt;</code>?
+      <p style="margin-top:0.5rem;"><strong>Answer:</strong> The logic is reversed. With <code>&gt;</code>, a dark room (level 67) would clear the screen, and a bright room (level 130) would show the chessboard and play music. This is a <strong>logic error</strong> — the code runs but does the opposite of what is intended.</p>
     </div>
 
     <!-- ===== MICROPYTHON ENVIRONMENT ===== -->
@@ -865,6 +871,39 @@
           </tr>
         </table>
       </div>
+    </div>
+
+    <!-- ===== AI PROJECT ===== -->
+    <h2>🤖 AI Project: Train a Model (Project-Based)</h2>
+
+    <div class="highlight-box purple">
+      <i class="fas fa-calendar-check" style="color:#8e24aa; margin-right:8px;"></i>
+      <strong>This is a project-based task that runs across several lessons.</strong>
+    </div>
+
+    <h3>📅 This week (in class)</h3>
+    <ul>
+      <li>Watch the <strong>CreateAI tutorial video</strong> (shown by your teacher).</li>
+      <li>Follow along and learn how to <strong>train a model</strong> to recognise two movements (e.g. "shake" and "still").</li>
+      <li>Learn how to program the micro:bit to <strong>show a different icon</strong> depending on what the AI detects.</li>
+      <li>At the end of <strong>next lesson</strong>, you should be able to <em>run the program</em> using the CreateAI simulator.</li>
+    </ul>
+
+    <h3>🎒 Homework — bring your materials for next lesson</h3>
+    <div class="highlight-box green">
+      <i class="fas fa-box-open" style="color:#2d8f2d; margin-right:8px;"></i>
+      Bring in physical materials to build a real-world version of your AI project. Examples:
+      <ul style="margin-top:0.4rem;">
+        <li><strong>Elastic bands</strong> — to create a moving part or lever</li>
+        <li><strong>Small toys</strong> or figures — to be moved by your device</li>
+        <li><strong>Card, straws, tape, string</strong> — for building a simple mechanism</li>
+        <li><strong>Anything else</strong> you think you'll need to make your project move or react</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Continue your work:</strong> Go to <a href="https://createai.microbit.org/" target="_blank" style="color:#1f6390;">createai.microbit.org</a> to continue training your AI model. In a future lesson, you will combine your trained AI model with the physical materials you bring in and present your project in a <strong>show and tell</strong>.
     </div>
 
     <!-- ===== SELF-CHECK QUIZ ===== -->
