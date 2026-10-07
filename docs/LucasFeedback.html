@@ -175,7 +175,7 @@ This document covers the eight things you need to complete Criterion D: the tech
 <h2>1. Techniques to Justify</h2>
 
 <div class="note">
-No fixed number is required. The rubric asks for <em>appropriate</em> techniques, judged on quality, not counted. For your project, <strong>six to nine</strong> is the right range. You already have eight in your code.
+No fixed number is required. The rubric asks for <em>appropriate</em> techniques, judged on quality, not counted. For your project, <strong>six to nine</strong> is the right range. You already have nine in your code.
 </div>
 
 <table>
@@ -235,9 +235,9 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
   </tr>
   <tr>
     <td>9</td>
-    <td>Frozen-path handling for PyInstaller packaging using <code>sys._MEIPASS</code></td>
-    <td><code>load_breaches()</code></td>
-    <td><span class="tag mod">Moderate</span></td>
+    <td>Standalone packaging with PyInstaller — the program runs as a distributable .exe without Python installed on the client machine</td>
+    <td>Build step; supported in code by <code>sys._MEIPASS</code> handling in <code>load_breaches()</code></td>
+    <td><span class="tag strong">Strong</span></td>
   </tr>
 </table>
 
@@ -291,7 +291,7 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
   </tr>
   <tr>
     <td>1</td>
-    <td>Structure justification — single-file OOP design, why one class holds state and analysis, JSON/CSV breach list, dark-theme UI, offline operation</td>
+    <td>Structure justification — single-file OOP design, why one class holds state and analysis, CSV breach list, dark-theme UI, offline operation, PyInstaller packaging</td>
     <td>200</td>
   </tr>
   <tr>
@@ -365,13 +365,13 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
 <tr>
   <td>9</td><td>Interface is clear and usable</td>
   <td class="partial">Unverified</td>
-  <td>Layout is well-structured, but there is no splash guidance and no client feedback recorded</td>
+  <td>Layout is well-structured, and a distributable .exe exists, but there is no splash guidance and no client feedback recorded</td>
   <td>Add a splash dialog; collect Microsoft Forms responses</td>
 </tr>
 <tr>
   <td>10</td><td>Runs offline / no data leaves the machine</td>
   <td class="met">Met</td>
-  <td>CSV breach list loaded locally, no network calls in the code</td>
+  <td>CSV breach list loaded locally, no network calls in the code, distributed as a standalone .exe</td>
   <td>State this in the write-up as a design decision</td>
 </tr>
 </table>
@@ -382,24 +382,20 @@ Nine criteria are fully met. One is unverified. All ten become demonstrable once
 
 <h2>5. Required Code Changes</h2>
 
-<h3>5.1 No standalone executable has been created</h3>
+<h3>5.1 Confirm the executable is up to date</h3>
 
-<p>A distributable executable lets the client use the program without installing Python or any libraries, and it demonstrates that the product is a finished deliverable. The IA resource page has a tutorial for this. The standard tool is <code>PyInstaller</code>:</p>
+<p>The program has already been packaged as a standalone executable, which is an advantage: the client can run it without installing Python. Before recording, confirm the .exe includes the current version of the source and the bundled CSV, and test it on a machine that does not have Python installed. If any code changes are made after the build, rebuild with:</p>
 
-<pre>pip install pyinstaller
-pyinstaller --onefile --windowed --add-data "breached_passwords.csv;." --name "PasswordSecurityAuditor" main.py</pre>
+<pre>pyinstaller --onefile --windowed --add-data "breached_passwords.csv;." --name "PasswordSecurityAuditor" main.py</pre>
 
-<p>Notes:</p>
+<p>Notes for the rebuild if needed:</p>
 <ul>
   <li><code>--onefile</code> produces a single .exe</li>
-  <li><code>--windowed</code> hides the console, which is correct for a GUI-only app</li>
-  <li><code>--add-data "breached_passwords.csv;."</code> bundles the CSV into the executable. On macOS and Linux, replace the semicolon with a colon: <code>"breached_passwords.csv:."</code></li>
-  <li>The code already handles the frozen path correctly using <code>sys._MEIPASS</code> in <code>load_breaches()</code>, so no further changes are needed</li>
-  <li>The executable appears in the <code>dist/</code> folder after the build</li>
-  <li>Test the executable on a machine that does not have Python installed — that is the only way to confirm it works for the client</li>
+  <li><code>--windowed</code> hides the console, correct for a GUI-only app</li>
+  <li><code>--add-data "breached_passwords.csv;."</code> bundles the CSV. On macOS and Linux replace the semicolon with a colon: <code>"breached_passwords.csv:."</code></li>
+  <li>The code already handles the frozen-path correctly using <code>sys._MEIPASS</code> in <code>load_breaches()</code></li>
+  <li>Test the final .exe on a clean machine — that is the only way to confirm the bundled CSV loads</li>
 </ul>
-
-<p>Once the executable builds and runs, record it as a technique in the Criterion D write-up. This supports SC9 (usability) and strengthens the "fully functional product" requirement.</p>
 
 <h3>5.2 SC9 — Client evidence and splash guidance</h3>
 <p>Send the client a Microsoft Forms survey with one Likert question per SC. Record the responses and reference them in the video. Add the splash dialog described in Section 7 so the interface is self-explanatory on first launch.</p>
@@ -539,7 +535,7 @@ Load breached_passwords.csv, hash entries
 
 <h3>8.1 Pre-recording checklist</h3>
 <ul>
-  <li>Build a standalone executable using PyInstaller, bundling the CSV with <code>--add-data</code> (SC9, deliverable)</li>
+  <li>Confirm the existing executable includes the current source and the bundled CSV</li>
   <li>Test the executable on a clean machine without Python installed (SC9, SC10)</li>
   <li>Add the splash dialog and a Help button (SC9)</li>
   <li>Collect client feedback via Microsoft Forms (SC9)</li>
@@ -557,7 +553,7 @@ Load breached_passwords.csv, hash entries
 
 <table>
 <tr><th>Time</th><th>Content</th><th>Test / SC</th></tr>
-<tr><td>0:00–0:20</td><td>Intro: client, purpose. Show the splash dialog.</td><td>SC9</td></tr>
+<tr><td>0:00–0:20</td><td>Intro: client, purpose. Launch the executable (not the script) to show it is a finished deliverable. Show the splash dialog.</td><td>SC9, SC10</td></tr>
 <tr><td>0:20–0:45</td><td>Dismiss splash. Show the empty UI and its default state.</td><td>T8</td></tr>
 <tr><td>0:45–1:30</td><td>Type <code>123456</code> then <code>password1</code>. Show Very Weak tier, breach warning, dictionary penalty, low crack time.</td><td>T1, T2</td></tr>
 <tr><td>1:30–2:15</td><td>Type <code>aaaaaaaaaaaa</code> then <code>qwertyuiop</code>. Show repeating and sequence penalties.</td><td>T3, T4</td></tr>
@@ -574,7 +570,7 @@ Load breached_passwords.csv, hash entries
 <h3>8.4 Immediate priority</h3>
 
 <div class="box">
-<p>The most urgent item is the missing executable. The program runs from source, but the client cannot use it without installing Python and the standard library. Build the executable with PyInstaller and test it on a machine that does not have Python installed. The code already handles the frozen-path case in <code>load_breaches()</code>, so the build itself is a single command. Once the executable builds and runs, both SC9 and SC10 become provable, and the video has a clean opening shot of the .exe being launched.</p>
+<p>The program has already been packaged as a standalone executable, which strengthens the "fully functional product" claim for Criterion D. The remaining priorities are: confirm the .exe includes the current source and the bundled CSV, test it on a machine without Python installed so SC9 and SC10 can be demonstrated with evidence, add the splash dialog so the interface is self-explanatory on first launch, and collect client feedback via Microsoft Forms. Record the latency figure for a long password in the video to prove the efficiency claim holds under load.</p>
 </div>
 
 </body>
