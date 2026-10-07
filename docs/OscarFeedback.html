@@ -218,7 +218,7 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
   <tr>
     <td>6</td>
     <td>Local JSON persistence with add-or-update semantics</td>
-    <td><code>RecommendationSystem.add_or_update_university()</code>, <code>add_or_update_university()</code> calls</td>
+    <td><code>RecommendationSystem.add_or_update_university()</code></td>
     <td><span class="tag strong">Strong</span></td>
   </tr>
   <tr>
@@ -235,7 +235,7 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
   </tr>
 </table>
 
-<p>Optional addition if you refactor — pick one, not both:</p>
+<p>Optional addition if you refactor:</p>
 
 <table>
   <tr>
@@ -248,14 +248,9 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
     <td>Classes and encapsulation for <code>University</code></td>
     <td>Replace the dictionaries returned by <code>generate_recommendations()</code> with typed objects</td>
   </tr>
-  <tr>
-    <td>10</td>
-    <td>SQLite persistence</td>
-    <td>Switch from JSON to SQLite if you plan to rewrite Criterion B's storage component</td>
-  </tr>
 </table>
 
-<p><strong>OOP is already present</strong> — this is a real advantage over the other two projects and should be the first technique written up. Do not pad the list with basic syntax. Loops, <code>print()</code>, comments, and file names do not count as techniques. A technique earns a paragraph only when another programmer might have solved it differently.</p>
+<p>Do not pad the list with basic syntax. Loops, <code>print()</code>, comments, and file names do not count as techniques. A technique earns a paragraph only when another programmer might have solved it differently.</p>
 
 <h2>2. How to Write Each Technique</h2>
 
@@ -376,19 +371,50 @@ Eight criteria are fully met. Two are partial or unverified. All ten become demo
 
 <h2>5. Required Code Changes</h2>
 
-<h3>5.1 SC2 — Route sidebar inputs through the validator</h3>
+<h3>5.1 The program must run — this is the top priority</h3>
+
+<p>You reported <code>ModuleNotFoundError: No module named 'recommendation_system'</code> when running the program. This must be fixed before anything else. Common causes and fixes:</p>
+
+<ul>
+  <li><strong>Files in different folders.</strong> <code>program.py</code> must be in the same directory as <code>recommendation_system.py</code> and <code>validation.py</code>. If they are in subfolders, move them all into one folder.</li>
+  <li><strong>Wrong working directory.</strong> If you run from an IDE, the working directory might not be where the files are. In VS Code, right-click the folder containing all three files and choose "Open in Integrated Terminal", then run <code>python program.py</code>.</li>
+  <li><strong>Missing file.</strong> Confirm <code>recommendation_system.py</code> actually exists. If it was never created or was deleted, the imports will fail.</li>
+  <li><strong>Typos.</strong> Filenames are case-sensitive. <code>Recommendation_system.py</code> is not the same as <code>recommendation_system.py</code>.</li>
+</ul>
+
+<p>The Criterion D video cannot be recorded until the program runs. Fix this before anything else on this list.</p>
+
+<h3>5.2 Create a standalone executable</h3>
+
+<p>A distributable executable lets the client use the program without installing Python or libraries, and it demonstrates that the product is a finished deliverable. The IA resource page has a tutorial for building one. The standard tool for Python is <code>PyInstaller</code>:</p>
+
+<pre>pip install pyinstaller
+pyinstaller --onefile --windowed --name "IBUniversityRecommender" program.py</pre>
+
+<p>Notes:</p>
+<ul>
+  <li><code>--onefile</code> produces a single .exe</li>
+  <li><code>--windowed</code> hides the console (use it for a GUI-only app)</li>
+  <li>Any data files (JSON files) that the program reads at runtime must be listed with <code>--add-data</code> or the executable will fail when it cannot find them</li>
+  <li>The executable will be in the <code>dist/</code> folder after the build</li>
+  <li>Test the executable on a machine without Python installed — that is the only way to confirm it works for the client</li>
+</ul>
+
+<p>Once it builds and runs, mention this in the write-up as a technique: "packaged the program into a standalone executable using PyInstaller so the client does not need to install Python". It supports SC9 (usability) and strengthens the "fully functional product" requirement.</p>
+
+<h3>5.3 SC2 — Route sidebar inputs through the validator</h3>
 <p>The data editor validates university fields, but the sidebar score and fees entries are only stripped. In <code>run_recommendation_process()</code>, pass the raw strings through <code>self.validator</code> first. If it returns an error, call <code>self.show_error(error)</code> and return before calling <code>generate_recommendations()</code>. This makes SC2 provable on the main screen, not just the editor.</p>
 
-<h3>5.2 SC9 — Client evidence and splash guidance</h3>
+<h3>5.4 SC9 — Client evidence and splash guidance</h3>
 <p>Send the client a Microsoft Forms survey with one Likert question per SC. Record the responses and reference them in the video. Add the splash dialog described in Section 7 so the interface is self-explanatory on first launch.</p>
 
-<h3>5.3 SC7 — Record the response time</h3>
+<h3>5.5 SC7 — Record the response time</h3>
 <p>The code already measures and displays response time in <code>display_results()</code>. Add a <code>print()</code> so the value appears in the console during the video, and pause on the summary line long enough for the viewer to read it.</p>
 
-<h3>5.4 Storage consistency</h3>
+<h3>5.6 Storage consistency</h3>
 <p>Criterion A mentions "JSON or SQLite". Criterion B mentions "JSON/SQLite". The implementation uses JSON. Either commit to JSON in Criterion B (recommended, since it already works) or refactor to SQLite. Do not leave the storage choice ambiguous between criteria.</p>
 
-<h3>5.5 University dictionary consistency</h3>
+<h3>5.7 University dictionary consistency</h3>
 <p>The result cards read <code>university["ib_requirement"]</code>, <code>university["fees"]</code>, and <code>university["field_of_study"]</code>. Confirm that <code>recommendation_system.py</code> returns exactly those keys. A single mismatch causes a <code>KeyError</code> at runtime that would fail SC6 in the video.</p>
 
 <h2>6. Test Plan</h2>
@@ -418,7 +444,7 @@ Eight criteria are fully met. Two are partial or unverified. All ten become demo
 <tr><td>T17</td><td>Invalid editor input</td><td>Fees = "free"</td><td>Invalid</td><td>Error message in editor</td><td>2</td><td>Reliability</td><td>4:05</td></tr>
 <tr><td>T18</td><td>Client usability</td><td>Client uses app unaided</td><td>Valid</td><td>Completes task without help</td><td>9</td><td>Correctness</td><td>4:20</td></tr>
 <tr><td>T19</td><td>No matches</td><td>Filters that exclude all data</td><td>Extreme</td><td>"No matching universities" card</td><td>10</td><td>Reliability</td><td>4:35</td></tr>
-<tr><td>T20</td><td>Full process end-to-end</td><td>Score + all filters + generate</td><td>Valid</td><td>Complete working run</td><td>1–10</td><td>Correctness</td><td>4:45</td></tr>
+<tr><td>T20</td><td>Executable runs on clean machine</td><td>Run .exe on PC without Python</td><td>Valid</td><td>Program launches normally</td><td>9</td><td>Correctness</td><td>4:45</td></tr>
 </table>
 
 <h2>7. Splash Screen</h2>
@@ -500,6 +526,8 @@ Load UniversityRecommenderApp
 
 <h3>8.1 Pre-recording checklist</h3>
 <ul>
+  <li><strong>Fix the ModuleNotFoundError so the program runs</strong></li>
+  <li>Build a standalone executable using PyInstaller and test it on a clean machine (SC9, deliverable)</li>
   <li>Route sidebar score and fees through <code>InputValidator</code> (SC2)</li>
   <li>Confirm dictionary keys returned by <code>generate_recommendations()</code> match the keys used in result cards (SC6)</li>
   <li>Commit to JSON or SQLite in Criterion B (storage consistency)</li>
@@ -518,7 +546,7 @@ Load UniversityRecommenderApp
 
 <table>
 <tr><th>Time</th><th>Content</th><th>Test / SC</th></tr>
-<tr><td>0:00–0:20</td><td>Intro: client, purpose. Show the splash dialog.</td><td>SC9</td></tr>
+<tr><td>0:00–0:20</td><td>Intro: client, purpose. Launch the executable (not the script) to show it is a finished deliverable. Show the splash dialog.</td><td>SC9</td></tr>
 <tr><td>0:20–0:35</td><td>Dismiss splash. Show the sidebar and "Start here" card.</td><td>—</td></tr>
 <tr><td>0:35–1:30</td><td>Enter score 38, press the button. Show Reach / Match / Safe stat cards and result cards.</td><td>T1, T6, T7, T8</td></tr>
 <tr><td>1:30–2:20</td><td>Show invalid inputs: blank score, "abc", score 50, negative fees.</td><td>T2, T3, T4, T5</td></tr>
@@ -534,7 +562,8 @@ Load UniversityRecommenderApp
 <h3>8.4 Immediate priority</h3>
 
 <div class="box">
-<p>The most urgent item is SC2. The validator exists but is only called from the data editor. Route the sidebar score and fees entries through <code>self.validator</code> in <code>run_recommendation_process()</code> before calling <code>generate_recommendations()</code>. This makes SC2 provable on the main screen and gives you a clean test case for the video. Verifying the dictionary keys used by the result cards is the second priority — a mismatch would fail SC6 in the recording.</p>
+<p>The most urgent item is getting the program to run. <code>ModuleNotFoundError: No module named 'recommendation_system'</code> means Python cannot find one of your source files. Check that <code>program.py</code>, <code>recommendation_system.py</code>, and <code>validation.py</code> are in the same folder, and that you run the program from that folder. Until the program runs, no other improvement matters, and no video can be recorded.</p>
+<p>Once the program runs, build the executable with PyInstaller and test it on a machine that does not have Python installed. That is the strongest evidence that the product is finished and that SC9 is met.</p>
 </div>
 
 </body>
