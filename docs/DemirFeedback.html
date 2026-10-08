@@ -175,7 +175,7 @@ This document covers the eight things you need to complete Criterion D: the tech
 <h2>1. Techniques to Justify</h2>
 
 <div class="note">
-No fixed number is required. The rubric asks for <em>appropriate</em> techniques, judged on quality, not counted. For your project, <strong>six to nine</strong> is the right range. You already have nine in your code.
+No fixed number is required. The rubric asks for <em>appropriate</em> techniques, judged on quality, not counted. For your project, <strong>six to nine</strong> is the right range. You already have ten in your code.
 </div>
 
 <table>
@@ -224,7 +224,7 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
   <tr>
     <td>7</td>
     <td>Event-driven UI with <code>tkinter.ttk</code> — a <code>Treeview</code> bound to selection, so clicking a row loads it into the form</td>
-    <td><code>tree.bind("<<TreeviewSelect>>", ...)</code>, <code>select_task()</code></td>
+    <td><code>tree.bind("&lt;&lt;TreeviewSelect&gt;&gt;", ...)</code>, <code>select_task()</code></td>
     <td><span class="tag strong">Strong</span></td>
   </tr>
   <tr>
@@ -241,7 +241,7 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
   </tr>
   <tr>
     <td>10</td>
-    <td>Standalone packaging with PyInstaller — the program runs as a distributable .exe without Python installed</td>
+    <td>Standalone packaging with PyInstaller — the program runs as a distributable .exe without Python installed on the client machine</td>
     <td>Build step, not source code</td>
     <td><span class="tag strong">Strong</span></td>
   </tr>
@@ -355,7 +355,8 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
   <td>None</td>
 </tr>
 <tr>
-  <td>10</td><td>Interface shows error message after rejecting, editing, deleting</td>
+  <td>10</td>
+  <td>Interface shows error message after rejecting, editing, deleting</td>
   <td class="met">Met</td>
   <td><code>messagebox.showerror</code>, <code>messagebox.showinfo</code>, <code>messagebox.askyesno</code></td>
   <td>None</td>
@@ -363,40 +364,39 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
 </table>
 
 <div class="note">
-All ten success criteria are met in the code. The remaining problem is that no standalone executable has been created — see Section 5.1.
+All ten success criteria are met in the code. The program has been packaged as a standalone executable and it opens when double-clicked. All that remains is documentation and evidence.
 </div>
 
 <h2>5. Required Code Changes</h2>
 
-<h3>5.1 No standalone executable has been created</h3>
+<h3>5.1 Confirm the executable is up to date</h3>
 
-<p>A distributable executable lets the client use the program without installing Python or any libraries, and it demonstrates that the product is a finished deliverable. The IA resource page has a tutorial for this. The standard tool is <code>PyInstaller</code>:</p>
+<p>The program has already been packaged as a standalone executable, and it opens when double-clicked. Before recording, confirm the .exe was built from the current version of the source. If any code changes are made after the build, rebuild with:</p>
 
-<pre>pip install pyinstaller
-pyinstaller --onefile --windowed --name "HomeworkTaskManager" homework_task_manager.py</pre>
+<pre>pyinstaller --onefile --windowed --name "HomeworkTaskManager" homework_task_manager.py</pre>
 
-<p>Notes:</p>
+<p>Notes for the rebuild if needed:</p>
 <ul>
   <li><code>--onefile</code> produces a single .exe</li>
   <li><code>--windowed</code> hides the console window, correct for a GUI-only app</li>
   <li>The JSON file is created in the working directory at first run, so nothing needs to be bundled</li>
-  <li>Test the executable on a machine without Python installed — the JSON file should be created alongside the .exe the first time the client saves a task</li>
-  <li>If PyInstaller produces an <em>Ordinal Not Found</em> error on the client machine, rebuild with <code>--onedir</code> instead of <code>--onefile</code> and install the Visual C++ Redistributable on that machine</li>
+  <li>Test the final .exe on a clean machine without Python installed — the JSON file should be created alongside the .exe the first time the client saves a task</li>
+  <li>If a rebuild produces an <em>Ordinal Not Found</em> error on the target machine, rebuild with <code>--onedir</code> and install the Visual C++ Redistributable there</li>
 </ul>
 
-<p>Once the executable builds and runs, record it as a technique in the Criterion D write-up. This supports the "fully functional product" requirement and gives you a clean opening shot for the video.</p>
+<h3>5.2 Test data in homework_tasks.json</h3>
 
-<h3>5.2 The homework_tasks.json sample data is bad test data</h3>
+<p>The current JSON file contains one sample record with due date <code>1999-12-26</code>, which the program correctly classifies as OVERDUE with <code>days_left: -9783</code>. This record was added during development to confirm that saving and reloading worked.</p>
 
-<p>The current JSON contains a task with due date <code>1999-12-26</code>, which the program correctly classifies as OVERDUE with <code>days_left: -9783</code>. For a demo, this looks like a bug rather than a feature. Delete this sample entry before recording, and start with a clean file or realistic test tasks.</p>
+<p>When you record the video, use the "Delete Task" button to remove this sample entry first, then add realistic tasks for the demonstration. That gives a clean starting state and lets the assessor see the empty table before any real data is entered. Keeping the sample record in the file is fine for the written submission, but the video should start from a state the client would recognise.</p>
 
-<h3>5.3 Editing an overdue task does not un-overdue it</h3>
+<h3>5.3 Editing an overdue task keeps it overdue until the next refresh</h3>
 
-<p>When a task is edited, <code>edit_task()</code> calls <code>calculate_priority()</code> again on the new due date, so priority is recalculated correctly. However, the tag "OVERDUE" remains until the next refresh if the edit form is used on a task whose due date is still in the past. This is correct. State it clearly in the write-up so an assessor does not mistake it for a bug.</p>
+<p>When a task is edited, <code>edit_task()</code> calls <code>calculate_priority()</code> again on the new due date, so priority is recalculated correctly. However, the "OVERDUE" tag remains until the next refresh if the edit form is used on a task whose due date is still in the past. This is correct behaviour. State it clearly in the write-up so an assessor does not mistake it for a bug.</p>
 
-<h3>5.4 The days_left display does not handle negative values in the JSON</h3>
+<h3>5.4 Days-left display when the JSON is edited externally</h3>
 
-<p>In <code>refresh_task_list()</code>, negative <code>days_left</code> is displayed as "X day(s) late" which is correct. But if the JSON is manually edited and <code>days_left</code> is a string instead of an integer, the display falls through to <code>str(days_left)</code> and shows the raw string. This is not a bug in normal use — the JSON is always written by <code>save_tasks()</code>. Note it as a limitation if you want.</p>
+<p>In <code>refresh_task_list()</code>, negative <code>days_left</code> is displayed as "X day(s) late", which is correct. But if the JSON is manually edited and <code>days_left</code> is a string instead of an integer, the display falls through to <code>str(days_left)</code> and shows the raw string. This is not a bug in normal use — the JSON is always written by <code>save_tasks()</code>. Note it as a limitation if you want.</p>
 
 <h3>5.5 No splash / welcome screen</h3>
 
@@ -441,7 +441,7 @@ pyinstaller --onefile --windowed --name "HomeworkTaskManager" homework_task_mana
 <tr><td>T21</td><td>Persistence after restart</td><td>Add tasks, close, reopen</td><td>Valid</td><td>All tasks still present</td><td>7</td><td>Correctness</td><td>Yes</td></tr>
 <tr><td>T22</td><td>Corrupt JSON file</td><td>Truncate homework_tasks.json, reopen program</td><td>Invalid</td><td>Error dialog, app starts empty</td><td>7</td><td>Reliability</td><td>Yes</td></tr>
 <tr><td>T23</td><td>Auto-refresh</td><td>Leave program open, advance system clock</td><td>Extreme</td><td>Days-left and priority update</td><td>5</td><td>Correctness</td><td>No (screenshot)</td></tr>
-<tr><td>T24</td><td>Executable runs on clean machine</td><td>Run .exe without Python installed</td><td>Valid</td><td>Window opens, JSON file created on first save</td><td>1–10</td><td>Correctness</td><td>Yes (start)</td></tr>
+<tr><td>T24</td><td>Executable launches on clean machine</td><td>Run .exe without Python installed</td><td>Valid</td><td>Window opens, JSON file created on first save</td><td>1–10</td><td>Correctness</td><td>Yes (start)</td></tr>
 <tr><td>T25</td><td>Client usability</td><td>Client uses app unaided</td><td>Valid</td><td>Client adds and completes a task</td><td>9</td><td>Correctness</td><td>No (screenshot)</td></tr>
 </table>
 
@@ -528,9 +528,9 @@ Load homework_tasks.json
 
 <h3>8.1 Pre-recording checklist</h3>
 <ul>
-  <li>Build the standalone executable using PyInstaller (SC9, deliverable)</li>
+  <li>Confirm the existing executable was built from the current source</li>
   <li>Test the executable on a clean machine without Python installed</li>
-  <li>Delete the <code>1999-12-26</code> sample task from <code>homework_tasks.json</code></li>
+  <li>Delete the <code>1999-12-26</code> sample task from <code>homework_tasks.json</code> using the Delete Task button before recording</li>
   <li>Add the splash dialog (SC9)</li>
   <li>Collect client feedback via Microsoft Forms (SC9)</li>
   <li>Justify the 60-second auto-refresh interval in the write-up</li>
@@ -549,8 +549,8 @@ Load homework_tasks.json
 
 <table>
 <tr><th>Time</th><th>Content</th><th>Test / SC</th></tr>
-<tr><td>0:00–0:20</td><td>Intro: client, purpose. Launch the executable. Show the splash dialog.</td><td>T24 / SC9</td></tr>
-<tr><td>0:20–0:50</td><td>Dismiss splash. Show empty program. Add "Essay draft" due in 3 days, subject English, details "First paragraph".</td><td>T1 / SC1, SC7</td></tr>
+<tr><td>0:00–0:20</td><td>Intro: client, purpose. Launch the executable (not the script) to show it is a finished deliverable. Show the splash dialog.</td><td>T24 / SC9</td></tr>
+<tr><td>0:20–0:50</td><td>Dismiss splash. Delete the sample task so the table is empty. Add "Essay draft" due in 3 days, subject English, details "First paragraph".</td><td>T1 / SC1, SC7</td></tr>
 <tr><td>0:50–1:30</td><td>Add three more tasks: one due tomorrow, one due in 20 days, one due yesterday. Show the priority column changing.</td><td>T2, T3, T4 / SC4, SC6</td></tr>
 <tr><td>1:30–2:00</td><td>Show the sorting order. Point out that the overdue task is at the top. Zoom in on the days-left column.</td><td>T13, T14 / SC6</td></tr>
 <tr><td>2:00–2:35</td><td>Trigger validation: missing title, invalid date "15/10/2026". Show error dialogs.</td><td>T5, T8 / SC8, SC10</td></tr>
@@ -583,9 +583,10 @@ Load homework_tasks.json
 <h3>8.5 Immediate priority</h3>
 
 <div class="box">
-<p>The most urgent item is building the standalone executable. The program runs from source and every success criterion is met, but without an .exe the client cannot use it. Build with PyInstaller and test on a machine without Python installed. If PyInstaller produces an <em>Ordinal Not Found</em> error, rebuild with <code>--onedir</code> instead of <code>--onefile</code> and install the Visual C++ Redistributable.</p>
-<p>The second priority is cleaning up the test data. The <code>1999-12-26</code> sample task makes the program look broken on first launch. Delete it before recording.</p>
-<p>The third priority is fixing Criterion A so it names a specific client. The video plan assumes one client, and the assessment criteria require one. Once these are done, the program is demonstrably complete and the video can be recorded.</p>
+<p>The program is complete. All ten success criteria are met, the executable has been built and opens when double-clicked. The remaining work is documentation and evidence, not code.</p>
+<p>The first priority is cleaning up the starting state before recording. Use the Delete Task button to remove the sample task before recording begins so the video starts from a clean, client-recognisable state.</p>
+<p>The second priority is fixing Criterion A so it names a specific client. The video plan assumes one client, and the assessment criteria require one.</p>
+<p>The third priority is adding the splash dialog and collecting client feedback. Once those are done, the program is demonstrably complete and the video can be recorded.</p>
 </div>
 
 </body>
