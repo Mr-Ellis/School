@@ -369,25 +369,25 @@ No fixed number is required. The rubric asks for <em>appropriate</em> techniques
 </table>
 
 <div class="note">
-All ten success criteria are met in the code. The remaining problem is that the packaged executable does not currently open — see Section 5.1.
+All ten success criteria are met in the code. The remaining problem is that the packaged executable does not open — see Section 5.1.
 </div>
 
 <h2>5. Required Code Changes</h2>
 
-<h3>5.1 The executable does not open — <code>Ordinal Not Found</code> error</h3>
+<h3>5.1 The executable does not open — Ordinal Not Found error</h3>
 
-<p>The error shown in the screenshot is:</p>
+<p>The executable has been built, but it does not open. The error shown when launching it is:</p>
 
 <pre>PilatesStudioManager.exe - Ordinal Not Found
 The ordinal 380 could not be located in the dynamic link library
 ...\PilatesStudioManager.exe.</pre>
 
-<p>This is not a bug in your Python code. It is a Windows error that occurs when a packaged executable cannot find a system DLL function it depends on. The most common causes and fixes are:</p>
+<p>This is not a bug in the Python code. It is a Windows error that occurs when a packaged executable cannot find a system DLL function it depends on. The most common causes and fixes are:</p>
 
 <ul>
-  <li><strong>The build was made with a mismatched Python version.</strong> PyInstaller-built executables are tied to the Python version they were built with. If the .exe was built on one machine and run on another with a different Visual C++ runtime, this error appears. Fix: rebuild the executable <em>on the same machine it will be run on</em>, using the same Python version.</li>
-  <li><strong>Missing Visual C++ Redistributable.</strong> Python depends on the Microsoft Visual C++ runtime. If the client machine does not have the correct version installed, the .exe fails with this exact error. Fix: install the latest <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe">Visual C++ Redistributable (x64)</a> on the client machine, or ship it alongside the .exe with instructions.</li>
-  <li><strong>PyInstaller was run with the wrong options.</strong> <code>--onefile</code> produces a single .exe that extracts itself at runtime, and this can trigger Ordinal Not Found errors on some systems. Fix: rebuild with <code>--onedir</code> instead, which produces a folder containing the .exe and its dependencies. Onedir is more reliable for distribution.</li>
+  <li><strong>Missing Visual C++ Redistributable.</strong> Python depends on the Microsoft Visual C++ runtime. If the machine running the .exe does not have the correct version installed, the .exe fails with this exact error. Fix: install the latest Visual C++ Redistributable (x64) on the machine where the .exe is being run.</li>
+  <li><strong>The build was made with a mismatched Python version.</strong> PyInstaller-built executables are tied to the Python version they were built with. If the .exe was built on one machine and run on another with a different runtime, this error appears. Fix: rebuild the executable on the same machine it will be run on, using the same Python version.</li>
+  <li><strong>PyInstaller was run with <code>--onefile</code>.</strong> <code>--onefile</code> produces a single .exe that extracts itself at runtime, and this can trigger Ordinal Not Found errors on some systems. Fix: rebuild with <code>--onedir</code> instead, which produces a folder containing the .exe and its dependencies. Onedir is more reliable for Flask + webview apps.</li>
   <li><strong>Antivirus interference.</strong> Some antivirus programs block the extraction step. Fix: add an exception for the folder.</li>
 </ul>
 
@@ -400,11 +400,11 @@ pyinstaller --onedir --windowed --name "PilatesStudioManager" PilatesStudioManag
 <ul>
   <li><code>--onedir</code> is more reliable than <code>--onefile</code> for Flask + webview apps, because the app loads several libraries at runtime</li>
   <li><code>--windowed</code> hides the console window, correct for a GUI-only app</li>
-  <li>The Flask templates folder and any static files must be copied next to the .exe. If your Flask app uses a <code>templates/</code> folder, add <code>--add-data "templates;templates"</code> to the PyInstaller command</li>
+  <li>The Flask <code>templates/</code> folder must be copied next to the .exe, or added to the build with <code>--add-data "templates;templates"</code></li>
   <li>Test the rebuilt folder on a machine that does not have Python installed</li>
 </ul>
 
-<p>Once the executable opens, record it as a technique in the Criterion D write-up — this is one of your strongest pieces of evidence for a "fully functional product".</p>
+<p>Once the executable opens, record it as a technique in the Criterion D write-up — this is one of the strongest pieces of evidence for a "fully functional product".</p>
 
 <h3>5.2 Confirm the SQLite path works after packaging</h3>
 
@@ -442,7 +442,7 @@ pyinstaller --onedir --windowed --name "PilatesStudioManager" PilatesStudioManag
 
 <h2>6. Test Plan</h2>
 
-<p>The rubric requires testing for correctness, reliability, and efficiency. The full test plan below covers every success criterion. <strong>Not all tests can be shown in a five-minute video.</strong> The video plan in Section 8.3 selects the highest-value subset. The remaining tests are documented in the written submission with screenshots.</p>
+<p>The rubric requires testing for correctness, reliability, and efficiency. The full test plan below covers every success criterion. Not all tests can be shown in a five-minute video. The video plan in Section 8.3 selects the highest-value subset. The remaining tests are documented in the written submission with screenshots.</p>
 
 <table>
 <tr>
@@ -477,7 +477,7 @@ pyinstaller --onedir --windowed --name "PilatesStudioManager" PilatesStudioManag
 <tr><td>T27</td><td>Client usability</td><td>Maria uses app unaided</td><td>Valid</td><td>She adds a client and books a session</td><td>9</td><td>Correctness</td><td>No (screenshot)</td></tr>
 </table>
 
-<p><strong>Rule for the write-up:</strong> all twenty-seven tests appear in the written test plan with expected and actual results. The "In video?" column shows which are demonstrated live. The remaining ones are evidenced by screenshots.</p>
+<p>Rule for the write-up: all twenty-seven tests appear in the written test plan with expected and actual results. The "In video?" column shows which are demonstrated live. The remaining ones are evidenced by screenshots.</p>
 
 <h2>7. Splash Screen</h2>
 
@@ -597,7 +597,7 @@ Open pywebview window at 127.0.0.1
 <h3>8.5 Immediate priority</h3>
 
 <div class="box">
-<p>The most urgent item is the executable failing to open with <code>Ordinal Not Found</code>. This is a packaging problem, not a code problem — the source code runs and every success criterion is met. Rebuild with <code>--onedir</code> instead of <code>--onefile</code>, and if the error persists, install the latest Visual C++ Redistributable on the machine where the .exe is being run. Confirm that the templates folder is included in the build.</p>
+<p>The most urgent item is the executable failing to open with the <code>Ordinal Not Found</code> error. This is a packaging problem, not a code problem — the source code runs and every success criterion is met. Rebuild with <code>--onedir</code> instead of <code>--onefile</code>, and if the error persists, install the latest Visual C++ Redistributable on the machine where the .exe is being run. Confirm that the templates folder is included in the build.</p>
 <p>The second priority is the MySQL-to-SQLite inconsistency between Criterion A and the implementation. Update Criterion A to say SQLite and justify the change (no server install needed, portable, easier for Maria).</p>
 <p>The third priority is adding the welcome banner to the home page for SC9, and collecting client feedback. Once the executable opens and the banner is in place, the program is demonstrably complete and the video can be recorded.</p>
 </div>
