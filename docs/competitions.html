@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Competitions — IB CompSci</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #f0a95c; }
+
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #d97a1f; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #d97a1f;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #fdf1e7;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, #fdf1e7, #f8e4d0);
+      border-radius: 24px;
+      padding: 2rem 2.2rem;
+      margin-bottom: 2.5rem;
+      border: 1px solid #f0d0b0;
+      border-left: 8px solid #d97a1f;
+      box-shadow: 0 8px 30px rgba(217, 122, 31, 0.08);
+    }
+    .hero-card h2 {
+      font-size: 1.4rem;
+      color: #8a4a10;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-card p {
+      font-size: 1rem;
+      color: #5c3a1a;
+      margin-bottom: 0.8rem;
+    }
+    .hero-card .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #d97a1f;
+      color: white;
+      padding: 0.7rem 1.6rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      margin-top: 0.5rem;
+    }
+    .hero-card .cta:hover {
+      background: #b86212;
+      transform: translateY(-2px);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      margin: 2.5rem 0 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid #f0d0b0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title i { color: #d97a1f; }
+
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .comp-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem 1.6rem 1.5rem;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+      border: 1px solid #e5edf5;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: 0.25s ease;
+    }
+    .comp-card:hover {
+      box-shadow: 0 12px 30px rgba(0, 32, 64, 0.10);
+      transform: translateY(-3px);
+    }
+    .comp-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+    }
+    .comp-card.imlc::before {
+      background: linear-gradient(to right, #1e4b8f, #4a7cc9);
+    }
+    .comp-card.hackathon::before {
+      background: linear-gradient(to right, #15631c, #2d8f2d);
+    }
+
+    .comp-card .comp-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .comp-card.imlc .comp-icon {
+      background: #eaf1fb;
+      color: #1e4b8f;
+    }
+    .comp-card.hackathon .comp-icon {
+      background: #e3f0e6;
+      color: #15631c;
+    }
+
+    .comp-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      margin-bottom: 0.6rem;
+    }
+    .comp-card .comp-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+    .comp-card .comp-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .comp-card .comp-meta i { font-size: 0.75rem; opacity: 0.7; }
+
+    .comp-card p {
+      font-size: 0.92rem;
+      color: #475569;
+      line-height: 1.55;
+      margin-bottom: 0.8rem;
+      flex: 1;
+    }
+
+    .comp-card .highlight {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.88rem;
+      color: #334155;
+      border-left: 3px solid #cbd5e1;
+    }
+    .comp-card.imlc .highlight { border-left-color: #1e4b8f; }
+    .comp-card.hackathon .highlight { border-left-color: #15631c; }
+
+    .comp-card .comp-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid #eef2f6;
+      margin-top: auto;
+    }
+    .comp-card .comp-footer .learn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .comp-card.imlc .learn-link { color: #1e4b8f; }
+    .comp-card.hackathon .learn-link { color: #15631c; }
+    .comp-card .learn-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    .hardware-card {
+      background: linear-gradient(135deg, #f4f0fa, #ece6f5);
+      border-radius: 24px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2.5rem;
+      border: 1px solid #d8cfe8;
+      border-left: 8px solid #7a5fb8;
+    }
+    .hardware-card h3 {
+      font-size: 1.2rem;
+      color: #4e3a7a;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hardware-card p {
+      font-size: 0.95rem;
+      color: #5b4a7a;
+      margin-bottom: 1rem;
+    }
+    .hardware-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .hardware-item {
+      background: white;
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e0d5f0;
+    }
+    .hardware-item h4 {
+      font-size: 0.95rem;
+      color: #4e3a7a;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hardware-item h4 i { color: #7a5fb8; font-size: 0.9rem; }
+    .hardware-item p {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .value-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+    }
+    .value-card h3 {
+      font-size: 1.2rem;
+      color: #0b2a4a;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .value-card h3 i { color: #d97a1f; }
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+    .value-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .value-item .vi-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #fdf1e7;
+      color: #d97a1f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .value-item .vi-text h4 {
+      font-size: 0.92rem;
+      color: #0b2a4a;
+      margin-bottom: 0.2rem;
+    }
+    .value-item .vi-text p {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .action-card {
+      background: linear-gradient(135deg, #0b2a4a, #1a4a6e);
+      border-radius: 24px;
+      padding: 2rem 2.2rem;
+      margin-bottom: 2.5rem;
+      color: white;
+      text-align: center;
+    }
+    .action-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .action-card h3 i { color: #f0a95c; }
+    .action-card p {
+      font-size: 1rem;
+      color: #cbd5e1;
+      margin-bottom: 1.5rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .action-card .btn-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .action-card .btn-primary {
+      background: #f0a95c;
+      color: #0b2a4a;
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-card .btn-primary:hover {
+      background: #e09440;
+      transform: translateY(-2px);
+    }
+    .action-card .btn-secondary {
+      background: transparent;
+      color: #cbd5e1;
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      border: 1px solid #3a5a7a;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-card .btn-secondary:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: #5a7a9a;
+    }
+
+    .divider-light { margin: 3rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .comp-grid { grid-template-columns: 1fr; }
+      .hardware-list { grid-template-columns: 1fr; }
+      .value-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IB CompSci</span>
+    <a href="12units.html"><i class="fas fa-arrow-left"></i> Back to Units</a>
+    <a href="../index.html"><i class="fas fa-home"></i> Main Page</a>
+  </nav>
+
+  <div class="main-title">
+    <i class="fas fa-trophy"></i> Competitions
+  </div>
+  <div class="subhead">
+    <i class="fas fa-bolt" style="color:#d97a1f; margin-right: 6px;"></i>
+    Build your CV, test your skills, and compete globally
+  </div>
+
+  <!-- HERO CARD -->
+  <div class="hero-card">
+    <h2><i class="fas fa-rocket"></i> Why compete?</h2>
+    <p>
+      University admissions officers see thousands of identical IB profiles. Competition experience is one of the
+      strongest differentiators you can add to your CV. It shows initiative, computational thinking, and the
+      ability to perform under pressure — qualities that top universities actively look for.
+    </p>
+    <p>
+      And the best part: you do not have to compete alone. I have physical hardware available — Quarky robots and
+      micro:bits — to help you build, experiment, and prepare. Whether you are interested in algorithms,
+      hardware, or both, there is a competition for you.
+    </p>
+  </div>
+
+  <!-- COMPETITIONS -->
+  <div class="section-title">
+    <i class="fas fa-medal"></i> Open Competitions
+  </div>
+
+  <div class="comp-grid">
+
+    <!-- IMLC CARD -->
+    <div class="comp-card imlc">
+      <div class="comp-icon">
+        <i class="fas fa-language"></i>
+      </div>
+      <h3>International Machine Learning Competition (IMLC)</h3>
+      <div class="comp-meta">
+        <span><i class="fas fa-calendar"></i> Qualification Round: Sep 2026</span>
+        <span><i class="fas fa-globe"></i> Online</span>
+        <span><i class="fas fa-users"></i> Individual</span>
+      </div>
+      <p>
+        The IMLC is a global competition that challenges students to solve problems using computational
+        thinking, algorithms, and problem-solving under time pressure. The qualification round is a written
+        paper with multiple problems of increasing difficulty, designed to test how you decompose complex
+        problems and design efficient solutions.
+      </p>
+      <div class="highlight">
+        <strong>Why it matters:</strong> A strong result in the qualification round directly demonstrates
+        algorithmic thinking and problem decomposition — skills that are assessed in IB Computer Science and
+        valued by university admissions.
+      </div>
+      <p>
+        <strong>Preparation:</strong> I have past qualification papers and worked solutions available. We can
+        run practice sessions during lunch or after school, and the problems are excellent preparation for
+        Paper 2.
+      </p>
+      <div class="comp-footer">
+        <a href="https://imlco.org/en/" target="_blank" class="learn-link">
+          <i class="fas fa-external-link-alt"></i> Visit competition site
+        </a>
+      </div>
+    </div>
+
+    <!-- GV HACKATHON CARD -->
+    <div class="comp-card hackathon">
+      <div class="comp-icon">
+        <i class="fas fa-code-branch"></i>
+      </div>
+      <h3>GV Hackathon</h3>
+      <div class="comp-meta">
+        <span><i class="fas fa-calendar"></i> Annual</span>
+        <span><i class="fas fa-map-marker-alt"></i> Team-based</span>
+        <span><i class="fas fa-clock"></i> Sprint format</span>
+      </div>
+      <p>
+        A hackathon is a time-boxed sprint where teams design and build a solution to a real-world problem.
+        You will brainstorm, prototype, and pitch your idea to judges. The focus is not just on code — it is
+        on creativity, teamwork, and communication.
+      </p>
+      <div class="highlight">
+        <strong>Why it matters:</strong> Hackathons develop exactly the skills universities want to see:
+        collaboration, rapid prototyping, and the ability to present technical ideas to a non-technical
+        audience. They are also genuinely fun.
+      </div>
+      <p>
+        <strong>Hardware advantage:</strong> You do not need to build a web app. With the Quarky robots and
+        micro:bits available, your team can prototype physical solutions — sensors, robots, interactive
+        devices — which makes your pitch stand out.
+      </p>
+      <div class="comp-footer">
+        <a href="https://gvhackathon.com/" target="_blank" class="learn-link">
+          <i class="fas fa-external-link-alt"></i> Visit competition site
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HARDWARE -->
+  <div class="hardware-card">
+    <h3><i class="fas fa-microchip"></i> Hardware available to you</h3>
+    <p>
+      These are not toys. They are the same tools used in university robotics labs and industry prototyping.
+      I have them available for competition preparation and project work.
+    </p>
+    <div class="hardware-list">
+
+      <div class="hardware-item">
+        <h4><i class="fas fa-robot"></i> Quarky Robot Kits</h4>
+        <p>
+          AI and robotics platform with camera, sensors, motors, and block/Python programming. Used for
+          self-driving car projects, face recognition, and interactive builds. Ideal for hackathon
+          prototyping and machine learning demonstrations.
+        </p>
+      </div>
+
+      <div class="hardware-item">
+        <h4><i class="fas fa-microchip"></i> BBC micro:bit</h4>
+        <p>
+          Pocket-sized programmable computer with LED display, buttons, accelerometer, compass, radio, and
+          (on v2) a microphone and speaker. Perfect for sensor-based projects, wearable tech, and rapid
+          prototyping of interactive devices.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VALUE -->
+  <div class="value-card">
+    <h3><i class="fas fa-star"></i> What you get out of it</h3>
+    <div class="value-grid">
+
+      <div class="value-item">
+        <div class="vi-icon"><i class="fas fa-file-alt"></i></div>
+        <div class="vi-text">
+          <h4>CV and university applications</h4>
+          <p>Competition participation and results are concrete evidence of initiative and technical skill. They make your personal statement and reference letters stronger.</p>
+        </div>
+      </div>
+
+      <div class="value-item">
+        <div class="vi-icon"><i class="fas fa-brain"></i></div>
+        <div class="vi-text">
+          <h4>Problem-solving under pressure</h4>
+          <p>Competitions force you to think algorithmically and debug quickly. These are the same skills you need for Paper 2 and for university interviews.</p>
+        </div>
+      </div>
+
+      <div class="value-item">
+        <div class="vi-icon"><i class="fas fa-users"></i></div>
+        <div class="vi-text">
+          <h4>Teamwork and communication</h4>
+          <p>Hackathons especially require explaining technical ideas to non-technical judges. This is a skill you will use for the rest of your career.</p>
+        </div>
+      </div>
+
+      <div class="value-item">
+        <div class="vi-icon"><i class="fas fa-trophy"></i></div>
+        <div class="vi-text">
+          <h4>Something to aim for</h4>
+          <p>Preparation has a purpose. You will learn more in a focused competition sprint than in months of passive study.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="action-card">
+    <h3><i class="fas fa-bullhorn"></i> Interested? Tell me now.</h3>
+    <p>
+      Registration deadlines are close. If you want to take part in either competition, you need to let me know
+      as soon as possible so we can begin the registration process and start preparation.
+    </p>
+    <div class="btn-row">
+      <a href="mailto:?subject=Competition Interest" class="btn-primary">
+        <i class="fas fa-paper-plane"></i> Tell me you are interested
+      </a>
+      <a href="12units.html" class="btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Units
+      </a>
+    </div>
+  </div>
+
+  <hr class="divider-light">
+  <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+    <i class="fas fa-info-circle" style="margin-right: 8px;"></i> Competitions page · IB Computer Science · 2027
+  </div>
+
+</div>
+
+</body>
+</html>
