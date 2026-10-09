@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 7 · Digital Currency</title>
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#12315a;
+    --page-bg:#eef2f8;
+    --card:#ffffff;
+    --text:#1a2332;
+    --muted:#5a6b82;
+    --border:#dbe3ee;
+    --accent:#2563eb;
+    --accent-soft:#dbeafe;
+    --green:#15803d;
+    --green-soft:#dcfce7;
+    --amber:#b45309;
+    --amber-soft:#fef3c7;
+    --radius:20px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    line-height:1.65;
+    font-size:16px;
+    font-weight:400;
+    padding:0;
+  }
+
+  /* ---------- Top nav bar ---------- */
+  .topbar-wrap{
+    max-width:1080px;
+    margin:18px auto 0;
+    padding:0 28px;
+  }
+  .topbar{
+    background:var(--navy);
+    color:#fff;
+    padding:14px 26px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    box-shadow:0 4px 18px rgba(11,37,69,.14);
+  }
+  .topbar .brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:700;font-size:1.05rem;
+    color:#fff;text-decoration:none;
+    letter-spacing:-.005em;
+  }
+  .topbar .brand .cap{font-size:1.25rem;}
+  .topbar .navlinks{display:flex;gap:26px;flex-wrap:wrap;}
+  .topbar .navlinks a{
+    color:#e6edf7;text-decoration:none;
+    font-size:.95rem;font-weight:500;
+    display:inline-flex;align-items:center;gap:6px;
+    opacity:.92;transition:opacity .15s;
+  }
+  .topbar .navlinks a:hover{opacity:1;text-decoration:underline;}
+
+  /* ---------- Page wrapper ---------- */
+  .page{
+    max-width:1080px;
+    margin:0 auto;
+    padding:36px 28px 80px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{margin-bottom:32px;}
+  .hero h1{
+    font-size:clamp(2.1rem,4.5vw,3.1rem);
+    line-height:1.15;
+    margin:0 0 20px;
+    font-weight:700;
+    color:var(--navy);
+    letter-spacing:-.025em;
+    display:flex;align-items:center;gap:16px;
+    flex-wrap:wrap;
+  }
+  .hero h1 .emoji{
+    font-size:1em;
+    font-weight:400;
+    font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  }
+  .hero .pill{
+    display:inline-flex;align-items:center;gap:12px;
+    background:#e2e8f2;
+    color:var(--navy);
+    border-radius:999px;
+    padding:10px 24px 10px 10px;
+    font-size:1rem;
+    font-weight:400;
+    border-left:5px solid #2b8a9b;
+  }
+  .hero .pill .dot{
+    width:24px;height:24px;border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    display:grid;place-items:center;
+    font-size:.8rem;font-weight:700;
+    flex-shrink:0;
+    line-height:1;
+  }
+
+  /* ---------- Cards ---------- */
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:34px 40px;
+    margin-bottom:26px;
+    box-shadow:0 2px 4px rgba(11,37,69,.04), 0 8px 24px rgba(11,37,69,.05);
+    border:1px solid rgba(219,227,238,.5);
+  }
+  @media(max-width:640px){
+    .card{padding:24px 20px;}
+    .topbar-wrap{padding:0 16px;}
+    .page{padding:28px 16px 60px;}
+  }
+
+  .card h2{
+    font-size:1.5rem;
+    margin:0 0 18px;
+    font-weight:600;
+    color:var(--navy);
+    display:flex;align-items:center;gap:10px;
+    letter-spacing:-.01em;
+  }
+  .card h3{
+    font-size:1.1rem;
+    margin:26px 0 12px;
+    font-weight:600;
+    color:var(--navy);
+    display:flex;align-items:center;gap:8px;
+    letter-spacing:-.005em;
+  }
+  .card p{margin:0 0 14px;}
+  .card ul,.card ol{margin:0 0 14px;padding-left:24px;}
+  .card ul li,.card ol li{margin-bottom:6px;}
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    background:#e8f1fb;
+    border-left:4px solid var(--accent);
+    border-radius:10px;
+    padding:16px 20px;
+    margin:20px 0;
+    font-size:.98rem;
+    line-height:1.65;
+    font-weight:400;
+  }
+  .callout strong{color:var(--navy);font-weight:600;}
+  .callout.tip{background:#dcfce7;border-left-color:var(--green);}
+  .callout.warn{background:#fef3c7;border-left-color:var(--amber);}
+
+  /* ---------- Tables ---------- */
+  .table-wrap{overflow-x:auto;margin:18px 0;}
+  table{
+    width:100%;border-collapse:separate;border-spacing:0;
+    background:#fff;font-size:.95rem;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    overflow:hidden;
+  }
+  th,td{
+    padding:14px 18px;text-align:left;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+    font-weight:400;
+  }
+  th{
+    background:#f4f7fb;
+    font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--navy);font-weight:600;
+  }
+  tr:last-child td{border-bottom:none;}
+  td strong{font-weight:600;color:var(--navy);}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--navy);
+    color:#fff;
+    border:1px solid var(--navy);
+    padding:10px 20px;border-radius:10px;
+    text-decoration:none;font-weight:500;font-size:.93rem;
+    transition:.15s;cursor:pointer;
+    line-height:1.4;
+    font-family:inherit;
+  }
+  .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;text-decoration:none;}
+  .btn.green{background:var(--green);border-color:var(--green);}
+  .btn.green:hover{background:#115e30;border-color:#115e30;}
+  .btn.purple{background:#6d28d9;border-color:#6d28d9;}
+  .btn.purple:hover{background:#5b21b6;border-color:#5b21b6;}
+  .btn.outline{
+    background:#fff;color:var(--navy);border-color:var(--border);
+  }
+  .btn.outline:hover{background:#f4f7fb;border-color:#b8c5d6;color:var(--navy);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+
+  /* ---------- Details / reveal ---------- */
+  details.reveal{
+    margin-top:16px;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    background:#f8fafd;
+    overflow:hidden;
+  }
+  details.reveal summary{
+    cursor:pointer;padding:13px 18px;font-weight:600;font-size:.95rem;
+    color:var(--accent);list-style:none;
+    display:flex;align-items:center;gap:8px;
+  }
+  details.reveal summary::-webkit-details-marker{display:none;}
+  details.reveal summary::before{content:"▶";font-size:.7rem;transition:.2s;}
+  details.reveal[open] summary::before{transform:rotate(90deg);}
+  details.reveal .body{
+    padding:6px 18px 18px;border-top:1px solid var(--border);background:#fff;
+  }
+
+  /* ---------- Blockchain lab ---------- */
+  .chain-lab{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;
+    margin:20px 0;align-items:stretch;
+  }
+  @media(max-width:800px){.chain-lab{grid-template-columns:1fr;}}
+  .block{
+    background:#f4f7fb;border:2px solid var(--border);border-radius:var(--radius-sm);
+    padding:14px 16px;font-size:.85rem;
+  }
+  .block .label{
+    font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--muted);font-weight:600;margin-bottom:6px;
+  }
+  .block .hash{
+    font-family:"SF Mono",Consolas,Monaco,monospace;
+    font-size:.75rem;color:var(--navy);font-weight:600;
+    word-break:break-all;
+    background:#fff;padding:6px 8px;border-radius:6px;
+    border:1px solid var(--border);
+    margin-bottom:10px;
+    transition:background .2s, color .2s;
+  }
+  .block .field{margin-bottom:8px;}
+  .block .field .name{color:var(--muted);font-size:.75rem;}
+  .block .field .value{color:var(--navy);font-weight:600;}
+  .block .prev{
+    font-size:.7rem;color:var(--muted);margin-top:8px;
+    padding-top:8px;border-top:1px dashed var(--border);
+  }
+  .block .prev code{
+    font-family:"SF Mono",Consolas,Monaco,monospace;
+    color:#a13232;font-weight:600;font-size:.7rem;
+  }
+  .chain-lab input{
+    width:100%;padding:6px 10px;border-radius:8px;
+    border:1px solid var(--border);background:#fff;
+    font-family:"SF Mono",Consolas,Monaco,monospace;
+    font-size:.75rem;color:var(--navy);
+    margin-top:4px;
+  }
+  .chain-lab input:focus{outline:none;border-color:var(--accent);}
+  .chain-status{
+    text-align:center;font-weight:600;margin-top:10px;
+    font-size:.9rem;color:var(--green);
+    padding:10px;background:#dcfce7;border-radius:10px;
+  }
+  .chain-status.broken{background:#fee2e2;color:#a13232;}
+
+  /* ---------- Match game ---------- */
+  .match-game{
+    display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;
+  }
+  @media(max-width:640px){.match-game{grid-template-columns:1fr;}}
+  .match-col h4{
+    font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--navy);margin:0 0 10px;font-weight:600;
+  }
+  .match-item{
+    background:#fff;border:1.5px solid var(--border);
+    border-radius:10px;padding:12px 16px;margin-bottom:9px;
+    cursor:pointer;font-size:.93rem;transition:.15s;
+    font-weight:400;
+  }
+  .match-item:hover{border-color:var(--accent);background:#f8fafd;}
+  .match-item.selected{
+    border-color:var(--accent);background:var(--accent-soft);
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+  }
+  .match-item.matched{
+    border-color:var(--green);background:var(--green-soft);
+    color:var(--green);cursor:default;
+  }
+  .match-item.wrong{
+    animation:shake .35s;
+    border-color:#dc2626;background:#fee2e2;
+  }
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    75%{transform:translateX(5px);}
+  }
+  .match-score{
+    text-align:center;margin-top:18px;font-size:.95rem;color:var(--muted);
+    font-weight:500;
+  }
+  .match-score strong{color:var(--green);font-weight:600;}
+
+  /* ---------- Progress note ---------- */
+  .progress-note{
+    text-align:center;color:var(--muted);font-size:.85rem;
+    margin-top:40px;
+  }
+
+  /* ---------- Teacher panel ---------- */
+  .teacher-panel{
+    background:#fff;
+    border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:0;
+    overflow:hidden;
+  }
+  .teacher-panel summary{
+    cursor:pointer;font-weight:600;color:var(--navy);font-size:.98rem;
+    list-style:none;display:flex;align-items:center;gap:10px;
+    padding:18px 22px;
+  }
+  .teacher-panel summary::-webkit-details-marker{display:none;}
+  .teacher-panel summary::before{content:"🔒";font-size:1.05rem;}
+  .teacher-panel[open] summary{border-bottom:1px solid var(--border);}
+  .teacher-panel[open] summary::before{content:"🔓";}
+  .teacher-panel .panel-body{padding:22px;}
+
+  .lock-screen{text-align:center;padding:20px 12px;}
+  .lock-screen input{
+    padding:10px 14px;border-radius:10px;
+    background:#fff;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;margin-right:8px;
+    font-family:inherit;
+  }
+  .lock-screen input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+  .hidden{display:none !important;}
+
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="topbar-wrap">
+  <div class="topbar">
+    <a href="#" class="brand"><span class="cap">🎓</span> IGCSE CompSci</a>
+    <nav class="navlinks">
+      <a href="#">← Back to Unit 5</a>
+      <a href="#">← Year 10</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <h1><span class="emoji">₿</span> Digital Currency</h1>
+    <div class="pill">
+      <span class="dot">✓</span>
+      Lesson 7 · Cryptocurrency, Public/Private Keys &amp; the Blockchain
+    </div>
+  </div>
+
+  <!-- ============ STARTER ============ -->
+  <section class="card">
+    <h2>🎯 Starter Activity – What is Currency?</h2>
+    <p>We use it every day, but what actually <em>is</em> currency? Discuss with a partner: what makes something work as money?</p>
+
+    <div class="callout">
+      💡 <strong>Currencies generally have these properties:</strong>
+      <ul style="margin-top:8px;margin-bottom:0;">
+        <li><strong>Fungible</strong> — a medium of exchange, one unit is interchangeable with another</li>
+        <li><strong>Durable</strong> — it can be reused many times</li>
+        <li><strong>Portable</strong> — easily carried around</li>
+        <li><strong>Recognisable</strong> — other people understand its value</li>
+        <li><strong>Stable</strong> — its value stays fairly constant over time</li>
+      </ul>
+    </div>
+
+    <p>Traditional currencies are usually created by a country's government and accepted as payment for taxes and debts. But is a £10 note worth £10 because of the paper? No — <em>currency itself has no intrinsic value.</em> Its value comes from the <strong>faith</strong> that people have in it.</p>
+  </section>
+
+  <!-- ============ OBJECTIVES ============ -->
+  <section class="card">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+      <li>Understand the concept of a digital currency and how digital currencies are used</li>
+      <li>Understand the process of blockchain and how it is used to track digital currency transactions</li>
+    </ul>
+
+    <div class="callout">
+      💡 <strong>Key Fact:</strong> Digital currencies (cryptocurrencies) exist <em>only electronically</em>. Like ordinary currencies, they have no intrinsic value — their worth is built on what people believe they are worth.
+    </div>
+  </section>
+
+  <!-- ============ PROBLEMS WITH CURRENCY ============ -->
+  <section class="card">
+    <h2>📉 Problems with Traditional Currency</h2>
+    <p>Why were cryptocurrencies invented? Because ordinary currencies have weaknesses:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Problem</th><th>What it means</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Counterfeiting</strong></td>
+            <td>Fake coins and notes can be created.</td>
+          </tr>
+          <tr>
+            <td><strong>Hyperinflation</strong></td>
+            <td>Governments or central banks can print too much money, making each unit worth less. Prices rise rapidly — sometimes daily.</td>
+          </tr>
+          <tr>
+            <td><strong>Commission fees</strong></td>
+            <td>Currency exchange and international transfers often carry high fees.</td>
+          </tr>
+          <tr>
+            <td><strong>Slow transfers</strong></td>
+            <td>International bank transfers can take days.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      ⚠️ <strong>Hyperinflation:</strong> Argentina (1975–1990) saw average annual inflation of around 300%. Yugoslavia's peaked at <em>more than 100 trillion percent per year</em>. Prices rose so quickly that people spent money as fast as they received it.
+    </div>
+
+    <p>Traditional currencies are also backed by something — for example, gold stored in central banks, foreign currency reserves, or Special Drawing Rights (SDRs) issued by the IMF. Cryptocurrencies typically have <strong>nothing backing them</strong>.</p>
+  </section>
+
+  <!-- ============ HOW CRYPTOCURRENCIES WORK ============ -->
+  <section class="card">
+    <h2>🔑 How Digital Currencies Work</h2>
+    <p>Cryptocurrencies move between users using <strong>cryptography</strong>. When you create a cryptocurrency account, you generate <strong>two digital keys</strong>:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Key</th><th>Purpose</th><th>Analogy</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Public key</strong></td>
+            <td>Used to <em>receive</em> money. Contains the wallet's digital currency address. Can be shared freely.</td>
+            <td>Like an account number / sort code</td>
+          </tr>
+          <tr>
+            <td><strong>Private key</strong></td>
+            <td>Used to <em>spend</em> or transfer money. Must be kept secret.</td>
+            <td>Like a PIN on a bank card</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Where do you keep them?</h3>
+    <ul>
+      <li>In a file or simple database called a <strong>wallet</strong>.</li>
+      <li>If the file with the keys is <em>printed</em> so it can't be digitally hacked, this is called <strong>cold storage</strong>.</li>
+    </ul>
+
+    <h3>Spending digital currency</h3>
+    <p>To send currency you provide:</p>
+    <ol>
+      <li>The <strong>public key</strong> (which contains the destination address)</li>
+      <li>An <strong>electronic signature</strong> created using your <strong>private key</strong></li>
+    </ol>
+    <p>Everyone on the network can then verify the transaction as valid — proving that the person spending the money actually owns it.</p>
+  </section>
+
+  <!-- ============ BLOCKCHAIN ============ -->
+  <section class="card">
+    <h2>⛓️ The Blockchain</h2>
+    <p>The blockchain is the most revolutionary part of digital currencies. It is a <strong>distributed digital ledger</strong> — a public record of every transaction ever made.</p>
+
+    <h3>What is in each block?</h3>
+    <ul>
+      <li>The two parties involved in the transaction (sender and receiver)</li>
+      <li>A <strong>timestamp</strong> of when the transaction occurred</li>
+      <li>The amount of currency transferred</li>
+      <li>Its own <strong>hash</strong> (a unique identifier)</li>
+      <li>A reference to the previous block's hash</li>
+    </ul>
+
+    <h3>Why "distributed"?</h3>
+    <ul>
+      <li>The ledger is <strong>public</strong> — anyone can download and view it.</li>
+      <li>Because it's <strong>distributed</strong>, there are many copies — there is no central authority.</li>
+      <li>If one copy is altered, it will disagree with all the other copies on the network, and the alteration will be spotted immediately.</li>
+    </ul>
+
+    <h3>How it prevents tampering</h3>
+    <p>Each block links back to the previous block via its hash. This creates a chain. If you try to change anything in an earlier block, its hash changes — and every following block's "previous hash" reference becomes wrong. The whole chain visibly breaks, so fraud is easy to detect.</p>
+
+    <div class="callout tip">
+      📝 <strong>Beyond currency:</strong> The blockchain concept is also used for other purposes — for example, <strong>NFTs</strong> (non-fungible tokens) use blockchains to prove ownership of digital items.
+    </div>
+
+    <!-- BLOCKCHAIN LAB -->
+    <h3>🧪 Blockchain Lab — See the Chain Break</h3>
+    <p>Change any transaction amount below. Watch how changing one block affects every block after it — that's how tampering is detected.</p>
+
+    <div class="chain-lab" id="chainLab">
+      <div class="block" data-block="1">
+        <div class="label">Block 1</div>
+        <div class="field">
+          <div class="name">Amount</div>
+          <input type="text" class="amount" value="0.5 BTC">
+        </div>
+        <div class="field">
+          <div class="name">Hash</div>
+          <div class="hash">a4f2c1</div>
+        </div>
+        <div class="prev">Previous: <code>0000</code></div>
+      </div>
+      <div class="block" data-block="2">
+        <div class="label">Block 2</div>
+        <div class="field">
+          <div class="name">Amount</div>
+          <input type="text" class="amount" value="1.2 BTC">
+        </div>
+        <div class="field">
+          <div class="name">Hash</div>
+          <div class="hash">b7e9d3</div>
+        </div>
+        <div class="prev">Previous: <code>a4f2c1</code></div>
+      </div>
+      <div class="block" data-block="3">
+        <div class="label">Block 3</div>
+        <div class="field">
+          <div class="name">Amount</div>
+          <input type="text" class="amount" value="0.05 BTC">
+        </div>
+        <div class="field">
+          <div class="name">Hash</div>
+          <div class="hash">c1a8f5</div>
+        </div>
+        <div class="prev">Previous: <code>b7e9d3</code></div>
+      </div>
+    </div>
+    <div class="chain-status" id="chainStatus">✅ Chain valid — all hashes match</div>
+  </section>
+
+  <!-- ============ DIGITAL CURRENCY USES & BENEFITS ============ -->
+  <section class="card">
+    <h2>💡 Uses &amp; Benefits of Digital Currency</h2>
+
+    <h3>Uses</h3>
+    <ul>
+      <li><strong>International transfers</strong> — take minutes instead of days</li>
+      <li><strong>Paying for goods and services</strong> — anywhere that accepts the currency</li>
+      <li><strong>Saving</strong> — some people use it as a savings account</li>
+    </ul>
+
+    <h3>Benefits</h3>
+    <ul>
+      <li>Hard to counterfeit (individual accounts may still be hacked)</li>
+      <li>Send money anywhere in the world with <strong>very low fees</strong> — no bank needed</li>
+      <li>The amount of currency is tightly controlled by the protocol — no government can just print more</li>
+    </ul>
+
+    <h3>Is hyperinflation prevented?</h3>
+    <p>The supply of most cryptocurrencies is heavily controlled, so printing-driven hyperinflation isn't possible. However, if people <strong>lose trust</strong> in the currency, no one will want it — and its value can fall to zero. That's effectively the same outcome as hyperinflation.</p>
+
+    <div class="callout warn">
+      ⚠️ <strong>Price volatility:</strong> Because cryptocurrencies have no intrinsic value, prices can be extremely volatile. Bitcoin, for example, has lost or gained more than half its value within a single year.
+    </div>
+  </section>
+
+  <!-- ============ MAIN TASK ============ -->
+  <section class="card">
+    <h2>📝 Main Task – Worksheet 7</h2>
+    <p>📄 <strong>Worksheet 7: Digital Currency</strong></p>
+    <p>Complete the tasks on Worksheet 7. Tasks 2 and 3 involve generating a bitcoin wallet and exploring the real blockchain explorer — use the links below.</p>
+    <div class="btn-row">
+      <a href="https://lms.isr-school.com/" target="_blank" rel="noopener" class="btn">
+        📄 Open Worksheet 7
+      </a>
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F5%2520Networks-internet%2FT7%2520Digital%2520currency.pptx&wdOrigin=BROWSELINK"
+         target="_blank" rel="noopener" class="btn outline">
+        📊 Lesson Presentation (T7 Digital Currency)
+      </a>
+      <a href="https://play.blooket.com/host/royale?id=63d2acb4d78a1906e8f6cad4"
+         target="_blank" rel="noopener" class="btn purple">
+        🎮 Blooket Royale
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ INTERACTIVE TOOLS ============ -->
+  <section class="card">
+    <h2>🧰 Interactive Tools</h2>
+    <p>Three real-world tools to explore the technology behind digital currency.</p>
+
+    <div class="tool-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:14px;">
+      <div class="tool-card" style="background:#f8fafd;border:1px solid var(--border);border-radius:var(--radius-sm);padding:22px;display:flex;flex-direction:column;">
+        <div class="icon" style="font-size:1.7rem;margin-bottom:10px;">🔐</div>
+        <h3 style="margin:0 0 8px;font-size:1.05rem;font-weight:600;color:var(--navy);">Bitaddress — Generate a Wallet</h3>
+        <p style="font-size:.92rem;color:var(--muted);flex:1;margin-bottom:16px;">Generate a real public address and private key. Move your mouse to create randomness. <strong>Never store real bitcoin in a wallet made here</strong> — it hasn't been created with security in mind.</p>
+        <a href="https://www.bitaddress.org" target="_blank" rel="noopener" class="btn purple" style="align-self:flex-start;">
+          Open Bitaddress →
+        </a>
+      </div>
+
+      <div class="tool-card" style="background:#f8fafd;border:1px solid var(--border);border-radius:var(--radius-sm);padding:22px;display:flex;flex-direction:column;">
+        <div class="icon" style="font-size:1.7rem;margin-bottom:10px;">⛓️</div>
+        <h3 style="margin:0 0 8px;font-size:1.05rem;font-weight:600;color:var(--navy);">Blockchain Explorer — Genesis Block</h3>
+        <p style="font-size:.92rem;color:var(--muted);flex:1;margin-bottom:16px;">View the very first block in the bitcoin blockchain. Find its timestamp and hash for Task 3.</p>
+        <a href="https://www.blockchain.com/explorer/blocks/btc/000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f" target="_blank" rel="noopener" class="btn green" style="align-self:flex-start;">
+          Open Genesis Block →
+        </a>
+      </div>
+
+      <div class="tool-card" style="background:#f8fafd;border:1px solid var(--border);border-radius:var(--radius-sm);padding:22px;display:flex;flex-direction:column;">
+        <div class="icon" style="font-size:1.7rem;margin-bottom:10px;">🏦</div>
+        <h3 style="margin:0 0 8px;font-size:1.05rem;font-weight:600;color:var(--navy);">Genesis Address — Transaction History</h3>
+        <p style="font-size:.92rem;color:var(--muted);flex:1;margin-bottom:16px;">Look at every transaction ever made by the address that received the first bitcoin. Use this for the transaction table in Task 3(c).</p>
+        <a href="https://www.blockchain.com/explorer/addresses/btc/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" target="_blank" rel="noopener" class="btn" style="align-self:flex-start;">
+          Open Genesis Address →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AI GUIDE ============ -->
+  <section class="card">
+    <h2>🤖 AI Guide</h2>
+    <p>Your personal tutor! Ask the AI any question about digital currency or blockchain.</p>
+    <div class="btn-row">
+      <a href="#" class="btn" onclick="return false;">💬 Ask the AI Tutor</a>
+    </div>
+  </section>
+
+  <!-- ============ EXTENSION ============ -->
+  <section class="card">
+    <h2>⭐ Extension Tasks</h2>
+    <ul>
+      <li>Complete the extension task for this lesson.</li>
+      <li>Check that previous worksheets have also been submitted.</li>
+      <li><strong>Research task:</strong> What is <em>proof of work</em>? How is it used in bitcoin mining? What is the environmental cost?</li>
+      <li><strong>Challenge:</strong> Search for "1 BTC in GBP". How has the price moved in the last year? What does this tell you about stability?</li>
+      <li><strong>Creative:</strong> Design a short presentation explaining one real-world use of blockchain beyond cryptocurrency (e.g., supply chain tracking, digital IDs, NFT ownership).</li>
+    </ul>
+  </section>
+
+  <!-- ============ PLENARY ============ -->
+  <section class="card">
+    <h2>🔁 Plenary – Match the Definition</h2>
+    <p>Click a term on the left, then click its definition on the right. Get them all right to complete the challenge.</p>
+
+    <div class="match-game" id="matchGame">
+      <div class="match-col">
+        <h4>Terms</h4>
+        <div class="match-item" data-id="publickey">Public key</div>
+        <div class="match-item" data-id="privatekey">Private key</div>
+        <div class="match-item" data-id="blockchain">Blockchain</div>
+        <div class="match-item" data-id="wallet">Wallet</div>
+        <div class="match-item" data-id="coldstorage">Cold storage</div>
+      </div>
+      <div class="match-col">
+        <h4>Definitions</h4>
+        <div class="match-item" data-id="privatekey">Kept secret — used to spend or transfer currency (like a PIN)</div>
+        <div class="match-item" data-id="blockchain">A distributed digital ledger of time-stamped transactions that cannot be altered</div>
+        <div class="match-item" data-id="coldstorage">Printing the keys so they cannot be digitally hacked</div>
+        <div class="match-item" data-id="publickey">Used to receive currency (like an account number)</div>
+        <div class="match-item" data-id="wallet">A file or database where digital keys are stored</div>
+      </div>
+    </div>
+
+    <p class="match-score" id="matchScore">Matched: <strong>0</strong> / 5</p>
+    <p style="text-align:center;font-size:.85rem;color:var(--muted);">Click a term to begin.</p>
+  </section>
+
+  <!-- ============ TEACHER PANEL ============ -->
+  <section class="card">
+    <h2>Additional Resources</h2>
+
+    <details class="teacher-panel">
+      <summary>📋 Lesson Plan (Teacher only) — click to toggle</summary>
+      <div class="panel-body">
+
+        <div class="lock-screen" id="lockScreen">
+          <p style="color:var(--muted);margin-bottom:14px;">Enter password to view the full lesson plan.</p>
+          <input type="password" id="lockInput" placeholder="Password">
+          <button class="btn" id="lockBtn">Unlock</button>
+          <p id="lockMsg" style="color:#dc2626;font-size:.85rem;margin-top:10px;min-height:1.2em;"></p>
+        </div>
+
+        <div id="teacherContent" class="hidden">
+          <h3>Lesson Overview</h3>
+          <p>Students are introduced to digital currencies (cryptocurrencies). The lesson begins with what currency is and the problems with traditional currencies (counterfeiting, hyperinflation, fees), which explains why cryptocurrencies were created. Students then learn how keys, wallets, and the blockchain fit together, and finish with a real exploration of the bitcoin blockchain explorer.</p>
+
+          <h3>Timing</h3>
+          <ul>
+            <li><strong>0–5 min</strong> — Starter: What is currency? Properties discussion</li>
+            <li><strong>5–15 min</strong> — Problems with currency: hyperinflation, counterfeiting, fees</li>
+            <li><strong>15–25 min</strong> — Public/private keys and wallets; Worksheet 7 Tasks 1 &amp; 2</li>
+            <li><strong>25–35 min</strong> — The blockchain: structure, distribution, tamper-resistance</li>
+            <li><strong>35–50 min</strong> — Blockchain Explorer: Genesis Block and Genesis Address; Worksheet 7 Task 3</li>
+            <li><strong>50–60 min</strong> — Uses and benefits; plenary match-the-definition game; hand out Homework 7</li>
+          </ul>
+
+          <h3>Key Teaching Points</h3>
+          <ul>
+            <li>Currency has no intrinsic value — its value is built on faith. This is true of both traditional and digital currencies.</li>
+            <li>The public key is like an account number (share freely); the private key is like a PIN (keep secret).</li>
+            <li>The blockchain is <em>distributed</em> — no central authority. Changing one copy would disagree with all the others, so fraud is instantly detected.</li>
+            <li>Blockchains are not just for currency — NFTs and other digital ownership schemes use them too.</li>
+            <li>Common misconception: students may think bitcoin is "anonymous". It's actually <strong>pseudonymous</strong> — every transaction is public and permanent.</li>
+          </ul>
+
+          <h3>Differentiation</h3>
+          <ul>
+            <li><strong>Support:</strong> Use the blockchain lab demo to make the "chain breaks if altered" idea tangible before asking for written explanations.</li>
+            <li><strong>Stretch:</strong> Ask students to research proof-of-work and evaluate its environmental impact.</li>
+            <li><strong>EAL / Dyslexia:</strong> The blockchain lab and the real explorer pages provide concrete, visual anchors for abstract concepts.</li>
+          </ul>
+
+          <h3>Assessment</h3>
+          <ul>
+            <li>Formative: blockchain lab observations, match-the-definition score.</li>
+            <li>Summative: Worksheet 7 submission on Schoolbox.</li>
+            <li>Retrieval: Homework 7 (Chinara scenario).</li>
+          </ul>
+
+          <h3>Resources</h3>
+          <ul>
+            <li><strong>T7 Digital Currency PowerPoint</strong> — lesson slides.</li>
+            <li><strong>Worksheet 7</strong> — currency comparison, wallet generation, blockchain explorer.</li>
+            <li><strong>Homework 7</strong> — Chinara scenario, consolidating keys, blockchain and benefits.</li>
+            <li><strong>Bitaddress.org</strong> — real wallet generator (for demonstration only).</li>
+            <li><strong>Blockchain.com Explorer</strong> — real blockchain viewer.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ REFERENCE ============ -->
+  <section class="card">
+    <h2>📚 Reference Material</h2>
+    <p>Additional content on digital currency and blockchain — The Computer Science Lab.</p>
+    <div class="btn-row">
+      <a href="https://www.thecomputersciencelab.com/chapter-5-the-internet-and-its-uses" target="_blank" rel="noopener" class="btn outline">
+        Open Reference →
+      </a>
+    </div>
+  </section>
+
+  <p class="progress-note">progress saved automatically in your browser</p>
+</div>
+
+<script>
+/* BLOCKCHAIN LAB */
+(function(){
+  const blocks = document.querySelectorAll('#chainLab .block');
+  const status = document.getElementById('chainStatus');
+
+  // Fake "hash" function — takes the amount string and turns it into a short hex-like signature.
+  // Same input always gives same output. Any change → different output.
+  function hash(str){
+    let h = 0;
+    for (let i = 0; i < str.length; i++){
+      h = ((h << 5) - h) + str.charCodeAt(i);
+      h = h & h; // 32-bit
+    }
+    // Turn into a positive 6-char hex string
+    return ('000000' + (h >>> 0).toString(16)).slice(-6);
+  }
+
+  function recalc(){
+    let prevHash = '0000';
+    let allGood = true;
+
+    blocks.forEach(function(block, i){
+      const amount = block.querySelector('.amount').value;
+      const thisHash = hash(amount + i);
+
+      // Update displayed hash
+      block.querySelector('.hash').textContent = thisHash;
+
+      // Update prev reference (the label at bottom stays as the "linked" value, which is the previous block's hash)
+      const prevEl = block.querySelector('.prev code');
+      prevEl.textContent = prevHash;
+
+      // Check: does the previous hash in this block match the previous block's actual hash?
+      // In our model, the "link" is implicit — if we change block 1, block 2's prev should still show block 1's OLD hash for it to be broken.
+      // Simpler visual: highlight the block red if its amount has been changed from its original.
+      const original = block.getAttribute('data-original');
+      if (original === null){
+        block.setAttribute('data-original', amount);
+      } else if (amount !== original){
+        block.style.borderColor = '#dc2626';
+        block.style.background = '#fee2e2';
+        allGood = false;
+      } else {
+        block.style.borderColor = '';
+        block.style.background = '';
+      }
+
+      prevHash = thisHash;
+    });
+
+    if (allGood){
+      status.textContent = '✅ Chain valid — all hashes match';
+      status.classList.remove('broken');
+    } else {
+      status.textContent = '❌ Chain broken — one block has been altered, so every following hash no longer matches';
+      status.classList.add('broken');
+    }
+  }
+
+  document.querySelectorAll('#chainLab .amount').forEach(function(input){
+    input.addEventListener('input', recalc);
+  });
+
+  recalc();
+})();
+
+/* MATCH GAME */
+(function(){
+  const items    = Array.from(document.querySelectorAll('#matchGame .match-item'));
+  const scoreEl  = document.getElementById('matchScore');
+  let selected   = null;
+  let matched    = 0;
+  const TOTAL    = 5;
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('matched')) return;
+      if (!selected){
+        selected = item;
+        item.classList.add('selected');
+        return;
+      }
+      if (selected === item){
+        item.classList.remove('selected');
+        selected = null;
+        return;
+      }
+      const selectedCol = selected.parentElement;
+      const itemCol     = item.parentElement;
+      if (selectedCol === itemCol){
+        selected.classList.remove('selected');
+        selected = item;
+        item.classList.add('selected');
+        return;
+      }
+      if (selected.dataset.id === item.dataset.id){
+        selected.classList.remove('selected');
+        selected.classList.add('matched');
+        item.classList.add('matched');
+        matched++;
+        scoreEl.innerHTML = `Matched: <strong>${matched}</strong> / ${TOTAL}`;
+        selected = null;
+        if (matched === TOTAL){
+          scoreEl.innerHTML = `🎉 All matched! Well done.`;
+        }
+      } else {
+        const a = selected, b = item;
+        a.classList.remove('selected');
+        a.classList.add('wrong');
+        b.classList.add('wrong');
+        setTimeout(() => {
+          a.classList.remove('wrong');
+          b.classList.remove('wrong');
+        }, 400);
+        selected = null;
+      }
+    });
+  });
+})();
+
+/* TEACHER LOCK */
+(function(){
+  const PASSWORD = 'teacher7';
+  const lockScreen = document.getElementById('lockScreen');
+  const content    = document.getElementById('teacherContent');
+  const input      = document.getElementById('lockInput');
+  const btn        = document.getElementById('lockBtn');
+  const msg        = document.getElementById('lockMsg');
+
+  function tryUnlock(){
+    if (input.value === PASSWORD){
+      lockScreen.classList.add('hidden');
+      content.classList.remove('hidden');
+      msg.textContent = '';
+    } else {
+      msg.textContent = 'Incorrect password. Try again.';
+      input.value = '';
+      input.focus();
+    }
+  }
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+})();
+</script>
+
+</body>
+</html>
