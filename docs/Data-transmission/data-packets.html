@@ -189,7 +189,7 @@
   .sim{background:#f4f7fb;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin-top:14px;}
   .sim-network{
     position:relative;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);
-    padding:20px;min-height:280px;margin-bottom:14px;
+    padding:20px;min-height:180px;margin-bottom:14px;
   }
   .sim-network .nodes{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
   .sim-node{
@@ -495,13 +495,13 @@
       <a href="https://lms.isr-school.com/" target="_blank" rel="noopener" class="btn">
         📄 Open Worksheet 1
       </a>
-      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F2%2520Data-transmission%2FT1%2520Data%2520packets.pptx&wdOrigin=BROWSELINK"
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F2%2520Data-transmission-encryption%2FT1%2520Data%2520packets.pptx&wdOrigin=BROWSELINK"
          target="_blank" rel="noopener" class="btn outline">
         📊 Lesson Presentation (T1 Data Packets)
       </a>
-      <a href="https://play.blooket.com/host/royale?id=63d2acb4d78a1906e8f6cad4"
+      <a href="https://play.blooket.com/host/gold?id=63d2acde979214f9b2637b49"
          target="_blank" rel="noopener" class="btn purple">
-        🎮 Blooket Royale
+        🎮 Blooket Gold
       </a>
     </div>
   </section>
@@ -685,12 +685,11 @@
     dst:  document.getElementById('node-dst')
   };
 
-  // Two routes through the network
   const routes = [
-    ['src','r1','r2','r3','dst'],  // via all three routers
-    ['src','r1','r2','dst'],       // shorter: skip r3
-    ['src','r1','r2','r3','dst'],  // via all three
-    ['src','r1','dst']             // shortest
+    ['src','r1','r2','r3','dst'],
+    ['src','r1','r2','dst'],
+    ['src','r1','r2','r3','dst'],
+    ['src','r1','dst']
   ];
 
   function clearActive(){
@@ -741,7 +740,6 @@
     const order = [];
     await Promise.all(routes.map((route, i) => {
       const packetNum = i + 1;
-      // simulate arrival order different from send order
       const delay = [0, 600, 300, 900][i];
       return animatePacket(packetNum, route, delay).then(() => order.push(packetNum));
     }));
