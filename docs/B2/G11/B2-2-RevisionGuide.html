@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2.2 Data Structures — Revision Guide</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 2rem;
+    }
+
+    h1 small {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #4b6a8b;
+      margin-left: auto;
+      background: #e9f0fa;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+    }
+
+    .tip-box {
+      background: #fff8e7;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .tip-box strong { color: #8a6d1f; }
+
+    .check-box {
+      background: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .check-box strong { color: #2e7d32; }
+
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
+    .keyword {
+      font-weight: 600;
+      color: #1f4973;
+      background: #eef5ff;
+      padding: 0.1rem 0.4rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+    }
+
+    code {
+      background: #eef2f7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #b21f1f;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0.8rem 0;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #0b2a4a;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) td { background: #f7fafc; }
+
+    .qa-toggle {
+      background: #e9f0fa;
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1f4973;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      border: 1px solid #bed3ec;
+      transition: background 0.15s;
+    }
+    .qa-toggle:hover { background: #d4e3fc; }
+
+    .qa-content {
+      display: none;
+      margin-top: 0.8rem;
+      background: white;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      border-left: 4px solid #ffc857;
+      font-size: 0.95rem;
+    }
+    .qa-content.show { display: block; }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0;
+    }
+    li { margin-bottom: 0.3rem; }
+
+    .analogy {
+      background: #eef6ff;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #2c4b6e;
+      border-left: 4px solid #2a6f97;
+    }
+
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.6rem; flex-wrap: wrap; }
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .guide-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+      .qa-content { display: block !important; }
+      .qa-toggle { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+
+    <h1>
+      📘 B2.2 Data Structures — Revision Guide
+      <small>IB Computer Science · First Assessment 2027</small>
+    </h1>
+
+    <p style="margin-bottom: 2rem; color: #2c4b6e;">
+      This guide teaches the <strong>concepts</strong> you need for the Unit B2.2 exam. Each section explains
+      the idea from scratch, shows a worked example of the technique, and points out common mistakes.
+      At the end there are practice questions so you can test yourself — the answers are hidden
+      behind the buttons so you can try first.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: STATIC & DYNAMIC DATA STRUCTURES -->
+    <!-- ============================================================ -->
+    <h2>1. Static &amp; Dynamic Data Structures</h2>
+
+    <div class="card">
+      <h3>What is a data structure?</h3>
+      <p>A <strong>data structure</strong> is a way of organising data in memory so it can be accessed and worked with efficiently. Choosing between static and dynamic data structures is like choosing the right tool — sometimes you need a fixed-size wrench, and sometimes an adjustable one.</p>
+      <p>The key difference lies in <strong>how they handle memory allocation and resizing</strong>.</p>
+
+      <div class="analogy">
+        💡 Think of the difference between a fixed-size car park and a valet parking service. A static structure is like a car park with a fixed number of spaces — once it's full, no more cars can park. A dynamic structure is like a valet service that can always find another space.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Static data structures</h3>
+      <p>A <strong>static data structure</strong> has a <strong>fixed size</strong> that is determined at <strong>compile time</strong> and cannot be changed during program execution.</p>
+
+      <pre><code>// Java - Static array with fixed size
+int[] scores = new int[5];
+
+// Index:  0   1   2   3   4
+// Value: 78  85  92  63  89
+
+// Cannot add a 6th score!</code></pre>
+
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Allocation Time</td><td>Compile-time (before the program runs)</td></tr>
+          <tr><td>Memory Location</td><td>Stack (fast, but limited)</td></tr>
+          <tr><td>Size</td><td>Fixed; cannot be changed</td></tr>
+          <tr><td>Flexibility</td><td>None</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        <strong>🔑 Key Principle:</strong> Static data structures are allocated on the <strong>stack</strong>. They are fast because memory is contiguous and access is direct (O(1)).
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Dynamic data structures</h3>
+      <p>A <strong>dynamic data structure</strong> can <strong>grow or shrink</strong> as needed during program execution, allocating memory at <strong>runtime</strong>.</p>
+
+      <pre><code># Python - Dynamic linked list
+# Node 1 → Node 2 → Node 3 → NULL
+#   78       85       92
+
+# Can grow by adding new nodes
+# Can shrink by removing nodes
+# Slower access (must traverse from start)</code></pre>
+
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Allocation Time</td><td>Runtime (while the program is running)</td></tr>
+          <tr><td>Memory Location</td><td>Heap (flexible, but slower)</td></tr>
+          <tr><td>Size</td><td>Flexible; can grow or shrink</td></tr>
+          <tr><td>Flexibility</td><td>High</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        <strong>🔑 Key Principle:</strong> Dynamic data structures are allocated on the <strong>heap</strong>. They are flexible because memory is allocated and deallocated as needed, but access may require traversal (O(n)).
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Comparison summary</h3>
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Static</th><th>Dynamic</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Size</td><td>Fixed</td><td>Flexible</td></tr>
+          <tr><td>Memory Allocation</td><td>Compile-time</td><td>Runtime</td></tr>
+          <tr><td>Memory Location</td><td>Stack</td><td>Heap</td></tr>
+          <tr><td>Resizing</td><td>Not possible</td><td>Possible</td></tr>
+          <tr><td>Access Speed</td><td>Fast (O(1))</td><td>Slower (O(n))</td></tr>
+          <tr><td>Memory Efficiency</td><td>Efficient if size known</td><td>Efficient for varying sizes</td></tr>
+          <tr><td>Flexibility</td><td>Low</td><td>High</td></tr>
+          <tr><td>Overflow Risk</td><td>Yes</td><td>No (within heap limits)</td></tr>
+          <tr><td>Memory Overhead</td><td>None</td><td>Pointers/references</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Common structures</h3>
+      <table>
+        <thead>
+          <tr><th>Static Structures</th><th>Dynamic Structures</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Array</td><td>Linked List</td></tr>
+          <tr><td>Static Stack</td><td>Dynamic Stack</td></tr>
+          <tr><td>Static Queue</td><td>Dynamic Queue</td></tr>
+          <tr><td>—</td><td>Tree</td></tr>
+          <tr><td>—</td><td>Graph</td></tr>
+          <tr><td>—</td><td>ArrayList (Python list)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Worked example: choosing the right structure</h3>
+      <p><strong>Scenario:</strong> A school initially stores 500 students but expects enrolment to vary greatly over the next five years.</p>
+      <ul>
+        <li><strong>Analysis:</strong> Known initial size but high variability.</li>
+        <li><strong>Static:</strong> Simple, fast, but may overflow or waste memory if numbers change.</li>
+        <li><strong>Dynamic:</strong> Flexible, handles growth, avoids overflow, but slower access and pointer overhead.</li>
+        <li><strong>Recommendation:</strong> Dynamic is likely better for varying enrolment, but a hybrid (resizable array) could work.</li>
+      </ul>
+
+      <div class="warn-box">
+        <strong>⚠️ Common mistake:</strong> Assuming a static array can be resized. In Java, <code>int[] scores = new int[5];</code> creates an array that can never hold more than 5 elements. Attempting to add a 6th element causes an <code>ArrayIndexOutOfBoundsException</code>.
+      </div>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> If a question asks "explain why a dynamic data structure would be more suitable," you must mention:
+        <ul>
+          <li>It can grow/shrink as items are added/removed</li>
+          <li>Memory is allocated at runtime, so no fixed limit</li>
+          <li>Avoids overflow and wasted memory</li>
+          <li>Static would require a fixed maximum, risking overflow or unused space</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: ARRAYS AND LISTS -->
+    <!-- ============================================================ -->
+    <h2>2. Arrays &amp; Lists</h2>
+
+    <div class="card">
+      <h3>What is an array?</h3>
+      <p>An <strong>array</strong> is an ordered collection of elements that all share the <strong>same data type</strong>. Each element sits at a numbered position called an <strong>index</strong>. In most languages — and in IGCSE pseudocode — indexing starts at <strong>0</strong>.</p>
+
+      <pre><code># Python - 1D List
+numbers = [10, 20, 30]     # Declaration and initialization
+numbers[0] = 15            # Modify
+print(numbers[0])          # Access</code></pre>
+
+      <p><strong>Output:</strong> <code>15</code></p>
+
+      <div class="tip-box">
+        📌 <strong>Remember:</strong> Indexing starts at 0 in both Java and Python. The main difference is mutability and resizing: Java arrays are fixed-size, while Python lists are dynamic.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>What is a list?</h3>
+      <p>A <strong>list</strong> is a dynamic, resizable collection of elements. Python's built-in <code>list</code> is the most common example.</p>
+
+      <pre><code>names = []
+names.append("Alice")
+names.append("Bob")
+names.remove("Alice")
+print(names[0])  # Outputs: "Bob"</code></pre>
+
+      <p><strong>Output:</strong> <code>Bob</code></p>
+
+      <div class="tip-box">
+        <strong>🔑 Key Principle:</strong> Python lists are <strong>mutable</strong> and <strong>dynamic</strong>. You can add, remove, and change elements after the list is created. Java arrays are fixed-size; Java <code>ArrayList</code> is the dynamic alternative.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Two-dimensional arrays and lists</h3>
+      <p>A <strong>2D array</strong> (or list of lists) is a grid-like structure where each element is accessed using <strong>two indices</strong>: row and column.</p>
+
+      <pre><code># Python - 2D List (Matrix)
+matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+print(matrix[0][0])  # Output: 1</code></pre>
+
+      <p><strong>Output:</strong> <code>1</code></p>
+    </div>
+
+    <div class="card">
+      <h3>Array and list operations summary</h3>
+      <table>
+        <thead>
+          <tr><th>Operation</th><th>Description</th><th>Python Example</th><th>Java Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Declare</td><td>Create a new array/list</td><td><code>my_list = []</code></td><td><code>int[] arr = new int[5];</code></td></tr>
+          <tr><td>Access</td><td>Get element at index</td><td><code>my_list[0]</code></td><td><code>arr[0]</code></td></tr>
+          <tr><td>Modify</td><td>Change element at index</td><td><code>my_list[0] = 5</code></td><td><code>arr[0] = 5;</code></td></tr>
+          <tr><td>Add (end)</td><td>Append to end of list</td><td><code>my_list.append(x)</code></td><td><code>list.add(x);</code></td></tr>
+          <tr><td>Add (at index)</td><td>Insert at specific index</td><td><code>my_list.insert(i, x)</code></td><td><code>list.add(i, x);</code></td></tr>
+          <tr><td>Remove (by value)</td><td>Remove first occurrence</td><td><code>my_list.remove(x)</code></td><td><code>list.remove(x);</code></td></tr>
+          <tr><td>Remove (by index)</td><td>Remove element at index</td><td><code>del my_list[i]</code> or <code>my_list.pop(i)</code></td><td><code>list.remove(i);</code></td></tr>
+          <tr><td>Length</td><td>Get number of elements</td><td><code>len(my_list)</code></td><td><code>arr.length</code> / <code>list.size()</code></td></tr>
+          <tr><td>Traverse</td><td>Loop through elements</td><td><code>for x in my_list:</code></td><td><code>for (int x : arr)</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Worked example 1: Calculating the average of a list</h3>
+      <pre><code>scores = [90, 80, 70]
+total = 0
+for score in scores:
+    total = total + score
+average = total / len(scores)
+print(average)   # Output: 80.0</code></pre>
+      <p><strong>Output:</strong> <code>80.0</code></p>
+    </div>
+
+    <div class="card">
+      <h3>Worked example 2: Linear search in a list</h3>
+      <pre><code>numbers = [73, 99, 37, 49, 38]
+target = 37
+found = False
+for i in range(len(numbers)):
+    if numbers[i] == target:
+        found = True
+        print("Found at index", i)
+        break
+if not found:
+    print("Not found")</code></pre>
+      <p><strong>Output:</strong> <code>Found at index 2</code></p>
+    </div>
+
+    <div class="card">
+      <h3>Worked example 3: Shopping list manager</h3>
+      <pre><code>shopping_list = []
+# Add items
+shopping_list.append("apples")
+shopping_list.append("bananas")
+shopping_list.insert(1, "oranges")
+# Traverse
+for item in shopping_list:
+    print(item)
+# Remove
+shopping_list.remove("bananas")
+del shopping_list[0]
+print("Final list:", shopping_list)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>apples
+oranges
+bananas
+Final list: ['oranges']</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Worked example 4: 2D list (Tic-Tac-Toe board)</h3>
+      <pre><code>board = [
+    ["X", "O", "X"],
+    ["O", "X", "O"],
+    ["O", "X", "X"]
+]
+for row in board:
+    for cell in row:
+        print(cell, end=" ")
+    print()</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>X O X
+O X O
+O X X</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Key terms</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Array</td><td>An ordered collection of elements of the same data type, with a fixed size in languages like Java.</td></tr>
+          <tr><td>List</td><td>A dynamic, resizable collection of elements (Python's built-in list).</td></tr>
+          <tr><td>Element</td><td>One value inside an array or list.</td></tr>
+          <tr><td>Index</td><td>The position of an element in an array or list (starting from 0).</td></tr>
+          <tr><td>Length</td><td>How many elements an array or list holds.</td></tr>
+          <tr><td>Traversal</td><td>Visiting each element in an array or list, typically using a loop.</td></tr>
+          <tr><td>2D Array/List</td><td>A grid-like structure (array of arrays / list of lists) accessed with two indices.</td></tr>
+          <tr><td>Dynamic</td><td>Able to grow or shrink in size at runtime (e.g. Python lists, Java ArrayList).</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box">
+        <strong>⚠️ Common mistakes:</strong>
+        <ul>
+          <li><strong>Out-of-bounds access:</strong> Accessing an index that doesn't exist (e.g. <code>list[10]</code> in a list of size 3).</li>
+          <li><strong>Removing items during traversal:</strong> Modifying a list while iterating over it can cause errors.</li>
+          <li><strong>Confusing 1D with 2D logic:</strong> Forgetting to use nested loops when dealing with 2D structures.</li>
+          <li><strong>Assuming fixed size:</strong> Trying to assign to an index that hasn't been created in a dynamic list.</li>
+        </ul>
+      </div>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> When writing code to traverse a 2D list, always use nested loops. The outer loop iterates through rows, the inner loop iterates through columns.
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: STACKS (LIFO) -->
+    <!-- ============================================================ -->
+    <h2>3. Stacks (LIFO)</h2>
+
+    <div class="card">
+      <h3>What is a stack?</h3>
+      <p>Think of a stack of plates in a cafeteria. You add a new plate to the top, and you take a plate from the top. You would never pull a plate from the middle of the stack — that would be messy and inefficient. This "Last In, First Out" (<strong>LIFO</strong>) principle is the core of a fundamental data structure: the <strong>Stack</strong>.</p>
+      <p>A <strong>stack</strong> is an abstract data structure that works on the <strong>LIFO</strong> (Last In, First Out) or <strong>FILO</strong> (First In, Last Out) principle. This means the last element added to the stack is the first one to be removed. Only the top element is accessible at any time.</p>
+
+      <div class="analogy">
+        💡 Imagine a stack of coins. If you want to add a coin, you put it on top. If you want to take a coin, you take it from the top. The coin that was placed last is the first one to be taken out. This is the essence of LIFO.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Core operations</h3>
+      <table>
+        <thead>
+          <tr><th>Operation</th><th>Description</th><th>Error Condition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Push</strong></td><td>Adds an item to the top of the stack.</td><td>Overflow (if the stack is full)</td></tr>
+          <tr><td><strong>Pop</strong></td><td>Removes and returns the top item.</td><td>Underflow (if the stack is empty)</td></tr>
+          <tr><td><strong>Peek</strong> (or Top)</td><td>Returns the top item without removing it.</td><td>None (returns null/None if empty)</td></tr>
+          <tr><td><strong>isEmpty</strong></td><td>Checks if the stack is empty.</td><td>N/A</td></tr>
+          <tr><td><strong>isFull</strong></td><td>Checks if the stack is full (for a static, array-based stack).</td><td>N/A</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        📌 <strong>Important:</strong> A <strong>stack pointer</strong> (often called <code>topIndex</code> or <code>top</code>) is a variable used to keep track of the index of the topmost element in the stack. It is crucial for all operations.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Stack operations in detail</h3>
+
+      <h4>1. Push (adding an item)</h4>
+      <p>To push an item, the stack pointer is incremented (moved to the next free slot), and the new value is placed at that position. If the stack is already full, attempting to push causes an <strong>overflow</strong> error.</p>
+      <pre><code># Python - Push operation (simplified)
+def push(stack, value):
+    if len(stack) == MAX_SIZE:
+        print("Stack Overflow!")
+    else:
+        stack.append(value)
+        print(f"Pushed: {value}")</code></pre>
+
+      <h4>2. Pop (removing an item)</h4>
+      <p>To pop an item, the value at the top of the stack is returned, and the stack pointer is decremented. If the stack is empty, attempting to pop causes an <strong>underflow</strong> error.</p>
+      <pre><code># Python - Pop operation (simplified)
+def pop(stack):
+    if len(stack) == 0:
+        print("Stack Underflow!")
+        return None
+    else:
+        return stack.pop()</code></pre>
+
+      <h4>3. Peek (looking at the top)</h4>
+      <p>This operation returns the value of the top element without changing the stack. It's useful for checking what's next without committing to a pop.</p>
+      <pre><code># Python - Peek operation (simplified)
+def peek(stack):
+    if len(stack) > 0:
+        return stack[-1]
+    else:
+        return None</code></pre>
+
+      <h4>4. isEmpty and isFull</h4>
+      <p>These are boolean checks to prevent errors. <code>isEmpty</code> checks if the stack pointer is at -1 (or 0, depending on implementation). <code>isFull</code> checks if the stack pointer has reached the maximum size of the array.</p>
+
+      <div class="tip-box">
+        <strong>🔑 Key Principle:</strong> A stack can be implemented as a <strong>static</strong> data structure (using an array with a fixed size) or as a <strong>dynamic</strong> data structure (using a linked list, which can grow and shrink as needed).
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Worked example: Building a stack in Python</h3>
+      <pre><code># Initialize the stack
+my_stack = []
+print("Stack created:", my_stack)
+
+def push(stack, item):
+    stack.append(item)
+    print(f"Pushed: {item}")
+
+def pop(stack):
+    if len(stack) == 0:
+        print("Stack Underflow!")
+        return None
+    else:
+        return stack.pop()
+
+def peek(stack):
+    if len(stack) > 0:
+        return stack[-1]
+    else:
+        print("Stack is empty!")
+        return None
+
+def isEmpty(stack):
+    return len(stack) == 0
+
+# Test the stack
+push(my_stack, "A")
+push(my_stack, "B")
+push(my_stack, "C")
+
+print("Top item:", peek(my_stack))
+print("Popped:", pop(my_stack))
+print("Popped:", pop(my_stack))
+print("Is empty?", isEmpty(my_stack))
+print("Popped:", pop(my_stack))
+print("Is empty?", isEmpty(my_stack))</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Pushed: A
+Pushed: B
+Pushed: C
+Top item: C
+Popped: C
+Popped: B
+Is empty? False
+Popped: A
+Is empty? True</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Uses of stacks</h3>
+      <ul>
+        <li><strong>Interrupt Handling:</strong> When the CPU is interrupted, the current state (variables, return address) is pushed onto a stack. After the interrupt is handled, the state is popped to resume the previous task.</li>
+        <li><strong>Recursion:</strong> When a function calls itself, the return addresses and parameters are stored on a stack to help "unwind" the recursive calls correctly.</li>
+        <li><strong>Undo Feature:</strong> In games or text editors, each action is pushed onto a stack. The "Undo" command pops the last action, reverting the state.</li>
+        <li><strong>Browser Back Button:</strong> Opening a new page pushes the URL onto a stack. Pressing "Back" pops the current URL to go to the previous one.</li>
+        <li><strong>Evaluating Arithmetic Expressions:</strong> Stacks are used to convert and evaluate expressions, especially in Reverse Polish Notation (RPN).</li>
+      </ul>
+
+      <h3>Key terms</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Stack</td><td>An abstract data structure that works on the LIFO principle.</td></tr>
+          <tr><td>LIFO</td><td>Last In, First Out. The last element inserted is the first one removed.</td></tr>
+          <tr><td>Push</td><td>A method for inserting an element at the top of a stack.</td></tr>
+          <tr><td>Pop</td><td>A method for deleting the element from the top of a stack.</td></tr>
+          <tr><td>Peek</td><td>Looking at the top element without removing it.</td></tr>
+          <tr><td>Stack Pointer</td><td>A variable (e.g., <code>topIndex</code>) that tracks the position of the top element.</td></tr>
+          <tr><td>Overflow</td><td>An error that occurs when trying to push onto a full stack.</td></tr>
+          <tr><td>Underflow</td><td>An error that occurs when trying to pop from an empty stack.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box">
+        <strong>⚠️ Common mistakes:</strong>
+        <ul>
+          <li><strong>Stack Overflow</strong> — forgetting to check if a static stack is full before pushing.</li>
+          <li><strong>Stack Underflow</strong> — forgetting to check if a stack is empty before popping.</li>
+          <li><strong>Losing Data</strong> — not storing the popped value if it's needed later.</li>
+        </ul>
+      </div>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> If a question asks "explain why a stack is suitable for [scenario]," you must mention the LIFO principle and how it applies to the specific scenario (e.g. "The undo feature requires the most recent action to be reversed first, which is exactly what LIFO provides").
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: QUEUES (FIFO) -->
+    <!-- ============================================================ -->
+    <h2>4. Queues (FIFO)</h2>
+
+    <div class="card">
+      <h3>What is a queue?</h3>
+      <p>Think of a queue at a grocery store checkout. The first person to join the line is the first person to be served. A new person who joins the line enters at the back. This "First In, First Out" (<strong>FIFO</strong>) principle is the core of a fundamental data structure: the <strong>Queue</strong>.</p>
+      <p>A <strong>queue</strong> is an abstract data structure that works on the <strong>FIFO</strong> (First In, First Out) principle. This means the first element added to the queue is the first one to be removed. Elements are added at one end (the <strong>rear</strong>) and removed from the other end (the <strong>front</strong>).</p>
+
+      <div class="analogy">
+        💡 Imagine a queue of people waiting to buy tickets. The person at the front of the line is served first. When they are done, they leave the queue, and the next person becomes the new front. A new person joining the queue goes to the back. This is the essence of FIFO.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Core operations</h3>
+      <table>
+        <thead>
+          <tr><th>Operation</th><th>Description</th><th>Error Condition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Enqueue</strong></td><td>Adds an item to the rear of the queue.</td><td>Overflow (if the queue is full)</td></tr>
+          <tr><td><strong>Dequeue</strong></td><td>Removes and returns the front item.</td><td>Underflow (if the queue is empty)</td></tr>
+          <tr><td><strong>Front</strong> (or Peek)</td><td>Returns the front item without removing it.</td><td>None (returns null/None if empty)</td></tr>
+          <tr><td><strong>isEmpty</strong></td><td>Checks if the queue is empty.</td><td>N/A</td></tr>
+          <tr><td><strong>isFull</strong></td><td>Checks if the queue is full (for a static, array-based queue).</td><td>N/A</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        📌 <strong>Important:</strong> A queue uses a <strong>front pointer</strong> (or <code>head</code>) to show where elements will be removed from, and a <strong>rear pointer</strong> (or <code>tail</code>) to show where elements will be added. These are crucial for all operations.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Queue operations in detail</h3>
+
+      <h4>1. Enqueue (adding an item)</h4>
+      <p>To enqueue an item, the rear pointer is moved to the next free slot, and the new value is placed at that position. If the queue is already full, attempting to enqueue causes an <strong>overflow</strong> error.</p>
+      <pre><code># Python - Enqueue operation (simplified)
+def enqueue(queue, value):
+    if len(queue) == MAX_SIZE:
+        print("Queue Overflow!")
+    else:
+        queue.append(value)
+        print(f"Enqueued: {value}")</code></pre>
+
+      <h4>2. Dequeue (removing an item)</h4>
+      <p>To dequeue an item, the value at the front of the queue is returned, and the front pointer is advanced. If the queue is empty, attempting to dequeue causes an <strong>underflow</strong> error.</p>
+      <pre><code># Python - Dequeue operation (simplified)
+def dequeue(queue):
+    if len(queue) == 0:
+        print("Queue Underflow!")
+        return None
+    else:
+        return queue.pop(0)</code></pre>
+
+      <h4>3. Front (looking at the front)</h4>
+      <p>This operation returns the value of the front element without changing the queue. It's useful for checking what's next without committing to a dequeue.</p>
+      <pre><code># Python - Front operation (simplified)
+def front(queue):
+    if len(queue) > 0:
+        return queue[0]
+    else:
+        return None</code></pre>
+
+      <h4>4. isEmpty and isFull</h4>
+      <p>These are boolean checks to prevent errors. <code>isEmpty</code> checks if the front and rear pointers indicate an empty queue. <code>isFull</code> checks if the queue has reached its maximum size.</p>
+
+      <div class="tip-box">
+        <strong>🔑 Key Principle:</strong> A queue can be implemented as a <strong>static</strong> data structure (using an array with a fixed size) or as a <strong>dynamic</strong> data structure (using a linked list, which can grow and shrink as needed). A common static implementation is the <strong>circular queue</strong>, which reuses empty spaces at the front of the array.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Circular queues</h3>
+      <p>When a queue is implemented as an array, it can often be managed as a <strong>circular queue</strong>. This allows the queue to wrap around when the rear pointer reaches the end of the array, reusing spaces that have been freed by dequeued elements.</p>
+      <ul>
+        <li>If the rear pointer becomes equal to the front pointer after an item is added, the queue becomes <strong>full</strong>.</li>
+        <li>If they become equal after an item is removed, the queue becomes <strong>empty</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Worked example: Building a queue in Python</h3>
+      <pre><code># Initialize the queue
+my_queue = []
+print("Queue created:", my_queue)
+
+def enqueue(queue, item):
+    queue.append(item)
+    print(f"Enqueued: {item}")
+
+def dequeue(queue):
+    if len(queue) == 0:
+        print("Queue Underflow!")
+        return None
+    else:
+        return queue.pop(0)
+
+def front(queue):
+    if len(queue) > 0:
+        return queue[0]
+    else:
+        print("Queue is empty!")
+        return None
+
+def isEmpty(queue):
+    return len(queue) == 0
+
+# Test the queue
+enqueue(my_queue, "A")
+enqueue(my_queue, "B")
+enqueue(my_queue, "C")
+
+print("Front item:", front(my_queue))
+print("Dequeued:", dequeue(my_queue))
+print("Dequeued:", dequeue(my_queue))
+print("Is empty?", isEmpty(my_queue))
+print("Dequeued:", dequeue(my_queue))
+print("Is empty?", isEmpty(my_queue))</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Enqueued: A
+Enqueued: B
+Enqueued: C
+Front item: A
+Dequeued: A
+Dequeued: B
+Is empty? False
+Dequeued: C
+Is empty? True</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Uses of queues</h3>
+      <ul>
+        <li><strong>Printer Queues:</strong> Printing jobs are stored in a queue. The first job sent is the first to be printed. New jobs join at the rear.</li>
+        <li><strong>Keyboard Queues:</strong> The keyboard buffer stores characters as they are typed. The first key pressed is the first character to appear on screen.</li>
+        <li><strong>Simulations:</strong> Queues model real-life situations like checkout lines, car washes, and car park exits, where people or cars enter one side and exit the other.</li>
+        <li><strong>CPU Scheduling:</strong> Processes waiting for CPU time are often managed in a queue.</li>
+        <li><strong>Breadth-First Search:</strong> In graph algorithms, a queue is used to explore nodes level by level.</li>
+      </ul>
+
+      <h3>Key terms</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Queue</td><td>An abstract data structure that works on the FIFO principle.</td></tr>
+          <tr><td>FIFO</td><td>First In, First Out. The first element inserted is the first one removed.</td></tr>
+          <tr><td>Enqueue</td><td>A method for inserting an element at the rear of a queue.</td></tr>
+          <tr><td>Dequeue</td><td>A method for deleting the element from the front of a queue.</td></tr>
+          <tr><td>Front Pointer</td><td>A variable that tracks the position of the front element.</td></tr>
+          <tr><td>Rear Pointer</td><td>A variable that tracks the position of the rear element.</td></tr>
+          <tr><td>Overflow</td><td>An error that occurs when trying to enqueue onto a full queue.</td></tr>
+          <tr><td>Underflow</td><td>An error that occurs when trying to dequeue from an empty queue.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box">
+        <strong>⚠️ Common mistakes:</strong>
+        <ul>
+          <li><strong>Queue Overflow</strong> — forgetting to check if a static queue is full before enqueuing.</li>
+          <li><strong>Queue Underflow</strong> — forgetting to check if a queue is empty before dequeuing.</li>
+          <li><strong>Losing Data</strong> — not storing the dequeued value if it's needed later.</li>
+        </ul>
+      </div>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> If a question asks "explain why a queue is suitable for [scenario]," you must mention the FIFO principle and how it applies to the specific scenario (e.g. "A printer queue requires jobs to be printed in the order they were submitted, which is exactly what FIFO provides").
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5: EXAM TECHNIQUE -->
+    <!-- ============================================================ -->
+    <h2>5. Exam Technique</h2>
+
+    <div class="card">
+      <h3>Understanding command words</h3>
+      <p>The command word at the start of a question tells you exactly how much detail the examiner wants.</p>
+
+      <table>
+        <thead>
+          <tr><th>Command word</th><th>What to do</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>State / Give / Name</strong></td><td>A short answer — often one word or phrase. No explanation.</td></tr>
+          <tr><td><strong>Describe</strong></td><td>Say what happens or what something is. More detail than "state," but no need for reasons.</td></tr>
+          <tr><td><strong>Explain</strong></td><td>Say <em>how</em> or <em>why</em>. Give reasons and make connections.</td></tr>
+          <tr><td><strong>Distinguish</strong></td><td>Make clear the differences between two things.</td></tr>
+          <tr><td><strong>Compare</strong></td><td>Identify similarities and differences.</td></tr>
+          <tr><td><strong>Complete / Trace</strong></td><td>Fill in the blank, or work through the code step by step.</td></tr>
+          <tr><td><strong>Identify</strong></td><td>Pick out the correct answer from the information given.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Reading the mark allocation</h3>
+      <p>The number of marks tells you how many distinct points the examiner expects.</p>
+      <ul>
+        <li><strong>1 mark:</strong> one short answer.</li>
+        <li><strong>2 marks:</strong> two distinct points, OR one point with a clear explanation.</li>
+        <li><strong>3 marks:</strong> three distinct points, OR one point developed through three stages.</li>
+        <li><strong>4+ marks:</strong> multiple developed points — don't try to answer in one sentence.</li>
+      </ul>
+
+      <h3>How to answer "explain" questions</h3>
+      <p>Aim for a <strong>two-part structure</strong>: what happens + why it happens.</p>
+      <p><strong>Weak answer:</strong> "It handles the error." <br>
+         <strong>Strong answer:</strong> "The <code>except ValueError</code> block catches the error raised by <code>int()</code> when the input is not a number, so the program prints a helpful message instead of crashing."</p>
+
+      <h3>Common mistakes to avoid</h3>
+      <ul>
+        <li>Confusing <strong>static</strong> and <strong>dynamic</strong> — static is fixed at compile time, dynamic is flexible at runtime.</li>
+        <li>Forgetting that <strong>arrays in Java are fixed-size</strong>, while <strong>Python lists are dynamic</strong>.</li>
+        <li>Mixing up <strong>LIFO (stacks)</strong> and <strong>FIFO (queues)</strong>.</li>
+        <li>Forgetting to check for <strong>overflow</strong> and <strong>underflow</strong> before push/pop or enqueue/dequeue.</li>
+        <li>Writing vague answers like "it handles the error" instead of naming the specific exception or operation.</li>
+        <li>Confusing <strong>stack pointer</strong> with <strong>front/rear pointers</strong> (stacks have one pointer, queues have two).</li>
+      </ul>
+
+      <h3>How to tackle a data structures exam question</h3>
+      <ol>
+        <li><strong>Read the question carefully.</strong> Identify whether it's about static vs dynamic, arrays/lists, stacks, or queues.</li>
+        <li><strong>Look at the mark allocation.</strong> It tells you how many points the examiner wants.</li>
+        <li><strong>For "explain" questions</strong>, use a two-part structure: what happens + why it happens.</li>
+        <li><strong>For code-writing questions</strong>, if unsure, write a plan first, then code.</li>
+        <li><strong>For trace questions</strong>, work through the operations step by step, updating the state after each operation.</li>
+      </ol>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6: PRACTICE QUESTIONS -->
+    <!-- ============================================================ -->
+    <h2>6. Practice Questions</h2>
+    <p style="margin-bottom: 1rem; color: #2c4b6e;">
+      Now test yourself. Try each question <strong>without</strong> looking back at the notes. Write your answer first,
+      then click <strong>Show answer ▼</strong> to check. None of these questions are the same as the ones in the exam —
+      they test the same skills on different scenarios.
+    </p>
+
+    <div class="card">
+      <h3>Question 1</h3>
+      <p>State the data structure that would be most appropriate for each of the following scenarios: <em>(4 marks)</em></p>
+      <ul>
+        <li>A web browser's back button</li>
+        <li>A printer managing print jobs</li>
+        <li>Storing exam marks for exactly 30 students</li>
+        <li>A social media feed where new posts are added constantly</li>
+      </ul>
+      <button class="qa-toggle" data-target="q1">Show answer ▼</button>
+      <div id="q1" class="qa-content">
+        <ul>
+          <li>Stack (LIFO — most recent page visited is the first to go back to)</li>
+          <li>Queue (FIFO — first job sent is first to be printed)</li>
+          <li>Static array (fixed size of 30)</li>
+          <li>Dynamic list (grows as new posts are added)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 2</h3>
+      <p>A variable is declared inside a function in Python.</p>
+      <p><strong>(a)</strong> State the scope of this variable. <em>(1 mark)</em><br>
+         <strong>(b)</strong> Explain why this variable cannot be accessed from outside the function. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q2">Show answer ▼</button>
+      <div id="q2" class="qa-content">
+        <p><strong>(a)</strong> Local.</p>
+        <p><strong>(b)</strong> A local variable can only be accessed within the function where it is declared. It does not exist outside that function's scope.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 3</h3>
+      <p>A student has written the following code:</p>
+      <pre><code>reference = "BOOK-2024-0891"
+year = reference[5:9]
+code = reference[10:]
+print(year)
+print(code)</code></pre>
+      <p><strong>(a)</strong> State the output of <code>print(year)</code>. <em>(1 mark)</em><br>
+         <strong>(b)</strong> State the output of <code>print(code)</code>. <em>(1 mark)</em><br>
+         <strong>(c)</strong> Write a single Python statement that would extract the first four characters of <code>reference</code> and store them in a variable called <code>type_code</code>. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q3">Show answer ▼</button>
+      <div id="q3" class="qa-content">
+        <p><strong>(a)</strong> <code>2024</code></p>
+        <p><strong>(b)</strong> <code>0891</code></p>
+        <p><strong>(c)</strong> <code>type_code = reference[0:4]</code> (or <code>reference[:4]</code>).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 4</h3>
+      <p>Explain why strings in Python are described as <strong>immutable</strong>. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q4">Show answer ▼</button>
+      <div id="q4" class="qa-content">
+        <p>Strings are immutable because they cannot be changed in place after they are created. Methods like <code>.replace()</code> and <code>.lower()</code> return a <strong>new</strong> string rather than modifying the original. For example, <code>message.replace("cat","dog")</code> returns a new string, but the original <code>message</code> remains unchanged.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 5</h3>
+      <p>Study the following code:</p>
+      <pre><code>try:
+    age = int(input("Enter your age: "))
+    birth_year = 2025 - age
+    print(birth_year)
+except ValueError:
+    print("Please enter a whole number.")
+except ZeroDivisionError:
+    print("This will never happen.")</code></pre>
+      <p><strong>(a)</strong> State the output if the user enters <code>"ten"</code>. <em>(1 mark)</em><br>
+         <strong>(b)</strong> State the output if the user enters <code>"15"</code>. <em>(1 mark)</em><br>
+         <strong>(c)</strong> Explain why <code>except ZeroDivisionError</code> would not work if it were placed <em>after</em> <code>except Exception</code>. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q5">Show answer ▼</button>
+      <div id="q5" class="qa-content">
+        <p><strong>(a)</strong> <code>Please enter a whole number.</code></p>
+        <p><strong>(b)</strong> <code>2010</code></p>
+        <p><strong>(c)</strong> <code>except Exception</code> catches all exceptions. If it were placed first, it would catch everything and the specific <code>ZeroDivisionError</code> handler would never run.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 6</h3>
+      <p>Distinguish between a <strong>syntax error</strong> and a <strong>logical error</strong>, giving one example of each. <em>(4 marks)</em></p>
+      <button class="qa-toggle" data-target="q6">Show answer ▼</button>
+      <div id="q6" class="qa-content">
+        <p><strong>Syntax error</strong> — a violation of the rules of the programming language. Example: missing parentheses or a missing colon.</p>
+        <p><strong>Logical error</strong> — the code runs without crashing but produces an incorrect result. Example: using the wrong formula, or a loop that iterates the wrong number of times.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 7</h3>
+      <p>A programmer has written the following code:</p>
+      <pre><code>count = 0
+for n in range(1, 4):
+    count = count + n * 2
+print(count)</code></pre>
+      <p><strong>(a)</strong> Complete the trace table below. <em>(3 marks)</em><br>
+         <strong>(b)</strong> State the final output. <em>(1 mark)</em></p>
+      <table>
+        <thead>
+          <tr><th>Iteration</th><th><code>n</code></th><th><code>count</code></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td></td><td></td></tr>
+          <tr><td>2</td><td></td><td></td></tr>
+          <tr><td>3</td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <button class="qa-toggle" data-target="q7">Show answer ▼</button>
+      <div id="q7" class="qa-content">
+        <p><strong>(a)</strong></p>
+        <table>
+          <thead><tr><th>Iteration</th><th><code>n</code></th><th><code>count</code></th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>1</td><td>2</td></tr>
+            <tr><td>2</td><td>2</td><td>6</td></tr>
+            <tr><td>3</td><td>3</td><td>12</td></tr>
+          </tbody>
+        </table>
+        <p><strong>(b)</strong> <code>12</code></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 8</h3>
+      <p>A shopping website stores products that are frequently added and removed.</p>
+      <p>Explain why a <strong>dynamic</strong> data structure would be more suitable than a static data structure. <em>(4 marks)</em></p>
+      <button class="qa-toggle" data-target="q8">Show answer ▼</button>
+      <div id="q8" class="qa-content">
+        <ul>
+          <li>Dynamic structures can grow/shrink as products are added/removed (1).</li>
+          <li>Memory is allocated at runtime, so no fixed limit (1).</li>
+          <li>Avoids overflow and wasted memory (1).</li>
+          <li>Static would require a fixed maximum, risking overflow or unused space (1).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 9</h3>
+      <p>Compare <strong>static</strong> and <strong>dynamic</strong> data structures with reference to: memory allocation, performance, and flexibility. <em>(6 marks)</em></p>
+      <button class="qa-toggle" data-target="q9">Show answer ▼</button>
+      <div id="q9" class="qa-content">
+        <ul>
+          <li><strong>Memory allocation:</strong> static at compile time, dynamic at runtime; static on stack, dynamic on heap.</li>
+          <li><strong>Performance:</strong> static faster access (O(1)) due to contiguous memory; dynamic slower (O(n)) due to traversal and pointer overhead.</li>
+          <li><strong>Flexibility:</strong> static fixed size, cannot resize; dynamic can grow/shrink, more flexible.</li>
+          <li>Additional credit for overflow/fragmentation discussion.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 10</h3>
+      <p>A school initially stores 500 students but expects enrolment to vary greatly over the next five years.</p>
+      <p>Discuss whether a <strong>static</strong> or <strong>dynamic</strong> data structure should be used. <em>(8 marks)</em></p>
+      <button class="qa-toggle" data-target="q10">Show answer ▼</button>
+      <div id="q10" class="qa-content">
+        <ul>
+          <li><strong>Analysis:</strong> known initial size but high variability.</li>
+          <li><strong>Static:</strong> simple, fast, but may overflow or waste memory if numbers change.</li>
+          <li><strong>Dynamic:</strong> flexible, handles growth, avoids overflow, but slower access and pointer overhead.</li>
+          <li><strong>Recommendation:</strong> dynamic is likely better for varying enrolment, but could use a hybrid (resizable array).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 11</h3>
+      <p>A stack is implemented using a list in Python.</p>
+      <p><strong>(a)</strong> State the principle that a stack operates on. <em>(1 mark)</em><br>
+         <strong>(b)</strong> Explain what happens when a <code>pop</code> operation is performed on an empty stack. <em>(2 marks)</em><br>
+         <strong>(c)</strong> Describe the difference between <code>pop</code> and <code>peek</code>. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q11">Show answer ▼</button>
+      <div id="q11" class="qa-content">
+        <p><strong>(a)</strong> LIFO (Last In, First Out).</p>
+        <p><strong>(b)</strong> An underflow error occurs. The stack cannot remove an item because there are no items to remove.</p>
+        <p><strong>(c)</strong> <code>pop</code> removes and returns the top item from the stack, while <code>peek</code> returns the top item without removing it.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 12</h3>
+      <p>A queue is implemented using a list in Python.</p>
+      <p><strong>(a)</strong> State the principle that a queue operates on. <em>(1 mark)</em><br>
+         <strong>(b)</strong> Explain what happens when a <code>dequeue</code> operation is performed on an empty queue. <em>(2 marks)</em><br>
+         <strong>(c)</strong> Describe the difference between <code>enqueue</code> and <code>dequeue</code>. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q12">Show answer ▼</button>
+      <div id="q12" class="qa-content">
+        <p><strong>(a)</strong> FIFO (First In, First Out).</p>
+        <p><strong>(b)</strong> An underflow error occurs. The queue cannot remove an item because there are no items to remove.</p>
+        <p><strong>(c)</strong> <code>enqueue</code> adds an item to the rear of the queue, while <code>dequeue</code> removes and returns the front item.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 13</h3>
+      <p>Explain why a <strong>queue</strong> is suitable for managing print jobs in a network. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q13">Show answer ▼</button>
+      <div id="q13" class="qa-content">
+        <p>A queue operates on the FIFO principle, so print jobs are processed in the order they were submitted. The first job sent is the first to be printed, which is fair and predictable. New jobs join at the rear without disrupting the order of existing jobs.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 14</h3>
+      <p>Explain why a <strong>stack</strong> is suitable for implementing an "undo" feature in a text editor. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q14">Show answer ▼</button>
+      <div id="q14" class="qa-content">
+        <p>A stack operates on the LIFO principle, so the most recent action is the first one to be undone. Each action is pushed onto the stack, and the "Undo" command pops the last action, reverting the state. This matches the natural expectation that the most recent change should be reversed first.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 15</h3>
+      <p>A 2D list is declared as follows:</p>
+      <pre><code>grid = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]</code></pre>
+      <p><strong>(a)</strong> State the value of <code>grid[1][2]</code>. <em>(1 mark)</em><br>
+         <strong>(b)</strong> Write a Python statement to change the value at row 2, column 0 to 10. <em>(1 mark)</em><br>
+         <strong>(c)</strong> Write a nested loop to print all elements in the grid. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q15">Show answer ▼</button>
+      <div id="q15" class="qa-content">
+        <p><strong>(a)</strong> <code>6</code></p>
+        <p><strong>(b)</strong> <code>grid[2][0] = 10</code></p>
+        <p><strong>(c)</strong></p>
+        <pre><code>for row in grid:
+    for cell in row:
+        print(cell)</code></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 16</h3>
+      <p>Describe the difference between a <strong>static stack</strong> and a <strong>dynamic stack</strong>. <em>(4 marks)</em></p>
+      <button class="qa-toggle" data-target="q16">Show answer ▼</button>
+      <div id="q16" class="qa-content">
+        <p>A static stack is implemented using an array with a fixed size determined at compile time. It is allocated on the stack, has fast access, but can overflow if too many items are pushed. A dynamic stack is implemented using a linked list that can grow and shrink at runtime. It is allocated on the heap, has slower access due to traversal, but never overflows (within heap limits).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 17</h3>
+      <p>A <strong>circular queue</strong> is used to manage a keyboard buffer.</p>
+      <p>Explain one advantage of using a circular queue over a simple linear queue. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q17">Show answer ▼</button>
+      <div id="q17" class="qa-content">
+        <p>A circular queue reuses empty spaces at the front of the array that have been freed by dequeued elements. This means the queue can wrap around when the rear pointer reaches the end of the array, making more efficient use of memory. A simple linear queue would waste space as elements are dequeued, eventually running out of space even if there are free slots at the front.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 18</h3>
+      <p>Trace the following stack operations and state the final contents of the stack. <em>(4 marks)</em></p>
+      <pre><code>stack = []
+push(stack, "A")
+push(stack, "B")
+pop(stack)
+push(stack, "C")
+push(stack, "D")
+pop(stack)</code></pre>
+      <button class="qa-toggle" data-target="q18">Show answer ▼</button>
+      <div id="q18" class="qa-content">
+        <table>
+          <thead><tr><th>Operation</th><th>Stack Contents (bottom to top)</th></tr></thead>
+          <tbody>
+            <tr><td>Initial</td><td>[]</td></tr>
+            <tr><td>push A</td><td>["A"]</td></tr>
+            <tr><td>push B</td><td>["A", "B"]</td></tr>
+            <tr><td>pop</td><td>["A"]</td></tr>
+            <tr><td>push C</td><td>["A", "C"]</td></tr>
+            <tr><td>push D</td><td>["A", "C", "D"]</td></tr>
+            <tr><td>pop</td><td>["A", "C"]</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Final contents:</strong> <code>["A", "C"]</code> (with "C" on top).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 19</h3>
+      <p>Trace the following queue operations and state the final contents of the queue. <em>(4 marks)</em></p>
+      <pre><code>queue = []
+enqueue(queue, "X")
+enqueue(queue, "Y")
+dequeue(queue)
+enqueue(queue, "Z")
+enqueue(queue, "W")
+dequeue(queue)</code></pre>
+      <button class="qa-toggle" data-target="q19">Show answer ▼</button>
+      <div id="q19" class="qa-content">
+        <table>
+          <thead><tr><th>Operation</th><th>Queue Contents (front to rear)</th></tr></thead>
+          <tbody>
+            <tr><td>Initial</td><td>[]</td></tr>
+            <tr><td>enqueue X</td><td>["X"]</td></tr>
+            <tr><td>enqueue Y</td><td>["X", "Y"]</td></tr>
+            <tr><td>dequeue</td><td>["Y"]</td></tr>
+            <tr><td>enqueue Z</td><td>["Y", "Z"]</td></tr>
+            <tr><td>enqueue W</td><td>["Y", "Z", "W"]</td></tr>
+            <tr><td>dequeue</td><td>["Z", "W"]</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Final contents:</strong> <code>["Z", "W"]</code> (with "Z" at the front).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 20</h3>
+      <p>A programmer needs to store a list of student names that will be frequently added to and removed from.</p>
+      <p><strong>(a)</strong> State whether a static or dynamic data structure would be more suitable. <em>(1 mark)</em><br>
+         <strong>(b)</strong> Justify your answer. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q20">Show answer ▼</button>
+      <div id="q20" class="qa-content">
+        <p><strong>(a)</strong> Dynamic.</p>
+        <p><strong>(b)</strong> A dynamic data structure can grow and shrink as names are added and removed, so there is no fixed limit. This avoids overflow if more students are added than expected, and avoids wasted memory if fewer students are added. Static would require a fixed maximum, which could be too small or too large.</p>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      ⚡ B2.2 Data Structures — Revision Guide · IB Computer Science · First Assessment 2027
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const toggles = document.querySelectorAll('.qa-toggle');
+      toggles.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('data-target');
+          const content = document.getElementById(targetId);
+          if (!content) return;
+
+          const isVisible = content.classList.contains('show');
+          if (isVisible) {
+            content.classList.remove('show');
+            this.textContent = 'Show answer ▼';
+          } else {
+            content.classList.add('show');
+            this.textContent = 'Hide answer ▲';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
