@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2.3.1 – Sequence Lab Session</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+    }
+
+    .tip-box {
+      background: #fff8e7;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .tip-box strong { color: #8a6d1f; }
+
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
+    .info-box {
+      background: #e8f4fd;
+      border-left: 5px solid #2a6f97;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .info-box strong { color: #1a5f87; }
+
+    .success-box {
+      background: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .success-box strong { color: #2e7d32; }
+
+    /* Learning Objectives */
+    .objectives-box {
+      background: linear-gradient(135deg, #0b2a4a 0%, #1f4b6e 100%);
+      border-radius: 1.2rem;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem;
+      color: white;
+      box-shadow: 0 8px 20px rgba(11, 42, 74, 0.15);
+    }
+    .objectives-box h3 {
+      color: #fdbb2d;
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .objectives-box ul {
+      padding-left: 1.5rem;
+      margin-top: 0.8rem;
+    }
+    .objectives-box li {
+      margin-bottom: 0.5rem;
+      color: #e6edf5;
+      font-size: 0.95rem;
+    }
+    .objectives-box li::marker { color: #fdbb2d; }
+
+    /* IDE Embed */
+    .ide-frame {
+      width: 100%;
+      height: 700px;
+      border: 2px solid #d0ddeb;
+      border-radius: 1rem;
+      margin: 1rem 0;
+      background: #1e293b;
+      overflow: hidden;
+    }
+    .ide-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Task cards */
+    .task-card {
+      background: #fff;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+      border-left: 6px solid #2a6f97;
+    }
+    .task-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 0;
+    }
+    .task-num {
+      background: #2a6f97;
+      color: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Code block */
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0.8rem 0;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+    code {
+      background: #eef2f7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #b21f1f;
+    }
+
+    /* Buttons */
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-ide { background: #1a5f87; color: white; }
+    .btn-ide:hover { background: #134f75; }
+
+    .btn-python { background: #db2777; color: white; }
+    .btn-python:hover { background: #be185d; }
+
+    .btn-theory { background: #d97706; color: white; }
+    .btn-theory:hover { background: #b45309; }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+      margin: 1rem 0;
+    }
+    .checklist li {
+      padding: 0.5rem 0 0.5rem 2rem;
+      position: relative;
+      border-bottom: 1px solid #eef2f7;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before {
+      content: "\f0c8";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 400;
+      position: absolute;
+      left: 0;
+      color: #2a6f97;
+      font-size: 1.1rem;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #0b2a4a;
+      color: #fff;
+      font-weight: 600;
+    }
+    tr:nth-child(even) td { background: #f7fafc; }
+
+    /* Drag and drop (mini) */
+    .seq-activity {
+      background: #fff;
+      border: 2px dashed #b6cfe5;
+      border-radius: 1rem;
+      padding: 1.2rem;
+      margin: 1rem 0;
+    }
+    .seq-pool {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .seq-item {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.85rem;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: 2px solid transparent;
+      transition: 0.15s;
+      user-select: none;
+    }
+    .seq-item.correct { border-color: #4caf50; background: #1b4332; }
+    .seq-item.incorrect { border-color: #c62828; background: #4a1e1e; }
+    .seq-item .handle { color: #7bb3ff; font-size: 0.9rem; }
+    .seq-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+    .seq-btn {
+      background: #1a5f87;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.3rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.15s;
+    }
+    .seq-btn:hover { background: #134f75; }
+    .seq-btn.reset { background: #6b7f8f; }
+    .seq-btn.reset:hover { background: #556673; }
+    .seq-feedback {
+      margin-top: 0.8rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+    }
+    .seq-feedback.good { color: #2e7d32; }
+    .seq-feedback.bad { color: #c62828; }
+
+    /* Footer */
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; flex-wrap: wrap; }
+      .button-grid { flex-direction: column; }
+      .ide-frame { height: 500px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+
+    <a href="b2-3-1-theory.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to B2.3.1 Theory
+    </a>
+
+    <h1>💻 B2.3.1 – Sequence Lab Session</h1>
+
+    <!-- ============================================================ -->
+    <!-- LEARNING OBJECTIVES -->
+    <!-- ============================================================ -->
+    <div class="objectives-box">
+      <h3><i class="fas fa-bullseye"></i> Lab Objectives</h3>
+      <ul>
+        <li>Practise writing Python code with the <strong>correct sequence of instructions</strong>.</li>
+        <li>Use the <strong>Python Code Lab</strong> IDE to write, run, and step-trace your programs.</li>
+        <li>Debug common sequencing errors such as <strong>using variables before assigning</strong> them and <strong>infinite loops</strong>.</li>
+        <li>Apply <strong>trace tables</strong> to verify the order of execution.</li>
+        <li>Complete the challenge tasks and save your work as a <code>.txt</code> file.</li>
+      </ul>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- STARTER -->
+    <!-- ============================================================ -->
+    <h2>🎯 Starter Activity</h2>
+
+    <div class="card">
+      <h3>🧪 JuiceMind Quiz</h3>
+      <p>Test your understanding of sequence and instruction order with this JuiceMind quiz.</p>
+      <div class="button-grid">
+        <a href="#" target="_blank" rel="noopener" class="btn btn-ide">
+          <i class="fas fa-flask"></i> Take the Quiz
+        </a>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MAIN ACTIVITY -->
+    <!-- ============================================================ -->
+    <h2>💻 Main Activity</h2>
+
+    <div class="card">
+      <h3>📝 Complete Your Theory Assessment</h3>
+      <div class="info-box">
+        <strong>📌 Reminder:</strong> If you haven't finished the assessment from the Theory lesson, complete it now:
+      </div>
+      <div class="button-grid">
+        <a href="b2-3-1-theory.html" class="btn btn-theory">
+          <i class="fas fa-book-open"></i> B2.3.1 Theory Page
+        </a>
+      </div>
+      <p style="margin-top: 1rem;">If you have already completed the assessment, move on to the practical coding activity below.</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PYTHON CODE LAB -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>🐍 Python Code Lab — Your IDE</h3>
+      <div class="info-box">
+        <strong>💡 How to use it:</strong> Write your code in the editor, click <strong>Run</strong> to execute it, or use <strong>Step</strong> to trace through the program line by line. The trace table on the right shows you exactly what happens at each step — perfect for spotting sequencing errors.
+      </div>
+      <div class="ide-frame">
+        <iframe src="https://jamesabela.github.io/jsfun/pythoncopy?blank" title="Python Code Lab IDE" allow="clipboard-write"></iframe>
+      </div>
+      <div class="tip-box">
+        <strong>📌 Tip:</strong> If the IDE doesn't load properly, open it directly: 
+        <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener">Python Code Lab →</a>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CODING CHALLENGES -->
+    <!-- ============================================================ -->
+    <h2>🧪 Coding Challenges</h2>
+
+    <p>Work through these challenges in order. Each one focuses on a different aspect of sequencing. Write your code in the Python Code Lab above.</p>
+
+    <!-- Challenge 1 -->
+    <div class="task-card">
+      <h3><span class="task-num">1</span> Fix the Broken Sequence</h3>
+      <p>The following code is supposed to ask for two numbers and print their sum, but the instructions are in the wrong order. Copy it into the IDE, fix the order, and run it.</p>
+      <pre><code>print("Sum:", total)
+a = int(input("Enter first number: "))
+total = a + b
+b = int(input("Enter second number: "))</code></pre>
+      <div class="info-box">
+        <strong>What to do:</strong> Rearrange the lines so the program works correctly. Use the IDE's <strong>Step</strong> button to trace execution.
+      </div>
+      <div class="success-box">
+        <strong>✅ Success criteria:</strong> The program asks for two numbers, adds them, and prints the correct sum.
+      </div>
+    </div>
+
+    <!-- Challenge 2 -->
+    <div class="task-card">
+      <h3><span class="task-num">2</span> Fix the Infinite Loop</h3>
+      <p>The following code is meant to count from 1 to 5, but it runs forever. Find the bug and fix it.</p>
+      <pre><code>i = 1
+while i <= 5:
+    print(i)</code></pre>
+      <div class="info-box">
+        <strong>What to do:</strong> Add the missing line so the loop terminates after printing 5.
+      </div>
+      <div class="success-box">
+        <strong>✅ Success criteria:</strong> The program prints 1, 2, 3, 4, 5 and then stops.
+      </div>
+    </div>
+
+    <!-- Challenge 3 -->
+    <div class="task-card">
+      <h3><span class="task-num">3</span> Write a Greeting Program</h3>
+      <p>Write a Python program that:</p>
+      <ol>
+        <li>Asks the user for their name.</li>
+        <li>Asks the user for their favourite colour.</li>
+        <li>Prints a personalised greeting that includes both.</li>
+      </ol>
+      <div class="info-box">
+        <strong>Example output:</strong>
+        <pre><code>What is your name? Alex
+What is your favourite colour? Blue
+Hello Alex! Blue is a great colour.</code></pre>
+      </div>
+      <div class="success-box">
+        <strong>✅ Success criteria:</strong> Input is collected <em>before</em> it is used, and the greeting appears <em>after</em> both inputs.
+      </div>
+    </div>
+
+    <!-- Challenge 4 -->
+    <div class="task-card">
+      <h3><span class="task-num">4</span> Trace the Output</h3>
+      <p>Without running the code, work out what it prints. Then check your answer in the IDE using the <strong>Step</strong> button.</p>
+      <pre><code>x = 3
+y = 4
+x = x + y
+y = x - y
+x = x - y
+print("x =", x)
+print("y =", y)</code></pre>
+      <div class="info-box">
+        <strong>Your task:</strong> Fill in the trace table below on paper, then run the code to verify.
+      </div>
+      <table>
+        <thead>
+          <tr><th>Line</th><th><code>x</code></th><th><code>y</code></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Start</td><td>3</td><td>4</td></tr>
+          <tr><td><code>x = x + y</code></td><td></td><td></td></tr>
+          <tr><td><code>y = x - y</code></td><td></td><td></td></tr>
+          <tr><td><code>x = x - y</code></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="success-box">
+        <strong>✅ Success criteria:</strong> Your predicted output matches the actual output when you run it.
+      </div>
+    </div>
+
+    <!-- Challenge 5 -->
+    <div class="task-card">
+      <h3><span class="task-num">5</span> Build a Homework Reminder</h3>
+      <p>Write a Python program that:</p>
+      <ol>
+        <li>Creates an empty list called <code>homework_list</code>.</li>
+        <li>Asks the user how many homework assignments they have.</li>
+        <li>Uses a loop to collect each assignment's name.</li>
+        <li>Prints a reminder header, then lists each assignment on its own line.</li>
+        <li>Ends with a motivational message.</li>
+      </ol>
+      <div class="info-box">
+        <strong>Example output:</strong>
+        <pre><code>How many homework assignments do you have? 3
+Enter homework #1: Maths
+Enter homework #2: Physics
+Enter homework #3: English
+
+Here are your homework assignments for today:
+- Maths
+- Physics
+- English
+
+Good luck! Remember to finish your homework on time!</code></pre>
+      </div>
+      <div class="success-box">
+        <strong>✅ Success criteria:</strong>
+        <ul>
+          <li>The list is created <em>before</em> any items are added.</li>
+          <li>The reminder header prints <em>after</em> all inputs are collected.</li>
+          <li>The motivational message prints <em>after</em> the list.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- INTERACTIVE: SEQUENCING PUZZLE -->
+    <!-- ============================================================ -->
+    <h2>🧩 Interactive: Sequence Reorder Puzzle</h2>
+
+    <div class="card">
+      <p>Before you code Challenge 5, try reordering these blocks into the correct sequence. Drag them into the right order.</p>
+
+      <div class="seq-activity" id="seqActivity">
+        <div class="seq-pool" id="seqPool">
+          <div class="seq-item" draggable="true" data-order="4">
+            <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+            <code>for hw in homework_list: print("-", hw)</code>
+          </div>
+          <div class="seq-item" draggable="true" data-order="1">
+            <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+            <code>homework_list = []</code>
+          </div>
+          <div class="seq-item" draggable="true" data-order="5">
+            <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+            <code>print("Good luck!")</code>
+          </div>
+          <div class="seq-item" draggable="true" data-order="2">
+            <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+            <code>num = int(input("How many? "))</code>
+          </div>
+          <div class="seq-item" draggable="true" data-order="3">
+            <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+            <code>for i in range(num): homework_list.append(input(...))</code>
+          </div>
+        </div>
+        <div class="seq-actions">
+          <button class="seq-btn" id="seqCheck"><i class="fas fa-check"></i> Check Order</button>
+          <button class="seq-btn reset" id="seqReset"><i class="fas fa-undo"></i> Reset</button>
+        </div>
+        <div class="seq-feedback" id="seqFeedback"></div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHECKLIST -->
+    <!-- ============================================================ -->
+    <h2>✅ Checklist Before Submitting</h2>
+
+    <div class="card">
+      <ul class="checklist">
+        <li>I completed all 5 coding challenges in the Python Code Lab.</li>
+        <li>I used the <strong>Step</strong> button to trace at least one program.</li>
+        <li>I fixed the infinite loop in Challenge 2 and verified it terminates.</li>
+        <li>I verified that my Challenge 5 program uses the correct sequence.</li>
+        <li>I saved my code as a <code>.txt</code> file.</li>
+        <li>I submitted my work to Schoolbox.</li>
+      </ul>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SUBMISSION -->
+    <!-- ============================================================ -->
+    <h2>📤 Submission</h2>
+
+    <div class="card">
+      <div class="warn-box">
+        <strong>📌 Important:</strong> Save your code as a <strong>.txt</strong> file. You will submit all starter activity answers and challenge code to <strong>Schoolbox</strong> at the end of this lab session.
+      </div>
+      <h4>How to save your work:</h4>
+      <ol>
+        <li>In the Python Code Lab, click <strong>Copy</strong> to copy your code.</li>
+        <li>Open a text editor (Notepad, TextEdit, etc.).</li>
+        <li>Paste your code and save the file as <code>b2-3-1-lab-yourname.txt</code>.</li>
+        <li>Upload the file to Schoolbox.</li>
+      </ol>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- KEY TAKEAWAY -->
+    <!-- ============================================================ -->
+    <div class="card" style="background: #0b2a4a; color: #e6edf5; border: none;">
+      <h3 style="color: #fdbb2d; margin-top: 0;">💡 Key Takeaway</h3>
+      <p style="color: #e6edf5; margin-bottom: 0;">
+        "Practice is the key to mastering programming. The more you code, the more natural it becomes. Remember: <strong>sequence matters</strong> — every instruction has its place."
+      </p>
+    </div>
+
+    <div class="footer-note">
+      ⚡ B2.3.1 – Sequence Lab Session · IB Computer Science · First Assessment 2027
+    </div>
+
+  </div>
+
+  <script>
+    // ============================================================
+    // DRAG AND DROP SEQUENCING (mini puzzle)
+    // ============================================================
+    (function() {
+      const pool = document.getElementById('seqPool');
+      if (!pool) return;
+      let dragged = null;
+
+      pool.querySelectorAll('.seq-item').forEach(item => {
+        item.addEventListener('dragstart', function(e) {
+          dragged = this;
+          this.classList.add('dragging');
+        });
+        item.addEventListener('dragend', function() {
+          this.classList.remove('dragging');
+          document.querySelectorAll('.seq-item').forEach(i => i.classList.remove('drag-over'));
+        });
+        item.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          if (this !== dragged) this.classList.add('drag-over');
+        });
+        item.addEventListener('dragleave', function() {
+          this.classList.remove('drag-over');
+        });
+        item.addEventListener('drop', function(e) {
+          e.preventDefault();
+          this.classList.remove('drag-over');
+          if (dragged && this !== dragged) {
+            const items = Array.from(pool.children);
+            const fromIdx = items.indexOf(dragged);
+            const toIdx = items.indexOf(this);
+            if (fromIdx < toIdx) {
+              pool.insertBefore(dragged, this.nextSibling);
+            } else {
+              pool.insertBefore(dragged, this);
+            }
+          }
+        });
+      });
+
+      document.getElementById('seqCheck').addEventListener('click', function() {
+        const items = Array.from(pool.children);
+        let allCorrect = true;
+        items.forEach((item, idx) => {
+          const expected = idx + 1;
+          const actual = parseInt(item.getAttribute('data-order'));
+          item.classList.remove('correct', 'incorrect');
+          if (actual === expected) {
+            item.classList.add('correct');
+          } else {
+            item.classList.add('incorrect');
+            allCorrect = false;
+          }
+        });
+        const fb = document.getElementById('seqFeedback');
+        if (allCorrect) {
+          fb.textContent = '✅ Perfect! The code is in the correct sequence.';
+          fb.className = 'seq-feedback good';
+        } else {
+          fb.textContent = '❌ Not quite. Green = correct position, red = wrong position. Try again!';
+          fb.className = 'seq-feedback bad';
+        }
+      });
+
+      document.getElementById('seqReset').addEventListener('click', function() {
+        const items = Array.from(pool.children);
+        const shuffled = items.sort(() => Math.random() - 0.5);
+        pool.innerHTML = '';
+        shuffled.forEach(i => {
+          i.classList.remove('correct', 'incorrect');
+          pool.appendChild(i);
+        });
+        document.getElementById('seqFeedback').textContent = '';
+      });
+    })();
+  </script>
+</body>
+</html>
