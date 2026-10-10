@@ -325,8 +325,56 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      transition: 0.15s;
     }
     .trace-check-btn:hover { background: #1f6b1f; }
+    .trace-check-btn.reveal { background: #6b7f8f; }
+    .trace-check-btn.reveal:hover { background: #556673; }
+
+    /* Keyword matching game */
+    .match-game {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .match-col { display: flex; flex-direction: column; gap: 0.5rem; }
+    .match-item {
+      background: #f0f4fb;
+      border: 2px solid #d0ddeb;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .match-item:hover { border-color: #1a5f87; background: #e3eef8; }
+    .match-item.selected { border-color: #1a5f87; background: #d4e3fc; box-shadow: 0 0 0 3px rgba(26,95,135,0.15); }
+    .match-item.matched {
+      border-color: #4caf50;
+      background: #e8f5e9;
+      cursor: default;
+      opacity: 0.75;
+    }
+    .match-item.matched:hover { border-color: #4caf50; background: #e8f5e9; }
+    .match-item.incorrect {
+      border-color: #c62828 !important;
+      background: #fdeaea !important;
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .match-feedback {
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+    }
+    .match-feedback.good { color: #2e7d32; }
+    .match-feedback.bad { color: #c62828; }
 
     code {
       background: #eef2f7;
@@ -447,6 +495,7 @@
       .guide-container { padding: 1.5rem; }
       h1 { font-size: 1.5rem; flex-wrap: wrap; }
       .button-grid { flex-direction: column; }
+      .match-game { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -541,6 +590,17 @@ System.out.println(x);</code></pre>
       </button>
       <div id="reveal2" class="reveal-content">
         <strong>💡 Think about it:</strong> In Java, a variable must be <em>declared</em> and <em>initialized</em> before it can be used. If you try to print <code>x</code> before assigning it a value, the compiler refuses to run your program. This is a <strong>compile-time error</strong> — the earliest kind of sequencing mistake to catch.
+      </div>
+
+      <div class="info-box" style="margin-top: 1rem;">
+        <strong>🔍 Java vs Python — is this the same?</strong>
+        <p><strong>No.</strong> In Java, using an uninitialised variable is a <em>compile-time error</em> — the program refuses to run. In Python, variables don't need to be declared, so you can't "use before declaring" in the same way. But you <em>can</em> get a similar error:</p>
+        <ul>
+          <li><strong>Java:</strong> <code>int x; System.out.println(x);</code> → compile error</li>
+          <li><strong>Python:</strong> <code>print(x)</code> → <code>NameError: name 'x' is not defined</code> (runtime error)</li>
+          <li><strong>Python (different case):</strong> <code>y = y + 1</code> when <code>y</code> was never set → <code>NameError</code></li>
+        </ul>
+        <p>So the <em>concept</em> is the same (you can't use a variable before it exists), but the <em>type</em> of error differs: Java catches it at compile time, Python at runtime.</p>
       </div>
 
       <h4>Example 3: Control Flow and Logic</h4>
@@ -743,6 +803,10 @@ print("Area:", area)</code></pre>
       <h3>📊 Interactive: Complete the Trace Table</h3>
       <p>Trace the code below and fill in the values of <code>i</code> and <code>total</code> at each step. Click <strong>Check</strong> when you're done.</p>
 
+      <div class="tip-box">
+        <strong>💡 Hint:</strong> <code>i</code> is the loop counter (it changes each iteration: 1, 2, 3). <code>total</code> is the running sum (it accumulates). Don't mix them up!
+      </div>
+
       <pre><code>total = 0
 for i in range(1, 4):
     total = total + i * 2
@@ -750,31 +814,32 @@ print(total)</code></pre>
 
       <table class="trace-table">
         <thead>
-          <tr><th>Iteration</th><th><code>i</code></th><th>Calculation</th><th><code>total</code></th></tr>
+          <tr><th>Iteration</th><th><code>i</code> (loop counter)</th><th>Calculation</th><th><code>total</code> (running sum)</th></tr>
         </thead>
         <tbody>
           <tr>
             <td>1</td>
-            <td><input type="text" data-answer="1" placeholder="?"></td>
+            <td><input type="text" data-answer="1" placeholder="i = ?"></td>
             <td>0 + 1*2</td>
-            <td><input type="text" data-answer="2" placeholder="?"></td>
+            <td><input type="text" data-answer="2" placeholder="total = ?"></td>
           </tr>
           <tr>
             <td>2</td>
-            <td><input type="text" data-answer="2" placeholder="?"></td>
+            <td><input type="text" data-answer="2" placeholder="i = ?"></td>
             <td>2 + 2*2</td>
-            <td><input type="text" data-answer="6" placeholder="?"></td>
+            <td><input type="text" data-answer="6" placeholder="total = ?"></td>
           </tr>
           <tr>
             <td>3</td>
-            <td><input type="text" data-answer="3" placeholder="?"></td>
+            <td><input type="text" data-answer="3" placeholder="i = ?"></td>
             <td>6 + 3*2</td>
-            <td><input type="text" data-answer="12" placeholder="?"></td>
+            <td><input type="text" data-answer="12" placeholder="total = ?"></td>
           </tr>
         </tbody>
       </table>
 
       <button class="trace-check-btn" id="traceCheck"><i class="fas fa-check"></i> Check Answers</button>
+      <button class="trace-check-btn reveal" id="traceReveal"><i class="fas fa-eye"></i> Reveal All</button>
       <div class="quiz-fb" id="traceFeedback"></div>
     </div>
 
@@ -880,6 +945,33 @@ print(sum)</code></pre>
     </div>
 
     <!-- ============================================================ -->
+    <!-- INTERACTIVE: KEYWORD MATCHING -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>🔗 Interactive: Match the Keyword to its Definition</h3>
+      <p>Click a keyword on the left, then click its matching definition on the right. Correct pairs turn green.</p>
+      <div class="match-game" id="matchGame">
+        <div class="match-col" id="matchLeft">
+          <div class="match-item" data-key="sequence">Sequence</div>
+          <div class="match-item" data-key="infinite">Infinite loop</div>
+          <div class="match-item" data-key="deadlock">Deadlock</div>
+          <div class="match-item" data-key="trace">Trace table</div>
+          <div class="match-item" data-key="stepwise">Stepwise refinement</div>
+          <div class="match-item" data-key="control">Control flow</div>
+        </div>
+        <div class="match-col" id="matchRight">
+          <div class="match-item" data-key="control">The order in which statements, instructions, or function calls are executed.</div>
+          <div class="match-item" data-key="sequence">The order in which instructions are executed in a program.</div>
+          <div class="match-item" data-key="deadlock">Two or more processes waiting indefinitely for each other to release resources.</div>
+          <div class="match-item" data-key="trace">A manual tool for simulating code execution step by step.</div>
+          <div class="match-item" data-key="infinite">A loop whose termination condition is never met.</div>
+          <div class="match-item" data-key="stepwise">Breaking a problem into smaller, manageable tasks and ordering them logically.</div>
+        </div>
+      </div>
+      <div class="match-feedback" id="matchFeedback"></div>
+    </div>
+
+    <!-- ============================================================ -->
     <!-- SECTION 6 -->
     <!-- ============================================================ -->
     <div class="card">
@@ -975,7 +1067,7 @@ print(sum)</code></pre>
         <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.3.1-construct-programs-that-implement-the-correct-sequence-of-code-instructions-to-meet-program-objectives" target="_blank" rel="noopener" class="btn btn-wiki">
           <i class="fas fa-book"></i> Computer Science Wiki
         </a>
-        <a href="https://raw.githubusercontent.com/Mr-Ellis/School/main/docs/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.3.1.pdf" target="_blank" rel="noopener" class="btn btn-ebook">
+        <a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20B%202.3.1.pdf" target="_blank" rel="noopener" class="btn btn-ebook">
           <i class="fas fa-file-pdf"></i> eBook PDF
         </a>
         <a href="https://docs.google.com/presentation/d/e/2PACX-1vQDDG5fCMExumYAzgAbz-TP3dWIkzXZuo3pP3EPRfyD95PtR4WBTe7zADyy9L3NLUrGUBhEkIy51Kmp/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener" class="btn btn-presentation">
@@ -1052,7 +1144,7 @@ print(sum)</code></pre>
         const isOpen = target.classList.contains('show');
         if (isOpen) {
           target.classList.remove('show');
-          this.innerHTML = '<i class="fas fa-lightbulb"></i> ' + this.textContent.replace('Hide', 'Why does this matter?');
+          this.innerHTML = '<i class="fas fa-lightbulb"></i> Why does this matter?';
         } else {
           target.classList.add('show');
           this.innerHTML = '<i class="fas fa-eye-slash"></i> Hide explanation';
@@ -1114,6 +1206,17 @@ print(sum)</code></pre>
         fb.textContent = '❌ Some answers are incorrect. Try again!';
         fb.className = 'quiz-fb bad';
       }
+    });
+
+    document.getElementById('traceReveal').addEventListener('click', function() {
+      document.querySelectorAll('.trace-table input').forEach(inp => {
+        inp.value = inp.getAttribute('data-answer');
+        inp.classList.remove('incorrect');
+        inp.classList.add('correct');
+      });
+      const fb = document.getElementById('traceFeedback');
+      fb.textContent = '👀 All answers revealed.';
+      fb.className = 'quiz-fb';
     });
 
     // ============================================================
@@ -1180,7 +1283,6 @@ print(sum)</code></pre>
       });
 
       document.getElementById('seqReset').addEventListener('click', function() {
-        // Shuffle back to a random-ish order
         const items = Array.from(pool.children);
         const shuffled = items.sort(() => Math.random() - 0.5);
         pool.innerHTML = '';
@@ -1189,6 +1291,60 @@ print(sum)</code></pre>
           pool.appendChild(i);
         });
         document.getElementById('seqFeedback').textContent = '';
+      });
+    })();
+
+    // ============================================================
+    // KEYWORD-DEFINITION MATCHING GAME
+    // ============================================================
+    (function() {
+      const game = document.getElementById('matchGame');
+      if (!game) return;
+      let selectedLeft = null;
+      let pairsMatched = 0;
+      const totalPairs = 6;
+
+      const leftItems = game.querySelectorAll('#matchLeft .match-item');
+      const rightItems = game.querySelectorAll('#matchRight .match-item');
+
+      leftItems.forEach(item => {
+        item.addEventListener('click', function() {
+          if (this.classList.contains('matched')) return;
+          leftItems.forEach(i => i.classList.remove('selected'));
+          this.classList.add('selected');
+          selectedLeft = this;
+        });
+      });
+
+      rightItems.forEach(item => {
+        item.addEventListener('click', function() {
+          if (this.classList.contains('matched')) return;
+          if (!selectedLeft) {
+            document.getElementById('matchFeedback').textContent = '👈 Click a keyword on the left first.';
+            document.getElementById('matchFeedback').className = 'match-feedback';
+            return;
+          }
+          if (this.getAttribute('data-key') === selectedLeft.getAttribute('data-key')) {
+            this.classList.add('matched');
+            selectedLeft.classList.add('matched');
+            selectedLeft.classList.remove('selected');
+            selectedLeft = null;
+            pairsMatched++;
+            const fb = document.getElementById('matchFeedback');
+            if (pairsMatched === totalPairs) {
+              fb.textContent = '🎉 All matched! Well done.';
+              fb.className = 'match-feedback good';
+            } else {
+              fb.textContent = `✅ Correct! ${pairsMatched} / ${totalPairs} matched.`;
+              fb.className = 'match-feedback good';
+            }
+          } else {
+            this.classList.add('incorrect');
+            setTimeout(() => this.classList.remove('incorrect'), 600);
+            document.getElementById('matchFeedback').textContent = '❌ Not quite — try again.';
+            document.getElementById('matchFeedback').className = 'match-feedback bad';
+          }
+        });
       });
     })();
   </script>
