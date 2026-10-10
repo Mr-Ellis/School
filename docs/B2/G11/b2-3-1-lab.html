@@ -254,28 +254,6 @@
     .btn-theory { background: #d97706; color: white; }
     .btn-theory:hover { background: #b45309; }
 
-    /* Checklist */
-    .checklist {
-      list-style: none;
-      padding-left: 0;
-      margin: 1rem 0;
-    }
-    .checklist li {
-      padding: 0.5rem 0 0.5rem 2rem;
-      position: relative;
-      border-bottom: 1px solid #eef2f7;
-    }
-    .checklist li:last-child { border-bottom: none; }
-    .checklist li::before {
-      content: "\f0c8";
-      font-family: "Font Awesome 6 Free";
-      font-weight: 400;
-      position: absolute;
-      left: 0;
-      color: #2a6f97;
-      font-size: 1.1rem;
-    }
-
     /* Tables */
     table {
       width: 100%;
@@ -295,6 +273,65 @@
       font-weight: 600;
     }
     tr:nth-child(even) td { background: #f7fafc; }
+
+    /* Interactive trace table */
+    .trace-table input {
+      width: 90px;
+      padding: 0.4rem 0.6rem;
+      border: 2px solid #d0ddeb;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: 0.15s;
+    }
+    .trace-table input:focus {
+      outline: none;
+      border-color: #1a5f87;
+      box-shadow: 0 0 0 3px rgba(26,95,135,0.15);
+    }
+    .trace-table input.correct {
+      border-color: #4caf50;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-weight: 600;
+    }
+    .trace-table input.incorrect {
+      border-color: #c62828;
+      background: #fdeaea;
+      color: #c62828;
+      font-weight: 600;
+    }
+    .trace-btn {
+      background: #2d8f2d;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 0.8rem;
+      margin-right: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.15s;
+    }
+    .trace-btn:hover { background: #1f6b1f; }
+    .trace-btn.reveal { background: #6b7f8f; }
+    .trace-btn.reveal:hover { background: #556673; }
+    .trace-btn.reset { background: #c62828; }
+    .trace-btn.reset:hover { background: #a02020; }
+    .trace-feedback {
+      margin-top: 0.8rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+    }
+    .trace-feedback.good { color: #2e7d32; }
+    .trace-feedback.bad { color: #c62828; }
+    .trace-feedback.hint { color: #8a6d1f; }
 
     /* Drag and drop (mini) */
     .seq-activity {
@@ -402,21 +439,6 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- STARTER -->
-    <!-- ============================================================ -->
-    <h2>🎯 Starter Activity</h2>
-
-    <div class="card">
-      <h3>🧪 JuiceMind Quiz</h3>
-      <p>Test your understanding of sequence and instruction order with this JuiceMind quiz.</p>
-      <div class="button-grid">
-        <a href="#" target="_blank" rel="noopener" class="btn btn-ide">
-          <i class="fas fa-flask"></i> Take the Quiz
-        </a>
-      </div>
-    </div>
-
-    <!-- ============================================================ -->
     <!-- MAIN ACTIVITY -->
     <!-- ============================================================ -->
     <h2>💻 Main Activity</h2>
@@ -512,7 +534,7 @@ Hello Alex! Blue is a great colour.</code></pre>
     <!-- Challenge 4 -->
     <div class="task-card">
       <h3><span class="task-num">4</span> Trace the Output</h3>
-      <p>Without running the code, work out what it prints. Then check your answer in the IDE using the <strong>Step</strong> button.</p>
+      <p>Without running the code, work out what it prints. Fill in the trace table below, then click <strong>Check</strong> to see if you're right. You can then verify in the IDE using the <strong>Step</strong> button.</p>
       <pre><code>x = 3
 y = 4
 x = x + y
@@ -520,22 +542,46 @@ y = x - y
 x = x - y
 print("x =", x)
 print("y =", y)</code></pre>
+
       <div class="info-box">
-        <strong>Your task:</strong> Fill in the trace table below on paper, then run the code to verify.
+        <strong>💡 Hint:</strong> This program is a classic trick — it swaps the values of <code>x</code> and <code>y</code> without using a temporary variable. Trace each line carefully!
       </div>
-      <table>
+
+      <table class="trace-table">
         <thead>
           <tr><th>Line</th><th><code>x</code></th><th><code>y</code></th></tr>
         </thead>
         <tbody>
-          <tr><td>Start</td><td>3</td><td>4</td></tr>
-          <tr><td><code>x = x + y</code></td><td></td><td></td></tr>
-          <tr><td><code>y = x - y</code></td><td></td><td></td></tr>
-          <tr><td><code>x = x - y</code></td><td></td><td></td></tr>
+          <tr>
+            <td>Start</td>
+            <td><input type="text" data-answer="3" placeholder="?"></td>
+            <td><input type="text" data-answer="4" placeholder="?"></td>
+          </tr>
+          <tr>
+            <td><code>x = x + y</code></td>
+            <td><input type="text" data-answer="7" placeholder="?"></td>
+            <td><input type="text" data-answer="4" placeholder="?"></td>
+          </tr>
+          <tr>
+            <td><code>y = x - y</code></td>
+            <td><input type="text" data-answer="7" placeholder="?"></td>
+            <td><input type="text" data-answer="3" placeholder="?"></td>
+          </tr>
+          <tr>
+            <td><code>x = x - y</code></td>
+            <td><input type="text" data-answer="4" placeholder="?"></td>
+            <td><input type="text" data-answer="3" placeholder="?"></td>
+          </tr>
         </tbody>
       </table>
-      <div class="success-box">
-        <strong>✅ Success criteria:</strong> Your predicted output matches the actual output when you run it.
+
+      <button class="trace-btn" id="traceCheck"><i class="fas fa-check"></i> Check Answers</button>
+      <button class="trace-btn reveal" id="traceReveal"><i class="fas fa-eye"></i> Reveal All</button>
+      <button class="trace-btn reset" id="traceReset"><i class="fas fa-undo"></i> Reset</button>
+      <div class="trace-feedback" id="traceFeedback"></div>
+
+      <div class="success-box" style="margin-top: 1rem;">
+        <strong>✅ Success criteria:</strong> Your filled-in trace table matches the actual execution when you run the code. You should notice that <code>x</code> and <code>y</code> have swapped values at the end.
       </div>
     </div>
 
@@ -614,40 +660,6 @@ Good luck! Remember to finish your homework on time!</code></pre>
     </div>
 
     <!-- ============================================================ -->
-    <!-- CHECKLIST -->
-    <!-- ============================================================ -->
-    <h2>✅ Checklist Before Submitting</h2>
-
-    <div class="card">
-      <ul class="checklist">
-        <li>I completed all 5 coding challenges in the Python Code Lab.</li>
-        <li>I used the <strong>Step</strong> button to trace at least one program.</li>
-        <li>I fixed the infinite loop in Challenge 2 and verified it terminates.</li>
-        <li>I verified that my Challenge 5 program uses the correct sequence.</li>
-        <li>I saved my code as a <code>.txt</code> file.</li>
-        <li>I submitted my work to Schoolbox.</li>
-      </ul>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- SUBMISSION -->
-    <!-- ============================================================ -->
-    <h2>📤 Submission</h2>
-
-    <div class="card">
-      <div class="warn-box">
-        <strong>📌 Important:</strong> Save your code as a <strong>.txt</strong> file. You will submit all starter activity answers and challenge code to <strong>Schoolbox</strong> at the end of this lab session.
-      </div>
-      <h4>How to save your work:</h4>
-      <ol>
-        <li>In the Python Code Lab, click <strong>Copy</strong> to copy your code.</li>
-        <li>Open a text editor (Notepad, TextEdit, etc.).</li>
-        <li>Paste your code and save the file as <code>b2-3-1-lab-yourname.txt</code>.</li>
-        <li>Upload the file to Schoolbox.</li>
-      </ol>
-    </div>
-
-    <!-- ============================================================ -->
     <!-- KEY TAKEAWAY -->
     <!-- ============================================================ -->
     <div class="card" style="background: #0b2a4a; color: #e6edf5; border: none;">
@@ -664,6 +676,73 @@ Good luck! Remember to finish your homework on time!</code></pre>
   </div>
 
   <script>
+    // ============================================================
+    // INTERACTIVE TRACE TABLE (Challenge 4)
+    // ============================================================
+    (function() {
+      const checkBtn = document.getElementById('traceCheck');
+      const revealBtn = document.getElementById('traceReveal');
+      const resetBtn = document.getElementById('traceReset');
+      const feedback = document.getElementById('traceFeedback');
+
+      if (!checkBtn) return;
+
+      checkBtn.addEventListener('click', function() {
+        const inputs = document.querySelectorAll('.trace-table input');
+        let allCorrect = true;
+        let filledCount = 0;
+        inputs.forEach(inp => {
+          const ans = inp.getAttribute('data-answer');
+          const val = inp.value.trim();
+          inp.classList.remove('correct', 'incorrect');
+          if (val === '') {
+            allCorrect = false;
+            return;
+          }
+          filledCount++;
+          if (val === ans) {
+            inp.classList.add('correct');
+          } else {
+            inp.classList.add('incorrect');
+            allCorrect = false;
+          }
+        });
+
+        if (filledCount === 0) {
+          feedback.textContent = '✏️ Fill in some answers first, then click Check.';
+          feedback.className = 'trace-feedback hint';
+          return;
+        }
+
+        if (allCorrect) {
+          feedback.textContent = '🎉 All correct! x and y have been swapped. Final output: x = 4, y = 3';
+          feedback.className = 'trace-feedback good';
+        } else {
+          feedback.textContent = '❌ Some answers are incorrect (marked in red). Try again or click Reveal All.';
+          feedback.className = 'trace-feedback bad';
+        }
+      });
+
+      revealBtn.addEventListener('click', function() {
+        document.querySelectorAll('.trace-table input').forEach(inp => {
+          inp.value = inp.getAttribute('data-answer');
+          inp.classList.remove('incorrect');
+          inp.classList.add('correct');
+        });
+        feedback.textContent = '👀 All answers revealed. Now try running the code in the IDE to see it in action!';
+        feedback.className = 'trace-feedback hint';
+      });
+
+      resetBtn.addEventListener('click', function() {
+        document.querySelectorAll('.trace-table input').forEach(inp => {
+          inp.value = '';
+          inp.classList.remove('correct', 'incorrect');
+        });
+        feedback.textContent = '';
+        feedback.className = 'trace-feedback';
+      });
+    })();
+
     // ============================================================
     // DRAG AND DROP SEQUENCING (mini puzzle)
     // ============================================================
