@@ -83,13 +83,6 @@
     .objectives-box ul { margin: 0.2rem 0 0 1.2rem; padding-left: 0.5rem; }
     .objectives-box ul li { list-style-type: disc; font-size: 0.95rem; }
 
-    .strand-box {
-      background: #f3e5f5; border-radius: 16px; padding: 0.8rem 1.4rem;
-      margin: 1rem 0 1.2rem 0; border-left: 4px solid #8e24aa; font-size: 0.9rem;
-    }
-    .strand-box strong { color: #4a148c; }
-    .strand-box p { margin-bottom: 0.3rem; color: #3e1058; }
-
     .highlight-box {
       background: #eef6fc; padding: 1rem 1.6rem; border-radius: 16px;
       border-left: 5px solid #2a6f97; margin: 1rem 0;
@@ -115,7 +108,6 @@
     .starter-callout a { color: #e65100; font-weight: 600; text-decoration: none; border-bottom: 2px solid #e65100; }
     .starter-callout a:hover { color: #7a3300; }
 
-    /* ===== MAIN ACTIVITY (HERO) ===== */
     .hero-activity {
       background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
       border: 3px solid #2d8f2d; border-radius: 24px;
@@ -131,20 +123,7 @@
     .hero-activity h3 { margin-top: 0; color: #1b5e20; font-size: 1.35rem; }
     .hero-activity p, .hero-activity li { color: #1b3d1b; }
     .hero-activity ol, .hero-activity ul { margin-left: 0.2rem; }
-
-    .main-task {
-      background: linear-gradient(135deg, #fff8e1, #ffecb3);
-      border: 2px solid #f9a825; border-radius: 20px;
-      padding: 1.4rem 1.8rem; margin: 1.5rem 0;
-      display: flex; align-items: flex-start; gap: 1rem;
-    }
-    .main-task .badge {
-      background: #f9a825; color: #4a2c00; font-weight: 700;
-      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px;
-      padding: 0.3rem 0.9rem; border-radius: 30px; white-space: nowrap; flex-shrink: 0;
-    }
-    .main-task h3 { margin-top: 0; color: #7a4b00; font-size: 1.15rem; }
-    .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
+    .hero-activity a { color: #1b5e20; font-weight: 700; }
 
     .lab-callout {
       background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
@@ -366,7 +345,7 @@
       .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
       .lesson-content { padding: 1.2rem 1.4rem; }
       .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
-      .main-task, .starter-callout, .lab-callout, .group-work { flex-direction: column; gap: 0.6rem; }
+      .starter-callout, .lab-callout, .group-work { flex-direction: column; gap: 0.6rem; }
       .hero-activity { padding: 1.2rem 1.4rem; }
       .binary-tool .bit-btn { width: 40px; height: 50px; font-size: 1.2rem; }
       .trace-table { font-size: 0.78rem; }
@@ -412,11 +391,6 @@
         <li><strong>8P.10</strong> Know how to test algorithms using suitable data.</li>
         <li><strong>8P.11</strong> Know how to develop programs that allow two or more physical devices to interact.</li>
       </ul>
-    </div>
-
-    <div class="strand-box">
-      <strong><i class="fas fa-brain" style="margin-right:6px;"></i> Strand 3 · Machine Learning Models &amp; Algorithms (The Pattern Architect)</strong>
-      <p>Binary encoding and debugging both rely on rule-based reasoning. Debugging a program means finding where a rule has been broken — the same process an AI engineer uses when a model misclassifies an input. Building a test plan with expected outputs is exactly how ML models are validated: give the system known inputs, compare the actual output to the expected output, and trace the error back to its source.</p>
     </div>
 
     <!-- ===== STARTER ===== -->
@@ -509,15 +483,37 @@
       <h3 style="font-size:1.05rem; margin-top:1.2rem;">What you need</h3>
       <ul>
         <li>Two micro:bits and two USB cables</li>
-        <li>The MicroPython editor open on your device</li>
-        <li>The program file <code>HiddenWord.py</code></li>
+        <li>The MicroPython editor open on your device: <a href="https://python.microbit.org/v/2" target="_blank">https://python.microbit.org/v/2</a></li>
+        <li>The program below (this is <code>HiddenWord.py</code>)</li>
         <li>Pen and paper (you must write down each binary number as it scrolls)</li>
       </ul>
+
+      <h3 style="font-size:1.05rem; margin-top:1.2rem;">The program: <code>HiddenWord.py</code></h3>
+      <div class="code-block">
+        <span class="kw">from</span> microbit <span class="kw">import</span> *<br>
+        <span class="kw">import</span> radio<br>
+        <span class="kw">import</span> music<br><br>
+        radio.on()<br>
+        radio.config(group=<span class="num">65</span>)<br><br>
+        <span class="kw">while</span> True:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;message = radio.receive()<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> button_a.was_pressed():<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radio.send(<span class="str">'message'</span>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> message:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.scroll(<span class="str">'01100010'</span>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">1000</span>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;music.play(<span class="str">'c'</span>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.scroll(<span class="str">'01111001'</span>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">1000</span>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;music.play(<span class="str">'c'</span>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.scroll(<span class="str">'01100101'</span>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;music.play(music.POWER_DOWN)
+      </div>
 
       <h3 style="font-size:1.05rem; margin-top:1.2rem;">Step-by-step</h3>
       <ol>
         <li><strong>Agree a radio group</strong> with your partner. Pick a number between 0 and 255 that no other pair is using. Write it down: group ______</li>
-        <li>Open <code>HiddenWord.py</code> in the editor and change the line <code>radio.config(group=65)</code> so the number matches your group.</li>
+        <li>Open <a href="https://python.microbit.org/v/2" target="_blank">https://python.microbit.org/v/2</a> and type in the program above, changing the line <code>radio.config(group=65)</code> so the number matches your group.</li>
         <li><strong>Download the program to BOTH micro:bits.</strong> Both must run the same program with the same group number.</li>
         <li>Press <strong>button A</strong> on one micro:bit. The other micro:bit should beep and scroll the first binary number.</li>
         <li><strong>Write down each binary number</strong> as it appears. There are three numbers in total — one for each letter of the hidden word.</li>
@@ -696,17 +692,6 @@
       <strong>Think about it:</strong> A conditional statement can have only one of two outputs: <strong>TRUE</strong> or <strong>FALSE</strong>. This is a <strong>Boolean output</strong>. When you shake the micro:bit, <code>accelerometer.was_gesture('shake')</code> returns TRUE; otherwise it returns FALSE. Which lines run when it is TRUE? Which are skipped when it is FALSE? Test it with your partner.
     </div>
 
-    <!-- ===== SUPPORTING WORKSHEET ===== -->
-    <div class="main-task">
-      <span class="badge">📝 Supporting Task</span>
-      <div>
-        <h3>Worksheet 14 &amp; 15 — Written Practice</h3>
-        <p><strong>Worksheet 14:</strong> Use your checklist to find the errors in the program code, then open <code>ReviewDebugProgram.py</code> and fix the errors you identified.</p>
-        <p><strong>Worksheet 15:</strong> Use the test plan to identify the errors in the two MicroPython code images.</p>
-        <p style="margin-top:0.5rem;"><strong>Then:</strong> write your own test plan for <code>HiddenWord.py</code> using the table above — three tests with expected and actual outcomes.</p>
-      </div>
-    </div>
-
     <!-- ===== PLENARY ===== -->
     <div class="quiz" id="quiz">
       <h3><i class="fas fa-flag-checkered" style="color:#2a6f97;"></i> Plenary — Exit Ticket</h3>
@@ -756,11 +741,6 @@
         <button data-opt="d">D. Input → Actual result → Expected output</button>
         <div class="answer-feedback"></div>
       </div>
-    </div>
-
-    <div class="highlight-box green">
-      <i class="fas fa-pen" style="color:#2d8f2d; margin-right:8px;"></i>
-      <strong>Exit ticket:</strong> On a sticky note, write the hidden word you decoded and <strong>one error you found and fixed</strong> in your radio program. Stick it on the board as you leave.
     </div>
 
     <h2>🔑 Keywords</h2>
