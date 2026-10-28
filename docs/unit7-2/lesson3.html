@@ -331,6 +331,35 @@
     .trace-table .yes { background: #c8e6c9; color: #1b5e20; font-weight: 600; }
     .trace-table .no { background: #ffcdd2; color: #b71c1c; font-weight: 600; }
 
+    /* Editable trace table */
+    .trace-table input,
+    .trace-table select {
+      width: 100%;
+      min-width: 70px;
+      padding: 0.35rem 0.5rem;
+      border: 1.5px solid #d4e3f0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: #0b2a4a;
+      background: white;
+      text-align: center;
+    }
+    .trace-table input:focus,
+    .trace-table select:focus {
+      outline: none;
+      border-color: #2a6f97;
+      box-shadow: 0 0 0 2px rgba(42, 111, 151, 0.15);
+    }
+    .trace-table select { cursor: pointer; }
+    .trace-table .saved-note {
+      font-size: 0.8rem;
+      color: #2d8f2d;
+      font-weight: 600;
+      min-height: 1.2rem;
+      margin-top: 0.4rem;
+    }
+
     .tracer-tool {
       background: #f8fafc;
       border: 1px solid #dceaf7;
@@ -493,6 +522,8 @@
       .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
       .main-task, .starter-callout, .lab-callout { flex-direction: column; gap: 0.6rem; }
       .datatype-grid { grid-template-columns: 1fr 1fr; }
+      .trace-table { font-size: 0.8rem; }
+      .trace-table input, .trace-table select { font-size: 0.78rem; padding: 0.25rem; }
     }
   </style>
 </head>
@@ -712,8 +743,8 @@
       <strong>Notice:</strong> <code>display.read_light_level()</code> returns an <strong>integer</strong>. We use <code>str()</code> to convert it to a string so <code>display.scroll()</code> can show it. This is a great example of why data types matter!
     </div>
 
-    <h3>Step 2: Add a Decision</h3>
-    <p>Now add an <code>if</code> statement. Cover the micro:bit with your hand (low light) and shine a torch on it (high light). Record the values you see in the table below.</p>
+    <h3>Step 2: Add a Decision and Trace Your Results</h3>
+    <p>Now add an <code>if</code> statement. Cover the micro:bit with your hand (low light) and shine a torch on it (high light). Type the readings you see into the table below. Then choose whether the condition is True or False, and select the correct output.</p>
 
     <div class="code-block">
       <span class="kw">from</span> microbit <span class="kw">import</span> *<br><br>
@@ -726,16 +757,95 @@
       &nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">200</span>)
     </div>
 
-    <table class="trace-table">
+    <table class="trace-table" id="sensorTraceTable">
       <thead>
-        <tr><th>Test</th><th>Your Sensor Reading</th><th>Condition (&lt; 50)</th><th>Result</th><th>Output</th></tr>
+        <tr>
+          <th>Test</th>
+          <th>Your Sensor Reading</th>
+          <th>Condition (&lt; 50)</th>
+          <th>Result</th>
+          <th>Output</th>
+        </tr>
       </thead>
       <tbody>
-        <tr><td>Hand over sensor (dark)</td><td>________</td><td>________</td><td>________</td><td>________</td></tr>
-        <tr><td>Torch on sensor (bright)</td><td>________</td><td>________</td><td>________</td><td>________</td></tr>
-        <tr><td>Normal classroom light</td><td>________</td><td>________</td><td>________</td><td>________</td></tr>
+        <tr>
+          <td>Hand over sensor (dark)</td>
+          <td><input type="number" min="0" max="255" placeholder="e.g. 23" data-row="dark"></td>
+          <td>
+            <select data-row="dark">
+              <option value="">--</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="dark">
+              <option value="">--</option>
+              <option value="Condition met">Condition met</option>
+              <option value="Condition not met">Condition not met</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="dark">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Torch on sensor (bright)</td>
+          <td><input type="number" min="0" max="255" placeholder="e.g. 180" data-row="bright"></td>
+          <td>
+            <select data-row="bright">
+              <option value="">--</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="bright">
+              <option value="">--</option>
+              <option value="Condition met">Condition met</option>
+              <option value="Condition not met">Condition not met</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="bright">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Normal classroom light</td>
+          <td><input type="number" min="0" max="255" placeholder="e.g. 75" data-row="normal"></td>
+          <td>
+            <select data-row="normal">
+              <option value="">--</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="normal">
+              <option value="">--</option>
+              <option value="Condition met">Condition met</option>
+              <option value="Condition not met">Condition not met</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="normal">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+        </tr>
       </tbody>
     </table>
+    <div class="saved-note" id="savedNote"></div>
 
     <div class="highlight-box purple">
       <i class="fas fa-flask" style="color:#8e24aa; margin-right:8px;"></i>
@@ -905,6 +1015,51 @@
             fb.className = 'answer-feedback no';
           }
         });
+      });
+    });
+  })();
+
+  // ===== SENSOR TRACE TABLE: AUTO-CHECK =====
+  (function() {
+    const table = document.getElementById('sensorTraceTable');
+    const note = document.getElementById('savedNote');
+    const inputs = table.querySelectorAll('input, select');
+
+    function checkRow(rowKey) {
+      const readingInput = table.querySelector(`input[data-row="${rowKey}"]`);
+      const selects = table.querySelectorAll(`select[data-row="${rowKey}"]`);
+      const conditionSel = selects[0];
+      const resultSel = selects[1];
+      const outputSel = selects[2];
+
+      const reading = parseInt(readingInput.value, 10);
+      if (isNaN(reading) || !conditionSel.value || !resultSel.value || !outputSel.value) {
+        note.textContent = '';
+        return;
+      }
+
+      const expectedCondition = reading < 50 ? 'True' : 'False';
+      const expectedResult = reading < 50 ? 'Condition met' : 'Condition not met';
+      const expectedOutput = reading < 50 ? 'Happy face' : 'Sad face';
+
+      const allCorrect =
+        conditionSel.value === expectedCondition &&
+        resultSel.value === expectedResult &&
+        outputSel.value === expectedOutput;
+
+      if (allCorrect) {
+        note.textContent = '✅ All rows look correct! Great tracing.';
+        note.style.color = '#2d8f2d';
+      } else {
+        note.textContent = '🤔 Some rows are not quite right yet. Check the condition and output for each reading.';
+        note.style.color = '#b45309';
+      }
+    }
+
+    inputs.forEach(el => {
+      el.addEventListener('input', () => {
+        const rowKey = el.getAttribute('data-row');
+        checkRow(rowKey);
       });
     });
   })();
