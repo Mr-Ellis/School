@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic 3 · Error Detection</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#12315a;
+    --page-bg:#eef2f8;
+    --card:#ffffff;
+    --text:#1a2332;
+    --muted:#5a6b82;
+    --border:#dbe3ee;
+    --accent:#2563eb;
+    --accent-soft:#dbeafe;
+    --green:#15803d;
+    --green-soft:#dcfce7;
+    --amber:#b45309;
+    --amber-soft:#fef3c7;
+    --red:#dc2626;
+    --radius:20px;
+    --radius-sm:12px;
+    --mono:'JetBrains Mono','Fira Code',monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    line-height:1.65;
+    font-size:16px;
+    font-weight:400;
+    padding:0;
+  }
+
+  .topbar-wrap{max-width:1080px;margin:18px auto 0;padding:0 28px;}
+  .topbar{
+    background:var(--navy);color:#fff;padding:14px 26px;border-radius:999px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    box-shadow:0 4px 18px rgba(11,37,69,.14);
+  }
+  .topbar .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;color:#fff;text-decoration:none;letter-spacing:-.005em;}
+  .topbar .brand .cap{font-size:1.25rem;}
+  .topbar .navlinks{display:flex;gap:26px;flex-wrap:wrap;}
+  .topbar .navlinks a{color:#e6edf7;text-decoration:none;font-size:.95rem;font-weight:500;display:inline-flex;align-items:center;gap:6px;opacity:.92;transition:opacity .15s;}
+  .topbar .navlinks a:hover{opacity:1;text-decoration:underline;}
+
+  .page{max-width:1080px;margin:0 auto;padding:36px 28px 80px;}
+
+  .hero{margin-bottom:32px;}
+  .hero h1{
+    font-size:clamp(2.1rem,4.5vw,3.1rem);line-height:1.15;margin:0 0 20px;
+    font-weight:700;color:var(--navy);letter-spacing:-.025em;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .hero h1 .emoji{font-size:1em;font-weight:400;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;}
+  .hero .pill{
+    display:inline-flex;align-items:center;gap:12px;background:#e2e8f2;color:var(--navy);
+    border-radius:999px;padding:10px 24px 10px 10px;font-size:1rem;font-weight:400;
+    border-left:5px solid #2b8a9b;
+  }
+  .hero .pill .dot{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700;flex-shrink:0;line-height:1;}
+
+  .card{
+    background:var(--card);border-radius:var(--radius);padding:34px 40px;margin-bottom:26px;
+    box-shadow:0 2px 4px rgba(11,37,69,.04), 0 8px 24px rgba(11,37,69,.05);
+    border:1px solid rgba(219,227,238,.5);
+  }
+  @media(max-width:640px){.card{padding:24px 20px;}.topbar-wrap{padding:0 16px;}.page{padding:28px 16px 60px;}}
+
+  .card h2{
+    font-size:1.5rem;margin:0 0 18px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:10px;letter-spacing:-.01em;
+  }
+  .card h3{
+    font-size:1.1rem;margin:26px 0 12px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:8px;letter-spacing:-.005em;
+  }
+  .card p{margin:0 0 14px;}
+  .card ul,.card ol{margin:0 0 14px;padding-left:24px;}
+  .card ul li,.card ol li{margin-bottom:6px;}
+
+  .callout{
+    background:#e8f1fb;border-left:4px solid var(--accent);border-radius:10px;
+    padding:16px 20px;margin:20px 0;font-size:.98rem;line-height:1.65;font-weight:400;
+  }
+  .callout strong{color:var(--navy);font-weight:600;}
+  .callout.tip{background:#dcfce7;border-left-color:var(--green);}
+  .callout.warn{background:#fef3c7;border-left-color:var(--amber);}
+  .callout.danger{background:#fee2e2;border-left-color:var(--red);}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;
+    border:1px solid var(--navy);padding:10px 20px;border-radius:10px;text-decoration:none;
+    font-weight:500;font-size:.93rem;transition:.15s;cursor:pointer;line-height:1.4;font-family:inherit;
+  }
+  .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;text-decoration:none;}
+  .btn.green{background:var(--green);border-color:var(--green);}
+  .btn.green:hover{background:#115e30;border-color:#115e30;}
+  .btn.purple{background:#6d28d9;border-color:#6d28d9;}
+  .btn.purple:hover{background:#5b21b6;border-color:#5b21b6;}
+  .btn.red{background:var(--red);border-color:var(--red);}
+  .btn.red:hover{background:#b91c1c;border-color:#b91c1c;}
+  .btn.outline{background:#fff;color:var(--navy);border-color:var(--border);}
+  .btn.outline:hover{background:#f4f7fb;border-color:#b8c5d6;color:var(--navy);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+
+  details.reveal{
+    margin-top:16px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    background:#f8fafd;overflow:hidden;
+  }
+  details.reveal summary{
+    cursor:pointer;padding:13px 18px;font-weight:600;font-size:.95rem;color:var(--accent);
+    list-style:none;display:flex;align-items:center;gap:8px;
+  }
+  details.reveal summary::-webkit-details-marker{display:none;}
+  details.reveal summary::before{content:"▶";font-size:.7rem;transition:.2s;}
+  details.reveal[open] summary::before{transform:rotate(90deg);}
+  details.reveal .body{padding:6px 18px 18px;border-top:1px solid var(--border);background:#fff;}
+
+  /* ===== INTERACTIVE DEMO BOXES ===== */
+  .demo-box {
+    background: #f8fafd;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.4rem 1.6rem;
+    margin: 1.5rem 0;
+  }
+  .demo-box h3 {
+    margin-top: 0;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .demo-box .bits-row {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+    font-family: var(--mono);
+  }
+  .demo-box .bit {
+    width: 42px;
+    height: 52px;
+    border-radius: 8px;
+    border: 2px solid #b6cfe5;
+    background: white;
+    font-family: var(--mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--navy);
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .demo-box .bit:hover { border-color: var(--accent); background: #dbeafe; }
+  .demo-box .bit.parity { background: #fef3c7; border-color: #f9a825; }
+  .demo-box .bit.changed { background: #fee2e2; border-color: var(--red); color: var(--red); }
+  .demo-box .bit.changed.parity { background: #fee2e2; border-color: var(--red); }
+
+  .demo-box .status {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+  }
+  .demo-box .status.ok { background: var(--green-soft); color: var(--green); }
+  .demo-box .status.fail { background: #fee2e2; color: var(--red); }
+
+  .demo-box .controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .demo-box .controls button {
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .demo-box .controls button:hover { background: var(--navy-2); }
+  .demo-box .controls button.secondary {
+    background: #fff;
+    color: var(--navy);
+    border: 2px solid var(--border);
+  }
+  .demo-box .controls button.secondary:hover { background: #f4f7fb; }
+
+  .parity-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.85rem;
+    font-family: var(--mono);
+  }
+  .parity-table th, .parity-table td {
+    border: 1px solid var(--border);
+    padding: 0.45rem;
+    text-align: center;
+    background: white;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .parity-table th { background: #e9eff8; color: var(--navy); font-weight: 600; cursor: default; }
+  .parity-table td:hover { background: #dbeafe; }
+  .parity-table td.bit-on { background: var(--navy); color: white; font-weight: 700; }
+  .parity-table td.parity-bit { background: #fef3c7; }
+  .parity-table td.parity-bit.bit-on { background: #b45309; }
+  .parity-table td.row-check, .parity-table td.col-check {
+    background: #f1f5f9; font-weight: 700; color: var(--muted); cursor: default;
+  }
+  .parity-table td.row-check.ok, .parity-table td.col-check.ok { background: var(--green-soft); color: var(--green); }
+  .parity-table td.row-check.fail, .parity-table td.col-check.fail { background: #fee2e2; color: var(--red); }
+
+  .checksum-inputs {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+  }
+  .checksum-inputs input {
+    width: 80px;
+    padding: 0.5rem;
+    border: 2px solid #b6cfe5;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 1rem;
+    text-align: center;
+  }
+  .checksum-inputs input:focus { outline: none; border-color: var(--accent); }
+
+  .arq-diagram {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .arq-diagram .lane { flex: 1; text-align: center; }
+  .arq-diagram .lane h4 { margin: 0 0 0.8rem 0; color: var(--navy); font-size: 0.9rem; }
+  .arq-diagram .lane .arrow {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    margin-bottom: 0.4rem;
+    display: inline-block;
+    min-width: 120px;
+  }
+  .arq-diagram .lane .arrow.data { background: #dbeafe; color: var(--accent); }
+  .arq-diagram .lane .arrow.ack { background: var(--green-soft); color: var(--green); }
+  .arq-diagram .lane .arrow.nack { background: #fee2e2; color: var(--red); }
+  .arq-diagram .lane .arrow.timeout { background: #fef3c7; color: var(--amber); }
+
+  /* Teacher panel */
+  .teacher-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:0;overflow:hidden; margin-top: 2rem;}
+  .teacher-panel summary{
+    cursor:pointer;font-weight:600;color:var(--navy);font-size:.98rem;
+    list-style:none;display:flex;align-items:center;gap:10px;padding:18px 22px;
+  }
+  .teacher-panel summary::-webkit-details-marker{display:none;}
+  .teacher-panel summary::before{content:"🔒";font-size:1.05rem;}
+  .teacher-panel[open] summary{border-bottom:1px solid var(--border);}
+  .teacher-panel[open] summary::before{content:"🔓";}
+  .teacher-panel .panel-body{padding:22px;}
+  .lock-screen{text-align:center;padding:20px 12px;}
+  .lock-screen input{
+    padding:10px 14px;border-radius:10px;background:#fff;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;margin-right:8px;font-family:inherit;
+  }
+  .lock-screen input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+  .hidden{display:none !important;}
+
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  @media(max-width:680px){
+    .demo-box .bit { width: 34px; height: 44px; font-size: 1rem; }
+    .parity-table { font-size: 0.7rem; }
+    .parity-table th, .parity-table td { padding: 0.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar-wrap">
+  <div class="topbar">
+    <a href="#" class="brand"><span class="cap">🎓</span> IGCSE CompSci</a>
+    <nav class="navlinks">
+      <a href="#">← Back to Unit 2</a>
+      <a href="#">← Year 10</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <h1><span class="emoji">🔍</span> Error Detection</h1>
+    <div class="pill">
+      <span class="dot">✓</span> Topic 3 · Parity, Checksums, Echo Checks, Check Digits &amp; ARQ
+    </div>
+  </div>
+
+  <!-- ============ STARTER ============ -->
+  <section class="card">
+    <h2>🔥 Starter – The Whisper Challenge</h2>
+    <p>Work in a pair. One partner reads out the binary numbers below <strong>as quickly as possible</strong>. The other partner must write down the numbers they hear <strong>without looking at the screen</strong>.</p>
+    <p style="font-family:monospace; font-size:1.15rem; font-weight:700; letter-spacing:3px; color:var(--navy); background:#f1f5f9; padding:0.8rem 1.2rem; border-radius:10px; display:inline-block;">01001110 &nbsp; 10110011 &nbsp; 00101101 &nbsp; 11010010</p>
+    <p><strong>How can you do this in the fastest way, whilst making sure you are 100% accurate?</strong></p>
+    <p><em>Discuss with your partner — be ready to share your ideas.</em></p>
+
+    <details class="reveal">
+      <summary>Show suggested answer</summary>
+      <div class="body">
+        <p>Some possible ways to make sure the number was entered correctly:</p>
+        <ul>
+          <li>Repeat the numbers back to the speaker.</li>
+          <li>Give the numbers in sets of digits (e.g. four at a time), then repeat back.</li>
+          <li>Have the listener confirm they heard correctly after each block of numbers.</li>
+        </ul>
+        <p><strong>These are essentially the same ideas as an <em>echo check</em> and an <em>automatic repeat request (ARQ)</em></strong>, both of which we will cover today.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ OBJECTIVES ============ -->
+  <section class="card">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+      <li>Understand the need to check for errors after data transmission.</li>
+      <li>Describe each of the following error detection methods:
+        <ul>
+          <li>Parity check (odd and even)</li>
+          <li>Checksum</li>
+          <li>Echo check</li>
+        </ul>
+      </li>
+      <li>Describe how check digits are used in data entry, including:
+        <ul>
+          <li>ISBN</li>
+          <li>Bar codes</li>
+        </ul>
+      </li>
+      <li>Describe how an automatic repeat query (ARQ) is used to establish data is correctly received.</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Why This Matters:</strong> A single wrong bit can change a letter, a number in a bank payment, or an instruction in a program. Error detection lets the receiver discover that data has been damaged, so it can be corrected or sent again before it is used. Every time you scan a barcode at a self-service till, send a file over the internet, or make a phone call, these error detection methods are working silently in the background.
+    </div>
+  </section>
+
+  <!-- ============ SECTION 1: WHY ERRORS HAPPEN ============ -->
+  <section class="card">
+    <h2>⚡ Why Errors Happen During Transmission</h2>
+    <p>Data is sent as electrical signals, light, or radio waves. Interference can disturb the signal so that it is read incorrectly. This can cause:</p>
+    <ul>
+      <li><strong>Data loss</strong> — bits that were sent never arrive.</li>
+      <li><strong>Data gain</strong> — extra bits arrive that were never sent.</li>
+      <li><strong>Data change</strong> — bits arrive with the wrong value (a 1 instead of a 0, or the other way round).</li>
+    </ul>
+    <h3>Common causes of interference</h3>
+    <ul>
+      <li>Electrical interference from nearby equipment</li>
+      <li>Power surges</li>
+      <li>Synchronisation issues</li>
+      <li>Wear and tear on the cable or connectors</li>
+      <li>A weak wireless signal</li>
+    </ul>
+
+    <div class="callout warn">
+      <strong>Why this is dangerous:</strong> The received data usually still looks like valid data. Without an error check, the receiver would not know anything was wrong. A single wrong bit can change a letter, a number in a bank payment, or an instruction in a program.
+    </div>
+  </section>
+
+  <!-- ============ TASK 1: PARITY CHECK ============ -->
+  <section class="card">
+    <h2>1️⃣ Parity Check</h2>
+    <p>In a parity check, the sender and receiver agree to use either <strong>even</strong> or <strong>odd</strong> parity. The sender adds a <strong>parity bit</strong> to each byte so that the number of 1s is even (even parity) or odd (odd parity). The receiver counts the 1s in each byte; if the count is wrong for the agreed parity, an error has occurred.</p>
+
+    <h3>The process</h3>
+    <ol>
+      <li>The sender and receiver agree whether to use even or odd parity.</li>
+      <li>For each byte, the sender counts the 1s in the 7 data bits and sets the parity bit to 0 or 1, so that the total number of 1s (including the parity bit) is even (or odd).</li>
+      <li>The byte is transmitted.</li>
+      <li>The receiver counts the 1s in the byte it receives.</li>
+      <li>If the total does not match the agreed parity, an error has occurred, and the byte is sent again.</li>
+    </ol>
+
+    <div class="callout tip">
+      <strong>Key idea:</strong> For <strong>even parity</strong>, all the 1s (including the parity bit) must add up to an even number. For <strong>odd parity</strong>, all the 1s must add up to an odd number.
+    </div>
+
+    <h3>Try it: Odd and even parity</h3>
+    <p>Click any bit below to flip it (as interference would). The demo starts with <strong>even parity</strong>. Watch what happens to the parity check when you flip one bit, then flip a second one.</p>
+
+    <div class="demo-box" id="parityDemo">
+      <div style="text-align:center; margin-bottom:0.8rem;">
+        <label style="font-weight:600; margin-right:1rem; cursor:pointer;">
+          <input type="radio" name="parityType" value="even" checked> Even parity
+        </label>
+        <label style="font-weight:600; cursor:pointer;">
+          <input type="radio" name="parityType" value="odd"> Odd parity
+        </label>
+      </div>
+      <p style="text-align:center; font-size:0.9rem; color:var(--muted); margin-bottom:0.4rem;">Click any bit to flip it. The leftmost bit is the parity bit.</p>
+      <div class="bits-row" id="parityBits">
+        <button class="bit parity" data-index="0">0</button>
+        <button class="bit" data-index="1">1</button>
+        <button class="bit" data-index="2">0</button>
+        <button class="bit" data-index="3">1</button>
+        <button class="bit" data-index="4">1</button>
+        <button class="bit" data-index="5">0</button>
+        <button class="bit" data-index="6">0</button>
+        <button class="bit" data-index="7">1</button>
+      </div>
+      <div class="status ok" id="parityStatus">The receiver counts the 1s: there are 4, which is even. This matches even parity, so the byte is accepted.</div>
+      <div class="controls">
+        <button onclick="resetParityDemo()">Reset</button>
+      </div>
+    </div>
+
+    <h3>Limitations of a parity check</h3>
+    <ul>
+      <li>If an <strong>even number of bits</strong> are changed (such as two), the number of 1s stays even (or odd), so the error is <strong>not detected</strong>.</li>
+      <li>A parity check on a single byte shows that an error has happened, but <strong>not which bit</strong> is wrong.</li>
+    </ul>
+  </section>
+
+  <!-- ============ TASK 2: PARITY BLOCK CHECK ============ -->
+  <section class="card">
+    <h2>2️⃣ Parity Block Check</h2>
+    <p>A parity block check sends data in a <strong>block of bytes</strong>. Each byte has its own parity bit, checking each row. An extra byte — the <strong>parity byte</strong> — is added at the end: each of its bits is the parity bit for one column of the block.</p>
+    <p>If a single bit is changed, one row and one column will both fail their parity check. The wrong bit is where that row and column cross, so the receiver can <strong>find it, and even correct it</strong>, without the block being sent again.</p>
+
+    <h3>Try it: Parity block check</h3>
+    <p>Click any data bit below to flip it. Even parity is used for every row and every column. Column P holds each byte's parity bit. Watch the row and column checks light up to pinpoint the error.</p>
+
+    <div class="demo-box">
+      <table class="parity-table" id="parityBlockTable">
+        <thead>
+          <tr>
+            <th></th>
+            <th>P</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>Row check</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows will be generated by JS -->
+        </tbody>
+      </table>
+      <div class="status ok" id="parityBlockStatus">Every row and every column has an even number of 1s, so the block is accepted.</div>
+      <div class="controls">
+        <button onclick="resetParityBlock()">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Why this is powerful:</strong> A plain parity check can only tell you <em>that</em> an error happened. A parity block check can tell you <em>where</em> it happened — and if only one bit is wrong, it can be corrected on the spot.
+    </div>
+  </section>
+
+  <!-- ============ TASK 3: CHECKSUM ============ -->
+  <section class="card">
+    <h2>3️⃣ Checksum</h2>
+    <p>A checksum is a value calculated from a block of data using an agreed algorithm. The sender calculates the checksum and sends it with the data. The receiver recalculates the checksum from the data it received; if the two checksums do not match, an error has occurred.</p>
+
+    <h3>The process</h3>
+    <ol>
+      <li>Before sending, the sender uses an agreed algorithm to calculate a checksum from the block of data.</li>
+      <li>The checksum is transmitted along with the data.</li>
+      <li>The receiver uses the same algorithm to recalculate the checksum from the data it received.</li>
+      <li>The receiver compares the two checksums. If they match, the data is accepted. If they are different, an error has occurred, and the data is sent again.</li>
+    </ol>
+
+    <h3>Try it: Checksum</h3>
+    <p>Change any of the received values below (as interference might) and watch the checksums stop matching. This demo uses a simple algorithm: add up the values and keep the remainder after dividing by 256.</p>
+
+    <div class="demo-box">
+      <div style="display:flex; justify-content:space-around; gap:1rem; flex-wrap:wrap;">
+        <div style="flex:1; min-width:200px;">
+          <h4 style="color:var(--accent); text-align:center;">Sender</h4>
+          <div class="checksum-inputs">
+            <input type="number" id="cs1" value="23" min="0" max="255">
+            <input type="number" id="cs2" value="107" min="0" max="255">
+            <input type="number" id="cs3" value="56" min="0" max="255">
+            <input type="number" id="cs4" value="200" min="0" max="255">
+            <input type="number" id="cs5" value="91" min="0" max="255">
+          </div>
+          <p style="text-align:center; font-size:0.85rem; color:var(--muted);" id="csSenderInfo">Total = 477. Checksum = 221</p>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <h4 style="color:var(--green); text-align:center;">Receiver: change a value to simulate an error</h4>
+          <div class="checksum-inputs">
+            <input type="number" id="cr1" value="23" min="0" max="255">
+            <input type="number" id="cr2" value="107" min="0" max="255">
+            <input type="number" id="cr3" value="56" min="0" max="255">
+            <input type="number" id="cr4" value="200" min="0" max="255">
+            <input type="number" id="cr5" value="91" min="0" max="255">
+          </div>
+          <p style="text-align:center; font-size:0.85rem; color:var(--muted);" id="csReceiverInfo">Recalculated: total = 477, checksum = 221. Received checksum: 221.</p>
+        </div>
+      </div>
+      <div class="status ok" id="csStatus">The checksums match, so the data is accepted.</div>
+      <div class="controls">
+        <button onclick="resetChecksumDemo()">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Note:</strong> Real systems use more complex algorithms, but the process is the same — calculate, send, recalculate, compare.
+    </div>
+  </section>
+
+  <!-- ============ TASK 4: ECHO CHECK ============ -->
+  <section class="card">
+    <h2>4️⃣ Echo Check</h2>
+    <p>In an echo check, the receiver sends a copy of the data it received straight back to the sender. The sender compares this copy with the original data. If they are different, an error has occurred, and the data is sent again.</p>
+
+    <h3>Worked walkthrough: An echo check</h3>
+    <ol>
+      <li>The sender transmits the data, <code>10110110</code>, and keeps a copy of it.</li>
+      <li>Interference changes one bit on the way, so the receiver gets <code>10110010</code>. The receiver does not know this.</li>
+      <li>The receiver sends an exact copy of what it received back to the sender: the "echo".</li>
+      <li>The sender now has its original data and the echo.</li>
+      <li>The sender compares them. They are different, so an error has occurred, and the sender transmits the data again.</li>
+    </ol>
+
+    <div class="callout warn">
+      <strong>Limitations of an echo check:</strong>
+      <ul style="margin-top:0.5rem;">
+        <li>Every piece of data is sent <strong>twice</strong>, so it takes more time and uses more bandwidth.</li>
+        <li>If the copies differ, the sender <strong>cannot tell whether the error happened on the way to the receiver or on the way back</strong>. The data is sent again either way.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ TASK 5: CHECK DIGITS ============ -->
+  <section class="card">
+    <h2>5️⃣ Check Digits</h2>
+    <p>A check digit is an extra digit added to the end of a number, calculated from all the other digits. It is used to detect errors when the number is <strong>entered</strong> (typed in or scanned). The computer recalculates the check digit from the digits entered; if it does not match the check digit, an error has been made.</p>
+
+    <h3>Errors in data entry</h3>
+    <p>Check digits are designed to catch the mistakes people commonly make when entering a long number:</p>
+    <ul>
+      <li>Typing one digit incorrectly (e.g. 5 instead of 8)</li>
+      <li>Swapping two digits round (e.g. 45 instead of 54 — a <strong>transposition error</strong>)</li>
+      <li>Missing out a digit, or typing an extra one</li>
+    </ul>
+
+    <h3>Where check digits are used</h3>
+    <ul>
+      <li><strong>International Standard Book Numbers (ISBNs)</strong> — the 13-digit number that identifies every published book. The last digit is the check digit.</li>
+      <li><strong>Barcodes on products</strong> — the number under the barcode ends with a check digit, which detects errors when the barcode is scanned or the number is typed in by hand.</li>
+      <li>Other examples include <strong>bank card numbers</strong> and some <strong>identity numbers</strong>.</li>
+    </ul>
+
+    <h3>Try it: Checking an ISBN</h3>
+    <p>In this algorithm, the digits are multiplied by 1 and 3 in turn, and the products are added up. The check digit is whatever is needed to bring the total up to the next multiple of 10. Try the example, then change a digit to see the check fail.</p>
+
+    <div class="demo-box">
+      <p style="text-align:center; font-size:0.9rem; color:var(--muted);">Enter the first 12 digits of an ISBN. The 13th digit is the check digit.</p>
+      <div class="checksum-inputs" id="isbnInputs">
+        <input type="number" class="isbn-digit" value="9" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="7" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="8" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="0" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="3" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="0" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="6" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="4" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="0" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="6" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="1" min="0" max="9" maxlength="1">
+        <input type="number" class="isbn-digit" value="5" min="0" max="9" maxlength="1">
+      </div>
+      <div id="isbnTable" style="overflow-x:auto; margin:1rem 0;"></div>
+      <p style="text-align:center; font-weight:600;" id="isbnInfo">The products add up to 93. The next multiple of 10 is 100, so the check digit is 100 − 93 = 7.</p>
+      <div class="status ok" id="isbnStatus">The check digit entered is 7, which matches, so the number is accepted.</div>
+      <div class="controls">
+        <button onclick="resetISBN()">Reset to valid ISBN</button>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Check digits and validation:</strong> A check digit is also one of the validation checks, because it is carried out automatically by the computer when data is entered. It is different from verification checks (such as double entry), which compare the data with a second copy of it.
+    </div>
+  </section>
+
+  <!-- ============ TASK 6: ARQ ============ -->
+  <section class="card">
+    <h2>6️⃣ Automatic Repeat Query (ARQ)</h2>
+    <p>An automatic repeat query (ARQ) uses acknowledgements and a timeout to make sure data is received without error. The receiver checks each packet and replies with a positive acknowledgement if it is correct, or a negative acknowledgement if it is not. If the sender receives a negative acknowledgement, or no acknowledgement before the timeout, it sends the data again.</p>
+
+    <h3>The process</h3>
+    <ol>
+      <li>The sender transmits a packet of data, including an error check such as a checksum, and starts a timer.</li>
+      <li>The receiver uses the error check to see whether the packet has arrived correctly.</li>
+      <li>If there is no error, the receiver sends back a <strong>positive acknowledgement (ACK)</strong>, and the sender moves on to the next packet.</li>
+      <li>If there is an error, the receiver sends back a <strong>negative acknowledgement (NACK)</strong>, and the sender sends the packet again.</li>
+      <li>If the sender receives <strong>no acknowledgement before the timer reaches the set time limit (the timeout)</strong>, it assumes the packet was lost and sends it again automatically.</li>
+      <li>This repeats until a positive acknowledgement is received.</li>
+    </ol>
+
+    <h3>Try it: ARQ</h3>
+    <p>Choose what goes wrong, then send the packet. Watch the timer under the sender.</p>
+
+    <div class="demo-box">
+      <div style="display:flex; justify-content:space-around; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
+        <label style="font-weight:600; cursor:pointer;">
+          <input type="radio" name="arqScenario" value="ok" checked> No error
+        </label>
+        <label style="font-weight:600; cursor:pointer;">
+          <input type="radio" name="arqScenario" value="error"> Error in packet (NACK)
+        </label>
+        <label style="font-weight:600; cursor:pointer;">
+          <input type="radio" name="arqScenario" value="lost"> Packet or ACK lost (timeout)
+        </label>
+      </div>
+
+      <div class="arq-diagram">
+        <div class="lane">
+          <h4>Sender</h4>
+          <div id="arqSenderLog" style="min-height:120px;"></div>
+          <div id="arqTimer" style="font-family:var(--mono); font-weight:700; color:var(--amber); margin-top:0.5rem;">timer: —</div>
+        </div>
+        <div class="lane" style="flex:0.3; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+          <div style="font-size:2rem; color:var(--muted);">⇄</div>
+        </div>
+        <div class="lane">
+          <h4>Receiver</h4>
+          <div id="arqReceiverLog" style="min-height:120px;"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button onclick="runARQDemo()">Send Packet</button>
+        <button class="secondary" onclick="resetARQDemo()">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Why ARQ is useful:</strong> It is the only method here that can automatically <em>recover</em> from an error. The others (parity, checksum, echo) only detect that something went wrong — ARQ goes one step further and gets the data resent.
+    </div>
+  </section>
+
+  <!-- ============ COMPARISON TABLE ============ -->
+  <section class="card">
+    <h2>📊 Comparing the Methods</h2>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+        <thead>
+          <tr style="background:var(--navy); color:white;">
+            <th style="padding:0.7rem; text-align:left; border:1px solid var(--border);">Method</th>
+            <th style="padding:0.7rem; text-align:left; border:1px solid var(--border);">Used for</th>
+            <th style="padding:0.7rem; text-align:left; border:1px solid var(--border);">How the error is found</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#f8fafd;">
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>Parity check</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Transmission</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">The number of 1s in a byte does not match the agreed odd or even parity</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>Parity block check</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Transmission</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">A row and a column fail their parity checks, pinpointing the wrong bit</td>
+          </tr>
+          <tr style="background:#f8fafd;">
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>Checksum</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Transmission</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">The recalculated checksum does not match the one sent</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>Echo check</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Transmission</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">The data echoed back is different from the original</td>
+          </tr>
+          <tr style="background:#f8fafd;">
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>Check digit</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Data entry</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">The recalculated check digit does not match the one entered</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>ARQ</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Transmission</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">A negative acknowledgement is received, or no acknowledgement arrives before the timeout</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ MAIN TASK ============ -->
+  <section class="card">
+    <h2>⭐ Lesson 2: Interactive Activities &amp; Extension</h2>
+    <p>In the second half of the lesson, complete the interactive activities above (if you haven't already) and then complete the extension worksheet on Schoolbox.</p>
+    <div class="btn-row" style="margin-top: 1.5rem;">
+      <a href="https://lms.isr-school.com/" target="_blank" rel="noopener" class="btn">
+        📄 Open Schoolbox Extension Worksheet
+      </a>
+      <a href="https://play.blooket.com/host/gold?id=63d2acde979214f9b2637b49" target="_blank" rel="noopener" class="btn purple">
+        🎮 Blooket Gold
+      </a>
+    </div>
+    <div class="callout tip" style="margin-top:1.5rem;">
+      <strong>Extension worksheet:</strong> The Schoolbox worksheet covers the same error detection methods you have just practised. Use the interactive demos above to help you answer the questions.
+    </div>
+  </section>
+
+  <!-- ============ AI GUIDE & POWERPOINT ============ -->
+  <section class="card">
+    <h2>🤖 AI Guide</h2>
+    <p>Your personal tutor! Ask the AI any question about error detection.</p>
+    <div class="btn-row">
+      <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" rel="noopener" class="btn">
+        💬 Ask the AI Tutor
+      </a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>📊 Lesson Presentation</h2>
+    <p>Use these slides to recap the lesson.</p>
+    <div class="btn-row">
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F2%2520Data-transmission-encryption%2FT3%2520Error%2520detection.pptx&wdOrigin=BROWSELINK" target="_blank" rel="noopener" class="btn outline">
+        📊 Open PowerPoint
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ TEACHER PANEL ============ -->
+  <section class="card">
+    <h2>Additional Resources</h2>
+
+    <details class="teacher-panel">
+      <summary>📋 Lesson Plan (Teacher only) — click to toggle</summary>
+      <div class="panel-body">
+
+        <div class="lock-screen" id="lockScreen">
+          <p style="color:var(--muted);margin-bottom:14px;">Enter password to view the full lesson plan.</p>
+          <input type="password" id="lockInput" placeholder="Password">
+          <button class="btn" id="lockBtn">Unlock</button>
+          <p id="lockMsg" style="color:#dc2626;font-size:.85rem;margin-top:10px;min-height:1.2em;"></p>
+        </div>
+
+        <div id="teacherContent" class="hidden">
+          <h3>Lesson Overview</h3>
+          <p>This is a <strong>double lesson</strong>. The first half of the lesson covers the theory of error detection, with interactive demos for parity, checksums, echo checks, check digits, and ARQ. The second half is dedicated to the Schoolbox extension worksheet.</p>
+
+          <h3>Timing</h3>
+          <ul>
+            <li><strong>0–10 min</strong> — Starter (Whisper Challenge) &amp; Objectives</li>
+            <li><strong>10–25 min</strong> — Why errors happen + Parity check (with interactive demo)</li>
+            <li><strong>25–40 min</strong> — Parity block check (with interactive demo)</li>
+            <li><strong>40–55 min</strong> — Checksum + Echo check (with interactive demos)</li>
+            <li><strong>55–70 min</strong> — Check digits + ARQ (with interactive demos)</li>
+            <li><strong>70–90 min</strong> — Schoolbox Extension Worksheet</li>
+            <li><strong>90–100 min</strong> — Review and Pack Up</li>
+          </ul>
+
+          <h3>Key Teaching Points</h3>
+          <ul>
+            <li>Emphasise that all these methods <strong>detect</strong> errors, but only ARQ can <strong>recover</strong> from them automatically.</li>
+            <li>The parity block check is the only one that can <strong>locate</strong> a single-bit error.</li>
+            <li>Check digits are for <strong>data entry</strong>, not transmission.</li>
+            <li>Use the interactive demos to let students "break" the data and see the checks fail.</li>
+          </ul>
+
+          <h3>Answers to Worksheet 3</h3>
+          <p><strong>Task 1 (odd parity):</strong> Byte 1 (0011001) needs a parity bit of 0 (already three 1s — odd). Byte 2 (1101110) needs a parity bit of 1 (five 1s — odd). Byte 3 (1101011) needs a parity bit of 1 (five 1s — odd).</p>
+          <p><strong>Task 4 (ARQ):</strong> Block 1 sent → ACK received. Block 2 sent → error detected → NACK sent → Block 2 resent → ACK received. Block 3 sent → ACK not received → timeout → Block 3 resent → ACK received.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:40px;">progress saved automatically in your browser</p>
+</div>
+
+<script>
+  /* ===== PARITY DEMO ===== */
+  (function() {
+    const bitsContainer = document.getElementById('parityBits');
+    const status = document.getElementById('parityStatus');
+    const parityRadios = document.querySelectorAll('input[name="parityType"]');
+    let bits = [0, 1, 0, 1, 1, 0, 0, 1]; // parity bit + 7 data bits
+
+    function getParityType() {
+      return document.querySelector('input[name="parityType"]:checked').value;
+    }
+
+    function renderParity() {
+      const buttons = bitsContainer.querySelectorAll('.bit');
+      buttons.forEach((btn, i) => {
+        btn.textContent = bits[i];
+      });
+      checkParity();
+    }
+
+    function checkParity() {
+      const parityType = getParityType();
+      const onesCount = bits.reduce((a, b) => a + b, 0);
+      const isEven = onesCount % 2 === 0;
+      const expectedEven = parityType === 'even';
+
+      if (isEven === expectedEven) {
+        status.className = 'status ok';
+        status.textContent = `The receiver counts the 1s: there are ${onesCount}, which is ${isEven ? 'even' : 'odd'}. This matches ${parityType} parity, so the byte is accepted.`;
+      } else {
+        status.className = 'status fail';
+        status.textContent = `The receiver counts the 1s: there are ${onesCount}, which is ${isEven ? 'even' : 'odd'}. This does NOT match ${parityType} parity — an error has occurred!`;
+      }
+    }
+
+    bitsContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.bit');
+      if (!btn) return;
+      const index = parseInt(btn.getAttribute('data-index'), 10);
+      bits[index] = bits[index] === 0 ? 1 : 0;
+      renderParity();
+    });
+
+    parityRadios.forEach(r => r.addEventListener('change', renderParity));
+
+    window.resetParityDemo = function() {
+      bits = [0, 1, 0, 1, 1, 0, 0, 1];
+      document.querySelector('input[name="parityType"][value="even"]').checked = true;
+      renderParity();
+    };
+
+    renderParity();
+  })();
+
+  /* ===== PARITY BLOCK CHECK ===== */
+  (function() {
+    // 4 data bytes, each 7 bits + parity bit + parity byte + parity bit for parity byte
+    // Even parity throughout
+    const initialData = [
+      [0, 1, 1, 0, 1, 0, 1], // Byte 1 data (7 bits)
+      [1, 0, 1, 0, 0, 1, 1], // Byte 2
+      [0, 1, 0, 1, 1, 0, 0], // Byte 3
+      [1, 1, 0, 1, 0, 1, 1]  // Byte 4
+    ];
+    let data = initialData.map(row => row.slice());
+    const table = document.getElementById('parityBlockTable');
+    const tbody = table.querySelector('tbody');
+    const status = document.getElementById('parityBlockStatus');
+
+    function countOnes(arr) {
+      return arr.reduce((a, b) => a + b, 0);
+    }
+
+    function evenParityBit(arr) {
+      return countOnes(arr) % 2 === 0 ? 0 : 1;
+    }
+
+    function renderTable() {
+      tbody.innerHTML = '';
+      // 4 data rows
+      for (let r = 0; r < 4; r++) {
+        const tr = document.createElement('tr');
+        // Label
+        const label = document.createElement('th');
+        label.textContent = 'Byte ' + (r + 1);
+        tr.appendChild(label);
+
+        // Parity bit (column P) - even parity
+        const parityBit = evenParityBit(data[r]);
+        const pCell = document.createElement('td');
+        pCell.className = 'parity-bit' + (parityBit ? ' bit-on' : '');
+        pCell.textContent = parityBit;
+        tr.appendChild(pCell);
+
+        // 7 data bits
+        for (let c = 0; c < 7; c++) {
+          const td = document.createElement('td');
+          td.textContent = data[r][c];
+          if (data[r][c]) td.classList.add('bit-on');
+          td.dataset.row = r;
+          td.dataset.col = c;
+          tr.appendChild(td);
+        }
+
+        // Row check (even parity?)
+        const rowOnes = countOnes(data[r]) + parityBit;
+        const rowCheck = document.createElement('td');
+        rowCheck.className = 'row-check ' + (rowOnes % 2 === 0 ? 'ok' : 'fail');
+        rowCheck.textContent = rowOnes % 2 === 0 ? '✓' : '✗';
+        tr.appendChild(rowCheck);
+
+        tbody.appendChild(tr);
+      }
+
+      // Parity byte row
+      const tr = document.createElement('tr');
+      const label = document.createElement('th');
+      label.textContent = 'Parity byte';
+      tr.appendChild(label);
+
+      // Parity bit for the parity byte itself
+      const colParityBits = [];
+      for (let c = 0; c < 7; c++) {
+        const colData = data.map(row => row[c]);
+        colParityBits.push(evenParityBit(colData));
+      }
+      const parityByteParityBit = evenParityBit(colParityBits);
+      const ppCell = document.createElement('td');
+      ppCell.className = 'parity-bit' + (parityByteParityBit ? ' bit-on' : '');
+      ppCell.textContent = parityByteParityBit;
+      tr.appendChild(ppCell);
+
+      for (let c = 0; c < 7; c++) {
+        const td = document.createElement('td');
+        td.className = 'parity-bit' + (colParityBits[c] ? ' bit-on' : '');
+        td.textContent = colParityBits[c];
+        td.dataset.parityCol = c;
+        tr.appendChild(td);
+      }
+
+      // Column check for parity byte
+      const colCheck = document.createElement('td');
+      colCheck.className = 'row-check';
+      colCheck.textContent = '—';
+      tr.appendChild(colCheck);
+
+      tbody.appendChild(tr);
+
+      // Column check row
+      const colCheckRow = document.createElement('tr');
+      const labelCol = document.createElement('th');
+      labelCol.textContent = 'Column check';
+      colCheckRow.appendChild(labelCol);
+      const emptyCell = document.createElement('td');
+      emptyCell.className = 'row-check';
+      emptyCell.textContent = '—';
+      colCheckRow.appendChild(emptyCell);
+
+      for (let c = 0; c < 7; c++) {
+        const colData = data.map(row => row[c]);
+        const parityForCol = colParityBits[c];
+        const total = countOnes(colData) + parityForCol;
+        const td = document.createElement('td');
+        td.className = 'col-check ' + (total % 2 === 0 ? 'ok' : 'fail');
+        td.textContent = total % 2 === 0 ? '✓' : '✗';
+        td.dataset.colCheck = c;
+        colCheckRow.appendChild(td);
+      }
+      const emptyCell2 = document.createElement('td');
+      emptyCell2.className = 'row-check';
+      emptyCell2.textContent = '—';
+      colCheckRow.appendChild(emptyCell2);
+
+      tbody.appendChild(colCheckRow);
+
+      // Overall status
+      const allRowsOk = Array.from(tbody.querySelectorAll('.row-check.ok')).length >= 4;
+      const allColsOk = Array.from(tbody.querySelectorAll('.col-check.ok')).length === 7;
+      const totalOnes = data.flat().reduce((a, b) => a + b, 0);
+      const parityByteOnes = countOnes(colParityBits) + parityByteParityBit;
+
+      // Simpler check: count total 1s in data + parity bits
+      let errors = 0;
+      for (let r = 0; r < 4; r++) {
+        const rowOnes = countOnes(data[r]) + evenParityBit(data[r]);
+        if (rowOnes % 2 !== 0) errors++;
+      }
+      for (let c = 0; c < 7; c++) {
+        const colData = data.map(row => row[c]);
+        const colParity = evenParityBit(colData);
+        if ((countOnes(colData) + colParity) % 2 !== 0) errors++;
+      }
+
+      if (errors === 0) {
+        status.className = 'status ok';
+        status.textContent = 'Every row and every column has an even number of 1s, so the block is accepted.';
+      } else {
+        // Find which bit is wrong
+        let wrongRow = -1, wrongCol = -1;
+        for (let r = 0; r < 4; r++) {
+          const rowOnes = countOnes(data[r]) + evenParityBit(data[r]);
+          if (rowOnes % 2 !== 0) wrongRow = r;
+        }
+        for (let c = 0; c < 7; c++) {
+          const colData = data.map(row => row[c]);
+          const colParity = evenParityBit(colData);
+          if ((countOnes(colData) + colParity) % 2 !== 0) wrongCol = c;
+        }
+        if (wrongRow !== -1 && wrongCol !== -1) {
+          status.className = 'status fail';
+          status.textContent = `Error detected! Row ${wrongRow + 1} and column ${wrongCol + 1} both fail their parity checks. The wrong bit is at Byte ${wrongRow + 1}, bit ${wrongCol + 1}.`;
+        } else {
+          status.className = 'status fail';
+          status.textContent = 'Error detected, but the parity block check cannot pinpoint exactly which bit is wrong (more than one bit may have been flipped).';
+        }
+      }
+
+      // Attach click handlers to data cells
+      tbody.querySelectorAll('td[data-row][data-col]').forEach(td => {
+        td.style.cursor = 'pointer';
+        td.addEventListener('click', () => {
+          const r = parseInt(td.dataset.row, 10);
+          const c = parseInt(td.dataset.col, 10);
+          data[r][c] = data[r][c] === 0 ? 1 : 0;
+          renderTable();
+        });
+      });
+    }
+
+    window.resetParityBlock = function() {
+      data = initialData.map(row => row.slice());
+      renderTable();
+    };
+
+    renderTable();
+  })();
+
+  /* ===== CHECKSUM DEMO ===== */
+  (function() {
+    const senderInputs = [1,2,3,4,5].map(i => document.getElementById('cs' + i));
+    const receiverInputs = [1,2,3,4,5].map(i => document.getElementById('cr' + i));
+    const senderInfo = document.getElementById('csSenderInfo');
+    const receiverInfo = document.getElementById('csReceiverInfo');
+    const status = document.getElementById('csStatus');
+
+    function sum(inputs) {
+      return inputs.reduce((total, inp) => total + (parseInt(inp.value, 10) || 0), 0);
+    }
+
+    function updateChecksum() {
+      const senderTotal = sum(senderInputs);
+      const senderChecksum = senderTotal % 256;
+      senderInfo.textContent = `Total = ${senderTotal}. Checksum = ${senderChecksum}. Sends the data and checksum ${senderChecksum}.`;
+
+      const receiverTotal = sum(receiverInputs);
+      const receiverChecksum = receiverTotal % 256;
+      receiverInfo.textContent = `Recalculated: total = ${receiverTotal}, checksum = ${receiverChecksum}. Received checksum: ${senderChecksum}.`;
+
+      if (senderChecksum === receiverChecksum) {
+        status.className = 'status ok';
+        status.textContent = 'The checksums match, so the data is accepted.';
+      } else {
+        status.className = 'status fail';
+        status.textContent = 'The checksums do NOT match — an error has occurred, and the data is sent again.';
+      }
+    }
+
+    senderInputs.forEach(inp => inp.addEventListener('input', updateChecksum));
+    receiverInputs.forEach(inp => inp.addEventListener('input', updateChecksum));
+
+    window.resetChecksumDemo = function() {
+      senderInputs.forEach((inp, i) => inp.value = [23, 107, 56, 200, 91][i]);
+      receiverInputs.forEach((inp, i) => inp.value = [23, 107, 56, 200, 91][i]);
+      updateChecksum();
+    };
+
+    updateChecksum();
+  })();
+
+  /* ===== ISBN DEMO ===== */
+  (function() {
+    const inputs = document.querySelectorAll('.isbn-digit');
+    const tableContainer = document.getElementById('isbnTable');
+    const info = document.getElementById('isbnInfo');
+    const status = document.getElementById('isbnStatus');
+    const correctCheckDigit = 7;
+
+    function renderISBN() {
+      const digits = Array.from(inputs).map(inp => parseInt(inp.value, 10) || 0);
+      const weights = [1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3];
+      const products = digits.map((d, i) => d * weights[i]);
+      const total = products.reduce((a, b) => a + b, 0);
+      const nextMultiple = Math.ceil((total + 1) / 10) * 10;
+      const checkDigit = nextMultiple - total;
+
+      let html = '<table style="width:100%; border-collapse:collapse; font-family:var(--mono); font-size:0.8rem; text-align:center;">';
+      html += '<tr style="background:#e9eff8; font-weight:600;">';
+      html += '<th style="border:1px solid var(--border); padding:0.3rem;">Digit</th>';
+      digits.forEach(d => html += `<th style="border:1px solid var(--border); padding:0.3rem;">${d}</th>`);
+      html += '</tr>';
+      html += '<tr>';
+      html += '<th style="border:1px solid var(--border); padding:0.3rem;">Weight</th>';
+      weights.forEach(w => html += `<th style="border:1px solid var(--border); padding:0.3rem;">× ${w}</th>`);
+      html += '</tr>';
+      html += '<tr>';
+      html += '<th style="border:1px solid var(--border); padding:0.3rem;">Product</th>';
+      products.forEach(p => html += `<td style="border:1px solid var(--border); padding:0.3rem;">${p}</td>`);
+      html += '</tr>';
+      html += '</table>';
+      tableContainer.innerHTML = html;
+
+      info.textContent = `The products add up to ${total}. The next multiple of 10 is ${nextMultiple}, so the check digit is ${nextMultiple} − ${total} = ${checkDigit}.`;
+
+      if (checkDigit === correctCheckDigit) {
+        status.className = 'status ok';
+        status.textContent = `The check digit entered is ${correctCheckDigit}, which matches, so the number is accepted.`;
+      } else {
+        status.className = 'status fail';
+        status.textContent = `The correct check digit should be ${correctCheckDigit}, but the number entered produces ${checkDigit} — an error has been made!`;
+      }
+    }
+
+    inputs.forEach(inp => {
+      inp.addEventListener('input', () => {
+        let val = parseInt(inp.value, 10);
+        if (isNaN(val)) val = 0;
+        if (val < 0) val = 0;
+        if (val > 9) val = 9;
+        inp.value = val;
+        renderISBN();
+      });
+    });
+
+    window.resetISBN = function() {
+      const validDigits = [9, 7, 8, 0, 3, 0, 6, 4, 0, 6, 1, 5];
+      inputs.forEach((inp, i) => inp.value = validDigits[i]);
+      renderISBN();
+    };
+
+    renderISBN();
+  })();
+
+  /* ===== ARQ DEMO ===== */
+  (function() {
+    const senderLog = document.getElementById('arqSenderLog');
+    const receiverLog = document.getElementById('arqReceiverLog');
+    const timerEl = document.getElementById('arqTimer');
+    let timeoutId = null;
+
+    function getScenario() {
+      return document.querySelector('input[name="arqScenario"]:checked').value;
+    }
+
+    function addToLane(lane, text, type) {
+      const div = document.createElement('div');
+      div.className = 'arrow ' + type;
+      div.textContent = text;
+      lane.appendChild(div);
+    }
+
+    function resetARQDemo() {
+      if (timeoutId) clearTimeout(timeoutId);
+      senderLog.innerHTML = '';
+      receiverLog.innerHTML = '';
+      timerEl.textContent = 'timer: —';
+    }
+
+    window.runARQDemo = function() {
+      resetARQDemo();
+      const scenario = getScenario();
+      let step = 0;
+
+      const steps = [];
+
+      if (scenario === 'ok') {
+        steps.push({ lane: 'sender', text: 'DATA BLOCK 1 →', type: 'data' });
+        steps.push({ lane: 'receiver', text: '← ACK', type: 'ack' });
+        steps.push({ lane: 'sender', text: 'DATA BLOCK 2 →', type: 'data' });
+        steps.push({ lane: 'receiver', text: '← ACK', type: 'ack' });
+      } else if (scenario === 'error') {
+        steps.push({ lane: 'sender', text: 'DATA BLOCK 1 →', type: 'data' });
+        steps.push({ lane: 'receiver', text: '← NACK (error!)', type: 'nack' });
+        steps.push({ lane: 'sender', text: 'DATA BLOCK 1 → (resend)', type: 'data' });
+        steps.push({ lane: 'receiver', text: '← ACK', type: 'ack' });
+      } else {
+        steps.push({ lane: 'sender', text: 'DATA BLOCK 1 →', type: 'data' });
+        steps.push({ lane: 'receiver', text: '(ACK lost)', type: 'nack' });
+        steps.push({ lane: 'sender', text: '⏰ TIMEOUT', type: 'timeout' });
+        steps.push({ lane: 'sender', text: 'DATA BLOCK 1 → (resend)', type: 'data' });
+        steps.push({ lane: 'receiver', text: '← ACK', type: 'ack' });
+      }
+
+      function playStep() {
+        if (step >= steps.length) {
+          timerEl.textContent = 'timer: done ✓';
+          return;
+        }
+        const s = steps[step];
+        const lane = s.lane === 'sender' ? senderLog : receiverLog;
+        addToLane(lane, s.text, s.type);
+
+        if (s.type === 'data') {
+          timerEl.textContent = 'timer: running…';
+        } else if (s.type === 'ack' || s.type === 'nack') {
+          timerEl.textContent = 'timer: stopped';
+        } else if (s.type === 'timeout') {
+          timerEl.textContent = 'timer: TIMEOUT!';
+        }
+
+        step++;
+        timeoutId = setTimeout(playStep, 800);
+      }
+
+      playStep();
+    };
+
+    window.resetARQDemo = resetARQDemo;
+  })();
+
+  /* ===== TEACHER LOCK ===== */
+  (function(){
+    const PASSWORD = 'teacher1';
+    const lockScreen = document.getElementById('lockScreen');
+    const content    = document.getElementById('teacherContent');
+    const input      = document.getElementById('lockInput');
+    const btn        = document.getElementById('lockBtn');
+    const msg        = document.getElementById('lockMsg');
+
+    function tryUnlock(){
+      if (input.value === PASSWORD){
+        lockScreen.classList.add('hidden');
+        content.classList.remove('hidden');
+        msg.textContent = '';
+      } else {
+        msg.textContent = 'Incorrect password. Try again.';
+        input.value = '';
+        input.focus();
+      }
+    }
+    btn.addEventListener('click', tryUnlock);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+  })();
+</script>
+
+</body>
+</html>
