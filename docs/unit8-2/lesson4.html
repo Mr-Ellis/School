@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.2 Lesson 4 · Debugging Programs with MicroPython</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand { margin-right: auto; font-weight: 600; color: white; font-size: 1.1rem; }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: #1f6390; text-decoration: none; font-weight: 500; margin-bottom: 1.5rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 {
+      font-size: 2.4rem; font-weight: 700; color: #0b2a4a;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .page-header h1 i { color: #2a6f97; font-size: 2rem; }
+    .page-header .sub {
+      color: #475569; font-size: 1rem; background: #e9eff8;
+      display: inline-block; padding: 0.3rem 1.4rem; border-radius: 40px; margin-top: 0.3rem;
+    }
+
+    .lesson-content {
+      background: white; border-radius: 24px; padding: 2rem 2.5rem;
+      border: 1px solid #e5edf5; box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h2 {
+      font-size: 1.5rem; font-weight: 600; color: #0b2a4a;
+      margin: 1.8rem 0 0.8rem 0; border-left: 5px solid #2a6f97; padding-left: 15px;
+    }
+    .lesson-content h2:first-of-type { margin-top: 0; }
+    .lesson-content h3 { font-size: 1.1rem; font-weight: 600; color: #0b2a4a; margin: 1.2rem 0 0.4rem 0; }
+    .lesson-content p { margin-bottom: 0.6rem; }
+    .lesson-content ul, .lesson-content ol { padding-left: 1.6rem; margin: 0.5rem 0 1rem 0; }
+    .lesson-content li { margin-bottom: 0.25rem; }
+
+    .objectives-box {
+      background: #eef6fc; border-radius: 16px; padding: 0.8rem 1.4rem;
+      margin: 0.5rem 0 1.2rem 0; border-left: 4px solid #2a6f97;
+    }
+    .objectives-box strong { color: #0b2a4a; }
+    .objectives-box ul { margin: 0.2rem 0 0 1.2rem; padding-left: 0.5rem; }
+    .objectives-box ul li { list-style-type: disc; font-size: 0.95rem; }
+
+    .strand-box {
+      background: #f3e5f5; border-radius: 16px; padding: 0.8rem 1.4rem;
+      margin: 1rem 0 1.2rem 0; border-left: 4px solid #8e24aa; font-size: 0.9rem;
+    }
+    .strand-box strong { color: #4a148c; }
+    .strand-box p { margin-bottom: 0.3rem; color: #3e1058; }
+
+    .highlight-box {
+      background: #eef6fc; padding: 1rem 1.6rem; border-radius: 16px;
+      border-left: 5px solid #2a6f97; margin: 1rem 0;
+    }
+    .highlight-box strong { color: #0b2a4a; }
+    .highlight-box.green { border-left-color: #4caf50; background: #edf7ed; }
+    .highlight-box.amber { border-left-color: #f9a825; background: #fff8e1; }
+    .highlight-box.purple { border-left-color: #8e24aa; background: #f7edfa; }
+
+    .starter-callout {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      border: 2px solid #e65100; border-radius: 20px;
+      padding: 1.4rem 1.8rem; margin: 1.5rem 0;
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .starter-callout .badge {
+      background: #e65100; color: white; font-weight: 700;
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem; border-radius: 30px; white-space: nowrap; flex-shrink: 0;
+    }
+    .starter-callout h3 { margin-top: 0; color: #7a3300; font-size: 1.15rem; }
+    .starter-callout p { margin-bottom: 0.3rem; color: #5a2900; }
+    .starter-callout a { color: #e65100; font-weight: 600; text-decoration: none; border-bottom: 2px solid #e65100; }
+    .starter-callout a:hover { color: #7a3300; }
+
+    /* ===== MAIN ACTIVITY (HERO) ===== */
+    .hero-activity {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 3px solid #2d8f2d; border-radius: 24px;
+      padding: 1.8rem 2rem; margin: 1.8rem 0;
+      box-shadow: 0 8px 24px rgba(45, 143, 45, 0.15);
+    }
+    .hero-activity .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #2d8f2d; color: white;
+      font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+      padding: 0.4rem 1.1rem; border-radius: 30px; margin-bottom: 0.8rem;
+    }
+    .hero-activity h3 { margin-top: 0; color: #1b5e20; font-size: 1.35rem; }
+    .hero-activity p, .hero-activity li { color: #1b3d1b; }
+    .hero-activity ol, .hero-activity ul { margin-left: 0.2rem; }
+
+    .main-task {
+      background: linear-gradient(135deg, #fff8e1, #ffecb3);
+      border: 2px solid #f9a825; border-radius: 20px;
+      padding: 1.4rem 1.8rem; margin: 1.5rem 0;
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .main-task .badge {
+      background: #f9a825; color: #4a2c00; font-weight: 700;
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem; border-radius: 30px; white-space: nowrap; flex-shrink: 0;
+    }
+    .main-task h3 { margin-top: 0; color: #7a4b00; font-size: 1.15rem; }
+    .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
+
+    .lab-callout {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 2px solid #2d8f2d; border-radius: 20px;
+      padding: 1.4rem 1.8rem; margin: 1.5rem 0;
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .lab-callout .badge {
+      background: #2d8f2d; color: white; font-weight: 700;
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem; border-radius: 30px; white-space: nowrap; flex-shrink: 0;
+    }
+    .lab-callout h3 { margin-top: 0; color: #1b5e20; font-size: 1.15rem; }
+    .lab-callout p { margin-bottom: 0.3rem; color: #2e4a2e; }
+
+    .code-block {
+      background: #1e293b; border-left: 5px solid #2a6f97; color: #e2e8f0;
+      font-family: monospace; font-size: 0.88rem;
+      padding: 1rem 1.4rem; border-radius: 12px; margin: 1rem 0; overflow-x: auto;
+    }
+    .code-block .kw { color: #7bb3ff; }
+    .code-block .num { color: #f9a825; }
+    .code-block .str { color: #a5d6a7; }
+    .code-block .comment { color: #94a3b8; }
+
+    .compare-table, .trace-table {
+      width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem;
+    }
+    .compare-table th, .compare-table td, .trace-table th, .trace-table td {
+      border: 1px solid #d4e3f0; padding: 0.6rem 0.8rem;
+    }
+    .compare-table th, .trace-table th {
+      background: #e9eff8; color: #0b2a4a; font-weight: 600; text-align: left;
+    }
+    .compare-table tr:nth-child(even) td { background: #f8fafc; }
+    .trace-table td { text-align: center; }
+    .trace-table td:first-child, .trace-table td:nth-child(2) { text-align: left; }
+    .trace-table .yes { background: #c8e6c9; color: #1b5e20; font-weight: 600; }
+    .trace-table .no { background: #ffcdd2; color: #b71c1c; font-weight: 600; }
+    .trace-table input, .trace-table select {
+      width: 100%; min-width: 70px; padding: 0.35rem 0.5rem;
+      border: 1.5px solid #d4e3f0; border-radius: 8px;
+      font-family: inherit; font-size: 0.85rem; color: #0b2a4a;
+      background: white; text-align: center;
+    }
+    .trace-table input:focus, .trace-table select:focus {
+      outline: none; border-color: #2a6f97;
+      box-shadow: 0 0 0 2px rgba(42, 111, 151, 0.15);
+    }
+    .trace-table select { cursor: pointer; }
+    .saved-note { font-size: 0.85rem; font-weight: 600; min-height: 1.2rem; margin-top: 0.4rem; }
+
+    .binary-tool {
+      background: #f8fafc; border: 1px solid #dceaf7; border-radius: 20px;
+      padding: 1.4rem 1.6rem; margin: 1.2rem 0;
+    }
+    .binary-tool h3 { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+    .binary-tool .bits-row {
+      display: flex; gap: 0.5rem; justify-content: center;
+      flex-wrap: wrap; margin: 1rem 0;
+    }
+    .binary-tool .bit-btn {
+      width: 56px; height: 66px; border-radius: 12px;
+      border: 2px solid #b6cfe5; background: white;
+      font-family: monospace; font-size: 1.6rem; font-weight: 700;
+      color: #94a3b8; cursor: pointer; transition: 0.2s;
+    }
+    .binary-tool .bit-btn.on {
+      background: #0b2a4a; border-color: #0b2a4a; color: #7bb3ff;
+      box-shadow: 0 4px 14px rgba(11,42,74,0.3);
+    }
+    .binary-tool .binary-readout {
+      display: flex; flex-wrap: wrap; gap: 1rem 2rem;
+      justify-content: center; align-items: center;
+      background: white; border: 2px solid #d4e3f0; border-radius: 12px;
+      padding: 1rem 1.4rem; font-family: monospace;
+    }
+    .binary-tool .binary-readout .big {
+      font-size: 1.5rem; font-weight: 700; color: #0b2a4a; letter-spacing: 4px;
+    }
+    .binary-tool .binary-readout .label { font-size: 0.8rem; color: #64748b; }
+    .binary-tool .binary-readout .char-out {
+      font-size: 2rem; font-weight: 700; color: #2d8f2d;
+      background: #e8f5e9; border-radius: 10px; padding: 0.2rem 1rem; min-width: 70px; text-align: center;
+    }
+    .binary-tool .binary-readout .dec-out {
+      font-size: 1.4rem; font-weight: 700; color: #e65100;
+    }
+
+    .checklist-tool {
+      background: #f8fafc; border: 1px solid #dceaf7; border-radius: 20px;
+      padding: 1.4rem 1.6rem; margin: 1.2rem 0;
+    }
+    .checklist-tool h3 { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+    .checklist-tool .check-item {
+      display: flex; align-items: flex-start; gap: 0.8rem;
+      background: white; border: 1.5px solid #e5edf5; border-radius: 12px;
+      padding: 0.6rem 1rem; margin-bottom: 0.5rem;
+      cursor: pointer; transition: 0.2s; user-select: none;
+    }
+    .checklist-tool .check-item:hover { border-color: #7bb3ff; }
+    .checklist-tool .check-item.checked {
+      background: #e8f5e9; border-color: #4caf50;
+    }
+    .checklist-tool .check-item .box {
+      width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+      border: 2px solid #b6cfe5; display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: white; margin-top: 2px;
+    }
+    .checklist-tool .check-item.checked .box { background: #2d8f2d; border-color: #2d8f2d; }
+    .checklist-tool .check-item span.text { font-size: 0.9rem; color: #0b2a4a; }
+    .checklist-tool .progress-note {
+      margin-top: 0.6rem; font-weight: 600; font-size: 0.9rem; color: #1f6390;
+    }
+
+    .debug-file {
+      background: #f8fafc; border: 1px solid #dceaf7; border-radius: 20px;
+      padding: 1.4rem 1.6rem; margin: 1.2rem 0;
+    }
+    .debug-file h3 { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+    .debug-file .line {
+      display: flex; align-items: center; gap: 0.8rem;
+      background: #1e293b; color: #e2e8f0;
+      font-family: monospace; font-size: 0.82rem;
+      border-radius: 8px; padding: 0.4rem 0.8rem; margin-bottom: 0.3rem;
+      cursor: pointer; transition: 0.2s;
+    }
+    .debug-file .line:hover { background: #2a3a52; }
+    .debug-file .line .ln {
+      color: #64748b; min-width: 22px; text-align: right; flex-shrink: 0;
+    }
+    .debug-file .line .code { white-space: pre; overflow-x: auto; }
+    .debug-file .line .flag {
+      margin-left: auto; font-size: 0.7rem; font-weight: 700;
+      padding: 0.15rem 0.5rem; border-radius: 20px; white-space: nowrap;
+      background: #475569; color: #cbd5e1;
+    }
+    .debug-file .line.flagged { background: #7a1f1f; }
+    .debug-file .line.flagged .flag { background: #f9a825; color: #4a2c00; }
+    .debug-file .feedback { font-weight: 600; margin-top: 0.6rem; font-size: 0.9rem; }
+    .debug-file .feedback.ok { color: #2d8f2d; }
+    .debug-file .feedback.no { color: #b71c1c; }
+
+    .group-work {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      border: 2px solid #1e88e5; border-radius: 20px;
+      padding: 1.4rem 1.8rem; margin: 1.5rem 0;
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .group-work .badge {
+      background: #1e88e5; color: white; font-weight: 700;
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem; border-radius: 30px; white-space: nowrap; flex-shrink: 0;
+    }
+    .group-work h3 { margin-top: 0; color: #0d47a1; font-size: 1.15rem; }
+    .group-work p { margin-bottom: 0.3rem; color: #0d3b6e; }
+    .group-work ul { margin: 0.5rem 0 0 0; padding-left: 1.2rem; }
+    .group-work ul li { color: #0d3b6e; font-size: 0.9rem; }
+
+    .quiz {
+      background: #f8fafc; border: 1px solid #dceaf7; border-radius: 20px;
+      padding: 1.4rem 1.6rem; margin: 1.2rem 0;
+    }
+    .quiz h3 { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+    .quiz .q {
+      margin: 1rem 0; padding: 0.9rem 1.2rem; background: white;
+      border-radius: 14px; border: 1px solid #e5edf5;
+    }
+    .quiz .q p { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz .q button {
+      background: #eef6fc; border: 1.5px solid #d4e3f0; color: #0b2a4a;
+      padding: 0.4rem 1rem; border-radius: 30px; font-size: 0.85rem;
+      margin: 0.2rem 0.3rem 0.2rem 0; cursor: pointer; transition: 0.2s; font-weight: 500;
+    }
+    .quiz .q button:hover { background: #dbeafe; border-color: #7bb3ff; }
+    .quiz .q button.correct { background: #c8e6c9; border-color: #2d8f2d; color: #1b5e20; font-weight: 700; }
+    .quiz .q button.incorrect { background: #ffcdd2; border-color: #e53935; color: #b71c1c; }
+    .quiz .q .answer-feedback { font-size: 0.82rem; margin-top: 0.4rem; min-height: 1.2rem; font-weight: 500; }
+    .quiz .q .answer-feedback.ok { color: #2d8f2d; }
+    .quiz .q .answer-feedback.no { color: #b71c1c; }
+
+    .resource-bar {
+      display: flex; flex-wrap: wrap; gap: 0.8rem 1.5rem;
+      background: white; padding: 0.8rem 1.8rem; border-radius: 60px;
+      border: 1px solid #d4e3f0; margin-bottom: 2rem; align-items: center;
+    }
+    .resource-bar a {
+      color: #1f6390; text-decoration: none; font-weight: 500; font-size: 0.9rem;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .resource-bar a:hover { text-decoration: underline; }
+    .resource-bar .label { font-weight: 600; color: #0b2a4a; font-size: 0.85rem; }
+
+    .keyword-row {
+      display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem;
+      background: #f1f6fc; padding: 0.8rem 1.2rem;
+      border-radius: 12px; margin: 0.5rem 0 1rem 0;
+    }
+    .keyword-row span {
+      background: white; padding: 0.2rem 0.8rem;
+      border-radius: 20px; border: 1px solid #dce4ed; font-size: 0.85rem;
+    }
+
+    .divider { margin: 2.5rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    .ascii-mini {
+      width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.8rem;
+    }
+    .ascii-mini th { background: #0b2a4a; color: white; padding: 0.4rem; }
+    .ascii-mini td { border: 1px solid #d4e3f0; padding: 0.35rem 0.5rem; text-align: center; background: white; }
+    .ascii-mini tr:nth-child(even) td { background: #f8fafc; }
+    .ascii-mini td.ch { font-weight: 700; color: #0b2a4a; }
+    .ascii-mini td.bin { color: #1f6390; }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
+      .lesson-content { padding: 1.2rem 1.4rem; }
+      .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
+      .main-task, .starter-callout, .lab-callout, .group-work { flex-direction: column; gap: 0.6rem; }
+      .hero-activity { padding: 1.2rem 1.4rem; }
+      .binary-tool .bit-btn { width: 40px; height: 50px; font-size: 1.2rem; }
+      .trace-table { font-size: 0.78rem; }
+      .trace-table input, .trace-table select { font-size: 0.75rem; padding: 0.25rem; }
+      .ascii-mini { font-size: 0.68rem; }
+      .ascii-mini td, .ascii-mini th { padding: 0.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+    <a href="../year8-units.html"><i class="fas fa-arrow-left"></i> Year 8 Units</a>
+    <a href="../unit8-2-pseudocode.html"><i class="fas fa-diagram-project"></i> 8.2 Pseudocode</a>
+  </nav>
+
+  <a href="../unit8-2-pseudocode.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to 8.2 Pseudocode &amp; Algorithms</a>
+
+  <div class="page-header">
+    <h1><i class="fas fa-bug"></i> Lesson 4 · Debugging Programs with MicroPython</h1>
+    <div class="sub"><i class="fas fa-arrow-right" style="margin-right:6px;"></i> Student's Book pages 53–59</div>
+  </div>
+
+  <div class="resource-bar">
+    <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+    <a href="https://python.microbit.org/v/2" target="_blank"><i class="fas fa-code"></i> MicroPython Editor</a>
+    <a href="https://makecode.microbit.org" target="_blank"><i class="fas fa-cubes"></i> MakeCode</a>
+    <a href="https://app.diagrams.net" target="_blank"><i class="fas fa-project-diagram"></i> draw.io Flowcharts</a>
+  </div>
+
+  <div class="lesson-content">
+
+    <div class="objectives-box">
+      <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+      <ul>
+        <li><strong>8P.02</strong> Identify and describe data types in text-based programs, including Integer, Real and Boolean.</li>
+        <li><strong>8P.04</strong> Know how to develop text-based programs with conditional (selection) statements.</li>
+        <li><strong>8P.07</strong> Use an iterative process to develop programs.</li>
+        <li><strong>8P.08</strong> Know how to develop and apply test plans.</li>
+        <li><strong>8P.10</strong> Know how to test algorithms using suitable data.</li>
+        <li><strong>8P.11</strong> Know how to develop programs that allow two or more physical devices to interact.</li>
+      </ul>
+    </div>
+
+    <div class="strand-box">
+      <strong><i class="fas fa-brain" style="margin-right:6px;"></i> Strand 3 · Machine Learning Models &amp; Algorithms (The Pattern Architect)</strong>
+      <p>Binary encoding and debugging both rely on rule-based reasoning. Debugging a program means finding where a rule has been broken — the same process an AI engineer uses when a model misclassifies an input. Building a test plan with expected outputs is exactly how ML models are validated: give the system known inputs, compare the actual output to the expected output, and trace the error back to its source.</p>
+    </div>
+
+    <!-- ===== STARTER ===== -->
+    <div class="starter-callout">
+      <span class="badge">🔥 Starter</span>
+      <div>
+        <h3>Binary Decode Warm-Up (5 mins)</h3>
+        <p>Each binary number below represents one letter. Use the ASCII mini-table to work out the word:</p>
+        <p style="font-family:monospace; font-size:1.05rem; font-weight:700; letter-spacing:2px; color:#7a3300;">01100010 &nbsp; 01100101 &nbsp; 01100100</p>
+        <p>Discuss with a partner: how does a computer know which letter a key press represents?</p>
+        <p><em>Answer revealed in the Binary section below.</em></p>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 1: BINARY ===== -->
+    <h2>💻 How Computers Store Letters: Binary &amp; ASCII</h2>
+    <p>Computers are made of millions of tiny switches that can only ever be <strong>ON (1)</strong> or <strong>OFF (0)</strong>. That is why computers "speak" in <strong>binary</strong> — a series of 0s and 1s.</p>
+    <p>Every letter, number and symbol on a keyboard has its own unique <strong>8-bit binary code</strong>. This is called the <strong>ASCII</strong> code.</p>
+
+    <h3>ASCII mini-table (lowercase letters)</h3>
+    <table class="ascii-mini">
+      <tr>
+        <th>Letter</th><td class="ch">a</td><td class="ch">b</td><td class="ch">c</td><td class="ch">d</td><td class="ch">e</td><td class="ch">f</td><td class="ch">g</td><td class="ch">h</td>
+      </tr>
+      <tr>
+        <th>Binary</th><td class="bin">01100001</td><td class="bin">01100010</td><td class="bin">01100011</td><td class="bin">01100100</td><td class="bin">01100101</td><td class="bin">01100110</td><td class="bin">01100111</td><td class="bin">01101000</td>
+      </tr>
+      <tr>
+        <th>Letter</th><td class="ch">i</td><td class="ch">j</td><td class="ch">k</td><td class="ch">l</td><td class="ch">m</td><td class="ch">n</td><td class="ch">o</td><td class="ch">p</td>
+      </tr>
+      <tr>
+        <th>Binary</th><td class="bin">01101001</td><td class="bin">01101010</td><td class="bin">01101011</td><td class="bin">01101100</td><td class="bin">01101101</td><td class="bin">01101110</td><td class="bin">01101111</td><td class="bin">01110000</td>
+      </tr>
+    </table>
+
+    <div class="highlight-box green">
+      <i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Starter answer:</strong> 01100010 = b, 01100101 = e, 01100100 = d → the word is <strong>"bed"</strong>.
+    </div>
+
+    <!-- ===== INTERACTIVE BINARY DECODER ===== -->
+    <div class="binary-tool">
+      <h3><i class="fas fa-toggle-on" style="color:#2a6f97;"></i> Interactive Binary Decoder</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click the 8 bits to turn them ON or OFF. The decoder works out the decimal value and which lowercase letter you have created. Try to build the letter <strong>y</strong> (the middle letter of the hidden word) before you start the lab.</p>
+      <div class="bits-row" id="bitsRow">
+        <button class="bit-btn" data-bit="0">0</button>
+        <button class="bit-btn" data-bit="1">0</button>
+        <button class="bit-btn" data-bit="2">0</button>
+        <button class="bit-btn" data-bit="3">0</button>
+        <button class="bit-btn" data-bit="4">0</button>
+        <button class="bit-btn" data-bit="5">0</button>
+        <button class="bit-btn" data-bit="6">0</button>
+        <button class="bit-btn" data-bit="7">0</button>
+      </div>
+      <div class="binary-readout">
+        <div>
+          <div class="label">Binary</div>
+          <div class="big" id="binReadout">00000000</div>
+        </div>
+        <div>
+          <div class="label">Decimal</div>
+          <div class="dec-out" id="decReadout">0</div>
+        </div>
+        <div>
+          <div class="label">Letter</div>
+          <div class="char-out" id="charReadout">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 2: RADIO ===== -->
+    <h2>📡 Sending a Message Between Two micro:bits</h2>
+    <p>The micro:bit has a built-in <strong>radio</strong> that lets two devices talk to each other without any wires. Two functions do the work:</p>
+    <ul>
+      <li><code>radio.send()</code> — sends data from one micro:bit to another.</li>
+      <li><code>radio.receive()</code> — reads any message that has arrived.</li>
+    </ul>
+
+    <div class="highlight-box amber">
+      <i class="fas fa-exclamation-triangle" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Critical rule:</strong> both micro:bits must be on the <strong>same radio group</strong> to communicate. The group is a number from 0 to 255. Choose a group that is <strong>unique to your pair</strong> — if another pair uses the same group, your messages will be mixed up with theirs.
+    </div>
+
+    <!-- ===== MAIN ACTIVITY: SEND THE HIDDEN WORD ===== -->
+    <div class="hero-activity">
+      <span class="hero-badge"><i class="fas fa-star"></i> Main Activity · Micro:bit Pair Work</span>
+      <h3>Send the Hidden Word Between Two micro:bits</h3>
+      <p>In pairs, you will program two micro:bits to talk to each other over the radio. One micro:bit sends a message; the other receives it and scrolls a sequence of binary numbers. You decode the numbers to reveal a hidden three-letter word.</p>
+
+      <h3 style="font-size:1.05rem; margin-top:1.2rem;">What you need</h3>
+      <ul>
+        <li>Two micro:bits and two USB cables</li>
+        <li>The MicroPython editor open on your device</li>
+        <li>The program file <code>HiddenWord.py</code></li>
+        <li>Pen and paper (you must write down each binary number as it scrolls)</li>
+      </ul>
+
+      <h3 style="font-size:1.05rem; margin-top:1.2rem;">Step-by-step</h3>
+      <ol>
+        <li><strong>Agree a radio group</strong> with your partner. Pick a number between 0 and 255 that no other pair is using. Write it down: group ______</li>
+        <li>Open <code>HiddenWord.py</code> in the editor and change the line <code>radio.config(group=65)</code> so the number matches your group.</li>
+        <li><strong>Download the program to BOTH micro:bits.</strong> Both must run the same program with the same group number.</li>
+        <li>Press <strong>button A</strong> on one micro:bit. The other micro:bit should beep and scroll the first binary number.</li>
+        <li><strong>Write down each binary number</strong> as it appears. There are three numbers in total — one for each letter of the hidden word.</li>
+        <li>Use the ASCII mini-table to decode the three letters and work out the hidden word.</li>
+      </ol>
+
+      <div class="highlight-box green" style="margin-top:1.2rem;">
+        <i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i>
+        <strong>Check your answer:</strong> the hidden word is <strong>"bye"</strong> — 01100010 = b, 01111001 = y, 01100101 = e.
+      </div>
+
+      <div class="highlight-box" style="margin-top:1rem; background:#fff; border-left-color:#2d8f2d;">
+        <strong>Then extend it (10 mins):</strong> add sound and a final image so the receiver knows when each letter starts and ends, and when the whole message is complete.
+        <ul style="margin-top:0.4rem;">
+          <li>Add <code>music.play('c')</code> after each letter so there is a beep between numbers.</li>
+          <li>Add <code>display.show(Image.YES)</code> at the end so the receiver knows the message has finished.</li>
+          <li>Test again with your partner. Which version is easier to decode — with or without the beeps and final image?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== DEBUGGING ===== -->
+    <h2>🛠️ Debugging: Finding and Fixing Errors</h2>
+    <p>If your radio message does not arrive, the problem is often an <strong>error in the code</strong>. When a program has a <strong>syntax error</strong>, it will not run: the micro:bit displays a <strong>sad face</strong> and the <strong>line number</strong> where it found the problem. Use that line number to find and fix the mistake.</p>
+
+    <h3>Common mistakes</h3>
+    <table class="compare-table">
+      <thead>
+        <tr><th>Mistake</th><th>What to check</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Missing colon <code>:</code></td><td>Every <code>if</code>, <code>else</code>, <code>while</code> and <code>for</code> line needs a colon at the end.</td></tr>
+        <tr><td>Spelling errors</td><td><code>Display</code> instead of <code>display</code>, <code>image.heart</code> instead of <code>Image.HEART</code>. Python is <strong>case-sensitive</strong>.</td></tr>
+        <tr><td>Missing brackets</td><td>Every opening <code>(</code> needs a closing <code>)</code>.</td></tr>
+        <tr><td>Missing quotation marks</td><td>Strings (text) must be wrapped in <code>" "</code> or <code>' '</code>.</td></tr>
+        <tr><td>Wrong radio group</td><td>Both micro:bits must use the same group number.</td></tr>
+        <tr><td>Missing indentation</td><td>Lines inside an <code>if</code> block must be indented.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- INTERACTIVE CHECKLIST -->
+    <div class="checklist-tool">
+      <h3><i class="fas fa-list-check" style="color:#2a6f97;"></i> Your Debugging Checklist</h3>
+      <p style="font-size:0.9rem; color:#475569;">Use this checklist if your message does not arrive. Click each item to tick it off.</p>
+
+      <div class="check-item" data-check="spelling"><div class="box"></div><span class="text">Spelling is correct (e.g. <code>display</code>, not <code>Display</code>).</span></div>
+      <div class="check-item" data-check="case"><div class="box"></div><span class="text">Capital letters are correct for images (e.g. <code>Image.HEART</code>).</span></div>
+      <div class="check-item" data-check="brackets"><div class="box"></div><span class="text">Brackets are opened and closed in the correct places.</span></div>
+      <div class="check-item" data-check="colon"><div class="box"></div><span class="text">A colon <code>:</code> is placed at the end of every conditional statement.</span></div>
+      <div class="check-item" data-check="if"><div class="box"></div><span class="text"><code>if</code> appears at the start of a conditional statement.</span></div>
+      <div class="check-item" data-check="quotes"><div class="box"></div><span class="text">Quotation marks are placed around any strings.</span></div>
+      <div class="check-item" data-check="indent"><div class="box"></div><span class="text">Lines inside a conditional block are indented.</span></div>
+      <div class="check-item" data-check="import"><div class="box"></div><span class="text">The libraries used (<code>radio</code>, <code>music</code>) are imported at the top.</span></div>
+
+      <div class="progress-note" id="checklistProgress">0 of 8 checks ticked.</div>
+    </div>
+
+    <!-- ===== DEBUG FILE ACTIVITY ===== -->
+    <div class="debug-file">
+      <h3><i class="fas fa-bug-slash" style="color:#e65100;"></i> Debug It: <code>GoFurtherDebug.py</code></h3>
+      <p style="font-size:0.9rem; color:#475569;">This program should scroll "Hello, World!" when A is pressed, show a heart when B is pressed, and play music when both are pressed. It has several errors. <strong>Click a line to flag it as an error</strong>, then click "Check My Flags".</p>
+
+      <div id="debugLines">
+        <div class="line" data-line="1"><span class="ln">1</span><span class="code">from microbit import *</span><span class="flag">✓</span></div>
+        <div class="line" data-line="2"><span class="ln">2</span><span class="code">import music</span><span class="flag">✓</span></div>
+        <div class="line" data-line="3"><span class="ln">3</span><span class="code"></span><span class="flag">✓</span></div>
+        <div class="line" data-line="4"><span class="ln">4</span><span class="code">while True:</span><span class="flag">✓</span></div>
+        <div class="line" data-line="5"><span class="ln">5</span><span class="code">    if button_a.is_pressed(</span><span class="flag">✓</span></div>
+        <div class="line" data-line="6"><span class="ln">6</span><span class="code">        diplay.scroll('Hello, World!</span><span class="flag">✓</span></div>
+        <div class="line" data-line="7"><span class="ln">7</span><span class="code">    if button_b.is_pressed):</span><span class="flag">✓</span></div>
+        <div class="line" data-line="8"><span class="ln">8</span><span class="code">        display.show(image.heart)</span><span class="flag">✓</span></div>
+        <div class="line" data-line="9"><span class="ln">9</span><span class="code">    if button_a.is_pressed() &amp; button_b.is_pressed():</span><span class="flag">✓</span></div>
+        <div class="line" data-line="10"><span class="ln">10</span><span class="code">        music.play(MUSIC.POWER_UP)</span><span class="flag">✓</span></div>
+      </div>
+
+      <button class="check-btn" id="checkDebugBtn" style="background:#0b2a4a; color:white; border:none; padding:0.6rem 1.4rem; border-radius:30px; font-weight:600; font-size:0.85rem; cursor:pointer; margin-top:0.5rem;">Check My Flags</button>
+      <button class="check-btn" id="revealDebugBtn" style="background:white; color:#1f6390; border:2px solid #b6cfe5; padding:0.6rem 1.4rem; border-radius:30px; font-weight:600; font-size:0.85rem; cursor:pointer; margin-top:0.5rem; margin-left:0.4rem;">Reveal Errors</button>
+      <div class="feedback" id="debugFeedback"></div>
+
+      <div class="highlight-box amber" id="debugReveal" style="display:none; margin-top:0.8rem;">
+        <strong>Errors found:</strong>
+        <ul style="margin-top:0.4rem;">
+          <li><strong>Line 5:</strong> missing closing bracket and colon → <code>if button_a.is_pressed():</code></li>
+          <li><strong>Line 6:</strong> <code>diplay</code> is misspelt, missing closing quotation mark and bracket → <code>display.scroll('Hello, World!')</code></li>
+          <li><strong>Line 7:</strong> the bracket is in the wrong place → <code>if button_b.is_pressed():</code></li>
+          <li><strong>Line 8:</strong> <code>image.heart</code> must be <code>Image.HEART</code> (capital letters).</li>
+          <li><strong>Line 9:</strong> <code>&amp;</code> is not a Boolean operator in Python → use <code>and</code>.</li>
+          <li><strong>Line 10:</strong> <code>MUSIC.POWER_UP</code> must be lowercase → <code>music.POWER_UP</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== TEST PLAN ===== -->
+    <h2>🧪 Test Plan: Did Your Message Arrive?</h2>
+    <p>A <strong>test plan</strong> is a table that tells you what to test, what you expect to happen, and what actually happened. Fill in the <strong>expected outcome before you test</strong>, then run the program and record the actual result. <strong>Fix one error at a time</strong> — this is an <strong>iterative process</strong>.</p>
+
+    <table class="trace-table" id="testPlanTable">
+      <thead>
+        <tr>
+          <th>Test</th>
+          <th>Input</th>
+          <th>Expected outcome</th>
+          <th>Pass / Fail</th>
+          <th>Error found</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>A button pressed on micro:bit 1</td>
+          <td><input type="text" placeholder="e.g. beep + scroll binary" data-row="1"></td>
+          <td>
+            <select data-row="1">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+          <td><input type="text" placeholder="Line ___ error" data-row="1"></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Message received on micro:bit 2</td>
+          <td><input type="text" placeholder="e.g. scroll 01100010" data-row="2"></td>
+          <td>
+            <select data-row="2">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+          <td><input type="text" placeholder="Line ___ error" data-row="2"></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Second pair uses same group</td>
+          <td><input type="text" placeholder="e.g. mixed messages" data-row="3"></td>
+          <td>
+            <select data-row="3">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+          <td><input type="text" placeholder="Line ___ error" data-row="3"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="saved-note" id="testPlanNote"></div>
+
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Tip:</strong> Testing early saves time! Fix small errors before they become big problems. Every error you find and fix is one <strong>iteration</strong> of the development cycle.
+    </div>
+
+    <!-- ===== CHALLENGE YOURSELF ===== -->
+    <h2>🚀 Challenge Yourself: Change the Input</h2>
+    <p>Open the file <code>ChallengeYourself.py</code>. The program currently sends a message when the A button is pressed. <strong>Your challenge:</strong> replace the A button with the <strong>shake</strong> gesture.</p>
+
+    <div class="code-block">
+      <span class="kw">from</span> microbit <span class="kw">import</span> *<br>
+      <span class="kw">import</span> radio<br><br>
+      radio.config(group=<span class="num">42</span>)<br>
+      radio.on()<br><br>
+      <span class="kw">while</span> True:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;message = radio.receive()<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> message:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.scroll(<span class="str">"8, 5, 12, 12, 15"</span>)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> accelerometer.was_gesture(<span class="str">'shake'</span>):<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.clear()<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radio.send(<span class="str">'message'</span>)
+    </div>
+
+    <div class="highlight-box purple">
+      <i class="fas fa-flask" style="color:#8e24aa; margin-right:8px;"></i>
+      <strong>Think about it:</strong> A conditional statement can have only one of two outputs: <strong>TRUE</strong> or <strong>FALSE</strong>. This is a <strong>Boolean output</strong>. When you shake the micro:bit, <code>accelerometer.was_gesture('shake')</code> returns TRUE; otherwise it returns FALSE. Which lines run when it is TRUE? Which are skipped when it is FALSE? Test it with your partner.
+    </div>
+
+    <!-- ===== SUPPORTING WORKSHEET ===== -->
+    <div class="main-task">
+      <span class="badge">📝 Supporting Task</span>
+      <div>
+        <h3>Worksheet 14 &amp; 15 — Written Practice</h3>
+        <p><strong>Worksheet 14:</strong> Use your checklist to find the errors in the program code, then open <code>ReviewDebugProgram.py</code> and fix the errors you identified.</p>
+        <p><strong>Worksheet 15:</strong> Use the test plan to identify the errors in the two MicroPython code images.</p>
+        <p style="margin-top:0.5rem;"><strong>Then:</strong> write your own test plan for <code>HiddenWord.py</code> using the table above — three tests with expected and actual outcomes.</p>
+      </div>
+    </div>
+
+    <!-- ===== PLENARY ===== -->
+    <div class="quiz" id="quiz">
+      <h3><i class="fas fa-flag-checkered" style="color:#2a6f97;"></i> Plenary — Exit Ticket</h3>
+      <p style="font-size:0.9rem; color:#475569;">Answer these five questions to check your understanding. Click an answer to see if you're right.</p>
+
+      <div class="q" data-correct="b">
+        <p>1. How many bits are used to represent one letter in ASCII?</p>
+        <button data-opt="a">A. 4</button>
+        <button data-opt="b">B. 8</button>
+        <button data-opt="c">C. 16</button>
+        <button data-opt="d">D. 1</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="c">
+        <p>2. What does <code>radio.send()</code> do?</p>
+        <button data-opt="a">A. Receives a message from another micro:bit</button>
+        <button data-opt="b">B. Turns the radio off</button>
+        <button data-opt="c">C. Sends data to another micro:bit</button>
+        <button data-opt="d">D. Changes the radio group</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p>3. A program has a syntax error. What does the micro:bit display?</p>
+        <button data-opt="a">A. A sad face and the line number</button>
+        <button data-opt="b">B. A happy face</button>
+        <button data-opt="c">C. The word "ERROR"</button>
+        <button data-opt="d">D. Nothing at all</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="d">
+        <p>4. Why must both micro:bits use the same radio group?</p>
+        <button data-opt="a">A. So the battery lasts longer</button>
+        <button data-opt="b">B. So the display is brighter</button>
+        <button data-opt="c">C. So the program runs faster</button>
+        <button data-opt="d">D. So they can send and receive each other's messages</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="b">
+        <p>5. What is the correct order for a test plan row?</p>
+        <button data-opt="a">A. Actual result → Input → Expected output</button>
+        <button data-opt="b">B. Input → Expected output → Actual result</button>
+        <button data-opt="c">C. Expected output → Actual result → Input</button>
+        <button data-opt="d">D. Input → Actual result → Expected output</button>
+        <div class="answer-feedback"></div>
+      </div>
+    </div>
+
+    <div class="highlight-box green">
+      <i class="fas fa-pen" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Exit ticket:</strong> On a sticky note, write the hidden word you decoded and <strong>one error you found and fixed</strong> in your radio program. Stick it on the board as you leave.
+    </div>
+
+    <h2>🔑 Keywords</h2>
+    <div class="keyword-row">
+      <span>binary</span>
+      <span>bit</span>
+      <span>ASCII</span>
+      <span>radio.send()</span>
+      <span>radio.receive()</span>
+      <span>radio group</span>
+      <span>syntax error</span>
+      <span>debugging</span>
+      <span>checklist</span>
+      <span>test plan</span>
+      <span>expected outcome</span>
+      <span>actual result</span>
+      <span>Boolean output</span>
+      <span>iterative process</span>
+      <span>conditional statement</span>
+    </div>
+
+  </div>
+
+  <hr class="divider" />
+  <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #5d7f9a; padding: 0.5rem 0; flex-wrap: wrap; gap: 0.5rem;">
+    <span><i class="fas fa-arrow-left" style="margin-right: 6px;"></i><a href="../unit8-2-pseudocode.html" style="color: #1f6390; text-decoration: none;">Back to 8.2 Pseudocode &amp; Algorithms</a></span>
+    <span>8.2 Lesson 4 · Debugging Programs with MicroPython</span>
+  </div>
+
+</div>
+
+<script>
+  // ===== INTERACTIVE BINARY DECODER =====
+  (function() {
+    const bitButtons = document.querySelectorAll('#bitsRow .bit-btn');
+    const binReadout = document.getElementById('binReadout');
+    const decReadout = document.getElementById('decReadout');
+    const charReadout = document.getElementById('charReadout');
+    const bits = [0, 0, 0, 0, 0, 0, 0, 0];
+
+    function updateDecoder() {
+      const binaryString = bits.join('');
+      binReadout.textContent = binaryString;
+      const decimal = parseInt(binaryString, 2);
+      decReadout.textContent = decimal;
+      if (decimal >= 97 && decimal <= 122) {
+        charReadout.textContent = String.fromCharCode(decimal);
+        charReadout.style.color = '#2d8f2d';
+        charReadout.style.background = '#e8f5e9';
+      } else {
+        charReadout.textContent = '—';
+        charReadout.style.color = '#94a3b8';
+        charReadout.style.background = '#f1f5f9';
+      }
+    }
+
+    bitButtons.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        bits[index] = bits[index] === 0 ? 1 : 0;
+        btn.textContent = bits[index];
+        btn.classList.toggle('on', bits[index] === 1);
+        updateDecoder();
+      });
+    });
+
+    [0,1,1,0,0,0,1,0].forEach((val, i) => {
+      bits[i] = val;
+      bitButtons[i].textContent = val;
+      bitButtons[i].classList.toggle('on', val === 1);
+    });
+    updateDecoder();
+  })();
+
+  // ===== INTERACTIVE CHECKLIST =====
+  (function() {
+    const items = document.querySelectorAll('.check-item');
+    const progress = document.getElementById('checklistProgress');
+
+    function updateProgress() {
+      const checked = document.querySelectorAll('.check-item.checked').length;
+      progress.textContent = checked + ' of ' + items.length + ' checks ticked.' + (checked === items.length ? ' ✅ Checklist complete!' : '');
+      progress.style.color = checked === items.length ? '#2d8f2d' : '#1f6390';
+    }
+
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('checked');
+        const box = item.querySelector('.box');
+        box.textContent = item.classList.contains('checked') ? '✓' : '';
+        updateProgress();
+      });
+    });
+    updateProgress();
+  })();
+
+  // ===== DEBUG FILE ACTIVITY =====
+  (function() {
+    const errorLines = [5, 6, 7, 8, 9, 10];
+    const lines = document.querySelectorAll('#debugLines .line');
+    const feedback = document.getElementById('debugFeedback');
+    const revealBox = document.getElementById('debugReveal');
+    const checkBtn = document.getElementById('checkDebugBtn');
+    const revealBtn = document.getElementById('revealDebugBtn');
+
+    lines.forEach(line => {
+      line.addEventListener('click', () => {
+        line.classList.toggle('flagged');
+        const flag = line.querySelector('.flag');
+        flag.textContent = line.classList.contains('flagged') ? '⚠ flagged' : '✓';
+      });
+    });
+
+    checkBtn.addEventListener('click', () => {
+      const flagged = [];
+      lines.forEach(line => {
+        if (line.classList.contains('flagged')) {
+          flagged.push(parseInt(line.getAttribute('data-line'), 10));
+        }
+      });
+
+      const correctCount = flagged.filter(n => errorLines.includes(n)).length;
+      const wrongFlags = flagged.filter(n => !errorLines.includes(n));
+
+      if (correctCount === errorLines.length && wrongFlags.length === 0) {
+        feedback.textContent = '✅ Excellent! You found all ' + errorLines.length + ' error lines.';
+        feedback.className = 'feedback ok';
+      } else if (correctCount > 0) {
+        feedback.textContent = '🤔 You found ' + correctCount + ' of ' + errorLines.length + ' error lines.' +
+          (wrongFlags.length ? ' You also flagged line(s) ' + wrongFlags.join(', ') + ' which are correct.' : '') +
+          ' Try again.';
+        feedback.className = 'feedback no';
+      } else {
+        feedback.textContent = '❌ No error lines flagged yet. Look carefully at lines 5–10.';
+        feedback.className = 'feedback no';
+      }
+    });
+
+    revealBtn.addEventListener('click', () => {
+      revealBox.style.display = revealBox.style.display === 'none' ? 'block' : 'none';
+    });
+  })();
+
+  // ===== TEST PLAN NOTE =====
+  (function() {
+    const table = document.getElementById('testPlanTable');
+    const note = document.getElementById('testPlanNote');
+    const inputs = table.querySelectorAll('input, select');
+
+    inputs.forEach(el => {
+      el.addEventListener('input', () => {
+        const rows = [1, 2, 3];
+        const complete = rows.every(r => {
+          const rowInputs = table.querySelectorAll('[data-row="' + r + '"]');
+          return Array.from(rowInputs).every(i => i.value.trim() !== '');
+        });
+        if (complete) {
+          note.textContent = '✅ Test plan complete — now run the program and check your expected outcomes!';
+          note.style.color = '#2d8f2d';
+        } else {
+          note.textContent = 'Fill in every box in the test plan before you test the program.';
+          note.style.color = '#64748b';
+        }
+      });
+    });
+  })();
+
+  // ===== QUIZ =====
+  (function() {
+    const questions = document.querySelectorAll('#quiz .q');
+    questions.forEach(q => {
+      const correct = q.getAttribute('data-correct');
+      const buttons = q.querySelectorAll('button');
+      const fb = q.querySelector('.answer-feedback');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
+          const chosen = btn.getAttribute('data-opt');
+          if (chosen === correct) {
+            btn.classList.add('correct');
+            fb.textContent = '✅ Correct!';
+            fb.className = 'answer-feedback ok';
+          } else {
+            btn.classList.add('incorrect');
+            fb.textContent = '❌ Not quite. Try again.';
+            fb.className = 'answer-feedback no';
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
