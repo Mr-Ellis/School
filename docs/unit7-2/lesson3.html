@@ -210,6 +210,35 @@
     }
     .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
 
+    .lab-callout {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 2px solid #2d8f2d;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .lab-callout .badge {
+      background: #2d8f2d;
+      color: white;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .lab-callout h3 {
+      margin-top: 0;
+      color: #1b5e20;
+      font-size: 1.15rem;
+    }
+    .lab-callout p { margin-bottom: 0.3rem; color: #2e4a2e; }
+
     .compare-table {
       width: 100%;
       border-collapse: collapse;
@@ -301,6 +330,60 @@
     }
     .trace-table .yes { background: #c8e6c9; color: #1b5e20; font-weight: 600; }
     .trace-table .no { background: #ffcdd2; color: #b71c1c; font-weight: 600; }
+
+    /* ===== INTERACTIVE TRACER TOOL ===== */
+    .tracer-tool {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .tracer-tool h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tracer-tool .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    .tracer-tool input[type="range"] {
+      flex: 1;
+      min-width: 180px;
+      accent-color: #2a6f97;
+    }
+    .tracer-tool .value-display {
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #0b2a4a;
+      background: #eef6fc;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      min-width: 80px;
+      text-align: center;
+    }
+    .tracer-tool .result-box {
+      background: white;
+      border: 2px solid #d4e3f0;
+      border-radius: 12px;
+      padding: 1rem 1.4rem;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+    .tracer-tool .result-box .condition {
+      font-family: monospace;
+      background: #f1f6fc;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+    }
+    .tracer-tool .result-box .outcome-true { color: #1b5e20; font-weight: 700; }
+    .tracer-tool .result-box .outcome-false { color: #b71c1c; font-weight: 700; }
 
     .quiz {
       background: #f8fafc;
@@ -409,7 +492,7 @@
       .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
       .lesson-content { padding: 1.2rem 1.4rem; }
       .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
-      .main-task, .starter-callout { flex-direction: column; gap: 0.6rem; }
+      .main-task, .starter-callout, .lab-callout { flex-direction: column; gap: 0.6rem; }
       .datatype-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
@@ -435,7 +518,7 @@
     <span class="label"><i class="fas fa-tools"></i> Tools:</span>
     <a href="https://python.microbit.org/v/2" target="_blank"><i class="fas fa-code"></i> MicroPython Editor</a>
     <a href="https://makecode.microbit.org" target="_blank"><i class="fas fa-cubes"></i> MakeCode</a>
-    <a href="https://app.diagrams.net" target="_blank"><i class="fas fa-project-diagram"></i> draw.io Flowcharts</a>
+    <a href="https://createai.microbit.org/" target="_blank"><i class="fas fa-lightbulb"></i> CreateAI</a>
   </div>
 
   <div class="lesson-content">
@@ -454,9 +537,9 @@
     <div class="starter-callout">
       <span class="badge">🔥 Starter</span>
       <div>
-        <h3>Homework Recap &amp; Sensor Devices</h3>
-        <p>Share your homework findings from <strong>Worksheet 10</strong>: which devices in your home or local environment use sensors?</p>
-        <p>Be ready to explain <strong>what the device does</strong> and <strong>how it uses a sensor</strong> to gather data and make a decision.</p>
+        <h3>Blooket Warm-Up</h3>
+        <p>Start with a quick <strong>Blooket</strong> game to recap data types, variables and comparison operators.</p>
+        <p><a href="https://play.blooket.com/host/brawl?id=68e4d3eef610e4be77c229da" target="_blank">▶ Open Blooket Starter</a></p>
       </div>
     </div>
 
@@ -551,6 +634,21 @@
       </tbody>
     </table>
 
+    <!-- ===== INTERACTIVE TRACER ===== -->
+    <div class="tracer-tool">
+      <h3><i class="fas fa-magnifying-glass-chart" style="color:#2a6f97;"></i> Interactive Tracer: Try It Yourself</h3>
+      <p style="font-size:0.9rem; color:#475569;">Drag the slider to change the <code>light_level</code> variable and see how the condition <code>light_level &lt;= 10</code> evaluates.</p>
+      <div class="slider-row">
+        <span style="font-weight:600; font-size:0.9rem;">light_level:</span>
+        <input type="range" id="lightSlider" min="0" max="200" value="0" step="1">
+        <span class="value-display" id="lightValue">0</span>
+      </div>
+      <div class="result-box">
+        <p>Condition: <span class="condition">light_level &lt;= 10</span></p>
+        <p id="traceResult">Result: <span class="outcome-true">True</span> → 🔔 Alarm sounds</p>
+      </div>
+    </div>
+
     <h2>💡 Worked Example: Sound Sensor Program</h2>
     <p>The flowchart below shows a program that checks the sound level detected by the micro:bit's microphone. If the sound is greater than 150 (loud), it displays a surprised face; otherwise, it displays a happy face.</p>
 
@@ -592,6 +690,75 @@
       <strong>Debugging challenge:</strong> The original <code>SoundSensorProgram.py</code> used <code>== SoundEvent.LOUD</code> instead of <code>&gt; SoundEvent.LOUD</code>. Why might that cause a problem? The comparison operator should be <code>&gt;</code> for a loud noise and <code>&lt;</code> for a quiet noise. Using <code>==</code> only matches one exact value, so louder sounds might be missed. This is a <strong>logic error</strong> — the code runs but doesn't do what was intended.
     </div>
 
+    <!-- ===== PHYSICAL MICRO:BIT LAB ===== -->
+    <div class="lab-callout">
+      <span class="badge">🔬 Micro:bit Lab</span>
+      <div>
+        <h3>Hands-On: Sensor Detective</h3>
+        <p>Get a micro:bit and USB cable. You will write a short MicroPython program that reads a sensor, stores the value in a variable, and uses an <code>if</code> statement with a comparison operator to make a decision.</p>
+      </div>
+    </div>
+
+    <h3>Step 1: Read and Display a Sensor Value</h3>
+    <p>Open the <a href="https://python.microbit.org/v/2" target="_blank" style="color:#1f6390;">MicroPython Editor</a> and type this program. It reads the light level and scrolls the number on the display so you can see the actual integer value:</p>
+
+    <div class="code-block">
+      <span class="kw">from</span> microbit <span class="kw">import</span> *<br><br>
+      <span class="kw">while</span> True:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;light_level = display.read_light_level()<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;display.scroll(<span class="kw">str</span>(light_level))<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">500</span>)
+    </div>
+
+    <div class="highlight-box green">
+      <i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Notice:</strong> <code>display.read_light_level()</code> returns an <strong>integer</strong>. We use <code>str()</code> to convert it to a string so <code>display.scroll()</code> can show it. This is a great example of why data types matter!
+    </div>
+
+    <h3>Step 2: Add a Decision</h3>
+    <p>Now add an <code>if</code> statement. Cover the micro:bit with your hand (low light) and shine a torch on it (high light). Record the values you see in the table below.</p>
+
+    <div class="code-block">
+      <span class="kw">from</span> microbit <span class="kw">import</span> *<br><br>
+      <span class="kw">while</span> True:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;light_level = display.read_light_level()<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> light_level &lt; <span class="num">50</span>:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.HAPPY)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">else</span>:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.SAD)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">200</span>)
+    </div>
+
+    <h3>Step 3: Trace Your Own Sensor</h3>
+    <table class="trace-table">
+      <thead>
+        <tr><th>Test</th><th>Your Sensor Reading</th><th>Condition (&lt; 50)</th><th>Result</th><th>Output</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Hand over sensor (dark)</td><td>________</td><td>________</td><td>________</td><td>________</td></tr>
+        <tr><td>Torch on sensor (bright)</td><td>________</td><td>________</td><td>________</td><td>________</td></tr>
+        <tr><td>Normal classroom light</td><td>________</td><td>________</td><td>________</td><td>________</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box purple">
+      <i class="fas fa-flask" style="color:#8e24aa; margin-right:8px;"></i>
+      <strong>Challenge:</strong> Change the comparison operator from <code>&lt;</code> to <code>&gt;=</code>. Predict what will happen before you download the program. Then test it with your hand and the torch. Was your prediction correct? This is <strong>algorithm tracing</strong> in action!
+    </div>
+
+    <h3>Step 4: Swap to the Sound Sensor</h3>
+    <p>Try the sound sensor program from the worked example. Clap loudly, whisper, and stay quiet. Which comparison operator gives the correct behaviour?</p>
+
+    <div class="code-block">
+      <span class="kw">from</span> microbit <span class="kw">import</span> *<br><br>
+      <span class="kw">while</span> True:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> microphone.current_event() &gt; SoundEvent.LOUD:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.SURPRISED)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">else</span>:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.HAPPY)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">200</span>)
+    </div>
+
     <div class="main-task">
       <span class="badge">⭐ Main Task</span>
       <div>
@@ -601,6 +768,33 @@
         <p><strong>Part 3:</strong> Look at the flowchart for calculating the area of a square and annotate it to show where the variables are.</p>
         <p style="margin-top:0.6rem;"><strong>Extension:</strong> Trace the algorithm with these light levels and decide whether the desk lamp is on or off: 10, 50, 51, 45. (The condition is <code>light level &lt; 20</code> → lights on; otherwise lights off.)</p>
       </div>
+    </div>
+
+    <!-- ===== AI PROJECT EXTENSION ===== -->
+    <h2>🤖 AI Project Extension: Train a Model (Project-Based)</h2>
+
+    <div class="highlight-box purple">
+      <i class="fas fa-calendar-check" style="color:#8e24aa; margin-right:8px;"></i>
+      <strong>This is a project-based task that continues from Lesson 2 and runs across several lessons.</strong>
+    </div>
+
+    <h3>📅 This week (in class)</h3>
+    <ul>
+      <li>Use the <strong>physical materials you brought in</strong> to build a real-world version of your AI project.</li>
+      <li>Continue <strong>training and testing your AI model</strong> using the CreateAI simulator.</li>
+      <li>Combine your trained model with your physical build so that the micro:bit reacts to what the AI detects.</li>
+      <li>Test your project to make sure the model responds correctly to the two movements you trained it to recognise.</li>
+      <li>Use <strong>data types and comparison operators</strong> in your code: store the AI confidence score in a variable (integer or float) and use an <code>if</code> statement to decide what the micro:bit should do.</li>
+    </ul>
+
+    <div class="highlight-box green">
+      <i class="fas fa-box-open" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Materials reminder:</strong> Make sure you have your materials with you — elastic bands, small toys or figures, card, straws, tape, string, and anything else you need to make your project move or react.
+    </div>
+
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Continue your work:</strong> Go to <a href="https://createai.microbit.org/" target="_blank" style="color:#1f6390;">createai.microbit.org</a> to keep training and testing your AI model. In a future lesson, you will present your finished project in a <strong>show and tell</strong>.
     </div>
 
     <h2>✅ Summary: Be a Coding Pro!</h2>
@@ -689,6 +883,27 @@
 </div>
 
 <script>
+  // ===== INTERACTIVE TRACER =====
+  (function() {
+    const slider = document.getElementById('lightSlider');
+    const valueDisplay = document.getElementById('lightValue');
+    const result = document.getElementById('traceResult');
+
+    function updateTrace() {
+      const val = parseInt(slider.value, 10);
+      valueDisplay.textContent = val;
+      if (val <= 10) {
+        result.innerHTML = 'Result: <span class="outcome-true">True</span> → 🔔 Alarm sounds';
+      } else {
+        result.innerHTML = 'Result: <span class="outcome-false">False</span> → ❌ Alarm silent';
+      }
+    }
+
+    slider.addEventListener('input', updateTrace);
+    updateTrace();
+  })();
+
+  // ===== QUIZ =====
   (function() {
     const questions = document.querySelectorAll('#quiz .q');
     questions.forEach(q => {
