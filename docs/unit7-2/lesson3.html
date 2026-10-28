@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.2 Lesson 3 · Data Types and Algorithm Tracing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .page-header h1 i { color: #2a6f97; font-size: 2rem; }
+    .page-header .sub {
+      color: #475569;
+      font-size: 1rem;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.3rem 1.4rem;
+      border-radius: 40px;
+      margin-top: 0.3rem;
+    }
+
+    .lesson-content {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.8rem 0 0.8rem 0;
+      border-left: 5px solid #2a6f97;
+      padding-left: 15px;
+    }
+    .lesson-content h2:first-of-type { margin-top: 0; }
+    .lesson-content h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.2rem 0 0.4rem 0;
+    }
+    .lesson-content p { margin-bottom: 0.6rem; }
+    .lesson-content ul, .lesson-content ol {
+      padding-left: 1.6rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content li { margin-bottom: 0.25rem; }
+
+    .objectives-box {
+      background: #eef6fc;
+      border-radius: 16px;
+      padding: 0.8rem 1.4rem;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #2a6f97;
+    }
+    .objectives-box strong { color: #0b2a4a; }
+    .objectives-box ul {
+      margin: 0.2rem 0 0 1.2rem;
+      padding-left: 0.5rem;
+    }
+    .objectives-box ul li { list-style-type: disc; font-size: 0.95rem; }
+
+    .highlight-box {
+      background: #eef6fc;
+      padding: 1rem 1.6rem;
+      border-radius: 16px;
+      border-left: 5px solid #2a6f97;
+      margin: 1rem 0;
+    }
+    .highlight-box strong { color: #0b2a4a; }
+    .highlight-box.green {
+      border-left-color: #4caf50;
+      background: #edf7ed;
+    }
+    .highlight-box.amber {
+      border-left-color: #f9a825;
+      background: #fff8e1;
+    }
+    .highlight-box.purple {
+      border-left-color: #8e24aa;
+      background: #f7edfa;
+    }
+
+    .starter-callout {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      border: 2px solid #e65100;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .starter-callout .badge {
+      background: #e65100;
+      color: white;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .starter-callout h3 {
+      margin-top: 0;
+      color: #7a3300;
+      font-size: 1.15rem;
+    }
+    .starter-callout p { margin-bottom: 0.3rem; color: #5a2900; }
+    .starter-callout a {
+      color: #e65100;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 2px solid #e65100;
+    }
+    .starter-callout a:hover { color: #7a3300; }
+
+    .main-task {
+      background: linear-gradient(135deg, #fff8e1, #ffecb3);
+      border: 2px solid #f9a825;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .main-task .badge {
+      background: #f9a825;
+      color: #4a2c00;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .main-task h3 {
+      margin-top: 0;
+      color: #7a4b00;
+      font-size: 1.15rem;
+    }
+    .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .compare-table th, .compare-table td {
+      border: 1px solid #d4e3f0;
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+    }
+    .compare-table th {
+      background: #e9eff8;
+      color: #0b2a4a;
+      font-weight: 600;
+    }
+    .compare-table tr:nth-child(even) td { background: #f8fafc; }
+
+    .datatype-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+    .datatype-card {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      transition: 0.25s;
+    }
+    .datatype-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(31, 110, 156, 0.12);
+      border-color: #7bb3ff;
+    }
+    .datatype-card h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+    }
+    .datatype-card .example {
+      font-family: monospace;
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    .datatype-card.string h3 i { color: #e91e63; }
+    .datatype-card.integer h3 i { color: #1e88e5; }
+    .datatype-card.float h3 i { color: #4caf50; }
+    .datatype-card.boolean h3 i { color: #f9a825; }
+
+    .code-block {
+      background: #1e293b;
+      border-left: 5px solid #2a6f97;
+      color: #e2e8f0;
+      font-family: monospace;
+      font-size: 0.9rem;
+      padding: 1rem 1.4rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+    .code-block .kw { color: #7bb3ff; }
+    .code-block .num { color: #f9a825; }
+    .code-block .str { color: #a5d6a7; }
+    .code-block .comment { color: #94a3b8; }
+
+    .trace-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .trace-table th, .trace-table td {
+      border: 1px solid #d4e3f0;
+      padding: 0.6rem 0.8rem;
+      text-align: center;
+    }
+    .trace-table th {
+      background: #e9eff8;
+      color: #0b2a4a;
+      font-weight: 600;
+    }
+    .trace-table .yes { background: #c8e6c9; color: #1b5e20; font-weight: 600; }
+    .trace-table .no { background: #ffcdd2; color: #b71c1c; font-weight: 600; }
+
+    .quiz {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .quiz h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quiz .q {
+      margin: 1rem 0;
+      padding: 0.9rem 1.2rem;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #e5edf5;
+    }
+    .quiz .q p { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz .q button {
+      background: #eef6fc;
+      border: 1.5px solid #d4e3f0;
+      color: #0b2a4a;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      margin: 0.2rem 0.3rem 0.2rem 0;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+    .quiz .q button:hover { background: #dbeafe; border-color: #7bb3ff; }
+    .quiz .q button.correct { background: #c8e6c9; border-color: #2d8f2d; color: #1b5e20; font-weight: 700; }
+    .quiz .q button.incorrect { background: #ffcdd2; border-color: #e53935; color: #b71c1c; }
+    .quiz .q .answer-feedback { font-size: 0.82rem; margin-top: 0.4rem; min-height: 1.2rem; font-weight: 500; }
+    .quiz .q .answer-feedback.ok { color: #2d8f2d; }
+    .quiz .q .answer-feedback.no { color: #b71c1c; }
+
+    .resource-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      background: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid #d4e3f0;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+    .resource-bar a {
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .resource-bar a:hover { text-decoration: underline; }
+    .resource-bar .label {
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.85rem;
+    }
+
+    .keyword-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      background: #f1f6fc;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .keyword-row span {
+      background: white;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid #dce4ed;
+      font-size: 0.85rem;
+    }
+
+    .divider { margin: 2.5rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    .flowchart-img {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .flowchart-img .caption {
+      font-size: 0.85rem;
+      color: #475569;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
+      .lesson-content { padding: 1.2rem 1.4rem; }
+      .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
+      .main-task, .starter-callout { flex-direction: column; gap: 0.6rem; }
+      .datatype-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+    <a href="../year7-units.html"><i class="fas fa-arrow-left"></i> Year 7 Units</a>
+    <a href="../unit7-2-decomposing-problems.html"><i class="fas fa-puzzle-piece"></i> 7.2 Decomposing problems</a>
+  </nav>
+
+  <a href="../unit7-2-decomposing-problems.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to 7.2 Decomposing problems</a>
+
+  <div class="page-header">
+    <h1><i class="fas fa-calculator"></i> Lesson 3 · Data Types and Algorithm Tracing</h1>
+    <div class="sub"><i class="fas fa-arrow-right" style="margin-right:6px;"></i> Student's Book pages 66–72</div>
+  </div>
+
+  <div class="resource-bar">
+    <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+    <a href="https://python.microbit.org/v/2" target="_blank"><i class="fas fa-code"></i> MicroPython Editor</a>
+    <a href="https://makecode.microbit.org" target="_blank"><i class="fas fa-cubes"></i> MakeCode</a>
+    <a href="https://app.diagrams.net" target="_blank"><i class="fas fa-project-diagram"></i> draw.io Flowcharts</a>
+  </div>
+
+  <div class="lesson-content">
+
+    <div class="objectives-box">
+      <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+      <ul>
+        <li><strong>7CT.01</strong> Follow, understand, edit and correct algorithms that are presented as flowcharts.</li>
+        <li><strong>7CT.05</strong> Predict the outcome of flowcharts that use selection.</li>
+        <li><strong>7CT.09</strong> Select and use appropriate comparison operators in algorithms, limited to &lt;, &gt;, &lt;=, &gt;=, == and !=.</li>
+        <li><strong>7P.03</strong> Know how to develop text-based programs using data types, including Integer, Real, and String.</li>
+        <li><strong>7P.10</strong> Know how to systematically identify and debug errors in text-based programs.</li>
+      </ul>
+    </div>
+
+    <div class="starter-callout">
+      <span class="badge">🔥 Starter</span>
+      <div>
+        <h3>Homework Recap &amp; Sensor Devices</h3>
+        <p>Share your homework findings from <strong>Worksheet 10</strong>: which devices in your home or local environment use sensors?</p>
+        <p>Be ready to explain <strong>what the device does</strong> and <strong>how it uses a sensor</strong> to gather data and make a decision.</p>
+      </div>
+    </div>
+
+    <h2>🧩 What Are Data Types?</h2>
+    <p><strong>Data types</strong> are like labels that tell the computer what kind of information you're working with. Just like you wouldn't store soup in a pencil case, you need the right container for the right data!</p>
+
+    <div class="datatype-grid">
+      <div class="datatype-card string">
+        <h3><i class="fas fa-font"></i> String</h3>
+        <p>Text — one or more characters, always in quotation marks.</p>
+        <div class="example">"Hello!", "Game Over"</div>
+      </div>
+      <div class="datatype-card integer">
+        <h3><i class="fas fa-hashtag"></i> Integer</h3>
+        <p>Whole numbers with no decimal point.</p>
+        <div class="example">100, -5, 2025</div>
+      </div>
+      <div class="datatype-card float">
+        <h3><i class="fas fa-divide"></i> Float</h3>
+        <p>Numbers that contain a decimal point.</p>
+        <div class="example">3.14, 0.5, 99.99</div>
+      </div>
+      <div class="datatype-card boolean">
+        <h3><i class="fas fa-toggle-on"></i> Boolean</h3>
+        <p>True or False — used for decisions.</p>
+        <div class="example">True, False</div>
+      </div>
+    </div>
+
+    <div class="highlight-box green">
+      <i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>On the micro:bit:</strong> Sensor readings like sound or light are stored as <strong>integers</strong>. Messages and screen text are stored as <strong>strings</strong>. If you want to perform a calculation with a value, it must be an integer or float — you cannot do maths with a string!
+    </div>
+
+    <h2>🕹️ Variables: Your Data Containers</h2>
+    <p>Imagine variables as <strong>named boxes</strong> that hold your data while the program runs. You can open the box, change what's inside, or check it later.</p>
+    <ul>
+      <li>Use names that make sense: <code>temperature</code>, <code>score</code>, <code>player_name</code>, <code>light_level</code>.</li>
+      <li>Assign values using <code>=</code>: <code>score = 100</code>.</li>
+    </ul>
+
+    <div class="code-block">
+      <span class="comment"># Python examples</span><br>
+      score = <span class="num">100</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Integer</span><br>
+      player_name = <span class="str">"Alex"</span> &nbsp;&nbsp;<span class="comment"># String</span><br>
+      game_over = <span class="kw">False</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Boolean</span>
+    </div>
+
+    <h2>🔍 Decisions &amp; Comparison Operators</h2>
+    <p>When your program needs to make a choice, it uses <strong>comparison operators</strong> to compare values. These are used in <code>if</code> statements, loops, and flowcharts.</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Result</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>==</code></td><td>Equal to</td><td><code>score == 100</code></td><td>True if score is 100</td></tr>
+        <tr><td><code>!=</code></td><td>Not equal to</td><td><code>score != 100</code></td><td>True if score is NOT 100</td></tr>
+        <tr><td><code>&gt;</code></td><td>Greater than</td><td><code>score &gt; 100</code></td><td>True if score is more than 100</td></tr>
+        <tr><td><code>&lt;</code></td><td>Less than</td><td><code>score &lt; 100</code></td><td>True if score is less than 100</td></tr>
+        <tr><td><code>&gt;=</code></td><td>Greater than or equal to</td><td><code>score &gt;= 100</code></td><td>True if score is 100 or more</td></tr>
+        <tr><td><code>&lt;=</code></td><td>Less than or equal to</td><td><code>score &lt;= 100</code></td><td>True if score is 100 or less</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box amber">
+      <i class="fas fa-exclamation-triangle" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Watch out:</strong> Changing <code>&lt;</code> to <code>&lt;=</code> changes the meaning. If the light detected is <em>less than or equal to</em> 100, the value 100 is now included as part of the condition that switches the lights on. The comparison operator is a common place to look when debugging a program that isn't behaving as expected.
+    </div>
+
+    <h2>🧪 Algorithm Tracing: Test Your Program Like a Detective!</h2>
+    <p><strong>Algorithm tracing</strong> means walking through your code step-by-step to see what happens with different inputs. This helps you catch bugs and predict outcomes.</p>
+
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Example:</strong> A burglar alarm that sounds when the light level is <code>&lt;= 10</code>.
+      <ul style="margin-top:0.4rem;">
+        <li>If <code>light_level = 9</code> → <code>9 &lt;= 10</code> is <strong>True</strong> → Alarm turns <strong>on</strong></li>
+        <li>If <code>light_level = 15</code> → <code>15 &lt;= 10</code> is <strong>False</strong> → Alarm stays <strong>off</strong></li>
+      </ul>
+    </div>
+
+    <h3>📊 Sensor Decision Table</h3>
+    <table class="trace-table">
+      <thead>
+        <tr><th>Sensor Input</th><th>Variable Value</th><th>Condition (&lt;= 10)</th><th>Result</th><th>Output</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Light = 0</td><td><code>light_level = 0</code></td><td class="yes">✅ True</td><td>Alarm On</td><td>🔔 Sounds</td></tr>
+        <tr><td>Light = 150</td><td><code>light_level = 150</code></td><td class="no">❌ False</td><td>Alarm Off</td><td>❌ Silent</td></tr>
+        <tr><td>Light = 10</td><td><code>light_level = 10</code></td><td class="yes">✅ True</td><td>Alarm On</td><td>🔔 Sounds</td></tr>
+      </tbody>
+    </table>
+
+    <h2>💡 Worked Example: Sound Sensor Program</h2>
+    <p>The flowchart below shows a program that checks the sound level detected by the micro:bit's microphone. If the sound is greater than 150 (loud), it displays a surprised face; otherwise, it displays a happy face.</p>
+
+    <div class="flowchart-img">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.6rem; padding: 1rem;">
+        <div style="background: #fce4ec; border: 2.5px solid #e91e63; border-radius: 50px; padding: 0.5rem 1.5rem; font-weight: 600; font-size: 0.85rem;">Start</div>
+        <div style="font-size: 1.2rem; color: #64748b;">↓</div>
+        <div style="background: #fff8e1; border: 2.5px solid #f9a825; width: 100px; height: 100px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin: 0.5rem 0;">
+          <span style="transform: rotate(-45deg); font-size: 0.65rem; font-weight: 600; text-align: center; line-height: 1.2;">Is sound level<br>&gt; 150?</span>
+        </div>
+        <div style="display: flex; gap: 3rem; font-size: 0.85rem; color: #64748b;">
+          <span>↓ Yes</span><span>↓ No</span>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <div style="background: #e3f2fd; border: 2.5px solid #1e88e5; border-radius: 6px; padding: 0.5rem 1rem; font-weight: 600; font-size: 0.8rem; text-align: center;">Display<br>surprised face</div>
+          <div style="background: #e3f2fd; border: 2.5px solid #1e88e5; border-radius: 6px; padding: 0.5rem 1rem; font-weight: 600; font-size: 0.8rem; text-align: center;">Display<br>happy face</div>
+        </div>
+        <div style="font-size: 1.2rem; color: #64748b;">↓</div>
+        <div style="background: #fce4ec; border: 2.5px solid #e91e63; border-radius: 50px; padding: 0.5rem 1.5rem; font-weight: 600; font-size: 0.85rem;">Stop</div>
+      </div>
+      <div class="caption">Flowchart for the sound sensor program using selection.</div>
+    </div>
+
+    <p>Here is the MicroPython program that matches this flowchart. Notice how the comparison operator <code>&gt;</code> is used:</p>
+
+    <div class="code-block">
+      <span class="kw">from</span> microbit <span class="kw">import</span> *<br><br>
+      <span class="kw">while</span> True:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> microphone.current_event() &gt; SoundEvent.LOUD:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.SURPRISED)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">200</span>)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> microphone.current_event() &lt; SoundEvent.QUIET:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.HAPPY)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">200</span>)
+    </div>
+
+    <div class="highlight-box amber">
+      <i class="fas fa-exclamation-triangle" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Debugging challenge:</strong> The original <code>SoundSensorProgram.py</code> used <code>== SoundEvent.LOUD</code> instead of <code>&gt; SoundEvent.LOUD</code>. Why might that cause a problem? The comparison operator should be <code>&gt;</code> for a loud noise and <code>&lt;</code> for a quiet noise. Using <code>==</code> only matches one exact value, so louder sounds might be missed. This is a <strong>logic error</strong> — the code runs but doesn't do what was intended.
+    </div>
+
+    <div class="main-task">
+      <span class="badge">⭐ Main Task</span>
+      <div>
+        <h3>📝 Worksheet 11 — Comparison Operators &amp; Flowcharts</h3>
+        <p><strong>Part 1:</strong> Match each comparison operator to its correct description.</p>
+        <p><strong>Part 2:</strong> Use the flowchart sections to draw a flowchart for this program: <em>"If a motion is detected in the room, then turn the lights on; else turn the lights off."</em></p>
+        <p><strong>Part 3:</strong> Look at the flowchart for calculating the area of a square and annotate it to show where the variables are.</p>
+        <p style="margin-top:0.6rem;"><strong>Extension:</strong> Trace the algorithm with these light levels and decide whether the desk lamp is on or off: 10, 50, 51, 45. (The condition is <code>light level &lt; 20</code> → lights on; otherwise lights off.)</p>
+      </div>
+    </div>
+
+    <h2>✅ Summary: Be a Coding Pro!</h2>
+    <ul>
+      <li>Use <strong>flowcharts</strong> to plan your program's decisions.</li>
+      <li>Pick the <strong>right data types</strong> for your variables — string for text, integer for whole numbers, float for decimals, boolean for True/False.</li>
+      <li>Use <strong>clear variable names</strong> so your code makes sense.</li>
+      <li>Test your program with <strong>algorithm tracing</strong> to catch bugs.</li>
+      <li>Don't forget <strong>indentation</strong> in Python — it shows which code belongs together!</li>
+    </ul>
+
+    <div class="quiz" id="quiz">
+      <h3><i class="fas fa-circle-question" style="color:#2a6f97;"></i> Quick Self-Check</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click an answer to see if you're right. This is just for you — no marks are recorded.</p>
+
+      <div class="q" data-correct="c">
+        <p>1. What data type is <code>"Pass123"</code>?</p>
+        <button data-opt="a">A. Integer</button>
+        <button data-opt="b">B. Boolean</button>
+        <button data-opt="c">C. String</button>
+        <button data-opt="d">D. Float</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="b">
+        <p>2. Which comparison operator means "not equal to"?</p>
+        <button data-opt="a">A. <code>==</code></button>
+        <button data-opt="b">B. <code>!=</code></button>
+        <button data-opt="c">C. <code>&gt;=</code></button>
+        <button data-opt="d">D. <code>&lt;=</code></button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="d">
+        <p>3. If <code>light_level = 10</code>, what is the result of <code>light_level &lt;= 10</code>?</p>
+        <button data-opt="a">A. 10</button>
+        <button data-opt="b">B. False</button>
+        <button data-opt="c">C. An error</button>
+        <button data-opt="d">D. True</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p>4. Why can't you perform a calculation on a number stored as a string?</p>
+        <button data-opt="a">A. Strings are text, not numeric values</button>
+        <button data-opt="b">B. Strings are always too long</button>
+        <button data-opt="c">C. Strings can only store True or False</button>
+        <button data-opt="d">D. Strings are only used for sensor readings</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="b">
+        <p>5. In the sound sensor program, which operator should be used to check for a loud noise?</p>
+        <button data-opt="a">A. <code>&lt;</code></button>
+        <button data-opt="b">B. <code>&gt;</code></button>
+        <button data-opt="c">C. <code>==</code></button>
+        <button data-opt="d">D. <code>!=</code></button>
+        <div class="answer-feedback"></div>
+      </div>
+    </div>
+
+    <h2>🔑 Keywords</h2>
+    <div class="keyword-row">
+      <span>data type</span>
+      <span>string</span>
+      <span>integer</span>
+      <span>float</span>
+      <span>boolean</span>
+      <span>variable</span>
+      <span>comparison operator</span>
+      <span>selection</span>
+      <span>algorithm tracing</span>
+      <span>flowchart</span>
+      <span>debugging</span>
+      <span>MicroPython</span>
+    </div>
+
+  </div>
+
+  <hr class="divider" />
+  <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #5d7f9a; padding: 0.5rem 0; flex-wrap: wrap; gap: 0.5rem;">
+    <span><i class="fas fa-arrow-left" style="margin-right: 6px;"></i><a href="../unit7-2-decomposing-problems.html" style="color: #1f6390; text-decoration: none;">Back to 7.2 Decomposing problems</a></span>
+    <span>7.2 Lesson 3 · Data Types and Algorithm Tracing</span>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    const questions = document.querySelectorAll('#quiz .q');
+    questions.forEach(q => {
+      const correct = q.getAttribute('data-correct');
+      const buttons = q.querySelectorAll('button');
+      const fb = q.querySelector('.answer-feedback');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
+          const chosen = btn.getAttribute('data-opt');
+          if (chosen === correct) {
+            btn.classList.add('correct');
+            fb.textContent = '✅ Correct!';
+            fb.className = 'answer-feedback ok';
+          } else {
+            btn.classList.add('incorrect');
+            fb.textContent = '❌ Not quite. Try again.';
+            fb.className = 'answer-feedback no';
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
