@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDLC Lesson 2: Coding, Testing & Plenary</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --card-bg: #ffffff;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        header h1 { margin: 0; font-size: 2rem; }
+        header p { margin: 0.5rem 0 0 0; opacity: 0.9; }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h2 { color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+        h3 { color: var(--secondary); }
+        .interactive-box {
+            background: #f1f5f9;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: var(--secondary); }
+        .btn-reveal { background: #64748b; margin-top: 1rem; }
+        .btn-reveal:hover { background: #475569; }
+        .btn-check { background: var(--success); }
+        .btn-check:hover { background: #059669; }
+        .answer {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #dcfce7;
+            border-left: 4px solid var(--success);
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th { background: #e2e8f0; }
+        input[type="text"], input[type="number"] {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100px;
+        }
+        .drag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        .drag-item {
+            background: #e0e7ff;
+            border: 2px solid var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: grab;
+            user-select: none;
+        }
+        .drop-zone {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            min-height: 60px;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-content: flex-start;
+        }
+        .drop-zone.active { border-color: var(--primary); background: #eff6ff; }
+        .stage-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .stage-box { background: #fff; border: 1px solid #cbd5e1; padding: 1rem; border-radius: 8px; }
+        .stage-box h4 { margin-top: 0; color: var(--primary); text-align: center; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🔄 The Program Development Life Cycle</h1>
+    <p>Lesson 2: Coding, Testing & Plenary</p>
+</header>
+
+<div class="container">
+
+    <!-- CODING -->
+    <div class="card">
+        <h2>Stage 3: Coding</h2>
+        <p>This is where the design is turned into actual program code using languages like Python, Java, or C#.</p>
+        
+        <h3>Iterative Testing</h3>
+        <p>Programs are tested <strong>as they are developed</strong>. You don't wait until the whole program is finished. You write a small part, test it, fix errors, and move on.</p>
+        <ul>
+            <li>Each time the program is updated = an <strong>Iteration</strong>.</li>
+            <li>Testing done during this process = <strong>Iterative Testing</strong>.</li>
+        </ul>
+
+        <div class="interactive-box">
+            <h4>Scenario: The Quiz Score Bug</h4>
+            <p>A programmer writes the code to check if a student's quiz score is valid. Valid scores are between <strong>0 and 20</strong>.</p>
+            <p>They write this condition: <code>IF score > 21 THEN...</code></p>
+            <p><strong>Question:</strong> If a student enters a score of <strong>21</strong>, will the program accept or reject it based on the code?</p>
+            <button class="btn btn-reveal" onclick="toggleAnswer('iter-ans')">Show Answer</button>
+            <div id="iter-ans" class="answer">
+                <p>The program will <strong>ACCEPT</strong> the score of 21, because 21 is not greater than 21.</p>
+                <p>This is an error! Because they tested it iteratively, they caught the bug early and can change the code to <code>IF score > 20</code> before building the rest of the app.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TESTING -->
+    <div class="card">
+        <h2>Stage 4: Testing</h2>
+        <p>Final testing happens at the end of the lifecycle. Before coding even begins, a <strong>Test Plan</strong> is created. It lists the inputs, the test reason, and the <em>Expected Output</em>.</p>
+        <p>When the program is finished, we run the tests, record the <em>Actual Output</em>, and compare them (Pass/Fail).</p>
+
+        <h3>Types of Test Data</h3>
+        <table>
+            <tr><th>Type</th><th>Description</th><th>Example (Range 0-20)</th></tr>
+            <tr><td><strong>Normal</strong></td><td>Valid data, typical of everyday use.</td><td>12</td></tr>
+            <tr><td><strong>Extreme</strong></td><td>The largest and smallest valid values.</td><td>0, 20</td></tr>
+            <tr><td><strong>Boundary</strong></td><td>Data that sits exactly on the edge. If 20 is valid, 21 must be tested.</td><td>-1, 0, 20, 21</td></tr>
+            <tr><td><strong>Abnormal</strong></td><td>Invalid data (wrong type or outside range).</td><td>"ten", 35, -5</td></tr>
+        </table>
+
+        <div class="interactive-box">
+            <h4>Interactive Task: Fill the Test Table</h4>
+            <p>A programmer has created an app that reverses an integer between 1 and 5 digits long (e.g., input 342 gives output 243).</p>
+            <p>Complete the expected outputs for the test plan below:</p>
+            <table>
+                <tr><th>Test #</th><th>Test Data</th><th>Test Reason</th><th>Expected Output</th></tr>
+                <tr>
+                    <td>1</td>
+                    <td>342</td>
+                    <td>3 digit number</td>
+                    <td><input type="text" id="t1" placeholder="Type here"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>8</td>
+                    <td>1 digit number</td>
+                    <td><input type="text" id="t2" placeholder="Type here"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>42375</td>
+                    <td>5 digit number</td>
+                    <td><input type="text" id="t3" placeholder="Type here"></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>848327356</td>
+                    <td>6 digit number</td>
+                    <td><input type="text" id="t4" placeholder="Type here"></td>
+                </tr>
+            </table>
+            <button class="btn btn-check" onclick="checkAnswers()">Check My Answers</button>
+            <div id="test-ans" class="answer"></div>
+        </div>
+    </div>
+
+    <!-- PLENARY -->
+    <div class="card">
+        <h2>🎯 Plenary: Match the Task to the Stage</h2>
+        <p>Drag (or click) the tasks below and place them into the correct stage of the Program Development Life Cycle.</p>
+
+        <div class="drag-container" id="task-pool">
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Identification of the problem</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Structure diagrams</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Writing program code</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Testing with test data</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Abstraction</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Pseudocode</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Decomposition of the problem</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Iterative testing</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Flowcharts</div>
+            <div class="drag-item" draggable="true" onclick="moveTask(this)">Decomposition (solution)</div>
+        </div>
+
+        <div class="stage-col">
+            <div class="stage-box">
+                <h4>Analysis</h4>
+                <div class="drop-zone" id="zone-analysis" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+            <div class="stage-box">
+                <h4>Design</h4>
+                <div class="drop-zone" id="zone-design" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+            <div class="stage-box">
+                <h4>Coding</h4>
+                <div class="drop-zone" id="zone-coding" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+            <div class="stage-box">
+                <h4>Testing</h4>
+                <div class="drop-zone" id="zone-testing" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+        </div>
+
+        <button class="btn btn-reveal" onclick="toggleAnswer('plenary-ans')" style="margin-top: 1rem;">Show Correct Answers</button>
+        <div id="plenary-ans" class="answer">
+            <p><strong>Analysis:</strong> Identification of the problem, Abstraction, Decomposition of the problem.</p>
+            <p><strong>Design:</strong> Structure diagrams, Pseudocode, Flowcharts, Decomposition (solution).</p>
+            <p><strong>Coding:</strong> Writing program code, Iterative testing.</p>
+            <p><strong>Testing:</strong> Testing with test data.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Toggle Answers
+    function toggleAnswer(id) {
+        const el = document.getElementById(id);
+        if (el.style.display === "block") {
+            el.style.display = "none";
+        } else {
+            el.style.display = "block";
+        }
+    }
+
+    // Check Test Table Answers
+    function checkAnswers() {
+        const a1 = document.getElementById('t1').value.trim();
+        const a2 = document.getElementById('t2').value.trim();
+        const a3 = document.getElementById('t3').value.trim();
+        const a4 = document.getElementById('t4').value.trim();
+        const resultDiv = document.getElementById('test-ans');
+        
+        let score = 0;
+        let feedback = "<h4>Results:</h4>";
+
+        // Test 1
+        if (a1 === "243") { score++; feedback += "<p>✅ Test 1 is correct (342 reversed is 243)</p>"; }
+        else { feedback += "<p>❌ Test 1 is incorrect. You entered: " + a1 + ". (Hint: Reverse 342)</p>"; }
+
+        // Test 2
+        if (a2 === "8") { score++; feedback += "<p>✅ Test 2 is correct (8 reversed is 8)</p>"; }
+        else { feedback += "<p>❌ Test 2 is incorrect. You entered: " + a2 + ". (Hint: Reverse 8)</p>"; }
+
+        // Test 3
+        if (a3 === "57324") { score++; feedback += "<p>✅ Test 3 is correct (42375 reversed is 57324)</p>"; }
+        else { feedback += "<p>❌ Test 3 is incorrect. You entered: " + a3 + ". (Hint: Reverse 42375)</p>"; }
+
+        // Test 4
+        if (a4.toLowerCase() === "number too long" || a4.toLowerCase() === "error") { 
+            score++; 
+            feedback += "<p>✅ Test 4 is correct. (The app only supports up to 5 digits, so it should display an error/too long message).</p>"; 
+        }
+        else { feedback += "<p>❌ Test 4 is incorrect. You entered: " + a4 + ". (Hint: The app only reverses 1 to 5 digits).</p>"; }
+
+        feedback += `<p><strong>Score: ${score}/4</strong></p>`;
+        resultDiv.innerHTML = feedback;
+        resultDiv.style.display = "block";
+    }
+
+    // Drag and Drop Logic
+    let draggedItem = null;
+
+    document.querySelectorAll('.drag-item').forEach(item => {
+        item.addEventListener('dragstart', function(e) {
+            draggedItem = this;
+            setTimeout(() => this.style.display = 'none', 0);
+        });
+        item.addEventListener('dragend', function(e) {
+            setTimeout(() => {
+                draggedItem.style.display = 'block';
+                draggedItem = null;
+            }, 0);
+        });
+    });
+
+    function allowDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('active');
+    }
+
+    // Remove active class on dragleave
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragleave', function(e) {
+            this.classList.remove('active');
+        });
+    });
+
+    function drop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('active');
+        if (draggedItem) {
+            e.currentTarget.appendChild(draggedItem);
+        }
+    }
+
+    // Click-to-move fallback (for touch devices)
+    let selectedItem = null;
+    function moveTask(el) {
+        if (selectedItem === el) {
+            selectedItem.style.border = "2px solid var(--primary)";
+            selectedItem = null;
+            return;
+        }
+        if (selectedItem) {
+            selectedItem.style.border = "2px solid var(--primary)";
+        }
+        selectedItem = el;
+        el.style.border = "2px solid var(--warning)";
+        
+        // Setup click on zones
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.onclick = function() {
+                if (selectedItem) {
+                    this.appendChild(selectedItem);
+                    selectedItem.style.border = "2px solid var(--primary)";
+                    selectedItem = null;
+                }
+            };
+        });
+    }
+</script>
+
+</body>
+</html>
