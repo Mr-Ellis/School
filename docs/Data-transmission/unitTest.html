@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2 Data Transmission · 85-Question Exam</title>
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#12315a;
+    --page-bg:#eef2f8;
+    --card:#ffffff;
+    --text:#1a2332;
+    --muted:#5a6b82;
+    --border:#dbe3ee;
+    --accent:#2563eb;
+    --accent-soft:#dbeafe;
+    --green:#15803d;
+    --green-soft:#dcfce7;
+    --amber:#b45309;
+    --amber-soft:#fef3c7;
+    --radius:20px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    line-height:1.65;
+    font-size:16px;
+    font-weight:400;
+    padding:0;
+  }
+
+  .topbar-wrap{max-width:1080px;margin:18px auto 0;padding:0 28px;}
+  .topbar{
+    background:var(--navy);color:#fff;padding:14px 26px;border-radius:999px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    box-shadow:0 4px 18px rgba(11,37,69,.14);
+  }
+  .topbar .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;color:#fff;text-decoration:none;letter-spacing:-.005em;}
+  .topbar .brand .cap{font-size:1.25rem;}
+  .topbar .navlinks{display:flex;gap:26px;flex-wrap:wrap;}
+  .topbar .navlinks a{color:#e6edf7;text-decoration:none;font-size:.95rem;font-weight:500;display:inline-flex;align-items:center;gap:6px;opacity:.92;transition:opacity .15s;}
+  .topbar .navlinks a:hover{opacity:1;text-decoration:underline;}
+
+  .page{max-width:1080px;margin:0 auto;padding:36px 28px 80px;}
+
+  .hero{margin-bottom:32px;}
+  .hero h1{
+    font-size:clamp(2.1rem,4.5vw,3.1rem);line-height:1.15;margin:0 0 20px;
+    font-weight:700;color:var(--navy);letter-spacing:-.025em;
+  }
+  .hero .pill{
+    display:inline-flex;align-items:center;gap:12px;background:#e2e8f2;color:var(--navy);
+    border-radius:999px;padding:10px 24px 10px 10px;font-size:1rem;font-weight:400;
+    border-left:5px solid #2b8a9b;
+  }
+  .hero .pill .dot{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700;flex-shrink:0;line-height:1;}
+
+  .card{
+    background:var(--card);border-radius:var(--radius);padding:34px 40px;margin-bottom:26px;
+    box-shadow:0 2px 4px rgba(11,37,69,.04), 0 8px 24px rgba(11,37,69,.05);
+    border:1px solid rgba(219,227,238,.5);
+  }
+  @media(max-width:640px){.card{padding:24px 20px;}.topbar-wrap{padding:0 16px;}.page{padding:28px 16px 60px;}}
+
+  .card h2{
+    font-size:1.5rem;margin:0 0 18px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:10px;letter-spacing:-.01em;
+  }
+  .card h3{
+    font-size:1.1rem;margin:26px 0 12px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:8px;letter-spacing:-.005em;
+  }
+  .card p{margin:0 0 14px;}
+  .card ul,.card ol{margin:0 0 14px;padding-left:24px;}
+  .card ul li,.card ol li{margin-bottom:6px;}
+
+  .callout{
+    background:#e8f1fb;border-left:4px solid var(--accent);border-radius:10px;
+    padding:16px 20px;margin:20px 0;font-size:.98rem;line-height:1.65;font-weight:400;
+  }
+  .callout strong{color:var(--navy);font-weight:600;}
+  .callout.tip{background:#dcfce7;border-left-color:var(--green);}
+  .callout.warn{background:#fef3c7;border-left-color:var(--amber);}
+
+  .section-divider{
+    background:#0b2545;color:#fff;padding:14px 26px;border-radius:12px;
+    margin:32px 0 22px;font-weight:600;font-size:1.15rem;letter-spacing:-.005em;
+  }
+  .question{
+    background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:20px 24px;margin-bottom:18px;
+    box-shadow:0 1px 3px rgba(11,37,69,.03);
+  }
+  .question .qnum{
+    display:inline-block;background:var(--navy);color:#fff;font-weight:700;font-size:.75rem;
+    padding:3px 12px;border-radius:20px;margin-right:10px;letter-spacing:.03em;
+  }
+  .question .qtext{font-weight:600;color:var(--navy);font-size:1rem;}
+  .options{margin-top:12px;padding-left:0;list-style:none;}
+  .options li{
+    padding:8px 0 8px 38px;position:relative;font-size:.95rem;
+    border-bottom:1px dashed #eef2f8;
+  }
+  .options li:last-child{border-bottom:none;}
+  .options li::before{
+    content:attr(data-letter);position:absolute;left:0;top:8px;
+    width:24px;height:24px;border-radius:50%;background:#e2e8f2;color:var(--navy);
+    font-size:.75rem;font-weight:700;display:grid;place-items:center;
+  }
+  .reveal-btn{
+    background:#e9f0fa;border:1px solid #bed3ec;border-radius:30px;
+    padding:5px 16px;font-size:.78rem;font-weight:600;color:#1f4973;
+    cursor:pointer;margin-top:12px;font-family:inherit;
+    transition:.15s;
+  }
+  .reveal-btn:hover{background:#d4e3fc;}
+  .answer-key{
+    background:#dcfce7;border-left:4px solid var(--green);border-radius:8px;
+    padding:10px 16px;margin-top:10px;font-size:.9rem;color:#0b3d1f;
+    display:none;
+  }
+  .answer-key.show{display:block;}
+  .answer-key strong{color:var(--green);}
+
+  .progress-note{text-align:center;color:var(--muted);font-size:.85rem;margin-top:40px;}
+
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="topbar-wrap">
+  <div class="topbar">
+    <a href="#" class="brand"><span class="cap">🎓</span> IGCSE CompSci</a>
+    <nav class="navlinks">
+      <a href="#">← Back to Unit 2</a>
+      <a href="#">← Year 10</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <h1>Unit 2 Data Transmission</h1>
+    <div class="pill">
+      <span class="dot">✓</span>
+      85-Question Exam · Packets, Serial/Parallel, Duplex, USB, Error Detection &amp; Encryption
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>Instructions</h2>
+    <ul>
+      <li>This exam contains <strong>85 multiple-choice questions</strong> covering the Unit 2 Data Transmission specification.</li>
+      <li>Each question has four options: <strong>A, B, C, or D</strong>. Choose the best answer.</li>
+      <li>All questions are equally weighted. The total mark is out of 85.</li>
+      <li>Answer keys are provided under each question so you can self-assess.</li>
+    </ul>
+    <div class="callout tip">
+      <strong>Exam tip:</strong> Work through each section, then check your answers. Use the hidden answer key to mark your work and identify topics to revise.
+    </div>
+  </section>
+
+  <!-- ================= SECTION 1 ================= -->
+  <div class="section-divider">Section 1: Data Packets &amp; Packet Switching (Questions 1–22)</div>
+
+  <div class="question">
+    <span class="qnum">1</span><span class="qtext">Why is data broken down into packets before being transmitted across a network?</span>
+    <ul class="options">
+      <li data-letter="A">Because packets are more secure than whole files</li>
+      <li data-letter="B">Because networks have size/weight limits, so large files must be split into smaller pieces</li>
+      <li data-letter="C">Because binary can only be sent in small chunks</li>
+      <li data-letter="D">Because routers cannot read large files</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Like a postal network with weight limits, large files are split into packets so they can travel through the network.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">2</span><span class="qtext">Which three sections make up every data packet?</span>
+    <ul class="options">
+      <li data-letter="A">Header, payload, trailer</li>
+      <li data-letter="B">Address, body, signature</li>
+      <li data-letter="C">Start, middle, end bits</li>
+      <li data-letter="D">Source, router, destination</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: A</strong> — Every packet contains a header, a payload, and a trailer.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">3</span><span class="qtext">Which of the following is NOT a component of the packet header?</span>
+    <ul class="options">
+      <li data-letter="A">Destination address</li>
+      <li data-letter="B">Originating (source) address</li>
+      <li data-letter="C">Packet number</li>
+      <li data-letter="D">Checksum</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: D</strong> — The checksum is in the trailer, not the header. The header contains destination address, source address, and packet number.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">4</span><span class="qtext">What is the purpose of the destination address in a packet header?</span>
+    <ul class="options">
+      <li data-letter="A">To identify the computer or server the packet is being sent to</li>
+      <li data-letter="B">To identify the computer the packet came from</li>
+      <li data-letter="C">To show the order of the packet in the file</li>
+      <li data-letter="D">To check the packet for errors</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: A</strong> — The destination address identifies where the packet is being sent.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">5</span><span class="qtext">What is the originating address also known as?</span>
+    <ul class="options">
+      <li data-letter="A">The destination address</li>
+      <li data-letter="B">The source address</li>
+      <li data-letter="C">The packet number</li>
+      <li data-letter="D">The checksum</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — The originating address is also called the source address.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">6</span><span class="qtext">Why does a packet header include a packet number?</span>
+    <ul class="options">
+      <li data-letter="A">To count how many packets were sent</li>
+      <li data-letter="B">To determine the packet's place in the overall order so packets can be reordered</li>
+      <li data-letter="C">To show which router sent the packet</li>
+      <li data-letter="D">To calculate the checksum</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — The packet number lets the receiver reassemble packets in the correct order.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">7</span><span class="qtext">What is the payload of a packet?</span>
+    <ul class="options">
+      <li data-letter="A">The destination address</li>
+      <li data-letter="B">The actual data being sent — the fragments of the original file</li>
+      <li data-letter="C">The end-of-packet marker</li>
+      <li data-letter="D">The error-checking data</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — The payload is the actual contents being sent.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">8</span><span class="qtext">What does the trailer of a packet contain?</span>
+    <ul class="options">
+      <li data-letter="A">The destination address and packet number</li>
+      <li data-letter="B">The payload only</li>
+      <li data-letter="C">An end-of-packet marker and error-checking data such as a checksum or CRC</li>
+      <li data-letter="D">The originating address</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: C</strong> — The trailer indicates the end of the packet and contains error-checking data.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">9</span><span class="qtext">What is packet switching?</span>
+    <ul class="options">
+      <li data-letter="A">The process of encrypting packets before sending them</li>
+      <li data-letter="B">The process of sending data through a network by breaking it into packets and routing them independently</li>
+      <li data-letter="C">The process of storing packets on a server</li>
+      <li data-letter="D">The process of converting packets into binary</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Packet switching is the process of sending data through a network in packets.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">10</span><span class="qtext">In packet switching, what is the first step?</span>
+    <ul class="options">
+      <li data-letter="A">Reorder the packets</li>
+      <li data-letter="B">Break the data down into packets</li>
+      <li data-letter="C">Send the packets to the nearest router</li>
+      <li data-letter="D">Calculate the checksum</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — The file is first split into fragments, each becoming the payload of a packet.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">11</span><span class="qtext">What do routers do during packet switching?</span>
+    <ul class="options">
+      <li data-letter="A">They store the packets permanently</li>
+      <li data-letter="B">They read the destination address and forward the packet to a closer router</li>
+      <li data-letter="C">They encrypt every packet</li>
+      <li data-letter="D">They reorder the packets before sending them on</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Each router reads the destination address and forwards the packet to a closer router.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">12</span><span class="qtext">Why might packets arrive at the destination out of order?</span>
+    <ul class="options">
+      <li data-letter="A">Because routers deliberately scramble them</li>
+      <li data-letter="B">Because each packet can take a different route through the network, and some routes are faster than others</li>
+      <li data-letter="C">Because the sender sends them in the wrong order</li>
+      <li data-letter="D">Because the payload is encrypted</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Different packets may take different routes, so they can arrive out of order.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">13</span><span class="qtext">How does the destination computer reassemble packets into the correct order?</span>
+    <ul class="options">
+      <li data-letter="A">By using the destination address</li>
+      <li data-letter="B">By using the packet number</li>
+      <li data-letter="C">By using the checksum</li>
+      <li data-letter="D">By using the originating address</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — The packet number is used to put packets back in the correct sequence.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">14</span><span class="qtext">What is the role of a server in a packet-switched network?</span>
+    <ul class="options">
+      <li data-letter="A">It directs packets between networks</li>
+      <li data-letter="B">It stores data and responds to requests from clients</li>
+      <li data-letter="C">It allows wireless devices to connect</li>
+      <li data-letter="D">It encrypts all data</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — A server stores data and responds to requests from clients.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">15</span><span class="qtext">What is the role of a router in a network?</span>
+    <ul class="options">
+      <li data-letter="A">It stores web pages</li>
+      <li data-letter="B">It directs packets between networks, choosing the best route to the destination</li>
+      <li data-letter="C">It converts analogue signals to digital</li>
+      <li data-letter="D">It provides power to client devices</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Routers direct packets between networks, choosing the best route.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">16</span><span class="qtext">Which of the following is a client device?</span>
+    <ul class="options">
+      <li data-letter="A">A web server</li>
+      <li data-letter="B">A router</li>
+      <li data-letter="C">A smartphone</li>
+      <li data-letter="D">A Wi-Fi access point</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: C</strong> — Smartphones, tablets, and desktops are client devices.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">17</span><span class="qtext">What does a Wi-Fi access point and router allow?</span>
+    <ul class="options">
+      <li data-letter="A">It stores all network data permanently</li>
+      <li data-letter="B">It allows wireless devices to connect to the network and routes traffic between the LAN and the internet</li>
+      <li data-letter="C">It converts binary to denary</li>
+      <li data-letter="D">It encrypts all wireless traffic</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — A Wi-Fi access point and router lets wireless devices connect and routes traffic.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">18</span><span class="qtext">In the postal analogy, what does the address on a parcel represent in a data packet?</span>
+    <ul class="options">
+      <li data-letter="A">The payload</li>
+      <li data-letter="B">The header (destination address)</li>
+      <li data-letter="C">The trailer</li>
+      <li data-letter="D">The packet number</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — The address on a parcel works like the header/destination address.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">19</span><span class="qtext">Why is packet switching described as efficient and resilient?</span>
+    <ul class="options">
+      <li data-letter="A">Because all packets take the same route</li>
+      <li data-letter="B">Because packets can take different routes, so if one route is busy or fails, packets can still get through</li>
+      <li data-letter="C">Because packets are never lost</li>
+      <li data-letter="D">Because it uses no routers</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Different packets can take different routes, making the network resilient.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">20</span><span class="qtext">Which of the following is a common misconception about packets?</span>
+    <ul class="options">
+      <li data-letter="A">Packets contain a header, payload, and trailer</li>
+      <li data-letter="B">Packets always arrive in the order they were sent</li>
+      <li data-letter="C">Packets can take different routes</li>
+      <li data-letter="D">Packets contain a packet number</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — A common misconception is that packets arrive in order; routes and timing vary, so reordering is essential.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">21</span><span class="qtext">A checksum is commonly replaced in real networks by which more reliable error check?</span>
+    <ul class="options">
+      <li data-letter="A">Parity bit</li>
+      <li data-letter="B">Cyclic redundancy check (CRC)</li>
+      <li data-letter="C">Check digit</li>
+      <li data-letter="D">Echo check</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — In real networks a cyclic redundancy check (CRC) is commonly used.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">22</span><span class="qtext">If a packet never arrives at the destination, what is this most likely to lead to?</span>
+    <ul class="options">
+      <li data-letter="A">The file is automatically complete</li>
+      <li data-letter="B">Retransmission of the missing packet</li>
+      <li data-letter="C">The network shuts down</li>
+      <li data-letter="D">The packet number is reused</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — A missing packet leads to retransmission (this links to ARQ).</div>
+  </div>
+
+  <!-- ================= SECTION 2 ================= -->
+  <div class="section-divider">Section 2: Serial &amp; Parallel Transmission (Questions 23–40)</div>
+
+  <div class="question">
+    <span class="qnum">23</span><span class="qtext">How many bits are sent at a time in serial transmission?</span>
+    <ul class="options">
+      <li data-letter="A">One bit at a time over a single wire</li>
+      <li data-letter="B">Four bits at a time</li>
+      <li data-letter="C">Eight bits at a time</li>
+      <li data-letter="D">All bits simultaneously</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: A</strong> — Serial transmission sends one bit at a time over a single wire.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">24</span><span class="qtext">How does parallel transmission send data?</span>
+    <ul class="options">
+      <li data-letter="A">One bit at a time over a single wire</li>
+      <li data-letter="B">Multiple wires are used so many bits may be sent at the same time</li>
+      <li data-letter="C">Using radio waves only</li>
+      <li data-letter="D">By encrypting each bit</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Parallel transmission uses multiple wires to send many bits at once.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">25</span><span class="qtext">What is crosstalk?</span>
+    <ul class="options">
+      <li data-letter="A">When signals arrive at slightly different times</li>
+      <li data-letter="B">When a signal on one wire creates a disturbance in another wire</li>
+      <li data-letter="C">When a packet is lost</li>
+      <li data-letter="D">When data is encrypted</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Crosstalk is interference where a signal on one wire disturbs another wire.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">26</span><span class="qtext">What is skew?</span>
+    <ul class="options">
+      <li data-letter="A">When signals arrive at slightly different times because each wire has slightly different properties</li>
+      <li data-letter="B">When a signal is too weak</li>
+      <li data-letter="C">When data is sent in one direction only</li>
+      <li data-letter="D">When packets are reordered</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: A</strong> — Skew is when signals arrive at slightly different times due to differing wire properties.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">27</span><span class="qtext">Which problem affects parallel transmission but NOT serial transmission?</span>
+    <ul class="options">
+      <li data-letter="A">Crosstalk and skew</li>
+      <li data-letter="B">Encryption</li>
+      <li data-letter="C">Packet loss</li>
+      <li data-letter="D">Checksums</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: A</strong> — Parallel transmission suffers from crosstalk and skew; serial does not.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">28</span><span class="qtext">Why are serial cables cheaper to make than parallel cables?</span>
+    <ul class="options">
+      <li data-letter="A">Because they are made of plastic</li>
+      <li data-letter="B">Because they only need one wire, so they are smaller and use less material</li>
+      <li data-letter="C">Because they are shorter</li>
+      <li data-letter="D">Because they don't need connectors</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — Serial cables need only one wire, making them cheaper and smaller.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">29</span><span class="qtext">Which of the following is an example of serial transmission?</span>
+    <ul class="options">
+      <li data-letter="A">Older PATA/IDE hard drive cables</li>
+      <li data-letter="B">USB</li>
+      <li data-letter="C">Parallel printer cables</li>
+      <li data-letter="D">CPU-to-RAM connections</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: B</strong> — USB, SATA, Ethernet, and broadband are serial.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">30</span><span class="qtext">Which of the following is an example of parallel transmission?</span>
+    <ul class="options">
+      <li data-letter="A">USB</li>
+      <li data-letter="B">Ethernet</li>
+      <li data-letter="C">Older PATA/IDE hard drive cables</li>
+      <li data-letter="D">Broadband internet</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: C</strong> — Older PATA/IDE cables and parallel printer cables are parallel.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">31</span><span class="qtext">Why has parallel transmission largely been replaced by serial transmission for external cables?</span>
+    <ul class="options">
+      <li data-letter="A">Because serial avoids crosstalk and skew, and modern processors are fast enough to handle high serial speeds</li>
+      <li data-letter="B">Because parallel cannot send data</li>
+      <li data-letter="C">Because serial is always slower</li>
+      <li data-letter="D">Because parallel cables are too short</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: A</strong> — Serial avoids crosstalk and skew, and faster processors make serial speeds high.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">32</span><span class="qtext">Where is parallel transmission still commonly used inside a computer?</span>
+    <ul class="options">
+      <li data-letter="A">Between the CPU and RAM</li>
+      <li data-letter="B">Between the keyboard and computer</li>
+      <li data-letter="C">Between the computer and a printer</li>
+      <li data-letter="D">Over broadband internet</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: A</strong> — Parallel is still used internally, e.g. between CPU and RAM.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">33</span><span class="qtext">Historically, serial transmission was slower than parallel. Why is this no longer true?</span>
+    <ul class="options">
+      <li data-letter="A">Because modern processors are fast enough to handle high serial speeds</li>
+      <li data-letter="B">Because serial now uses crosstalk</li>
+      <li data-letter="C">Because parallel cables were banned</li>
+      <li data-letter="D">Because serial sends multiple bits at once</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class="answer-key"><strong>Answer: A</strong> — Faster processors allow high serial speeds, so serial is no longer the slower option.</div>
+  </div>
+
+  <div class="question">
+    <span class="qnum">34</span><span class="qtext">A serial, simplex cable sends data how?</span>
+    <ul class="options">
+      <li data-letter="A">Multiple bits at a time in both directions</li>
+      <li data-letter="B">One bit at a time in one direction only</li>
+      <li data-letter="C">One bit at a time in both directions simultaneously</li>
+      <li data-letter="D">Multiple bits at a time in one direction</li>
+    </ul>
+    <button class="reveal-btn">Show answer ▼</button>
+    <div class
