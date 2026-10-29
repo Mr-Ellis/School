@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic 4 · Encryption</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#12315a;
+    --page-bg:#eef2f8;
+    --card:#ffffff;
+    --text:#1a2332;
+    --muted:#5a6b82;
+    --border:#dbe3ee;
+    --accent:#2563eb;
+    --accent-soft:#dbeafe;
+    --green:#15803d;
+    --green-soft:#dcfce7;
+    --amber:#b45309;
+    --amber-soft:#fef3c7;
+    --red:#dc2626;
+    --red-soft:#fee2e2;
+    --purple:#6d28d9;
+    --purple-soft:#ede9fe;
+    --radius:20px;
+    --radius-sm:12px;
+    --mono:'JetBrains Mono','Fira Code',monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    line-height:1.65;
+    font-size:16px;
+    font-weight:400;
+    padding:0;
+  }
+
+  .topbar-wrap{max-width:1080px;margin:18px auto 0;padding:0 28px;}
+  .topbar{
+    background:var(--navy);color:#fff;padding:14px 26px;border-radius:999px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    box-shadow:0 4px 18px rgba(11,37,69,.14);
+  }
+  .topbar .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;color:#fff;text-decoration:none;letter-spacing:-.005em;}
+  .topbar .brand .cap{font-size:1.25rem;}
+  .topbar .navlinks{display:flex;gap:26px;flex-wrap:wrap;}
+  .topbar .navlinks a{color:#e6edf7;text-decoration:none;font-size:.95rem;font-weight:500;display:inline-flex;align-items:center;gap:6px;opacity:.92;transition:opacity .15s;}
+  .topbar .navlinks a:hover{opacity:1;text-decoration:underline;}
+
+  .page{max-width:1080px;margin:0 auto;padding:36px 28px 80px;}
+
+  .hero{margin-bottom:32px;}
+  .hero h1{
+    font-size:clamp(2.1rem,4.5vw,3.1rem);line-height:1.15;margin:0 0 20px;
+    font-weight:700;color:var(--navy);letter-spacing:-.025em;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .hero h1 .emoji{font-size:1em;font-weight:400;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;}
+  .hero .pill{
+    display:inline-flex;align-items:center;gap:12px;background:#e2e8f2;color:var(--navy);
+    border-radius:999px;padding:10px 24px 10px 10px;font-size:1rem;font-weight:400;
+    border-left:5px solid #8b5cf6;
+  }
+  .hero .pill .dot{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700;flex-shrink:0;line-height:1;}
+
+  .card{
+    background:var(--card);border-radius:var(--radius);padding:34px 40px;margin-bottom:26px;
+    box-shadow:0 2px 4px rgba(11,37,69,.04), 0 8px 24px rgba(11,37,69,.05);
+    border:1px solid rgba(219,227,238,.5);
+  }
+  @media(max-width:640px){.card{padding:24px 20px;}.topbar-wrap{padding:0 16px;}.page{padding:28px 16px 60px;}}
+
+  .card h2{
+    font-size:1.5rem;margin:0 0 18px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:10px;letter-spacing:-.01em;
+  }
+  .card h3{
+    font-size:1.1rem;margin:26px 0 12px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:8px;letter-spacing:-.005em;
+  }
+  .card p{margin:0 0 14px;}
+  .card ul,.card ol{margin:0 0 14px;padding-left:24px;}
+  .card ul li,.card ol li{margin-bottom:6px;}
+
+  /* Learning objectives card */
+  .objectives-card {
+    border-left: 5px solid var(--accent);
+  }
+  .objectives-card h2 {
+    font-size: 1.6rem;
+  }
+  .objectives-card ul {
+    margin: 0 0 18px;
+    padding-left: 24px;
+  }
+  .objectives-card ul li {
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  .objectives-card ul li strong {
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .objectives-card .why-matters {
+    background: #e8f1fb;
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px 0 0;
+    font-size: .98rem;
+  }
+
+  /* Lesson instructions card */
+  .lesson-instructions {
+    border-left: 5px solid var(--green);
+    background: #f0fdf4;
+  }
+  .lesson-instructions h2 {
+    color: var(--green);
+  }
+  .lesson-instructions .lesson-part {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    border: 1px solid #bbf7d0;
+  }
+  .lesson-instructions .lesson-part h3 {
+    margin-top: 0;
+    color: var(--navy);
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lesson-instructions .lesson-part .tag {
+    display: inline-block;
+    background: var(--green);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    margin-right: 6px;
+  }
+  .lesson-instructions .lesson-part ol,
+  .lesson-instructions .lesson-part ul {
+    margin: 0.5rem 0 0 1.2rem;
+    padding-left: 0.5rem;
+  }
+  .lesson-instructions .lesson-part li {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+  }
+
+  .callout{
+    background:#e8f1fb;border-left:4px solid var(--accent);border-radius:10px;
+    padding:16px 20px;margin:20px 0;font-size:.98rem;line-height:1.65;font-weight:400;
+  }
+  .callout strong{color:var(--navy);font-weight:600;}
+  .callout.tip{background:#dcfce7;border-left-color:var(--green);}
+  .callout.warn{background:#fef3c7;border-left-color:var(--amber);}
+  .callout.danger{background:#fee2e2;border-left-color:var(--red);}
+  .callout.purple{background:var(--purple-soft);border-left-color:var(--purple);}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;
+    border:1px solid var(--navy);padding:10px 20px;border-radius:10px;text-decoration:none;
+    font-weight:500;font-size:.93rem;transition:.15s;cursor:pointer;line-height:1.4;font-family:inherit;
+  }
+  .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;text-decoration:none;}
+  .btn.green{background:var(--green);border-color:var(--green);}
+  .btn.green:hover{background:#115e30;border-color:#115e30;}
+  .btn.purple{background:var(--purple);border-color:var(--purple);}
+  .btn.purple:hover{background:#5b21b6;border-color:#5b21b6;}
+  .btn.red{background:var(--red);border-color:var(--red);}
+  .btn.red:hover{background:#b91c1c;border-color:#b91c1c;}
+  .btn.outline{background:#fff;color:var(--navy);border-color:var(--border);}
+  .btn.outline:hover{background:#f4f7fb;border-color:#b8c5d6;color:var(--navy);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+
+  details.reveal{
+    margin-top:16px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    background:#f8fafd;overflow:hidden;
+  }
+  details.reveal summary{
+    cursor:pointer;padding:13px 18px;font-weight:600;font-size:.95rem;color:var(--accent);
+    list-style:none;display:flex;align-items:center;gap:8px;
+  }
+  details.reveal summary::-webkit-details-marker{display:none;}
+  details.reveal summary::before{content:"▶";font-size:.7rem;transition:.2s;}
+  details.reveal[open] summary::before{transform:rotate(90deg);}
+  details.reveal .body{padding:6px 18px 18px;border-top:1px solid var(--border);background:#fff;}
+
+  /* ===== INTERACTIVE DEMO BOXES ===== */
+  .demo-box {
+    background: #f8fafd;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.4rem 1.6rem;
+    margin: 1.5rem 0;
+  }
+  .demo-box h3 {
+    margin-top: 0;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .demo-box .status {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+  }
+  .demo-box .status.ok { background: var(--green-soft); color: var(--green); }
+  .demo-box .status.fail { background: #fee2e2; color: var(--red); }
+  .demo-box .status.info { background: #dbeafe; color: var(--accent); }
+  .demo-box .status.warn { background: #fef3c7; color: var(--amber); }
+
+  .demo-box .controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .demo-box .controls button {
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .demo-box .controls button:hover { background: var(--navy-2); }
+  .demo-box .controls button.secondary {
+    background: #fff;
+    color: var(--navy);
+    border: 2px solid var(--border);
+  }
+  .demo-box .controls button.secondary:hover { background: #f4f7fb; }
+
+  /* Encryption demo specific */
+  .encryption-flow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 1.2rem 0;
+  }
+  .encryption-flow .node {
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: white;
+    transition: 0.3s;
+  }
+  .encryption-flow .node .label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .encryption-flow .node .content {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--navy);
+    word-break: break-all;
+    min-height: 2.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .encryption-flow .arrow {
+    font-size: 1.5rem;
+    color: var(--muted);
+  }
+  .encryption-flow .key {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--amber-soft);
+    border: 2px solid var(--amber);
+    border-radius: 40px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--amber);
+    margin-top: 0.5rem;
+  }
+  .encryption-flow .key.public { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+  .encryption-flow .key.private { background: var(--red-soft); border-color: var(--red); color: var(--red); }
+
+  /* Asymmetric demo specific */
+  .asym-demo .keypair {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+  }
+  .asym-demo .key-card {
+    flex: 1;
+    min-width: 160px;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    border: 2px solid;
+  }
+  .asym-demo .key-card.public {
+    background: var(--green-soft);
+    border-color: var(--green);
+  }
+  .asym-demo .key-card.private {
+    background: var(--red-soft);
+    border-color: var(--red);
+  }
+  .asym-demo .key-card h4 {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+  }
+  .asym-demo .key-card .key-value {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    word-break: break-all;
+  }
+  .asym-demo .message-area {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid var(--border);
+  }
+  .asym-demo .message-area textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 0.6rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    resize: vertical;
+  }
+  .asym-demo .message-area textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .asym-demo .asym-step {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .asym-demo .asym-step:last-child { border-bottom: none; }
+  .asym-demo .asym-step .step-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+  }
+  .asym-demo .asym-step .step-text {
+    flex: 1;
+    font-size: 0.9rem;
+  }
+  .asym-demo .asym-step .step-result {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+  }
+  .asym-demo .asym-step .step-result.success { background: var(--green-soft); color: var(--green); }
+  .asym-demo .asym-step .step-result.fail { background: var(--red-soft); color: var(--red); }
+  .asym-demo .asym-step .step-result.pending { background: #f1f5f9; color: var(--muted); }
+
+  .cipher-slider {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    justify-content: center;
+    margin: 0.8rem 0;
+  }
+  .cipher-slider label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .cipher-slider input[type="range"] {
+    width: 180px;
+    accent-color: var(--navy);
+  }
+  .cipher-slider .key-display {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--navy);
+    min-width: 2.5em;
+    text-align: center;
+  }
+
+  .cipher-text {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    font-weight: 600;
+    word-break: break-all;
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 10px;
+    background: white;
+    border: 1px solid var(--border);
+    min-height: 2.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge.symmetric { background: var(--amber-soft); color: var(--amber); }
+  .badge.asymmetric { background: var(--purple-soft); color: var(--purple); }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  @media(max-width:600px){
+    .comparison-grid { grid-template-columns: 1fr; }
+    .encryption-flow { flex-direction: column; }
+    .encryption-flow .arrow { transform: rotate(90deg); }
+  }
+  .comparison-grid .col {
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: white;
+  }
+  .comparison-grid .col.sym { border-color: var(--amber); background: #fffbeb; }
+  .comparison-grid .col.asym { border-color: var(--purple); background: #f5f3ff; }
+  .comparison-grid .col h4 {
+    margin: 0 0 0.6rem;
+    font-size: 0.95rem;
+  }
+  .comparison-grid .col ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-size: 0.88rem;
+  }
+  .comparison-grid .col ul li { margin-bottom: 0.3rem; }
+
+  /* Teacher panel */
+  .teacher-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:0;overflow:hidden; margin-top: 2rem;}
+  .teacher-panel summary{
+    cursor:pointer;font-weight:600;color:var(--navy);font-size:.98rem;
+    list-style:none;display:flex;align-items:center;gap:10px;padding:18px 22px;
+  }
+  .teacher-panel summary::-webkit-details-marker{display:none;}
+  .teacher-panel summary::before{content:"🔒";font-size:1.05rem;}
+  .teacher-panel[open] summary{border-bottom:1px solid var(--border);}
+  .teacher-panel[open] summary::before{content:"🔓";}
+  .teacher-panel .panel-body{padding:22px;}
+  .lock-screen{text-align:center;padding:20px 12px;}
+  .lock-screen input{
+    padding:10px 14px;border-radius:10px;background:#fff;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;margin-right:8px;font-family:inherit;
+  }
+  .lock-screen input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+  .hidden{display:none !important;}
+
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  @media(max-width:680px){
+    .demo-box { padding: 1rem; }
+    .asym-demo .keypair { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar-wrap">
+  <div class="topbar">
+    <a href="#" class="brand"><span class="cap">🎓</span> IGCSE CompSci</a>
+    <nav class="navlinks">
+      <a href="#">← Back to Unit 2</a>
+      <a href="#">← Year 10</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <h1><span class="emoji">🔐</span> Encryption</h1>
+    <div class="pill">
+      <span class="dot">✓</span> Topic 4 · Symmetric &amp; Asymmetric Encryption
+    </div>
+  </div>
+
+  <!-- ============ STARTER ============ -->
+  <section class="card">
+    <h2>🔥 Starter – The Wi-Fi Question</h2>
+    <p>Many people now use a Wi-Fi access point in their home.</p>
+    <p><strong>1. Why do Wi-Fi access points need encryption?</strong></p>
+    <p><strong>2. Describe how the encryption on a Wi-Fi access point works from a user's point of view.</strong></p>
+    <p><em>Discuss with the person next to you — be ready to share your ideas.</em></p>
+
+    <details class="reveal">
+      <summary>Show suggested answer</summary>
+      <div class="body">
+        <p><strong>Why Wi-Fi needs encryption:</strong></p>
+        <ul>
+          <li>Sensitive data (passwords, bank details, photos) is sent from devices to the access point.</li>
+          <li>An eavesdropper can listen to the Wi-Fi signal. If it is not encrypted, they can read and use that sensitive information.</li>
+        </ul>
+        <p><strong>How it works from the user's point of view:</strong></p>
+        <ul>
+          <li>A Wi-Fi password (a pre-shared key, or PSK) is given to each user who wants to connect.</li>
+          <li>The data is encrypted using this key before it is sent.</li>
+        </ul>
+        <p><strong>This is an example of <em>symmetric encryption</em> — the same key encrypts and decrypts the data.</strong></p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ LEARNING OBJECTIVES ============ -->
+  <section class="card objectives-card">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+      <li><strong>Understand the need for and purpose of encryption</strong> when transmitting data.</li>
+      <li><strong>Understand how data is encrypted</strong> using <strong>symmetric</strong> and <strong>asymmetric</strong> encryption.</li>
+      <li><strong>Describe</strong> the role of the public key, private key, and shared key.</li>
+      <li><strong>Explain</strong> why asymmetric encryption is used for secure websites (HTTPS).</li>
+    </ul>
+
+    <div class="why-matters">
+      <strong>Why This Matters:</strong> Every time you log into a website, send a message, or pay for something online, encryption is protecting your data. Without it, anyone on the same network could read your passwords and bank details. Understanding encryption helps you see how the internet keeps your private information private — and why some methods are safer than others.
+    </div>
+  </section>
+
+  <!-- ============ LESSON INSTRUCTIONS ============ -->
+  <section class="card lesson-instructions">
+    <h2>📋 How to Work Through This Lesson</h2>
+    <p>This is a <strong>single lesson</strong>. Follow the steps below in order.</p>
+
+    <div class="lesson-part">
+      <h3><span class="tag">Lesson</span> Work through this interactive page</h3>
+      <ol>
+        <li>Read each section carefully, from <strong>The Need for Encryption</strong> through to <strong>Comparing the Methods</strong>.</li>
+        <li>Use the <strong>interactive demos</strong> — encrypt messages, try to intercept them, and see how keys work.</li>
+        <li>Complete <strong>Worksheet 4</strong> on Schoolbox. This is the work your teacher will mark.</li>
+      </ol>
+      <div class="btn-row" style="margin-top:0.8rem;">
+        <a href="https://lms.isr-school.com/" target="_blank" rel="noopener" class="btn green">
+          📄 Open Worksheet 4
+        </a>
+      </div>
+    </div>
+
+    <div class="callout tip" style="margin-top:1.2rem; margin-bottom:0;">
+      <strong>Tip:</strong> The interactive demos on this page are designed to help you answer the worksheet questions. If you get stuck on a question, come back to the matching demo and try it again.
+    </div>
+  </section>
+
+  <!-- ============ SECTION 1: THE NEED FOR ENCRYPTION ============ -->
+  <section class="card">
+    <h2>🛡️ The Need for Encryption</h2>
+    <p>Large amounts of personal data are now stored and transmitted on computers. Companies and other organisations also hold highly confidential data that they don't want others to see.</p>
+    <p>In paper systems, sensitive data was held in locked cabinets and locked rooms. Now, sensitive data is often transmitted via the internet — a public network — and stored on computers and servers that may be hacked.</p>
+
+    <div class="callout warn">
+      <strong>The problem:</strong> When data is transmitted, it can be intercepted. Encryption does not stop data being intercepted, but it scrambles the data so that anyone who intercepts it cannot understand it without the key. Its purpose is to keep data <strong>confidential</strong> while it is being transmitted.
+    </div>
+
+    <h3>Key terms</h3>
+    <ul>
+      <li><strong>Plaintext</strong> — the original, readable data before it is encrypted.</li>
+      <li><strong>Ciphertext</strong> — the scrambled data produced after an encryption algorithm is applied.</li>
+      <li><strong>Encryption</strong> — the process of encoding data so that it becomes unreadable.</li>
+      <li><strong>Decryption</strong> — decoding encrypted data back into plaintext.</li>
+      <li><strong>Eavesdropper</strong> — someone who listens to or intercepts data being transmitted.</li>
+    </ul>
+
+    <h3>Try it: Intercepting a message</h3>
+    <p>Send a message across the network. The eavesdropper copies everything sent. Switch on encryption and compare what the eavesdropper sees.</p>
+
+    <div class="demo-box" id="interceptDemo">
+      <div class="encryption-flow">
+        <div class="node">
+          <div class="label">Sender</div>
+          <div class="content" id="senderMessage">Card number 4921 7731 0045 8812</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node" style="border-color:var(--red); background:#fef2f2;">
+          <div class="label" style="color:var(--red);">Eavesdropper</div>
+          <div class="content" id="eavesdropperMessage" style="color:var(--red);">Card number 4921 7731 0045 8812</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <div class="label">Receiver</div>
+          <div class="content" id="receiverMessage">Card number 4921 7731 0045 8812</div>
+        </div>
+      </div>
+      <div class="status warn" id="interceptStatus">The message is sent as plaintext. Anyone who intercepts it can read it, and use it.</div>
+      <div class="controls">
+        <button onclick="toggleEncryption()" id="encryptBtn">🔒 Encrypt the message</button>
+        <button class="secondary" onclick="resetIntercept()">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Important distinction:</strong> Encryption cannot prevent data from being intercepted — it simply ensures that if it is stolen, it makes no sense to the thief.
+    </div>
+  </section>
+
+  <!-- ============ SECTION 2: SYMMETRIC ENCRYPTION ============ -->
+  <section class="card">
+    <h2>🔑 Symmetric Encryption <span class="badge symmetric">Symmetric</span></h2>
+    <p>In symmetric encryption, the <strong>same key</strong> is used to encrypt and to decrypt the data.</p>
+
+    <h3>The process</h3>
+    <ol>
+      <li>The sender encrypts the plaintext using the key, producing ciphertext.</li>
+      <li>The ciphertext is transmitted to the receiver.</li>
+      <li>The receiver decrypts the ciphertext using the <strong>same key</strong>.</li>
+    </ol>
+
+    <div class="callout tip">
+      <strong>Simple example:</strong> A Caesar cipher is a very simple symmetric cipher. The key is a number, and every letter is shifted that many places along the alphabet. Change the key, then try decrypting with the wrong key and the right one.
+    </div>
+
+    <h3>Try it: Caesar cipher</h3>
+    <p>Adjust the key to encrypt the message. Then see what happens when the receiver uses the wrong key to decrypt it.</p>
+
+    <div class="demo-box" id="caesarDemo">
+      <div class="cipher-slider">
+        <label for="caesarKey">Key:</label>
+        <input type="range" id="caesarKey" min="1" max="25" value="3">
+        <span class="key-display" id="caesarKeyDisplay">3</span>
+      </div>
+      <p style="text-align:center; font-size:0.85rem; color:var(--muted); margin-bottom:0.4rem;">Plaintext (what the sender writes):</p>
+      <div class="cipher-text" id="caesarPlaintext">HELLO WORLD</div>
+      <p style="text-align:center; font-size:0.85rem; color:var(--muted); margin:0.8rem 0 0.4rem;">Ciphertext (what is sent):</p>
+      <div class="cipher-text" id="caesarCiphertext" style="background:#fffbeb; border-color:var(--amber);">KHOOR ZRUOG</div>
+      <p style="text-align:center; font-size:0.85rem; color:var(--muted); margin:0.8rem 0 0.4rem;">Receiver decrypts with the <strong>same key</strong>:</p>
+      <div class="cipher-text" id="caesarDecrypted" style="background:#dcfce7; border-color:var(--green);">HELLO WORLD</div>
+      <div class="status ok" id="caesarStatus">The receiver uses the same key (3) and gets back the original message.</div>
+      <div class="controls">
+        <button class="secondary" onclick="tryWrongKey()">Try decrypting with the wrong key</button>
+        <button onclick="resetCaesar()">Reset</button>
+      </div>
+    </div>
+
+    <h3>The problem with symmetric encryption</h3>
+    <p>The sender and receiver both need the same key, so the key has to be sent to the receiver. If the key is intercepted on the way, anyone who has it can decrypt every message.</p>
+
+    <div class="callout danger">
+      <strong>Key distribution problem:</strong> Sharing the key safely is difficult. If the key is sent by email, post, or phone, an eavesdropper could intercept it. This is the main weakness of symmetric encryption when used for data transfer.
+    </div>
+
+    <h3>Real-world uses of symmetric encryption</h3>
+    <ul>
+      <li>Wi-Fi connections (the pre-shared key/PSK)</li>
+      <li>Adding a password to a ZIP file (which also encrypts the file)</li>
+      <li>Encrypting a hard drive or external storage device</li>
+    </ul>
+  </section>
+
+  <!-- ============ SECTION 3: ASYMMETRIC ENCRYPTION ============ -->
+  <section class="card">
+    <h2>🔐 Asymmetric Encryption <span class="badge asymmetric">Asymmetric</span></h2>
+    <p>Asymmetric encryption uses <strong>two different keys</strong> that are mathematically linked, called a <strong>key pair</strong>:</p>
+    <ul>
+      <li><strong>Public key</strong> — shared openly with anyone, and used to <strong>encrypt</strong> data.</li>
+      <li><strong>Private key</strong> — kept secret by its owner, and used to <strong>decrypt</strong> data.</li>
+    </ul>
+
+    <div class="callout purple">
+      <strong>Key idea:</strong> Data encrypted with someone's public key can only be decrypted with their matching private key. Not even the public key can decrypt it.
+    </div>
+
+    <h3>Worked walkthrough: Alice sends Bob a secret message</h3>
+    <p>Think of Bob's public key as an open padlock that anyone can snap shut, and his private key as the only key that can open it.</p>
+
+    <div class="demo-box asym-demo" id="asymDemo">
+      <div class="keypair">
+        <div class="key-card public">
+          <h4>🌍 Public Key</h4>
+          <div class="key-value">(17, 3233)</div>
+          <p style="font-size:0.75rem; color:var(--muted); margin:0.4rem 0 0;">Shared with everyone — including Eve.</p>
+        </div>
+        <div class="key-card private">
+          <h4>🔒 Private Key</h4>
+          <div class="key-value">(2753, 3233)</div>
+          <p style="font-size:0.75rem; color:var(--muted); margin:0.4rem 0 0;">Kept secret. Never sent to anyone.</p>
+        </div>
+      </div>
+
+      <div class="message-area">
+        <label style="font-weight:600; font-size:0.85rem; color:var(--muted); display:block; margin-bottom:0.4rem;">Alice's message to Bob:</label>
+        <textarea id="aliceMessage" placeholder="Type a short message...">Hello Bob</textarea>
+      </div>
+
+      <div class="asym-demo-steps" id="asymSteps">
+        <div class="asym-step">
+          <span class="step-num">1</span>
+          <span class="step-text">Bob creates a key pair. He keeps the private key secret.</span>
+          <span class="step-result pending">—</span>
+        </div>
+        <div class="asym-step">
+          <span class="step-num">2</span>
+          <span class="step-text">Bob sends his public key to Alice. It does not need to be kept secret.</span>
+          <span class="step-result pending">—</span>
+        </div>
+        <div class="asym-step">
+          <span class="step-num">3</span>
+          <span class="step-text">Eve intercepts the public key. This does not matter — it can only encrypt, not decrypt.</span>
+          <span class="step-result pending">—</span>
+        </div>
+        <div class="asym-step">
+          <span class="step-num">4</span>
+          <span class="step-text">Alice encrypts her message using Bob's public key.</span>
+          <span class="step-result pending">—</span>
+        </div>
+        <div class="asym-step">
+          <span class="step-num">5</span>
+          <span class="step-text">Eve intercepts the ciphertext too, but she does not have Bob's private key.</span>
+          <span class="step-result pending">—</span>
+        </div>
+        <div class="asym-step">
+          <span class="step-num">6</span>
+          <span class="step-text">Bob decrypts the ciphertext using his private key.</span>
+          <span class="step-result pending">—</span>
+        </div>
+      </div>
+
+      <div class="status info" id="asymStatus">Press "Run the walkthrough" to see each step of asymmetric encryption.</div>
+      <div class="controls">
+        <button onclick="runAsymWalkthrough()">▶ Run the walkthrough</button>
+        <button class="secondary" onclick="resetAsymDemo()">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Why this solves the key distribution problem:</strong> The private key was never sent anywhere, so it could not have been intercepted. Only the public key is shared, and that is safe — anyone can have it, but it can only encrypt, not decrypt.
+    </div>
+
+    <h3>Real-world use: HTTPS</h3>
+    <p>Web pages that are shared using HTTPS (Hypertext Transfer Protocol Secure) make use of asymmetric encryption. The browser and server share the necessary public keys to encrypt data, then use their private keys to decrypt.</p>
+
+    <div class="callout">
+      <strong>Why not use symmetric encryption for every website?</strong> If symmetric encryption were used, every website you visit would first need to send the password privately to you — for example through a letter. The sharing of a public key happens in a fraction of a second, and there is no risk if an eavesdropper discovers it.
+    </div>
+
+    <div class="callout tip">
+      <strong>In practice:</strong> The two are often used together. When you visit a secure website, asymmetric encryption is used first to share a symmetric key safely, and then the faster symmetric encryption is used for the rest of the data.
+    </div>
+  </section>
+
+  <!-- ============ SECTION 4: COMPARING THE METHODS ============ -->
+  <section class="card">
+    <h2>📊 Comparing Symmetric and Asymmetric Encryption</h2>
+
+    <div class="comparison-grid">
+      <div class="col sym">
+        <h4>🔑 Symmetric Encryption</h4>
+        <ul>
+          <li><strong>One key</strong> is used to encrypt and decrypt.</li>
+          <li>The key <strong>must be shared</strong> with the receiver — and it could be intercepted.</li>
+          <li>If the shared key is intercepted, <strong>every message can be decrypted</strong>.</li>
+          <li><strong>Faster</strong> — the calculations are simpler.</li>
+        </ul>
+      </div>
+      <div class="col asym">
+        <h4>🌍 Asymmetric Encryption</h4>
+        <ul>
+          <li>A <strong>key pair</strong>: a public key to encrypt and a private key to decrypt.</li>
+          <li>Only the <strong>public key is shared</strong>; the private key is never sent.</li>
+          <li>If the public key is intercepted, <strong>no problem</strong> — it cannot decrypt anything.</li>
+          <li><strong>Slower</strong> — the calculations are more complex.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-top:1rem;">
+        <thead>
+          <tr style="background:var(--navy); color:white;">
+            <th style="padding:0.7rem; text-align:left; border:1px solid var(--border);">Feature</th>
+            <th style="padding:0.7rem; text-align:left; border:1px solid var(--border);">Symmetric</th>
+            <th style="padding:0.7rem; text-align:left; border:1px solid var(--border);">Asymmetric</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#f8fafd;">
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>Keys</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">One key, used to encrypt and decrypt</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">A key pair: a public key to encrypt and a private key to decrypt</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>Sharing keys</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">The key must be sent to the receiver, and could be intercepted</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Only the public key is shared; the private key is never sent</td>
+          </tr>
+          <tr style="background:#f8fafd;">
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>If a key is intercepted</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Every message can be decrypted</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">No problem: the public key cannot decrypt anything</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem; border:1px solid var(--border);"><strong>Speed</strong></td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Faster</td>
+            <td style="padding:0.7rem; border:1px solid var(--border);">Slower, because the calculations are more complex</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ AI GUIDE & POWERPOINT ============ -->
+  <section class="card">
+    <h2>🤖 AI Guide</h2>
+    <p>Your personal tutor! Ask the AI any question about encryption.</p>
+    <div class="btn-row">
+      <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" rel="noopener" class="btn">
+        💬 Ask the AI Tutor
+      </a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>📊 Lesson Presentation</h2>
+    <p>Use these slides to recap the lesson.</p>
+    <div class="btn-row">
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F2%2520Data-transmission-encryption%2FT4%2520Encryption.pptx&wdOrigin=BROWSELINK" target="_blank" rel="noopener" class="btn outline">
+        📊 Open PowerPoint
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ TEACHER PANEL ============ -->
+  <section class="card">
+    <h2>Additional Resources</h2>
+
+    <details class="teacher-panel">
+      <summary>📋 Lesson Plan (Teacher only) — click to toggle</summary>
+      <div class="panel-body">
+
+        <div class="lock-screen" id="lockScreen">
+          <p style="color:var(--muted);margin-bottom:14px;">Enter password to view the full lesson plan.</p>
+          <input type="password" id="lockInput" placeholder="Password">
+          <button class="btn" id="lockBtn">Unlock</button>
+          <p id="lockMsg" style="color:#dc2626;font-size:.85rem;margin-top:10px;min-height:1.2em;"></p>
+        </div>
+
+        <div id="teacherContent" class="hidden">
+          <h3>Lesson Overview</h3>
+          <p>This is a <strong>single lesson</strong> covering the need for encryption and the two main types: symmetric and asymmetric. The lesson uses interactive demos to make the abstract concepts tangible.</p>
+
+          <h3>Timing</h3>
+          <ul>
+            <li><strong>0–10 min</strong> — Starter (Wi-Fi question) &amp; Objectives</li>
+            <li><strong>10–25 min</strong> — The need for encryption + key terms + intercept demo</li>
+            <li><strong>25–45 min</strong> — Symmetric encryption + Caesar cipher demo + key distribution problem</li>
+            <li><strong>45–65 min</strong> — Asymmetric encryption + Alice/Bob walkthrough + HTTPS</li>
+            <li><strong>65–75 min</strong> — Comparing the methods + worksheet Task 1 &amp; 2</li>
+            <li><strong>75–85 min</strong> — Review and plenary</li>
+          </ul>
+
+          <h3>Key Teaching Points</h3>
+          <ul>
+            <li>Encryption <strong>does not stop interception</strong> — it makes the data useless to the interceptor.</li>
+            <li>Symmetric is <strong>faster but has the key distribution problem</strong>.</li>
+            <li>Asymmetric solves this because <strong>only the public key is shared</strong>, and it cannot decrypt.</li>
+            <li>HTTPS uses <strong>asymmetric encryption</strong>; Wi-Fi uses <strong>symmetric encryption</strong>.</li>
+            <li>In practice, the two are often <strong>combined</strong>.</li>
+          </ul>
+
+          <h3>Answers to Worksheet 4</h3>
+          <p><strong>Task 1(a):</strong> Isabella creates a password and uses it as the <strong>shared key</strong>. She phones the director to share the password. She takes the <strong>plaintext</strong> PDF and uses an <strong>encryption algorithm</strong> and the shared key to create the <strong>encrypted text</strong>. The file is sent from Isabella (<strong>sender</strong>) to the director (<strong>receiver</strong>). An <strong>eavesdropper</strong> cannot understand it. The director uses the shared key to <strong>decrypt</strong> the file back to plaintext. This is <strong>symmetric encryption</strong>.</p>
+          <p><strong>Task 1(b):</strong> The phone call itself is likely insecure. If an eavesdropper listens to the call, they will find out the shared key and then be able to decrypt the PDF that is sent.</p>
+          <p><strong>Task 2(a):</strong> Web forms often contain sensitive information (email address, credit card number, address, password). Sending the data encrypted will protect it from an eavesdropper.</p>
+          <p><strong>Task 2(b):</strong> Diagram should show: browser requests web page → server sends public key → browser encrypts data with public key → ciphertext sent to server → server decrypts with private key.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:40px;">progress saved automatically in your browser</p>
+</div>
+
+<script>
+  /* ===== INTERCEPT DEMO ===== */
+  (function() {
+    const senderMsg = document.getElementById('senderMessage');
+    const eavesMsg = document.getElementById('eavesdropperMessage');
+    const receiverMsg = document.getElementById('receiverMessage');
+    const status = document.getElementById('interceptStatus');
+    const btn = document.getElementById('encryptBtn');
+    let isEncrypted = false;
+
+    const plaintext = 'Card number 4921 7731 0045 8812';
+    const ciphertext = 'xK9#mP2$vL7@qR4!nB8&wT1^zY6*cF3';
+
+    window.toggleEncryption = function() {
+      isEncrypted = !isEncrypted;
+      if (isEncrypted) {
+        senderMsg.textContent = ciphertext;
+        eavesMsg.textContent = ciphertext;
+        eavesMsg.style.color = '#6d28d9';
+        receiverMsg.textContent = plaintext;
+        status.className = 'status ok';
+        status.textContent = 'The message is encrypted. The eavesdropper intercepts the ciphertext but cannot understand it without the key. The receiver decrypts it back to plaintext.';
+        btn.textContent = '🔓 Decrypt the message';
+      } else {
+        senderMsg.textContent = plaintext;
+        eavesMsg.textContent = plaintext;
+        eavesMsg.style.color = 'var(--red)';
+        receiverMsg.textContent = plaintext;
+        status.className = 'status warn';
+        status.textContent = 'The message is sent as plaintext. Anyone who intercepts it can read it, and use it.';
+        btn.textContent = '🔒 Encrypt the message';
+      }
+    };
+
+    window.resetIntercept = function() {
+      isEncrypted = false;
+      senderMsg.textContent = plaintext;
+      eavesMsg.textContent = plaintext;
+      eavesMsg.style.color = 'var(--red)';
+      receiverMsg.textContent = plaintext;
+      status.className = 'status warn';
+      status.textContent = 'The message is sent as plaintext. Anyone who intercepts it can read it, and use it.';
+      btn.textContent = '🔒 Encrypt the message';
+    };
+  })();
+
+  /* ===== CAESAR CIPHER DEMO ===== */
+  (function() {
+    const keySlider = document.getElementById('caesarKey');
+    const keyDisplay = document.getElementById('caesarKeyDisplay');
+    const plaintextEl = document.getElementById('caesarPlaintext');
+    const ciphertextEl = document.getElementById('caesarCiphertext');
+    const decryptedEl = document.getElementById('caesarDecrypted');
+    const status = document.getElementById('caesarStatus');
+
+    const original = 'HELLO WORLD';
+    let currentKey = 3;
+    let wrongKeyActive = false;
+
+    function shiftText(text, key) {
+      return text.split('').map(ch => {
+        if (ch === ' ') return ' ';
+        const code = ch.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          return String.fromCharCode(((code - 65 + key) % 26) + 65);
+        }
+        return ch;
+      }).join('');
+    }
+
+    function renderCaesar() {
+      const cipher = shiftText(original, currentKey);
+      ciphertextEl.textContent = cipher;
+
+      let decryptKey = currentKey;
+      if (wrongKeyActive) {
+        decryptKey = (currentKey + 5) % 26;
+        if (decryptKey === 0) decryptKey = 26;
+      }
+      const decrypted = shiftText(cipher, 26 - decryptKey);
+      decryptedEl.textContent = decrypted;
+
+      if (wrongKeyActive) {
+        decryptedEl.style.background = '#fee2e2';
+        decryptedEl.style.borderColor = 'var(--red)';
+        status.className = 'status fail';
+        status.textContent = `The receiver uses the wrong key (${decryptKey}) and gets nonsense: "${decrypted}". This is not the original message!`;
+      } else {
+        decryptedEl.style.background = '#dcfce7';
+        decryptedEl.style.borderColor = 'var(--green)';
+        status.className = 'status ok';
+        status.textContent = `The receiver uses the same key (${currentKey}) and gets back the original message.`;
+      }
+
+      keyDisplay.textContent = currentKey;
+    }
+
+    keySlider.addEventListener('input', () => {
+      currentKey = parseInt(keySlider.value, 10);
+      wrongKeyActive = false;
+      renderCaesar();
+    });
+
+    window.tryWrongKey = function() {
+      wrongKeyActive = true;
+      renderCaesar();
+    };
+
+    window.resetCaesar = function() {
+      currentKey = 3;
+      keySlider.value = 3;
+      wrongKeyActive = false;
+      renderCaesar();
+    };
+
+    renderCaesar();
+  })();
+
+  /* ===== ASYMMETRIC WALKTHROUGH DEMO ===== */
+  (function() {
+    const stepsContainer = document.getElementById('asymSteps');
+    const status = document.getElementById('asymStatus');
+    const messageInput = document.getElementById('aliceMessage');
+    let stepIndex = 0;
+    let timeoutId = null;
+
+    const steps = [
+      { text: 'Bob creates a key pair. He keeps the private key secret.', result: 'Key pair created', resultClass: 'success' },
+      { text: 'Bob sends his public key to Alice. It does not need to be kept secret.', result: 'Public key shared', resultClass: 'success' },
+      { text: 'Eve intercepts the public key. This does not matter — it can only encrypt, not decrypt.', result: 'Eve has public key', resultClass: 'warn' },
+      { text: 'Alice encrypts her message using Bob\'s public key.', result: 'Message encrypted', resultClass: 'success' },
+      { text: 'Eve intercepts the ciphertext too, but she does not have Bob\'s private key.', result: 'Eve cannot decrypt', resultClass: 'fail' },
+      { text: 'Bob decrypts the ciphertext using his private key.', result: 'Message decrypted', resultClass: 'success' }
+    ];
+
+    function renderSteps() {
+      const stepEls = stepsContainer.querySelectorAll('.asym-step');
+      stepEls.forEach((el, i) => {
+        const resultEl = el.querySelector('.step-result');
+        if (i < stepIndex) {
+          resultEl.textContent = steps[i].result;
+          resultEl.className = 'step-result ' + steps[i].resultClass;
+        } else {
+          resultEl.textContent = '—';
+          resultEl.className = 'step-result pending';
+        }
+      });
+    }
+
+    window.runAsymWalkthrough = function() {
+      if (timeoutId) clearTimeout(timeoutId);
+      stepIndex = 0;
+      renderSteps();
+      status.className = 'status info';
+      status.textContent = 'Running the walkthrough...';
+
+      function advance() {
+        if (stepIndex >= steps.length) {
+          status.className = 'status ok';
+          status.textContent = 'Walkthrough complete! Bob has received the message, and Eve was unable to read it.';
+          return;
+        }
+        stepIndex++;
+        renderSteps();
+        if (stepIndex === 3) {
+          const msg = messageInput.value || 'Hello Bob';
+          status.textContent = `Alice encrypts: "${msg}" → ciphertext...`;
+        } else if (stepIndex === 4) {
+          status.textContent = 'Eve intercepts the ciphertext but only has the public key...';
+        } else if (stepIndex === 5) {
+          status.textContent = 'Bob uses his private key to decrypt...';
+        }
+        timeoutId = setTimeout(advance, 900);
+      }
+      timeoutId = setTimeout(advance, 600);
+    };
+
+    window.resetAsymDemo = function() {
+      if (timeoutId) clearTimeout(timeoutId);
+      stepIndex = 0;
+      renderSteps();
+      status.className = 'status info';
+      status.textContent = 'Press "Run the walkthrough" to see each step of asymmetric encryption.';
+      messageInput.value = 'Hello Bob';
+    };
+
+    renderSteps();
+  })();
+
+  /* ===== TEACHER LOCK ===== */
+  (function(){
+    const PASSWORD = 'teacher1';
+    const lockScreen = document.getElementById('lockScreen');
+    const content    = document.getElementById('teacherContent');
+    const input      = document.getElementById('lockInput');
+    const btn        = document.getElementById('lockBtn');
+    const msg        = document.getElementById('lockMsg');
+
+    function tryUnlock(){
+      if (input.value === PASSWORD){
+        lockScreen.classList.add('hidden');
+        content.classList.remove('hidden');
+        msg.textContent = '';
+      } else {
+        msg.textContent = 'Incorrect password. Try again.';
+        input.value = '';
+        input.focus();
+      }
+    }
+    btn.addEventListener('click', tryUnlock);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+  })();
+</script>
+
+</body>
+</html>
