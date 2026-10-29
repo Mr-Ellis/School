@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDLC Lesson 2: Coding, Testing & Plenary</title>
+    <title>🔄 The Program Development Life Cycle</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -76,6 +76,7 @@
             border-left: 4px solid var(--success);
             border-radius: 4px;
         }
+        .answer.show { display: block; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -91,7 +92,7 @@
             padding: 0.5rem;
             border: 1px solid #ccc;
             border-radius: 4px;
-            width: 100px;
+            width: 150px;
         }
         .drag-container {
             display: flex;
@@ -106,7 +107,10 @@
             border-radius: 20px;
             cursor: grab;
             user-select: none;
+            transition: background 0.2s;
         }
+        .drag-item:hover { background: #c7d2fe; }
+        .drag-item.selected { border-color: var(--warning); background: #fef3c7; }
         .drop-zone {
             background: #f8fafc;
             border: 2px dashed #cbd5e1;
@@ -117,25 +121,299 @@
             flex-wrap: wrap;
             gap: 5px;
             align-content: flex-start;
+            transition: border-color 0.2s;
         }
         .drop-zone.active { border-color: var(--primary); background: #eff6ff; }
         .stage-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .stage-box { background: #fff; border: 1px solid #cbd5e1; padding: 1rem; border-radius: 8px; }
         .stage-box h4 { margin-top: 0; color: var(--primary); text-align: center; }
+        .flowchart-symbol {
+            display: inline-block;
+            width: 120px;
+            text-align: center;
+            margin: 10px;
+            font-size: 0.9rem;
+        }
+        .shape {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            width: 100px;
+            border: 2px solid var(--text);
+            margin: 0 auto 10px auto;
+            background: white;
+            font-weight: bold;
+        }
+        .terminator { border-radius: 25px; }
+        .io { transform: skewX(-15deg); }
+        .io span { transform: skewX(15deg); }
+        .process { border-radius: 0; }
+        .decision { transform: rotate(45deg); height: 60px; width: 60px; margin: 20px auto; }
+        .decision span { transform: rotate(-45deg); display: block; font-size: 0.8rem; }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        details {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        .badge-mild { background: #dbeafe; color: #1e40af; }
+        .badge-medium { background: #fef3c7; color: #b45309; }
+        .badge-spicy { background: #fee2e2; color: #b91c1c; }
+        .gap-fill {
+            display: inline-block;
+            border-bottom: 2px solid var(--primary);
+            min-width: 80px;
+            text-align: center;
+        }
+        .gap-fill input {
+            border: none;
+            border-bottom: 2px solid var(--primary);
+            background: transparent;
+            text-align: center;
+            width: 100px;
+            font-size: 1rem;
+            padding: 0.25rem;
+            outline: none;
+        }
+        .gap-fill input:focus { border-bottom-color: var(--warning); }
     </style>
 </head>
 <body>
 
 <header>
     <h1>🔄 The Program Development Life Cycle</h1>
-    <p>Lesson 2: Coding, Testing & Plenary</p>
+    <p>✓ Unit 8 · Algorithm Design and Problem Solving · Lesson 1</p>
 </header>
 
 <div class="container">
 
-    <!-- CODING -->
+    <!-- STARTER -->
     <div class="card">
-        <h2>Stage 3: Coding</h2>
+        <h2>🔥 Starter – How is large software created?</h2>
+        <p>Discuss with a partner: <strong>Describe the process that software developers use to create a large piece of software, like a game or an app.</strong></p>
+        <p>Think about how they plan, write the code, and make sure it works.</p>
+        <button class="btn btn-reveal" onclick="toggleAnswer('starter-ans')">Show Suggested Answer</button>
+        <div id="starter-ans" class="answer">
+            <p>You might have mentioned:</p>
+            <ul>
+                <li>Teamwork and planning</li>
+                <li>Meetings and sprints</li>
+                <li>Agile or Scrum methodologies</li>
+                <li>Testing the code as they go</li>
+            </ul>
+            <p>In this topic, we will look at the <strong>Waterfall Development</strong> model, which forms the basis of the Program Development Life Cycle (PDLC): <strong>Analysis → Design → Coding → Testing</strong>.</p>
+        </div>
+    </div>
+
+    <!-- LEARNING OBJECTIVES -->
+    <div class="card">
+        <h2>🎯 Learning Objectives</h2>
+        <ul>
+            <li><strong>Understand</strong> the four stages of the program development life cycle.</li>
+            <li><strong>Describe</strong> the tasks involved in each stage: analysis (abstraction, decomposition, problem identification, requirements), design (decomposition, structure diagrams, flowcharts, pseudocode), coding (writing code, iterative testing), and testing (testing with test data).</li>
+        </ul>
+        <p><strong>Why This Matters:</strong> Following a structured life cycle helps developers build software that meets requirements, reduces errors, and is easier to maintain. This is a core topic in the IGCSE Computer Science syllabus.</p>
+    </div>
+
+    <!-- TASK 1: ANALYSIS -->
+    <div class="card">
+        <h2>Task 1: Analysis Stage <span class="badge badge-mild">Mild</span></h2>
+        <p>Analysis is about understanding the problem fully before trying to solve it. It answers the question: <em>"What is the problem, and what must the program do?"</em></p>
+
+        <h3>1. Identifying the Problem & Requirements</h3>
+        <p>A <strong>requirement</strong> is something the finished program must do. They are found by investigating the problem and talking to the people who will use the software.</p>
+        <div class="interactive-box">
+            <h4>Worked Example: Quiz Program Requirements</h4>
+            <ul>
+                <li>The program must allow a score to be entered for each of the 30 students.</li>
+                <li>Each score must be a whole number from 0 to 20.</li>
+                <li>The program must reject any score outside this range and ask for it again.</li>
+                <li>The program must output the highest score.</li>
+                <li>The program must output the class average.</li>
+            </ul>
+            <p><strong>Question:</strong> Which of these requirements tells us <em>how</em> to solve the problem?</p>
+            <button class="btn btn-reveal" onclick="toggleAnswer('req-ans')">Show Answer</button>
+            <div id="req-ans" class="answer">
+                <p><strong>None of them.</strong> Requirements only state <em>what</em> the program must do, never <em>how</em> it will be done. The "how" is decided in the Design stage.</p>
+            </div>
+        </div>
+
+        <h3>2. Abstraction</h3>
+        <p><strong>Abstraction</strong> means removing unnecessary details from a problem so you can focus on the essential components.</p>
+        <div class="interactive-box">
+            <h4>Interactive Task: Abstraction in a Weather App</h4>
+            <p>A weather app shows today's forecast. Which of these should be <strong>included</strong>, and which should be <strong>ignored</strong>?</p>
+            <ul>
+                <li>The chance of rain as a percentage</li>
+                <li>The exact shapes of the clouds</li>
+                <li>The maximum temperature as a whole number (e.g., 22°C)</li>
+                <li>The decimal points of the temperature (e.g., 22.47°C)</li>
+            </ul>
+            <button class="btn btn-reveal" onclick="toggleAnswer('abs-ans')">Show Answer</button>
+            <div id="abs-ans" class="answer">
+                <p><strong>Included:</strong> Chance of rain (%), Max temp as integer, Cloud/Sun graphics.</p>
+                <p><strong>Ignored:</strong> Exact cloud shapes, decimal temperatures, wind speed if not requested.</p>
+            </div>
+        </div>
+
+        <h3>3. Decomposition</h3>
+        <p><strong>Decomposition</strong> means breaking a complex problem down into smaller, more manageable parts.</p>
+        <div class="interactive-box">
+            <h4>Interactive Task: Decompose the Quiz Program</h4>
+            <p>In pairs, list the sub-problems for the quiz program.</p>
+            <button class="btn btn-reveal" onclick="toggleAnswer('decomp-ans')">Show Answer</button>
+            <div id="decomp-ans" class="answer">
+                <ol>
+                    <li>Enter the scores.</li>
+                    <li>Check each score is valid.</li>
+                    <li>Keep a running total and work out the average.</li>
+                    <li>Find the highest score.</li>
+                    <li>Output the results.</li>
+                </ol>
+            </div>
+        </div>
+
+        <h3>4. Identifying Inputs, Processes, Outputs and Storage</h3>
+        <p>Every program takes in data (<strong>inputs</strong>), does something with it (<strong>processes</strong>), and produces results (<strong>outputs</strong>). It may also need to keep data while it runs or for later (<strong>storage</strong>).</p>
+        <table>
+            <tr><th>Inputs</th><th>Processes</th><th>Outputs</th><th>Storage</th></tr>
+            <tr>
+                <td>30 quiz scores</td>
+                <td>Check each score is valid; add to total; find highest</td>
+                <td>Highest score; class average; error message</td>
+                <td>Running total; highest score so far</td>
+            </tr>
+        </table>
+
+        <h3>🔍 Quick Check</h3>
+        <div class="interactive-box">
+            <p><strong>Question 1:</strong> What does abstraction mean?</p>
+            <button class="btn btn-reveal" onclick="toggleAnswer('qc1')">Show Answer</button>
+            <div id="qc1" class="answer"><p>Removing unnecessary details from a problem so you can focus on the essential components.</p></div>
+
+            <p><strong>Question 2:</strong> What is the difference between analysis decomposition and design decomposition?</p>
+            <button class="btn btn-reveal" onclick="toggleAnswer('qc2')">Show Answer</button>
+            <div id="qc2" class="answer"><p>Analysis decomposition breaks down the <em>problem</em> from the user's point of view. Design decomposition breaks down the <em>solution</em> into inputs, processes, outputs, and storage.</p></div>
+        </div>
+    </div>
+
+    <!-- TASK 2: DESIGN -->
+    <div class="card">
+        <h2>Task 2: Design Stage <span class="badge badge-medium">Medium</span></h2>
+        <p>Design answers the question: <em>"How will the program work?"</em> We take the requirements from Analysis and plan the solution.</p>
+
+        <h3>1. Structure Diagrams</h3>
+        <p>Used to decompose the design of the solution. Each box shows a sub-system.</p>
+        <div class="interactive-box">
+            <h4>Interactive Task: Complete the Structure Diagram</h4>
+            <p>For the Basketball Software system, the requirements are:</p>
+            <ol>
+                <li>Store current player details</li>
+                <li>Store game, place, date, time, and result</li>
+                <li>Send emails 3 days before the game</li>
+                <li>Send results as soon as the game is over</li>
+            </ol>
+            <button class="btn btn-reveal" onclick="toggleAnswer('struct-ans')">Show Diagram</button>
+            <div id="struct-ans" class="answer">
+                <pre style="background: #fff; color: #1e293b; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0;">
+       [Basketball Software]
+               |
+       -----------------
+       |       |       |
+  [Store    [Store   [Send
+  Players]  Games]  Emails]
+                        |
+                  -------------
+                  |           |
+             [Create      [Send
+              Emails]     Emails]
+                </pre>
+            </div>
+        </div>
+
+        <h3>2. Flowcharts</h3>
+        <p>Flowcharts show algorithms graphically using standard symbols.</p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; margin: 1rem 0;">
+            <div class="flowchart-symbol">
+                <div class="shape terminator"><span>BEGIN</span></div>
+                <p>Terminator</p>
+            </div>
+            <div class="flowchart-symbol">
+                <div class="shape io"><span>INPUT age</span></div>
+                <p>Input/Output</p>
+            </div>
+            <div class="flowchart-symbol">
+                <div class="shape process"><span>Total = A + B</span></div>
+                <p>Process</p>
+            </div>
+            <div class="flowchart-symbol">
+                <div class="shape decision"><span>age > 18?</span></div>
+                <p>Decision</p>
+            </div>
+        </div>
+
+        <div class="interactive-box">
+            <h4>Trace the Flowchart</h4>
+            <p>Look at this logic: <br>BEGIN ➔ INPUT age ➔ Is age > 18? ➔ YES: OUTPUT "Adult" ➔ END.<br>NO: OUTPUT "Child" ➔ END.</p>
+            <p><strong>Question:</strong> If the user inputs exactly <strong>18</strong>, what is the output?</p>
+            <button class="btn btn-reveal" onclick="toggleAnswer('flow-ans')">Show Answer</button>
+            <div id="flow-ans" class="answer">
+                <p><strong>Output: "Child"</strong>. Because the question is "Is age GREATER THAN 18". 18 is not greater than 18, so it follows the NO path.</p>
+            </div>
+        </div>
+
+        <h3>3. Pseudocode</h3>
+        <p>A way to write algorithms that looks like code but is understandable by any programmer regardless of the language they use.</p>
+        <table>
+            <tr><th>Pseudocode</th><th>C# (Real Code)</th></tr>
+            <tr>
+                <td><pre style="margin:0; padding: 0.5rem; background: #f1f5f9; color: #1e293b;">FOR i < 0 TO 10
+    OUTPUT i
+NEXT i</pre></td>
+                <td><pre style="margin:0; padding: 0.5rem; background: #f1f5f9; color: #1e293b;">for (int i=0; i<10; i++) {
+    Console.WriteLine(i);
+}</pre></td>
+            </tr>
+        </table>
+
+        <h3>🔍 Quick Check</h3>
+        <div class="interactive-box">
+            <p><strong>Question:</strong> Describe two differences between pseudocode and a real programming language.</p>
+            <button class="btn btn-reveal" onclick="toggleAnswer('qc3')">Show Answer</button>
+            <div id="qc3" class="answer">
+                <ul>
+                    <li>Pseudocode cannot be compiled or run on a computer.</li>
+                    <li>It is easier to read and has simpler syntax.</li>
+                    <li>It can be understood by any competent programmer, regardless of the programming languages they know.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- TASK 3: CODING -->
+    <div class="card">
+        <h2>Task 3: Coding Stage <span class="badge badge-medium">Medium</span></h2>
         <p>This is where the design is turned into actual program code using languages like Python, Java, or C#.</p>
         
         <h3>Iterative Testing</h3>
@@ -158,9 +436,9 @@
         </div>
     </div>
 
-    <!-- TESTING -->
+    <!-- TASK 4: TESTING -->
     <div class="card">
-        <h2>Stage 4: Testing</h2>
+        <h2>Task 4: Testing Stage <span class="badge badge-medium">Medium</span></h2>
         <p>Final testing happens at the end of the lifecycle. Before coding even begins, a <strong>Test Plan</strong> is created. It lists the inputs, the test reason, and the <em>Expected Output</em>.</p>
         <p>When the program is finished, we run the tests, record the <em>Actual Output</em>, and compare them (Pass/Fail).</p>
 
@@ -211,7 +489,7 @@
 
     <!-- PLENARY -->
     <div class="card">
-        <h2>🎯 Plenary: Match the Task to the Stage</h2>
+        <h2>🎯 Plenary: Match the Task to the Stage <span class="badge badge-spicy">Spicy</span></h2>
         <p>Drag (or click) the tasks below and place them into the correct stage of the Program Development Life Cycle.</p>
 
         <div class="drag-container" id="task-pool">
@@ -253,6 +531,58 @@
             <p><strong>Coding:</strong> Writing program code, Iterative testing.</p>
             <p><strong>Testing:</strong> Testing with test data.</p>
         </div>
+    </div>
+
+    <!-- HOMEWORK -->
+    <div class="card">
+        <h2>📝 Homework</h2>
+        <p>Complete the following tasks. Your teacher will mark these to check your understanding.</p>
+        <ol>
+            <li><strong>Matching:</strong> Match each task to its correct stage in the program development life cycle.</li>
+            <li><strong>Abstraction:</strong> Explain what is meant by the term "abstraction" and describe how it is used by the designers of a satnav system.</li>
+            <li><strong>Pseudocode:</strong> Describe two differences between pseudocode and a real programming language.</li>
+        </ol>
+        <button class="btn btn-reveal" onclick="toggleAnswer('hw-ans')">Show Answers</button>
+        <div id="hw-ans" class="answer">
+            <p><strong>Q1 (Matching):</strong></p>
+            <ul>
+                <li><strong>Analysis:</strong> Identification of the requirements, Abstraction, Identification of the problem, Decomposition of the problem.</li>
+                <li><strong>Design:</strong> Structure diagrams, Pseudocode, Decomposition, Flowcharts.</li>
+                <li><strong>Coding:</strong> Writing program code, Iterative testing.</li>
+                <li><strong>Testing:</strong> Testing with test data.</li>
+            </ul>
+            <p><strong>Q2 (Abstraction):</strong> Removing unnecessary detail from a problem so that it is easier to focus on the parts relevant to the solution. Satnav designers keep important details like road length, junction points, road names, points of interest, and speed limits. They ignore irrelevant details like where trees are located, whether crash barriers are present, and the type of road surface.</p>
+            <p><strong>Q3 (Pseudocode):</strong> Any two of: cannot be compiled/run on a computer; easier to read; simpler syntax; readable by any competent programmer regardless of language knowledge.</p>
+        </div>
+    </div>
+
+    <!-- TEACHER LESSON PLAN -->
+    <div class="card">
+        <details>
+            <summary>📋 Lesson Plan (Teacher only) — click to toggle</summary>
+            <h3>Lesson Overview</h3>
+            <p>This is a double lesson. Students learn the four stages of the program development life cycle — <strong>Analysis, Design, Coding, Testing</strong> — and the techniques used within each. The lesson follows the waterfall model and finishes with a plenary where students place tasks back into the correct stage.</p>
+
+            <h3>Timing</h3>
+            <ul>
+                <li>0–10 min — Starter & Objectives</li>
+                <li>10–25 min — Task 1 (Analysis)</li>
+                <li>25–40 min — Task 2 (Design)</li>
+                <li>40–50 min — Task 3 (Coding & Iterative Testing)</li>
+                <li>50–70 min — Task 4 (Testing & Test Data)</li>
+                <li>70–85 min — Plenary (Matching Game)</li>
+                <li>85–90 min — Review, Homework, Pack Up</li>
+            </ul>
+
+            <h3>Key Teaching Points</h3>
+            <ul>
+                <li>Use the London Underground map as an example of abstraction.</li>
+                <li>Emphasise that requirements only state <em>what</em>, not <em>how</em>.</li>
+                <li>Use the quiz program example to show analysis, design, coding, and testing in action.</li>
+                <li>Explain that iterative testing catches errors early, before the whole program is built.</li>
+                <li>Use the test data table to show how to choose normal, extreme, boundary, and abnormal data.</li>
+            </ul>
+        </details>
     </div>
 
 </div>
@@ -343,22 +673,22 @@
     let selectedItem = null;
     function moveTask(el) {
         if (selectedItem === el) {
-            selectedItem.style.border = "2px solid var(--primary)";
+            selectedItem.classList.remove('selected');
             selectedItem = null;
             return;
         }
         if (selectedItem) {
-            selectedItem.style.border = "2px solid var(--primary)";
+            selectedItem.classList.remove('selected');
         }
         selectedItem = el;
-        el.style.border = "2px solid var(--warning)";
+        el.classList.add('selected');
         
         // Setup click on zones
         document.querySelectorAll('.drop-zone').forEach(zone => {
             zone.onclick = function() {
                 if (selectedItem) {
                     this.appendChild(selectedItem);
-                    selectedItem.style.border = "2px solid var(--primary)";
+                    selectedItem.classList.remove('selected');
                     selectedItem = null;
                 }
             };
