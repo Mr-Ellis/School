@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic 2 · Algorithms and Flowcharts</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  :root{
+    --navy:#0b2545;
+    --navy-2:#12315a;
+    --page-bg:#eef2f8;
+    --card:#ffffff;
+    --text:#1a2332;
+    --muted:#5a6b82;
+    --border:#dbe3ee;
+    --accent:#2563eb;
+    --accent-soft:#dbeafe;
+    --green:#15803d;
+    --green-soft:#dcfce7;
+    --amber:#b45309;
+    --amber-soft:#fef3c7;
+    --red:#dc2626;
+    --radius:20px;
+    --radius-sm:12px;
+    --mono:'JetBrains Mono','Fira Code',monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    line-height:1.65;
+    font-size:16px;
+    font-weight:400;
+    padding:0;
+  }
+
+  .topbar-wrap{max-width:1080px;margin:18px auto 0;padding:0 28px;}
+  .topbar{
+    background:var(--navy);color:#fff;padding:14px 26px;border-radius:999px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    box-shadow:0 4px 18px rgba(11,37,69,.14);
+  }
+  .topbar .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;color:#fff;text-decoration:none;letter-spacing:-.005em;}
+  .topbar .brand .cap{font-size:1.25rem;}
+  .topbar .navlinks{display:flex;gap:26px;flex-wrap:wrap;}
+  .topbar .navlinks a{color:#e6edf7;text-decoration:none;font-size:.95rem;font-weight:500;display:inline-flex;align-items:center;gap:6px;opacity:.92;transition:opacity .15s;}
+  .topbar .navlinks a:hover{opacity:1;text-decoration:underline;}
+
+  .page{max-width:1080px;margin:0 auto;padding:36px 28px 80px;}
+
+  .hero{margin-bottom:32px;}
+  .hero h1{
+    font-size:clamp(2.1rem,4.5vw,3.1rem);line-height:1.15;margin:0 0 20px;
+    font-weight:700;color:var(--navy);letter-spacing:-.025em;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .hero h1 .emoji{font-size:1em;font-weight:400;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;}
+  .hero .pill{
+    display:inline-flex;align-items:center;gap:12px;background:#e2e8f2;color:var(--navy);
+    border-radius:999px;padding:10px 24px 10px 10px;font-size:1rem;font-weight:400;
+    border-left:5px solid #2b8a9b;
+  }
+  .hero .pill .dot{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700;flex-shrink:0;line-height:1;}
+
+  .card{
+    background:var(--card);border-radius:var(--radius);padding:34px 40px;margin-bottom:26px;
+    box-shadow:0 2px 4px rgba(11,37,69,.04), 0 8px 24px rgba(11,37,69,.05);
+    border:1px solid rgba(219,227,238,.5);
+  }
+  @media(max-width:640px){.card{padding:24px 20px;}.topbar-wrap{padding:0 16px;}.page{padding:28px 16px 60px;}}
+
+  .card h2{
+    font-size:1.5rem;margin:0 0 18px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:10px;letter-spacing:-.01em;
+  }
+  .card h3{
+    font-size:1.1rem;margin:26px 0 12px;font-weight:600;color:var(--navy);
+    display:flex;align-items:center;gap:8px;letter-spacing:-.005em;
+  }
+  .card p{margin:0 0 14px;}
+  .card ul,.card ol{margin:0 0 14px;padding-left:24px;}
+  .card ul li,.card ol li{margin-bottom:6px;}
+
+  /* Learning objectives card */
+  .objectives-card {
+    border-left: 5px solid var(--accent);
+  }
+  .objectives-card h2 {
+    font-size: 1.6rem;
+  }
+  .objectives-card ul {
+    margin: 0 0 18px;
+    padding-left: 24px;
+  }
+  .objectives-card ul li {
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  .objectives-card ul li strong {
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .objectives-card .why-matters {
+    background: #e8f1fb;
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px 0 0;
+    font-size: .98rem;
+  }
+
+  /* Lesson instructions card */
+  .lesson-instructions {
+    border-left: 5px solid var(--green);
+    background: #f0fdf4;
+  }
+  .lesson-instructions h2 {
+    color: var(--green);
+  }
+  .lesson-instructions .lesson-part {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    border: 1px solid #bbf7d0;
+  }
+  .lesson-instructions .lesson-part h3 {
+    margin-top: 0;
+    color: var(--navy);
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lesson-instructions .lesson-part .tag {
+    display: inline-block;
+    background: var(--green);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    margin-right: 6px;
+  }
+  .lesson-instructions .lesson-part ol,
+  .lesson-instructions .lesson-part ul {
+    margin: 0.5rem 0 0 1.2rem;
+    padding-left: 0.5rem;
+  }
+  .lesson-instructions .lesson-part li {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+  }
+
+  .callout{
+    background:#e8f1fb;border-left:4px solid var(--accent);border-radius:10px;
+    padding:16px 20px;margin:20px 0;font-size:.98rem;line-height:1.65;font-weight:400;
+  }
+  .callout strong{color:var(--navy);font-weight:600;}
+  .callout.tip{background:#dcfce7;border-left-color:var(--green);}
+  .callout.warn{background:#fef3c7;border-left-color:var(--amber);}
+  .callout.danger{background:#fee2e2;border-left-color:var(--red);}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;
+    border:1px solid var(--navy);padding:10px 20px;border-radius:10px;text-decoration:none;
+    font-weight:500;font-size:.93rem;transition:.15s;cursor:pointer;line-height:1.4;font-family:inherit;
+  }
+  .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;text-decoration:none;}
+  .btn.green{background:var(--green);border-color:var(--green);}
+  .btn.green:hover{background:#115e30;border-color:#115e30;}
+  .btn.purple{background:#6d28d9;border-color:#6d28d9;}
+  .btn.purple:hover{background:#5b21b6;border-color:#5b21b6;}
+  .btn.red{background:var(--red);border-color:var(--red);}
+  .btn.red:hover{background:#b91c1c;border-color:#b91c1c;}
+  .btn.outline{background:#fff;color:var(--navy);border-color:var(--border);}
+  .btn.outline:hover{background:#f4f7fb;border-color:#b8c5d6;color:var(--navy);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+
+  details.reveal{
+    margin-top:16px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    background:#f8fafd;overflow:hidden;
+  }
+  details.reveal summary{
+    cursor:pointer;padding:13px 18px;font-weight:600;font-size:.95rem;color:var(--accent);
+    list-style:none;display:flex;align-items:center;gap:8px;
+  }
+  details.reveal summary::-webkit-details-marker{display:none;}
+  details.reveal summary::before{content:"▶";font-size:.7rem;transition:.2s;}
+  details.reveal[open] summary::before{transform:rotate(90deg);}
+  details.reveal .body{padding:6px 18px 18px;border-top:1px solid var(--border);background:#fff;}
+
+  /* ===== INTERACTIVE DEMO BOXES ===== */
+  .demo-box {
+    background: #f8fafd;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.4rem 1.6rem;
+    margin: 1.5rem 0;
+  }
+  .demo-box h3 {
+    margin-top: 0;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .demo-box .status {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+  }
+  .demo-box .status.ok { background: var(--green-soft); color: var(--green); }
+  .demo-box .status.fail { background: #fee2e2; color: var(--red); }
+  .demo-box .controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .demo-box .controls button {
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .demo-box .controls button:hover { background: var(--navy-2); }
+  .demo-box .controls button.secondary {
+    background: #fff;
+    color: var(--navy);
+    border: 2px solid var(--border);
+  }
+  .demo-box .controls button.secondary:hover { background: #f4f7fb; }
+
+  /* Flowchart symbols */
+  .flowchart-symbol {
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    margin: 10px;
+    font-size: 0.9rem;
+  }
+  .shape {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100px;
+    border: 2px solid var(--text);
+    margin: 0 auto 10px auto;
+    background: white;
+    font-weight: bold;
+  }
+  .terminator { border-radius: 25px; }
+  .io { transform: skewX(-15deg); }
+  .io span { transform: skewX(15deg); }
+  .process { border-radius: 0; }
+  .decision { transform: rotate(45deg); height: 60px; width: 60px; margin: 20px auto; }
+  .decision span { transform: rotate(-45deg); display: block; font-size: 0.8rem; }
+
+  /* Matching game */
+  .match-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+  .match-item {
+    background: #e0e7ff;
+    border: 2px solid var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+    font-size: 0.9rem;
+  }
+  .match-item:hover { background: #c7d2fe; }
+  .match-item.selected { border-color: var(--amber); background: #fef3c7; }
+  .match-zone {
+    background: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    min-height: 60px;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-content: flex-start;
+    transition: border-color 0.2s;
+  }
+  .match-zone.active { border-color: var(--accent); background: #eff6ff; }
+  .match-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .match-box { background: #fff; border: 1px solid #cbd5e1; padding: 1rem; border-radius: 8px; }
+  .match-box h4 { margin-top: 0; color: var(--accent); text-align: center; }
+
+  /* Teacher panel */
+  .teacher-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:0;overflow:hidden; margin-top: 2rem;}
+  .teacher-panel summary{
+    cursor:pointer;font-weight:600;color:var(--navy);font-size:.98rem;
+    list-style:none;display:flex;align-items:center;gap:10px;padding:18px 22px;
+  }
+  .teacher-panel summary::-webkit-details-marker{display:none;}
+  .teacher-panel summary::before{content:"🔒";font-size:1.05rem;}
+  .teacher-panel[open] summary{border-bottom:1px solid var(--border);}
+  .teacher-panel[open] summary::before{content:"🔓";}
+  .teacher-panel .panel-body{padding:22px;}
+  .lock-screen{text-align:center;padding:20px 12px;}
+  .lock-screen input{
+    padding:10px 14px;border-radius:10px;background:#fff;border:1px solid var(--border);
+    color:var(--text);font-size:.95rem;margin-right:8px;font-family:inherit;
+  }
+  .lock-screen input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+  .hidden{display:none !important;}
+
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="topbar-wrap">
+  <div class="topbar">
+    <a href="#" class="brand"><span class="cap">🎓</span> IGCSE CompSci</a>
+    <nav class="navlinks">
+      <a href="#">← Back to Unit 8</a>
+      <a href="#">← Year 10</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <h1><span class="emoji">📊</span> Algorithms and Flowcharts</h1>
+    <div class="pill">
+      <span class="dot">✓</span> Topic 2 · Symbols, Processes, Subroutines &amp; Decisions
+    </div>
+  </div>
+
+  <!-- ============ STARTER ============ -->
+  <section class="card">
+    <h2>🔥 Starter – What is an algorithm?</h2>
+    <p>Work in a pair. <strong>Explain what an algorithm is.</strong> Try to give an example of an algorithm you use in everyday life, even if it doesn't involve a computer.</p>
+    <p>Think about the steps you take to get to school, make a sandwich, or build a Lego model.</p>
+
+    <details class="reveal">
+      <summary>Show suggested answer</summary>
+      <div class="body">
+        <p>An <strong>algorithm</strong> is a set of instructions for solving a problem or completing a task. The task could be:</p>
+        <ul>
+          <li>Making a chocolate cake</li>
+          <li>Summing the numbers 1 to 1000</li>
+          <li>Building a Lego model</li>
+        </ul>
+        <p><strong>Algorithms are everywhere</strong> — even when problems are not solved computationally. You probably have a sophisticated algorithm for how you get to school, involving all the processes and decisions involved.</p>
+        <p>In this topic, we will look at how algorithms can be shown visually using <strong>flowcharts</strong>.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ LEARNING OBJECTIVES ============ -->
+  <section class="card objectives-card">
+    <h2>🎯 Learning Objectives</h2>
+    <ul>
+      <li><strong>Understand</strong> how flowcharts are used to solve problems.</li>
+      <li><strong>Understand</strong> flowchart symbols including:
+        <ul>
+          <li>Processes, subroutines, input/output, decisions, terminators</li>
+        </ul>
+      </li>
+      <li><strong>Create, interpret, correct, complete and amend</strong> algorithms using flowcharts.</li>
+    </ul>
+    <div class="why-matters">
+      <strong>Why This Matters:</strong> Flowcharts are a visual way to plan algorithms before writing code. They make the logic of a program easy to see, share, and debug. Understanding flowcharts is essential for the IGCSE exam and for designing solutions to real-world problems.
+    </div>
+  </section>
+
+  <!-- ============ LESSON INSTRUCTIONS ============ -->
+  <section class="card lesson-instructions">
+    <h2>📋 How to Work Through This Lesson</h2>
+    <p>This is a <strong>double lesson</strong>. Follow the two parts below in order.</p>
+
+    <div class="lesson-part">
+      <h3><span class="tag">Lesson 1</span> Work through this interactive page</h3>
+      <ol>
+        <li>Read each section carefully, from <strong>Purpose of Flowcharts</strong> through to <strong>Subprograms</strong>.</li>
+        <li>Use the <strong>interactive demos</strong> in each section — match symbols, complete flowcharts, and trace algorithms.</li>
+        <li>Complete the <strong>main worksheet</strong> on Schoolbox for Lesson 1. This is the work your teacher will mark.</li>
+      </ol>
+      <div class="btn-row" style="margin-top:0.8rem;">
+        <a href="https://lms.isr-school.com/" target="_blank" rel="noopener" class="btn green">
+          📄 Open Lesson 1 Main Worksheet
+        </a>
+      </div>
+    </div>
+
+    <div class="lesson-part">
+      <h3><span class="tag">Lesson 2</span> Finish or extend</h3>
+      <ul>
+        <li><strong>Option A:</strong> If you have not yet finished and submitted the Lesson 1 worksheet, complete and submit it now.</li>
+        <li><strong>Option B:</strong> If you have already submitted the Lesson 1 worksheet, move on to the <strong>extension task</strong> on Schoolbox.</li>
+      </ul>
+      <div class="btn-row" style="margin-top:0.8rem;">
+        <a href="https://lms.isr-school.com/" target="_blank" rel="noopener" class="btn">
+          📄 Open Lesson 2 Extension Task
+        </a>
+      </div>
+    </div>
+
+    <div class="callout tip" style="margin-top:1.2rem; margin-bottom:0;">
+      <strong>Tip:</strong> The interactive demos on this page are designed to help you answer the worksheet questions. If you get stuck on a question, come back to the matching demo and try it again.
+    </div>
+  </section>
+
+  <!-- ============ PURPOSE ============ -->
+  <section class="card">
+    <h2>🔍 Purpose of Flowcharts</h2>
+    <p>A <strong>flowchart</strong> is a visual way to show an algorithm. It uses standard symbols joined by arrows to show the order of steps.</p>
+
+    <h3>Worked Example: Making Bread</h3>
+    <p>Look at this flowchart. Even if you haven't learned the symbols yet, you can probably work out what the algorithm does.</p>
+
+    <div class="demo-box">
+      <h3>Interactive: What is this a flowchart for?</h3>
+      <p>Click on the correct answer.</p>
+      <div style="display:flex; flex-direction:column; gap:10px; max-width:400px; margin:1rem auto;">
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkBread('bread')">A. Making bread</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkBread('cake')">B. Making a chocolate cake</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkBread('lego')">C. Building a Lego model</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkBread('car')">D. Building a car</button>
+      </div>
+      <div class="status" id="breadStatus" style="display:none;"></div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Answer:</strong> It is a flowchart for making bread. The flour and water are mixed together. If there is too much flour, more water is added. If there is too much water, more flour is added. Once correct, the dough is kneaded, put in the oven, and the process stops.
+    </div>
+  </section>
+
+  <!-- ============ FLOWCHART SYMBOLS ============ -->
+  <section class="card">
+    <h2>🔣 Flowchart Symbols</h2>
+    <p>Flowcharts use a standard set of symbols. You need to know each symbol and what it means.</p>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; margin: 1rem 0;">
+      <div class="flowchart-symbol">
+        <div class="shape terminator"><span>Start / Stop</span></div>
+        <p>Terminator</p>
+        <p style="font-size:0.8rem; color:var(--muted);">Start and end of the algorithm</p>
+      </div>
+      <div class="flowchart-symbol">
+        <div class="shape io"><span>INPUT / OUTPUT</span></div>
+        <p>Input/Output</p>
+        <p style="font-size:0.8rem; color:var(--muted);">Data coming in or results going out</p>
+      </div>
+      <div class="flowchart-symbol">
+        <div class="shape process"><span>Total = A + B</span></div>
+        <p>Process</p>
+        <p style="font-size:0.8rem; color:var(--muted);">A calculation or assignment</p>
+      </div>
+      <div class="flowchart-symbol">
+        <div class="shape decision"><span>age > 18?</span></div>
+        <p>Decision</p>
+        <p style="font-size:0.8rem; color:var(--muted);">A question with Yes/No exits</p>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; margin: 1rem 0;">
+      <div class="flowchart-symbol">
+        <div style="display:flex; align-items:center; gap:5px;">
+          <div style="width:20px; height:60px; border-left:2px solid var(--text); border-right:2px solid var(--text); background:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem; text-align:center;">showMenu()</div>
+        </div>
+        <p>Sub program</p>
+        <p style="font-size:0.8rem; color:var(--muted);">Call a procedure or function</p>
+      </div>
+      <div class="flowchart-symbol">
+        <div style="display:flex; align-items:center; gap:5px;">
+          <div style="width:80px; height:2px; background:var(--text); position:relative;">
+            <div style="position:absolute; right:-5px; top:-4px; width:0; height:0; border-left:10px solid var(--text); border-top:5px solid transparent; border-bottom:5px solid transparent;"></div>
+          </div>
+        </div>
+        <p>Flow Line</p>
+        <p style="font-size:0.8rem; color:var(--muted);">Shows direction of flow</p>
+      </div>
+    </div>
+
+    <div class="demo-box">
+      <h3>Interactive: Match the Symbol</h3>
+      <p>Click a symbol name, then click the matching shape.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin:1rem 0;">
+        <div style="text-align:center; cursor:pointer; padding:10px; border:2px solid var(--border); border-radius:8px;" onclick="checkSymbol('terminator')" id="sym-terminator">
+          <div class="shape terminator" style="width:100px; margin:0 auto;"><span>Start</span></div>
+          <p style="margin:5px 0; font-weight:600;">Terminator</p>
+        </div>
+        <div style="text-align:center; cursor:pointer; padding:10px; border:2px solid var(--border); border-radius:8px;" onclick="checkSymbol('io')" id="sym-io">
+          <div class="shape io" style="width:100px; margin:0 auto;"><span>INPUT x</span></div>
+          <p style="margin:5px 0; font-weight:600;">Input/Output</p>
+        </div>
+        <div style="text-align:center; cursor:pointer; padding:10px; border:2px solid var(--border); border-radius:8px;" onclick="checkSymbol('process')" id="sym-process">
+          <div class="shape process" style="width:100px; margin:0 auto;"><span>Total = A + B</span></div>
+          <p style="margin:5px 0; font-weight:600;">Process</p>
+        </div>
+        <div style="text-align:center; cursor:pointer; padding:10px; border:2px solid var(--border); border-radius:8px;" onclick="checkSymbol('decision')" id="sym-decision">
+          <div class="shape decision" style="width:60px; margin:0 auto;"><span>age > 18?</span></div>
+          <p style="margin:5px 0; font-weight:600;">Decision</p>
+        </div>
+      </div>
+      <div class="status" id="symbolStatus" style="display:none;"></div>
+      <div class="controls">
+        <button onclick="resetSymbols()">Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DRAWING A FLOWCHART ============ -->
+  <section class="card">
+    <h2>✏️ Drawing a Flowchart</h2>
+    <p>Algorithms can be planned using flowcharts and pseudocode. The idea is that <strong>algorithmic thinking</strong> — thought about the process and method — is carried out without having to worry about the syntax of a particular programming language.</p>
+
+    <h3>Worked Example: Registering a User ID</h3>
+    <p>Look at this flowchart. What algorithm does it represent?</p>
+
+    <div class="demo-box">
+      <h3>Interactive: What does this flowchart do?</h3>
+      <p>Read the flowchart and choose the best description.</p>
+      <div style="display:flex; flex-direction:column; gap:10px; max-width:500px; margin:1rem auto;">
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkID('register')">A. It registers a new user, but if the ID is already in use, it asks for another ID.</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkID('login')">B. It logs a user in by checking their password.</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkID('delete')">C. It deletes a user ID from the system.</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkID('display')">D. It displays a list of all user IDs.</button>
+      </div>
+      <div class="status" id="idStatus" style="display:none;"></div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Answer:</strong> It registers a new user. The algorithm asks the user to choose an ID, checks if it is already in use, and if it is, asks for another ID. This repeats until an unused ID is entered, which is then saved.
+    </div>
+  </section>
+
+  <!-- ============ COUNTING ============ -->
+  <section class="card">
+    <h2>🔢 Counting</h2>
+    <p>Counting, totalling, and finding the maximum, minimum, and average of a set of numbers are all <strong>standard algorithms</strong> that are on the specification.</p>
+
+    <div class="callout">
+      <strong>Key idea:</strong> The statement <code>count &lt; count + 1</code> means "Add 1 to the variable called count".
+    </div>
+
+    <h3>Worked Example: Counting Flowchart</h3>
+    <p>Look at this flowchart. What will it output?</p>
+
+    <div class="demo-box">
+      <h3>Interactive: What does the counting flowchart output?</h3>
+      <div style="display:flex; flex-direction:column; gap:10px; max-width:400px; margin:1rem auto;">
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkCount('1to999')">A. 1, 2, 3, ... 999</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkCount('1to1000')">B. 1, 2, 3, ... 1000</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkCount('0to999')">C. 0, 1, 2, ... 999</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkCount('0to1000')">D. 0, 1, 2, ... 1000</button>
+      </div>
+      <div class="status" id="countStatus" style="display:none;"></div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Answer:</strong> The program outputs <strong>1, 2, 3, ... 999</strong>. It will not output 0 or 1000. The loop continues while <code>count &lt; 1000</code>, so when count reaches 1000, the loop stops.
+    </div>
+  </section>
+
+  <!-- ============ FINDING THE MAXIMUM ============ -->
+  <section class="card">
+    <h2>🔝 Finding the Maximum</h2>
+    <p>Finding the maximum is one of the standard algorithms that students need to know in the specification.</p>
+
+    <h3>Worked Example: Maximum of Two Numbers</h3>
+    <p>The flowchart shows the algorithm that will find the maximum of two numbers.</p>
+
+    <div class="callout warn">
+      <strong>Remember:</strong> When using a decision symbol, you must label the different branches that come out of it — in this case "Yes" and "No".
+    </div>
+
+    <div class="demo-box">
+      <h3>Interactive: Trace the Maximum Algorithm</h3>
+      <p>If <code>num1 = 10</code> and <code>num2 = 5</code>, what does the algorithm output?</p>
+      <div style="display:flex; gap:1rem; justify-content:center; margin:1rem 0;">
+        <button class="btn" onclick="checkMax('num1')">10 (num1)</button>
+        <button class="btn" onclick="checkMax('num2')">5 (num2)</button>
+      </div>
+      <div class="status" id="maxStatus" style="display:none;"></div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Answer:</strong> It outputs <strong>10 (num1)</strong>. The decision asks <code>num1 &gt; num2</code>. Since 10 is greater than 5, the Yes branch is followed and <code>num1</code> is output.
+    </div>
+
+    <h3>Extending: Maximum of a Set of Numbers</h3>
+    <p>The same idea can be extended to find the maximum of a set of numbers entered one by one in a loop. You would keep a variable called <code>max</code> and compare each new number to it.</p>
+  </section>
+
+  <!-- ============ SUBPROGRAMS ============ -->
+  <section class="card">
+    <h2>📦 Subprograms</h2>
+    <p>You need to know how subprograms are drawn in flowcharts. These represent <strong>procedures</strong> and <strong>functions</strong> in programming languages.</p>
+
+    <ul>
+      <li>A <strong>process box with lines either side</strong> is used for function/procedure calls.</li>
+      <li>The <strong>terminator (start/end) symbols</strong> are used for the function name (and parameters) and the return value.</li>
+      <li>The <strong>dotted arrows</strong> on the diagram show how data is passed from the calling statement to the subprogram (function).</li>
+    </ul>
+
+    <div class="demo-box">
+      <h3>Interactive: The findVAT Subprogram</h3>
+      <p>Look at the subprogram diagram. What does the <code>findVAT</code> function do?</p>
+      <div style="display:flex; flex-direction:column; gap:10px; max-width:500px; margin:1rem auto;">
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkSub('vat')">A. It calculates VAT by multiplying the input by 0.2 and returns the result.</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkSub('add')">B. It adds 0.2 to the input and returns the result.</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkSub('print')">C. It prints the input value to the screen.</button>
+        <button class="btn outline" style="justify-content:flex-start;" onclick="checkSub('nothing')">D. It does nothing and returns nothing.</button>
+      </div>
+      <div class="status" id="subStatus" style="display:none;"></div>
+    </div>
+
+    <div class="callout tip">
+      <strong>Answer:</strong> The <code>findVAT</code> function takes a value <code>n</code>, multiplies it by 0.2 to calculate VAT, and returns the result. The main program calls it using <code>total &lt; total + findVAT(total)</code>.
+    </div>
+  </section>
+
+  <!-- ============ PLENARY ============ -->
+  <section class="card">
+    <h2>🎯 Plenary: Match the Symbol</h2>
+    <p>Drag (or click) the symbol names and place them next to the correct shape.</p>
+
+    <div class="match-container" id="match-pool">
+      <div class="match-item" draggable="true" onclick="selectMatchItem(this)">Terminator</div>
+      <div class="match-item" draggable="true" onclick="selectMatchItem(this)">Input/Output</div>
+      <div class="match-item" draggable="true" onclick="selectMatchItem(this)">Process</div>
+      <div class="match-item" draggable="true" onclick="selectMatchItem(this)">Decision</div>
+      <div class="match-item" draggable="true" onclick="selectMatchItem(this)">Sub program</div>
+      <div class="match-item" draggable="true" onclick="selectMatchItem(this)">Flow Line</div>
+    </div>
+
+    <div class="match-col">
+      <div class="match-box">
+        <h4>Terminator</h4>
+        <div style="text-align:center; padding:10px;">
+          <div class="shape terminator" style="width:100px; margin:0 auto;"><span>Start</span></div>
+        </div>
+        <div class="match-zone" id="zone-terminator" ondrop="dropMatch(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div class="match-box">
+        <h4>Input/Output</h4>
+        <div style="text-align:center; padding:10px;">
+          <div class="shape io" style="width:100px; margin:0 auto;"><span>INPUT x</span></div>
+        </div>
+        <div class="match-zone" id="zone-io" ondrop="dropMatch(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div class="match-box">
+        <h4>Process</h4>
+        <div style="text-align:center; padding:10px;">
+          <div class="shape process" style="width:100px; margin:0 auto;"><span>Total = A + B</span></div>
+        </div>
+        <div class="match-zone" id="zone-process" ondrop="dropMatch(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div class="match-box">
+        <h4>Decision</h4>
+        <div style="text-align:center; padding:10px;">
+          <div class="shape decision" style="width:60px; margin:0 auto;"><span>age > 18?</span></div>
+        </div>
+        <div class="match-zone" id="zone-decision" ondrop="dropMatch(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div class="match-box">
+        <h4>Sub program</h4>
+        <div style="text-align:center; padding:10px;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:5px;">
+            <div style="width:20px; height:60px; border-left:2px solid var(--text); border-right:2px solid var(--text); background:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;">showMenu()</div>
+          </div>
+        </div>
+        <div class="match-zone" id="zone-sub" ondrop="dropMatch(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div class="match-box">
+        <h4>Flow Line</h4>
+        <div style="text-align:center; padding:10px;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:5px;">
+            <div style="width:80px; height:2px; background:var(--text); position:relative;">
+              <div style="position:absolute; right:-5px; top:-4px; width:0; height:0; border-left:10px solid var(--text); border-top:5px solid transparent; border-bottom:5px solid transparent;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="match-zone" id="zone-line" ondrop="dropMatch(event)" ondragover="allowDrop(event)"></div>
+      </div>
+    </div>
+
+    <div class="controls" style="margin-top:1rem;">
+      <button class="btn" onclick="checkPlenary()">Check Answers</button>
+      <button class="btn outline" onclick="resetPlenary()">Reset</button>
+    </div>
+    <div class="status" id="plenaryStatus" style="display:none;"></div>
+  </section>
+
+  <!-- ============ AI GUIDE & POWERPOINT ============ -->
+  <section class="card">
+    <h2>🤖 AI Guide</h2>
+    <p>Your personal tutor! Ask the AI any question about algorithms and flowcharts.</p>
+    <div class="btn-row">
+      <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" rel="noopener" class="btn">
+        💬 Ask the AI Tutor
+      </a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>📊 Lesson Presentation</h2>
+    <p>Use these slides to recap the lesson.</p>
+    <div class="btn-row">
+      <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FT2%2520Algorithms%2520and%2520flowcharts.pptx&wdOrigin=BROWSELINK" target="_blank" rel="noopener" class="btn outline">
+        📊 Open PowerPoint
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ TEACHER PANEL ============ -->
+  <section class="card">
+    <h2>Additional Resources</h2>
+
+    <details class="teacher-panel">
+      <summary>📋 Lesson Plan (Teacher only) — click to toggle</summary>
+      <div class="panel-body">
+
+        <div class="lock-screen" id="lockScreen">
+          <p style="color:var(--muted);margin-bottom:14px;">Enter password to view the full lesson plan.</p>
+          <input type="password" id="lockInput" placeholder="Password">
+          <button class="btn" id="lockBtn">Unlock</button>
+          <p id="lockMsg" style="color:#dc2626;font-size:.85rem;margin-top:10px;min-height:1.2em;"></p>
+        </div>
+
+        <div id="teacherContent" class="hidden">
+          <h3>Lesson Overview</h3>
+          <p>This is a <strong>double lesson</strong>. The first half of the lesson covers algorithms and flowcharts, with interactive demos for symbols, counting, finding the maximum, and subprograms. The second half is dedicated to the Schoolbox extension worksheet.</p>
+
+          <h3>Timing</h3>
+          <ul>
+            <li><strong>0–10 min</strong> — Starter &amp; Objectives</li>
+            <li><strong>10–25 min</strong> — Purpose + Flowchart Symbols (with interactive demos)</li>
+            <li><strong>25–40 min</strong> — Drawing a Flowchart + Counting (with interactive demos)</li>
+            <li><strong>40–50 min</strong> — Finding the Maximum (with interactive demo)</li>
+            <li><strong>50–65 min</strong> — Subprograms (with interactive demo)</li>
+            <li><strong>65–80 min</strong> — Plenary (Matching Game)</li>
+            <li><strong>80–90 min</strong> — Review, Pack Up</li>
+          </ul>
+
+          <h3>Key Teaching Points</h3>
+          <ul>
+            <li>Use the bread flowchart to show that flowcharts can represent everyday algorithms.</li>
+            <li>Emphasise that every decision symbol must have two labelled branches (Yes/No).</li>
+            <li>Use the counting flowchart to show how a loop works.</li>
+            <li>Use the maximum flowchart to show how decisions are used to compare values.</li>
+            <li>Use the subprogram diagram to show how functions are called and return values.</li>
+          </ul>
+
+          <h3>Answers to Plenary Matching Game</h3>
+          <p><strong>Terminator:</strong> Start/Stop</p>
+          <p><strong>Input/Output:</strong> INPUT x / OUTPUT result</p>
+          <p><strong>Process:</strong> Total = A + B</p>
+          <p><strong>Decision:</strong> age > 18?</p>
+          <p><strong>Sub program:</strong> showMenu()</p>
+          <p><strong>Flow Line:</strong> Arrow</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:40px;">progress saved automatically in your browser</p>
+</div>
+
+<script>
+  /* ===== TOGGLE ANSWERS ===== */
+  function toggleAnswer(id) {
+    const el = document.getElementById(id);
+    if (el.style.display === "block") {
+      el.style.display = "none";
+    } else {
+      el.style.display = "block";
+    }
+  }
+
+  /* ===== BREAD DEMO ===== */
+  function checkBread(answer) {
+    const status = document.getElementById('breadStatus');
+    if (answer === 'bread') {
+      status.className = 'status ok';
+      status.textContent = 'Correct! It is a flowchart for making bread.';
+    } else {
+      status.className = 'status fail';
+      status.textContent = 'Not quite. Look at the steps: add flour, add water, mix, check if too much flour or water, knead, put in oven. What does that make?';
+    }
+    status.style.display = 'block';
+  }
+
+  /* ===== SYMBOL MATCHING DEMO ===== */
+  function checkSymbol(symbol) {
+    const status = document.getElementById('symbolStatus');
+    const el = document.getElementById('sym-' + symbol);
+    if (el) {
+      el.style.borderColor = 'var(--green)';
+      el.style.background = 'var(--green-soft)';
+      status.className = 'status ok';
+      status.textContent = 'Correct! That is the ' + symbol.charAt(0).toUpperCase() + symbol.slice(1) + ' symbol.';
+      status.style.display = 'block';
+    }
+  }
+
+  function resetSymbols() {
+    document.getElementById('symbolStatus').style.display = 'none';
+    ['terminator', 'io', 'process', 'decision'].forEach(s => {
+      const el = document.getElementById('sym-' + s);
+      if (el) { el.style.borderColor = 'var(--border)'; el.style.background = ''; }
+    });
+  }
+
+  /* ===== ID DEMO ===== */
+  function checkID(answer) {
+    const status = document.getElementById('idStatus');
+    if (answer === 'register') {
+      status.className = 'status ok';
+      status.textContent = 'Correct! It registers a new user. If the ID is already in use, it asks for another ID.';
+    } else {
+      status.className = 'status fail';
+      status.textContent = 'Not quite. Look at the steps: ask for ID, check if already in use, if yes ask for another, if no save the ID. What is this doing?';
+    }
+    status.style.display = 'block';
+  }
+
+  /* ===== COUNT DEMO ===== */
+  function checkCount(answer) {
+    const status = document.getElementById('countStatus');
+    if (answer === '1to999') {
+      status.className = 'status ok';
+      status.textContent = 'Correct! The program outputs 1, 2, 3, ... 999. It will not output 0 or 1000.';
+    } else {
+      status.className = 'status fail';
+      status.textContent = 'Not quite. Look at the condition: Is count < 1000? What happens when count reaches 1000?';
+    }
+    status.style.display = 'block';
+  }
+
+  /* ===== MAX DEMO ===== */
+  function checkMax(answer) {
+    const status = document.getElementById('maxStatus');
+    if (answer === 'num1') {
+      status.className = 'status ok';
+      status.textContent = 'Correct! Since 10 > 5, the Yes branch is followed and num1 (10) is output.';
+    } else {
+      status.className = 'status fail';
+      status.textContent = 'Not quite. The decision asks: num1 > num2. Is 10 greater than 5?';
+    }
+    status.style.display = 'block';
+  }
+
+  /* ===== SUB DEMO ===== */
+  function checkSub(answer) {
+    const status = document.getElementById('subStatus');
+    if (answer === 'vat') {
+      status.className = 'status ok';
+      status.textContent = 'Correct! It calculates VAT by multiplying the input by 0.2 and returns the result.';
+    } else {
+      status.className = 'status fail';
+      status.textContent = 'Not quite. Look at the process box: VAT < n * 0.2. What is it doing?';
+    }
+    status.style.display = 'block';
+  }
+
+  /* ===== PLENARY MATCHING ===== */
+  let selectedMatch = null;
+
+  function selectMatchItem(el) {
+    if (selectedMatch === el) {
+      selectedMatch.classList.remove('selected');
+      selectedMatch = null;
+      return;
+    }
+    if (selectedMatch) selectedMatch.classList.remove('selected');
+    selectedMatch = el;
+    el.classList.add('selected');
+    document.querySelectorAll('.match-zone').forEach(zone => {
+      zone.onclick = function() {
+        if (selectedMatch) {
+          this.appendChild(selectedMatch);
+          selectedMatch.classList.remove('selected');
+          selectedMatch = null;
+        }
+      };
+    });
+  }
+
+  function allowDrop(e) { e.preventDefault(); e.currentTarget.classList.add('active'); }
+  function dropMatch(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('active');
+    if (selectedMatch) {
+      e.currentTarget.appendChild(selectedMatch);
+      selectedMatch.classList.remove('selected');
+      selectedMatch = null;
+    }
+  }
+  document.querySelectorAll('.match-zone').forEach(zone => {
+    zone.addEventListener('dragleave', function() { this.classList.remove('active'); });
+  });
+
+  document.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('dragstart', function(e) {
+      selectedMatch = this;
+      setTimeout(() => this.style.display = 'none', 0);
+    });
+    item.addEventListener('dragend', function() {
+      setTimeout(() => { this.style.display = 'block'; selectedMatch = null; }, 0);
+    });
+  });
+
+  function checkPlenary() {
+    const zones = {
+      terminator: document.getElementById('zone-terminator'),
+      io: document.getElementById('zone-io'),
+      process: document.getElementById('zone-process'),
+      decision: document.getElementById('zone-decision'),
+      sub: document.getElementById('zone-sub'),
+      line: document.getElementById('zone-line')
+    };
+    const answers = {
+      terminator: ['Terminator'],
+      io: ['Input/Output'],
+      process: ['Process'],
+      decision: ['Decision'],
+      sub: ['Sub program'],
+      line: ['Flow Line']
+    };
+    let correct = 0, total = 6;
+    for (const [zoneId, expected] of Object.entries(answers)) {
+      const items = zones[zoneId].querySelectorAll('.match-item');
+      items.forEach(item => {
+        if (expected.includes(item.textContent.trim())) correct++;
+      });
+    }
+    const status = document.getElementById('plenaryStatus');
+    status.className = correct === total ? 'status ok' : 'status fail';
+    status.textContent = `You got ${correct} out of ${total} correct.`;
+    status.style.display = 'block';
+  }
+
+  function resetPlenary() {
+    document.querySelectorAll('.match-zone').forEach(zone => {
+      while (zone.firstChild) {
+        document.getElementById('match-pool').appendChild(zone.firstChild);
+      }
+    });
+    document.getElementById('plenaryStatus').style.display = 'none';
+    if (selectedMatch) { selectedMatch.classList.remove('selected'); selectedMatch = null; }
+  }
+
+  /* ===== TEACHER LOCK ===== */
+  (function(){
+    const PASSWORD = 'teacher1';
+    const lockScreen = document.getElementById('lockScreen');
+    const content    = document.getElementById('teacherContent');
+    const input      = document.getElementById('lockInput');
+    const btn        = document.getElementById('lockBtn');
+    const msg        = document.getElementById('lockMsg');
+
+    function tryUnlock(){
+      if (input.value === PASSWORD){
+        lockScreen.classList.add('hidden');
+        content.classList.remove('hidden');
+        msg.textContent = '';
+      } else {
+        msg.textContent = 'Incorrect password. Try again.';
+        input.value = '';
+        input.focus();
+      }
+    }
+    btn.addEventListener('click', tryUnlock);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+  })();
+</script>
+
+</body>
+</html>
