@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2.3.3 – Looping Theory</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+    }
+
+    .tip-box {
+      background: #fff8e7;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .tip-box strong { color: #8a6d1f; }
+
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
+    .info-box {
+      background: #e8f4fd;
+      border-left: 5px solid #2a6f97;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .info-box strong { color: #1a5f87; }
+
+    .success-box {
+      background: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .success-box strong { color: #2e7d32; }
+
+    .hl-box {
+      background: linear-gradient(135deg, #5b2c83 0%, #7c3aed 100%);
+      border-radius: 1.2rem;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+      color: white;
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.2);
+    }
+    .hl-box h3 {
+      color: #fdbb2d;
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hl-box p, .hl-box li {
+      color: #ede9fe;
+      font-size: 0.95rem;
+    }
+    .hl-box a {
+      color: #fdbb2d;
+      font-weight: 600;
+    }
+
+    .objectives-box {
+      background: linear-gradient(135deg, #0b2a4a 0%, #1f4b6e 100%);
+      border-radius: 1.2rem;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem;
+      color: white;
+      box-shadow: 0 8px 20px rgba(11, 42, 74, 0.15);
+    }
+    .objectives-box h3 {
+      color: #fdbb2d;
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .objectives-box ul {
+      padding-left: 1.5rem;
+      margin-top: 0.8rem;
+    }
+    .objectives-box li {
+      margin-bottom: 0.5rem;
+      color: #e6edf5;
+      font-size: 0.95rem;
+    }
+    .objectives-box li::marker { color: #fdbb2d; }
+
+    .reveal-btn {
+      background: #e9f0fa;
+      border: 1px solid #bed3ec;
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1f4973;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.8rem;
+      transition: background 0.15s;
+    }
+    .reveal-btn:hover { background: #d4e3fc; }
+    .reveal-btn i { font-size: 0.8rem; }
+
+    .reveal-content {
+      display: none;
+      margin-top: 0.8rem;
+      background: white;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      border-left: 4px solid #ffc857;
+      font-size: 0.95rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .reveal-content.show { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .seq-activity {
+      background: #fff;
+      border: 2px dashed #b6cfe5;
+      border-radius: 1rem;
+      padding: 1.2rem;
+      margin: 1rem 0;
+    }
+    .seq-pool {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .seq-item {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.85rem;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: 2px solid transparent;
+      transition: 0.15s;
+      user-select: none;
+    }
+    .seq-item:active { cursor: grabbing; }
+    .seq-item.dragging { opacity: 0.4; border-color: #ffc857; }
+    .seq-item.drag-over { border-color: #4caf50; background: #2d3f54; }
+    .seq-item.correct { border-color: #4caf50; background: #1b4332; }
+    .seq-item.incorrect { border-color: #c62828; background: #4a1e1e; }
+    .seq-item .handle { color: #7bb3ff; font-size: 0.9rem; }
+    .seq-item .num {
+      background: #1f4b6e;
+      color: #fdbb2d;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .seq-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+    .seq-btn {
+      background: #1a5f87;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.3rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.15s;
+    }
+    .seq-btn:hover { background: #134f75; }
+    .seq-btn.reset { background: #6b7f8f; }
+    .seq-btn.reset:hover { background: #556673; }
+    .seq-feedback {
+      margin-top: 0.8rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+    }
+    .seq-feedback.good { color: #2e7d32; }
+    .seq-feedback.bad { color: #c62828; }
+
+    .quiz-q {
+      background: #fff;
+      border-radius: 0.8rem;
+      padding: 1.2rem 1.4rem;
+      margin: 0.8rem 0;
+      border: 1px solid #d0ddeb;
+    }
+    .quiz-q p { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz-opts { display: flex; flex-direction: column; gap: 0.5rem; }
+    .quiz-opt {
+      background: #f0f4fb;
+      border: 2px solid #d0ddeb;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      text-align: left;
+    }
+    .quiz-opt:hover { border-color: #1a5f87; background: #e3eef8; }
+    .quiz-opt.correct { border-color: #4caf50; background: #e8f5e9; }
+    .quiz-opt.incorrect { border-color: #c62828; background: #fdeaea; }
+    .quiz-opt:disabled { cursor: default; opacity: 0.85; }
+    .quiz-fb {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      min-height: 1.2rem;
+    }
+    .quiz-fb.good { color: #2e7d32; }
+    .quiz-fb.bad { color: #c62828; }
+
+    .match-game {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .match-col { display: flex; flex-direction: column; gap: 0.5rem; }
+    .match-item {
+      background: #f0f4fb;
+      border: 2px solid #d0ddeb;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .match-item:hover { border-color: #1a5f87; background: #e3eef8; }
+    .match-item.selected { border-color: #1a5f87; background: #d4e3fc; box-shadow: 0 0 0 3px rgba(26,95,135,0.15); }
+    .match-item.matched {
+      border-color: #4caf50;
+      background: #e8f5e9;
+      cursor: default;
+      opacity: 0.75;
+    }
+    .match-item.matched:hover { border-color: #4caf50; background: #e8f5e9; }
+    .match-item.incorrect {
+      border-color: #c62828 !important;
+      background: #fdeaea !important;
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .match-feedback {
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+    }
+    .match-feedback.good { color: #2e7d32; }
+    .match-feedback.bad { color: #c62828; }
+
+    code {
+      background: #eef2f7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #b21f1f;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0.8rem 0;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #0b2a4a;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) td { background: #f7fafc; }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0;
+    }
+    li { margin-bottom: 0.3rem; }
+
+    .analogy {
+      background: #eef6ff;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #2c4b6e;
+      border-left: 4px solid #2a6f97;
+    }
+
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-blooket { background: #1a5f87; color: white; }
+    .btn-blooket:hover { background: #134f75; }
+
+    .btn-presentation { background: #d97706; color: white; }
+    .btn-presentation:hover { background: #b45309; }
+
+    .btn-wiki { background: #2d8f2d; color: white; }
+    .btn-wiki:hover { background: #1f6b1f; }
+
+    .btn-ebook { background: #dc2626; color: white; }
+    .btn-ebook:hover { background: #b91c1c; }
+
+    .btn-dojo { background: #7c3aed; color: white; }
+    .btn-dojo:hover { background: #6d28d9; }
+
+    .btn-python { background: #db2777; color: white; }
+    .btn-python:hover { background: #be185d; }
+
+    .btn-juice { background: #ea580c; color: white; }
+    .btn-juice:hover { background: #c2410c; }
+
+    .btn-youtube { background: #dc2626; color: white; }
+    .btn-youtube:hover { background: #b91c1c; }
+
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; flex-wrap: wrap; }
+      .button-grid { flex-direction: column; }
+      .match-game { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+
+    <a href="../B2-Programming.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to B2 Programming
+    </a>
+
+    <h1>🔁 B2.3.3 – Looping Theory</h1>
+
+    <!-- ============================================================ -->
+    <!-- LEARNING OBJECTIVES -->
+    <!-- ============================================================ -->
+    <div class="objectives-box">
+      <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
+      <ul>
+        <li>Explain the purpose of <strong>looping structures</strong> and how they enable repeated actions.</li>
+        <li>Distinguish between <strong>counted loops</strong> (<code>for</code>) and <strong>conditional loops</strong> (<code>while</code>) and choose the appropriate type for a task.</li>
+        <li>Write <code>for</code> and <code>while</code> loops in <strong>Python</strong> to repeat actions a known or unknown number of times.</li>
+        <li>Use <strong>Boolean and relational operators</strong> to govern loop execution and combine them with <code>if</code>/<code>elif</code>/<code>else</code> statements inside loops.</li>
+        <li>Identify and fix common loop errors such as <strong>infinite loops</strong>, <strong>off-by-one errors</strong>, <strong>missing initialisation</strong>, and <strong>faulty condition logic</strong>.</li>
+        <li>Construct programs that use looping structures correctly to meet program objectives.</li>
+      </ul>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- HL STARTER ACTIVITY -->
+    <!-- ============================================================ -->
+    <div class="hl-box">
+      <h3><i class="fas fa-star"></i> HL Starter — Repetition Without Loops</h3>
+      <p>Before watching the video, read these guiding questions. As you watch, look for the answers — then discuss them with a partner.</p>
+
+      <p style="margin-top:0.8rem;"><strong>❓ Questions to answer while watching:</strong></p>
+      <ol style="padding-left:1.5rem;margin-top:0.4rem;margin-bottom:1rem;">
+        <li>Why is repetition a core idea in computing — what tasks would be impractical to solve without loops?</li>
+        <li>How does a <strong>counted loop</strong> differ from a <strong>conditional loop</strong> in terms of when it stops?</li>
+        <li>What role does a <strong>loop control variable</strong> play in a <code>for</code> loop? What happens if it is never updated in a <code>while</code> loop?</li>
+        <li>How can an <code>if</code> statement inside a loop change the loop’s behaviour (e.g. <code>break</code> or <code>continue</code>)?</li>
+        <li>Think of a real-world process that repeats until a condition is met (e.g. entering a password). How would you model it as a <code>while</code> loop?</li>
+        <li>Why do <strong>off-by-one errors</strong> and <strong>infinite loops</strong> happen, and how can you spot them before running the code?</li>
+      </ol>
+
+      <p style="margin-top:0.8rem;">
+        <a href="https://www.youtube.com/watch?v=ujkD4SxPKOI" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#fdbb2d;color:#1e1b4b;padding:0.6rem 1.4rem;border-radius:40px;text-decoration:none;font-weight:700;">
+          <i class="fab fa-youtube"></i> Watch the Video
+        </a>
+      </p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- STARTER ACTIVITY -->
+    <!-- ============================================================ -->
+    <h2>🎯 Starter Activity</h2>
+
+    <div class="card">
+      <h3>🐟 Blooket Quiz</h3>
+      <p>Test your understanding of looping and iteration with this Blooket quiz.</p>
+      <div class="button-grid">
+        <a href="https://play.blooket.com/host/hack?id=68b039e7da963af6c95719b1" target="_blank" rel="noopener" class="btn btn-blooket">
+          <i class="fas fa-gamepad"></i> Play Blooket
+        </a>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- LESSON CONTENT -->
+    <!-- ============================================================ -->
+    <h2>📖 Lesson Content</h2>
+
+    <div class="card">
+      <h3>The Big Idea</h3>
+      <p>In programming, <strong>looping structures</strong> allow us to execute a block of code multiple times, often with changing conditions or counters. Instead of writing the same instructions repeatedly, loops enable efficient, concise, and flexible repetition of actions—a core concept in all computational processes.</p>
+      <p>There are two broad categories of loops: <strong>counted loops</strong> (repeat a specific number of times) and <strong>conditional loops</strong> (repeat while a condition remains true). Effective use of loops—especially with conditional logic—allows programs to process data sets, interact with users, and perform algorithmic operations in a scalable way.</p>
+      <p class="tip-box"><strong>📚 Further reading:</strong> Course companion pages 366–370.</p>
+
+      <div class="analogy">
+        💡 Think of a loop as a treadmill: a <strong>counted loop</strong> is like setting the treadmill to run for exactly 5 kilometres; a <strong>conditional loop</strong> is like running until your heart rate reaches a target — you don’t know in advance how long that will take.
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1 -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>1. Types of Loops</h3>
+
+      <h4>A. Counted Loops (Definite Iteration)</h4>
+      <p>Counted loops execute a fixed number of times, often using a loop control variable. In Python these are <code>for</code> loops.</p>
+      <pre><code>for i in range(5):
+    print("Iteration:", i)</code></pre>
+      <p>Commonly used when the number of iterations is known ahead of time. The loop variable <code>i</code> controls how many times the loop runs.</p>
+
+      <h4>B. Conditional Loops (Indefinite Iteration)</h4>
+      <p>Conditional loops repeat until a condition becomes false. These are used when the number of repetitions is not known in advance. In Python these are <code>while</code> loops.</p>
+      <pre><code>password = ""
+while password != "open123":
+    password = input("Enter password: ")</code></pre>
+
+      <h4>C. Loop Variants and Their Use Cases</h4>
+      <table>
+        <thead>
+          <tr><th>Loop Type</th><th>Syntax Form</th><th>Best Use Case</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>for</code> loop</td><td>Count-controlled</td><td>When the number of iterations is known</td></tr>
+          <tr><td><code>while</code> loop</td><td>Condition-controlled</td><td>When looping until a condition changes</td></tr>
+          <tr><td><code>do-while</code> (Java only)</td><td>Executes at least once</td><td>When the body must run before the condition is checked</td></tr>
+        </tbody>
+      </table>
+
+      <button class="reveal-btn" data-target="reveal1">
+        <i class="fas fa-lightbulb"></i> When would you choose a while loop over a for loop?
+      </button>
+      <div id="reveal1" class="reveal-content">
+        <strong>💡 Think about it:</strong> Use a <code>for</code> loop when you know <em>how many times</em> to repeat (e.g. iterating over 10 items, or <code>range(n)</code>). Use a <code>while</code> loop when the number of repetitions depends on a <em>condition</em> that may change unpredictably (e.g. keep asking for input until it is valid). If you can express the repetition with a counter that stops at a known value, a <code>for</code> loop is usually clearer.
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- INTERACTIVE: SPOT THE ERROR -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>🔍 Interactive: Spot the Loop Error</h3>
+      <p>Read the code below. What is wrong with it? Click the option you think is correct.</p>
+
+      <div class="quiz-q">
+        <pre><code>i = 0
+while i &lt; 5:
+    print("Hello")
+</code></pre>
+        <p>What is the problem with this code?</p>
+        <div class="quiz-opts" data-answer="b">
+          <button class="quiz-opt" data-opt="a">Nothing — the code works perfectly.</button>
+          <button class="quiz-opt" data-opt="b">The loop variable <code>i</code> is never updated, causing an infinite loop.</button>
+          <button class="quiz-opt" data-opt="c">The condition <code>i &lt; 5</code> is always false.</button>
+          <button class="quiz-opt" data-opt="d">You cannot use <code>while</code> with a variable.</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz-q">
+        <pre><code>for i in range(1, 5):
+    print(i)</code></pre>
+        <p>What numbers are printed?</p>
+        <div class="quiz-opts" data-answer="a">
+          <button class="quiz-opt" data-opt="a">1, 2, 3, 4</button>
+          <button class="quiz-opt" data-opt="b">1, 2, 3, 4, 5</button>
+          <button class="quiz-opt" data-opt="c">0, 1, 2, 3, 4</button>
+          <button class="quiz-opt" data-opt="d">2, 3, 4, 5</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz-q">
+        <pre><code>total = 0
+num = int(input("Enter number (-1 to quit): "))
+while num != -1:
+    total += num
+    num = int(input("Enter number (-1 to quit): "))
+print("Total:", total)</code></pre>
+        <p>What pattern does this loop use?</p>
+        <div class="quiz-opts" data-answer="c">
+          <button class="quiz-opt" data-opt="a">A counted loop</button>
+          <button class="quiz-opt" data-opt="b">A <code>for</code> loop over a range</button>
+          <button class="quiz-opt" data-opt="c">A sentinel-controlled loop</button>
+          <button class="quiz-opt" data-opt="d">A nested loop</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2 -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>2. Conditional Statements Within Loops</h3>
+      <p>Inside a loop, <code>if</code>, <code>elif</code>, and <code>else</code> can be used to modify control flow, such as filtering values, breaking loops, or skipping iterations.</p>
+
+      <h4>Example: Filtering Odd Numbers (Python)</h4>
+      <pre><code>for i in range(10):
+    if i % 2 == 0:
+        continue  # Skip even numbers
+    print(i)</code></pre>
+
+      <h4>Example: Early Exit on Match</h4>
+      <pre><code>for i in range(len(numbers)):
+    if numbers[i] == target:
+        print("Found!")
+        break</code></pre>
+
+      <div class="info-box">
+        <strong>🔍 Loop control keywords:</strong>
+        <ul>
+          <li><strong><code>break</code></strong> — exits the loop immediately.</li>
+          <li><strong><code>continue</code></strong> — skips the rest of the current iteration and moves to the next one.</li>
+          <li>These are most useful inside <code>if</code> statements within the loop.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3 -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>3. Boolean and Relational Conditions in Loops</h3>
+      <p>Loops often rely on relational and Boolean logic for continuation or branching.</p>
+
+      <h4>Python Example</h4>
+      <pre><code>while age &lt; 18 or not has_permission:
+    print("Access denied.")
+    # request age or permission</code></pre>
+
+      <table>
+        <thead>
+          <tr><th>Operator Type</th><th>Examples</th><th>Use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Relational</td><td><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>==</code>, <code>!=</code></td><td>Compare values</td></tr>
+          <tr><td>Boolean</td><td><code>and</code>, <code>or</code>, <code>not</code> (Python)</td><td>Combine or invert relational expressions to form compound conditions</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box">
+        <strong>⚠️ Watch the logic!</strong> In a loop condition, <code>while x &gt; 0 or x &lt; 10:</code> is <em>always true</em> — the loop will never stop. Use <code>and</code> when checking that a value lies within a range.
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4 -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>4. Program Design Using Looping Structures</h3>
+      <p>The goal is to repeat actions efficiently while maintaining clear, correct control flow.</p>
+
+      <h4>Example: Accumulate Input Until Sentinel Value (Python)</h4>
+      <pre><code>total = 0
+num = int(input("Enter number (-1 to quit): "))
+while num != -1:
+    total += num
+    num = int(input("Enter number (-1 to quit): "))
+print("Total:", total)</code></pre>
+
+      <h4>Example: Count-Controlled Sum (Python)</h4>
+      <pre><code>total = 0
+for i in range(1, 11):
+    total += i
+print("Sum 1 to 10 =", total)</code></pre>
+
+      <button class="reveal-btn" data-target="reveal2">
+        <i class="fas fa-lightbulb"></i> How would you validate input with a loop?
+      </button>
+      <div id="reveal2" class="reveal-content">
+        <strong>💡 Think about it:</strong> Use a <code>while</code> loop that keeps repeating until valid data is entered. For example:
+        <pre><code>grade = -1
+while grade &lt; 0 or grade &gt; 100:
+    grade = int(input("Enter grade (0-100): "))</code></pre>
+        This is called <strong>input validation</strong> — a very common use of conditional loops.
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5 -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>5. Best Practices for Loops</h3>
+      <table>
+        <thead>
+          <tr><th>Practice</th><th>Description</th></tr>
+        </thead>
+        <tbody 
+      <tr>
+      <th>Practice</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Initialise before the loop</strong></td>
+      <td>Set any counter, accumulator, or flag <em>before</em> the loop begins. In Python, a <code>for</code> loop variable is initialised automatically by <code>range()</code>, but a <code>while</code> loop variable must be set manually.</td>
+    </tr>
+    <tr>
+      <td><strong>Update the loop control variable</strong></td>
+      <td>Every <code>while</code> loop must change the variable used in its condition, otherwise it runs forever. Place the update at the end of the body (or wherever the logic requires) and check that it is reachable.</td>
+    </tr>
+    <tr>
+      <td><strong>Choose the right loop type</strong></td>
+      <td>Use <code>for</code> when the number of repetitions is known; use <code>while</code> when it depends on a condition. Mixing them up makes code harder to read and more error-prone.</td>
+    </tr>
+    <tr>
+      <td><strong>Keep the loop body focused</strong></td>
+      <td>Each iteration should do one clear job. If the body grows long, consider extracting it into a function.</td>
+    </tr>
+    <tr>
+      <td><strong>Avoid deep nesting</strong></td>
+      <td>Nested loops multiply the number of iterations (an <em>O(n²)</em> pattern). Only nest when the problem genuinely requires it, and comment the purpose of each level.</td>
+    </tr>
+    <tr>
+      <td><strong>Use <code>break</code> and <code>continue</code> sparingly</strong></td>
+      <td>They are useful for early exit and filtering, but overuse makes control flow hard to trace. Prefer a clear condition where possible.</td>
+    </tr>
+    <tr>
+      <td><strong>Comment non-obvious conditions</strong></td>
+      <td>Explain <em>why</em> a loop stops, especially for sentinel values or compound Boolean conditions.</td>
+    </tr>
+    <tr>
+      <td><strong>Test boundary values</strong></td>
+      <td>Check the first and last iterations, empty input, and the sentinel value itself to catch off-by-one errors.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="tip-box">
+  <strong>📝 Quick checklist before running a loop:</strong>
+  <ol style="margin:0.4rem 0 0;">
+    <li>Is the loop variable initialised?</li>
+    <li>Does the condition eventually become false?</li>
+    <li>Is the variable updated on every path through the body?</li>
+    <li>Are the boundaries correct (start, stop, step)?</li>
+    <li>Does the loop do what the objective requires?</li>
+  </ol>
+</div>  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 6 -->
+  <!-- ============================================================ -->
+  <div class="card">
+    <h3>6. Common Loop Errors and How to Fix Them</h3>
+    <p>The following mistakes appear again and again in student code. Learn to recognise them before you run your program.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Error</th>
+          <th>What it looks like</th>
+          <th>Symptom</th>
+          <th>Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Infinite loop</strong></td>
+          <td><code>while i &lt; 5: print("Hi")</code></td>
+          <td>Program never terminates; fans spin up.</td>
+          <td>Update <code>i</code> inside the body (e.g. <code>i += 1</code>).</td>
+        </tr>
+        <tr>
+          <td><strong>Off-by-one error</strong></td>
+          <td><code>for i in range(1, 5)</code> when 1–5 is intended</td>
+          <td>One too few or too many iterations.</td>
+          <td>Remember <code>range(start, stop)</code> excludes <code>stop</code>. Use <code>range(1, 6)</code> for 1–5.</td>
+        </tr>
+        <tr>
+          <td><strong>Missing initialisation</strong></td>
+          <td><code>while total &lt; 100:</code> with no prior <code>total = 0</code></td>
+          <td><code>NameError</code> (Python) or unpredictable behaviour.</td>
+          <td>Initialise counters and accumulators <em>before</em> the loop.</td>
+        </tr>
+        <tr>
+          <td><strong>Faulty condition logic</strong></td>
+          <td><code>while x &gt; 0 or x &lt; 10:</code></td>
+          <td>Always-true condition → infinite loop.</td>
+          <td>Use <code>and</code> for range checks: <code>while x &gt; 0 and x &lt; 10:</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>Update in the wrong place</strong></td>
+          <td><code>i += 1</code> before a <code>continue</code> that skips it</td>
+          <td>Some iterations never advance → infinite loop.</td>
+          <td>Ensure the update is reached on every path, or restructure the logic.</td>
+        </tr>
+        <tr>
+          <td><strong>Accidental semicolon / indentation</strong></td>
+          <td>A stray line outside the loop body</td>
+          <td>Only part of the intended body repeats.</td>
+          <td>Check indentation carefully in Python; keep the body consistent.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warn-box">
+      <strong>⚠️ Debugging tip:</strong> If a loop misbehaves, add a temporary <code>print()</code> at the top of the body to show the loop variable and condition values on each pass. Remove it once the loop is correct.
+    </div>
+
+  <!-- ============================================================ -->
+  <!-- INTERACTIVE: SEQUENCE BUILDER -->
+  <!-- ============================================================ -->
+  <div class="card">
+    <h3>🧩 Interactive: Order the Loop Logic</h3>
+    <p>Drag the lines into the correct order to build a working sentinel-controlled loop that sums numbers until the user enters <code>-1</code>.</p>
+
+    <div class="seq-activity">
+      <div class="seq-pool" id="seqPool">
+        <div class="seq-item" draggable="true" data-order="3">
+          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+          <span class="num">?</span>
+          <code>print("Total:", total)</code>
+        </div>
+        <div class="seq-item" draggable="true" data-order="1">
+          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+          <span class="num">?</span>
+          <code>total = 0</code>
+        </div>
+        <div class="seq-item" draggable="true" data-order="5">
+          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+          <span class="num">?</span>
+          <code>num = int(input("Enter number (-1 to quit): "))</code>
+        </div>
+        <div class="seq-item" draggable="true" data-order="2">
+          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+          <span class="num">?</span>
+          <code>num = int(input("Enter number (-1 to quit): "))</code>
+        </div>
+        <div class="seq-item" draggable="true" data-order="4">
+          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
+          <span class="num">?</span>
+          <code>total += num</code>
+        </div>
+      </div>
+
+      <p style="font-size:0.9rem;color:#4b6a8b;">Hint: initialise → first read → condition → accumulate → re-read.</p>
+
+      <div class="seq-actions">
+        <button class="seq-btn" id="seqCheck"><i class="fas fa-check"></i> Check Order</button>
+        <button class="seq-btn reset" id="seqReset"><i class="fas fa-rotate-left"></i> Reset</button>
+      </div>
+      <div class="seq-feedback" id="seqFeedback"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- INTERACTIVE: MATCHING GAME -->
+  <!-- ============================================================ -->
+  <div class="card">
+    <h3>🔗 Interactive: Match the Term</h3>
+    <p>Click a term on the left, then click its matching description on the right.</p>
+
+    <div class="match-game" id="matchGame">
+      <div class="match-col">
+        <div class="match-item" data-key="for">Counted loop</div>
+        <div class="match-item" data-key="while">Conditional loop</div>
+        <div class="match-item" data-key="break">break</div>
+        <div class="match-item" data-key="continue">continue</div>
+        <div class="match-item" data-key="sentinel">Sentinel value</div>
+      </div>
+      <div class="match-col">
+        <div class="match-item" data-key="sentinel">A special value that signals the loop should stop (e.g. -1).</div>
+        <div class="match-item" data-key="for">Repeats a known number of times, usually with a loop control variable.</div>
+        <div class="match-item" data-key="continue">Skips the rest of the current iteration and moves to the next.</div>
+        <div class="match-item" data-key="while">Repeats while a condition remains true; the count is unknown in advance.</div>
+        <div class="match-item" data-key="break">Exits the loop immediately, even if the condition is still true.</div>
+      </div>
+    </div>
+    <div class="match-feedback" id="matchFeedback"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- QUIZ -->
+  <!-- ============================================================ -->
+  <h2>✅ Check Your Understanding</h2>
+
+  <div class="quiz-q">
+    <p>1. Which loop is best when the number of iterations is unknown in advance?</p>
+    <div class="quiz-opts" data-answer="b">
+      <button class="quiz-opt" data-opt="a">A <code>for</code> loop</button>
+      <button class="quiz-opt" data-opt="b">A <code>while</code> loop</button>
+      <button class="quiz-opt" data-opt="c">A nested <code>for</code> loop</button>
+      <button class="quiz-opt" data-opt="d">No loop — use copy-paste</button>
+    </div>
+    <div class="quiz-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <p>2. What does <code>range(0, 10, 2)</code> produce?</p>
+    <div class="quiz-opts" data-answer="c">
+      <button class="quiz-opt" data-opt="a">0, 1, 2, …, 9</button>
+      <button class="quiz-opt" data-opt="b">2, 4, 6, 8, 10</button>
+      <button class="quiz-opt" data-opt="c">0, 2, 4, 6, 8</button>
+      <button class="quiz-opt" data-opt="d">0, 2, 4, 6, 8, 10</button>
+    </div>
+    <div class="quiz-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <p>3. Which keyword would you use to stop a loop as soon as a target is found?</p>
+    <div class="quiz-opts" data-answer="a">
+      <button class="quiz-opt" data-opt="a"><code>break</code></button>
+      <button class="quiz-opt" data-opt="b"><code>continue</code></button>
+      <button class="quiz-opt" data-opt="c"><code>pass</code></button>
+      <button class="quiz-opt" data-opt="d"><code>return</code></button>
+    </div>
+    <div class="quiz-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <p>4. What is wrong with <code>while x &gt; 0 or x &lt; 10:</code> as a loop condition?</p>
+    <div class="quiz-opts" data-answer="d">
+      <button class="quiz-opt" data-opt="a">Nothing — it works fine.</button>
+      <button class="quiz-opt" data-opt="b"><code>x</code> must be a string.</button>
+      <button class="quiz-opt" data-opt="c">It only runs once.</button>
+      <button class="quiz-opt" data-opt="d">It is always true, so the loop never stops; use <code>and</code> for range checks.</button>
+    </div>
+    <div class="quiz-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <p>5. In <code>for i in range(5):</code>, how many times does the body execute?</p>
+    <div class="quiz-opts" data-answer="b">
+      <button class="quiz-opt" data-opt="a">4</button>
+      <button class="quiz-opt" data-opt="b">5</button>
+      <button class="quiz-opt" data-opt="c">6</button>
+      <button class="quiz-opt" data-opt="d">It depends on the body</button>
+    </div>
+    <div class="quiz-fb"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- FURTHER RESOURCES -->
+  <!-- ============================================================ -->
+  <h2>🔗 Further Resources</h2>
+
+  <div class="card">
+    <p>Use these resources to deepen your understanding and practise loop problems.</p>
+    <div class="button-grid">
+      <a href="https://www.python.org/doc/" target="_blank" rel="noopener" class="btn btn-python">
+        <i class="fab fa-python"></i> Python Docs
+      </a>
+      <a href="https://www.w3schools.com/python/python_while_loops.asp" target="_blank" rel="noopener" class="btn btn-wiki">
+        <i class="fas fa-book"></i> W3Schools — Loops
+      </a>
+      <a href="https://www.youtube.com/watch?v=ujkD4SxPKOI" target="_blank" rel="noopener" class="btn btn-youtube">
+        <i class="fab fa-youtube"></i> Video Revision
+      </a>
+    </div>
+
+    <div class="success-box" style="margin-top:1rem;">
+      <strong>💪 Practice challenge:</strong> Write a program that asks the user for 10 numbers, then prints the largest, the smallest, and the average. Then modify it so the program keeps asking until the user types <code>done</code>. Which loop type did you use for each version — and why?
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- FOOTER -->
+  <!-- ============================================================ -->
+  <div class="footer-note">
+    <p>B2.3.3 — Looping Theory · Part of the B2 Programming unit</p>
+    <p style="margin-top:0.3rem;"><a href="../B2-Programming.html" class="back-link" style="margin-bottom:0;"><i class="fas fa-arrow-left"></i> Back to B2 Programming</a></p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ============================================================ -->
+<script>
+  /* ---------- Reveal buttons ---------- */
+  document.querySelectorAll('.reveal-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      if (!target) return;
+      const shown = target.classList.toggle('show');
+      const icon = btn.querySelector('i');
+      if (icon) {
+        icon.className = shown ? 'fas fa-eye-slash' : 'fas fa-lightbulb';
+      }
+    });
+  });
+
+  /* ---------- Quiz ---------- */
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const opts = q.querySelectorAll('.quiz-opt');
+    const fb = q.querySelector('.quiz-fb');
+    const answer = q.querySelector('.quiz-opts').dataset.answer;
+
+    opts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (q.dataset.answered === 'true') return;
+        q.dataset.answered = 'true';
+
+        const isCorrect = opt.dataset.opt === answer;
+        opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+        // highlight the correct option too
+        opts.forEach(o => {
+          o.disabled = true;
+          if (o.dataset.opt === answer) o.classList.add('correct');
+        });
+
+        fb.textContent = isCorrect
+          ? '✅ Correct!'
+          : '❌ Not quite — the correct answer is highlighted in green.';
+        fb.className = 'quiz-fb ' + (isCorrect ? 'good' : 'bad');
+      });
+    });
+  });
+
+  /* ---------- Sequence builder (simple click/drag reorder) ---------- */
+  (function () {
+    const pool = document.getElementById('seqPool');
+    const feedback = document.getElementById('seqFeedback');
+    const checkBtn = document.getElementById('seqCheck');
+    const resetBtn = document.getElementById('seqReset');
+    if (!pool) return;
+
+    let dragged = null;
+    const items = () => Array.from(pool.querySelectorAll('.seq-item'));
+
+    function numberItems() {
+      items().forEach((el, idx) => {
+        const num = el.querySelector('.num');
+        if (num) num.textContent = idx + 1;
+      });
+    }
+
+    function clearMarks() {
+      items().forEach(el => el.classList.remove('correct', 'incorrect'));
+      feedback.textContent = '';
+      feedback.className = 'seq-feedback';
+    }
+
+    // drag events
+    pool.addEventListener('dragstart', e => {
+      const item = e.target.closest('.seq-item');
+      if (!item) return;
+      dragged = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    pool.addEventListener('dragend', () => {
+      if (dragged) dragged.classList.remove('dragging');
+      dragged = null;
+      items().forEach(el => el.classList.remove('drag-over'));
+    });
+
+    pool.addEventListener('dragover', e => {
+      e.preventDefault();
+      const target = e.target.closest('.seq-item');
+      if (!target || target === dragged) return;
+      e.dataTransfer.dropEffect = 'move';
+      items().forEach(el => el.classList.remove('drag-over'));
+      target.classList.add('drag-over');
+    });
+
+    pool.addEventListener('drop', e => {
+      e.preventDefault();
+      const target = e.target.closest('.seq-item');
+      if (!target || !dragged || target === dragged) return;
+      target.classList.remove('drag-over');
+
+      const all = items();
+      const fromIdx = all.indexOf(dragged);
+      const toIdx = all.indexOf(target);
+
+      if (fromIdx < toIdx) {
+        target.parentNode.insertBefore(dragged, target.nextSibling);
+      } else {
+        target.parentNode.insertBefore(dragged, target);
+      }
+      clearMarks();
+      numberItems();
+    });
+
+    // touch / click fallback: move item up on click (works without drag)
+    items().forEach(item => {
+      item.addEventListener('click', e => {
+        if (e.target.closest('.handle')) return;
+        const prev = item.previousElementSibling;
+        if (prev) {
+          pool.insertBefore(item, prev);
+          clearMarks();
+          numberItems();
+        }
+      });
+    });
+
+    checkBtn.addEventListener('click', () => {
+      const all = items();
+      const expected = ['1','2','3','4','5'];
+      let correct = 0;
+
+      all.forEach((el, idx) => {
+        el.classList.remove('correct', 'incorrect');
+        if (el.dataset.order === expected[idx]) {
+          el.classList.add('correct');
+          correct++;
+        } else {
+          el.classList.add('incorrect');
+        }
+      });
+
+      if (correct === all.length) {
+        feedback.textContent = '✅ Perfect — the loop is in the correct order!';
+        feedback.className = 'seq-feedback good';
+      } else {
+        feedback.textContent = `❌ ${correct} of ${all.length} lines are in the right place. Try again.`;
+        feedback.className = 'seq-feedback bad';
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      clearMarks();
+      // restore original visual order (by data-order) to make reset predictable
+      const sorted = items().sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
+      sorted.forEach(el => pool.appendChild(el));
+      numberItems();
+    });
+
+    numberItems();
+  })();
+
+  /* ---------- Matching game ---------- */
+  (function () {
+    const game = document.getElementById('matchGame');
+    if (!game) return;
+    const feedback = document.getElementById('matchFeedback');
+    const leftCol = game.querySelectorAll('.match-col')[0];
+    const rightCol = game.querySelectorAll('.match-col')[1];
+    let selected = null;
+    let matched = 0;
+
+    const leftItems = leftCol.querySelectorAll('.match-item');
+    const rightItems = rightCol.querySelectorAll('.match-item');
+    const total = leftItems.length;
+
+    function selectLeft(el) {
+      if (el.classList.contains('matched')) return;
+      leftItems.forEach(i => i.classList.remove('selected'));
+      el.classList.add('selected');
+      selected = el;
+      feedback.textContent = 'Now click the matching description on the right.';
+      feedback.className = 'match-feedback';
+    }
+
+    function tryMatch(rightEl) {
+      if (!selected) {
+        feedback.textContent = '👈 Pick a term on the left first.';
+        feedback.className = 'match-feedback bad';
+        return;
+      }
+      if (rightEl.classList.contains('matched')) return;
+
+      if (selected.dataset.key === rightEl.dataset.key) {
+        selected.classList.remove('selected');
+        selected.classList.add('matched');
+        rightEl.classList.add('matched');
+        selected = null;
+        matched++;
+
+        feedback.textContent = '✅ Match!';
+        feedback.className = 'match-feedback good';
+
+        if (matched === total) {
+          feedback.textContent = '🎉 All matched — great work!';
+        }
+      } else {
+        rightEl.classList.add('incorrect');
+        feedback.textContent = '❌ That is not the matching description — try again.';
+        feedback.className = 'match-feedback bad';
+        setTimeout(() => rightEl.classList.remove('incorrect'), 400);
+      }
+    }
+
+    leftItems.forEach(el => el.addEventListener('click', () => selectLeft(el)));
+    rightItems.forEach(el => el.addEventListener('click', () => tryMatch(el)));
+  })();
+</script>
+
+</body>
+</html>
