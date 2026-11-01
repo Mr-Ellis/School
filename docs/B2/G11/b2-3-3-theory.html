@@ -476,6 +476,9 @@
     .btn-youtube { background: #dc2626; color: white; }
     .btn-youtube:hover { background: #b91c1c; }
 
+    .btn-parsons { background: #0f766e; color: white; }
+    .btn-parsons:hover { background: #115e59; }
+
     .footer-note {
       margin-top: 3rem;
       padding-top: 1.5rem;
@@ -515,30 +518,6 @@
         <li>Identify and fix common loop errors such as <strong>infinite loops</strong>, <strong>off-by-one errors</strong>, <strong>missing initialisation</strong>, and <strong>faulty condition logic</strong>.</li>
         <li>Construct programs that use looping structures correctly to meet program objectives.</li>
       </ul>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- HL STARTER ACTIVITY -->
-    <!-- ============================================================ -->
-    <div class="hl-box">
-      <h3><i class="fas fa-star"></i> HL Starter — Repetition Without Loops</h3>
-      <p>Before watching the video, read these guiding questions. As you watch, look for the answers — then discuss them with a partner.</p>
-
-      <p style="margin-top:0.8rem;"><strong>❓ Questions to answer while watching:</strong></p>
-      <ol style="padding-left:1.5rem;margin-top:0.4rem;margin-bottom:1rem;">
-        <li>Why is repetition a core idea in computing — what tasks would be impractical to solve without loops?</li>
-        <li>How does a <strong>counted loop</strong> differ from a <strong>conditional loop</strong> in terms of when it stops?</li>
-        <li>What role does a <strong>loop control variable</strong> play in a <code>for</code> loop? What happens if it is never updated in a <code>while</code> loop?</li>
-        <li>How can an <code>if</code> statement inside a loop change the loop’s behaviour (e.g. <code>break</code> or <code>continue</code>)?</li>
-        <li>Think of a real-world process that repeats until a condition is met (e.g. entering a password). How would you model it as a <code>while</code> loop?</li>
-        <li>Why do <strong>off-by-one errors</strong> and <strong>infinite loops</strong> happen, and how can you spot them before running the code?</li>
-      </ol>
-
-      <p style="margin-top:0.8rem;">
-        <a href="https://www.youtube.com/watch?v=ujkD4SxPKOI" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#fdbb2d;color:#1e1b4b;padding:0.6rem 1.4rem;border-radius:40px;text-decoration:none;font-weight:700;">
-          <i class="fab fa-youtube"></i> Watch the Video
-        </a>
-      </p>
     </div>
 
     <!-- ============================================================ -->
@@ -675,12 +654,14 @@ print("Total:", total)</code></pre>
     if i % 2 == 0:
         continue  # Skip even numbers
     print(i)</code></pre>
+      <p><strong>Why are <code>range</code> and <code>len</code> different constructs?</strong> <code>range(10)</code> generates a <em>sequence of numbers</em> (0–9) directly, so the loop variable <code>i</code> takes each numeric value in turn. <code>len(numbers)</code>, on the other hand, returns a <em>single integer</em> — the count of items in a collection. Wrapping it as <code>range(len(numbers))</code> produces the indices 0, 1, 2 … up to the last valid index, so that <code>numbers[i]</code> can be used to access each element by position. In short: <code>range</code> creates a numeric sequence for iteration; <code>len</code> measures a collection’s size and is only used inside <code>range</code> to build that sequence.</p>
 
       <h4>Example: Early Exit on Match</h4>
       <pre><code>for i in range(len(numbers)):
     if numbers[i] == target:
         print("Found!")
         break</code></pre>
+      <p>Here <code>range(len(numbers))</code> lets the loop visit every valid index of the list. The <code>break</code> exits immediately once the target is found, so no unnecessary iterations occur.</p>
 
       <div class="info-box">
         <strong>🔍 Loop control keywords:</strong>
@@ -715,7 +696,7 @@ print("Total:", total)</code></pre>
       </table>
 
       <div class="warn-box">
-        <strong>⚠️ Watch the logic!</strong> In a loop condition, <code>while x &gt; 0 or x &lt; 10:</code> is <em>always true</em> — the loop will never stop. Use <code>and</code> when checking that a value lies within a range.
+        <strong>⚠️ Watch the logic!</strong> In a loop condition, <code>while x &gt; 0 or x &lt; 10:</code> is <em>always true</em> — the loop will never stop. <strong>Why?</strong> The condition joins two tests with <code>or</code>, which is true if <em>either</em> side is true. For any number <code>x</code>, at least one of “x &gt; 0” or “x &lt; 10” will hold: if <code>x</code> is 15, the first part is true; if <code>x</code> is 3, the second is true; if <code>x</code> is 7, both are true. There is no value of <code>x</code> that makes both sides false at once, so the loop can never exit. Use <code>and</code> when checking that a value lies within a range — e.g. <code>while x &gt; 0 and x &lt; 10:</code> is only true for values strictly between 0 and 10.
       </div>
     </div>
 
@@ -759,503 +740,361 @@ while grade &lt; 0 or grade &gt; 100:
       <h3>5. Best Practices for Loops</h3>
       <table>
         <thead>
-          <tr><th>Practice</th><th>Description</th></tr>
+          <tr>
+            <th>Practice</th>
+            <th>Description</th>
+          </tr>
         </thead>
-        <tbody 
-      <tr>
-      <th>Practice</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>Initialise before the loop</strong></td>
-      <td>Set any counter, accumulator, or flag <em>before</em> the loop begins. In Python, a <code>for</code> loop variable is initialised automatically by <code>range()</code>, but a <code>while</code> loop variable must be set manually.</td>
-    </tr>
-    <tr>
-      <td><strong>Update the loop control variable</strong></td>
-      <td>Every <code>while</code> loop must change the variable used in its condition, otherwise it runs forever. Place the update at the end of the body (or wherever the logic requires) and check that it is reachable.</td>
-    </tr>
-    <tr>
-      <td><strong>Choose the right loop type</strong></td>
-      <td>Use <code>for</code> when the number of repetitions is known; use <code>while</code> when it depends on a condition. Mixing them up makes code harder to read and more error-prone.</td>
-    </tr>
-    <tr>
-      <td><strong>Keep the loop body focused</strong></td>
-      <td>Each iteration should do one clear job. If the body grows long, consider extracting it into a function.</td>
-    </tr>
-    <tr>
-      <td><strong>Avoid deep nesting</strong></td>
-      <td>Nested loops multiply the number of iterations (an <em>O(n²)</em> pattern). Only nest when the problem genuinely requires it, and comment the purpose of each level.</td>
-    </tr>
-    <tr>
-      <td><strong>Use <code>break</code> and <code>continue</code> sparingly</strong></td>
-      <td>They are useful for early exit and filtering, but overuse makes control flow hard to trace. Prefer a clear condition where possible.</td>
-    </tr>
-    <tr>
-      <td><strong>Comment non-obvious conditions</strong></td>
-      <td>Explain <em>why</em> a loop stops, especially for sentinel values or compound Boolean conditions.</td>
-    </tr>
-    <tr>
-      <td><strong>Test boundary values</strong></td>
-      <td>Check the first and last iterations, empty input, and the sentinel value itself to catch off-by-one errors.</td>
-    </tr>
-  </tbody>
-</table>
+        <tbody>
+          <tr>
+            <td><strong>Initialise before the loop</strong></td>
+            <td>Set any counter, accumulator, or flag <em>before</em> the loop begins. In Python, a <code>for</code> loop variable is initialised automatically by <code>range()</code
+            <td><code>for i in range(1, 10): print(i)</code> when you wanted 1–10</td>
+            <td>The loop runs one too few or one too many times; the final value is missing or an extra iteration appears.</td>
+            <td>Remember <code>range(start, stop)</code> excludes <code>stop</code>. Use <code>range(1, 11)</code> for 1–10.</td>
+          </tr>
+          <tr>
+            <td><strong>Missing initialisation</strong></td>
+            <td><code>while count &lt; 5:</code> with no <code>count = 0</code> beforehand</td>
+            <td><code>NameError</code> in Python, or the loop behaves unpredictably if a stale value is reused.</td>
+            <td>Initialise the control variable and any accumulator <em>before</em> the loop.</td>
+          </tr>
+          <tr>
+            <td><strong>Faulty condition logic</strong></td>
+            <td><code>while x &gt; 0 or x &lt; 10:</code></td>
+            <td>Loop never exits because the compound condition is always true.</td>
+            <td>Use <code>and</code> for range checks: <code>while x &gt; 0 and x &lt; 10:</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Update on only one path</strong></td>
+            <td>Counter incremented inside an <code>if</code> branch that is sometimes skipped</td>
+            <td>Loop hangs on the iterations where the branch is not taken.</td>
+            <td>Ensure the control variable changes on <em>every</em> path through the body.</td>
+          </tr>
+          <tr>
+            <td><strong>Modifying a list while iterating</strong></td>
+            <td><code>for item in items: items.remove(item)</code></td>
+            <td>Items are skipped or the loop misbehaves as indices shift.</td>
+            <td>Iterate over a copy (<code>for item in items[:]:</code>) or build a new list.</td>
+          </tr>
+        </tbody>
+      </table>
 
-<div class="tip-box">
-  <strong>📝 Quick checklist before running a loop:</strong>
-  <ol style="margin:0.4rem 0 0;">
-    <li>Is the loop variable initialised?</li>
-    <li>Does the condition eventually become false?</li>
-    <li>Is the variable updated on every path through the body?</li>
-    <li>Are the boundaries correct (start, stop, step)?</li>
-    <li>Does the loop do what the objective requires?</li>
-  </ol>
-</div>  </div>
-
-  <!-- ============================================================ -->
-  <!-- SECTION 6 -->
-  <!-- ============================================================ -->
-  <div class="card">
-    <h3>6. Common Loop Errors and How to Fix Them</h3>
-    <p>The following mistakes appear again and again in student code. Learn to recognise them before you run your program.</p>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Error</th>
-          <th>What it looks like</th>
-          <th>Symptom</th>
-          <th>Fix</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Infinite loop</strong></td>
-          <td><code>while i &lt; 5: print("Hi")</code></td>
-          <td>Program never terminates; fans spin up.</td>
-          <td>Update <code>i</code> inside the body (e.g. <code>i += 1</code>).</td>
-        </tr>
-        <tr>
-          <td><strong>Off-by-one error</strong></td>
-          <td><code>for i in range(1, 5)</code> when 1–5 is intended</td>
-          <td>One too few or too many iterations.</td>
-          <td>Remember <code>range(start, stop)</code> excludes <code>stop</code>. Use <code>range(1, 6)</code> for 1–5.</td>
-        </tr>
-        <tr>
-          <td><strong>Missing initialisation</strong></td>
-          <td><code>while total &lt; 100:</code> with no prior <code>total = 0</code></td>
-          <td><code>NameError</code> (Python) or unpredictable behaviour.</td>
-          <td>Initialise counters and accumulators <em>before</em> the loop.</td>
-        </tr>
-        <tr>
-          <td><strong>Faulty condition logic</strong></td>
-          <td><code>while x &gt; 0 or x &lt; 10:</code></td>
-          <td>Always-true condition → infinite loop.</td>
-          <td>Use <code>and</code> for range checks: <code>while x &gt; 0 and x &lt; 10:</code>.</td>
-        </tr>
-        <tr>
-          <td><strong>Update in the wrong place</strong></td>
-          <td><code>i += 1</code> before a <code>continue</code> that skips it</td>
-          <td>Some iterations never advance → infinite loop.</td>
-          <td>Ensure the update is reached on every path, or restructure the logic.</td>
-        </tr>
-        <tr>
-          <td><strong>Accidental semicolon / indentation</strong></td>
-          <td>A stray line outside the loop body</td>
-          <td>Only part of the intended body repeats.</td>
-          <td>Check indentation carefully in Python; keep the body consistent.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="warn-box">
-      <strong>⚠️ Debugging tip:</strong> If a loop misbehaves, add a temporary <code>print()</code> at the top of the body to show the loop variable and condition values on each pass. Remove it once the loop is correct.
-    </div>
-
-  <!-- ============================================================ -->
-  <!-- INTERACTIVE: SEQUENCE BUILDER -->
-  <!-- ============================================================ -->
-  <div class="card">
-    <h3>🧩 Interactive: Order the Loop Logic</h3>
-    <p>Drag the lines into the correct order to build a working sentinel-controlled loop that sums numbers until the user enters <code>-1</code>.</p>
-
-    <div class="seq-activity">
-      <div class="seq-pool" id="seqPool">
-        <div class="seq-item" draggable="true" data-order="3">
-          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
-          <span class="num">?</span>
-          <code>print("Total:", total)</code>
-        </div>
-        <div class="seq-item" draggable="true" data-order="1">
-          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
-          <span class="num">?</span>
-          <code>total = 0</code>
-        </div>
-        <div class="seq-item" draggable="true" data-order="5">
-          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
-          <span class="num">?</span>
-          <code>num = int(input("Enter number (-1 to quit): "))</code>
-        </div>
-        <div class="seq-item" draggable="true" data-order="2">
-          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
-          <span class="num">?</span>
-          <code>num = int(input("Enter number (-1 to quit): "))</code>
-        </div>
-        <div class="seq-item" draggable="true" data-order="4">
-          <span class="handle"><i class="fas fa-grip-vertical"></i></span>
-          <span class="num">?</span>
-          <code>total += num</code>
-        </div>
-      </div>
-
-      <p style="font-size:0.9rem;color:#4b6a8b;">Hint: initialise → first read → condition → accumulate → re-read.</p>
-
-      <div class="seq-actions">
-        <button class="seq-btn" id="seqCheck"><i class="fas fa-check"></i> Check Order</button>
-        <button class="seq-btn reset" id="seqReset"><i class="fas fa-rotate-left"></i> Reset</button>
-      </div>
-      <div class="seq-feedback" id="seqFeedback"></div>
-    </div>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- INTERACTIVE: MATCHING GAME -->
-  <!-- ============================================================ -->
-  <div class="card">
-    <h3>🔗 Interactive: Match the Term</h3>
-    <p>Click a term on the left, then click its matching description on the right.</p>
-
-    <div class="match-game" id="matchGame">
-      <div class="match-col">
-        <div class="match-item" data-key="for">Counted loop</div>
-        <div class="match-item" data-key="while">Conditional loop</div>
-        <div class="match-item" data-key="break">break</div>
-        <div class="match-item" data-key="continue">continue</div>
-        <div class="match-item" data-key="sentinel">Sentinel value</div>
-      </div>
-      <div class="match-col">
-        <div class="match-item" data-key="sentinel">A special value that signals the loop should stop (e.g. -1).</div>
-        <div class="match-item" data-key="for">Repeats a known number of times, usually with a loop control variable.</div>
-        <div class="match-item" data-key="continue">Skips the rest of the current iteration and moves to the next.</div>
-        <div class="match-item" data-key="while">Repeats while a condition remains true; the count is unknown in advance.</div>
-        <div class="match-item" data-key="break">Exits the loop immediately, even if the condition is still true.</div>
+      <div class="warn-box">
+        <strong>⚠️ Debugging tip:</strong> If a loop misbehaves, add a <code>print()</code> of the control variable at the top of the body to trace its values. If the same value repeats forever, you have found your infinite loop.
       </div>
     </div>
-    <div class="match-feedback" id="matchFeedback"></div>
+
+    <!-- ============================================================ -->
+    <!-- INTERACTIVE: MATCHING GAME -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>🧩 Interactive: Match the Term to Its Description</h3>
+      <p>Click a term on the left, then click its matching description on the right.</p>
+
+      <div class="match-game">
+        <div class="match-col" id="matchLeft">
+          <div class="match-item" data-match="1">Counted loop</div>
+          <div class="match-item" data-match="2">Conditional loop</div>
+          <div class="match-item" data-match="3">Sentinel value</div>
+          <div class="match-item" data-match="4">Infinite loop</div>
+          <div class="match-item" data-match="5"><code>break</code></div>
+          <div class="match-item" data-match="6"><code>continue</code></div>
+        </div>
+        <div class="match-col" id="matchRight">
+          <div class="match-item" data-match="4">A loop whose condition never becomes false</div>
+          <div class="match-item" data-match="6">Skips the rest of the current iteration</div>
+          <div class="match-item" data-match="1">Repeats a fixed number of times, e.g. a <code>for</code> loop</div>
+          <div class="match-item" data-match="5">Exits the loop immediately</div>
+          <div class="match-item" data-match="3">A special value that signals the loop should stop</div>
+          <div class="match-item" data-match="2">Repeats while a condition remains true, e.g. a <code>while</code> loop</div>
+        </div>
+      </div>
+      <div class="match-feedback"></div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PRACTICE / CONSOLIDATION -->
+    <!-- ============================================================ -->
+    <h2>✏️ Practice &amp; Consolidation</h2>
+
+    <div class="card">
+      <h3>Try It Yourself</h3>
+      <p>Work through these tasks in your Python environment. They build from simple counted loops to combined conditional logic.</p>
+
+      <h4>Task 1 — Countdown</h4>
+      <p>Write a <code>for</code> loop that prints the numbers 10 down to 1, then prints <code>"Liftoff!"</code>.</p>
+      <button class="reveal-btn" data-target="task1">
+        <i class="fas fa-eye"></i> Show solution
+      </button>
+      <div id="task1" class="reveal-content">
+        <pre><code>for i in range(10, 0, -1):
+    print(i)
+print("Liftoff!")</code></pre>
+        <p><code>range(10, 0, -1)</code> starts at 10, stops before 0, and steps down by 1.</p>
+      </div>
+
+      <h4>Task 2 — Sum Until Zero</h4>
+      <p>Ask the user for numbers repeatedly and add them to a running total. Stop when the user enters <code>0</code>, then print the total.</p>
+      <button class="reveal-btn" data-target="task2">
+        <i class="fas fa-eye"></i> Show solution
+      </button>
+      <div id="task2" class="reveal-content">
+        <pre><code>total = 0
+num = int(input("Enter a number (0 to stop): "))
+while num != 0:
+    total += num
+    num = int(input("Enter a number (0 to stop): "))
+print("Total:", total)</code></pre>
+        <p>This is a sentinel-controlled loop — <code>0</code> is the sentinel value.</p>
+      </div>
+
+      <h4>Task 3 — Input Validation</h4>
+      <p>Keep asking for a test score until the user enters a value between 0 and 100 inclusive. Then print the accepted score.</p>
+      <button class="reveal-btn" data-target="task3">
+        <i class="fas fa-eye"></i> Show solution
+      </button>
+      <div id="task3" class="reveal-content">
+        <pre><code>score = -1
+while score &lt; 0 or score &gt; 100:
+    score = int(input("Enter score (0-100): "))
+print("Accepted score:", score)</code></pre>
+        <p>The initial <code>-1</code> guarantees the loop runs at least once. Note the use of <code>or</code> here — the loop continues while the value is <em>outside</em> the valid range.</p>
+      </div>
+
+      <h4>Task 4 — Filter with <code>continue</code></h4>
+      <p>Print only the odd numbers from 1 to 20 using a loop and <code>continue</code>.</p>
+      <button class="reveal-btn" data-target="task4">
+        <i class="fas fa-eye"></i> Show solution
+      </button>
+      <div id="task4" class="reveal-content">
+        <pre><code>for i in range(1, 21):
+    if i % 2 == 0:
+        continue
+    print(i)</code></pre>
+        <p>Even numbers are skipped; only odd numbers reach the <code>print</code>.</p>
+      </div>
+
+      <h4>Task 5 — Early Exit with <code>break</code></h4>
+      <p>Search a list of names for <code>"Ada"</code>. Print <code>"Found!"</code> and stop searching as soon as it appears.</p>
+      <button class="reveal-btn" data-target="task5">
+        <i class="fas fa-eye"></i> Show solution
+      </button>
+      <div id="task5" class="reveal-content">
+        <pre><code>names = ["Grace", "Alan", "Ada", "Linus"]
+for name in names:
+    if name == "Ada":
+        print("Found!")
+        break</code></pre>
+        <p><code>break</code> exits the loop immediately, so <code>"Linus"</code> is never checked.</p>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- QUICK QUIZ -->
+    <!-- ============================================================ -->
+    <div class="card">
+      <h3>✅ Quick Check Quiz</h3>
+
+      <div class="quiz-q">
+        <p>1. Which loop is best when the number of repetitions is known in advance?</p>
+        <div class="quiz-opts" data-answer="a">
+          <button class="quiz-opt" data-opt="a">A <code>for</code> loop</button>
+          <button class="quiz-opt" data-opt="b">A <code>while</code> loop</button>
+          <button class="quiz-opt" data-opt="c">A <code>do-while</code> loop</button>
+          <button class="quiz-opt" data-opt="d">A nested loop</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p>2. What does <code>continue</code> do inside a loop?</p>
+        <div class="quiz-opts" data-answer="b">
+          <button class="quiz-opt" data-opt="a">Exits the loop immediately</button>
+          <button class="quiz-opt" data-opt="b">Skips the rest of the current iteration and moves to the next</button>
+          <button class="quiz-opt" data-opt="c">Restarts the program</button>
+          <button class="quiz-opt" data-opt="d">Pauses the loop</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p>3. Why is <code>while x &gt; 0 or x &lt; 10:</code> a problem?</p>
+        <div class="quiz-opts" data-answer="c">
+          <button class="quiz-opt" data-opt="a">It causes a syntax error</button>
+          <button class="quiz-opt" data-opt="b">It only runs once</button>
+          <button class="quiz-opt" data-opt="c">It is always true, so the loop never exits</button>
+          <button class="quiz-opt" data-opt="d">It skips every other iteration</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p>4. What is printed by <code>for i in range(3): print(i)</code>?</p>
+        <div class="quiz-opts" data-answer="a">
+          <button class="quiz-opt" data-opt="a">0, 1, 2</button>
+          <button class="quiz-opt" data-opt="b">1, 2, 3</button>
+          <button class="quiz-opt" data-opt="c">0, 1, 2, 3</button>
+          <button class="quiz-opt" data-opt="d">1, 2</button>
+        </div>
+        <div class="quiz-fb"></div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FURTHER RESOURCES -->
+    <!-- ============================================================ -->
+    <h2>🔗 Further Resources</h2>
+
+    <div class="card">
+      <p>Use these resources to review, practise, and extend your understanding of looping.</p>
+      <div class="button-grid">
+        <a href="#" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-chalkboard-teacher"></i> Presentation Slides
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-wiki">
+          <i class="fas fa-book"></i> Wiki Page
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-ebook">
+          <i class="fas fa-book-open"></i> eBook
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-dojo">
+          <i class="fas fa-code"></i> Coding Dojo
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-python">
+          <i class="fab fa-python"></i> Python Practice
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-juice">
+          <i class="fas fa-flask"></i> JuiceMind
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-youtube">
+          <i class="fab fa-youtube"></i> Video Tutorial
+        </a>
+        <a href="#" target="_blank" rel="noopener" class="btn btn-parsons">
+          <i class="fas fa-puzzle-piece"></i> Parsons Problems
+        </a>
+      </div>
+      <div class="tip-box" style="margin-top:1.2rem;">
+        <strong>📚 Course companion:</strong> pages 366–370 cover looping theory, counted and conditional loops, and worked examples.
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER -->
+    <!-- ============================================================ -->
+    <div class="footer-note">
+      <p><strong>B2.3.3 – Looping Theory</strong> · B2 Programming</p>
+      <p>Remember: initialise before the loop, update inside the loop, and make sure the condition can become false.</p>
+    </div>
+
   </div>
 
   <!-- ============================================================ -->
-  <!-- QUIZ -->
+  <!-- JAVASCRIPT -->
   <!-- ============================================================ -->
-  <h2>✅ Check Your Understanding</h2>
-
-  <div class="quiz-q">
-    <p>1. Which loop is best when the number of iterations is unknown in advance?</p>
-    <div class="quiz-opts" data-answer="b">
-      <button class="quiz-opt" data-opt="a">A <code>for</code> loop</button>
-      <button class="quiz-opt" data-opt="b">A <code>while</code> loop</button>
-      <button class="quiz-opt" data-opt="c">A nested <code>for</code> loop</button>
-      <button class="quiz-opt" data-opt="d">No loop — use copy-paste</button>
-    </div>
-    <div class="quiz-fb"></div>
-  </div>
-
-  <div class="quiz-q">
-    <p>2. What does <code>range(0, 10, 2)</code> produce?</p>
-    <div class="quiz-opts" data-answer="c">
-      <button class="quiz-opt" data-opt="a">0, 1, 2, …, 9</button>
-      <button class="quiz-opt" data-opt="b">2, 4, 6, 8, 10</button>
-      <button class="quiz-opt" data-opt="c">0, 2, 4, 6, 8</button>
-      <button class="quiz-opt" data-opt="d">0, 2, 4, 6, 8, 10</button>
-    </div>
-    <div class="quiz-fb"></div>
-  </div>
-
-  <div class="quiz-q">
-    <p>3. Which keyword would you use to stop a loop as soon as a target is found?</p>
-    <div class="quiz-opts" data-answer="a">
-      <button class="quiz-opt" data-opt="a"><code>break</code></button>
-      <button class="quiz-opt" data-opt="b"><code>continue</code></button>
-      <button class="quiz-opt" data-opt="c"><code>pass</code></button>
-      <button class="quiz-opt" data-opt="d"><code>return</code></button>
-    </div>
-    <div class="quiz-fb"></div>
-  </div>
-
-  <div class="quiz-q">
-    <p>4. What is wrong with <code>while x &gt; 0 or x &lt; 10:</code> as a loop condition?</p>
-    <div class="quiz-opts" data-answer="d">
-      <button class="quiz-opt" data-opt="a">Nothing — it works fine.</button>
-      <button class="quiz-opt" data-opt="b"><code>x</code> must be a string.</button>
-      <button class="quiz-opt" data-opt="c">It only runs once.</button>
-      <button class="quiz-opt" data-opt="d">It is always true, so the loop never stops; use <code>and</code> for range checks.</button>
-    </div>
-    <div class="quiz-fb"></div>
-  </div>
-
-  <div class="quiz-q">
-    <p>5. In <code>for i in range(5):</code>, how many times does the body execute?</p>
-    <div class="quiz-opts" data-answer="b">
-      <button class="quiz-opt" data-opt="a">4</button>
-      <button class="quiz-opt" data-opt="b">5</button>
-      <button class="quiz-opt" data-opt="c">6</button>
-      <button class="quiz-opt" data-opt="d">It depends on the body</button>
-    </div>
-    <div class="quiz-fb"></div>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- FURTHER RESOURCES -->
-  <!-- ============================================================ -->
-  <h2>🔗 Further Resources</h2>
-
-  <div class="card">
-    <p>Use these resources to deepen your understanding and practise loop problems.</p>
-    <div class="button-grid">
-      <a href="https://www.python.org/doc/" target="_blank" rel="noopener" class="btn btn-python">
-        <i class="fab fa-python"></i> Python Docs
-      </a>
-      <a href="https://www.w3schools.com/python/python_while_loops.asp" target="_blank" rel="noopener" class="btn btn-wiki">
-        <i class="fas fa-book"></i> W3Schools — Loops
-      </a>
-      <a href="https://www.youtube.com/watch?v=ujkD4SxPKOI" target="_blank" rel="noopener" class="btn btn-youtube">
-        <i class="fab fa-youtube"></i> Video Revision
-      </a>
-    </div>
-
-    <div class="success-box" style="margin-top:1rem;">
-      <strong>💪 Practice challenge:</strong> Write a program that asks the user for 10 numbers, then prints the largest, the smallest, and the average. Then modify it so the program keeps asking until the user types <code>done</code>. Which loop type did you use for each version — and why?
-    </div>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- FOOTER -->
-  <!-- ============================================================ -->
-  <div class="footer-note">
-    <p>B2.3.3 — Looping Theory · Part of the B2 Programming unit</p>
-    <p style="margin-top:0.3rem;"><a href="../B2-Programming.html" class="back-link" style="margin-bottom:0;"><i class="fas fa-arrow-left"></i> Back to B2 Programming</a></p>
-  </div>
-
-</div>
-
-<!-- ============================================================ -->
-<!-- JAVASCRIPT -->
-<!-- ============================================================ -->
-<script>
-  /* ---------- Reveal buttons ---------- */
-  document.querySelectorAll('.reveal-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = document.getElementById(btn.dataset.target);
-      if (!target) return;
-      const shown = target.classList.toggle('show');
-      const icon = btn.querySelector('i');
-      if (icon) {
-        icon.className = shown ? 'fas fa-eye-slash' : 'fas fa-lightbulb';
-      }
+  <script>
+    // ---------- Reveal buttons ----------
+    document.querySelectorAll('.reveal-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.getAttribute('data-target'));
+        if (!target) return;
+        target.classList.toggle('show');
+        var icon = btn.querySelector('i');
+        if (icon) {
+          icon.classList.toggle('fa-eye');
+          icon.classList.toggle('fa-eye-slash');
+        }
+      });
     });
-  });
 
-  /* ---------- Quiz ---------- */
-  document.querySelectorAll('.quiz-q').forEach(q => {
-    const opts = q.querySelectorAll('.quiz-opt');
-    const fb = q.querySelector('.quiz-fb');
-    const answer = q.querySelector('.quiz-opts').dataset.answer;
+    // ---------- Quiz logic ----------
+    document.querySelectorAll('.quiz-q').forEach(function (q) {
+      var opts = q.querySelector('.quiz-opts');
+      if (!opts) return;
+      var answer = opts.getAttribute('data-answer');
+      var feedback = q.querySelector('.quiz-fb');
+      var buttons = opts.querySelectorAll('.quiz-opt');
 
-    opts.forEach(opt => {
-      opt.addEventListener('click', () => {
-        if (q.dataset.answered === 'true') return;
-        q.dataset.answered = 'true';
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (btn.disabled) return;
+          var chosen = btn.getAttribute('data-opt');
+          buttons.forEach(function (b) { b.disabled = true; });
 
-        const isCorrect = opt.dataset.opt === answer;
-        opt.classList.add(isCorrect ? 'correct' : 'incorrect');
-
-        // highlight the correct option too
-        opts.forEach(o => {
-          o.disabled = true;
-          if (o.dataset.opt === answer) o.classList.add('correct');
+          if (chosen === answer) {
+            btn.classList.add('correct');
+            feedback.textContent = '✅ Correct!';
+            feedback.className = 'quiz-fb good';
+          } else {
+            btn.classList.add('incorrect');
+            buttons.forEach(function (b) {
+              if (b.getAttribute('data-opt') === answer) {
+                b.classList.add('correct');
+              }
+            });
+            feedback.textContent = '❌ Not quite — the correct answer is highlighted.';
+            feedback.className = 'quiz-fb bad';
+          }
         });
-
-        fb.textContent = isCorrect
-          ? '✅ Correct!'
-          : '❌ Not quite — the correct answer is highlighted in green.';
-        fb.className = 'quiz-fb ' + (isCorrect ? 'good' : 'bad');
-      });
-    });
-  });
-
-  /* ---------- Sequence builder (simple click/drag reorder) ---------- */
-  (function () {
-    const pool = document.getElementById('seqPool');
-    const feedback = document.getElementById('seqFeedback');
-    const checkBtn = document.getElementById('seqCheck');
-    const resetBtn = document.getElementById('seqReset');
-    if (!pool) return;
-
-    let dragged = null;
-    const items = () => Array.from(pool.querySelectorAll('.seq-item'));
-
-    function numberItems() {
-      items().forEach((el, idx) => {
-        const num = el.querySelector('.num');
-        if (num) num.textContent = idx + 1;
-      });
-    }
-
-    function clearMarks() {
-      items().forEach(el => el.classList.remove('correct', 'incorrect'));
-      feedback.textContent = '';
-      feedback.className = 'seq-feedback';
-    }
-
-    // drag events
-    pool.addEventListener('dragstart', e => {
-      const item = e.target.closest('.seq-item');
-      if (!item) return;
-      dragged = item;
-      item.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-
-    pool.addEventListener('dragend', () => {
-      if (dragged) dragged.classList.remove('dragging');
-      dragged = null;
-      items().forEach(el => el.classList.remove('drag-over'));
-    });
-
-    pool.addEventListener('dragover', e => {
-      e.preventDefault();
-      const target = e.target.closest('.seq-item');
-      if (!target || target === dragged) return;
-      e.dataTransfer.dropEffect = 'move';
-      items().forEach(el => el.classList.remove('drag-over'));
-      target.classList.add('drag-over');
-    });
-
-    pool.addEventListener('drop', e => {
-      e.preventDefault();
-      const target = e.target.closest('.seq-item');
-      if (!target || !dragged || target === dragged) return;
-      target.classList.remove('drag-over');
-
-      const all = items();
-      const fromIdx = all.indexOf(dragged);
-      const toIdx = all.indexOf(target);
-
-      if (fromIdx < toIdx) {
-        target.parentNode.insertBefore(dragged, target.nextSibling);
-      } else {
-        target.parentNode.insertBefore(dragged, target);
-      }
-      clearMarks();
-      numberItems();
-    });
-
-    // touch / click fallback: move item up on click (works without drag)
-    items().forEach(item => {
-      item.addEventListener('click', e => {
-        if (e.target.closest('.handle')) return;
-        const prev = item.previousElementSibling;
-        if (prev) {
-          pool.insertBefore(item, prev);
-          clearMarks();
-          numberItems();
-        }
       });
     });
 
-    checkBtn.addEventListener('click', () => {
-      const all = items();
-      const expected = ['1','2','3','4','5'];
-      let correct = 0;
+    // ---------- Matching game logic ----------
+    (function () {
+      var leftItems = document.querySelectorAll('#matchLeft .match-item');
+      var rightItems = document.querySelectorAll('#matchRight .match-item');
+      var feedback = document.querySelector('.match-feedback');
+      var selectedLeft = null;
+      var matchedCount = 0;
+      var totalPairs = leftItems.length;
 
-      all.forEach((el, idx) => {
-        el.classList.remove('correct', 'incorrect');
-        if (el.dataset.order === expected[idx]) {
-          el.classList.add('correct');
-          correct++;
-        } else {
-          el.classList.add('incorrect');
-        }
+      function clearSelection() {
+        leftItems.forEach(function (i) { i.classList.remove('selected'); });
+      }
+
+      leftItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+          if (item.classList.contains('matched')) return;
+          clearSelection();
+          item.classList.add('selected');
+          selectedLeft = item;
+        });
       });
 
-      if (correct === all.length) {
-        feedback.textContent = '✅ Perfect — the loop is in the correct order!';
-        feedback.className = 'seq-feedback good';
-      } else {
-        feedback.textContent = `❌ ${correct} of ${all.length} lines are in the right place. Try again.`;
-        feedback.className = 'seq-feedback bad';
-      }
-    });
-
-    resetBtn.addEventListener('click', () => {
-      clearMarks();
-      // restore original visual order (by data-order) to make reset predictable
-      const sorted = items().sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
-      sorted.forEach(el => pool.appendChild(el));
-      numberItems();
-    });
-
-    numberItems();
-  })();
-
-  /* ---------- Matching game ---------- */
-  (function () {
-    const game = document.getElementById('matchGame');
-    if (!game) return;
-    const feedback = document.getElementById('matchFeedback');
-    const leftCol = game.querySelectorAll('.match-col')[0];
-    const rightCol = game.querySelectorAll('.match-col')[1];
-    let selected = null;
-    let matched = 0;
-
-    const leftItems = leftCol.querySelectorAll('.match-item');
-    const rightItems = rightCol.querySelectorAll('.match-item');
-    const total = leftItems.length;
-
-    function selectLeft(el) {
-      if (el.classList.contains('matched')) return;
-      leftItems.forEach(i => i.classList.remove('selected'));
-      el.classList.add('selected');
-      selected = el;
-      feedback.textContent = 'Now click the matching description on the right.';
-      feedback.className = 'match-feedback';
-    }
-
-    function tryMatch(rightEl) {
-      if (!selected) {
-        feedback.textContent = '👈 Pick a term on the left first.';
-        feedback.className = 'match-feedback bad';
-        return;
-      }
-      if (rightEl.classList.contains('matched')) return;
-
-      if (selected.dataset.key === rightEl.dataset.key) {
-        selected.classList.remove('selected');
-        selected.classList.add('matched');
-        rightEl.classList.add('matched');
-        selected = null;
-        matched++;
-
-        feedback.textContent = '✅ Match!';
-        feedback.className = 'match-feedback good';
-
-        if (matched === total) {
-          feedback.textContent = '🎉 All matched — great work!';
-        }
-      } else {
-        rightEl.classList.add('incorrect');
-        feedback.textContent = '❌ That is not the matching description — try again.';
-        feedback.className = 'match-feedback bad';
-        setTimeout(() => rightEl.classList.remove('incorrect'), 400);
-      }
-    }
-
-    leftItems.forEach(el => el.addEventListener('click', () => selectLeft(el)));
-    rightItems.forEach(el => el.addEventListener('click', () => tryMatch(el)));
-  })();
-</script>
-
+      rightItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+          if (item.classList.contains('matched')) return;
+          if (!selectedLeft) {
+            feedback.textContent = '👈 Select a term on the left first.';
+            feedback.className = 'match-feedback bad';
+            return;
+          }
+          if (selectedLeft.getAttribute('data-match') === item.getAttribute('data-match')) {
+            selectedLeft.classList.remove('selected');
+            selectedLeft.classList.add('matched');
+            item.classList.add('matched');
+            matchedCount++;
+            selectedLeft = null;
+            feedback.textContent = '✅ Match found!';
+            feedback.className = 'match-feedback good';
+            if (matchedCount === totalPairs) {
+              feedback.textContent = '🎉 All pairs matched — well done!';
+            }
+          } else {
+            item.classList.add('incorrect');
+            var wrongItem = item;
+            var wrongLeft = selectedLeft;
+            setTimeout(function () {
+              wrongItem.classList.remove('incorrect');
+              if (wrongLeft) wrongLeft.classList.remove('selected');
+            }, 500);
+            feedback.textContent = '❌ Not a match — try again.';
+            feedback.className = 'match-feedback bad';
+            selectedLeft = null;
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-</html>
+</html>                                                                                                                                                                                  
