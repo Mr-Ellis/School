@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A1.2.1 – Data Representation 1</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.6;
+         color: #1a1a1a; background: #fff; }
+  h1 { border-bottom: 3px solid #2563eb; padding-bottom: .5rem; }
+  h2 { margin-top: 2.5rem; border-bottom: 1px solid #e5e7eb; padding-bottom: .3rem; }
+  h3 { margin-top: 1.8rem; color: #1e40af; }
+  h4 { margin-top: 1.2rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
+  th, td { border: 1px solid #d1d5db; padding: .5rem .7rem; text-align: left; vertical-align: top; }
+  th { background: #f3f4f6; }
+  tr:nth-child(even) td { background: #fafafa; }
+  code { background: #f3f4f6; padding: .15rem .35rem; border-radius: 3px;
+         font-family: "SF Mono", Consolas, monospace; font-size: .9em; }
+  pre { background: #f3f4f6; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+  .callout { border-left: 4px solid #2563eb; background: #eff6ff;
+             padding: .8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .warn { border-left: 4px solid #dc2626; background: #fef2f2;
+          padding: .8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .task { border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .task h4 { margin-top: 0; }
+  .back { display: inline-block; margin-bottom: 1rem; color: #2563eb; text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+  a { color: #2563eb; }
+  .takeaway { border: 2px solid #2563eb; border-radius: 8px; padding: 1rem 1.2rem;
+              background: #eff6ff; margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<a class="back" href="../index.html">← Back to A1 Unit</a>
+
+<h1>A1.2.1 – Data Representation 1</h1>
+
+<h2>📌 Learning Objective</h2>
+<p>By the end of this lesson, you will be able to describe:</p>
+<ul>
+  <li>The <strong>principal methods of representing data</strong> — binary, hexadecimal, octal, and ASCII/Unicode</li>
+  <li><strong>Why</strong> computers use binary rather than denary</li>
+  <li>How to <strong>convert</strong> between binary, denary, hexadecimal, and octal</li>
+  <li>How <strong>characters</strong> are represented, and why Unicode extends ASCII</li>
+</ul>
+
+<h2>🎯 IB Command Term: Describe</h2>
+<p><strong>Describe</strong> – "Give a detailed account."</p>
+<p>Naming the four methods is not describing them. This lesson builds the skill of giving a detailed account of <em>what each method is</em>, <em>which base it uses</em>, and <em>where and why it is used</em>.</p>
+
+<div class="callout">
+🎮 <strong>Starter Activity – Blooket Rush</strong><br>
+Test your knowledge of number bases before we begin!
+🚀 <a href="https://play.blooket.com/host/hack?id=68b03780ddff7a4868b8d259" target="_blank" rel="noopener">Launch Blooket</a>
+</div>
+
+<h2>🔑 Key Terms</h2>
+<table>
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr><td>Bit</td><td>A single binary digit — 0 or 1</td></tr>
+  <tr><td>Nibble</td><td>4 bits; corresponds to exactly one hexadecimal digit</td></tr>
+  <tr><td>Byte</td><td>8 bits; the standard unit of storage</td></tr>
+  <tr><td>Binary</td><td>Base-2 representation, using only the digits 0 and 1</td></tr>
+  <tr><td>Denary</td><td>Base-10 representation, using digits 0–9 (the human default)</td></tr>
+  <tr><td>Hexadecimal</td><td>Base-16 representation, using 0–9 and A–F</td></tr>
+  <tr><td>Octal</td><td>Base-8 representation, using digits 0–7</td></tr>
+  <tr><td>ASCII</td><td>A 7-bit character code representing 128 characters</td></tr>
+  <tr><td>Unicode</td><td>An extended character encoding covering the world's scripts and symbols</td></tr>
+</table>
+
+<h2>📊 The Principal Methods of Representation</h2>
+
+<table>
+  <tr><th>Method</th><th>Base</th><th>Digits used</th><th>Why it is used</th></tr>
+  <tr><td>Binary</td><td>2</td><td>0, 1</td><td>Matches the two physical states of a transistor (on / off)</td></tr>
+  <tr><td>Octal</td><td>8</td><td>0–7</td><td>Compact shorthand for binary — 1 octal digit = 3 bits</td></tr>
+  <tr><td>Hexadecimal</td><td>16</td><td>0–9, A–F</td><td>Compact shorthand for binary — 1 hex digit = 1 nibble. Used for colours, memory addresses, MAC addresses</td></tr>
+  <tr><td>ASCII</td><td>—</td><td>7-bit codes</td><td>Standard character encoding for English / Latin text</td></tr>
+  <tr><td>Unicode</td><td>—</td><td>UTF-8 / UTF-16</td><td>Represents all world languages, symbols, and emoji</td></tr>
+</table>
+
+<h3>Why Computers Use Binary</h3>
+<p>A processor is built from <strong>transistors</strong>, each of which has two stable electrical states — effectively <strong>on</strong> and <strong>off</strong>. Two states map naturally onto two digits, so base 2 is all the hardware needs to distinguish.</p>
+<p>Denary is not technically superior — it is a historical accident of humans having ten fingers. Any base can be converted into any other, which is why hexadecimal and octal are simply <em>human-friendly shorthand</em> for the underlying binary.</p>
+
+<h3>Hexadecimal Digits</h3>
+<table>
+  <tr><th>Denary</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
+  <tr><th>Hex</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr>
+</table>
+
+<h2>🔄 Converting Between Bases</h2>
+
+<h3>Binary → Denary</h3>
+<p>Add the place values where a 1 appears.</p>
+<table>
+  <tr><th>Place value</th><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+  <tr><th>Bit</th><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+</table>
+<p><code>00101010</code> = 32 + 8 + 2 = <strong>42</strong></p>
+
+<h3>Denary → Binary</h3>
+<p>Subtract the largest place value that fits, then repeat with the remainder.</p>
+<pre>42 → 32 (remainder 10) → 8 (remainder 2) → 2 (remainder 0)
+= 00101010</pre>
+
+<h3>Binary → Hexadecimal</h3>
+<p>Group the bits in <strong>fours</strong>, starting from the right, then convert each group.</p>
+<pre>1010 1100  →  A     C   →  AC</pre>
+
+<h3>Binary → Octal</h3>
+<p>Group the bits in <strong>threes</strong>, starting from the right.</p>
+<pre>101 010  →  5   2  →  52</pre>
+
+<h3>Hexadecimal → Denary</h3>
+<p>Multiply each digit by its place value (16⁰, 16¹, 16² …).</p>
+<pre>2A = (2 × 16) + (10 × 1) = 32 + 10 = 42</pre>
+
+<h2>🔤 ASCII and Unicode</h2>
+<table>
+  <tr><th></th><th>ASCII</th><th>Unicode</th></tr>
+  <tr><td>Bits</td><td>7 (128 characters)</td><td>UTF-8 / UTF-16 (variable)</td></tr>
+  <tr><td>Covers</td><td>English, digits, basic punctuation</td><td>All world scripts, symbols, emoji</td></tr>
+  <tr><td>Examples</td><td><code>A</code> = 65, <code>a</code> = 97, <code>0</code> = 48, space = 32</td><td><code>A</code> = U+0041, <code>é</code> = U+00E9, <code>😀</code> = U+1F600</td></tr>
+</table>
+
+<div class="warn">
+⚠️ <strong>Common exam mistake:</strong> saying Unicode "replaces" ASCII as if they were unrelated. Unicode is a <em>superset</em> — its first 128 code points are identical to ASCII, and UTF-8 is backward-compatible with ASCII by design.
+</div>
+
+<h2>📖 Your Tasks</h2>
+
+<div class="task">
+<h4>1 — Read &amp; Learn</h4>
+<p>Use the resources below to learn about the principal methods of representing data. Take notes on each of the four number bases — what base it is, which digits it uses, and why it exists — then note how ASCII and Unicode represent characters.</p>
+<ul>
+  <li>📘 <a href="https://github.com/Mr-Ellis/School/blob/main/docs/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank" rel="noopener">Course ebook — DP Computer Science A 1.2.1–2 (PDF)</a></li>
+  <li>🌐 <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.1-describe-the-principal-methods-of-representing-data" target="_blank" rel="noopener">Computer Science Wiki — A1.2.1 Describe the principal methods of representing data</a></li>
+</ul>
+</div>
+
+<div class="task">
+<h4>2 — Complete the Starter Activity</h4>
+<p>Work through the mild, medium and spicy questions from the Lesson Starter PowerPoint.</p>
+<ul>
+  <li>🖥️ <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener">Lesson Starter / Main Task slides</a></li>
+  <li>🖥️ <a href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g30688db2fdf_1_6" target="_blank" rel="noopener">A 1.2.1 Binary Representation slides</a></li>
+</ul>
+<p>Use 🐍 Python Code Lab to write your answers in a text file.</p>
+<p>📌 <strong>Important:</strong> Save your work as a <code>.txt</code> file using the sentence frame:</p>
+<blockquote>
+"[Method] is base [number] and uses the digits [digits]. It is used because [reason]. Characters are represented using [ASCII/Unicode], which is [bits] bits and covers [characters]. Unicode is needed because [reason]."
+</blockquote>
+</div>
+
+<div class="task">
+<h4>3 — Deliberate Practice</h4>
+<p>Write a <strong>Describe</strong> answer to this question:</p>
+<blockquote><em>"Describe the principal methods of representing data."</em></blockquote>
+<p><strong>Sentence frame:</strong></p>
+<blockquote>
+"Computers use binary because ______. Binary uses only the digits ______. Hexadecimal is base ______ and uses the digits ______; it is used because ______. Octal is base ______ and is useful because ______. Characters are represented using ______, which is a ______-bit code covering ______ characters. Unicode is needed because ______."
+</blockquote>
+
+<details>
+<summary>📌 Click to see a completed example</summary>
+<p>Computers use binary because their processors are built from transistors, which have only two stable states — on and off — so two digits are all the hardware needs to distinguish. Binary uses only the digits 0 and 1, with each position representing a power of two.</p>
+<p>Hexadecimal is base 16 and uses the digits 0–9 plus A–F. It is used because it is a compact shorthand for binary: one hex digit represents exactly one nibble (4 bits), so long binary strings become shorter and less error-prone to read. It is commonly used for colour codes, memory addresses and MAC addresses.</p>
+<p>Octal is base 8 and uses the digits 0–7. It is useful because one octal digit represents exactly 3 bits, giving a compact notation historically used in early computing and still used for file permissions in Unix-like systems.</p>
+<p>Characters are represented using ASCII, which is a 7-bit code covering 128 characters including the English alphabet, digits and punctuation. Unicode is needed because ASCII cannot represent the world's other scripts, symbols or emoji; Unicode is a superset that assigns a unique code point to every character, allowing text in any language to be stored and exchanged.</p>
+</details>
+</div>
+
+<div class="task">
+<h4>4 — Plenary</h4>
+<p>Test yourself with the Quizlet flashcards.</p>
+<ul>
+  <li>🃏 <a href="https://quizlet.com/pt/1065988326/a-121-describe-the-principal-methods-of-representing-data-flash-cards" target="_blank" rel="noopener">A1.2.1 Describe the principal methods of representing data — Quizlet</a></li>
+</ul>
+</div>
+
+<h2>⭐ Extension Activities</h2>
+
+<h3>🔍 Direct Conversion</h3>
+<p>Convert hexadecimal directly to octal <em>without</em> passing through denary. Explain the method you used and why it works.</p>
+
+<h3>🔍 UTF-8 vs UTF-16</h3>
+<p>Research the difference between UTF-8 and UTF-16. Why does UTF-8 dominate the web despite UTF-16 being simpler for some scripts?</p>
+
+<h3>🔍 Colour Codes</h3>
+<p>HTML colours are written as hexadecimal, e.g. <code>#FF8800</code>. Explain why hexadecimal is used rather than binary, and work out what colour <code>#FF8800</code> is.</p>
+
+<div class="takeaway">
+<h2 style="margin-top:0;border:none;">💡 Key Takeaway</h2>
+<p>"Computers store everything as binary because their hardware has exactly two stable states. Denary, hexadecimal and octal are all just different ways of <em>writing down</em> the same underlying bits — chosen for human convenience, not machine necessity. Characters are no different: ASCII and Unicode assign numbers to letters, and those numbers are stored in binary like everything else."</p>
+</div>
+
+<hr style="margin-top:2.5rem;border:none;border-top:1px solid #e5e7eb;">
+<p style="font-size:.85rem;color:#6b7280;">
+<strong>Teacher resources:</strong>
+<a href="https://github.com/Mr-Ellis/School/blob/main/docs/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%202.1.1.pdf" target="_blank" rel="noopener">Lesson plan (PDF)</a> ·
+<a href="https://github.com/Mr-Ellis/School/blob/main/docs/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank" rel="noopener">Ebook (PDF)</a>
+</p>
+
+</body>
+</html>
