@@ -1,249 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A1.2.1 – Data Representation 1</title>
-<style>
-  /* Base layout matching A1.1.7 (clean, centered, readable) */
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 20px;
-  }
-  
-  a { color: #0366d6; text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  
-  h1, h2, h3 { color: #1e3a8a; margin-top: 1.5em; }
-  h1 { font-size: 2em; border-bottom: 2px solid #eaecef; padding-bottom: 10px; }
-  
-  table { border-collapse: collapse; width: 100%; margin: 20px 0; }
-  th, td { border: 1px solid #dfe2e5; padding: 10px; text-align: left; }
-  th { background-color: #f6f8fa; font-weight: 600; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.2.1 – Data Representation 1</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 { color: #0b2a4a; margin-top: 20px; margin-bottom: 10px; }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
 
-  /* EXACT styling for the Tasks section from your screenshot */
-  .task-item { display: flex; margin-bottom: 30px; }
-  .task-num { font-size: 1.5rem; font-weight: bold; color: #1e3a8a; width: 40px; flex-shrink: 0; }
-  .task-content { flex-grow: 1; }
-  
-  .task-title { font-size: 1.2rem; font-weight: bold; color: #1e3a8a; }
-  .task-title.green { color: #15803d; }
-  
-  .task-desc { color: #64748b; }
-  
-  .res-links { margin: 15px 0; display: flex; flex-wrap: wrap; gap: 20px; }
-  .res-links a { color: #dc2626; border-bottom: 1px dotted #dc2626; padding-bottom: 2px; text-decoration: none; font-weight: 500; }
-  .res-links a:hover { color: #991b1b; border-bottom-style: solid; text-decoration: none; }
-  
-  .python-pill { 
-    background-color: #3b82f6; color: white; padding: 4px 12px; 
-    border-radius: 20px; font-weight: bold; display: inline-block; 
-    text-decoration: none; margin: 0 4px;
-  }
-  .python-pill:hover { background-color: #2563eb; text-decoration: none; color: white; }
-  
-  .important-text { color: #dc2626; font-weight: bold; }
-  
-  /* Minimal styling for interactive bits so they don't look broken */
-  .interactive-box { border: 1px solid #dfe2e5; padding: 20px; border-radius: 8px; margin: 20px 0; background: #fff; }
-  .bit-strip { display: flex; gap: 8px; margin: 15px 0; flex-wrap: wrap; }
-  .bit-col { text-align: center; }
-  .bit-pv { font-size: 0.75rem; color: #666; display: block; margin-bottom: 4px; }
-  .bit-btn { width: 40px; height: 40px; font-family: monospace; font-size: 1.2rem; cursor: pointer; border: 1px solid #ccc; border-radius: 6px; background: #f9f9f9; }
-  .bit-btn.on { background: #4f46e5; color: white; border-color: #4f46e5; }
-  .readout-row { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; }
-  .readout { background: #f6f8fa; border: 1px solid #dfe2e5; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; }
-  .readout span { font-size: 0.75rem; color: #64748b; display: block; font-family: sans-serif; text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
-  input[type="text"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
-  .quiz-opt { display: block; width: 100%; text-align: left; margin: 8px 0; padding: 12px; border: 1px solid #dfe2e5; background: #fff; border-radius: 6px; cursor: pointer; font-size: 1rem; }
-  .quiz-opt:hover { background: #f6f8fa; }
-  .quiz-opt.correct { background: #d1fae5; border-color: #059669; font-weight: bold; }
-  .quiz-opt.wrong { background: #ffe4e6; border-color: #e11d48; font-weight: bold; }
-  .quiz-fb { display: none; margin-top: 10px; font-size: 0.9rem; color: #444; }
-  .quiz-fb.show { display: block; }
-  .ascii-big { font-size: 3rem; font-family: monospace; text-align: center; padding: 15px; background: #f6f8fa; border: 1px solid #dfe2e5; border-radius: 8px; margin: 10px 0; color: #1e3a8a; }
-</style>
+        /* Blooket starter */
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        /* Task styles */
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        /* Task 2 – green background */
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong {
+            color: #1a6b33;
+        }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        /* Extension card */
+        .extension-card {
+            background: #f1f6fc;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 0.8rem 0 0.5rem 0;
+            border-left: 4px solid #b21f1f;
+        }
+        .extension-card h4 {
+            color: #0b2a4a;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Interactive Tools CSS */
+        .interactive-box {
+            background: #f1f6fc;
+            border: 1px solid #dce4ed;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .bit-strip { display: flex; gap: 8px; margin: 15px 0; flex-wrap: wrap; }
+        .bit-col { text-align: center; }
+        .bit-pv { font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 4px; font-weight: bold; }
+        .bit-btn { width: 40px; height: 40px; font-family: monospace; font-size: 1.2rem; cursor: pointer; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0b2a4a; font-weight: bold; }
+        .bit-btn.on { background: #b21f1f; color: white; border-color: #b21f1f; }
+        .readout-row { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; }
+        .readout { background: #fff; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; color: #0b2a4a; font-weight: bold; }
+        .readout span { font-size: 0.75rem; color: #64748b; display: block; font-family: Arial, sans-serif; text-transform: uppercase; margin-bottom: 4px; }
+        .interactive-box input[type="text"], .interactive-box select { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; font-family: monospace; }
+        .ascii-big { font-size: 3rem; font-family: monospace; text-align: center; padding: 15px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; margin: 10px 0; color: #b21f1f; font-weight: bold; }
+        .quiz-opt { display: block; width: 100%; text-align: left; margin: 8px 0; padding: 12px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; cursor: pointer; font-size: 0.95rem; color: #1e293b; }
+        .quiz-opt:hover { background: #f8fafc; border-color: #94a3b8; }
+        .quiz-opt.correct { background: #d1fae5; border-color: #059669; font-weight: bold; color: #065f46; }
+        .quiz-opt.wrong { background: #ffe4e6; border-color: #e11d48; font-weight: bold; color: #9f1239; }
+        .quiz-fb { display: none; margin-top: 10px; font-size: 0.9rem; color: #475569; }
+        .quiz-fb.show { display: block; }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
 </head>
 <body>
 
-<a href="../index.html">← Back to A1 Unit</a>
+<div class="container">
 
-<h1>A1.2.1 – Data Representation 1</h1>
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
 
-<h2>📌 Learning Objective</h2>
-<p>By the end of this lesson, you will be able to:</p>
-<ul>
-  <li>Describe the <strong>principal methods of representing data</strong> — binary, hexadecimal, octal, and ASCII/Unicode</li>
-  <li>Explain <strong>why</strong> computers use binary rather than denary</li>
-  <li>Convert between binary, denary, hexadecimal, and octal</li>
-  <li>Describe how <strong>characters</strong> are represented, and why Unicode extends ASCII</li>
-</ul>
+    <h1>A1.2.1 – Data Representation 1</h1>
 
-<h2>🎯 IB Command Term: Describe</h2>
-<p><strong>Describe</strong> – "Give a detailed account."</p>
-<p>Naming the four methods is not describing them. This lesson builds the skill of giving a detailed account of <em>what each method is</em>, <em>which base it uses</em>, and <em>where and why it is used</em>.</p>
+    <h2>📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to:</p>
+    <ul>
+        <li><strong>Describe</strong> the principal methods of representing data — binary, hexadecimal, octal, and ASCII/Unicode</li>
+        <li>Explain <strong>why</strong> computers use binary rather than denary</li>
+        <li>Convert between binary, denary, hexadecimal, and octal</li>
+        <li>Describe how <strong>characters</strong> are represented, and why Unicode extends ASCII</li>
+    </ul>
 
-<p>🎮 Starter Activity – Blooket Rush Test your knowledge of number bases before we begin! 🚀 <a href="https://play.blooket.com/host/hack?id=68b03780ddff7a4868b8d259" target="_blank" rel="noopener">Launch Blooket</a></p>
-
-<h2>🔑 Key Terms</h2>
-<table>
-  <tr><th>Term</th><th>Definition</th></tr>
-  <tr><td>Bit</td><td>A single binary digit — 0 or 1</td></tr>
-  <tr><td>Nibble</td><td>4 bits; corresponds to exactly one hexadecimal digit</td></tr>
-  <tr><td>Byte</td><td>8 bits; the standard unit of storage</td></tr>
-  <tr><td>Binary</td><td>Base-2 representation, using only the digits 0 and 1</td></tr>
-  <tr><td>Denary</td><td>Base-10 representation, using digits 0–9 (the human default)</td></tr>
-  <tr><td>Hexadecimal</td><td>Base-16 representation, using 0–9 and A–F</td></tr>
-  <tr><td>Octal</td><td>Base-8 representation, using digits 0–7</td></tr>
-  <tr><td>ASCII</td><td>A 7-bit character code representing 128 characters</td></tr>
-  <tr><td>Unicode</td><td>An extended character encoding covering the world's scripts and symbols</td></tr>
-</table>
-
-<h2>📊 The Principal Methods of Representation</h2>
-<table>
-  <tr><th>Method</th><th>Base</th><th>Digits used</th><th>Why it is used</th></tr>
-  <tr><td>Binary</td><td>2</td><td>0, 1</td><td>Matches the two physical states of a transistor (on / off)</td></tr>
-  <tr><td>Octal</td><td>8</td><td>0–7</td><td>Compact shorthand for binary — 1 octal digit = 3 bits</td></tr>
-  <tr><td>Hexadecimal</td><td>16</td><td>0–9, A–F</td><td>Compact shorthand for binary — 1 hex digit = 1 nibble. Used for colours, memory addresses, MAC addresses</td></tr>
-  <tr><td>ASCII</td><td>—</td><td>7-bit codes</td><td>Standard character encoding for English / Latin text</td></tr>
-  <tr><td>Unicode</td><td>—</td><td>UTF-8 / UTF-16</td><td>Represents all world languages, symbols and emoji</td></tr>
-</table>
-
-<h3>Why computers use binary</h3>
-<p>A processor is built from <strong>transistors</strong>, each of which has two stable electrical states — effectively <strong>on</strong> and <strong>off</strong>. Two states map naturally onto two digits, so base 2 is all the hardware needs to distinguish.</p>
-<p>Denary is not technically superior — it is a historical accident of humans having ten fingers. Any base can be converted into any other, which is why hexadecimal and octal are simply <em>human-friendly shorthand</em> for the underlying binary.</p>
-
-<h3>Hexadecimal digits</h3>
-<table>
-  <tr><th>Denary</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
-  <tr><th>Hex</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr>
-</table>
-
-<h2>🎛️ Interactive Tools</h2>
-<p>Use these tools to check your understanding of how bits, bases, and characters work.</p>
-
-<div class="interactive-box">
-  <h3 style="margin-top:0;">Bit Playground</h3>
-  <p style="margin-top:0; font-size:0.9rem; color:#666;">Click the bits to flip them. Watch the values change live.</p>
-  <div class="bit-strip" id="bitStrip"></div>
-  <div class="readout-row">
-    <div class="readout"><span>Denary</span><span id="outDen">0</span></div>
-    <div class="readout"><span>Hex</span><span id="outHex">00</span></div>
-    <div class="readout"><span>Octal</span><span id="outOct">0</span></div>
-    <div class="readout"><span>Character</span><span id="outChr">—</span></div>
-  </div>
-  <div style="margin-top:15px;">
-    <button onclick="setBits(42)">42</button>
-    <button onclick="setBits(65)">65 ('A')</button>
-    <button onclick="setBits(97)">97 ('a')</button>
-    <button onclick="setBits(255)">255</button>
-  </div>
-</div>
-
-<div class="interactive-box">
-  <h3 style="margin-top:0;">Base Converter</h3>
-  <p style="margin-top:0; font-size:0.9rem; color:#666;">Type a number and select its base.</p>
-  <input type="text" id="convIn" value="42" style="width:100px;">
-  <select id="convBase">
-    <option value="10">Denary</option>
-    <option value="2">Binary</option>
-    <option value="16">Hex</option>
-    <option value="8">Octal</option>
-  </select>
-  <div class="readout-row">
-    <div class="readout"><span>Denary</span><span id="cDec">42</span></div>
-    <div class="readout"><span>Binary</span><span id="cBin">101010</span></div>
-    <div class="readout"><span>Hex</span><span id="cHex">2A</span></div>
-    <div class="readout"><span>Octal</span><span id="cOct">52</span></div>
-  </div>
-</div>
-
-<div class="interactive-box">
-  <h3 style="margin-top:0;">ASCII Explorer</h3>
-  <p style="margin-top:0; font-size:0.9rem; color:#666;">Drag the slider to see ASCII characters. Type any character (including emojis) to see its Unicode point.</p>
-  <div class="ascii-big" id="asciiChar">A</div>
-  <input type="range" id="asciiRange" min="32" max="126" value="65" style="width:100%;">
-  <div class="readout-row">
-    <div class="readout"><span>Denary</span><span id="aDec">65</span></div>
-    <div class="readout"><span>Hex</span><span id="aHex">41</span></div>
-    <div class="readout"><span>Binary</span><span id="aBin">01000001</span></div>
-  </div>
-  <div style="margin-top:15px;">
-    <input type="text" id="uniIn" placeholder="Type any character..." maxlength="2">
-    <div class="readout-row" style="margin-top:10px;">
-      <div class="readout"><span>Unicode</span><span id="uniCode">—</span></div>
+    <h2>🎯 IB Command Term: <span class="badge">Describe</span></h2>
+    <div class="command-term">
+        <strong>Describe</strong> – <em>"Give a detailed account."</em><br><br>
+        Naming the four methods is not describing them. This lesson builds the skill of giving a detailed account of <em>what each method is</em>, <em>which base it uses</em>, and <em>where and why it is used</em>.
     </div>
-  </div>
-</div>
 
-<h2>📖 Your Tasks</h2>
-
-<!-- Task 1: Exactly matches Image 1 -->
-<div class="task-item">
-  <div class="task-num">1</div>
-  <div class="task-content">
-    <span class="task-title">Read & Learn</span> <span class="task-desc">— Use the resources below to learn about data representation.</span>
-    
-    <div class="res-links">
-      <!-- eBook link is now raw.githubusercontent so it opens the PDF directly in a new tab -->
-      <a href="https://raw.githubusercontent.com/Mr-Ellis/School/main/docs/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank" rel="noopener">📖 eBook (A1.2.1)</a>
-      <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.1-describe-the-principal-methods-of-representing-data" target="_blank" rel="noopener">🌐 CS Wiki (A1.2.1)</a>
-      <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener">🖥️ Lesson Slides</a>
+    <!-- Blooket Starter Activity -->
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket Rush</span>
+        <span style="color:#3d5f7a;">Test your knowledge of number bases before we begin!</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/hack?id=68b03780ddff7a4868b8d259" target="_blank">🚀 Launch Blooket</a></span>
     </div>
-    
-    <p class="task-desc" style="margin-top:15px;">Take notes on each of the four number bases — what base it is, which digits it uses, and why it exists — then note how ASCII and Unicode represent characters.</p>
-  </div>
-</div>
 
-<!-- Task 2: Exactly matches Image 1 -->
-<div class="task-item">
-  <div class="task-num">2</div>
-  <div class="task-content">
-    <span class="task-title green">Complete the Starter Activity</span> <span class="task-desc">— Work through the <strong style="color:#15803d;">Describe</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g30688db2fdf_1_6" target="_blank" rel="noopener" style="color:#dc2626; border-bottom:1px dotted #dc2626; text-decoration:none;">Lesson Starter PowerPoint</a>.</span>
-    
-    <p style="margin-top:15px;">Use <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener" class="python-pill">🐍 Python Code Lab</a> to write your answers in a text file.</p>
-    
-    <p><span class="important-text">📌 Important:</span> Save your work as a <code>.txt</code> file using the sentence frame: <em>"[Method] is base [number] and uses the digits [digits]. It is used because [reason]. Characters are represented using [ASCII/Unicode], which is [bits] bits and covers [characters]. Unicode is needed because [reason]."</em></p>
-  </div>
-</div>
+    <!-- ===== KEY TERMS ===== -->
+    <h2>🔑 Key Terms</h2>
+    <table>
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Bit</strong></td><td>A single binary digit — 0 or 1</td></tr>
+            <tr><td><strong>Nibble</strong></td><td>4 bits; corresponds to exactly one hexadecimal digit</td></tr>
+            <tr><td><strong>Byte</strong></td><td>8 bits; the standard unit of storage</td></tr>
+            <tr><td><strong>Binary</strong></td><td>Base-2 representation, using only the digits 0 and 1</td></tr>
+            <tr><td><strong>Denary</strong></td><td>Base-10 representation, using digits 0–9 (the human default)</td></tr>
+            <tr><td><strong>Hexadecimal</strong></td><td>Base-16 representation, using 0–9 and A–F</td></tr>
+            <tr><td><strong>Octal</strong></td><td>Base-8 representation, using digits 0–7</td></tr>
+            <tr><td><strong>ASCII</strong></td><td>A 7-bit character code representing 128 characters</td></tr>
+            <tr><td><strong>Unicode</strong></td><td>An extended character encoding covering the world's scripts and symbols</td></tr>
+        </tbody>
+    </table>
 
-<!-- Task 3 -->
-<div class="task-item">
-  <div class="task-num">3</div>
-  <div class="task-content">
-    <span class="task-title">Deliberate Practice</span> <span class="task-desc">— Write a <strong>Describe</strong> answer to this question:</span>
-    <p><em>"Describe the principal methods of representing data."</em></p>
-    <p><strong>Sentence frame:</strong></p>
-    <p><em>"Computers use binary because ______. Binary uses only the digits ______. Hexadecimal is base ______ and uses the digits ______; it is used because ______. Octal is base ______ and is useful because ______. Characters are represented using ______, which is a ______-bit code covering ______ characters. Unicode is needed because ______."</em></p>
-  </div>
-</div>
+    <!-- ===== METHODS ===== -->
+    <h2>📊 The Principal Methods of Representation</h2>
+    <table>
+        <thead><tr><th>Method</th><th>Base</th><th>Digits used</th><th>Why it is used</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Binary</strong></td><td>2</td><td>0, 1</td><td>Matches the two physical states of a transistor (on / off)</td></tr>
+            <tr><td><strong>Octal</strong></td><td>8</td><td>0–7</td><td>Compact shorthand for binary — 1 octal digit = 3 bits</td></tr>
+            <tr><td><strong>Hexadecimal</strong></td><td>16</td><td>0–9, A–F</td><td>Compact shorthand for binary — 1 hex digit = 1 nibble. Used for colours, memory addresses, MAC addresses</td></tr>
+            <tr><td><strong>ASCII</strong></td><td>—</td><td>7-bit codes</td><td>Standard character encoding for English / Latin text</td></tr>
+            <tr><td><strong>Unicode</strong></td><td>—</td><td>UTF-8 / UTF-16</td><td>Represents all world languages, symbols and emoji</td></tr>
+        </tbody>
+    </table>
 
-<!-- Task 4: Exactly matches Image 1 (Plenary) -->
-<div class="task-item">
-  <div class="task-num">4</div>
-  <div class="task-content">
-    <span class="task-title">Plenary</span> <span class="task-desc">— Test yourself with the <a href="https://quizlet.com/pt/1065988326/a-121-describe-the-principal-methods-of-representing-data-flash-cards" target="_blank" rel="noopener" style="color:#dc2626; border-bottom:1px dotted #dc2626; text-decoration:none;">Quizlet flashcards</a>.</span>
-  </div>
-</div>
+    <h3>Why computers use binary</h3>
+    <p>A processor is built from <strong>transistors</strong>, each of which has two stable electrical states — effectively <strong>on</strong> and <strong>off</strong>. Two states map naturally onto two digits, so base 2 is all the hardware needs to distinguish.</p>
+    <p>Denary is not technically superior — it is a historical accident of humans having ten fingers. Any base can be converted into any other, which is why hexadecimal and octal are simply <em>human-friendly shorthand</em> for the underlying binary.</p>
 
-<!-- Quiz placed under tasks -->
-<div class="interactive-box">
-  <h3 style="margin-top:0;">Self-Marking Quiz</h3>
-  <div id="quizBody"></div>
-  <p id="quizScore" style="font-weight:bold; margin-top:15px;">Score: 0 / 6</p>
-</div>
+    <h3>Hexadecimal digits</h3>
+    <table>
+        <thead><tr><th>Denary</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th></tr></thead>
+        <tbody><tr><td><strong>Hex</strong></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr></tbody>
+    </table>
 
-<h2>⭐ Extension Activity</h2>
-<h3>🔍 Direct conversion</h3>
-<p>Convert hexadecimal directly to octal <em>without</em> passing through denary. Explain the method you used and why it works.</p>
-<h3>🔍 UTF-8 vs UTF-16</h3>
-<p>Research the difference. Why does UTF-8 dominate the web despite UTF-16 being simpler for some scripts?</p>
-<h3>🔍 Colour codes</h3>
-<p>HTML colours are written as hexadecimal, e.g. <code>#FF8800</code>. Explain why hex is used rather than binary, and work out what colour that is.</p>
+    <!-- ===== INTERACTIVE TOOLS ===== -->
+    <h2>🎛️ Interactive Tools</h2>
+    <p>Use these tools to check your understanding of how bits, bases, and characters work.</p>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">Bit Playground</h3>
+        <p style="margin-top:0; font-size:0.9rem; color:#64748b;">Click the bits to flip them. Watch the values change live.</p>
+        <div class="bit-strip" id="bitStrip"></div>
+        <div class="readout-row">
+            <div class="readout"><span>Denary</span><span id="outDen">0</span></div>
+            <div class="readout"><span>Hex</span><span id="outHex">00</span></div>
+            <div class="readout"><span>Octal</span><span id="outOct">0</span></div>
+            <div class="readout"><span>Character</span><span id="outChr">—</span></div>
+        </div>
+        <div style="margin-top:15px;">
+            <button style="padding:5px 10px; cursor:pointer;" onclick="setBits(42)">42</button>
+            <button style="padding:5px 10px; cursor:pointer;" onclick="setBits(65)">65 ('A')</button>
+            <button style="padding:5px 10px; cursor:pointer;" onclick="setBits(97)">97 ('a')</button>
+            <button style="padding:5px 10px; cursor:pointer;" onclick="setBits(255)">255</button>
+        </div>
+    </div>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">Base Converter</h3>
+        <p style="margin-top:0; font-size:0.9rem; color:#64748b;">Type a number and select its base.</p>
+        <input type="text" id="convIn" value="42" style="width:100px;">
+        <select id="convBase">
+            <option value="10">Denary</option>
+            <option value="2">Binary</option>
+            <option value="16">Hex</option>
+            <option value="8">Octal</option>
+        </select>
+        <div class="readout-row">
+            <div class="readout"><span>Denary</span><span id="cDec">42</span></div>
+            <div class="readout"><span>Binary</span><span id="cBin">101010</span></div>
+            <div class="readout"><span>Hex</span><span id="cHex">2A</span></div>
+            <div class="readout"><span>Octal</span><span id="cOct">52</span></div>
+        </div>
+    </div>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">ASCII Explorer</h3>
+        <p style="margin-top:0; font-size:0.9rem; color:#64748b;">Drag the slider to see ASCII characters. Type any character (including emojis) to see its Unicode point.</p>
+        <div class="ascii-big" id="asciiChar">A</div>
+        <input type="range" id="asciiRange" min="32" max="126" value="65" style="width:100%;">
+        <div class="readout-row">
+            <div class="readout"><span>Denary</span><span id="aDec">65</span></div>
+            <div class="readout"><span>Hex</span><span id="aHex">41</span></div>
+            <div class="readout"><span>Binary</span><span id="aBin">01000001</span></div>
+        </div>
+        <div style="margin-top:15px;">
+            <input type="text" id="uniIn" placeholder="Type any character..." maxlength="2">
+            <div class="readout-row" style="margin-top:10px;">
+                <div class="readout"><span>Unicode</span><span id="uniCode">—</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TASKS ===== -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+        <!-- Task 1 -->
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Learn</strong> — Use the resources below to learn about data representation.
+                <div class="task-1-resources">
+                    <!-- eBook now uses the GitHub Pages URL directly -->
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank">📖 eBook (A1.2.1)</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.1-describe-the-principal-methods-of-representing-data" target="_blank">🌐 CS Wiki (A1.2.1)</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&loop=false&delayms=3000&slide=id.g30688db2fdf_1_6" target="_blank">📊 Lesson Slides</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85; display:block; margin-top:8px;">Take notes on each of the four number bases — what base it is, which digits it uses, and why it exists — then note how ASCII and Unicode represent characters.</span>
+            </span>
+        </div>
+        <!-- Task 2 – green background -->
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Starter Activity</strong> — Work through the <strong>Describe</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your answers in a text file.<br>
+                <strong>📌 Important:</strong> Save your work as a <strong>.txt</strong> file using the sentence frame: <em>"[Method] is base [number] and uses the digits [digits]. It is used because [reason]. Characters are represented using [ASCII/Unicode], which is [bits] bits and covers [characters]. Unicode is needed because [reason]."</em>
+            </span>
+        </div>
+        <!-- Task 3 -->
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc">
+                <strong>Deliberate Practice</strong> — Write a <strong>Describe</strong> answer to this question:<br>
+                <em>"Describe the principal methods of representing data."</em><br><br>
+                <strong>Sentence frame:</strong><br>
+                <em>"Computers use binary because ______. Binary uses only the digits ______. Hexadecimal is base ______ and uses the digits ______; it is used because ______. Octal is base ______ and is useful because ______. Characters are represented using ______, which is a ______-bit code covering ______ characters. Unicode is needed because ______."</em>
+            </span>
+        </div>
+        <!-- Task 4 -->
+        <div class="task-row">
+            <span class="task-step">4</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1065988326/a-121-describe-the-principal-methods-of-representing-data-flash-cards" target="_blank">Quizlet flashcards</a>, then try the quiz below.</span>
+        </div>
+    </div>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">Self-Marking Quiz</h3>
+        <div id="quizBody"></div>
+        <p id="quizScore" style="font-weight:bold; margin-top:15px; color:#0b2a4a;">Score: 0 / 6</p>
+    </div>
+
+    <!-- ===== EXTENSION ACTIVITY ===== -->
+    <h2>⭐ Extension Activity</h2>
+    <div class="extension-card">
+        <h4>🔍 Direct conversion</h4>
+        <p>Convert hexadecimal directly to octal <em>without</em> passing through denary. Explain the method you used and why it works.</p>
+    </div>
+    <div class="extension-card">
+        <h4>🔍 UTF-8 vs UTF-16</h4>
+        <p>Research the difference. Why does UTF-8 dominate the web despite UTF-16 being simpler for some scripts?</p>
+    </div>
+    <div class="extension-card">
+        <h4>🔍 Colour codes</h4>
+        <p>HTML colours are written as hexadecimal, e.g. <code>#FF8800</code>. Explain why hex is used rather than binary, and work out what colour that is.</p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.2.0.html">← Previous: A1.2.0</a>
+        <a href="A1.2.2.html">Next: A1.2.2 →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.2.1 – Data Representation 1 • IB Computer Science • Year 12
+    </div>
+</div>
 
 <script>
 // --- BIT PLAYGROUND ---
@@ -322,7 +547,7 @@ function buildQuiz() {
   QUIZ.forEach((item, qi) => {
     const div = document.createElement('div');
     div.style.marginBottom = '20px';
-    div.innerHTML = `<p><strong>${qi+1}. ${item.q}</strong></p>`;
+    div.innerHTML = `<p style="font-weight:bold; color:#0b2a4a; margin-bottom:5px;">${qi+1}. ${item.q}</p>`;
     const fb = document.createElement('div'); fb.className = 'quiz-fb';
     item.opts.forEach((opt, oi) => {
       const btn = document.createElement('button'); btn.className = 'quiz-opt'; btn.textContent = opt;
