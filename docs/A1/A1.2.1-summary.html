@@ -5,897 +5,282 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A1.2.1 – Data Representation 1</title>
 <style>
-  :root{
-    --bg:#f1f5f9; --card:#fff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
-    --accent:#4f46e5; --accent-2:#6366f1; --accent-soft:#eef2ff;
-    --ok:#059669; --ok-soft:#ecfdf5; --bad:#e11d48; --bad-soft:#fff1f2;
-    --radius:16px;
-    --shadow:0 1px 2px rgba(15,23,42,.06),0 6px 20px rgba(15,23,42,.06);
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth;scroll-padding-top:84px}
-  body{
-    margin:0;background:var(--bg);color:var(--ink);line-height:1.65;
-    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
-
-  /* ---------- Hero ---------- */
-  .hero{
-    position:relative;overflow:hidden;color:#fff;padding:60px 0 52px;
-    background:linear-gradient(135deg,#312e81 0%,#4f46e5 55%,#7c3aed 100%);
-  }
-  .hero::after{
-    content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
-    background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.22) 1px,transparent 0);
-    background-size:24px 24px;
-  }
-  .hero .wrap{position:relative;z-index:1}
-  .back{
-    display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.85);
-    text-decoration:none;font-size:.85rem;font-weight:600;margin-bottom:20px;
-  }
-  .back:hover{color:#fff}
-  .eyebrow{
-    display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.12em;
-    text-transform:uppercase;background:rgba(255,255,255,.16);
-    padding:5px 12px;border-radius:999px;margin-bottom:14px;
-  }
-  .hero h1{
-    margin:0 0 12px;font-size:clamp(1.9rem,5vw,2.9rem);line-height:1.12;
-    letter-spacing:-.02em;font-weight:800;
-  }
-  .lede{margin:0 0 22px;font-size:clamp(1rem,2.2vw,1.15rem);color:rgba(255,255,255,.9);max-width:60ch}
-  .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{
-    font-size:.78rem;font-weight:700;padding:6px 13px;border-radius:999px;
-    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
-  }
-
-  /* ---------- Sticky nav ---------- */
-  .toc{
-    position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line);
-    background:rgba(255,255,255,.85);backdrop-filter:blur(12px);
-  }
-  .toc-inner{
-    display:flex;gap:4px;overflow-x:auto;padding:10px 20px;
-    max-width:960px;margin:0 auto;scrollbar-width:none;
-  }
-  .toc-inner::-webkit-scrollbar{display:none}
-  .toc a{
-    white-space:nowrap;padding:7px 14px;border-radius:999px;font-size:.82rem;
-    font-weight:700;color:var(--muted);text-decoration:none;transition:.18s;
-  }
-  .toc a:hover{background:var(--accent-soft);color:var(--accent)}
-  .toc a.active{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.32)}
-
-  /* ---------- Cards & type ---------- */
-  main{padding:32px 0 60px}
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-    padding:28px 30px;box-shadow:var(--shadow);margin-bottom:22px;
-  }
-  .card h2{
-    margin:0 0 18px;font-size:1.35rem;letter-spacing:-.01em;
-    display:flex;align-items:center;gap:10px;
-  }
-  .card h3{margin:26px 0 10px;font-size:1.05rem;color:#1e1b4b}
-  .card h3:first-of-type{margin-top:6px}
-  .card h4{margin:0 0 10px;font-size:.98rem}
-  ul,ol{margin:10px 0;padding-left:22px}
-  li{margin:6px 0}
-  code{
-    background:#f1f5f9;padding:.15em .4em;border-radius:5px;font-size:.9em;
-    font-family:ui-monospace,"SF Mono",Consolas,monospace;color:#4338ca;font-weight:600;
-  }
-  pre{
-    background:#0f172a;color:#e2e8f0;padding:16px 18px;border-radius:12px;
-    overflow-x:auto;font:500 .9rem/1.7 ui-monospace,"SF Mono",Consolas,monospace;
-    margin:14px 0;
-  }
-
-  /* ---------- Callouts ---------- */
-  .callout,.warn,.info{
-    border-radius:0 12px 12px 0;padding:14px 18px;margin:16px 0;font-size:.94rem;
-  }
-  .callout{border-left:4px solid var(--accent);background:var(--accent-soft)}
-  .warn{border-left:4px solid var(--bad);background:var(--bad-soft)}
-  .info{border-left:4px solid #0891b2;background:#ecfeff}
-  .callout strong,.warn strong,.info strong{color:inherit}
-
-  /* ---------- Tables ---------- */
-  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:16px 0}
-  table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:420px}
-  th{
-    background:#f8fafc;text-align:left;font-size:.72rem;font-weight:800;
-    letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
-    padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;
-  }
-  td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
-  tbody tr:last-child td{border-bottom:none}
-  tbody tr:hover td{background:#f8fafc}
-  td:first-child{font-weight:600}
-
-  /* ---------- Bit playground ---------- */
-  .bit-strip{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin:20px 0 6px}
-  .bit-cell{display:flex;flex-direction:column;align-items:center;gap:7px}
-  .bit-pv{
-    font-size:.68rem;font-weight:800;color:var(--muted);
-    font-variant-numeric:tabular-nums;letter-spacing:.02em;
-  }
-  .bit{
-    width:100%;aspect-ratio:1;border-radius:12px;border:2px solid var(--line);
-    background:#f8fafc;cursor:pointer;font-family:ui-monospace,monospace;
-    font-weight:800;font-size:clamp(.95rem,3.4vw,1.55rem);color:var(--muted);
-    transition:transform .15s,background .18s,border-color .18s,box-shadow .18s,color .18s;
-    display:flex;align-items:center;justify-content:center;padding:0;
-  }
-  .bit:hover{transform:translateY(-3px);border-color:#c7d2fe}
-  .bit.on{
-    background:linear-gradient(160deg,var(--accent),var(--accent-2));
-    border-color:var(--accent);color:#fff;box-shadow:0 8px 18px rgba(79,70,229,.35);
-  }
-
-  /* ---------- Readouts ---------- */
-  .readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px;margin-top:18px}
-  .readout{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px 15px}
-  .rl{
-    display:block;font-size:.68rem;font-weight:800;text-transform:uppercase;
-    letter-spacing:.08em;color:var(--muted);margin-bottom:3px;
-  }
-  .rv{
-    display:block;font-family:ui-monospace,monospace;font-weight:800;
-    font-size:1.35rem;line-height:1.3;color:var(--accent);
-    font-variant-numeric:tabular-nums;word-break:break-all;
-  }
-
-  /* ---------- Inputs ---------- */
-  .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px}
-  input[type=text],select{
-    font:inherit;font-weight:600;padding:11px 15px;border:1px solid var(--line);
-    border-radius:11px;background:#fff;color:var(--ink);outline:none;
-    transition:border-color .18s,box-shadow .18s;
-  }
-  input[type=text]:focus,select:focus{
-    border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.16);
-  }
-  input.invalid{border-color:var(--bad);box-shadow:0 0 0 3px rgba(225,29,72,.14)}
-  .btn{
-    font:inherit;font-weight:700;font-size:.85rem;padding:9px 16px;border-radius:999px;
-    border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;transition:.18s;
-  }
-  .btn:hover{background:var(--accent-soft);color:var(--accent);border-color:#c7d2fe}
-  .btn-primary{
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;
-    border:none;box-shadow:0 6px 16px rgba(79,70,229,.3);
-  }
-  .btn-primary:hover{color:#fff;filter:brightness(1.08);transform:translateY(-1px)}
-  .presets{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
-  .presets .lbl{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-right:2px}
-
-  /* ---------- ASCII ---------- */
-  .ascii-big{
-    display:flex;align-items:center;justify-content:center;min-height:130px;
-    font:800 4rem/1 ui-monospace,monospace;color:var(--accent);
-    background:#f8fafc;border:1px solid var(--line);border-radius:14px;margin-bottom:16px;
-  }
-  input[type=range]{width:100%;accent-color:var(--accent);height:30px;cursor:pointer}
-
-  /* ---------- Quiz ---------- */
-  .quiz-head{
-    display:flex;justify-content:space-between;align-items:center;gap:12px;
-    flex-wrap:wrap;margin-bottom:8px;
-  }
-  .score-pill{
-    font-size:.82rem;font-weight:800;background:var(--accent-soft);color:var(--accent);
-    padding:7px 15px;border-radius:999px;white-space:nowrap;
-  }
-  .q{border-top:1px solid var(--line);padding:20px 0 6px}
-  .q:first-of-type{border-top:none;padding-top:8px}
-  .q h4{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:.98rem;line-height:1.45}
-  .qnum{
-    flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
-    width:25px;height:25px;border-radius:50%;background:var(--accent-soft);
-    color:var(--accent);font-size:.78rem;font-weight:800;
-  }
-  .opts{display:grid;gap:8px}
-  .opt{
-    text-align:left;font:inherit;font-size:.92rem;font-weight:600;padding:12px 16px;
-    border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--ink);
-    cursor:pointer;transition:.15s;
-  }
-  .opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft);transform:translateX(3px)}
-  .opt:disabled{cursor:default;opacity:.85}
-  .opt.correct{background:var(--ok-soft);border-color:var(--ok);color:#065f46;font-weight:700;opacity:1}
-  .opt.wrong{background:var(--bad-soft);border-color:var(--bad);color:#9f1239;font-weight:700;opacity:1}
-  .fb{display:none;margin-top:11px;font-size:.88rem;color:var(--muted);line-height:1.5}
-  .fb.show{display:block}
-  .quiz-done{
-    display:none;margin-top:20px;padding:16px 20px;border-radius:12px;
-    background:var(--accent-soft);border:1px solid #c7d2fe;
-    font-weight:700;color:#3730a3;text-align:center;
-  }
-  .quiz-done.show{display:block}
-
-  /* ---------- Tasks ---------- */
-  .task{
-    border:1px solid var(--line);border-radius:14px;padding:20px 22px;
-    margin-bottom:14px;background:#fff;transition:border-color .18s,box-shadow .18s;
-  }
-  .task:hover{border-color:#c7d2fe;box-shadow:0 4px 16px rgba(79,70,229,.08)}
-  .task-head{display:flex;align-items:center;gap:11px;margin-bottom:10px}
-  .task-num{
-    flex:0 0 auto;width:28px;height:28px;border-radius:9px;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;
-    display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;
-    box-shadow:0 4px 10px rgba(79,70,229,.3);
-  }
-  .task-head h4{margin:0;font-size:1rem}
-  .reslist{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px}
-  .reslist li{margin:0}
-  .reslink{
-    display:flex;align-items:center;gap:10px;padding:11px 15px;border-radius:10px;
-    background:#f8fafc;border:1px solid var(--line);text-decoration:none;
-    color:var(--ink);font-size:.9rem;font-weight:600;transition:.16s;
-  }
-  .reslink:hover{background:var(--accent-soft);border-color:#c7d2fe;color:var(--accent);transform:translateX(3px)}
-  .reslink .ico{font-size:1.05rem;flex:0 0 auto}
-  blockquote{
-    margin:14px 0;padding:14px 18px;border-left:4px solid #c7d2fe;
-    background:#f8fafc;border-radius:0 10px 10px 0;font-style:italic;color:#334155;
-  }
-  details{border:1px solid var(--line);border-radius:12px;padding:0;margin:16px 0;overflow:hidden}
-  details summary{
-    cursor:pointer;padding:13px 18px;font-weight:700;font-size:.9rem;color:var(--accent);
-    background:#f8fafc;list-style:none;transition:.15s;
-  }
-  details summary::-webkit-details-marker{display:none}
-  details summary:hover{background:var(--accent-soft)}
-  details[open] summary{border-bottom:1px solid var(--line)}
-  details .body{padding:16px 18px}
-  details .body p{margin:0 0 12px}
-  details .body p:last-child{margin-bottom:0}
-
-  /* ---------- Extension grid ---------- */
-  .ext-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:6px}
-  .ext{
-    border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:#f8fafc;
-    transition:.18s;
-  }
-  .ext:hover{background:#fff;border-color:#c7d2fe;box-shadow:0 4px 16px rgba(79,70,229,.08)}
-  .ext h4{margin:0 0 8px;font-size:.95rem;color:#1e1b4b}
-  .ext p{margin:0;font-size:.88rem;color:var(--muted);line-height:1.6}
-
-  /* ---------- Takeaway ---------- */
-  .takeaway{
-    background:linear-gradient(135deg,#312e81,#4f46e5);color:#fff;border:none;
-    padding:30px 32px;border-radius:var(--radius);margin-bottom:22px;
-    box-shadow:0 10px 30px rgba(49,46,129,.28);
-  }
-  .takeaway h2{margin:0 0 12px;font-size:1.2rem;color:#fff}
-  .takeaway p{margin:0;color:rgba(255,255,255,.92);font-size:.98rem;line-height:1.7}
-
-  footer{padding:0 0 50px;font-size:.85rem;color:var(--muted)}
-  footer a{color:var(--accent);text-decoration:none;font-weight:600}
-  footer a:hover{text-decoration:underline}
-
-  @media (max-width:640px){
-    .card{padding:22px 20px}
-    .hero{padding:44px 0 40px}
-    .bit-strip{gap:6px}
-    .readout{padding:10px 12px}
-    .rv{font-size:1.1rem}
-  }
-  @media (prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
-    html{scroll-behavior:auto}
-  }
+  /* Minimal styles ONLY for the interactive tools so they don't break the plain format */
+  .bit-strip { display: flex; gap: 8px; margin: 15px 0; flex-wrap: wrap; }
+  .bit-col { text-align: center; }
+  .bit-pv { font-size: 0.75rem; color: #666; display: block; margin-bottom: 4px; }
+  .bit-btn { width: 40px; height: 40px; font-family: monospace; font-size: 1.2rem; cursor: pointer; border: 1px solid #ccc; border-radius: 6px; background: #f9f9f9; }
+  .bit-btn.on { background: #4f46e5; color: white; border-color: #4f46e5; }
+  .interactive-box { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin: 15px 0; background: #fafafa; }
+  .readout-row { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; }
+  .readout { background: #fff; border: 1px solid #ddd; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; }
+  .readout span { font-size: 0.8rem; color: #666; display: block; font-family: sans-serif; text-transform: uppercase; margin-bottom: 4px; }
+  .quiz-opt { display: block; width: 100%; text-align: left; margin: 5px 0; padding: 10px; border: 1px solid #ccc; background: #fff; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+  .quiz-opt:hover { background: #f0f0f0; }
+  .quiz-opt.correct { background: #d1fae5; border-color: #059669; font-weight: bold; }
+  .quiz-opt.wrong { background: #ffe4e6; border-color: #e11d48; font-weight: bold; }
+  .quiz-fb { display: none; margin-top: 10px; font-size: 0.9rem; color: #444; }
+  .quiz-fb.show { display: block; }
+  .ascii-big { font-size: 3rem; font-family: monospace; text-align: center; padding: 15px; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0; color: #4f46e5; }
+  input[type="text"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <a class="back" href="../index.html">← Back to A1 Unit</a>
-    <div class="eyebrow">IB DP Computer Science · A1.2.1</div>
-    <h1>Data Representation 1</h1>
-    <p class="lede">The principal methods of representing data — binary, hexadecimal, octal, ASCII and Unicode. Play with the bits, convert between bases, then prove it in the quiz.</p>
-    <div class="chips">
-      <span class="chip">Base 2 · 8 · 16</span>
-      <span class="chip">7-bit ASCII</span>
-      <span class="chip">Unicode</span>
-      <span class="chip">3 interactive tools</span>
+<a href="../index.html">← Back to A1 Unit</a>
+
+<h1>A1.2.1 – Data Representation 1</h1>
+
+<!-- SECTION: OBJECTIVE -->
+<h2>📌 Learning Objective</h2>
+<p>By the end of this lesson, you will be able to:</p>
+<ul>
+  <li>Describe the <strong>principal methods of representing data</strong> — binary, hexadecimal, octal, and ASCII/Unicode</li>
+  <li>Explain <strong>why</strong> computers use binary rather than denary</li>
+  <li>Convert between binary, denary, hexadecimal, and octal</li>
+  <li>Describe how <strong>characters</strong> are represented, and why Unicode extends ASCII</li>
+</ul>
+
+<!-- SECTION: COMMAND TERM -->
+<h2>🎯 IB Command Term: Describe</h2>
+<p><strong>Describe</strong> – "Give a detailed account."</p>
+<p>Naming the four methods is not describing them. This lesson builds the skill of giving a detailed account of <em>what each method is</em>, <em>which base it uses</em>, and <em>where and why it is used</em>.</p>
+
+<p>🎮 Starter Activity – Blooket Rush Test your knowledge of number bases before we begin! 🚀 <a href="https://play.blooket.com/host/hack?id=68b03780ddff7a4868b8d259" target="_blank" rel="noopener">Launch Blooket</a></p>
+
+<!-- SECTION: KEY TERMS -->
+<h2>🔑 Key Terms</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr><td>Bit</td><td>A single binary digit — 0 or 1</td></tr>
+  <tr><td>Nibble</td><td>4 bits; corresponds to exactly one hexadecimal digit</td></tr>
+  <tr><td>Byte</td><td>8 bits; the standard unit of storage</td></tr>
+  <tr><td>Binary</td><td>Base-2 representation, using only the digits 0 and 1</td></tr>
+  <tr><td>Denary</td><td>Base-10 representation, using digits 0–9 (the human default)</td></tr>
+  <tr><td>Hexadecimal</td><td>Base-16 representation, using 0–9 and A–F</td></tr>
+  <tr><td>Octal</td><td>Base-8 representation, using digits 0–7</td></tr>
+  <tr><td>ASCII</td><td>A 7-bit character code representing 128 characters</td></tr>
+  <tr><td>Unicode</td><td>An extended character encoding covering the world's scripts and symbols</td></tr>
+</table>
+
+<!-- SECTION: METHODS -->
+<h2>📊 The Principal Methods of Representation</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+  <tr><th>Method</th><th>Base</th><th>Digits used</th><th>Why it is used</th></tr>
+  <tr><td>Binary</td><td>2</td><td>0, 1</td><td>Matches the two physical states of a transistor (on / off)</td></tr>
+  <tr><td>Octal</td><td>8</td><td>0–7</td><td>Compact shorthand for binary — 1 octal digit = 3 bits</td></tr>
+  <tr><td>Hexadecimal</td><td>16</td><td>0–9, A–F</td><td>Compact shorthand for binary — 1 hex digit = 1 nibble. Used for colours, memory addresses, MAC addresses</td></tr>
+  <tr><td>ASCII</td><td>—</td><td>7-bit codes</td><td>Standard character encoding for English / Latin text</td></tr>
+  <tr><td>Unicode</td><td>—</td><td>UTF-8 / UTF-16</td><td>Represents all world languages, symbols and emoji</td></tr>
+</table>
+
+<h3>Why computers use binary</h3>
+<p>A processor is built from <strong>transistors</strong>, each of which has two stable electrical states — effectively <strong>on</strong> and <strong>off</strong>. Two states map naturally onto two digits, so base 2 is all the hardware needs to distinguish.</p>
+<p>Denary is not technically superior — it is a historical accident of humans having ten fingers. Any base can be converted into any other, which is why hexadecimal and octal are simply <em>human-friendly shorthand</em> for the underlying binary.</p>
+
+<h3>Hexadecimal digits</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+  <tr><th>Denary</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
+  <tr><th>Hex</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr>
+</table>
+
+<!-- SECTION: INTERACTIVE TOOLS -->
+<h2>🎛️ Interactive Tools</h2>
+<p>Use these tools to check your understanding of how bits, bases, and characters work.</p>
+
+<div class="interactive-box">
+  <h3 style="margin-top:0;">Bit Playground</h3>
+  <p style="margin-top:0; font-size:0.9rem; color:#555;">Click the bits to flip them. Watch the values change live.</p>
+  <div class="bit-strip" id="bitStrip"></div>
+  <div class="readout-row">
+    <div class="readout"><span>Denary</span><span id="outDen">0</span></div>
+    <div class="readout"><span>Hex</span><span id="outHex">00</span></div>
+    <div class="readout"><span>Octal</span><span id="outOct">0</span></div>
+    <div class="readout"><span>Character</span><span id="outChr">—</span></div>
+  </div>
+  <div style="margin-top:15px;">
+    <button onclick="setBits(42)">42</button>
+    <button onclick="setBits(65)">65 ('A')</button>
+    <button onclick="setBits(97)">97 ('a')</button>
+    <button onclick="setBits(255)">255</button>
+  </div>
+</div>
+
+<div class="interactive-box">
+  <h3 style="margin-top:0;">Base Converter</h3>
+  <p style="margin-top:0; font-size:0.9rem; color:#555;">Type a number and select its base.</p>
+  <input type="text" id="convIn" value="42" style="width:100px;">
+  <select id="convBase">
+    <option value="10">Denary</option>
+    <option value="2">Binary</option>
+    <option value="16">Hex</option>
+    <option value="8">Octal</option>
+  </select>
+  <div class="readout-row">
+    <div class="readout"><span>Denary</span><span id="cDec">42</span></div>
+    <div class="readout"><span>Binary</span><span id="cBin">101010</span></div>
+    <div class="readout"><span>Hex</span><span id="cHex">2A</span></div>
+    <div class="readout"><span>Octal</span><span id="cOct">52</span></div>
+  </div>
+</div>
+
+<div class="interactive-box">
+  <h3 style="margin-top:0;">ASCII Explorer</h3>
+  <p style="margin-top:0; font-size:0.9rem; color:#555;">Drag the slider to see ASCII characters. Type any character (including emojis) to see its Unicode point.</p>
+  <div class="ascii-big" id="asciiChar">A</div>
+  <input type="range" id="asciiRange" min="32" max="126" value="65" style="width:100%;">
+  <div class="readout-row">
+    <div class="readout"><span>Denary</span><span id="aDec">65</span></div>
+    <div class="readout"><span>Hex</span><span id="aHex">41</span></div>
+    <div class="readout"><span>Binary</span><span id="aBin">01000001</span></div>
+  </div>
+  <div style="margin-top:15px;">
+    <input type="text" id="uniIn" placeholder="Type any character..." maxlength="2">
+    <div class="readout-row" style="margin-top:10px;">
+      <div class="readout"><span>Unicode</span><span id="uniCode">—</span></div>
     </div>
   </div>
-</header>
+</div>
 
-<nav class="toc">
-  <div class="toc-inner">
-    <a href="#objective">Objective</a>
-    <a href="#terms">Key terms</a>
-    <a href="#methods">Methods</a>
-    <a href="#playground">Bit playground</a>
-    <a href="#convert">Converter</a>
-    <a href="#characters">Characters</a>
-    <a href="#tasks">Your tasks</a>
-    <a href="#extensions">Extension</a>
-    <a href="#quiz">Quiz</a>
-  </div>
-</nav>
+<!-- SECTION: TASKS -->
+<h2>📖 Your Tasks</h2>
 
-<main class="wrap">
+<p><strong>1 Read &amp; Learn</strong> — Use the resources below to learn about data representation.</p>
+<ul>
+  <!-- eBook link changed to raw.githubusercontent to force PDF download/view instead of GitHub UI -->
+  <li>📖 <a href="https://raw.githubusercontent.com/Mr-Ellis/School/main/docs/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank" rel="noopener">eBook (A1.2.1)</a></li>
+  <li>🌐 <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.1-describe-the-principal-methods-of-representing-data" target="_blank" rel="noopener">CS Wiki (A1.2.1)</a></li>
+  <li>🖥️ <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener">Lesson Slides</a> (Main Task)</li>
+  <li>🖥️ <a href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g30688db2fdf_1_6" target="_blank" rel="noopener">A 1.2.1 Binary Representation</a> (Slides)</li>
+</ul>
+<p>Take notes on each of the four number bases — what base it is, which digits it uses, and why it exists — then note how ASCII and Unicode represent characters.</p>
 
-  <!-- OBJECTIVE -->
-  <section class="card" id="objective">
-    <h2>📌 Learning Objective</h2>
-    <p>By the end of this lesson, you will be able to <strong>describe</strong>:</p>
-    <ul>
-      <li>The <strong>principal methods of representing data</strong> — binary, hexadecimal, octal, and ASCII/Unicode</li>
-      <li><strong>Why</strong> computers use binary rather than denary</li>
-      <li>How to <strong>convert</strong> between binary, denary, hexadecimal and octal</li>
-      <li>How <strong>characters</strong> are represented, and why Unicode extends ASCII</li>
-    </ul>
+<p><strong>2 Complete the Starter Activity</strong> — Work through the <strong>Describe</strong> questions from the Lesson Starter PowerPoint.</p>
+<!-- Python Code Lab link added here -->
+<p>Use 🐍 <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener">Python Code Lab</a> to write your answers in a text file.</p>
+<p>📌 <strong>Important:</strong> Save your work as a <code>.txt</code> file using the sentence frame: <em>"[Method] is base [number] and uses the digits [digits]. It is used because [reason]. Characters are represented using [ASCII/Unicode], which is [bits] bits and covers [characters]. Unicode is needed because [reason]."</em></p>
 
-    <h3>🎯 IB Command Term: Describe</h3>
-    <p><strong>Describe</strong> – "Give a detailed account."</p>
-    <p>Naming the four methods is not describing them. This lesson builds the skill of giving a detailed account of <em>what each method is</em>, <em>which base it uses</em>, and <em>where and why it is used</em>.</p>
+<p><strong>3 Deliberate Practice</strong> — Write a <strong>Describe</strong> answer to this question:</p>
+<p><em>"Describe the principal methods of representing data."</em></p>
+<p><strong>Sentence frame:</strong></p>
+<p><em>"Computers use binary because ______. Binary uses only the digits ______. Hexadecimal is base ______ and uses the digits ______; it is used because ______. Octal is base ______ and is useful because ______. Characters are represented using ______, which is a ______-bit code covering ______ characters. Unicode is needed because ______."</em></p>
 
-    <div class="callout">
-      🎮 <strong>Starter — Blooket Rush.</strong> Test your knowledge of number bases before we begin.
-      <div style="margin-top:12px">
-        <a class="btn btn-primary" style="text-decoration:none;display:inline-block"
-           href="https://play.blooket.com/host/hack?id=68b03780ddff7a4868b8d259" target="_blank" rel="noopener">🚀 Launch Blooket</a>
-      </div>
-    </div>
-  </section>
+<p><strong>4 Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1065988326/a-121-describe-the-principal-methods-of-representing-data-flash-cards" target="_blank" rel="noopener">Quizlet flashcards</a>.</p>
 
-  <!-- TERMS -->
-  <section class="card" id="terms">
-    <h2>🔑 Key Terms</h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
-        <tbody>
-          <tr><td>Bit</td><td>A single binary digit — 0 or 1</td></tr>
-          <tr><td>Nibble</td><td>4 bits; corresponds to exactly one hexadecimal digit</td></tr>
-          <tr><td>Byte</td><td>8 bits; the standard unit of storage</td></tr>
-          <tr><td>Binary</td><td>Base-2 representation, using only the digits 0 and 1</td></tr>
-          <tr><td>Denary</td><td>Base-10 representation, using digits 0–9 (the human default)</td></tr>
-          <tr><td>Hexadecimal</td><td>Base-16 representation, using 0–9 and A–F</td></tr>
-          <tr><td>Octal</td><td>Base-8 representation, using digits 0–7</td></tr>
-          <tr><td>ASCII</td><td>A 7-bit character code representing 128 characters</td></tr>
-          <tr><td>Unicode</td><td>An extended character encoding covering the world's scripts and symbols</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+<div class="interactive-box">
+  <h3 style="margin-top:0;">Self-Marking Quiz</h3>
+  <div id="quizBody"></div>
+  <p id="quizScore" style="font-weight:bold; margin-top:15px;">Score: 0 / 6</p>
+</div>
 
-  <!-- METHODS -->
-  <section class="card" id="methods">
-    <h2>📊 The Principal Methods of Representation</h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Base</th><th>Digits used</th><th>Why it is used</th></tr></thead>
-        <tbody>
-          <tr><td>Binary</td><td>2</td><td>0, 1</td><td>Matches the two physical states of a transistor (on / off)</td></tr>
-          <tr><td>Octal</td><td>8</td><td>0–7</td><td>Compact shorthand for binary — 1 octal digit = 3 bits</td></tr>
-          <tr><td>Hexadecimal</td><td>16</td><td>0–9, A–F</td><td>Compact shorthand for binary — 1 hex digit = 1 nibble. Used for colours, memory addresses, MAC addresses</td></tr>
-          <tr><td>ASCII</td><td>—</td><td>7-bit codes</td><td>Standard character encoding for English / Latin text</td></tr>
-          <tr><td>Unicode</td><td>—</td><td>UTF-8 / UTF-16</td><td>Represents all world languages, symbols and emoji</td></tr>
-        </tbody>
-      </table>
-    </div>
+<!-- SECTION: EXTENSIONS -->
+<h2>⭐ Extension Activity</h2>
+<h3>🔍 Direct conversion</h3>
+<p>Convert hexadecimal directly to octal <em>without</em> passing through denary. Explain the method you used and why it works.</p>
+<h3>🔍 UTF-8 vs UTF-16</h3>
+<p>Research the difference. Why does UTF-8 dominate the web despite UTF-16 being simpler for some scripts?</p>
+<h3>🔍 Colour codes</h3>
+<p>HTML colours are written as hexadecimal, e.g. <code>#FF8800</code>. Explain why hex is used rather than binary, and work out what colour that is.</p>
 
-    <h3>Why computers use binary</h3>
-    <p>A processor is built from <strong>transistors</strong>, each of which has two stable electrical states — effectively <strong>on</strong> and <strong>off</strong>. Two states map naturally onto two digits, so base 2 is all the hardware needs to distinguish.</p>
-    <p>Denary is not technically superior — it is a historical accident of humans having ten fingers. Any base can be converted into any other, which is why hexadecimal and octal are simply <em>human-friendly shorthand</em> for the underlying binary.</p>
-
-    <h3>Hexadecimal digits</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Denary</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th></tr></thead>
-        <tbody><tr><td>Hex</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- PLAYGROUND -->
-  <section class="card" id="playground">
-    <h2>🎛️ Bit Playground</h2>
-    <p>Click any bit to flip it. Watch the denary, hex, octal and character values update live — this is exactly what the CPU sees.</p>
-
-    <div class="bit-strip" id="bitStrip"></div>
-
-    <div class="readouts">
-      <div class="readout"><span class="rl">Denary</span><span class="rv" id="outDen">0</span></div>
-      <div class="readout"><span class="rl">Hexadecimal</span><span class="rv" id="outHex">00</span></div>
-      <div class="readout"><span class="rl">Octal</span><span class="rv" id="outOct">0</span></div>
-      <div class="readout"><span class="rl">Character</span><span class="rv" id="outChr">—</span></div>
-    </div>
-
-    <div class="presets">
-      <span class="lbl">Try:</span>
-      <button class="btn" data-set="0">0</button>
-      <button class="btn" data-set="42">42</button>
-      <button class="btn" data-set="65">65 · "A"</button>
-      <button class="btn" data-set="97">97 · "a"</button>
-      <button class="btn" data-set="127">127</button>
-      <button class="btn" data-set="255">255</button>
-      <button class="btn" data-random="1">🎲 Random</button>
-    </div>
-
-    <div class="info">
-      💡 Notice that <strong>00101010</strong> gives denary 42, hex <strong>2A</strong>, octal <strong>52</strong> and the character <strong>*</strong> — the same eight bits, read four different ways.
-    </div>
-  </section>
-
-  <!-- CONVERTER -->
-  <section class="card" id="convert">
-    <h2>🔄 Base Converter</h2>
-    <p>Type a number, pick its base, and see it in all four. Use it to check your own working — not to replace it.</p>
-
-    <div class="row">
-      <input type="text" id="convIn" value="42" style="flex:1;min-width:160px" aria-label="Number to convert">
-      <select id="convBase" aria-label="Input base">
-        <option value="10">Denary</option>
-        <option value="2">Binary</option>
-        <option value="16">Hexadecimal</option>
-        <option value="8">Octal</option>
-      </select>
-    </div>
-
-    <div class="readouts" id="convOut">
-      <div class="readout"><span class="rl">Denary</span><span class="rv" data-k="dec">42</span></div>
-      <div class="readout"><span class="rl">Binary</span><span class="rv" data-k="bin">101010</span></div>
-      <div class="readout"><span class="rl">Hex</span><span class="rv" data-k="hex">2A</span></div>
-      <div class="readout"><span class="rl">Octal</span><span class="rv" data-k="oct">52</span></div>
-    </div>
-
-    <h3>Worked methods</h3>
-    <p><strong>Binary → Denary:</strong> add the place values where a 1 appears.</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Place value</th><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead>
-        <tbody><tr><td>Bit</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr></tbody>
-      </table>
-    </div>
-    <pre>00101010  →  32 + 8 + 2  =  42</pre>
-
-    <p><strong>Denary → Binary:</strong> subtract the largest place value that fits, then repeat with the remainder.</p>
-    <pre>42 → 32 (remainder 10) → 8 (remainder 2) → 2 (remainder 0)
-   = 00101010</pre>
-
-    <p><strong>Binary → Hexadecimal:</strong> group the bits in <strong>fours</strong> from the right.</p>
-    <pre>1010 1100  →  A    C  →  AC</pre>
-
-    <p><strong>Binary → Octal:</strong> group the bits in <strong>threes</strong> from the right.</p>
-    <pre>101 010  →  5   2  →  52</pre>
-
-    <p><strong>Hexadecimal → Denary:</strong> multiply each digit by its place value (16⁰, 16¹, 16² …).</p>
-    <pre>2A = (2 × 16) + (10 × 1) = 32 + 10 = 42</pre>
-  </section>
-
-  <!-- CHARACTERS -->
-  <section class="card" id="characters">
-    <h2>🔤 ASCII and Unicode</h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th></th><th>ASCII</th><th>Unicode</th></tr></thead>
-        <tbody>
-          <tr><td>Bits</td><td>7 (128 characters)</td><td>UTF-8 / UTF-16 (variable)</td></tr>
-          <tr><td>Covers</td><td>English, digits, basic punctuation</td><td>All world scripts, symbols, emoji</td></tr>
-          <tr><td>Examples</td><td><code>A</code> = 65, <code>a</code> = 97, <code>0</code> = 48, space = 32</td><td><code>A</code> = U+0041, <code>é</code> = U+00E9, <code>😀</code> = U+1F600</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>ASCII explorer</h3>
-    <p>Drag the slider through the printable ASCII range (32–126) and watch the code change.</p>
-    <div class="ascii-big" id="asciiChar">A</div>
-    <input type="range" id="asciiRange" min="32" max="126" value="65" aria-label="ASCII code point">
-    <div class="readouts">
-      <div class="readout"><span class="rl">Denary</span><span class="rv" id="asciiDec">65</span></div>
-      <div class="readout"><span class="rl">Hex</span><span class="rv" id="asciiHex">41</span></div>
-      <div class="readout"><span class="rl">Binary</span><span class="rv" id="asciiBin">01000001</span></div>
-    </div>
-
-    <h3>Beyond ASCII: any character</h3>
-    <p>ASCII stops at 128. Type any character here — including emoji — to see its Unicode code point.</p>
-    <div class="row">
-      <input type="text" id="chrIn" placeholder="Type any character…" maxlength="2" style="flex:1;min-width:180px" aria-label="Any character">
-    </div>
-    <div class="readouts">
-      <div class="readout"><span class="rl">Character</span><span class="rv" id="uniChar">—</span></div>
-      <div class="readout"><span class="rl">Denary</span><span class="rv" id="uniDec">—</span></div>
-      <div class="readout"><span class="rl">Hex</span><span class="rv" id="uniHex">—</span></div>
-      <div class="readout"><span class="rl">Unicode</span><span class="rv" id="uniCode">—</span></div>
-    </div>
-
-    <div class="warn">
-      ⚠️ <strong>Common exam mistake:</strong> saying Unicode "replaces" ASCII as if they were unrelated. Unicode is a <em>superset</em> — its first 128 code points are identical to ASCII, and UTF-8 is backward-compatible with ASCII by design.
-    </div>
-  </section>
-
-  <!-- TASKS -->
-  <section class="card" id="tasks">
-    <h2>📖 Your Tasks</h2>
-
-    <div class="task">
-      <div class="task-head"><span class="task-num">1</span><h4>Read &amp; Learn</h4></div>
-      <p>Take notes on each of the four number bases — what base it is, which digits it uses, and why it exists — then note how ASCII and Unicode represent characters.</p>
-      <ul class="reslist">
-        <li><a class="reslink" href="https://github.com/Mr-Ellis/School/blob/main/docs/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank" rel="noopener"><span class="ico">📘</span> Course ebook — DP Computer Science A 1.2.1–2 (PDF)</a></li>
-        <li><a class="reslink" href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.1-describe-the-principal-methods-of-representing-data" target="_blank" rel="noopener"><span class="ico">🌐</span> Computer Science Wiki — A1.2.1 Describe the principal methods of representing data</a></li>
-      </ul>
-    </div>
-
-    <div class="task">
-      <div class="task-head"><span class="task-num">2</span><h4>Complete the Main Task</h4></div>
-      <p>Work through the mild, medium and spicy questions from the lesson slides.</p>
-      <ul class="reslist">
-        <li><a class="reslink" href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener"><span class="ico">🖥️</span> Main task slides</a></li>
-        <li><a class="reslink" href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g30688db2fdf_1_6" target="_blank" rel="noopener"><span class="ico">🖥️</span> A 1.2.1 Binary Representation slides</a></li>
-      </ul>
-      <p style="margin-top:14px">Use 🐍 Python Code Lab to write your answers in a text file.</p>
-      <p>📌 <strong>Important:</strong> save your work as a <code>.txt</code> file using the sentence frame:</p>
-      <blockquote>"[Method] is base [number] and uses the digits [digits]. It is used because [reason]. Characters are represented using [ASCII/Unicode], which is [bits] bits and covers [characters]. Unicode is needed because [reason]."</blockquote>
-    </div>
-
-    <div class="task">
-      <div class="task-head"><span class="task-num">3</span><h4>Deliberate Practice</h4></div>
-      <p>Write a <strong>Describe</strong> answer to this question:</p>
-      <blockquote><em>"Describe the principal methods of representing data."</em></blockquote>
-      <p><strong>Sentence frame:</strong></p>
-      <blockquote>"Computers use binary because ______. Binary uses only the digits ______. Hexadecimal is base ______ and uses the digits ______; it is used because ______. Octal is base ______ and is useful because ______. Characters are represented using ______, which is a ______-bit code covering ______ characters. Unicode is needed because ______."</blockquote>
-      <details>
-        <summary>📌 Click to see a completed example</summary>
-        <div class="body">
-          <p>Computers use binary because their processors are built from transistors, which have only two stable states — on and off — so two digits are all the hardware needs to distinguish. Binary uses only the digits 0 and 1, with each position representing a power of two.</p>
-          <p>Hexadecimal is base 16 and uses the digits 0–9 plus A–F. It is used because it is a compact shorthand for binary: one hex digit represents exactly one nibble (4 bits), so long binary strings become shorter and less error-prone to read. It is commonly used for colour codes, memory addresses and MAC addresses.</p>
-          <p>Octal is base 8 and uses the digits 0–7. It is useful because one octal digit represents exactly 3 bits, giving a compact notation historically used in early computing and still used for file permissions in Unix-like systems.</p>
-          <p>Characters are represented using ASCII, which is a 7-bit code covering 128 characters including the English alphabet, digits and punctuation. Unicode is needed because ASCII cannot represent the world's other scripts, symbols or emoji; Unicode is a superset that assigns a unique code point to every character, allowing text in any language to be stored and exchanged.</p>
-        </div>
-      </details>
-    </div>
-
-    <div class="task">
-      <div class="task-head"><span class="task-num">4</span><h4>Plenary</h4></div>
-      <p>Test yourself with the Quizlet flashcards, then try the quiz below.</p>
-      <ul class="reslist">
-        <li><a class="reslink" href="https://quizlet.com/pt/1065988326/a-121-describe-the-principal-methods-of-representing-data-flash-cards" target="_blank" rel="noopener"><span class="ico">🃏</span> A1.2.1 — Quizlet flashcards</a></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- EXTENSIONS -->
-  <section class="card" id="extensions">
-    <h2>⭐ Extension Activities</h2>
-    <div class="ext-grid">
-      <div class="ext">
-        <h4>🔍 Direct conversion</h4>
-        <p>Convert hexadecimal directly to octal <em>without</em> passing through denary. Explain the method you used and why it works.</p>
-      </div>
-      <div class="ext">
-        <h4>🔍 UTF-8 vs UTF-16</h4>
-        <p>Research the difference. Why does UTF-8 dominate the web despite UTF-16 being simpler for some scripts?</p>
-      </div>
-      <div class="ext">
-        <h4>🔍 Colour codes</h4>
-        <p>HTML colours are written as hexadecimal, e.g. <code>#FF8800</code>. Explain why hex is used rather than binary, and work out what colour that is.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- QUIZ -->
-  <section class="card" id="quiz">
-    <h2>✅ Check Your Understanding</h2>
-    <div class="quiz-head">
-      <p style="margin:0;color:var(--muted);font-size:.9rem">Six questions. Immediate feedback on each.</p>
-      <span class="score-pill">Score: <span id="quizScore">0</span> / <span id="quizTotal">6</span></span>
-    </div>
-    <div id="quizBody"></div>
-    <div class="quiz-done" id="quizDone"></div>
-    <div style="margin-top:20px">
-      <button class="btn" id="quizReset">↺ Reset quiz</button>
-    </div>
-  </section>
-
-  <!-- TAKEAWAY -->
-  <section class="takeaway">
-    <h2>💡 Key Takeaway</h2>
-    <p>Computers store everything as binary because their hardware has exactly two stable states. Denary, hexadecimal and octal are all just different ways of <em>writing down</em> the same underlying bits — chosen for human convenience, not machine necessity. Characters are no different: ASCII and Unicode assign numbers to letters, and those numbers are stored in binary like everything else.</p>
-  </section>
-
-  <footer>
-    <strong>Teacher resources:</strong>
-    <a href="https://github.com/Mr-Ellis/School/blob/main/docs/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%202.1.1.pdf" target="_blank" rel="noopener">Lesson plan (PDF)</a> ·
-    <a href="https://github.com/Mr-Ellis/School/blob/main/docs/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank" rel="noopener">Ebook (PDF)</a>
-  </footer>
-</main>
-
+<!-- SECTION: JAVASCRIPT -->
 <script>
-(function () {
-  'use strict';
-
-  /* ============ BIT PLAYGROUND ============ */
-  var PV = [128, 64, 32, 16, 8, 4, 2, 1];
-  var bits = [0, 0, 0, 0, 0, 0, 0, 0];
-  var strip = document.getElementById('bitStrip');
-
-  PV.forEach(function (pv, i) {
-    var cell = document.createElement('div');
-    cell.className = 'bit-cell';
-    var label = document.createElement('span');
-    label.className = 'bit-pv';
-    label.textContent = pv;
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'bit';
-    btn.dataset.i = i;
-    btn.textContent = '0';
-    btn.setAttribute('aria-label', 'Bit worth ' + pv);
-    cell.appendChild(label);
-    cell.appendChild(btn);
-    strip.appendChild(cell);
-  });
-
-  function bitsValue() {
-    var n = 0;
-    for (var i = 0; i < 8; i++) { if (bits[i]) n += PV[i]; }
-    return n;
+// --- BIT PLAYGROUND ---
+const PV = [128, 64, 32, 16, 8, 4, 2, 1];
+let bits = [0,0,0,0,0,0,0,0];
+const strip = document.getElementById('bitStrip');
+PV.forEach((pv, i) => {
+  const div = document.createElement('div'); div.className = 'bit-col';
+  div.innerHTML = `<span class="bit-pv">${pv}</span><button class="bit-btn" id="bit${i}" onclick="toggleBit(${i})">0</button>`;
+  strip.appendChild(div);
+});
+function toggleBit(i) { bits[i] = bits[i] ? 0 : 1; renderBits(); }
+function setBits(n) { for(let i=0; i<8; i++) bits[i] = (n >> (7-i)) & 1; renderBits(); }
+function renderBits() {
+  let n = 0;
+  for(let i=0; i<8; i++) if(bits[i]) n += PV[i];
+  document.getElementById('outDen').textContent = n;
+  document.getElementById('outHex').textContent = n.toString(16).toUpperCase().padStart(2, '0');
+  document.getElementById('outOct').textContent = n.toString(8);
+  let chr = '—';
+  if(n === 32) chr = '␣'; else if(n >= 33 && n <= 126) chr = String.fromCharCode(n);
+  document.getElementById('outChr').textContent = chr;
+  for(let i=0; i<8; i++) {
+    const b = document.getElementById('bit'+i);
+    b.textContent = bits[i];
+    b.classList.toggle('on', !!bits[i]);
   }
+}
+renderBits();
 
-  function renderBits() {
-    var n = bitsValue();
-    document.getElementById('outDen').textContent = n;
-    document.getElementById('outHex').textContent = n.toString(16).toUpperCase().padStart(2, '0');
-    document.getElementById('outOct').textContent = n.toString(8);
-    var chr = '—';
-    if (n === 32) chr = '␣';
-    else if (n >= 33 && n <= 126) chr = String.fromCharCode(n);
-    document.getElementById('outChr').textContent = chr;
+// --- BASE CONVERTER ---
+const convIn = document.getElementById('convIn'), convBase = document.getElementById('convBase');
+function convert() {
+  const raw = convIn.value.trim(), base = +convBase.value;
+  const patterns = {2: /^[01]+$/, 8: /^[0-7]+$/, 10: /^[0-9]+$/, 16: /^[0-9a-fA-F]+$/};
+  if(!raw || !patterns[base].test(raw)) return;
+  const n = parseInt(raw, base);
+  document.getElementById('cDec').textContent = n;
+  document.getElementById('cBin').textContent = n.toString(2);
+  document.getElementById('cHex').textContent = n.toString(16).toUpperCase();
+  document.getElementById('cOct').textContent = n.toString(8);
+}
+convIn.addEventListener('input', convert); convBase.addEventListener('change', convert); convert();
 
-    strip.querySelectorAll('.bit').forEach(function (b) {
-      var i = +b.dataset.i;
-      b.textContent = bits[i];
-      b.classList.toggle('on', !!bits[i]);
+// --- ASCII EXPLORER ---
+const range = document.getElementById('asciiRange');
+function renderAscii() {
+  const n = +range.value;
+  document.getElementById('asciiChar').textContent = n === 32 ? '␣' : String.fromCharCode(n);
+  document.getElementById('aDec').textContent = n;
+  document.getElementById('aHex').textContent = n.toString(16).toUpperCase().padStart(2, '0');
+  document.getElementById('aBin').textContent = n.toString(2).padStart(8, '0');
+}
+range.addEventListener('input', renderAscii); renderAscii();
+document.getElementById('uniIn').addEventListener('input', (e) => {
+  const v = e.target.value;
+  if(!v) { document.getElementById('uniCode').textContent = '—'; return; }
+  const cp = v.codePointAt(0);
+  document.getElementById('uniCode').textContent = 'U+' + cp.toString(16).toUpperCase().padStart(4, '0');
+});
+
+// --- QUIZ ---
+const QUIZ = [
+  { q: "Which base is hexadecimal?", opts: ["2", "8", "16", "10"], a: 2, why: "Hexadecimal is base 16 — digits 0–9 then A–F." },
+  { q: "What is 1111 in hexadecimal?", opts: ["E", "F", "15", "10"], a: 1, why: "1111 is a full nibble = denary 15 = hex F." },
+  { q: "What is a nibble?", opts: ["2 bits", "4 bits", "8 bits", "16 bits"], a: 1, why: "A nibble is 4 bits — exactly one hex digit." },
+  { q: "What is the character 'A' in ASCII (denary)?", opts: ["41", "65", "97", "48"], a: 1, why: "Uppercase A is 65. Lowercase a is 97; 0 is 48; 41 is hex for 65." },
+  { q: "Why was Unicode needed alongside ASCII?", opts: ["ASCII was too slow", "ASCII could not represent all world languages and symbols", "ASCII only worked on mainframes", "Unicode stores data in less space"], a: 1, why: "ASCII is only 7 bits (128 characters) — enough for English, not for the world." },
+  { q: "What is 00101010 in denary?", opts: ["32", "42", "52", "84"], a: 1, why: "32 + 8 + 2 = 42. (In hex that is 2A, in octal 52.)" }
+];
+let answered = 0, score = 0;
+const qBody = document.getElementById('quizBody');
+function buildQuiz() {
+  answered = 0; score = 0; document.getElementById('quizScore').textContent = 'Score: 0 / 6';
+  qBody.innerHTML = '';
+  QUIZ.forEach((item, qi) => {
+    const div = document.createElement('div');
+    div.style.marginBottom = '20px';
+    div.innerHTML = `<p><strong>${qi+1}. ${item.q}</strong></p>`;
+    const fb = document.createElement('div'); fb.className = 'quiz-fb';
+    item.opts.forEach((opt, oi) => {
+      const btn = document.createElement('button'); btn.className = 'quiz-opt'; btn.textContent = opt;
+      btn.onclick = () => {
+        div.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+        const isRight = oi === item.a;
+        btn.classList.add(isRight ? 'correct' : 'wrong');
+        if(!isRight) div.querySelectorAll('.quiz-opt')[item.a].classList.add('correct');
+        fb.textContent = (isRight ? '✅ Correct. ' : '❌ Not quite. ') + item.why;
+        fb.classList.add('show');
+        answered++; if(isRight) score++;
+        document.getElementById('quizScore').textContent = `Score: ${score} / 6`;
+      };
+      div.appendChild(btn);
     });
-  }
-
-  strip.addEventListener('click', function (e) {
-    var b = e.target.closest('.bit');
-    if (!b) return;
-    var i = +b.dataset.i;
-    bits[i] = bits[i] ? 0 : 1;
-    renderBits();
+    div.appendChild(fb);
+    qBody.appendChild(div);
   });
-
-  function setValue(n) {
-    for (var i = 0; i < 8; i++) { bits[i] = (n >> (7 - i)) & 1; }
-    renderBits();
-  }
-
-  document.querySelectorAll('[data-set]').forEach(function (b) {
-    b.addEventListener('click', function () { setValue(+b.dataset.set); });
-  });
-
-  document.querySelector('[data-random]').addEventListener('click', function () {
-    for (var i = 0; i < 8; i++) { bits[i] = Math.random() < 0.5 ? 0 : 1; }
-    renderBits();
-  });
-
-  renderBits();
-
-  /* ============ BASE CONVERTER ============ */
-  var convIn = document.getElementById('convIn');
-  var convBase = document.getElementById('convBase');
-  var convOut = document.getElementById('convOut');
-  var patterns = { 2: /^[01]+$/, 8: /^[0-7]+$/, 10: /^[0-9]+$/, 16: /^[0-9a-fA-F]+$/ };
-
-  function setOut(key, val) {
-    var el = convOut.querySelector('[data-k="' + key + '"]');
-    if (el) el.textContent = val;
-  }
-
-  function convert() {
-    var raw = convIn.value.trim();
-    var base = +convBase.value;
-    var ok = raw !== '' && patterns[base].test(raw) && raw.length <= 32;
-    var n = ok ? parseInt(raw, base) : NaN;
-
-    convIn.classList.toggle('invalid', !ok && raw !== '');
-
-    if (!ok || isNaN(n)) {
-      setOut('dec', '—'); setOut('bin', '—');
-      setOut('hex', '—'); setOut('oct', '—');
-      return;
-    }
-    setOut('dec', String(n));
-    setOut('bin', n.toString(2));
-    setOut('hex', n.toString(16).toUpperCase());
-    setOut('oct', n.toString(8));
-  }
-
-  convIn.addEventListener('input', convert);
-  convBase.addEventListener('change', convert);
-  convert();
-
-  /* ============ ASCII EXPLORER ============ */
-  var range = document.getElementById('asciiRange');
-
-  function renderAscii() {
-    var n = +range.value;
-    document.getElementById('asciiChar').textContent =
-      n === 32 ? '␣' : String.fromCharCode(n);
-    document.getElementById('asciiDec').textContent = n;
-    document.getElementById('asciiHex').textContent = n.toString(16).toUpperCase().padStart(2, '0');
-    document.getElementById('asciiBin').textContent = n.toString(2).padStart(8, '0');
-  }
-  range.addEventListener('input', renderAscii);
-  renderAscii();
-
-  /* ============ UNICODE INPUT ============ */
-  var chrIn = document.getElementById('chrIn');
-
-  chrIn.addEventListener('input', function () {
-    var v = chrIn.value;
-    var out = ['uniChar', 'uniDec', 'uniHex', 'uniCode'];
-    if (!v) {
-      out.forEach(function (id) { document.getElementById(id).textContent = '—'; });
-      return;
-    }
-    var cp = v.codePointAt(0);
-    document.getElementById('uniChar').textContent = String.fromCodePoint(cp);
-    document.getElementById('uniDec').textContent = cp;
-    document.getElementById('uniHex').textContent = cp.toString(16).toUpperCase();
-    document.getElementById('uniCode').textContent =
-      'U+' + cp.toString(16).toUpperCase().padStart(4, '0');
-  });
-
-  /* ============ QUIZ ============ */
-  var QUIZ = [
-    {
-      q: 'Which base is hexadecimal?',
-      opts: ['2', '8', '16', '10'],
-      a: 2,
-      why: 'Hexadecimal is base 16 — digits 0–9 then A–F.'
-    },
-    {
-      q: 'What is <code>1111</code> in hexadecimal?',
-      opts: ['E', 'F', '15', '10'],
-      a: 1,
-      why: '1111 is a full nibble = denary 15 = hex F.'
-    },
-    {
-      q: 'What is a nibble?',
-      opts: ['2 bits', '4 bits', '8 bits', '16 bits'],
-      a: 1,
-      why: 'A nibble is 4 bits — exactly one hex digit.'
-    },
-    {
-      q: 'What is the character <code>A</code> in ASCII (denary)?',
-      opts: ['41', '65', '97', '48'],
-      a: 1,
-      why: 'Uppercase A is 65. Lowercase a is 97; 0 is 48; 41 is hex for 65.'
-    },
-    {
-      q: 'Why was Unicode needed alongside ASCII?',
-      opts: [
-        'ASCII was too slow',
-        'ASCII could not represent all world languages and symbols',
-        'ASCII only worked on mainframes',
-        'Unicode stores data in less space'
-      ],
-      a: 1,
-      why: 'ASCII is only 7 bits (128 characters) — enough for English, not for the world.'
-    },
-    {
-      q: 'What is <code>00101010</code> in denary?',
-      opts: ['32', '42', '52', '84'],
-      a: 1,
-      why: '32 + 8 + 2 = 42. (In hex that is 2A, in octal 52.)'
-    }
-  ];
-
-  var quizBody = document.getElementById('quizBody');
-  var scoreEl = document.getElementById('quizScore');
-  var doneEl = document.getElementById('quizDone');
-  var answered = 0, score = 0;
-
-  function buildQuiz() {
-    answered = 0;
-    score = 0;
-    scoreEl.textContent = '0';
-    doneEl.classList.remove('show');
-    doneEl.textContent = '';
-    quizBody.innerHTML = '';
-
-    QUIZ.forEach(function (item, qi) {
-      var qWrap = document.createElement('div');
-      qWrap.className = 'q';
-
-      var h = document.createElement('h4');
-      var num = document.createElement('span');
-      num.className = 'qnum';
-      num.textContent = qi + 1;
-      h.appendChild(num);
-      var txt = document.createElement('span');
-      txt.innerHTML = item.q;
-      h.appendChild(txt);
-      qWrap.appendChild(h);
-
-      var opts = document.createElement('div');
-      opts.className = 'opts';
-
-      var fb = document.createElement('div');
-      fb.className = 'fb';
-
-      item.opts.forEach(function (label, oi) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'opt';
-        b.textContent = label;
-        b.addEventListener('click', function () {
-          opts.querySelectorAll('.opt').forEach(function (x) { x.disabled = true; });
-          var isRight = oi === item.a;
-          b.classList.add(isRight ? 'correct' : 'wrong');
-          if (!isRight) {
-            var correctBtn = opts.children[item.a];
-            if (correctBtn) correctBtn.classList.add('correct');
-          }
-          fb.textContent = (isRight ? '✅ Correct. ' : '❌ Not quite. ') + item.why;
-          fb.classList.add('show');
-
-          answered++;
-          if (isRight) score++;
-          scoreEl.textContent = score;
-
-          if (answered === QUIZ.length) {
-            var pct = score / QUIZ.length;
-            doneEl.textContent =
-              'Finished — ' + score + '/' + QUIZ.length + '. ' +
-              (pct === 1 ? 'Flawless. You can describe all four methods.'
-                : pct >= 0.7 ? 'Solid — review the ones you missed above.'
-                : 'Revisit the bit playground and converter, then reset and try again.');
-            doneEl.classList.add('show');
-          }
-        });
-        opts.appendChild(b);
-      });
-
-      qWrap.appendChild(opts);
-      qWrap.appendChild(fb);
-      quizBody.appendChild(qWrap);
-    });
-  }
-
-  document.getElementById('quizReset').addEventListener('click', function () {
-    buildQuiz();
-    document.getElementById('quiz').scrollIntoView({ block: 'start' });
-  });
-
-  buildQuiz();
-
-  /* ============ SCROLL SPY ============ */
-  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
-  var sections = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
-
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          var id = '#' + entry.target.id;
-          links.forEach(function (l) {
-            l.classList.toggle('active', l.getAttribute('href') === id);
-          });
-        }
-      });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    sections.forEach(function (s) { io.observe(s); });
-  }
-})();
+}
+buildQuiz();
 </script>
 </body>
 </html>
