@@ -5,24 +5,67 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A1.2.1 – Data Representation 1</title>
 <style>
-  /* Minimal styles ONLY for the interactive tools so they don't break the plain format */
+  /* Base layout matching A1.1.7 (clean, centered, readable) */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  
+  a { color: #0366d6; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  
+  h1, h2, h3 { color: #1e3a8a; margin-top: 1.5em; }
+  h1 { font-size: 2em; border-bottom: 2px solid #eaecef; padding-bottom: 10px; }
+  
+  table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+  th, td { border: 1px solid #dfe2e5; padding: 10px; text-align: left; }
+  th { background-color: #f6f8fa; font-weight: 600; }
+
+  /* EXACT styling for the Tasks section from your screenshot */
+  .task-item { display: flex; margin-bottom: 30px; }
+  .task-num { font-size: 1.5rem; font-weight: bold; color: #1e3a8a; width: 40px; flex-shrink: 0; }
+  .task-content { flex-grow: 1; }
+  
+  .task-title { font-size: 1.2rem; font-weight: bold; color: #1e3a8a; }
+  .task-title.green { color: #15803d; }
+  
+  .task-desc { color: #64748b; }
+  
+  .res-links { margin: 15px 0; display: flex; flex-wrap: wrap; gap: 20px; }
+  .res-links a { color: #dc2626; border-bottom: 1px dotted #dc2626; padding-bottom: 2px; text-decoration: none; font-weight: 500; }
+  .res-links a:hover { color: #991b1b; border-bottom-style: solid; text-decoration: none; }
+  
+  .python-pill { 
+    background-color: #3b82f6; color: white; padding: 4px 12px; 
+    border-radius: 20px; font-weight: bold; display: inline-block; 
+    text-decoration: none; margin: 0 4px;
+  }
+  .python-pill:hover { background-color: #2563eb; text-decoration: none; color: white; }
+  
+  .important-text { color: #dc2626; font-weight: bold; }
+  
+  /* Minimal styling for interactive bits so they don't look broken */
+  .interactive-box { border: 1px solid #dfe2e5; padding: 20px; border-radius: 8px; margin: 20px 0; background: #fff; }
   .bit-strip { display: flex; gap: 8px; margin: 15px 0; flex-wrap: wrap; }
   .bit-col { text-align: center; }
   .bit-pv { font-size: 0.75rem; color: #666; display: block; margin-bottom: 4px; }
   .bit-btn { width: 40px; height: 40px; font-family: monospace; font-size: 1.2rem; cursor: pointer; border: 1px solid #ccc; border-radius: 6px; background: #f9f9f9; }
   .bit-btn.on { background: #4f46e5; color: white; border-color: #4f46e5; }
-  .interactive-box { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin: 15px 0; background: #fafafa; }
   .readout-row { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; }
-  .readout { background: #fff; border: 1px solid #ddd; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; }
-  .readout span { font-size: 0.8rem; color: #666; display: block; font-family: sans-serif; text-transform: uppercase; margin-bottom: 4px; }
-  .quiz-opt { display: block; width: 100%; text-align: left; margin: 5px 0; padding: 10px; border: 1px solid #ccc; background: #fff; border-radius: 5px; cursor: pointer; font-size: 1rem; }
-  .quiz-opt:hover { background: #f0f0f0; }
+  .readout { background: #f6f8fa; border: 1px solid #dfe2e5; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; }
+  .readout span { font-size: 0.75rem; color: #64748b; display: block; font-family: sans-serif; text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
+  input[type="text"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+  .quiz-opt { display: block; width: 100%; text-align: left; margin: 8px 0; padding: 12px; border: 1px solid #dfe2e5; background: #fff; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+  .quiz-opt:hover { background: #f6f8fa; }
   .quiz-opt.correct { background: #d1fae5; border-color: #059669; font-weight: bold; }
   .quiz-opt.wrong { background: #ffe4e6; border-color: #e11d48; font-weight: bold; }
   .quiz-fb { display: none; margin-top: 10px; font-size: 0.9rem; color: #444; }
   .quiz-fb.show { display: block; }
-  .ascii-big { font-size: 3rem; font-family: monospace; text-align: center; padding: 15px; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0; color: #4f46e5; }
-  input[type="text"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+  .ascii-big { font-size: 3rem; font-family: monospace; text-align: center; padding: 15px; background: #f6f8fa; border: 1px solid #dfe2e5; border-radius: 8px; margin: 10px 0; color: #1e3a8a; }
 </style>
 </head>
 <body>
@@ -31,7 +74,6 @@
 
 <h1>A1.2.1 – Data Representation 1</h1>
 
-<!-- SECTION: OBJECTIVE -->
 <h2>📌 Learning Objective</h2>
 <p>By the end of this lesson, you will be able to:</p>
 <ul>
@@ -41,16 +83,14 @@
   <li>Describe how <strong>characters</strong> are represented, and why Unicode extends ASCII</li>
 </ul>
 
-<!-- SECTION: COMMAND TERM -->
 <h2>🎯 IB Command Term: Describe</h2>
 <p><strong>Describe</strong> – "Give a detailed account."</p>
 <p>Naming the four methods is not describing them. This lesson builds the skill of giving a detailed account of <em>what each method is</em>, <em>which base it uses</em>, and <em>where and why it is used</em>.</p>
 
 <p>🎮 Starter Activity – Blooket Rush Test your knowledge of number bases before we begin! 🚀 <a href="https://play.blooket.com/host/hack?id=68b03780ddff7a4868b8d259" target="_blank" rel="noopener">Launch Blooket</a></p>
 
-<!-- SECTION: KEY TERMS -->
 <h2>🔑 Key Terms</h2>
-<table border="1" cellpadding="8" cellspacing="0">
+<table>
   <tr><th>Term</th><th>Definition</th></tr>
   <tr><td>Bit</td><td>A single binary digit — 0 or 1</td></tr>
   <tr><td>Nibble</td><td>4 bits; corresponds to exactly one hexadecimal digit</td></tr>
@@ -63,9 +103,8 @@
   <tr><td>Unicode</td><td>An extended character encoding covering the world's scripts and symbols</td></tr>
 </table>
 
-<!-- SECTION: METHODS -->
 <h2>📊 The Principal Methods of Representation</h2>
-<table border="1" cellpadding="8" cellspacing="0">
+<table>
   <tr><th>Method</th><th>Base</th><th>Digits used</th><th>Why it is used</th></tr>
   <tr><td>Binary</td><td>2</td><td>0, 1</td><td>Matches the two physical states of a transistor (on / off)</td></tr>
   <tr><td>Octal</td><td>8</td><td>0–7</td><td>Compact shorthand for binary — 1 octal digit = 3 bits</td></tr>
@@ -79,18 +118,17 @@
 <p>Denary is not technically superior — it is a historical accident of humans having ten fingers. Any base can be converted into any other, which is why hexadecimal and octal are simply <em>human-friendly shorthand</em> for the underlying binary.</p>
 
 <h3>Hexadecimal digits</h3>
-<table border="1" cellpadding="8" cellspacing="0">
+<table>
   <tr><th>Denary</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
   <tr><th>Hex</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr>
 </table>
 
-<!-- SECTION: INTERACTIVE TOOLS -->
 <h2>🎛️ Interactive Tools</h2>
 <p>Use these tools to check your understanding of how bits, bases, and characters work.</p>
 
 <div class="interactive-box">
   <h3 style="margin-top:0;">Bit Playground</h3>
-  <p style="margin-top:0; font-size:0.9rem; color:#555;">Click the bits to flip them. Watch the values change live.</p>
+  <p style="margin-top:0; font-size:0.9rem; color:#666;">Click the bits to flip them. Watch the values change live.</p>
   <div class="bit-strip" id="bitStrip"></div>
   <div class="readout-row">
     <div class="readout"><span>Denary</span><span id="outDen">0</span></div>
@@ -108,7 +146,7 @@
 
 <div class="interactive-box">
   <h3 style="margin-top:0;">Base Converter</h3>
-  <p style="margin-top:0; font-size:0.9rem; color:#555;">Type a number and select its base.</p>
+  <p style="margin-top:0; font-size:0.9rem; color:#666;">Type a number and select its base.</p>
   <input type="text" id="convIn" value="42" style="width:100px;">
   <select id="convBase">
     <option value="10">Denary</option>
@@ -126,7 +164,7 @@
 
 <div class="interactive-box">
   <h3 style="margin-top:0;">ASCII Explorer</h3>
-  <p style="margin-top:0; font-size:0.9rem; color:#555;">Drag the slider to see ASCII characters. Type any character (including emojis) to see its Unicode point.</p>
+  <p style="margin-top:0; font-size:0.9rem; color:#666;">Drag the slider to see ASCII characters. Type any character (including emojis) to see its Unicode point.</p>
   <div class="ascii-big" id="asciiChar">A</div>
   <input type="range" id="asciiRange" min="32" max="126" value="65" style="width:100%;">
   <div class="readout-row">
@@ -142,38 +180,63 @@
   </div>
 </div>
 
-<!-- SECTION: TASKS -->
 <h2>📖 Your Tasks</h2>
 
-<p><strong>1 Read &amp; Learn</strong> — Use the resources below to learn about data representation.</p>
-<ul>
-  <!-- eBook link changed to raw.githubusercontent to force PDF download/view instead of GitHub UI -->
-  <li>📖 <a href="https://raw.githubusercontent.com/Mr-Ellis/School/main/docs/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank" rel="noopener">eBook (A1.2.1)</a></li>
-  <li>🌐 <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.1-describe-the-principal-methods-of-representing-data" target="_blank" rel="noopener">CS Wiki (A1.2.1)</a></li>
-  <li>🖥️ <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener">Lesson Slides</a> (Main Task)</li>
-  <li>🖥️ <a href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g30688db2fdf_1_6" target="_blank" rel="noopener">A 1.2.1 Binary Representation</a> (Slides)</li>
-</ul>
-<p>Take notes on each of the four number bases — what base it is, which digits it uses, and why it exists — then note how ASCII and Unicode represent characters.</p>
+<!-- Task 1: Exactly matches Image 1 -->
+<div class="task-item">
+  <div class="task-num">1</div>
+  <div class="task-content">
+    <span class="task-title">Read & Learn</span> <span class="task-desc">— Use the resources below to learn about data representation.</span>
+    
+    <div class="res-links">
+      <!-- eBook link is now raw.githubusercontent so it opens the PDF directly in a new tab -->
+      <a href="https://raw.githubusercontent.com/Mr-Ellis/School/main/docs/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank" rel="noopener">📖 eBook (A1.2.1)</a>
+      <a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.1-describe-the-principal-methods-of-representing-data" target="_blank" rel="noopener">🌐 CS Wiki (A1.2.1)</a>
+      <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener">🖥️ Lesson Slides</a>
+    </div>
+    
+    <p class="task-desc" style="margin-top:15px;">Take notes on each of the four number bases — what base it is, which digits it uses, and why it exists — then note how ASCII and Unicode represent characters.</p>
+  </div>
+</div>
 
-<p><strong>2 Complete the Starter Activity</strong> — Work through the <strong>Describe</strong> questions from the Lesson Starter PowerPoint.</p>
-<!-- Python Code Lab link added here -->
-<p>Use 🐍 <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener">Python Code Lab</a> to write your answers in a text file.</p>
-<p>📌 <strong>Important:</strong> Save your work as a <code>.txt</code> file using the sentence frame: <em>"[Method] is base [number] and uses the digits [digits]. It is used because [reason]. Characters are represented using [ASCII/Unicode], which is [bits] bits and covers [characters]. Unicode is needed because [reason]."</em></p>
+<!-- Task 2: Exactly matches Image 1 -->
+<div class="task-item">
+  <div class="task-num">2</div>
+  <div class="task-content">
+    <span class="task-title green">Complete the Starter Activity</span> <span class="task-desc">— Work through the <strong style="color:#15803d;">Describe</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g30688db2fdf_1_6" target="_blank" rel="noopener" style="color:#dc2626; border-bottom:1px dotted #dc2626; text-decoration:none;">Lesson Starter PowerPoint</a>.</span>
+    
+    <p style="margin-top:15px;">Use <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener" class="python-pill">🐍 Python Code Lab</a> to write your answers in a text file.</p>
+    
+    <p><span class="important-text">📌 Important:</span> Save your work as a <code>.txt</code> file using the sentence frame: <em>"[Method] is base [number] and uses the digits [digits]. It is used because [reason]. Characters are represented using [ASCII/Unicode], which is [bits] bits and covers [characters]. Unicode is needed because [reason]."</em></p>
+  </div>
+</div>
 
-<p><strong>3 Deliberate Practice</strong> — Write a <strong>Describe</strong> answer to this question:</p>
-<p><em>"Describe the principal methods of representing data."</em></p>
-<p><strong>Sentence frame:</strong></p>
-<p><em>"Computers use binary because ______. Binary uses only the digits ______. Hexadecimal is base ______ and uses the digits ______; it is used because ______. Octal is base ______ and is useful because ______. Characters are represented using ______, which is a ______-bit code covering ______ characters. Unicode is needed because ______."</em></p>
+<!-- Task 3 -->
+<div class="task-item">
+  <div class="task-num">3</div>
+  <div class="task-content">
+    <span class="task-title">Deliberate Practice</span> <span class="task-desc">— Write a <strong>Describe</strong> answer to this question:</span>
+    <p><em>"Describe the principal methods of representing data."</em></p>
+    <p><strong>Sentence frame:</strong></p>
+    <p><em>"Computers use binary because ______. Binary uses only the digits ______. Hexadecimal is base ______ and uses the digits ______; it is used because ______. Octal is base ______ and is useful because ______. Characters are represented using ______, which is a ______-bit code covering ______ characters. Unicode is needed because ______."</em></p>
+  </div>
+</div>
 
-<p><strong>4 Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1065988326/a-121-describe-the-principal-methods-of-representing-data-flash-cards" target="_blank" rel="noopener">Quizlet flashcards</a>.</p>
+<!-- Task 4: Exactly matches Image 1 (Plenary) -->
+<div class="task-item">
+  <div class="task-num">4</div>
+  <div class="task-content">
+    <span class="task-title">Plenary</span> <span class="task-desc">— Test yourself with the <a href="https://quizlet.com/pt/1065988326/a-121-describe-the-principal-methods-of-representing-data-flash-cards" target="_blank" rel="noopener" style="color:#dc2626; border-bottom:1px dotted #dc2626; text-decoration:none;">Quizlet flashcards</a>.</span>
+  </div>
+</div>
 
+<!-- Quiz placed under tasks -->
 <div class="interactive-box">
   <h3 style="margin-top:0;">Self-Marking Quiz</h3>
   <div id="quizBody"></div>
   <p id="quizScore" style="font-weight:bold; margin-top:15px;">Score: 0 / 6</p>
 </div>
 
-<!-- SECTION: EXTENSIONS -->
 <h2>⭐ Extension Activity</h2>
 <h3>🔍 Direct conversion</h3>
 <p>Convert hexadecimal directly to octal <em>without</em> passing through denary. Explain the method you used and why it works.</p>
@@ -182,7 +245,6 @@
 <h3>🔍 Colour codes</h3>
 <p>HTML colours are written as hexadecimal, e.g. <code>#FF8800</code>. Explain why hex is used rather than binary, and work out what colour that is.</p>
 
-<!-- SECTION: JAVASCRIPT -->
 <script>
 // --- BIT PLAYGROUND ---
 const PV = [128, 64, 32, 16, 8, 4, 2, 1];
