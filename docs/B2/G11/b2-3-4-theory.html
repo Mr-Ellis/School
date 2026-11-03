@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2.3.4 – Functions and Modularization</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+    }
+
+    .tip-box {
+      background: #fff8e7;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .tip-box strong { color: #8a6d1f; }
+
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
+    .info-box {
+      background: #e8f4fd;
+      border-left: 5px solid #2a6f97;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .info-box strong { color: #1a5f87; }
+
+    .success-box {
+      background: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .success-box strong { color: #2e7d32; }
+
+    .objectives-box {
+      background: linear-gradient(135deg, #0b2a4a 0%, #1f4b6e 100%);
+      border-radius: 1.2rem;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem;
+      color: white;
+      box-shadow: 0 8px 20px rgba(11, 42, 74, 0.15);
+    }
+    .objectives-box h3 {
+      color: #fdbb2d;
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .objectives-box ul { padding-left: 1.5rem; margin-top: 0.8rem; }
+    .objectives-box li { margin-bottom: 0.5rem; color: #e6edf5; font-size: 0.95rem; }
+    .objectives-box li::marker { color: #fdbb2d; }
+
+    .reveal-btn {
+      background: #e9f0fa;
+      border: 1px solid #bed3ec;
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1f4973;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.8rem;
+      transition: background 0.15s;
+    }
+    .reveal-btn:hover { background: #d4e3fc; }
+    .reveal-btn i { font-size: 0.8rem; }
+
+    .reveal-content {
+      display: none;
+      margin-top: 0.8rem;
+      background: white;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      border-left: 4px solid #ffc857;
+      font-size: 0.95rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .reveal-content.show { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quiz-q {
+      background: #fff;
+      border-radius: 0.8rem;
+      padding: 1.2rem 1.4rem;
+      margin: 0.8rem 0;
+      border: 1px solid #d0ddeb;
+    }
+    .quiz-q p { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz-opts { display: flex; flex-direction: column; gap: 0.5rem; }
+    .quiz-opt {
+      background: #f0f4fb;
+      border: 2px solid #d0ddeb;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      text-align: left;
+    }
+    .quiz-opt:hover { border-color: #1a5f87; background: #e3eef8; }
+    .quiz-opt.correct { border-color: #4caf50; background: #e8f5e9; }
+    .quiz-opt.incorrect { border-color: #c62828; background: #fdeaea; }
+    .quiz-opt:disabled { cursor: default; opacity: 0.85; }
+    .quiz-fb { margin-top: 0.6rem; font-size: 0.85rem; font-weight: 600; min-height: 1.2rem; }
+    .quiz-fb.good { color: #2e7d32; }
+    .quiz-fb.bad { color: #c62828; }
+
+    .match-game {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .match-col { display: flex; flex-direction: column; gap: 0.5rem; }
+    .match-item {
+      background: #f0f4fb;
+      border: 2px solid #d0ddeb;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .match-item:hover { border-color: #1a5f87; background: #e3eef8; }
+    .match-item.selected { border-color: #1a5f87; background: #d4e3fc; box-shadow: 0 0 0 3px rgba(26,95,135,0.15); }
+    .match-item.matched { border-color: #4caf50; background: #e8f5e9; cursor: default; opacity: 0.75; }
+    .match-item.matched:hover { border-color: #4caf50; background: #e8f5e9; }
+    .match-item.incorrect {
+      border-color: #c62828 !important;
+      background: #fdeaea !important;
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .match-feedback { margin-top: 1rem; font-weight: 600; font-size: 0.9rem; min-height: 1.4rem; }
+    .match-feedback.good { color: #2e7d32; }
+    .match-feedback.bad { color: #c62828; }
+
+    code {
+      background: #eef2f7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #b21f1f;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0.8rem 0;
+    }
+
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.95rem; }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { background: #0b2a4a; color: #fff; font-weight: 600; }
+
+    tr:nth-child(even) td { background: #f7fafc; }
+
+    ul, ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+    li { margin-bottom: 0.3rem; }
+
+    .analogy {
+      background: #eef6ff;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #2c4b6e;
+      border-left: 4px solid #2a6f97;
+    }
+
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-blooket { background: #1a5f87; color: white; }
+    .btn-blooket:hover { background: #134f75; }
+    .btn-presentation { background: #d97706; color: white; }
+    .btn-presentation:hover { background: #b45309; }
+    .btn-wiki { background: #2d8f2d; color: white; }
+    .btn-wiki:hover { background: #1f6b1f; }
+    .btn-ebook { background: #dc2626; color: white; }
+    .btn-ebook:hover { background: #b91c1c; }
+    .btn-juice { background: #ea580c; color: white; }
+    .btn-juice:hover { background: #c2410c; }
+    .btn-dojo { background: #7c3aed; color: white; }
+    .btn-dojo:hover { background: #6d28d9; }
+    .btn-parsons { background: #0f766e; color: white; }
+    .btn-parsons:hover { background: #115e59; }
+
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; flex-wrap: wrap; }
+      .button-grid { flex-direction: column; }
+      .match-game { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+
+    <a href="../B2-Programming.html" class="back-link">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to B2 Programming
+    </a>
+
+    <h1>🧩 B2.3.4 – Functions and Modularization</h1>
+
+    <!-- LEARNING OBJECTIVES -->
+    <div class="objectives-box">
+      <h3><i class="fas fa-bullseye" aria-hidden="true"></i> Learning Objectives</h3>
+      <ul>
+        <li>Explain what a <strong>function</strong> is and how it enables reusable blocks of code with different inputs.</li>
+        <li>Define and call functions in <strong>Python</strong> (and recognise equivalent <strong>Java</strong> syntax).</li>
+        <li>Describe <strong>modularization</strong> and its benefits: readability, maintainability, testability, and reuse.</li>
+        <li>Distinguish between <strong>local and global scope</strong> and explain why scope matters.</li>
+        <li>Differentiate between <strong>functions</strong> (return a value) and <strong>procedures</strong> (perform an action).</li>
+        <li>Apply modular design to decompose a problem into well-structured, reusable components.</li>
+      </ul>
+    </div>
+
+    <!-- STARTER ACTIVITY -->
+    <h2>🎯 Starter Activity</h2>
+
+    <div class="card">
+      <h3>🐟 Blooket Quiz</h3>
+      <p>Test your prior knowledge of functions and modular code with this Blooket quiz.</p>
+      <div class="button-grid">
+        <a href="https://dashboard.blooket.com/set/68b039e7da963af6c95719b1" target="_blank" rel="noopener" class="btn btn-blooket">
+          <i class="fas fa-gamepad" aria-hidden="true"></i> Play Blooket
+        </a>
+      </div>
+    </div>
+
+    <!-- LESSON CONTENT -->
+    <h2>📖 Lesson Content</h2>
+
+    <div class="card">
+      <h3>The Big Idea</h3>
+      <p><strong>Modularization</strong> is the principle of breaking down a program into independent, reusable components, each responsible for a specific task. These components are typically implemented as <strong>functions</strong>, which accept inputs (<strong>parameters</strong>), perform a task, and optionally return a result. Functions make code easier to read, easier to maintain, and less error-prone. Modularization also supports testing, debugging, and collaborative development by isolating functionality into clear, well-defined blocks. A critical concept in modularization is <strong>scope</strong>—understanding how data is shared (or not) between different parts of the program. [reference:0]</p>
+      <p class="tip-box"><strong>📚 Further reading:</strong> Course companion pages 371–375.</p>
+
+      <div class="analogy">
+        💡 Think of a function like a recipe: you write it once, and you can follow it many times to produce the same dish. You can also swap ingredients (parameters) to get variations. Modularization is like organising a cookbook into chapters—each recipe (function) is self-contained, easy to find, and easy to change without rewriting the whole book.
+      </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="card">
+      <h3>1. Functions: Reusable Blocks of Code</h3>
+      <p>A <strong>function</strong> is a named block of code that performs a specific task. Functions can: [reference:1]</p>
+      <ul>
+        <li>Be defined once and called many times.</li>
+        <li>Take <strong>parameters</strong> (inputs).</li>
+        <li>Return values (outputs).</li>
+        <li>Encapsulate behaviour, making programs modular and easier to reason about.</li>
+      </ul>
+
+      <h4>Python Example</h4>
+      <pre><code>def add(a, b):
+    return a + b
+
+result = add(5, 3)
+print(result)  # Output: 8</code></pre>
+
+      <h4>Java Example</h4>
+      <pre><code>public static int add(int a, int b) {
+    return a + b;
+}
+
+int result = add(5, 3);
+System.out.println(result); // Output: 8</code></pre>
+
+      <p>In both cases, the function is named <code>add</code>, takes two parameters <code>a</code> and <code>b</code>, and returns their sum. [reference:2]</p>
+
+      <h4>Functions vs Procedures</h4>
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>Function</th><th>Procedure</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Returns a value?</td><td>Yes</td><td>No (or returns <code>None</code>/<code>void</code>)</td></tr>
+          <tr><td>Typical use</td><td>Calculate and return a result</td><td>Perform an action (e.g. print, update)</td></tr>
+          <tr><td>Python</td><td><code>def</code> with <code>return</code></td><td><code>def</code> without <code>return</code> (returns <code>None</code>)</td></tr>
+          <tr><td>Java</td><td>Method with a return type</td><td><code>void</code> method</td></tr>
+        </tbody>
+      </table>
+
+      <button class="reveal-btn" data-target="reveal1" aria-expanded="false">
+        <i class="fas fa-lightbulb" aria-hidden="true"></i> Why use functions instead of writing the same code repeatedly?
+      </button>
+      <div id="reveal1" class="reveal-content">
+        <strong>💡 Think about it:</strong> Functions eliminate duplication (DRY — Don't Repeat Yourself). If you need to change the logic, you change it in one place rather than many. Functions also make code easier to test: you can test the function in isolation with known inputs and expected outputs. Finally, functions give names to ideas, making the program read more like a description of the problem.
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="card">
+      <h3>2. Modularization: Structuring Programs into Logical Components</h3>
+      <p>Modularization refers to organizing code into separate, logically distinct units, usually through: [reference:3]</p>
+      <ul>
+        <li><strong>Functions</strong> (procedural modularity).</li>
+        <li><strong>Classes and methods</strong> (object-oriented modularity).</li>
+        <li><strong>Modules and packages</strong> (file-level modularity).</li>
+      </ul>
+
+      <h4>Benefits of a Modular Program</h4>
+      <table>
+        <thead>
+          <tr><th>Benefit</th><th>Explanation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Easier to test</strong></td><td>Each module can be tested independently.</td></tr>
+          <tr><td><strong>Easier to maintain</strong></td><td>Bugs are easier to isolate and fix.</td></tr>
+          <tr><td><strong>Easier to extend</strong></td><td>New features can be added without rewriting existing code.</td></tr>
+          <tr><td><strong>Easier to reuse</strong></td><td>Functions or modules can be imported into other projects.</td></tr>
+        </tbody>
+      </table>
+      <p>[reference:4]</p>
+
+      <h4>Example Scenario: Payroll System</h4>
+      <p>Instead of one giant file, you would modularize:</p>
+      <ul>
+        <li><code>calculateGrossPay(hours, rate)</code></li>
+        <li><code>calculateDeductions(gross)</code></li>
+        <li><code>printPayslip(employeeData)</code></li>
+      </ul>
+      <p>Each function does one thing well, and changes to one function do not affect the others. [reference:5]</p>
+
+      <div class="info-box">
+        <strong>🔍 High cohesion, low coupling:</strong> Good modular design aims for <strong>high cohesion</strong> (each module focuses on a single, well-defined task) and <strong>low coupling</strong> (modules depend on each other as little as possible). This makes modules easier to understand, test, and replace.
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="card">
+      <h3>3. The Principle of Scope</h3>
+      <p><strong>Scope</strong> defines the visibility and lifetime of variables—where they can be accessed and modified. [reference:6]</p>
+
+      <h4>Local Scope</h4>
+      <p>A variable declared inside a function is <strong>local</strong> to that function and cannot be accessed from outside.</p>
+      <pre><code>def greet():
+    name = "Alice"  # local to greet()
+    print("Hello", name)
+
+greet()
+# print(name)  # Error: name is not defined</code></pre>
+      <p>[reference:7]</p>
+
+      <h4>Global Scope</h4>
+      <p>A variable defined outside all functions (in the main body) is <strong>global</strong> and accessible across multiple functions.</p>
+      <pre><code>name = "Bob"  # global
+
+def greet():
+    print("Hello", name)
+
+greet()  # Accesses global 'name'</code></pre>
+      <p>[reference:8]</p>
+
+      <div class="warn-box">
+        <strong>⚠️ Modifying globals inside functions:</strong> In Python, if you assign to a global variable inside a function without declaring it <code>global</code>, Python creates a <em>new local variable</em> instead. To modify a global, you must use the <code>global</code> keyword. In Java, there is no true global scope—variables belong to classes, and <code>static</code> fields act like globals.
+      </div>
+
+      <button class="reveal-btn" data-target="reveal2" aria-expanded="false">
+        <i class="fas fa-lightbulb" aria-hidden="true"></i> Why is local scope usually safer than global scope?
+      </button>
+      <div id="reveal2" class="reveal-content">
+        <strong>💡 Think about it:</strong> Local variables are isolated: changes inside one function cannot accidentally affect another function. This reduces side effects and makes behaviour easier to predict. Global variables, by contrast, can be changed from anywhere, which makes bugs harder to trace. A good rule of thumb is to keep variables local unless they genuinely need to be shared.
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="card">
+      <h3>4. Parameters, Arguments, and Passing Mechanisms</h3>
+      <p><strong>Parameters</strong> are the names listed in a function definition. <strong>Arguments</strong> are the actual values supplied when the function is called.</p>
+      <pre><code>def greet(name):        # 'name' is a parameter
+    print("Hello", name)
+
+greet("Alice")          # "Alice" is an argument</code></pre>
+
+      <h4>Pass by Value vs Pass by Reference</h4>
+      <table>
+        <thead>
+          <tr><th>Mechanism</th><th>What happens</th><th>Effect on caller's variable</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Pass by value</strong></td><td>A copy of the argument is passed.</td><td>Original variable is unchanged.</td></tr>
+          <tr><td><strong>Pass by reference</strong></td><td>Access to the original variable is passed.</td><td>Original variable can be changed.</td></tr>
+        </tbody>
+      </table>
+      <p>Python uses <strong>pass by object reference</strong> (sometimes called “pass by assignment”). Immutable objects (ints, strings, tuples) behave like pass by value; mutable objects (lists, dictionaries) can be modified inside the function. Java is strictly pass by value, but for objects the value passed is the reference, so object contents can be modified.</p>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> Be ready to explain the difference between pass by value and pass by reference, and to trace what happens to a variable when it is passed to a function and modified inside.
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="card">
+      <h3>5. Best Practices for Functions and Modularization</h3>
+      <table>
+        <thead>
+          <tr><th>Practice</th><th>Why it matters</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>One job per function</strong></td><td>High cohesion makes functions easier to understand, test, and reuse.</td></tr>
+          <tr><td><strong>Meaningful names</strong></td><td><code>calculate_tax</code> is clearer than <code>calc</code>; the name documents the function's purpose.</td></tr>
+          <tr><td><strong>Keep functions short</strong></td><td>If a function grows beyond a screen, consider splitting it.</td></tr>
+          <tr><td><strong>Minimise global state</strong></td><td>Prefer passing data as parameters and returning results; avoid hidden dependencies.</td></tr>
+          <tr><td><strong>Document parameters and return values</strong></td><td>Use docstrings (Python) or Javadoc (Java) to state what goes in and what comes out.</td></tr>
+          <tr><td><strong>Test functions independently</strong></td><td>Unit tests catch bugs early and give confidence when refactoring.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="success-box">
+        <strong>✅ Quick checklist before writing a function:</strong>
+        <ol style="margin:0.4rem 0 0;">
+          <li>Does this function do exactly one thing?</li>
+          <li>Are all inputs passed as parameters (rather than relying on globals)?</li>
+          <li>Does it return a value if it is meant to be a function (rather than a procedure)?</li>
+          <li>Is the name descriptive?</li>
+          <li>Have I tested it with normal, edge, and invalid inputs?</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE: SPOT THE ERROR -->
+    <div class="card">
+      <h3>🔍 Interactive: Spot the Function Error</h3>
+      <p>Read the code below. What is wrong with it? Click the option you think is correct.</p>
+
+      <div class="quiz-q">
+        <pre><code>def add(a, b):
+    a + b
+
+result = add(2, 3)
+print(result)</code></pre>
+        <p>What is the problem with this function?</p>
+        <div class="quiz-opts" data-answer="b">
+          <button class="quiz-opt" data-opt="a">Nothing — the code works and prints 5.</button>
+          <button class="quiz-opt" data-opt="b">The function calculates <code>a + b</code> but does not <code>return</code> the result, so <code>result</code> is <code>None</code>.</button>
+          <button class="quiz-opt" data-opt="c">You cannot pass two arguments to a Python function.</button>
+          <button class="quiz-opt" data-opt="d">The function name <code>add</code> is reserved.</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz-q">
+        <pre><code>def greet():
+    name = "Alice"
+    print("Hello", name)
+
+greet()
+print(name)</code></pre>
+        <p>What happens when this code runs?</p>
+        <div class="quiz-opts" data-answer="c">
+          <button class="quiz-opt" data-opt="a">It prints “Hello Alice” twice.</button>
+          <button class="quiz-opt" data-opt="b">It prints “Hello Alice” and then “Alice”.</button>
+          <button class="quiz-opt" data-opt="c">It prints “Hello Alice” and then raises a <code>NameError</code> because <code>name</code> is local to <code>greet()</code>.</button>
+          <button class="quiz-opt" data-opt="d">It raises a <code>SyntaxError</code> before running.</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p>Which of the following best describes <strong>modularization</strong>?</p>
+        <div class="quiz-opts" data-answer="a">
+          <button class="quiz-opt" data-opt="a">Breaking a program into independent, reusable components such as functions.</button>
+          <button class="quiz-opt" data-opt="b">Writing all code in one long file to avoid confusion.</button>
+          <button class="quiz-opt" data-opt="c">Using only global variables so every part of the program can access them.</button>
+          <button class="quiz-opt" data-opt="d">Repeating the same code in multiple places to make it easier to read.</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE: MATCHING GAME -->
+    <div class="card">
+      <h3>🧩 Interactive: Match the Function Concept</h3>
+      <p>Click a term on the left, then click its matching description on the right.</p>
+
+      <div class="match-game">
+        <div class="match-col" id="matchTerms">
+          <button class="match-item" data-key="function">Function</button>
+          <button class="match-item" data-key="procedure">Procedure</button>
+          <button class="match-item" data-key="parameter">Parameter</button>
+          <button class="match-item" data-key="argument">Argument</button>
+          <button class="match-item" data-key="return">return</button>
+          <button class="match-item" data-key="local">Local scope</button>
+          <button class="match-item" data-key="global">Global scope</button>
+          <button class="match-item" data-key="modularization">Modularization</button>
+        </div>
+        <div class="match-col" id="matchDefs">
+          <button class="match-item" data-key="modularization">Breaking a program into independent, reusable components</button>
+          <button class="match-item" data-key="local">A variable accessible only inside the function where it is declared</button>
+          <button class="match-item" data-key="function">A named block that performs a task and returns a value</button>
+          <button class="match-item" data-key="argument">The actual value supplied when a function is called</button>
+          <button class="match-item" data-key="return">The keyword that sends a value back from a function</button>
+          <button class="match-item" data-key="global">A variable defined outside all functions and accessible across them</button>
+          <button class="match-item" data-key="procedure">A named block that performs an action but does not return a value</button>
+          <button class="match-item" data-key="parameter">The name listed in a function definition that receives a value</button>
+        </div>
+      </div>
+      <div class="match-feedback" aria-live="polite"></div>
+    </div>
+
+    <!-- EXAM-STYLE PRACTICE -->
+    <div class="card">
+      <h3>📝 Exam-Style Practice</h3>
+      <p>Answer these in full sentences. Then reveal the model answers to check your work.</p>
+
+      <h4>Question 1 (2 marks)</h4>
+      <p>Define the term <strong>function</strong> and state <strong>one</strong> benefit of using functions in a program.</p>
+      <button class="reveal-btn" data-target="ans1"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
+      <div id="ans1" class="reveal-content">
+        A function is a named block of code that performs a specific task and can be called multiple times. Benefit (any one): it avoids code duplication; it makes the program easier to test and debug; it improves readability by giving a name to a logical operation; it allows code to be reused across different parts of a program or in other programs.
+      </div>
+
+      <h4>Question 2 (3 marks)</h4>
+      <p>Explain the difference between <strong>local scope</strong> and <strong>global scope</strong>, using examples.</p>
+      <button class="reveal-btn" data-target="ans2"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
+      <div id="ans2" class="reveal-content">
+        <strong>Local scope:</strong> a variable declared inside a function is only visible within that function. Example: <code>def greet(): name = "Alice"</code> — <code>name</code> cannot be used outside <code>greet()</code>. <strong>Global scope:</strong> a variable defined outside all functions is visible across the whole program. Example: <code>name = "Bob"</code> at the top level can be read inside any function. Local scope protects data from unintended changes; global scope allows controlled sharing but should be used sparingly.
+      </div>
+
+      <h4>Question 3 (4 marks)</h4>
+      <p>Write a Python function <code>calculate_area(length, width)</code> that returns the area of a rectangle. Then call it with <code>length = 5</code> and <code>width = 3</code> and print the result.</p>
+      <button class="reveal-btn" data-target="ans3"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
+      <div id="ans3" class="reveal-content">
+        <pre><code>def calculate_area(length, width):
+    return length * width
+
+result = calculate_area(5, 3)
+print(result)  # Output: 15</code></pre>
+        Marks: 1 for correct function header with two parameters; 1 for returning the product; 1 for calling the function with arguments 5 and 3; 1 for printing the returned value.
+      </div>
+
+      <h4>Question 4 (3 marks)</h4>
+      <p>Explain <strong>two</strong> benefits of modularization for a large software project.</p>
+      <button class="reveal-btn" data-target="ans4"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
+      <div id="ans4" class="reveal-content">
+        Any two of: (1) <strong>Easier maintenance</strong> — bugs are isolated to a single module, so fixing one part does not require understanding the whole program. (2) <strong>Easier testing</strong> — each module can be unit-tested independently with known inputs. (3) <strong>Reusability</strong> — well-designed modules can be imported into other projects. (4) <strong>Collaboration</strong> — different developers can work on separate modules with clear boundaries, reducing conflicts.
+      </div>
+    </div>
+
+    <!-- CODE PRACTICE & ASSESSMENT -->
+    <h2>📊 Code Practice &amp; Assessment</h2>
+
+    <div class="card">
+      <h3>Your Turn: Apply Functions and Modularization</h3>
+      <p>Use the questions in the presentation to guide your coding practice. Write your code using the online Python IDE.</p>
+      <div class="button-grid">
+        <a href="https://docs.google.com/presentation/d/e/2PACX-1vQDDG5fCMExumYAzgAbz-TP3dWIkzXZuo3pP3EPRfyD95PtR4WBTe7zADyy9L3NLUrGUBhEkIy51Kmp/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-file-alt" aria-hidden="true"></i> Main Activity Questions
+        </a>
+        <a href="https://docs.google.com/presentation/d/e/2PACX-1vSAawQpBbjImriU_6Vzge9yq5NmcBXhMiI3a11aCIUja2vHQKbuEWiwfvO3WdkqWP1OZn1fLXE3fNvC/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> Lesson Presentation
+        </a>
+        <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener" class="btn btn-blooket">
+          <i class="fas fa-laptop-code" aria-hidden="true"></i> Online Python IDE
+        </a>
+      </div>
+    </div>
+
+    <!-- EXTENSION TASK -->
+    <div class="card">
+      <h3>🚀 Extension: Parsons Game</h3>
+      <p>Put scrambled Python into the right order, collect stars, and light the path to the Robot Citadel.</p>
+      <div class="button-grid">
+        <a href="https://jamesabela.github.io/jsfun/parsonsgame.html" target="_blank" rel="noopener" class="btn btn-parsons">
+          <i class="fas fa-puzzle-piece" aria-hidden="true"></i> Parsons Game
+        </a>
+      </div>
+    </div>
+
+    <!-- JUICEMIND PRACTICE -->
+    <h2>🧃 JuiceMind Practice</h2>
+
+    <div class="card">
+      <h3>Practise Your Functions</h3>
+      <p>Work through the quizzes below to reinforce function definition, calls, parameters, and return values.</p>
+      <div class="button-grid">
+        <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/1/quizId/explore&class=intro-python&unitNumber=3&topicNumber=1&quizNumber=2?tab=curriculum" target="_blank" rel="noopener" class="btn btn-juice">
+          <i class="fas fa-flask" aria-hidden="true"></i> JuiceMind Topic 1
+        </a>
+        <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/2/quizId/explore&class=intro-python&unitNumber=3&topicNumber=2&quizNumber=2?tab=curriculum" target="_blank" rel="noopener" class="btn btn-juice">
+          <i class="fas fa-flask" aria-hidden="true"></i> JuiceMind Topic 2
+        </a>
+      </div>
+    </div>
+
+    <!-- REVISIONDOJO -->
+    <h2>🧠 RevisionDojo "Teach the AI"</h2>
+
+    <div class="card">
+      <h3>Consolidate Your Understanding</h3>
+      <p>Explain what you have learned about functions and modularization to the AI. Teaching a concept in your own words is one of the most effective ways to consolidate your understanding.</p>
+      <div class="button-grid">
+        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=292&classroomId=7d9d7fc0-cf13-42eb-a277-77d2b675cb6a" target="_blank" rel="noopener" class="btn btn-dojo">
+          <i class="fas fa-robot" aria-hidden="true"></i> Teach the AI
+        </a>
+      </div>
+    </div>
+
+    <!-- PLENARY -->
+    <h2>🧠 Plenary</h2>
+
+    <div class="card">
+      <h3>Quick Check</h3>
+      <div class="quiz-q">
+        <p>Which keyword is used in Python to send a value back from a function?</p>
+        <div class="quiz-opts" data-answer="b">
+          <button class="quiz-opt" data-opt="a"><code>print</code></button>
+          <button class="quiz-opt" data-opt="b"><code>return</code></button>
+          <button class="quiz-opt" data-opt="c"><code>def</code></button>
+          <button class="quiz-opt" data-opt="d"><code>output</code></button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p>A variable declared inside a function is said to have which scope?</p>
+        <div class="quiz-opts" data-answer="a">
+          <button class="quiz-opt" data-opt="a">Local scope</button>
+          <button class="quiz-opt" data-opt="b">Global scope</button>
+          <button class="quiz-opt" data-opt="c">Universal scope</button>
+          <button class="quiz-opt" data-opt="d">Class scope</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p>What is the main benefit of modularization?</p>
+        <div class="quiz-opts" data-answer="c">
+          <button class="quiz-opt" data-opt="a">It makes programs run faster.</button>
+          <button class="quiz-opt" data-opt="b">It removes the need for testing.</button>
+          <button class="quiz-opt" data-opt="c">It makes code easier to maintain, test, and reuse.</button>
+          <button class="quiz-opt" data-opt="d">It eliminates the need for variables.</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <p>B2.3.4 – Functions and Modularization · Programming Unit B2</p>
+      <p><i class="fas fa-lightbulb" aria-hidden="true"></i> Remember: a good function does one thing well—and a modular program is a collection of well-behaved functions.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // ---- Reveal buttons ----
+    document.querySelectorAll('.reveal-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.getAttribute('data-target'));
+        if (!target) return;
+        var isOpen = target.classList.toggle('show');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+
+    // ---- Multiple-choice quiz handler ----
+    document.querySelectorAll('.quiz-q').forEach(function (q) {
+      var opts = q.querySelector('.quiz-opts');
+      if (!opts) return;
+      var answer = opts.getAttribute('data-answer');
+      var fb = q.querySelector('.quiz-fb');
+      var buttons = q.querySelectorAll('.quiz-opt');
+
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (b.disabled) return;
+          var chosen = b.getAttribute('data-opt');
+          buttons.forEach(function (other) {
+            other.disabled = true;
+            if (other.getAttribute('data-opt') === answer) {
+              other.classList.add('correct');
+            }
+          });
+          if (chosen === answer) {
+            b.classList.add('correct');
+            fb.textContent = '✅ Correct! Well done.';
+            fb.className = 'quiz-fb good';
+          } else {
+            b.classList.add('incorrect');
+            fb.textContent = '❌ Not quite — the correct answer is highlighted in green.';
+            fb.className = 'quiz-fb bad';
+          }
+        });
+      });
+    });
+
+    // ---- Matching game ----
+    (function () {
+      var terms = document.querySelectorAll('#matchTerms .match-item');
+      var defs = document.querySelectorAll('#matchDefs .match-item');
+      var feedback = document.querySelector('.match-feedback');
+      var selectedTerm = null;
+      var matchedCount = 0;
+      var totalPairs = terms.length;
+
+      function clearSelection() {
+        terms.forEach(function (t) { t.classList.remove('selected'); });
+        selectedTerm = null;
+      }
+
+      terms.forEach(function (term) {
+        term.addEventListener('click', function () {
+          if (term.classList.contains('matched')) return;
+          clearSelection();
+          selectedTerm = term;
+          term.classList.add('selected');
+        });
+      });
+
+      defs.forEach(function (def) {
+        def.addEventListener('click', function () {
+          if (def.classList.contains('matched')) return;
+          if (!selectedTerm) {
+            feedback.textContent = '👈 Pick a term on the left first.';
+            feedback.className = 'match-feedback bad';
+            return;
+          }
+          var termKey = selectedTerm.getAttribute('data-key');
+          var defKey = def.getAttribute('data-key');
+
+          if (termKey === defKey) {
+            selectedTerm.classList.remove('selected');
+            selectedTerm.classList.add('matched');
+            def.classList.add('matched');
+            matchedCount++;
+            feedback.textContent = '✅ Correct match!';
+            feedback.className = 'match-feedback good';
+            selectedTerm = null;
+            if (matchedCount === totalPairs) {
+              feedback.textContent = '🎉 All pairs matched — excellent work!';
+              feedback.className = 'match-feedback good';
+            }
+          } else {
+            def.classList.add('incorrect');
+            feedback.textContent = '❌ That\'s not the right match — try again.';
+            feedback.className = 'match-feedback bad';
+            var wrongDef = def;
+            setTimeout(function () {
+              wrongDef.classList.remove('incorrect');
+            }, 400);
+            clearSelection();
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
