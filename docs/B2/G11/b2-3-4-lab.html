@@ -1,1 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2.3.4 – Functions Lab Session</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+    }
+
+    .tip-box {
+      background: #fff8e7;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .tip-box strong { color: #8a6d1f; }
+
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
+    .info-box {
+      background: #e8f4fd;
+      border-left: 5px solid #2a6f97;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .info-box strong { color: #1a5f87; }
+
+    .success-box {
+      background: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .success-box strong { color: #2e7d32; }
+
+    .objectives-box {
+      background: linear-gradient(135deg, #0b2a4a 0%, #1f4b6e 100%);
+      border-radius: 1.2rem;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem;
+      color: white;
+      box-shadow: 0 8px 20px rgba(11, 42, 74, 0.15);
+    }
+    .objectives-box h3 {
+      color: #fdbb2d;
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .objectives-box ul { padding-left: 1.5rem; margin-top: 0.8rem; }
+    .objectives-box li { margin-bottom: 0.5rem; color: #e6edf5; font-size: 0.95rem; }
+    .objectives-box li::marker { color: #fdbb2d; }
+
+    .challenge {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+      border-left: 5px solid #1a5f87;
+    }
+    .challenge h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .challenge-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.8rem;
+      height: 1.8rem;
+      background: #1a5f87;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    code {
+      background: #eef2f7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #b21f1f;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0.8rem 0;
+    }
+
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+    /* Embedded IDE */
+    .ide-wrapper {
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 14px rgba(11, 42, 74, 0.08);
+      margin-top: 1rem;
+      background: #1e293b;
+    }
+    .ide-wrapper iframe {
+      display: block;
+      width: 100%;
+      height: 520px;
+      border: none;
+    }
+    .ide-fallback {
+      padding: 1rem 1.4rem;
+      background: #fff8e7;
+      border-top: 1px solid #e8d9a8;
+      font-size: 0.9rem;
+      color: #6b5518;
+    }
+    .ide-fallback a { color: #1a5f87; font-weight: 600; }
+
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-python { background: #db2777; color: white; }
+    .btn-python:hover { background: #be185d; }
+    .btn-presentation { background: #d97706; color: white; }
+    .btn-presentation:hover { background: #b45309; }
+    .btn-juice { background: #ea580c; color: white; }
+    .btn-juice:hover { background: #c2410c; }
+    .btn-learn { background: #2a6f97; color: white; }
+    .btn-learn:hover { background: #1a5f87; }
+
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; flex-wrap: wrap; }
+      .button-grid { flex-direction: column; }
+      .ide-wrapper iframe { height: 420px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+
+    <a href="../b2-3-4-theory.html" class="back-link">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to B2.3.4 Theory
+    </a>
+
+    <h1>💻 B2.3.4 – Functions Lab Session</h1>
+
+    <!-- LAB OBJECTIVES -->
+    <div class="objectives-box">
+      <h3><i class="fas fa-bullseye" aria-hidden="true"></i> Lab Objectives</h3>
+      <ul>
+        <li>Define and call your own Python functions using <code>def</code> and <code>return</code>.</li>
+        <li>Use parameters and arguments to pass data into functions.</li>
+        <li>Distinguish between local and global scope, and explain why local scope is safer.</li>
+        <li>Break a program into modular components (functions) to improve readability and reuse.</li>
+        <li>Debug common function errors such as missing <code>return</code> statements and scope mistakes.</li>
+      </ul>
+    </div>
+
+    <!-- MAIN ACTIVITY -->
+    <h2>💻 Main Activity</h2>
+
+    <div class="card">
+      <h3>📝 Complete Your Theory Assessment</h3>
+      <p class="tip-box"><strong>📌 Reminder:</strong> If you haven't finished the assessment from the Theory lesson, complete it now. If you have already completed the assessment, move on to the practical coding activity below.</p>
+      <div class="button-grid">
+        <a href="https://docs.google.com/presentation/d/e/2PACX-1vQDDG5fCMExumYAzgAbz-TP3dWIkzXZuo3pP3EPRfyD95PtR4WBTe7zADyy9L3NLUrGUBhEkIy51Kmp/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-file-alt" aria-hidden="true"></i> View Theory Assessment
+        </a>
+      </div>
+    </div>
+
+    <!-- REFERENCE & EXTRA PRACTICE -->
+    <h2>📚 Reference &amp; Extra Practice</h2>
+
+    <div class="card">
+      <h3>Use These Alongside the Lab Challenges</h3>
+      <p>Read the Function Basics reference before you start Challenge 1, and use the Parsons game and JuiceMind quizzes for extra practice.</p>
+      <div class="button-grid">
+        <a href="https://learn.online-python.com/python/function-basics" target="_blank" rel="noopener" class="btn btn-learn">
+          <i class="fas fa-book-open" aria-hidden="true"></i> Function Basics Reference
+        </a>
+        <a href="https://jamesabela.github.io/jsfun/parsonsgame.html" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-puzzle-piece" aria-hidden="true"></i> Parsons Game
+        </a>
+      </div>
+      <p class="tip-box"><strong>📌 Tip:</strong> The Function Basics page explains function definition, parameters, return statements, and the function call process step by step. Do the Parsons game after Challenge 4, then the JuiceMind quizzes at the end of the lab.</p>
+    </div>
+
+    <!-- PYTHON CODE LAB (EMBEDDED) -->
+    <h2>🐍 Python Code Lab — Your IDE</h2>
+
+    <div class="card">
+      <h3>Write, Run, and Step Through Your Code</h3>
+      <p class="info-box"><strong>💡 How to use it:</strong> Write your code in the editor below, click <strong>Run</strong> to execute it, or use <strong>Step</strong> to trace through the program line by line. Watch how values are passed into functions and what they return.</p>
+
+      <div class="ide-wrapper">
+        <iframe
+          src="https://jamesabela.github.io/jsfun/pythoncopy?blank"
+          title="Python Code Lab — interactive IDE"
+          loading="lazy"
+          allow="clipboard-read; clipboard-write"
+        ></iframe>
+        <div class="ide-fallback">
+          <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+          If the IDE doesn't load inside the page, open it in a new tab:
+          <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener">Python Code Lab →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CODING CHALLENGES -->
+    <h2>🧪 Coding Challenges</h2>
+
+    <div class="card">
+      <p>Work through these challenges in order. Each one focuses on a different aspect of functions and modularization. Write your code in the Python Code Lab above.</p>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">1</span> Create Your First Function</h4>
+        <p>Write a function called <code>greet_user</code> that takes one parameter, <code>name</code>, and returns a greeting string like <code>"Hello, Alice! Welcome to Python!"</code>.</p>
+        <p><strong>What to do:</strong> Use <code>def</code> to define the function, add a docstring, and use <code>return</code> to send the greeting back. Then call the function three times with different names and print the results.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> The output shows a personalised greeting for each name you pass in.</p>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">2</span> Fix the Missing Return</h4>
+        <p>The following function calculates the area of a rectangle but does not return the result, so <code>room_area</code> is <code>None</code>. Fix it.</p>
+        <pre><code>def calculate_area(length, width):
+    area = length * width
+
+room_area = calculate_area(12, 10)
+print(room_area)</code></pre>
+        <p><strong>What to do:</strong> Add the missing <code>return</code> statement inside the function. Test it with the arguments <code>12</code> and <code>10</code> — the output should be <code>120</code>.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> <code>calculate_area(12, 10)</code> returns <code>120</code>, and printing <code>room_area</code> shows <code>120</code>, not <code>None</code>.</p>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">3</span> Temperature Converter</h4>
+        <p>Write a function called <code>convert_temperature</code> that takes a Celsius value as a parameter and returns the Fahrenheit equivalent. Use the formula: <code>fahrenheit = (celsius * 9/5) + 32</code>.</p>
+        <p><strong>Hint:</strong> Call the function with <code>25</code> and print the result. The output should be <code>77.0</code>.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> <code>convert_temperature(25)</code> returns <code>77.0</code>. Test with <code>0</code> to get <code>32.0</code>.</p>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">4</span> Grade Calculator with Return</h4>
+        <p>Write a function called <code>get_grade</code> that takes a numeric score and returns a letter grade based on this scale: 90+ = "A", 80–89 = "B", 70–79 = "C", otherwise "F".</p>
+        <p><strong>Hint:</strong> Use <code>if</code>, <code>elif</code>, and <code>else</code> inside the function, with a <code>return</code> in each branch. Test it with <code>85</code> (should return "B") and <code>92</code> (should return "A").</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> <code>get_grade(85)</code> returns <code>"B"</code>, <code>get_grade(92)</code> returns <code>"A"</code>, and <code>get_grade(65)</code> returns <code>"F"</code>.</p>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">5</span> Local vs Global Scope</h4>
+        <p>Run the following code and explain why it raises a <code>NameError</code>. Then fix it so it prints both lines without error.</p>
+        <pre><code>def greet():
+    name = "Alice"
+    print("Hello", name)
+
+greet()
+print(name)</code></pre>
+        <p><strong>What to do:</strong> The variable <code>name</code> is local to <code>greet()</code> and cannot be accessed outside. To fix it, either move the print inside the function, or return the name and print it outside.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> The program runs without error and prints "Hello Alice" followed by "Alice".</p>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">6</span> Modular Payroll System</h4>
+        <p>Break the following task into three separate functions and then call them in order:</p>
+        <ul>
+          <li><code>calculate_gross(hours, rate)</code> — returns <code>hours * rate</code>.</li>
+          <li><code>calculate_deductions(gross)</code> — returns 20% of <code>gross</code>.</li>
+          <li><code>print_payslip(name, gross, deductions)</code> — prints the employee's name, gross pay, deductions, and net pay.</li>
+        </ul>
+        <p><strong>Hint:</strong> Each function should do one job. In <code>print_payslip</code>, calculate net pay as <code>gross - deductions</code>.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> Calling the functions with hours=40, rate=15, name="Sam" produces a correctly formatted payslip showing gross 600, deductions 120, and net 480.</p>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">7</span> Even Number Checker</h4>
+        <p>Write a function called <code>is_even</code> that takes a number and returns <code>True</code> if it is even, and <code>False</code> otherwise.</p>
+        <p><strong>Hint:</strong> Use the modulo operator <code>%</code>. A number is even if <code>number % 2 == 0</code>.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> <code>is_even(42)</code> returns <code>True</code>, <code>is_even(7)</code> returns <code>False</code>, and <code>is_even(0)</code> returns <code>True</code>.</p>
+      </div>
+    </div>
+
+    <!-- PARSONS GAME -->
+    <h2>🧩 Parsons Game — Turn Code into Adventure</h2>
+
+    <div class="card">
+      <h3>Practise Function Ordering</h3>
+      <p>Put scrambled Python into the right order, collect stars, and light the path to the Robot Citadel. Use this to practise the order of function definitions, calls, and return statements before you attempt the challenges above.</p>
+      <div class="button-grid">
+        <a href="https://jamesabela.github.io/jsfun/parsonsgame.html" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-puzzle-piece" aria-hidden="true"></i> Open Parsons Game
+        </a>
+      </div>
+    </div>
+
+    <!-- JUICEMIND PRACTICE -->
+    <h2>🧃 JuiceMind Practice</h2>
+
+    <div class="card">
+      <h3>Extra Practice on Functions</h3>
+      <p>Complete both quizzes after you finish the coding challenges to reinforce function definitions, parameters, return values, and scope.</p>
+      <div class="button-grid">
+        <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/3/quizId/explore&class=intro-python&unitNumber=3&topicNumber=3&quizNumber=2?tab=curriculum" target="_blank" rel="noopener" class="btn btn-juice">
+          <i class="fas fa-flask" aria-hidden="true"></i> JuiceMind Topic 3
+        </a>
+        <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/4/quizId/KHgkmcVhTCmBCBWprkhO?tab=curriculum" target="_blank" rel="noopener" class="btn btn-juice">
+          <i class="fas fa-flask" aria-hidden="true"></i> JuiceMind Topic 4
+        </a>
+      </div>
+    </div>
+
+    <!-- KEY TAKEAWAY -->
+    <h2>💡 Key Takeaway</h2>
+
+    <div class="card">
+      <p><em>"Functions are the building blocks of organised, reusable code. Define them once, call them many times, pass in different arguments, and return results. Keep variables local to avoid unintended side effects, and break larger programs into small, focused functions. Modular design makes code easier to read, test, and maintain."</em></p>
+    </div>
+
+    <div class="footer-note">
+      <p>B2.3.4 – Functions Lab Session · Programming Unit B2</p>
+      <p><i class="fas fa-lightbulb" aria-hidden="true"></i> Test every function with normal, edge, and invalid inputs.</p>
+    </div>
+
+  </div>
+</body>
+</html>
