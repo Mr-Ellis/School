@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2.3 Programming — Revision Guide</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 2rem;
+    }
+
+    h1 small {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #4b6a8b;
+      margin-left: auto;
+      background: #e9f0fa;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+    }
+
+    .tip-box {
+      background: #fff8e7;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .tip-box strong { color: #8a6d1f; }
+
+    .check-box {
+      background: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .check-box strong { color: #2e7d32; }
+
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
+    .keyword {
+      font-weight: 600;
+      color: #1f4973;
+      background: #eef5ff;
+      padding: 0.1rem 0.4rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+    }
+
+    code {
+      background: #eef2f7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #b21f1f;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0.8rem 0;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #0b2a4a;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) td { background: #f7fafc; }
+
+    .qa-toggle {
+      background: #e9f0fa;
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1f4973;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      border: 1px solid #bed3ec;
+      transition: background 0.15s;
+    }
+    .qa-toggle:hover { background: #d4e3fc; }
+
+    .qa-content {
+      display: none;
+      margin-top: 0.8rem;
+      background: white;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      border-left: 4px solid #ffc857;
+      font-size: 0.95rem;
+    }
+    .qa-content.show { display: block; }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0;
+    }
+    li { margin-bottom: 0.3rem; }
+
+    .analogy {
+      background: #eef6ff;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #2c4b6e;
+      border-left: 4px solid #2a6f97;
+    }
+
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.6rem; flex-wrap: wrap; }
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .guide-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+      .qa-content { display: block !important; }
+      .qa-toggle { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+
+    <h1>
+      🧠 B2.3 Programming — Revision Guide
+      <small>IB Computer Science · First Assessment 2027</small>
+    </h1>
+
+    <p style="margin-bottom: 2rem; color: #2c4b6e;">
+      This guide teaches the <strong>core programming concepts</strong> you need for Unit B2.3. Each section explains the idea from scratch, shows a worked example, and points out common mistakes. At the end there are practice questions so you can test yourself — the answers are hidden behind the buttons so you can try first.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: SEQUENCE -->
+    <!-- ============================================================ -->
+    <h2>1. Sequence</h2>
+
+    <div class="card">
+      <h3>The Big Idea</h3>
+      <p>A program is ultimately a <strong>sequence of instructions</strong> that the computer executes one by one. The order of these instructions is critical: changing it can alter the logic, behaviour, or outcome of a program entirely. Understanding how to organise instructions correctly and intentionally is essential to writing software that works as expected.</p>
+
+      <div class="analogy">
+        💡 Think of a recipe. If you add the flour after baking the cake, the result is ruined. The order of steps matters just as much as the steps themselves.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Why instruction order matters</h3>
+      <p>The sequence of code instructions determines program behaviour. A program may be <strong>syntactically valid</strong> but <strong>functionally incorrect</strong> if instructions are placed in the wrong order.</p>
+
+      <h4>Example 1: Incorrect order produces incorrect output</h4>
+      <pre><code># Version 1 — correct order
+print("Welcome")
+name = input("What is your name? ")
+
+# Version 2 — wrong order
+name = input("What is your name? ")
+print("Welcome")</code></pre>
+      <p>In Version 1, the user is greeted before being asked for their name. In Version 2, they are asked for their name before being greeted — which feels abrupt and confusing. Both are syntactically valid, but only one meets the program objective of a friendly welcome.</p>
+
+      <h4>Example 2: Using a variable before it exists</h4>
+      <pre><code># Python — runtime error
+print(x)          # NameError: name 'x' is not defined
+x = 10
+
+# Correct order
+x = 10
+print(x)</code></pre>
+      <p>In Python, you cannot use a variable before assigning it a value. This raises a <code>NameError</code> at runtime. (In Java, the equivalent mistake is a compile-time error, because the compiler checks that variables are initialised before use.)</p>
+
+      <h4>Example 3: Control flow and indentation</h4>
+      <pre><code>total = 0
+for i in range(5):
+    total += i
+print("Done")
+print(total)</code></pre>
+      <p>If <code>print("Done")</code> were placed <em>inside</em> the loop (indented), it would execute 5 times, not once. Indentation in Python determines whether a line is inside or outside a loop.</p>
+
+      <div class="warn-box">
+        <strong>⚠️ Common sequencing errors:</strong>
+        <ul>
+          <li><strong>Premature execution:</strong> using a variable before it has been assigned.</li>
+          <li><strong>Late execution:</strong> printing a result before the calculation is complete.</li>
+          <li><strong>Skipped or repeated execution:</strong> placing a statement inside or outside a loop incorrectly.</li>
+          <li><strong>Infinite loops:</strong> forgetting to update a loop variable so the condition never becomes false.</li>
+        </ul>
+      </div>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> Use <strong>trace tables</strong> to track the value of each variable after every line. This is the most reliable way to catch sequencing errors before you run the code.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Key terms</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Sequence</td><td>The order in which instructions are executed, one after another.</td></tr>
+          <tr><td>Trace table</td><td>A table that records the value of each variable after each line of code, used to verify execution order.</td></tr>
+          <tr><td>Stepwise refinement</td><td>Breaking a problem into smaller, ordered steps before coding.</td></tr>
+          <tr><td>Initialisation</td><td>Assigning an initial value to a variable before it is used.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: SELECTION -->
+    <!-- ============================================================ -->
+    <h2>2. Selection</h2>
+
+    <div class="card">
+      <h3>The Big Idea</h3>
+      <p><strong>Selection structures</strong> allow a program to make decisions — to choose different paths of execution based on conditions. At runtime, these decisions determine which blocks of code will be executed and which will be skipped. This is a critical component of <strong>control flow</strong>, allowing programs to behave differently under different inputs, states, or environments.</p>
+
+      <div class="analogy">
+        💡 Think of a fork in a road. A selection structure is the signpost: if you want the scenic route, turn left; else, turn right. The program checks the condition and takes exactly one path.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Types of selection structures</h3>
+
+      <h4>A. Single selection (if)</h4>
+      <p>Executes a block only if a condition is true.</p>
+      <pre><code>if score > 90:
+    print("Excellent")</code></pre>
+
+      <h4>B. Double selection (if-else)</h4>
+      <p>Executes one block if the condition is true, another if false.</p>
+      <pre><code>if score >= 60:
+    print("Pass")
+else:
+    print("Fail")</code></pre>
+
+      <h4>C. Multiple selection (if-elif-else)</h4>
+      <p>Allows multiple mutually exclusive conditions to be evaluated in sequence.</p>
+      <pre><code>if score >= 90:
+    print("A")
+elif score >= 80:
+    print("B")
+elif score >= 70:
+    print("C")
+else:
+    print("Fail")</code></pre>
+
+      <div class="tip-box">
+        <strong>🔑 Key Principle:</strong> Python evaluates <code>elif</code> branches <strong>top to bottom</strong> and stops at the <strong>first true condition</strong>. Always order conditions from most specific / highest threshold to lowest. If you put <code>score >= 70</code> before <code>score >= 90</code>, a score of 95 would match <code>>= 70</code> first and print "C".
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Boolean and relational operators</h3>
+      <p>Selection structures evaluate <strong>Boolean expressions</strong>, composed using comparison operators and logical operators.</p>
+
+      <table>
+        <thead>
+          <tr><th>Operator Type</th><th>Python</th><th>Use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Relational</td><td><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>==</code>, <code>!=</code></td><td>Compare values</td></tr>
+          <tr><td>Logical</td><td><code>and</code>, <code>or</code>, <code>not</code></td><td>Combine or invert conditions</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Worked example: Range check</h4>
+      <pre><code>if x >= 10 and x <= 20:
+    print("In range")
+else:
+    print("Out of range")</code></pre>
+
+      <div class="warn-box">
+        <strong>⚠️ Common logic error:</strong> Using <code>or</code> when you need <code>and</code>. The condition <code>x >= 10 or x <= 20</code> is <strong>always true</strong> for any number, because every number is either ≥ 10, ≤ 20, or both. Use <code>and</code> to check that a value lies <em>between</em> two limits.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Nested selection</h3>
+      <p>Placing one selection structure inside another allows more complex decisions. Use nested selection only when the logic genuinely requires it; otherwise, simplify with <code>elif</code> or combined conditions.</p>
+
+      <pre><code>if age >= 18:
+    if has_permission:
+        print("Access granted")
+    else:
+        print("Permission required")
+else:
+    print("Too young")</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Common selection errors</h3>
+      <ul>
+        <li><strong>Assignment vs comparison:</strong> using <code>=</code> instead of <code>==</code> in a condition.</li>
+        <li><strong>Wrong branch order:</strong> checking a lower threshold before a higher one, making the higher branch unreachable.</li>
+        <li><strong>Always-true conditions:</strong> using <code>or</code> when <code>and</code> is needed for a range check.</li>
+        <li><strong>Missing <code>else</code> branch:</strong> leaving a path through the logic with no instruction.</li>
+        <li><strong>Redundant conditions:</strong> adding unnecessary checks that make the code harder to read.</li>
+      </ul>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> When writing selection code, trace through it with sample values — one below the threshold, one exactly on the threshold, and one above. This catches off-by-one errors and wrong branch order.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Key terms</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Selection</td><td>A control structure that chooses which block of code to execute based on a condition.</td></tr>
+          <tr><td>Condition</td><td>A Boolean expression that evaluates to <code>True</code> or <code>False</code>.</td></tr>
+          <tr><td>Branch</td><td>One possible path through a selection structure.</td></tr>
+          <tr><td>Boolean expression</td><td>An expression that produces a <code>True</code>/<code>False</code> result, often using relational and logical operators.</td></tr>
+          <tr><td>Nested selection</td><td>A selection structure placed inside another selection structure.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: LOOPING -->
+    <!-- ============================================================ -->
+    <h2>3. Looping</h2>
+
+    <div class="card">
+      <h3>The Big Idea</h3>
+      <p><strong>Looping structures</strong> allow us to execute a block of code multiple times, often with changing conditions or counters. Instead of writing the same instructions repeatedly, loops enable efficient, concise, and flexible repetition of actions — a core concept in all computational processes.</p>
+
+      <div class="analogy">
+        💡 Think of a loop as a treadmill: a <strong>counted loop</strong> is like setting the treadmill to run for exactly 5 kilometres; a <strong>conditional loop</strong> is like running until your heart rate reaches a target — you don't know in advance how long that will take.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Types of loops</h3>
+
+      <h4>A. Counted loops (definite iteration) — <code>for</code></h4>
+      <p>Executes a fixed number of times, often using a loop control variable.</p>
+      <pre><code>for i in range(5):
+    print("Iteration:", i)</code></pre>
+      <p>Used when the number of iterations is known ahead of time. The loop variable <code>i</code> controls how many times the loop runs.</p>
+
+      <h4>B. Conditional loops (indefinite iteration) — <code>while</code></h4>
+      <p>Repeats until a condition becomes false. Used when the number of repetitions is not known in advance.</p>
+      <pre><code>password = ""
+while password != "open123":
+    password = input("Enter password: ")</code></pre>
+
+      <div class="tip-box">
+        <strong>🔑 Key Principle:</strong> Use a <code>for</code> loop when you know <em>how many times</em> to repeat (e.g. iterating over 10 items, or <code>range(n)</code>). Use a <code>while</code> loop when the number of repetitions depends on a <em>condition</em> that may change unpredictably (e.g. keep asking for input until it is valid).
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Loop control keywords</h3>
+      <table>
+        <thead>
+          <tr><th>Keyword</th><th>Effect</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>break</code></td><td>Exits the loop immediately.</td></tr>
+          <tr><td><code>continue</code></td><td>Skips the rest of the current iteration and moves to the next one.</td></tr>
+        </tbody>
+      </table>
+      <p>These are most useful inside <code>if</code> statements within the loop.</p>
+    </div>
+
+    <div class="card">
+      <h3>Sentinel-controlled loops</h3>
+      <p>A <strong>sentinel value</strong> is a special input that signals the loop should stop. It is commonly used when the number of iterations is not known in advance.</p>
+      <pre><code>total = 0
+num = int(input("Enter number (-1 to quit): "))
+while num != -1:
+    total += num
+    num = int(input("Enter number (-1 to quit): "))
+print("Total:", total)</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Nested loops</h3>
+      <p>A loop placed inside another loop. The inner loop runs completely for each iteration of the outer loop. Nested loops are useful for processing grids, generating patterns, and working with 2D structures.</p>
+      <pre><code>for i in range(3):
+    for j in range(2):
+        print("Hello")</code></pre>
+      <p>This prints "Hello" <strong>6 times</strong> (3 outer iterations × 2 inner iterations).</p>
+    </div>
+
+    <div class="card">
+      <h3>Common loop errors</h3>
+      <table>
+        <thead>
+          <tr><th>Error</th><th>What it looks like</th><th>Fix</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Infinite loop</strong></td><td><code>while i &lt; 5:</code> with no update to <code>i</code></td><td>Update the loop variable inside the body (e.g. <code>i += 1</code>).</td></tr>
+          <tr><td><strong>Off-by-one error</strong></td><td><code>for i in range(1, 5):</code> when you meant 1–5</td><td>Remember <code>range(start, stop)</code> excludes <code>stop</code>. Use <code>range(1, 6)</code>.</td></tr>
+          <tr><td><strong>Missing initialisation</strong></td><td>Using a counter before assigning it a starting value</td><td>Initialise counters to <code>0</code> and accumulators before the loop.</td></tr>
+          <tr><td><strong>Faulty condition logic</strong></td><td><code>while x &gt; 0 or x &lt; 10:</code> (always true)</td><td>Use <code>and</code> for range checks: <code>while x &gt; 0 and x &lt; 10:</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box">
+        <strong>⚠️ Infinite loop first aid:</strong> If your program hangs, press <code>Ctrl + C</code> in the terminal (or the stop button in your IDE). Then look for the loop whose condition never becomes false — the culprit is almost always a missing or misplaced update to the control variable.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Key terms</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Iteration</td><td>One single pass through the body of a loop.</td></tr>
+          <tr><td>Counted loop</td><td>A loop that repeats a fixed, known number of times (e.g. <code>for</code>).</td></tr>
+          <tr><td>Conditional loop</td><td>A loop that repeats while a condition remains true (e.g. <code>while</code>).</td></tr>
+          <tr><td>Sentinel value</td><td>A special input value that signals the loop should stop.</td></tr>
+          <tr><td>Infinite loop</td><td>A loop whose condition never becomes false, so it never terminates.</td></tr>
+          <tr><td>Off-by-one error</td><td>A loop that runs one time too many or too few because a boundary value is wrong.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: FUNCTIONS & MODULARIZATION -->
+    <!-- ============================================================ -->
+    <h2>4. Functions &amp; Modularization</h2>
+
+    <div class="card">
+      <h3>The Big Idea</h3>
+      <p><strong>Modularization</strong> is the principle of breaking down a program into independent, reusable components, each responsible for a specific task. These components are typically implemented as <strong>functions</strong>, which accept inputs (<strong>parameters</strong>), perform a task, and optionally return a result. Functions enable code that is easier to read, easier to maintain, and less error-prone. Modularization also supports testing, debugging, and collaborative development by isolating functionality into clear, well-defined blocks.</p>
+
+      <div class="analogy">
+        💡 Think of a function like a recipe: you write it once, and you can follow it many times to produce the same dish. You can also swap ingredients (parameters) to get variations. Modularization is like organising a cookbook into chapters — each recipe (function) is self-contained, easy to find, and easy to change without rewriting the whole book.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Functions: reusable blocks of code</h3>
+      <p>A <strong>function</strong> is a named block of code that performs a specific task. Functions can:</p>
+      <ul>
+        <li>Be defined once and called many times.</li>
+        <li>Take <strong>parameters</strong> (inputs).</li>
+        <li>Return values (outputs).</li>
+        <li>Encapsulate behaviour, making programs modular and easier to reason about.</li>
+      </ul>
+
+      <pre><code>def add(a, b):
+    return a + b
+
+result = add(5, 3)
+print(result)  # Output: 8</code></pre>
+
+      <h4>Functions vs procedures</h4>
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>Function</th><th>Procedure</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Returns a value?</td><td>Yes</td><td>No (or returns <code>None</code>)</td></tr>
+          <tr><td>Typical use</td><td>Calculate and return a result</td><td>Perform an action (e.g. print, update)</td></tr>
+          <tr><td>Python</td><td><code>def</code> with <code>return</code></td><td><code>def</code> without <code>return</code> (returns <code>None</code>)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        <strong>🔑 Key Principle:</strong> Functions eliminate duplication (DRY — Don't Repeat Yourself). If you need to change the logic, you change it in one place rather than many. Functions also make code easier to test: you can test the function in isolation with known inputs and expected outputs.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Modularization: structuring programs into logical components</h3>
+      <p>Modularization refers to organizing code into separate, logically distinct units, usually through functions, classes and methods, or modules and packages.</p>
+
+      <h4>Benefits of a modular program</h4>
+      <table>
+        <thead>
+          <tr><th>Benefit</th><th>Explanation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Easier to test</strong></td><td>Each module can be tested independently.</td></tr>
+          <tr><td><strong>Easier to maintain</strong></td><td>Bugs are easier to isolate and fix.</td></tr>
+          <tr><td><strong>Easier to extend</strong></td><td>New features can be added without rewriting existing code.</td></tr>
+          <tr><td><strong>Easier to reuse</strong></td><td>Functions or modules can be imported into other projects.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        <strong>🔍 High cohesion, low coupling:</strong> Good modular design aims for <strong>high cohesion</strong> (each module focuses on a single, well-defined task) and <strong>low coupling</strong> (modules depend on each other as little as possible). This makes modules easier to understand, test, and replace.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Scope: local vs global</h3>
+      <p><strong>Scope</strong> defines the visibility and lifetime of variables — where they can be accessed and modified.</p>
+
+      <h4>Local scope</h4>
+      <p>A variable declared inside a function is <strong>local</strong> to that function and cannot be accessed from outside.</p>
+      <pre><code>def greet():
+    name = "Alice"  # local to greet()
+    print("Hello", name)
+
+greet()
+# print(name)  # Error: name is not defined</code></pre>
+
+      <h4>Global scope</h4>
+      <p>A variable defined outside all functions (in the main body) is <strong>global</strong> and accessible across multiple functions.</p>
+      <pre><code>name = "Bob"  # global
+
+def greet():
+    print("Hello", name)
+
+greet()  # Accesses global 'name'</code></pre>
+
+      <div class="warn-box">
+        <strong>⚠️ Modifying globals inside functions:</strong> In Python, if you assign to a global variable inside a function without declaring it <code>global</code>, Python creates a <em>new local variable</em> instead. To modify a global, you must use the <code>global</code> keyword.
+      </div>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> Local scope is usually safer than global scope. Local variables are isolated: changes inside one function cannot accidentally affect another function. This reduces side effects and makes behaviour easier to predict. Keep variables local unless they genuinely need to be shared.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Parameters and arguments</h3>
+      <p><strong>Parameters</strong> are the names listed in a function definition. <strong>Arguments</strong> are the actual values supplied when the function is called.</p>
+      <pre><code>def greet(name):        # 'name' is a parameter
+    print("Hello", name)
+
+greet("Alice")          # "Alice" is an argument</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Common function errors</h3>
+      <ul>
+        <li><strong>Missing <code>return</code>:</strong> the function calculates a result but does not send it back, so the caller receives <code>None</code>.</li>
+        <li><strong>Scope mistake:</strong> trying to access a local variable from outside the function.</li>
+        <li><strong>Forgetting to call the function:</strong> defining it but never using it.</li>
+        <li><strong>Wrong number of arguments:</strong> calling a function with too many or too few values.</li>
+      </ul>
+
+      <div class="check-box">
+        <strong>✅ Quick checklist before writing a function:</strong>
+        <ol style="margin:0.4rem 0 0;">
+          <li>Does this function do exactly one thing?</li>
+          <li>Are all inputs passed as parameters?</li>
+          <li>Does it return a value if it is meant to be a function (rather than a procedure)?</li>
+          <li>Is the name descriptive?</li>
+          <li>Have I tested it with normal, edge, and invalid inputs?</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Key terms</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Function</td><td>A named block of code that performs a task and returns a value.</td></tr>
+          <tr><td>Procedure</td><td>A named block that performs an action but does not return a value.</td></tr>
+          <tr><td>Parameter</td><td>The name listed in a function definition that receives a value.</td></tr>
+          <tr><td>Argument</td><td>The actual value supplied when a function is called.</td></tr>
+          <tr><td><code>return</code></td><td>The keyword that sends a value back from a function.</td></tr>
+          <tr><td>Local scope</td><td>A variable accessible only inside the function where it is declared.</td></tr>
+          <tr><td>Global scope</td><td>A variable defined outside all functions and accessible across them.</td></tr>
+          <tr><td>Modularization</td><td>Breaking a program into independent, reusable components.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5: EXAM TECHNIQUE -->
+    <!-- ============================================================ -->
+    <h2>5. Exam Technique</h2>
+
+    <div class="card">
+      <h3>Understanding command words</h3>
+      <table>
+        <thead>
+          <tr><th>Command word</th><th>What to do</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>State / Give / Name</strong></td><td>A short answer — often one word or phrase. No explanation.</td></tr>
+          <tr><td><strong>Describe</strong></td><td>Say what happens or what something is. More detail than "state," but no need for reasons.</td></tr>
+          <tr><td><strong>Explain</strong></td><td>Say <em>how</em> or <em>why</em>. Give reasons and make connections.</td></tr>
+          <tr><td><strong>Distinguish</strong></td><td>Make clear the differences between two things.</td></tr>
+          <tr><td><strong>Complete / Trace</strong></td><td>Fill in the blank, or work through the code step by step.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Reading the mark allocation</h3>
+      <ul>
+        <li><strong>1 mark:</strong> one short answer.</li>
+        <li><strong>2 marks:</strong> two distinct points, OR one point with a clear explanation.</li>
+        <li><strong>3 marks:</strong> three distinct points, OR one point developed through three stages.</li>
+        <li><strong>4+ marks:</strong> multiple developed points — don't try to answer in one sentence.</li>
+      </ul>
+
+      <h3>Common mistakes to avoid</h3>
+      <ul>
+        <li>Confusing <strong>sequence</strong> (order of instructions) with <strong>selection</strong> (choosing a path) and <strong>looping</strong> (repeating).</li>
+        <li>Using <code>=</code> instead of <code>==</code> in a condition.</li>
+        <li>Putting <code>elif</code> branches in the wrong order (lowest threshold first).</li>
+        <li>Forgetting to update a <code>while</code> loop variable (infinite loop).</li>
+        <li>Forgetting that <code>range(start, stop)</code> excludes <code>stop</code>.</li>
+        <li>Writing a function that calculates a value but forgets to <code>return</code> it.</li>
+        <li>Trying to access a local variable from outside its function.</li>
+      </ul>
+
+      <h3>How to tackle a programming exam question</h3>
+      <ol>
+        <li><strong>Read the question carefully.</strong> Identify whether it's about sequence, selection, looping, or functions.</li>
+        <li><strong>Look at the mark allocation.</strong> It tells you how many points the examiner wants.</li>
+        <li><strong>For "explain" questions</strong>, use a two-part structure: what happens + why it happens.</li>
+        <li><strong>For code-writing questions</strong>, if unsure, write a plan first, then code.</li>
+        <li><strong>For trace questions</strong>, work through the code step by step, updating the state after each line.</li>
+      </ol>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6: PRACTICE QUESTIONS -->
+    <!-- ============================================================ -->
+    <h2>6. Practice Questions</h2>
+    <p style="margin-bottom: 1rem; color: #2c4b6e;">
+      Now test yourself. Try each question <strong>without</strong> looking back at the notes. Write your answer first, then click <strong>Show answer ▼</strong> to check. None of these questions are the same as the ones in the exam — they test the same skills on different scenarios.
+    </p>
+
+    <div class="card">
+      <h3>Question 1</h3>
+      <p>Explain why the order of instructions matters in a program. Give one example of a sequencing error and explain its consequence. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q1">Show answer ▼</button>
+      <div id="q1" class="qa-content">
+        <p>The order of instructions determines the program's behaviour. If instructions are misordered, the program may produce incorrect output or crash.</p>
+        <p><strong>Example:</strong> using a variable before assigning it a value. <code>print(x)</code> before <code>x = 10</code> raises a <code>NameError</code> in Python because <code>x</code> does not exist yet. The consequence is that the program terminates with an error instead of printing 10.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 2</h3>
+      <p>Trace the following code and state the final value of <code>total</code>. <em>(2 marks)</em></p>
+      <pre><code>total = 0
+for i in range(1, 5):
+    total = total + i
+print(total)</code></pre>
+      <button class="qa-toggle" data-target="q2">Show answer ▼</button>
+      <div id="q2" class="qa-content">
+        <p>The loop runs for <code>i = 1, 2, 3, 4</code> (range excludes 5).</p>
+        <p><code>total</code> becomes: 0 + 1 = 1 → 1 + 2 = 3 → 3 + 3 = 6 → 6 + 4 = 10.</p>
+        <p><strong>Final value:</strong> <code>10</code>.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 3</h3>
+      <p>Write a Python <code>if-elif-else</code> statement that prints "Hot" if the temperature is 30 or above, "Warm" if it is between 20 and 29, and "Cool" otherwise. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q3">Show answer ▼</button>
+      <div id="q3" class="qa-content">
+        <pre><code>if temperature >= 30:
+    print("Hot")
+elif temperature >= 20:
+    print("Warm")
+else:
+    print("Cool")</code></pre>
+        <p>Note: the conditions are ordered from highest to lowest. If <code>temperature >= 20</code> were checked first, a temperature of 35 would print "Warm" instead of "Hot".</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 4</h3>
+      <p>Explain the difference between a <code>for</code> loop and a <code>while</code> loop, and give one scenario where each is the better choice. <em>(4 marks)</em></p>
+      <button class="qa-toggle" data-target="q4">Show answer ▼</button>
+      <div id="q4" class="qa-content">
+        <p>A <code>for</code> loop is used when the number of iterations is known in advance (count-controlled). A <code>while</code> loop is used when the number of iterations depends on a condition that may change unpredictably (condition-controlled).</p>
+        <p><strong>For loop scenario:</strong> iterating over a list of 10 students to print their names.</p>
+        <p><strong>While loop scenario:</strong> repeatedly asking for a password until the correct one is entered.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 5</h3>
+      <p>Identify and fix the error in the following loop:</p>
+      <pre><code>i = 0
+while i &lt; 5:
+    print("Hello")</code></pre>
+      <p><em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q5">Show answer ▼</button>
+      <div id="q5" class="qa-content">
+        <p><strong>Error:</strong> the loop variable <code>i</code> is never updated, so the condition <code>i &lt; 5</code> is always true. This creates an infinite loop.</p>
+        <p><strong>Fix:</strong> add <code>i += 1</code> inside the loop body.</p>
+        <pre><code>i = 0
+while i &lt; 5:
+    print("Hello")
+    i += 1</code></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 6</h3>
+      <p>Define the term <strong>function</strong> and state <strong>one</strong> benefit of using functions in a program. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q6">Show answer ▼</button>
+      <div id="q6" class="qa-content">
+        <p>A function is a named block of code that performs a specific task and can be called multiple times.</p>
+        <p><strong>Benefit (any one):</strong> it avoids code duplication; it makes the program easier to test and debug; it improves readability by giving a name to a logical operation; it allows code to be reused across different parts of a program.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 7</h3>
+      <p>Explain the difference between <strong>local scope</strong> and <strong>global scope</strong>, using examples. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q7">Show answer ▼</button>
+      <div id="q7" class="qa-content">
+        <p><strong>Local scope:</strong> a variable declared inside a function is only visible within that function. Example: <code>def greet(): name = "Alice"</code> — <code>name</code> cannot be used outside <code>greet()</code>.</p>
+        <p><strong>Global scope:</strong> a variable defined outside all functions is visible across the whole program. Example: <code>name = "Bob"</code> at the top level can be read inside any function.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 8</h3>
+      <p>Write a Python function called <code>calculate_area(length, width)</code> that returns the area of a rectangle. Then call it with <code>length = 5</code> and <code>width = 3</code> and print the result. <em>(4 marks)</em></p>
+      <button class="qa-toggle" data-target="q8">Show answer ▼</button>
+      <div id="q8" class="qa-content">
+        <pre><code>def calculate_area(length, width):
+    return length * width
+
+result = calculate_area(5, 3)
+print(result)  # Output: 15</code></pre>
+        <p>Marks: 1 for correct function header with two parameters; 1 for returning the product; 1 for calling the function with arguments 5 and 3; 1 for printing the returned value.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 9</h3>
+      <p>A programmer writes the following code:</p>
+      <pre><code>x = 5
+if x > 3 or x < 10:
+    print("Condition true")</code></pre>
+      <p>Explain why this condition is always true, and rewrite it so that it is only true when <code>x</code> is between 3 and 10 (exclusive). <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q9">Show answer ▼</button>
+      <div id="q9" class="qa-content">
+        <p>The condition uses <code>or</code>, which is true when <em>either</em> side is true. Every number satisfies at least one of “<code>x > 3</code>” or “<code>x < 10</code>” (e.g. 15 satisfies the first, 1 satisfies the second), so the condition is always true.</p>
+        <p><strong>Corrected:</strong> <code>if x > 3 and x < 10:</code> — this is true only for values strictly between 3 and 10.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 10</h3>
+      <p>Explain <strong>two</strong> benefits of modularization for a large software project. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q10">Show answer ▼</button>
+      <div id="q10" class="qa-content">
+        <p>Any two of:</p>
+        <ul>
+          <li><strong>Easier maintenance</strong> — bugs are isolated to a single module, so fixing one part does not require understanding the whole program.</li>
+          <li><strong>Easier testing</strong> — each module can be unit-tested independently with known inputs.</li>
+          <li><strong>Reusability</strong> — well-designed modules can be imported into other projects.</li>
+          <li><strong>Collaboration</strong> — different developers can work on separate modules with clear boundaries, reducing conflicts.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 11</h3>
+      <p>Trace the following code and state the output. <em>(2 marks)</em></p>
+      <pre><code>count = 0
+for i in range(3):
+    for j in range(2):
+        count += 1
+print(count)</code></pre>
+      <button class="qa-toggle" data-target="q11">Show answer ▼</button>
+      <div id="q11" class="qa-content">
+        <p>The outer loop runs 3 times. For each outer iteration, the inner loop runs 2 times. So the inner loop body executes 3 × 2 = <strong>6</strong> times.</p>
+        <p><strong>Output:</strong> <code>6</code></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 12</h3>
+      <p>A function is written as follows:</p>
+      <pre><code>def add(a, b):
+    a + b
+
+result = add(2, 3)
+print(result)</code></pre>
+      <p>Explain why <code>result</code> is <code>None</code>, and fix the function. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q12">Show answer ▼</button>
+      <div id="q12" class="qa-content">
+        <p>The function calculates <code>a + b</code> but does not <code>return</code> the value. In Python, a function without a <code>return</code> statement returns <code>None</code> by default.</p>
+        <p><strong>Fix:</strong> add <code>return a + b</code>.</p>
+        <pre><code>def add(a, b):
+    return a + b</code></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 13</h3>
+      <p>Describe the difference between a <strong>sentinel-controlled loop</strong> and a <strong>count-controlled loop</strong>. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q13">Show answer ▼</button>
+      <div id="q13" class="qa-content">
+        <p>A count-controlled loop repeats a fixed number of times, known in advance (e.g. <code>for i in range(5)</code>).</p>
+        <p>A sentinel-controlled loop repeats until a special input value (the sentinel) is encountered; the number of iterations is not known in advance (e.g. <code>while num != -1</code>).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 14</h3>
+      <p>Explain why <code>range(1, 5)</code> prints 1, 2, 3, 4 and not 1, 2, 3, 4, 5. <em>(2 marks)</em></p>
+      <button class="qa-toggle" data-target="q14">Show answer ▼</button>
+      <div id="q14" class="qa-content">
+        <p>In Python, <code>range(start, stop)</code> generates numbers from <code>start</code> up to but <strong>not including</strong> <code>stop</code>. So <code>range(1, 5)</code> stops before 5.</p>
+        <p>To include 5, you would write <code>range(1, 6)</code>.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Question 15</h3>
+      <p>A student writes the following selection code:</p>
+      <pre><code>if score >= 70:
+    print("C")
+elif score >= 80:
+    print("B")
+elif score >= 90:
+    print("A")</code></pre>
+      <p>Explain why a score of 95 would print "C" instead of "A", and fix the code. <em>(3 marks)</em></p>
+      <button class="qa-toggle" data-target="q15">Show answer ▼</button>
+      <div id="q15" class="qa-content">
+        <p>Python evaluates <code>elif</code> branches top to bottom and stops at the first true condition. A score of 95 satisfies <code>score >= 70</code> first, so it prints "C" and never reaches the <code>score >= 90</code> branch.</p>
+        <p><strong>Fix:</strong> reorder the conditions from highest threshold to lowest:</p>
+        <pre><code>if score >= 90:
+    print("A")
+elif score >= 80:
+    print("B")
+elif score >= 70:
+    print("C")</code></pre>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      ⚡ B2.3 Programming — Revision Guide · IB Computer Science · First Assessment 2027
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const toggles = document.querySelectorAll('.qa-toggle');
+      toggles.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('data-target');
+          const content = document.getElementById(targetId);
+          if (!content) return;
+
+          const isVisible = content.classList.contains('show');
+          if (isVisible) {
+            content.classList.remove('show');
+            this.textContent = 'Show answer ▼';
+          } else {
+            content.classList.add('show');
+            this.textContent = 'Hide answer ▲';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
