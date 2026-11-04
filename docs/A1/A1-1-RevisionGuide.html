@@ -95,6 +95,19 @@
         }
         tr:nth-child(even) { background: #f8fafc; }
 
+        /* Pipeline diagram styling */
+        .pipeline-diagram {
+            font-family: 'Courier New', Courier, monospace;
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
         @media (max-width: 640px) {
             .container { padding: 20px; }
             h1 { font-size: 1.8rem; }
@@ -112,101 +125,201 @@
 
     <h1>A1.1 Revision Guide: Computer Architecture</h1>
 
-    <p>This revision guide covers the fundamental hardware components of a computer system, how they communicate, and how data is managed and stored.</p>
+    <p>This revision guide covers the fundamental hardware components of a computer system: the CPU and GPU, the memory hierarchy, how instructions are processed, how data is stored long-term, and how modern systems use compression and cloud services.</p>
 
-    <h2>1. The CPU (Central Processing Unit)</h2>
-    <p>The CPU is the "brain" of the computer. It processes instructions and manages the flow of data. It consists of three main parts:</p>
-    <ul>
-        <li><strong>The Control Unit (CU):</strong> Directs the flow of data between the components and decodes instructions.</li>
-        <li><strong>The Arithmetic Logic Unit (ALU):</strong> Performs mathematical calculations (add, subtract) and logical operations (AND, OR, NOT).</li>
-        <li><strong>Registers:</strong> Tiny, ultra-fast memory locations inside the CPU.</li>
-    </ul>
+    <!-- ================= A1.1.1 ================= -->
+    <h2>1. CPU Architecture (A1.1.1)</h2>
+    <p>The Central Processing Unit (CPU) is the "brain" of the computer, responsible for executing instructions. It is built from several key components that work together.</p>
 
     <div class="key-term">
-        <strong>Key Registers to Know:</strong><br>
-        • <strong>Program Counter (PC):</strong> Holds the memory address of the <em>next</em> instruction.<br>
-        • <strong>Memory Address Register (MAR):</strong> Holds the address of the data currently being fetched.<br>
-        • <strong>Memory Data Register (MDR):</strong> Holds the actual data fetched from memory.<br>
-        • <strong>Accumulator (ACC):</strong> Stores the result of calculations from the ALU.<br>
-        • <strong>Current Instruction Register (CIR):</strong> Holds the instruction currently being decoded and executed.
+        <strong>Key CPU Components:</strong><br>
+        • <strong>Arithmetic Logic Unit (ALU):</strong> Performs arithmetic (add, subtract) and logical operations (AND, OR, NOT, comparisons).<br>
+        • <strong>Control Unit (CU):</strong> Fetches and decodes instructions, and sends control signals to direct other components. It processes no data itself.<br>
+        • <strong>Registers:</strong> Tiny, ultra-fast storage locations inside the CPU.<br>
+        • <strong>Buses:</strong> Sets of parallel wires that carry data and control signals between components.
     </div>
 
-    <h3>The Fetch-Decode-Execute Cycle (FDE)</h3>
-    <p>The CPU repeats this cycle billions of times a second:</p>
-    <ol>
-        <li><strong>Fetch:</strong> The address in the PC is copied to the MAR. The instruction at that address is fetched into the MDR, then copied to the CIR. The PC increments to point to the next instruction.</li>
-        <li><strong>Decode:</strong> The Control Unit decodes the instruction in the CIR to determine what needs to be done.</li>
-        <li><strong>Execute:</strong> The instruction is carried out. This might involve the ALU doing a calculation, or reading/writing data to memory.</li>
-    </ol>
-
-    <h2>2. GPU Architecture (Graphics Processing Unit)</h2>
-    <p>While a CPU has a few, highly complex cores designed for sequential tasks, a GPU has thousands of simpler cores designed to work in parallel.</p>
-    <ul>
-        <li><strong>Purpose:</strong> To handle the massive mathematical calculations required for rendering images, video, and 3D graphics.</li>
-        <li><strong>Parallel Processing:</strong> Because a GPU has thousands of cores, it can process many pieces of data at the exact same time (e.g., calculating the colour of every pixel on a 4K screen simultaneously).</li>
-    </ul>
-
-    <h2>3. Memory (RAM & ROM)</h2>
-    <p>Memory is split into Primary (direct CPU access) and Secondary (long-term storage).</p>
-    
+    <h3>The Key Registers</h3>
     <table>
-        <thead>
-            <tr>
-                <th>Feature</th>
-                <th>RAM (Random Access Memory)</th>
-                <th>ROM (Read-Only Memory)</th>
-            </tr>
-        </thead>
+        <thead><tr><th>Register</th><th>Function</th></tr></thead>
         <tbody>
-            <tr>
-                <td><strong>Volatility</strong></td>
-                <td>Volatile (loses data when power is off)</td>
-                <td>Non-volatile (keeps data without power)</td>
-            </tr>
-            <tr>
-                <td><strong>Read/Write</strong></td>
-                <td>Read and Write (changes constantly)</td>
-                <td>Read-only (cannot be changed by user)</td>
-            </tr>
-            <tr>
-                <td><strong>Purpose</strong></td>
-                <td>Stores currently running programs and open files.</td>
-                <td>Stores the BIOS / boot-up instructions.</td>
-            </tr>
+            <tr><td><strong>Program Counter (PC)</strong></td><td>Holds the memory address of the <em>next</em> instruction to be fetched.</td></tr>
+            <tr><td><strong>Instruction Register (IR)</strong></td><td>Holds the instruction currently being decoded and executed.</td></tr>
+            <tr><td><strong>Memory Address Register (MAR)</strong></td><td>Holds the memory address about to be accessed (where to look).</td></tr>
+            <tr><td><strong>Memory Data Register (MDR)</strong></td><td>Holds the data read from or being written to memory (what was found).</td></tr>
+            <tr><td><strong>Accumulator (AC)</strong></td><td>Holds intermediate results of ALU operations.</td></tr>
         </tbody>
     </table>
 
-    <h3>Cache Memory</h3>
-    <p>Cache is an extremely fast type of memory built into or very close to the CPU. It stores frequently used instructions to reduce the need to fetch them from the slower RAM.</p>
-
-    <h2>4. Secondary Storage</h2>
-    <p>Secondary storage is non-volatile long-term storage for files, software, and the OS.</p>
-    <ul>
-        <li><strong>Magnetic (HDD):</strong> Uses spinning disks and magnetic heads. Cheap, high capacity, but slow and easily damaged.</li>
-        <li><strong>Solid State (SSD):</strong> Uses flash memory (no moving parts). Extremely fast, silent, and durable, but more expensive than HDDs.</li>
-        <li><strong>Optical:</strong> Uses lasers (CD, DVD, Blu-ray). Used for media distribution.</li>
-    </ul>
-
-    <h2>5. Data Compression</h2>
-    <p>Compression reduces the file size to save storage space and speed up transmission.</p>
-    <ul>
-        <li><strong>Lossless Compression (e.g., ZIP, PNG):</strong> Reduces file size by finding patterns and storing them more efficiently. <em>All original data is preserved</em>, so the file can be perfectly restored.</li>
-        <li><strong>Lossy Compression (e.g., MP3, JPEG):</strong> Permanently removes data that the human eye or ear is unlikely to notice. It results in much smaller files but the original quality cannot be recovered.</li>
-    </ul>
+    <h3>The Three Buses</h3>
+    <table>
+        <thead><tr><th>Bus</th><th>Carries</th><th>Direction</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Address Bus</strong></td><td>Memory addresses from CPU to memory.</td><td>One way (CPU → RAM)</td></tr>
+            <tr><td><strong>Data Bus</strong></td><td>Data between CPU and memory.</td><td>Both directions</td></tr>
+            <tr><td><strong>Control Bus</strong></td><td>Control and timing signals from the CU.</td><td>Both directions</td></tr>
+        </tbody>
+    </table>
 
     <div class="exam-tip">
-        <strong>Exam Tip:</strong> If an exam question asks why a file should use lossless compression, the answer is usually because the data must remain perfectly intact (e.g., a text document, or a medical scan). Lossy is best for media where slight quality loss is acceptable (e.g., streaming music).
+        <strong>⚠️ Exam Tip:</strong> When drawing a CPU diagram, the address bus arrow points one way only (CPU → RAM). The data and control bus arrows point both ways. A diagram with three identical double-headed arrows tells the examiner you have memorised a shape, not understood the system.
     </div>
 
-    <h2>6. Cloud Computing</h2>
-    <p>Cloud computing is the delivery of computing services (storage, servers, software) over the internet.</p>
+    <!-- ================= A1.1.2 & A1.1.3 ================= -->
+    <h2>2. GPU Architecture (A1.1.2 & A1.1.3 HL)</h2>
+    <p>The Graphics Processing Unit (GPU) is a specialised processor designed for parallel processing. While a CPU has a few, highly complex cores for sequential tasks, a GPU has thousands of simpler cores that can operate simultaneously.</p>
+
+    <table>
+        <thead><tr><th>Feature</th><th>CPU</th><th>GPU</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Cores</strong></td><td>Few (e.g., 8-16), highly complex.</td><td>Thousands of simpler cores.</td></tr>
+            <tr><td><strong>Best at</strong></td><td>Sequential, logical tasks (running an OS, general software).</td><td>Parallel tasks (graphics rendering, scientific simulation, AI training).</td></tr>
+            <tr><td><strong>Architecture</strong></td><td>Low latency (fast completion of one task).</td><td>High throughput (many tasks completed simultaneously).</td></tr>
+        </tbody>
+    </table>
+
+    <div class="key-term">
+        <strong>HL Concepts:</strong><br>
+        • <strong>GPGPU:</strong> General-Purpose computing on Graphics Processing Units—using GPUs for non-graphics tasks.<br>
+        • <strong>SIMD:</strong> Single Instruction, Multiple Data—one instruction operates on many data elements at once.<br>
+        • <strong>Tensor Cores:</strong> Specialised NVIDIA cores for matrix multiplication, crucial for AI workloads.
+    </div>
+
+    <!-- ================= A1.1.4 ================= -->
+    <h2>3. Primary Memory & The Memory Hierarchy (A1.1.4)</h2>
+    <p>Primary memory is directly accessible by the CPU. It is organised in a hierarchy, balancing speed, size, and cost.</p>
+
+    <table>
+        <thead><tr><th>Memory Type</th><th>Volatile?</th><th>Speed</th><th>Typical Size</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Registers</strong></td><td>Yes</td><td>Fastest (~1 cycle)</td><td>Bytes</td><td>Data the CPU is working on this instant.</td></tr>
+            <tr><td><strong>L1 Cache</strong></td><td>Yes</td><td>~1–2 cycles</td><td>~32 KB per core</td><td>Smallest, fastest cache level.</td></tr>
+            <tr><td><strong>L2 Cache</strong></td><td>Yes</td><td>~3–14 cycles</td><td>~256 KB per core</td><td>Backup to L1; larger, slightly slower.</td></tr>
+            <tr><td><strong>L3 Cache</strong></td><td>Yes</td><td>~30–50+ cycles</td><td>~8–32 MB shared</td><td>Largest cache level; shared across all cores.</td></tr>
+            <tr><td><strong>RAM</strong></td><td>Yes</td><td>~100+ cycles</td><td>GBs</td><td>Working memory: OS, running programs.</td></tr>
+            <tr><td><strong>ROM</strong></td><td>No</td><td>Slow</td><td>MBs</td><td>Permanent startup instructions (BIOS/UEFI).</td></tr>
+        </tbody>
+    </table>
+
+    <div class="exam-tip">
+        <strong>⚠️ Cache Hit vs. Cache Miss:</strong> A <strong>cache hit</strong> means the CPU found the required data in the cache (fast). A <strong>cache miss</strong> means it was not in the cache, forcing the CPU to fetch it from the slower RAM. A miss is a normal, frequent event—not an error.
+    </div>
+
+    <!-- ================= A1.1.5 ================= -->
+    <h2>4. The Fetch-Decode-Execute Cycle (A1.1.5)</h2>
+    <p>The CPU continuously repeats this three-stage cycle to process every instruction.</p>
+
+    <h3>Stage 1: Fetch</h3>
+    <ol>
+        <li>The address in the <strong>Program Counter (PC)</strong> is copied to the <strong>Memory Address Register (MAR)</strong>.</li>
+        <li>The address travels along the <strong>address bus</strong> to main memory, while the Control Unit sends a read signal along the <strong>control bus</strong>.</li>
+        <li>Memory returns the instruction along the <strong>data bus</strong>, which is placed in the <strong>Memory Data Register (MDR)</strong>.</li>
+        <li>The instruction is copied from the MDR into the <strong>Instruction Register (IR)</strong>.</li>
+        <li>The <strong>PC is incremented</strong> to point to the next instruction.</li>
+    </ol>
+
+    <h3>Stage 2: Decode</h3>
+    <p>The <strong>Control Unit</strong> examines the instruction in the IR. It identifies the <strong>opcode</strong> (the operation to perform) and any <strong>operands</strong> (the data or addresses to act on). It then generates the necessary control signals.</p>
+
+    <h3>Stage 3: Execute</h3>
+    <p>The Control Unit sends signals to activate the required components. Values are routed through the <strong>ALU</strong>, the operation is performed, and the result is stored in the <strong>Accumulator (AC)</strong> or written back to memory.</p>
+
+    <!-- ================= A1.1.6 ================= -->
+    <h2>5. Pipelining (A1.1.6 HL)</h2>
+    <p>Pipelining is a technique that improves CPU performance by overlapping the stages of multiple instructions.</p>
+
+    <p>In a standard FDE cycle, an instruction goes: <strong>Fetch → Decode → Execute</strong>. For pipelining, a fourth stage is added: <strong>Write-back</strong> (where the result is stored).</p>
+
+    <div class="pipeline-diagram">
+        <strong>No Pipelining (Sequential) — 3 instructions take 12 cycles</strong><br>
+        Inst 1: F → D → E → W<br>
+        Inst 2: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F → D → E → W<br>
+        Inst 3: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F → D → E → W<br>
+        <br>
+        <strong>With Pipelining (Overlap) — 3 instructions take 6 cycles</strong><br>
+        Inst 1: F → D → E → W<br>
+        Inst 2: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F → D → E → W<br>
+        Inst 3: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F → D → E → W
+    </div>
+
+    <div class="key-term">
+        <strong>Throughput vs. Latency:</strong><br>
+        • <strong>Throughput:</strong> The number of instructions completed per unit of time. Pipelining <strong>increases</strong> this.<br>
+        • <strong>Latency:</strong> The time it takes to complete one single instruction from start to finish. Pipelining <strong>does not reduce</strong> this.
+    </div>
+
+    <!-- ================= A1.1.7 ================= -->
+    <h2>6. Secondary Memory (A1.1.7)</h2>
+    <p>Secondary storage is non-volatile, long-term storage for files, software, and the OS. The distinction between internal and external is location and connection, not what it stores.</p>
+
+    <h3>Internal Storage</h3>
+    <table>
+        <thead><tr><th>Type</th><th>Technology</th><th>Characteristics</th><th>Typical Use</th></tr></thead>
+        <tbody>
+            <tr><td><strong>HDD</strong></td><td>Magnetic, moving parts</td><td>Cheap per GB; high capacity; slower</td><td>Mass storage, archives</td></tr>
+            <tr><td><strong>SSD</strong></td><td>Flash, no moving parts</td><td>Fast; reliable; more expensive per GB</td><td>Operating system, frequently used programs</td></tr>
+            <tr><td><strong>eMMC</strong></td><td>Flash soldered to board</td><td>Compact; cheap; lower performance than SSD</td><td>Smartphones, tablets, budget devices</td></tr>
+        </tbody>
+    </table>
+
+    <h3>External Storage</h3>
+    <table>
+        <thead><tr><th>Type</th><th>Technology</th><th>Characteristics</th><th>Typical Use</th></tr></thead>
+        <tbody>
+            <tr><td><strong>External HDD</strong></td><td>Magnetic, moving parts</td><td>Portable; high capacity; interface-limited</td><td>Backup, file transfer</td></tr>
+            <tr><td><strong>External SSD</strong></td><td>Flash</td><td>Portable; fast; more expensive</td><td>High-speed backup, video editing</td></tr>
+            <tr><td><strong>Optical Drive</strong></td><td>Optical (laser)</td><td>Read-only or write-once; large capacity per disc</td><td>Media distribution, archival</td></tr>
+            <tr><td><strong>Flash Drive</strong></td><td>Flash</td><td>Small; portable; inexpensive</td><td>File transfer, portable programs</td></tr>
+            <tr><td><strong>Memory Card</strong></td><td>Flash</td><td>Compact; removable</td><td>Cameras, phones, portable devices</td></tr>
+            <tr><td><strong>NAS</strong></td><td>HDD or SSD in network enclosure</td><td>Shared access; centralised storage</td><td>Home/office storage, media servers</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================= A1.1.8 ================= -->
+    <h2>7. Data Compression (A1.1.8)</h2>
+    <p>Compression reduces file size by removing redundancy. This saves storage space and reduces bandwidth usage during transmission.</p>
+
+    <table>
+        <thead><tr><th>Feature</th><th>Lossless Compression</th><th>Lossy Compression</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Reversible?</strong></td><td>Yes—exact original data can be reconstructed.</td><td>No—some data is permanently lost.</td></tr>
+            <tr><td><strong>Compression Ratio</strong></td><td>Lower (less reduction in size).</td><td>Higher (greater reduction in size).</td></tr>
+            <tr><td><strong>Data Integrity</strong></td><td>Perfect—no quality loss.</td><td>Approximate—quality is degraded.</td></tr>
+            <tr><td><strong>Typical Use</strong></td><td>Text files, executable programs, databases, archives.</td><td>Images, audio, video where imperceptible loss is acceptable.</td></tr>
+            <tr><td><strong>Common Methods</strong></td><td>Run-Length Encoding (RLE), Huffman Coding, Lempel-Ziv (LZ).</td><td>Transform Coding (DCT in JPEG), Quantization.</td></tr>
+            <tr><td><strong>Example Formats</strong></td><td>PNG, ZIP, FLAC, GIF.</td><td>JPEG, MP3, MPEG, H.264.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Run-Length Encoding (RLE) — Lossless</h3>
+    <p>RLE replaces consecutive repeated values (runs) with a single value and a count.</p>
     <ul>
-        <li><strong>Advantages:</strong> Accessible from anywhere, scalable (pay for what you use), no need to maintain physical hardware.</li>
-        <li><strong>Disadvantages:</strong> Relies heavily on a stable internet connection, potential security/privacy risks, ongoing subscription costs.</li>
+        <li><strong>Original:</strong> AAAAABBBCCDAA</li>
+        <li><strong>Compressed:</strong> 5A 3B 2C 1D 2A</li>
     </ul>
 
-    <h2>7. Pipelining (HL Only)</h2>
-    <p>A technique used in CPUs to improve performance. Instead of waiting for one instruction to completely finish the FDE cycle before starting the next, the CPU begins fetching the next instruction while decoding the current one. This dramatically speeds up processing time.</p>
+    <!-- ================= A1.1.9 ================= -->
+    <h2>8. Cloud Service Models (A1.1.9)</h2>
+    <p>Cloud computing provides IT resources over the internet. The three main models differ in how much you manage versus how much the provider manages.</p>
+
+    <div class="key-term">
+        <strong>Quick Rule of Thumb:</strong><br>
+        • <strong>SaaS (Software as a Service):</strong> You just <em>use</em> it. (e.g., Google Workspace, Microsoft 365)<br>
+        • <strong>PaaS (Platform as a Service):</strong> You <em>build</em> on it. (e.g., Heroku, Google App Engine)<br>
+        • <strong>IaaS (Infrastructure as a Service):</strong> You <em>control</em> the foundations. (e.g., Amazon EC2, Azure VMs)
+    </div>
+
+    <table>
+        <thead><tr><th>Feature</th><th>SaaS</th><th>PaaS</th><th>IaaS</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Delivered to</strong></td><td>End users</td><td>Developers</td><td>System administrators</td></tr>
+            <tr><td><strong>Manages infrastructure</strong></td><td>Cloud provider</td><td>Cloud provider</td><td>User</td></tr>
+            <tr><td><strong>Manages platform</strong></td><td>Cloud provider</td><td>Cloud provider</td><td>User</td></tr>
+            <tr><td><strong>Manages application</strong></td><td>Cloud provider</td><td>User</td><td>User</td></tr>
+            <tr><td><strong>Flexibility</strong></td><td>Low</td><td>Medium</td><td>High</td></tr>
+            <tr><td><strong>Example use</strong></td><td>Email, CRM</td><td>Web app development</td><td>Custom app hosting</td></tr>
+        </tbody>
+    </table>
 
 </div>
 
