@@ -312,6 +312,53 @@
             border-left-color: #b21f1f;
         }
 
+        /* Pattern visual */
+        .pattern-bars {
+            background: #fff;
+            border: 1px solid #dce4ed;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin: 15px 0;
+        }
+        .pattern-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .pattern-row:last-child { margin-bottom: 0; }
+        .pattern-label {
+            font-family: monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0b2a4a;
+            width: 24px;
+            text-align: center;
+        }
+        .pattern-bar {
+            display: flex;
+            gap: 2px;
+        }
+        .bit {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            font-family: monospace;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 4px;
+        }
+        .bit-0 { background: #e2e8f0; color: #475569; }
+        .bit-1 { background: #b21f1f; color: #fff; }
+        .pattern-note {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-left: auto;
+            font-style: italic;
+        }
+
         /* Video box */
         .video-box {
             background: #f1f6fc;
@@ -423,6 +470,8 @@
             .blooket-box { flex-direction: column; align-items: flex-start; }
             .tt { font-size: 0.75rem; }
             .tt th, .tt td { padding: 6px 10px; }
+            .bit { width: 22px; height: 22px; line-height: 22px; font-size: 0.7rem; }
+            .pattern-note { font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -438,7 +487,7 @@
     <p>By the end of this lesson, you will be able to:</p>
     <ul>
         <li><strong>Construct</strong> a truth table for any logic circuit or Boolean expression</li>
-        <li>Work out how many rows a truth table needs using the \(2^n\) rule</li>
+        <li>Work out how many rows a truth table needs using the 2^n rule</li>
         <li>Use <strong>intermediate columns</strong> to break a multi-gate circuit into manageable steps</li>
         <li><strong>Analyse</strong> a completed truth table to describe what a circuit does</li>
     </ul>
@@ -464,14 +513,14 @@
             <tr><td><strong>Input combination</strong></td><td>One specific pattern of 0s and 1s on the input lines. With two inputs there are four combinations; with three there are eight.</td></tr>
             <tr><td><strong>Row</strong></td><td>One line of the truth table, representing one input combination and its corresponding output.</td></tr>
             <tr><td><strong>Intermediate column</strong></td><td>A column added partway across the table to record the output of an inner gate before the final output is calculated.</td></tr>
-            <tr><td><strong>Boolean expression</strong></td><td>A way of writing a logic rule using operators such as AND, OR and NOT — for example, \(Q = (A \text{ AND } B) \text{ OR NOT } C\).</td></tr>
-            <tr><td><strong>\(2^n\) rule</strong></td><td>For \(n\) inputs, a truth table needs \(2^n\) rows, because each input can be either 0 or 1.</td></tr>
+            <tr><td><strong>Boolean expression</strong></td><td>A way of writing a logic rule using operators such as AND, OR and NOT — for example, Q = (A AND B) OR NOT C.</td></tr>
+            <tr><td><strong>2^n rule</strong></td><td>For n inputs, a truth table needs 2^n rows, because each input can be either 0 or 1.</td></tr>
         </tbody>
     </table>
 
     <!-- ===== WHAT IS A TRUTH TABLE ===== -->
     <h2>📊 What a Truth Table Actually Does</h2>
-    <p>A truth table is the <strong>complete answer</strong> for a logic circuit. If you know the truth table, you know exactly what the circuit outputs for every possible input—there is nothing left to discover[reference:0]. That is why exam questions ask you to construct one: it proves you understand the circuit, not just that you can name the gates inside it.</p>
+    <p>A truth table is the <strong>complete answer</strong> for a logic circuit. If you know the truth table, you know exactly what the circuit outputs for every possible input—there is nothing left to discover. That is why exam questions ask you to construct one: it proves you understand the circuit, not just that you can name the gates inside it.</p>
 
     <p>The table has two parts:</p>
     <ul>
@@ -481,7 +530,7 @@
 
     <div class="plain-box">
         <div class="plain-title">The one rule you must never break</div>
-        <p>A truth table must include <strong>every possible input combination</strong> — including the all-zero row[reference:1]. If a row is missing, the table is incomplete and cannot be used to analyse the circuit.</p>
+        <p>A truth table must include <strong>every possible input combination</strong> — including the all-zero row. If a row is missing, the table is incomplete and cannot be used to analyse the circuit.</p>
     </div>
 
     <!-- ===== HOW MANY ROWS ===== -->
@@ -489,28 +538,54 @@
     <p>Each input can be either 0 or 1. So the number of possible combinations doubles each time you add another input:</p>
 
     <table>
-        <thead><tr><th>Number of inputs (\(n\))</th><th>Calculation</th><th>Rows needed</th></tr></thead>
+        <thead><tr><th>Number of inputs (n)</th><th>Calculation</th><th>Rows needed</th></tr></thead>
         <tbody>
-            <tr><td>1</td><td>\(2^1\)</td><td>2</td></tr>
-            <tr><td>2</td><td>\(2^2\)</td><td>4</td></tr>
-            <tr><td>3</td><td>\(2^3\)</td><td>8</td></tr>
-            <tr><td>4</td><td>\(2^4\)</td><td>16</td></tr>
+            <tr><td>1</td><td>2^1</td><td>2</td></tr>
+            <tr><td>2</td><td>2^2</td><td>4</td></tr>
+            <tr><td>3</td><td>2^3</td><td>8</td></tr>
+            <tr><td>4</td><td>2^4</td><td>16</td></tr>
         </tbody>
     </table>
 
-    <p>This is called the <strong>\(2^n\) rule</strong>, and you will see it stated in almost every textbook[reference:3]. For three inputs, for example, there are eight combinations: 000, 001, 010, 011, 100, 101, 110, 111.</p>
+    <p>This is called the <strong>2^n rule</strong>, and you will see it stated in almost every textbook. For three inputs, for example, there are eight combinations: 000, 001, 010, 011, 100, 101, 110, 111.</p>
 
     <div class="plain-box">
         <div class="plain-title">A pattern to make the listing easy</div>
-        <p>When you list the input combinations, the <strong>rightmost column alternates every row</strong> (0, 1, 0, 1…), the <strong>next column alternates every two rows</strong> (0, 0, 1, 1…), and the <strong>next every four rows</strong> (0, 0, 0, 0, 1, 1, 1, 1…). Following this pattern guarantees you cover every combination without repeats.</p>
+        <p>For three inputs (A, B, C), write the columns so that <strong>each one flips at half the rate of the column to its right</strong>. The colours below show where each column changes value:</p>
+
+        <div class="pattern-bars">
+            <div class="pattern-row">
+                <span class="pattern-label">C</span>
+                <div class="pattern-bar">
+                    <span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span>
+                </div>
+                <span class="pattern-note">flips every row</span>
+            </div>
+            <div class="pattern-row">
+                <span class="pattern-label">B</span>
+                <div class="pattern-bar">
+                    <span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span><span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span>
+                </div>
+                <span class="pattern-note">flips every 2 rows</span>
+            </div>
+            <div class="pattern-row">
+                <span class="pattern-label">A</span>
+                <div class="pattern-bar">
+                    <span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span>
+                </div>
+                <span class="pattern-note">flips every 4 rows</span>
+            </div>
+        </div>
+
+        <p style="margin-top:12px;">Read across the three rows and you get every combination from 000 to 111, with no repeats.</p>
     </div>
 
     <!-- ===== WORKED EXAMPLE 1 ===== -->
     <h2>🧮 Worked Example 1: A Simple Two-Input Circuit</h2>
-    <p>Suppose a circuit has inputs A and B, and the output Q is produced by an <strong>AND gate</strong> whose output then goes through a <strong>NOT gate</strong>. In Boolean notation: \(Q = \text{NOT}(A \text{ AND } B)\).</p>
+    <p>Suppose a circuit has inputs A and B, and the output Q is produced by an <strong>AND gate</strong> whose output then goes through a <strong>NOT gate</strong>. In Boolean notation: <code>Q = NOT(A AND B)</code>.</p>
 
     <h3>Step 1 — Count the inputs and draw the skeleton</h3>
-    <p>There are two inputs, so we need \(2^2 = 4\) rows. Draw the table with columns for A, B, and Q:</p>
+    <p>There are two inputs, so we need 2^2 = 4 rows. Draw the table with columns for A, B, and Q:</p>
 
     <table class="tt">
         <thead><tr><th>A</th><th>B</th><th>Q</th></tr></thead>
@@ -565,16 +640,16 @@
 
     <div class="plain-box">
         <div class="plain-title">Why the intermediate column matters</div>
-        <p>If you tried to jump straight from A and B to Q, you would be doing two mental operations at once. The intermediate column lets you check each gate separately, so an error is easy to spot and fix[reference:5].</p>
+        <p>If you tried to jump straight from A and B to Q, you would be doing two mental operations at once. The intermediate column lets you check each gate separately, so an error is easy to spot and fix.</p>
     </div>
 
     <!-- ===== WORKED EXAMPLE 2 ===== -->
     <h2>🧮 Worked Example 2: A Three-Input Circuit</h2>
     <p>Now a harder one. The Boolean expression is:</p>
-    <p style="text-align:center; font-family:monospace; font-size:1.1rem; background:#f8fafc; padding:10px; border-radius:8px;">\(Q = (A \text{ AND } B) \text{ OR } (\text{NOT } C)\)</p>
+    <p style="text-align:center; font-family:monospace; font-size:1.1rem; background:#f8fafc; padding:10px; border-radius:8px;">Q = (A AND B) OR (NOT C)</p>
 
     <h3>Step 1 — Count the inputs</h3>
-    <p>There are three inputs (A, B, C), so we need \(2^3 = 8\) rows.</p>
+    <p>There are three inputs (A, B, C), so we need 2^3 = 8 rows.</p>
 
     <h3>Step 2 — Identify the intermediate parts</h3>
     <p>The expression has two bracketed parts that are combined by the final OR. So we need two intermediate columns:</p>
@@ -656,7 +731,7 @@
 
     <!-- ===== TOOL ===== -->
     <h2>🛠️ Check Your Work With a Truth Table Generator</h2>
-    <p>Once you have built a table by hand, you can use an online generator to confirm your answer. <a href="https://truthtabletools.com/boolean/" target="_blank">TruthTableTools</a> lets you type a Boolean expression and produces the full table instantly[reference:6].</p>
+    <p>Once you have built a table by hand, you can use an online generator to confirm your answer. <a href="https://truthtabletools.com/boolean/" target="_blank">TruthTableTools</a> lets you type a Boolean expression and produces the full table instantly.</p>
 
     <div class="tool-callout">
         <div class="tool-text">
@@ -691,7 +766,7 @@
     <div class="tt-step">
         <div class="tt-num">3</div>
         <div class="tt-body">
-            <strong>Finish with the output gate.</strong> The last column is the circuit’s actual output. If the final gate is an AND gate, the output can only be 1 when every input to that gate is 1[reference:7].
+            <strong>Finish with the output gate.</strong> The last column is the circuit’s actual output. If the final gate is an AND gate, the output can only be 1 when every input to that gate is 1.
         </div>
     </div>
 
@@ -701,10 +776,10 @@
     <div class="mistake-box">
         <div class="mistake-title">Where marks are usually lost</div>
         <ul>
-            <li><strong>Too few rows.</strong> Three inputs need eight rows, not six or seven. Use \(2^n\) before you draw anything.</li>
+            <li><strong>Too few rows.</strong> Three inputs need eight rows, not six or seven. Use 2^n before you draw anything.</li>
             <li><strong>Repeating an input combination.</strong> Every row must be different. Follow the alternation pattern to avoid duplicates.</li>
-            <li><strong>Jumping straight to the output.</strong> With more than one gate, always add an intermediate column. It is worth marks and it prevents errors[reference:8].</li>
-            <li><strong>Forgetting the all-zero row.</strong> 000 is a valid input combination and must be included[reference:9].</li>
+            <li><strong>Jumping straight to the output.</strong> With more than one gate, always add an intermediate column. It is worth marks and it prevents errors.</li>
+            <li><strong>Forgetting the all-zero row.</strong> 000 is a valid input combination and must be included.</li>
             <li><strong>Inverting the wrong thing.</strong> NOT binds to whatever is immediately to its right. In <code>NOT A AND B</code>, the NOT applies only to A, not to the whole expression.</li>
         </ul>
     </div>
@@ -718,6 +793,8 @@
                 <strong>Read &amp; Learn</strong>
                 <div class="task-1-resources">
                     <span class="pill"><a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.2.4.pdf" target="_blank">📖 eBook (A1.2.4)</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.4-construct-and-analyse-truth-tables" target="_blank">🌐 CS Wiki (A1.2.4)</a></span>
+                    <span class="pill"><a href="https://www.revisiondojo.com/ib/ib-computer-science-new/ib-computer-science-new-a1-2-4-constructing-and-analyzing-truth-tables" target="_blank">📝 RevisionDojo Notes</a></span>
                     <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQRWFYkFwSyBAJkutHfP9rgw1aUn_qLcOBK1i5yo0U1IrkQnKdOukqJOBpOobt3FFaY7AabO0NkYc2A/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides (Truth Tables)</a></span>
                     <span class="pill"><a href="https://truthtabletools.com/boolean/" target="_blank">🛠️ TruthTableTools</a></span>
                 </div>
@@ -729,15 +806,15 @@
             <span class="task-desc">
                 <strong>Complete the Starter Activity</strong> — Work through the <strong>Construct</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.<br>
                 Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your answers in a text file.<br>
-                <strong>📌 Important:</strong> Save your work as a <strong>.txt</strong> file using the sentence frame: <em>"A truth table lists ______. For \(n\) inputs, the table needs ______ rows because ______. To construct a table, first ______, then ______, then ______. An intermediate column is useful because ______. Once the table is complete, we can analyse it by ______."</em>
+                <strong>📌 Important:</strong> Save your work as a <strong>.txt</strong> file using the sentence frame: <em>"A truth table lists ______. For n inputs, the table needs ______ rows because ______. To construct a table, first ______, then ______, then ______. An intermediate column is useful because ______. Once the table is complete, we can analyse it by ______."</em>
             </span>
         </div>
         <div class="task-row">
             <span class="task-step">3</span>
             <span class="task-desc">
                 <strong>Deliberate Practice</strong> — Construct a full truth table for this expression, showing intermediate columns:<br>
-                <em>\(Q = (A \text{ OR } B) \text{ AND } (\text{NOT } C)\)</em><br><br>
-                Then <strong>analyse</strong> your table: describe in one sentence the exact input condition that makes Q equal 0.
+                <em>Q = (A OR B) AND (NOT C)</em><br><br>
+                Then <strong>analyse</strong> your table: describe in one sentence the exact input condition that makes Q equal 1.
             </span>
         </div>
         <div class="task-row">
