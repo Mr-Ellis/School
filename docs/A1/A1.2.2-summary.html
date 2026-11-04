@@ -340,117 +340,117 @@
 
     <!-- ===== FUNDAMENTALS ===== -->
     <h2>📊 The Fundamentals of Binary Encoding</h2>
-    <p>Every datum in a computer—whether it looks to us like a number, a paragraph, a photograph, or a song—is ultimately just an ordered sequence of <strong>bits</strong> (0s and 1s)[reference:0]. A transistor has only two stable states (on/off), so binary is the natural language of hardware[reference:1].</p>
+    <p>Every datum in a computer—whether it looks to us like a number, a paragraph, a photograph, or a song—is ultimately just an ordered sequence of <strong>bits</strong> (0s and 1s). A transistor has only two stable states (on/off), so binary is the natural language of hardware.</p>
 
-    <p>The critical idea is that <strong>a file type is not a different kind of storage—it is a different agreed rule for reading the same 1s and 0s</strong>[reference:2]. That rule is called an <strong>encoding</strong>. Change the encoding, and the same bit pattern means something entirely different: a number, a letter, a colour, or a sound[reference:3].</p>
+    <p>The critical idea is that <strong>a file type is not a different kind of storage—it is a different agreed rule for reading the same 1s and 0s</strong>. That rule is called an <strong>encoding</strong>. Change the encoding, and the same bit pattern means something entirely different: a number, a letter, a colour, or a sound.</p>
 
     <table>
         <thead><tr><th>Concept</th><th>What it means</th><th>Why it matters for storage &amp; retrieval</th></tr></thead>
         <tbody>
             <tr><td><strong>Bit</strong></td><td>0 or 1.</td><td>Everything else is built from bits.</td></tr>
-            <tr><td><strong>Byte</strong></td><td>8 bits.</td><td>File sizes, memory addresses, and buses are byte-oriented[reference:4].</td></tr>
-            <tr><td><strong>Encoding rule</strong></td><td>Agreed mapping between bit patterns and abstractions.</td><td>Without the rule, the bits are meaningless noise[reference:5].</td></tr>
-            <tr><td><strong>Metadata</strong></td><td>Extra bits describing the payload (type, length, checksums).</td><td>Guarantees correct decoding and integrity on retrieval[reference:6].</td></tr>
+            <tr><td><strong>Byte</strong></td><td>8 bits.</td><td>File sizes, memory addresses, and buses are byte-oriented.</td></tr>
+            <tr><td><strong>Encoding rule</strong></td><td>Agreed mapping between bit patterns and abstractions.</td><td>Without the rule, the bits are meaningless noise.</td></tr>
+            <tr><td><strong>Metadata</strong></td><td>Extra bits describing the payload (type, length, checksums).</td><td>Guarantees correct decoding and integrity on retrieval.</td></tr>
         </tbody>
     </table>
 
     <h3>Impact on storage and retrieval</h3>
     <ul>
-        <li><strong>Capacity:</strong> Higher-precision encoding (e.g., 24-bit colour vs 8-bit) multiplies the space required[reference:7].</li>
-        <li><strong>Throughput:</strong> Wider buses move more bits per clock, affecting how fast data can be retrieved[reference:8].</li>
-        <li><strong>Latency:</strong> Compressed encodings trade space efficiency for extra CPU time during decoding[reference:9].</li>
-        <li><strong>Compatibility:</strong> Interoperability depends on all parties agreeing on the same binary layout (endianness, character set, container format)[reference:10].</li>
-        <li><strong>Correct retrieval:</strong> If the encoding is known, binary data can be accurately reconstructed. If it is incorrect or unknown, data may be misinterpreted or corrupted[reference:11].</li>
+        <li><strong>Capacity:</strong> Higher-precision encoding (e.g., 24-bit colour vs 8-bit) multiplies the space required.</li>
+        <li><strong>Throughput:</strong> Wider buses move more bits per clock, affecting how fast data can be retrieved.</li>
+        <li><strong>Latency:</strong> Compressed encodings trade space efficiency for extra CPU time during decoding.</li>
+        <li><strong>Compatibility:</strong> Interoperability depends on all parties agreeing on the same binary layout (endianness, character set, container format).</li>
+        <li><strong>Correct retrieval:</strong> If the encoding is known, binary data can be accurately reconstructed. If it is incorrect or unknown, data may be misinterpreted or corrupted.</li>
     </ul>
 
     <!-- ===== INTEGERS ===== -->
     <h2>🔢 Integers: Unsigned, Signed, and BCD</h2>
 
     <h3>Unsigned integers</h3>
-    <p>Unsigned integers use every bit for magnitude. An 8-bit unsigned integer holds the values <strong>0 to 255</strong> (256 possible patterns, counting from 0)[reference:12].</p>
-    <p><strong>Example:</strong> <code>0011 0101₂ = 53₁₀</code>[reference:13].</p>
+    <p>Unsigned integers use every bit for magnitude. An 8-bit unsigned integer holds the values <strong>0 to 255</strong> (256 possible patterns, counting from 0).</p>
+    <p><strong>Example:</strong> <code>0011 0101₂ = 53₁₀</code>.</p>
 
     <h3>Signed integers: two’s complement</h3>
-    <p>Signed integers must give up one bit to record the sign. The scheme real processors use is <strong>two’s complement</strong>. The most significant bit carries a <em>negative</em> place value, while the remaining bits carry their normal positive values[reference:14].</p>
+    <p>Signed integers must give up one bit to record the sign. The scheme real processors use is <strong>two’s complement</strong>. The most significant bit carries a <em>negative</em> place value, while the remaining bits carry their normal positive values.</p>
     <ul>
-        <li>In 4 bits, the MSB is worth −8, so <code>1011 = −8 + 2 + 1 = −5</code>[reference:15].</li>
-        <li>4 bits cover −8 to +7; 8 bits cover −128 to +127[reference:16].</li>
-        <li>To negate a number: flip every bit, then add 1. (<code>13 = 00001101 → flip → 11110010 → +1 → 11110011 = −13</code>)[reference:17].</li>
-        <li>Two’s complement is used because the same adder circuit handles addition and subtraction with no extra gates[reference:18].</li>
+        <li>In 4 bits, the MSB is worth −8, so <code>1011 = −8 + 2 + 1 = −5</code>.</li>
+        <li>4 bits cover −8 to +7; 8 bits cover −128 to +127.</li>
+        <li>To negate a number: flip every bit, then add 1. (<code>13 = 00001101 → flip → 11110010 → +1 → 11110011 = −13</code>).</li>
+        <li>Two’s complement is used because the same adder circuit handles addition and subtraction with no extra gates.</li>
     </ul>
 
     <h3>Sign and magnitude (for contrast)</h3>
-    <p>In sign and magnitude, the MSB is a flag (0 = positive, 1 = negative) and is <em>not</em> added to the total. The same pattern <code>1011</code> means <strong>−5</strong> in two’s complement but <strong>−3</strong> in sign and magnitude[reference:19]. Sign and magnitude produces two representations of zero (<code>0000</code> and <code>1000</code>) and needs separate circuits for addition and subtraction, which is why hardware does not use it[reference:20].</p>
+    <p>In sign and magnitude, the MSB is a flag (0 = positive, 1 = negative) and is <em>not</em> added to the total. The same pattern <code>1011</code> means <strong>−5</strong> in two’s complement but <strong>−3</strong> in sign and magnitude. Sign and magnitude produces two representations of zero (<code>0000</code> and <code>1000</code>) and needs separate circuits for addition and subtraction, which is why hardware does not use it.</p>
 
     <h3>Binary-coded decimal (BCD) and fixed point</h3>
-    <p>BCD stores each decimal digit separately in 4 bits. So <code>1001 0011</code> reads as <strong>9 then 3</strong>, giving <strong>93</strong>[reference:21]. Money amounts that cannot be written exactly in ordinary binary stay exact in BCD, which is why financial systems use it. The cost is wasted space: 4 bits can hold 16 values, but BCD uses only 10[reference:22].</p>
-    <p><strong>Fixed point</strong> places the binary point at an agreed position, so bits to the left are the integer part and bits to the right are the fractional part[reference:23].</p>
+    <p>BCD stores each decimal digit separately in 4 bits. So <code>1001 0011</code> reads as <strong>9 then 3</strong>, giving <strong>93</strong>. Money amounts that cannot be written exactly in ordinary binary stay exact in BCD, which is why financial systems use it. The cost is wasted space: 4 bits can hold 16 values, but BCD uses only 10.</p>
+    <p><strong>Fixed point</strong> places the binary point at an agreed position, so bits to the left are the integer part and bits to the right are the fractional part.</p>
 
     <!-- ===== CHARACTERS & STRINGS ===== -->
     <h2>🔤 Characters and Strings</h2>
-    <p>Characters are stored as binary codes. Each character is assigned a unique binary value, allowing text to be stored and processed[reference:24]. A <strong>string</strong> is simply a sequence of characters, so it is stored as a sequence of binary codes[reference:25].</p>
+    <p>Characters are stored as binary codes. Each character is assigned a unique binary value, allowing text to be stored and processed. A <strong>string</strong> is simply a sequence of characters, so it is stored as a sequence of binary codes.</p>
 
     <table>
         <thead><tr><th>Encoding</th><th>What it provides</th><th>Storage layout notes</th></tr></thead>
         <tbody>
-            <tr><td><strong>ASCII</strong></td><td>7-bit code for English letters and symbols. <code>'A' = 0x41 = 0100 0001₂</code>[reference:26].</td><td>Legacy text remains readable in UTF-8 because ASCII bytes stay unchanged[reference:27].</td></tr>
-            <tr><td><strong>Unicode (UTF-8)</strong></td><td>Assigns a code-point to every written symbol worldwide. UTF-8 encodes those points in <strong>1–4 bytes</strong>[reference:28].</td><td>Length-prefixed (<code>[len][data…]</code>) allows fast random access; null-terminated (<code>[data…][0]</code>) is C-style and requires re-scanning for length[reference:29].</td></tr>
+            <tr><td><strong>ASCII</strong></td><td>7-bit code for English letters and symbols. <code>'A' = 0x41 = 0100 0001₂</code>.</td><td>Legacy text remains readable in UTF-8 because ASCII bytes stay unchanged.</td></tr>
+            <tr><td><strong>Unicode (UTF-8)</strong></td><td>Assigns a code-point to every written symbol worldwide. UTF-8 encodes those points in <strong>1–4 bytes</strong>.</td><td>Length-prefixed (<code>[len][data…]</code>) allows fast random access; null-terminated (<code>[data…][0]</code>) is C-style and requires re-scanning for length.</td></tr>
         </tbody>
     </table>
 
     <!-- ===== IMAGES ===== -->
     <h2>🖼️ Images</h2>
-    <p>A digital image is a grid of <strong>pixels</strong>. Each pixel’s colour or brightness is stored as a binary value[reference:30]. In a raw bitmap, a header records width, height, and bit-depth, followed by the pixel data[reference:31].</p>
+    <p>A digital image is a grid of <strong>pixels</strong>. Each pixel’s colour or brightness is stored as a binary value. In a raw bitmap, a header records width, height, and bit-depth, followed by the pixel data.</p>
 
     <h3>RGB colour</h3>
-    <p>A common scheme uses <strong>24 bits per pixel</strong>: 8 bits red, 8 bits green, 8 bits blue[reference:32]. A 1920 × 1080 RGB image therefore needs:</p>
+    <p>A common scheme uses <strong>24 bits per pixel</strong>: 8 bits red, 8 bits green, 8 bits blue. A 1920 × 1080 RGB image therefore needs:</p>
     <p style="text-align:center; font-family:monospace; background:#f8fafc; padding:10px; border-radius:8px;">1920 × 1080 × 24 = 49,766,400 bits ≈ 5.94 MiB</p>
 
     <h3>Quality vs size</h3>
-    <p>More pixels (higher resolution) increases detail. More bits per pixel increases colour accuracy. Both increase the storage required[reference:33]. Compressed formats (PNG, JPEG) convert blocks of pixels into frequency coefficients and entropy-code them, dramatically shrinking size at the cost of CPU time (and for JPEG, some quality)[reference:34].</p>
+    <p>More pixels (higher resolution) increases detail. More bits per pixel increases colour accuracy. Both increase the storage required. Compressed formats (PNG, JPEG) convert blocks of pixels into frequency coefficients and entropy-code them, dramatically shrinking size at the cost of CPU time (and for JPEG, some quality).</p>
 
     <!-- ===== AUDIO ===== -->
     <h2>🎵 Audio</h2>
-    <p>Analogue sound is a continuous wave. To store it in binary, the waveform is <strong>sampled</strong> at regular intervals and each sample is <strong>quantised</strong> into a fixed-width binary integer. This is <strong>Pulse-Code Modulation (PCM)</strong>[reference:35].</p>
+    <p>Analogue sound is a continuous wave. To store it in binary, the waveform is <strong>sampled</strong> at regular intervals and each sample is <strong>quantised</strong> into a fixed-width binary integer. This is <strong>Pulse-Code Modulation (PCM)</strong>.</p>
 
     <table>
         <thead><tr><th>Parameter</th><th>Meaning</th><th>CD audio value</th></tr></thead>
         <tbody>
-            <tr><td><strong>Sampling rate (fₛ)</strong></td><td>Samples taken per second. Determines temporal resolution[reference:36].</td><td>44,100 Hz</td></tr>
-            <tr><td><strong>Bit depth (b)</strong></td><td>Bits per sample. Determines quantisation resolution and signal-to-noise ratio[reference:37].</td><td>16 bits</td></tr>
-            <tr><td><strong>Channels (c)</strong></td><td>Independent audio streams (mono = 1, stereo = 2)[reference:38].</td><td>2</td></tr>
+            <tr><td><strong>Sampling rate (fₛ)</strong></td><td>Samples taken per second. Determines temporal resolution.</td><td>44,100 Hz</td></tr>
+            <tr><td><strong>Bit depth (b)</strong></td><td>Bits per sample. Determines quantisation resolution and signal-to-noise ratio.</td><td>16 bits</td></tr>
+            <tr><td><strong>Channels (c)</strong></td><td>Independent audio streams (mono = 1, stereo = 2).</td><td>2</td></tr>
         </tbody>
     </table>
 
     <h3>Bits per second for CD audio</h3>
     <p style="text-align:center; font-family:monospace; background:#f8fafc; padding:10px; border-radius:8px;">fₛ × b × c = 44,100 × 16 × 2 = 1,411,200 bit/s ≈ 176 KiB/s</p>
-    <p>Samples are stored interleaved (<code>L₀, R₀, L₁, R₁, …</code>) to maintain sample-accurate alignment[reference:39].</p>
+    <p>Samples are stored interleaved (<code>L₀, R₀, L₁, R₁, …</code>) to maintain sample-accurate alignment.</p>
 
     <h3>Quality vs size</h3>
-    <p>More samples improve accuracy; more bits per sample improve precision. Higher quality requires more storage[reference:40]. Compressed codecs (MP3, AAC, Opus) transform blocks to frequency space and psycho-acoustically quantise, reaching <strong>90%+ savings</strong> by removing masked or inaudible components[reference:41][reference:42].</p>
+    <p>More samples improve accuracy; more bits per sample improve precision. Higher quality requires more storage. Compressed codecs (MP3, AAC, Opus) transform blocks to frequency space and psycho-acoustically quantise, reaching <strong>90%+ savings</strong> by removing masked or inaudible components.</p>
 
     <!-- ===== VIDEO ===== -->
     <h2>🎬 Video</h2>
-    <p>A video file is a <strong>container</strong> plus one or more <strong>streams</strong>. The video stream is a sequence of <strong>frames</strong> (bitmaps), and audio is usually stored alongside[reference:43].</p>
+    <p>A video file is a <strong>container</strong> plus one or more <strong>streams</strong>. The video stream is a sequence of <strong>frames</strong> (bitmaps), and audio is usually stored alongside.</p>
 
     <h3>Frame types and compression</h3>
     <ul>
         <li><strong>I-frames</strong> are self-contained (like a still image).</li>
         <li><strong>P/B-frames</strong> store only the <em>differences</em> from other frames.</li>
-        <li>A <strong>codec</strong> (H.264, AV1) orchestrates block transforms, motion vectors, and entropy coding to compress the stream[reference:44].</li>
+        <li>A <strong>codec</strong> (H.264, AV1) orchestrates block transforms, motion vectors, and entropy coding to compress the stream.</li>
     </ul>
-    <p>The binary stream is timestamped so the playback engine reconstructs each frame in order and at the correct rate (e.g., 30 fps ≈ one frame every 33 ms)[reference:45].</p>
-    <p><strong>Why video files are large:</strong> many frames must be stored, audio data is included, and higher quality increases requirements[reference:46].</p>
+    <p>The binary stream is timestamped so the playback engine reconstructs each frame in order and at the correct rate (e.g., 30 fps ≈ one frame every 33 ms).</p>
+    <p><strong>Why video files are large:</strong> many frames must be stored, audio data is included, and higher quality increases requirements.</p>
 
     <!-- ===== WORKED EXAMPLES ===== -->
     <h2>🧮 Worked Mini-Examples</h2>
     <table>
         <thead><tr><th>Data item</th><th>Binary view</th><th>Size implication</th></tr></thead>
         <tbody>
-            <tr><td>Integer 300₁₀</td><td><code>0000 0001 0010 1100₂</code> (16-bit unsigned)</td><td>Needs 2 bytes; an 8-bit unsigned integer would overflow (max 255)[reference:47].</td></tr>
-            <tr><td>Word “Hi” (UTF-8)</td><td><code>0x48 0x69</code></td><td>2 bytes; UTF-16 would use 4 bytes[reference:48].</td></tr>
-            <tr><td>One pixel, RGBA (255, 128, 0, 255)</td><td><code>1111 1111 1000 0000 0000 0000 1111 1111₂</code></td><td>32 bits[reference:49].</td></tr>
-            <tr><td>0.01 s of CD audio</td><td>441 samples × 16 bits × 2 channels</td><td>≈ 17,600 bits[reference:50].</td></tr>
+            <tr><td>Integer 300₁₀</td><td><code>0000 0001 0010 1100₂</code> (16-bit unsigned)</td><td>Needs 2 bytes; an 8-bit unsigned integer would overflow (max 255).</td></tr>
+            <tr><td>Word “Hi” (UTF-8)</td><td><code>0x48 0x69</code></td><td>2 bytes; UTF-16 would use 4 bytes.</td></tr>
+            <tr><td>One pixel, RGBA (255, 128, 0, 255)</td><td><code>1111 1111 1000 0000 0000 0000 1111 1111₂</code></td><td>32 bits.</td></tr>
+            <tr><td>0.01 s of CD audio</td><td>441 samples × 16 bits × 2 channels</td><td>≈ 17,600 bits.</td></tr>
         </tbody>
     </table>
 
@@ -535,10 +535,11 @@
             <span class="task-desc">
                 <strong>Read &amp; Learn</strong> — Use the resources below to build your understanding of how binary stores different data types.
                 <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.2.1-2.pdf" target="_blank">📖 eBook (A1.2.1–2)</a></span>
                     <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.2-explain-how-binary-is-used-to-store-data" target="_blank">🌐 CS Wiki (A1.2.2)</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&loop=false&delayms=3000&slide=id.g30688db2fdf_1_6" target="_blank">📊 Lesson Slides</a></span>
                     <span class="pill"><a href="https://www.revisiondojo.com/ib/ib-computer-science-new/ib-computer-science-new-a1-2-2-how-binary-is-used-to-store-data/notes" target="_blank">📝 RevisionDojo Notes</a></span>
                     <span class="pill"><a href="https://www.computersciencecafe.com/a122-computer-fundamentals-ib.html" target="_blank">☕ CS Cafe (A1.2.2)</a></span>
-                    <span class="pill"><a href="https://github.com/Mr-Ellis/School/blob/main/docs/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.2.pdf" target="_blank">📄 Lesson Plan PDF</a></span>
                 </div>
                 <span style="font-size:0.9rem; color:#4a6a85; display:block; margin-top:8px;">Focus on the <em>mechanisms</em>: how integers handle sign, how images use pixels and colour depth, how audio uses sampling and bit depth, and how video uses frames and compression. Note the impact on <strong>storage size</strong> and <strong>retrieval</strong>.</span>
             </span>
