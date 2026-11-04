@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.2.4 – Construct and Analyse Truth Tables</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 { color: #0b2a4a; margin-top: 20px; margin-bottom: 10px; }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
+
+        /* Blooket starter */
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        /* Task styles */
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong { color: #1a6b33; }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        /* Plain-language explainer box */
+        .plain-box {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 15px 0;
+        }
+        .plain-box .plain-title {
+            font-weight: 700;
+            color: #1a6b33;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 6px;
+        }
+        .plain-box p { margin-bottom: 8px; }
+        .plain-box p:last-child { margin-bottom: 0; }
+
+        /* Truth table styles */
+        .tt {
+            font-family: monospace;
+            font-size: 0.9rem;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #fff;
+            border: 1px solid #dce4ed;
+        }
+        .tt th {
+            background: #1a5f87;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            text-align: center;
+            border: 1px solid #1a5f87;
+        }
+        .tt td {
+            padding: 8px 16px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .tt .output-col {
+            background: #fff7f7;
+            font-weight: bold;
+            color: #b21f1f;
+        }
+        .tt .input-col {
+            background: #f0f7fc;
+        }
+        .tt .intermediate-col {
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        /* Step cards */
+        .tt-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-left: 4px solid #1a5f87;
+            border-radius: 0 10px 10px 0;
+            padding: 12px 16px;
+            margin: 10px 0;
+        }
+        .tt-step .tt-num {
+            flex-shrink: 0;
+            width: 30px;
+            height: 30px;
+            background: #1a5f87;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .tt-step .tt-body { flex: 1; }
+        .tt-step .tt-body strong { color: #0b2a4a; }
+        .tt-step .tt-math {
+            font-family: monospace;
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 3px 10px;
+            display: inline-block;
+            margin: 3px 0;
+            color: #b21f1f;
+            font-weight: bold;
+        }
+        .tt-highlight {
+            background: #fff7f7;
+            border-left-color: #b21f1f;
+        }
+
+        /* Video box */
+        .video-box {
+            background: #f1f6fc;
+            border: 1px solid #dce4ed;
+            border-radius: 14px;
+            overflow: hidden;
+            margin: 20px 0 10px;
+        }
+        .video-box .video-frame {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #0b2a4a;
+        }
+        .video-box .video-frame iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+        .video-box .video-caption {
+            padding: 12px 18px;
+            background: #e4eefa;
+            font-size: 0.88rem;
+            color: #1f4b6e;
+            border-top: 1px solid #dce4ed;
+        }
+        .video-box .video-caption strong { color: #0b2a4a; }
+
+        /* Tool callout */
+        .tool-callout {
+            background: #fff;
+            border: 2px solid #1a5f87;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .tool-callout .tool-text { flex: 1; min-width: 200px; }
+        .tool-callout .tool-text strong { color: #0b2a4a; }
+        .tool-callout .tool-btn {
+            background: #1a5f87;
+            color: #fff;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .tool-callout .tool-btn a {
+            color: #fff;
+            border-bottom: none;
+        }
+        .tool-callout .tool-btn a:hover { color: #fdbb2d; }
+
+        /* Common mistakes box */
+        .mistake-box {
+            background: #fff7f7;
+            border-left: 4px solid #b21f1f;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 15px 0;
+        }
+        .mistake-box .mistake-title {
+            font-weight: 700;
+            color: #b21f1f;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 6px;
+        }
+        .mistake-box ul { margin: 6px 0 0 20px; }
+        .mistake-box li { margin-bottom: 6px; font-size: 0.92rem; }
+
+        /* Quiz */
+        .quiz-opt {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 8px 0;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+        .quiz-opt:hover { background: #f8fafc; border-color: #94a3b8; }
+        .quiz-opt.correct { background: #d1fae5; border-color: #059669; font-weight: bold; color: #065f46; }
+        .quiz-opt.wrong { background: #ffe4e6; border-color: #e11d48; font-weight: bold; color: #9f1239; }
+        .quiz-fb { display: none; margin-top: 10px; font-size: 0.9rem; color: #475569; }
+        .quiz-fb.show { display: block; }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+            .tt { font-size: 0.75rem; }
+            .tt th, .tt td { padding: 6px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+
+    <h1>A1.2.4 – Construct and Analyse Truth Tables</h1>
+
+    <h2>📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to:</p>
+    <ul>
+        <li><strong>Construct</strong> a truth table for any logic circuit or Boolean expression</li>
+        <li>Work out how many rows a truth table needs using the \(2^n\) rule</li>
+        <li>Use <strong>intermediate columns</strong> to break a multi-gate circuit into manageable steps</li>
+        <li><strong>Analyse</strong> a completed truth table to describe what a circuit does</li>
+    </ul>
+
+    <h2>🎯 IB Command Term: <span class="badge">Construct</span></h2>
+    <div class="command-term">
+        <strong>Construct</strong> – <em>“To build or make by fitting together separate parts.”</em><br><br>
+        In this context, constructing means systematically building the table: counting the inputs, listing every combination, adding columns for intermediate signals, and only then working out the final output. Skipping steps is how mistakes creep in.
+    </div>
+
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket Defense</span>
+        <span style="color:#3d5f7a;">Warm up your Boolean brain before we build tables.</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/defense?id=68b03780ddff7a4868b8d259" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <!-- ===== KEY TERMS ===== -->
+    <h2>🔑 Key Terms</h2>
+    <table>
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Truth table</strong></td><td>A table that lists every possible combination of inputs to a logic circuit and the output that each combination produces.</td></tr>
+            <tr><td><strong>Input combination</strong></td><td>One specific pattern of 0s and 1s on the input lines. With two inputs there are four combinations; with three there are eight.</td></tr>
+            <tr><td><strong>Row</strong></td><td>One line of the truth table, representing one input combination and its corresponding output.</td></tr>
+            <tr><td><strong>Intermediate column</strong></td><td>A column added partway across the table to record the output of an inner gate before the final output is calculated.</td></tr>
+            <tr><td><strong>Boolean expression</strong></td><td>A way of writing a logic rule using operators such as AND, OR and NOT — for example, \(Q = (A \text{ AND } B) \text{ OR NOT } C\).</td></tr>
+            <tr><td><strong>\(2^n\) rule</strong></td><td>For \(n\) inputs, a truth table needs \(2^n\) rows, because each input can be either 0 or 1.</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== WHAT IS A TRUTH TABLE ===== -->
+    <h2>📊 What a Truth Table Actually Does</h2>
+    <p>A truth table is the <strong>complete answer</strong> for a logic circuit. If you know the truth table, you know exactly what the circuit outputs for every possible input—there is nothing left to discover[reference:0]. That is why exam questions ask you to construct one: it proves you understand the circuit, not just that you can name the gates inside it.</p>
+
+    <p>The table has two parts:</p>
+    <ul>
+        <li><strong>Input columns</strong> on the left — one column per input variable (A, B, C, …).</li>
+        <li><strong>Output column</strong> on the right — the final result. If the circuit produces more than one output (like a half adder’s Sum and Carry), there will be more than one output column.</li>
+    </ul>
+
+    <div class="plain-box">
+        <div class="plain-title">The one rule you must never break</div>
+        <p>A truth table must include <strong>every possible input combination</strong> — including the all-zero row[reference:1]. If a row is missing, the table is incomplete and cannot be used to analyse the circuit.</p>
+    </div>
+
+    <!-- ===== HOW MANY ROWS ===== -->
+    <h2>🔢 Step 1: Work Out How Many Rows You Need</h2>
+    <p>Each input can be either 0 or 1. So the number of possible combinations doubles each time you add another input:</p>
+
+    <table>
+        <thead><tr><th>Number of inputs (\(n\))</th><th>Calculation</th><th>Rows needed</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>\(2^1\)</td><td>2</td></tr>
+            <tr><td>2</td><td>\(2^2\)</td><td>4</td></tr>
+            <tr><td>3</td><td>\(2^3\)</td><td>8</td></tr>
+            <tr><td>4</td><td>\(2^4\)</td><td>16</td></tr>
+        </tbody>
+    </table>
+
+    <p>This is called the <strong>\(2^n\) rule</strong>, and you will see it stated in almost every textbook[reference:3]. For three inputs, for example, there are eight combinations: 000, 001, 010, 011, 100, 101, 110, 111.</p>
+
+    <div class="plain-box">
+        <div class="plain-title">A pattern to make the listing easy</div>
+        <p>When you list the input combinations, the <strong>rightmost column alternates every row</strong> (0, 1, 0, 1…), the <strong>next column alternates every two rows</strong> (0, 0, 1, 1…), and the <strong>next every four rows</strong> (0, 0, 0, 0, 1, 1, 1, 1…). Following this pattern guarantees you cover every combination without repeats.</p>
+    </div>
+
+    <!-- ===== WORKED EXAMPLE 1 ===== -->
+    <h2>🧮 Worked Example 1: A Simple Two-Input Circuit</h2>
+    <p>Suppose a circuit has inputs A and B, and the output Q is produced by an <strong>AND gate</strong> whose output then goes through a <strong>NOT gate</strong>. In Boolean notation: \(Q = \text{NOT}(A \text{ AND } B)\).</p>
+
+    <h3>Step 1 — Count the inputs and draw the skeleton</h3>
+    <p>There are two inputs, so we need \(2^2 = 4\) rows. Draw the table with columns for A, B, and Q:</p>
+
+    <table class="tt">
+        <thead><tr><th>A</th><th>B</th><th>Q</th></tr></thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td> </td></tr>
+            <tr><td>0</td><td>1</td><td> </td></tr>
+            <tr><td>1</td><td>0</td><td> </td></tr>
+            <tr><td>1</td><td>1</td><td> </td></tr>
+        </tbody>
+    </table>
+
+    <h3>Step 2 — Add an intermediate column</h3>
+    <p>Q is not produced by a single gate—it is produced by an AND gate followed by a NOT. Trying to work out Q directly is where mistakes happen. Instead, add a column for the AND gate’s output, which we will call <strong>X</strong>:</p>
+
+    <table class="tt">
+        <thead><tr><th>A</th><th>B</th><th>X (A AND B)</th><th>Q (NOT X)</th></tr></thead>
+        <tbody>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+        </tbody>
+    </table>
+
+    <h3>Step 3 — Fill the intermediate column first</h3>
+    <p>Work through the AND gate row by row. X is 1 only when both A and B are 1:</p>
+
+    <table class="tt">
+        <thead><tr><th>A</th><th>B</th><th>X (A AND B)</th><th>Q (NOT X)</th></tr></thead>
+        <tbody>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col">0</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col">1</td><td class="output-col"> </td></tr>
+        </tbody>
+    </table>
+
+    <h3>Step 4 — Apply the NOT gate to finish</h3>
+    <p>Now invert every value in the X column to get Q:</p>
+
+    <table class="tt">
+        <thead><tr><th>A</th><th>B</th><th>X (A AND B)</th><th>Q (NOT X)</th></tr></thead>
+        <tbody>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="output-col">1</td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col">0</td><td class="output-col">1</td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="output-col">1</td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col">1</td><td class="output-col">0</td></tr>
+        </tbody>
+    </table>
+
+    <p>That is the complete truth table. If you recognise the output column 1, 1, 1, 0, you have just built a <strong>NAND gate</strong> out of an AND and a NOT—which is exactly what a NAND gate is internally.</p>
+
+    <div class="plain-box">
+        <div class="plain-title">Why the intermediate column matters</div>
+        <p>If you tried to jump straight from A and B to Q, you would be doing two mental operations at once. The intermediate column lets you check each gate separately, so an error is easy to spot and fix[reference:5].</p>
+    </div>
+
+    <!-- ===== WORKED EXAMPLE 2 ===== -->
+    <h2>🧮 Worked Example 2: A Three-Input Circuit</h2>
+    <p>Now a harder one. The Boolean expression is:</p>
+    <p style="text-align:center; font-family:monospace; font-size:1.1rem; background:#f8fafc; padding:10px; border-radius:8px;">\(Q = (A \text{ AND } B) \text{ OR } (\text{NOT } C)\)</p>
+
+    <h3>Step 1 — Count the inputs</h3>
+    <p>There are three inputs (A, B, C), so we need \(2^3 = 8\) rows.</p>
+
+    <h3>Step 2 — Identify the intermediate parts</h3>
+    <p>The expression has two bracketed parts that are combined by the final OR. So we need two intermediate columns:</p>
+    <ul>
+        <li><strong>X = A AND B</strong></li>
+        <li><strong>Y = NOT C</strong></li>
+    </ul>
+    <p>Then the final output is <strong>Q = X OR Y</strong>.</p>
+
+    <h3>Step 3 — Build the skeleton and fill the inputs</h3>
+    <p>Use the alternation pattern for the inputs: C alternates every row, B every two rows, A every four rows.</p>
+
+    <table class="tt">
+        <thead><tr><th>A</th><th>B</th><th>C</th><th>X (A AND B)</th><th>Y (NOT C)</th><th>Q (X OR Y)</th></tr></thead>
+        <tbody>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col"> </td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col"> </td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col"> </td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col"> </td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col"> </td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col"> </td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col"> </td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col"> </td><td class="intermediate-col"> </td><td class="output-col"> </td></tr>
+        </tbody>
+    </table>
+
+    <h3>Step 4 — Fill X and Y</h3>
+    <p><strong>X = A AND B</strong>: 1 only when A and B are both 1 (the bottom two rows).</p>
+    <p><strong>Y = NOT C</strong>: the opposite of C in every row.</p>
+
+    <table class="tt">
+        <thead><tr><th>A</th><th>B</th><th>C</th><th>X (A AND B)</th><th>Y (NOT C)</th><th>Q (X OR Y)</th></tr></thead>
+        <tbody>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="intermediate-col">1</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col">0</td><td class="intermediate-col">0</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="intermediate-col">1</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col">0</td><td class="intermediate-col">0</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="intermediate-col">1</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col">0</td><td class="intermediate-col">0</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col">1</td><td class="intermediate-col">1</td><td class="output-col"> </td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col">1</td><td class="intermediate-col">0</td><td class="output-col"> </td></tr>
+        </tbody>
+    </table>
+
+    <h3>Step 5 — Apply the final OR</h3>
+    <p>Q is 1 whenever <em>either</em> X or Y is 1:</p>
+
+    <table class="tt">
+        <thead><tr><th>A</th><th>B</th><th>C</th><th>X (A AND B)</th><th>Y (NOT C)</th><th>Q (X OR Y)</th></tr></thead>
+        <tbody>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="intermediate-col">1</td><td class="output-col">1</td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col">0</td><td class="intermediate-col">0</td><td class="output-col">0</td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="intermediate-col">1</td><td class="output-col">1</td></tr>
+            <tr><td class="input-col">0</td><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col">0</td><td class="intermediate-col">0</td><td class="output-col">0</td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="input-col">0</td><td class="intermediate-col">0</td><td class="intermediate-col">1</td><td class="output-col">1</td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">0</td><td class="input-col">1</td><td class="intermediate-col">0</td><td class="intermediate-col">0</td><td class="output-col">0</td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="input-col">0</td><td class="intermediate-col">1</td><td class="intermediate-col">1</td><td class="output-col">1</td></tr>
+            <tr><td class="input-col">1</td><td class="input-col">1</td><td class="input-col">1</td><td class="intermediate-col">1</td><td class="intermediate-col">0</td><td class="output-col">1</td></tr>
+        </tbody>
+    </table>
+
+    <p>Now you can <strong>analyse</strong> the table. Look at the Q column: the only row where Q is 0 is when A=0, B=0, C=1. Every other combination produces a 1. That tells you something useful about the circuit: it outputs 0 <em>only</em> when both A and B are off and C is on.</p>
+
+    <!-- ===== VIDEO ===== -->
+    <div class="video-box">
+        <div class="video-frame">
+            <iframe
+                src="https://www.youtube.com/embed/RO5alU6PpSU"
+                title="Truth tables explained — video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+            </iframe>
+        </div>
+        <div class="video-caption">
+            <strong>🎥 Watch:</strong> a walkthrough of constructing truth tables. Follow along with the two worked examples above — pause the video when the presenter starts filling a column, try it yourself, then check.
+        </div>
+    </div>
+
+    <!-- ===== TOOL ===== -->
+    <h2>🛠️ Check Your Work With a Truth Table Generator</h2>
+    <p>Once you have built a table by hand, you can use an online generator to confirm your answer. <a href="https://truthtabletools.com/boolean/" target="_blank">TruthTableTools</a> lets you type a Boolean expression and produces the full table instantly[reference:6].</p>
+
+    <div class="tool-callout">
+        <div class="tool-text">
+            <strong>Use it as a checking tool, not a shortcut.</strong> If you type the expression and the generated table does not match yours, go back to your intermediate columns and find the row where they first disagree.
+        </div>
+        <span class="tool-btn"><a href="https://truthtabletools.com/boolean/" target="_blank">Open TruthTableTools →</a></span>
+    </div>
+
+    <p>Type expressions in the same form as the worked examples:</p>
+    <ul>
+        <li><code>A AND B</code></li>
+        <li><code>NOT C</code></li>
+        <li><code>(A AND B) OR NOT C</code></li>
+    </ul>
+
+    <!-- ===== FROM CIRCUIT DIAGRAM ===== -->
+    <h2>🔌 Building a Table From a Circuit Diagram</h2>
+    <p>Exam questions often give you a circuit diagram rather than a Boolean expression. The method is the same, but you have to work out the intermediate signals by tracing the wires:</p>
+
+    <div class="tt-step">
+        <div class="tt-num">1</div>
+        <div class="tt-body">
+            <strong>Label every gate’s output.</strong> Give each gate output a name (X, Y, Z…) and add a column for it. This is exactly the same idea as the intermediate columns above.
+        </div>
+    </div>
+    <div class="tt-step">
+        <div class="tt-num">2</div>
+        <div class="tt-body">
+            <strong>Work left to right.</strong> Fill in the columns for gates closest to the inputs first. A gate cannot be evaluated until the signals feeding into it have been worked out.
+        </div>
+    </div>
+    <div class="tt-step">
+        <div class="tt-num">3</div>
+        <div class="tt-body">
+            <strong>Finish with the output gate.</strong> The last column is the circuit’s actual output. If the final gate is an AND gate, the output can only be 1 when every input to that gate is 1[reference:7].
+        </div>
+    </div>
+
+    <!-- ===== COMMON MISTAKES ===== -->
+    <h2>⚠️ Common Mistakes to Avoid</h2>
+
+    <div class="mistake-box">
+        <div class="mistake-title">Where marks are usually lost</div>
+        <ul>
+            <li><strong>Too few rows.</strong> Three inputs need eight rows, not six or seven. Use \(2^n\) before you draw anything.</li>
+            <li><strong>Repeating an input combination.</strong> Every row must be different. Follow the alternation pattern to avoid duplicates.</li>
+            <li><strong>Jumping straight to the output.</strong> With more than one gate, always add an intermediate column. It is worth marks and it prevents errors[reference:8].</li>
+            <li><strong>Forgetting the all-zero row.</strong> 000 is a valid input combination and must be included[reference:9].</li>
+            <li><strong>Inverting the wrong thing.</strong> NOT binds to whatever is immediately to its right. In <code>NOT A AND B</code>, the NOT applies only to A, not to the whole expression.</li>
+        </ul>
+    </div>
+
+    <!-- ===== TASKS ===== -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Learn</strong>
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.2.4.pdf" target="_blank">📖 eBook (A1.2.4)</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQRWFYkFwSyBAJkutHfP9rgw1aUn_qLcOBK1i5yo0U1IrkQnKdOukqJOBpOobt3FFaY7AabO0NkYc2A/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides (Truth Tables)</a></span>
+                    <span class="pill"><a href="https://truthtabletools.com/boolean/" target="_blank">🛠️ TruthTableTools</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85; display:block; margin-top:8px;">Focus on the <em>method</em>: count the inputs, list every combination, add intermediate columns, then fill in the output. Copy the two worked examples by hand — the muscle memory of filling a table is what exam questions test.</span>
+            </span>
+        </div>
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Starter Activity</strong> — Work through the <strong>Construct</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your answers in a text file.<br>
+                <strong>📌 Important:</strong> Save your work as a <strong>.txt</strong> file using the sentence frame: <em>"A truth table lists ______. For \(n\) inputs, the table needs ______ rows because ______. To construct a table, first ______, then ______, then ______. An intermediate column is useful because ______. Once the table is complete, we can analyse it by ______."</em>
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc">
+                <strong>Deliberate Practice</strong> — Construct a full truth table for this expression, showing intermediate columns:<br>
+                <em>\(Q = (A \text{ OR } B) \text{ AND } (\text{NOT } C)\)</em><br><br>
+                Then <strong>analyse</strong> your table: describe in one sentence the exact input condition that makes Q equal 0.
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">4</span>
+            <span class="task-desc"><strong>Plenary</strong> — Try the quiz below. For any question you get wrong, rebuild the table by hand using the intermediate-column method before moving on.</span>
+        </div>
+    </div>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">Self-Marking Quiz</h3>
+        <div id="quizBody"></div>
+        <p id="quizScore" style="font-weight:bold; margin-top:15px; color:#0b2a4a;">Score: 0 / 6</p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.2.3.html">← Previous: A1.2.3</a>
+        <a href="A1.2.5.html">Next: A1.2.5 →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.2.4 – Construct and Analyse Truth Tables • IB Computer Science • Year 12
+    </div>
+</div>
+
+<script>
+// --- QUIZ ---
+const QUIZ = [
+    {
+        q: "How many rows does a truth table need for a circuit with three inputs?",
+        opts: ["3", "6", "8", "16"],
+        a: 2,
+        why: "Use the 2^n rule: 2^3 = 8. Three inputs produce eight possible combinations, from 000 to 111."
+    },
+    {
+        q: "What is an intermediate column used for in a truth table?",
+        opts: ["To make the table look longer", "To record the output of an inner gate before calculating the final output", "To list the input combinations twice", "To replace the output column"],
+        a: 1,
+        why: "Intermediate columns break a multi-gate circuit into single-gate steps. You fill them in left to right, then use them to work out the final output."
+    },
+    {
+        q: "For the expression Q = NOT(A AND B), what is Q when A = 1 and B = 1?",
+        opts: ["0", "1", "It depends on C", "Undefined"],
+        a: 0,
+        why: "A AND B = 1 when both inputs are 1. NOT of that gives 0. This is the only row where the output is 0."
+    },
+    {
+        q: "Which input combination must always appear in a truth table?",
+        opts: ["Only the rows where the output is 1", "Only the rows where the output is 0", "Every possible combination, including all zeros", "Only 000 and 111"],
+        a: 2,
+        why: "A truth table is only complete if it covers every possible input combination. Missing the all-zero row is a common mistake."
+    },
+    {
+        q: "For Q = (A AND B) OR (NOT C), what is Q when A = 0, B = 0, and C = 1?",
+        opts: ["0", "1", "It cannot be determined", "It equals A"],
+        a: 0,
+        why: "A AND B = 0. NOT C = 0. 0 OR 0 = 0. This is the only row in the worked example where Q is 0."
+    },
+    {
+        q: "What is the correct order for constructing a truth table from a circuit diagram?",
+        opts: ["Fill the output column first, then the inputs", "List the inputs, fill gates left to right, then the final output", "Guess the output and check it afterwards", "Only fill the rows where the output is 1"],
+        a: 1,
+        why: "You list every input combination first, then evaluate gates from the inputs toward the output. A gate cannot be evaluated until the signals feeding it are known."
+    }
+];
+
+let score = 0;
+const qBody = document.getElementById('quizBody');
+
+function buildQuiz() {
+    score = 0;
+    document.getElementById('quizScore').textContent = 'Score: 0 / ' + QUIZ.length;
+    qBody.innerHTML = '';
+    QUIZ.forEach((item, qi) => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '20px';
+        div.innerHTML = `<p style="font-weight:bold; color:#0b2a4a; margin-bottom:5px;">${qi + 1}. ${item.q}</p>`;
+        const fb = document.createElement('div');
+        fb.className = 'quiz-fb';
+        item.opts.forEach((opt, oi) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-opt';
+            btn.textContent = opt;
+            btn.onclick = () => {
+                div.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+                const isRight = oi === item.a;
+                btn.classList.add(isRight ? 'correct' : 'wrong');
+                if (!isRight) {
+                    div.querySelectorAll('.quiz-opt')[item.a].classList.add('correct');
+                }
+                fb.textContent = (isRight ? '✅ Correct. ' : '❌ Not quite. ') + item.why;
+                fb.classList.add('show');
+                if (isRight) score++;
+                document.getElementById('quizScore').textContent = `Score: ${score} / ${QUIZ.length}`;
+            };
+            div.appendChild(btn);
+        });
+        div.appendChild(fb);
+        qBody.appendChild(div);
+    });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
