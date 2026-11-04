@@ -228,6 +228,72 @@
             margin-bottom: 0.3rem;
         }
 
+        /* Staged calculation display */
+        .calc {
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-left: 4px solid #1a5f87;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 2;
+            color: #0b2a4a;
+            overflow-x: auto;
+        }
+        .calc .step-label {
+            display: inline-block;
+            min-width: 118px;
+            font-family: Arial, sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .calc .final {
+            color: #b21f1f;
+            font-weight: bold;
+        }
+        .calc-title {
+            font-family: Arial, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1a5f87;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Unit ladder */
+        .ladder {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        .ladder-unit {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+            flex: 1;
+            min-width: 92px;
+        }
+        .ladder-unit strong { display: block; color: #0b2a4a; font-size: 1rem; }
+        .ladder-unit span { font-size: 0.72rem; color: #64748b; }
+        .ladder-arrow {
+            align-self: center;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #b21f1f;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
         /* Interactive Tools */
         .interactive-box {
             background: #f1f6fc;
@@ -247,6 +313,7 @@
             color: #0b2a4a;
             font-weight: bold;
         }
+        .readout.final-readout { border-color: #b21f1f; background: #fff7f7; }
         .readout span {
             font-size: 0.75rem;
             color: #64748b;
@@ -288,6 +355,8 @@
             table { font-size: 0.85rem; }
             .task-1-resources { flex-direction: column; align-items: flex-start; }
             .blooket-box { flex-direction: column; align-items: flex-start; }
+            .calc { font-size: 0.8rem; }
+            .calc .step-label { min-width: 92px; font-size: 0.65rem; }
         }
     </style>
 </head>
@@ -305,7 +374,7 @@
         <li><strong>Explain</strong> how binary encoding is the foundation of all data storage, and how it impacts storage and retrieval</li>
         <li>Explain the mechanisms used to store <strong>integers, characters, strings, images, audio, and video</strong> in binary form</li>
         <li>Distinguish between <strong>storage format</strong> and <strong>interpretation</strong>—the same bits can mean different things under different encodings</li>
-        <li>Calculate the storage requirements for common data types (pixels, audio samples, frames)</li>
+        <li>Calculate the storage requirements for common data types, converting bits all the way to a final unit (bytes, KiB, MiB)</li>
     </ul>
 
     <h2>🎯 IB Command Term: <span class="badge">Explain</span></h2>
@@ -338,6 +407,24 @@
         </tbody>
     </table>
 
+    <!-- ===== UNITS ===== -->
+    <h2>📏 Working With Binary Units</h2>
+    <p>Exam questions often give a calculation in <strong>bits</strong> and expect the answer in a sensible storage unit. Always finish the conversion—stopping at “49,766,400 bits” does not tell you how much disk space the file needs.</p>
+
+    <div class="ladder">
+        <div class="ladder-unit"><strong>bit</strong><span>1 or 0</span></div>
+        <div class="ladder-arrow">÷ 8 →</div>
+        <div class="ladder-unit"><strong>Byte</strong><span>8 bits</span></div>
+        <div class="ladder-arrow">÷ 1024 →</div>
+        <div class="ladder-unit"><strong>KiB</strong><span>1024 bytes</span></div>
+        <div class="ladder-arrow">÷ 1024 →</div>
+        <div class="ladder-unit"><strong>MiB</strong><span>1024 KiB</span></div>
+        <div class="ladder-arrow">÷ 1024 →</div>
+        <div class="ladder-unit"><strong>GiB</strong><span>1024 MiB</span></div>
+    </div>
+
+    <p style="font-size:0.9rem; color:#4a6a85;"><strong>Note:</strong> KiB (kibibyte) uses 1024; KB (kilobyte) is often used loosely to mean 1000. IB exam answers normally expect the 1024 ladder, and you should state the unit you are using.</p>
+
     <!-- ===== FUNDAMENTALS ===== -->
     <h2>📊 The Fundamentals of Binary Encoding</h2>
     <p>Every datum in a computer—whether it looks to us like a number, a paragraph, a photograph, or a song—is ultimately just an ordered sequence of <strong>bits</strong> (0s and 1s). A transistor has only two stable states (on/off), so binary is the natural language of hardware.</p>
@@ -368,7 +455,7 @@
 
     <h3>Unsigned integers</h3>
     <p>Unsigned integers use every bit for magnitude. An 8-bit unsigned integer holds the values <strong>0 to 255</strong> (256 possible patterns, counting from 0).</p>
-    <p><strong>Example:</strong> <code>0011 0101₂ = 53₁₀</code>.</p>
+    <p><strong>Example:</strong> <code>0011 0101₂ = 32 + 16 + 4 + 1 = 53₁₀</code>.</p>
 
     <h3>Signed integers: two’s complement</h3>
     <p>Signed integers must give up one bit to record the sign. The scheme real processors use is <strong>two’s complement</strong>. The most significant bit carries a <em>negative</em> place value, while the remaining bits carry their normal positive values.</p>
@@ -403,8 +490,16 @@
     <p>A digital image is a grid of <strong>pixels</strong>. Each pixel’s colour or brightness is stored as a binary value. In a raw bitmap, a header records width, height, and bit-depth, followed by the pixel data.</p>
 
     <h3>RGB colour</h3>
-    <p>A common scheme uses <strong>24 bits per pixel</strong>: 8 bits red, 8 bits green, 8 bits blue. A 1920 × 1080 RGB image therefore needs:</p>
-    <p style="text-align:center; font-family:monospace; background:#f8fafc; padding:10px; border-radius:8px;">1920 × 1080 × 24 = 49,766,400 bits ≈ 5.94 MiB</p>
+    <p>A common scheme uses <strong>24 bits per pixel</strong>: 8 bits red, 8 bits green, 8 bits blue. A 1920 × 1080 RGB image therefore needs the following. Work down the ladder until you reach a sensible unit:</p>
+
+    <div class="calc">
+        <div class="calc-title">1920 × 1080 image at 24 bits per pixel</div>
+        <div><span class="step-label">Pixels</span>1920 × 1080 = 2,073,600 pixels</div>
+        <div><span class="step-label">Bits</span>2,073,600 × 24 = 49,766,400 bits</div>
+        <div><span class="step-label">÷ 8 → Bytes</span>49,766,400 ÷ 8 = 6,220,800 bytes</div>
+        <div><span class="step-label">÷ 1024 → KiB</span>6,220,800 ÷ 1024 = 6,075 KiB</div>
+        <div><span class="step-label">÷ 1024 → MiB</span>6,075 ÷ 1024 = <span class="final">≈ 5.93 MiB</span></div>
+    </div>
 
     <h3>Quality vs size</h3>
     <p>More pixels (higher resolution) increases detail. More bits per pixel increases colour accuracy. Both increase the storage required. Compressed formats (PNG, JPEG) convert blocks of pixels into frequency coefficients and entropy-code them, dramatically shrinking size at the cost of CPU time (and for JPEG, some quality).</p>
@@ -422,8 +517,16 @@
         </tbody>
     </table>
 
-    <h3>Bits per second for CD audio</h3>
-    <p style="text-align:center; font-family:monospace; background:#f8fafc; padding:10px; border-radius:8px;">fₛ × b × c = 44,100 × 16 × 2 = 1,411,200 bit/s ≈ 176 KiB/s</p>
+    <h3>Bit rate for CD audio</h3>
+    <p>First work out the number of bits produced each second, then convert to a rate you can compare with file sizes:</p>
+
+    <div class="calc">
+        <div class="calc-title">CD-quality stereo (44,100 Hz, 16-bit, 2 channels)</div>
+        <div><span class="step-label">Bits per second</span>44,100 × 16 × 2 = 1,411,200 bits/s</div>
+        <div><span class="step-label">÷ 8 → Bytes/s</span>1,411,200 ÷ 8 = 176,400 bytes/s</div>
+        <div><span class="step-label">÷ 1024 → KiB/s</span>176,400 ÷ 1024 = <span class="final">≈ 172.3 KiB/s</span></div>
+    </div>
+
     <p>Samples are stored interleaved (<code>L₀, R₀, L₁, R₁, …</code>) to maintain sample-accurate alignment.</p>
 
     <h3>Quality vs size</h3>
@@ -444,19 +547,47 @@
 
     <!-- ===== WORKED EXAMPLES ===== -->
     <h2>🧮 Worked Mini-Examples</h2>
+    <p>Each example is carried through to a final unit. Do not stop at bits—an answer in bits does not tell you whether the file fits on a disk.</p>
+
     <table>
-        <thead><tr><th>Data item</th><th>Binary view</th><th>Size implication</th></tr></thead>
+        <thead><tr><th>Data item</th><th>Staged calculation (bits → final unit)</th><th>Result</th></tr></thead>
         <tbody>
-            <tr><td>Integer 300₁₀</td><td><code>0000 0001 0010 1100₂</code> (16-bit unsigned)</td><td>Needs 2 bytes; an 8-bit unsigned integer would overflow (max 255).</td></tr>
-            <tr><td>Word “Hi” (UTF-8)</td><td><code>0x48 0x69</code></td><td>2 bytes; UTF-16 would use 4 bytes.</td></tr>
-            <tr><td>One pixel, RGBA (255, 128, 0, 255)</td><td><code>1111 1111 1000 0000 0000 0000 1111 1111₂</code></td><td>32 bits.</td></tr>
-            <tr><td>0.01 s of CD audio</td><td>441 samples × 16 bits × 2 channels</td><td>≈ 17,600 bits.</td></tr>
+            <tr>
+                <td>Integer 300₁₀ as 16-bit unsigned</td>
+                <td><code>0000 0001 0010 1100₂</code> = 16 bits<br>16 ÷ 8 = 2 bytes</td>
+                <td><strong>2 bytes</strong><br><span style="font-size:0.8rem; color:#64748b;">An 8-bit unsigned integer would overflow (max 255).</span></td>
+            </tr>
+            <tr>
+                <td>Word “Hi” in UTF-8</td>
+                <td><code>0x48 0x69</code> = 2 bytes = 16 bits<br>16 ÷ 8 = 2 bytes</td>
+                <td><strong>2 bytes</strong><br><span style="font-size:0.8rem; color:#64748b;">UTF-16 would use 4 bytes.</span></td>
+            </tr>
+            <tr>
+                <td>One pixel, RGBA (255, 128, 0, 255)</td>
+                <td>8 + 8 + 8 + 8 = 32 bits<br>32 ÷ 8 = 4 bytes</td>
+                <td><strong>4 bytes</strong></td>
+            </tr>
+            <tr>
+                <td>1920 × 1080 image, 24-bit RGB</td>
+                <td>1920 × 1080 × 24 = 49,766,400 bits<br>÷ 8 = 6,220,800 bytes<br>÷ 1024 = 6,075 KiB<br>÷ 1024 ≈ 5.93 MiB</td>
+                <td><strong>≈ 5.93 MiB</strong></td>
+            </tr>
+            <tr>
+                <td>60 s of CD audio (stereo)</td>
+                <td>44,100 × 16 × 2 = 1,411,200 bits/s<br>× 60 s = 84,672,000 bits<br>÷ 8 = 10,584,000 bytes<br>÷ 1024 = 10,335.9 KiB<br>÷ 1024 ≈ 10.09 MiB</td>
+                <td><strong>≈ 10.09 MiB</strong></td>
+            </tr>
+            <tr>
+                <td>0.01 s of CD audio</td>
+                <td>44,100 × 0.01 = 441 samples<br>441 × 16 × 2 = 14,112 bits<br>÷ 8 = 1,764 bytes<br>÷ 1024 ≈ 1.72 KiB</td>
+                <td><strong>≈ 1.72 KiB</strong></td>
+            </tr>
         </tbody>
     </table>
 
     <!-- ===== INTERACTIVE TOOLS ===== -->
     <h2>🎛️ Interactive Tools</h2>
-    <p>Use these tools to explore how encoding choices affect storage size and quality.</p>
+    <p>Use these tools to explore how encoding choices affect storage size. Each calculator shows every stage of the conversion, ending in a usable unit.</p>
 
     <div class="interactive-box">
         <h3 style="margin-top:0;">Image Storage Calculator</h3>
@@ -483,7 +614,9 @@
         <div class="readout-row">
             <div class="readout"><span>Pixels</span><span id="imgPixels">2,073,600</span></div>
             <div class="readout"><span>Bits</span><span id="imgBits">49,766,400</span></div>
-            <div class="readout"><span>Size (MiB)</span><span id="imgSize">5.94</span></div>
+            <div class="readout"><span>Bytes</span><span id="imgBytes">6,220,800</span></div>
+            <div class="readout"><span>KiB</span><span id="imgKib">6,075</span></div>
+            <div class="readout final-readout"><span>MiB</span><span id="imgSize">5.93</span></div>
         </div>
     </div>
 
@@ -521,9 +654,10 @@
             </div>
         </div>
         <div class="readout-row">
-            <div class="readout"><span>Bits per second</span><span id="audBps">1,411,200</span></div>
+            <div class="readout"><span>Bits / second</span><span id="audBps">1,411,200</span></div>
+            <div class="readout"><span>KiB / second</span><span id="audKibps">172.3</span></div>
             <div class="readout"><span>Total bits</span><span id="audTotal">84,672,000</span></div>
-            <div class="readout"><span>Size (MiB)</span><span id="audSize">10.10</span></div>
+            <div class="readout final-readout"><span>Total MiB</span><span id="audSize">10.09</span></div>
         </div>
     </div>
 
@@ -539,9 +673,8 @@
                     <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.2-explain-how-binary-is-used-to-store-data" target="_blank">🌐 CS Wiki (A1.2.2)</a></span>
                     <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQ_CM5dB_fvc6RqGVopLnKgkZG85ajJRk3d8fEtcldyS5cK6I7_iXg_tDduOTTbgl9OQlaE2UEQ547S/pub?start=false&loop=false&delayms=3000&slide=id.g30688db2fdf_1_6" target="_blank">📊 Lesson Slides</a></span>
                     <span class="pill"><a href="https://www.revisiondojo.com/ib/ib-computer-science-new/ib-computer-science-new-a1-2-2-how-binary-is-used-to-store-data/notes" target="_blank">📝 RevisionDojo Notes</a></span>
-                    <span class="pill"><a href="https://www.computersciencecafe.com/a122-computer-fundamentals-ib.html" target="_blank">☕ CS Cafe (A1.2.2)</a></span>
                 </div>
-                <span style="font-size:0.9rem; color:#4a6a85; display:block; margin-top:8px;">Focus on the <em>mechanisms</em>: how integers handle sign, how images use pixels and colour depth, how audio uses sampling and bit depth, and how video uses frames and compression. Note the impact on <strong>storage size</strong> and <strong>retrieval</strong>.</span>
+                <span style="font-size:0.9rem; color:#4a6a85; display:block; margin-top:8px;">Focus on the <em>mechanisms</em>: how integers handle sign, how images use pixels and colour depth, how audio uses sampling and bit depth, and how video uses frames and compression. Copy the worked examples from the eBook—they show the full conversion chain, which is exactly what exam answers need.</span>
             </span>
         </div>
         <div class="task-row task-starter">
@@ -581,7 +714,7 @@
     </div>
     <div class="extension-card">
         <h4>🔍 File size trade-offs</h4>
-        <p>Choose a song you know. Estimate its file size as uncompressed CD-quality PCM, then compare it to the actual MP3 or AAC file size. Explain the difference using the concepts of psychoacoustic modelling and masking.</p>
+        <p>Choose a song you know. Calculate its size as uncompressed CD-quality PCM, showing every stage from bits to MiB. Then compare it to the actual MP3 or AAC file size and explain the difference using psychoacoustic modelling and masking.</p>
     </div>
     <div class="extension-card">
         <h4>🔍 The same bits, different meanings</h4>
@@ -610,11 +743,17 @@ function updateImage() {
     const w = parseInt(imgW.value) || 0;
     const h = parseInt(imgH.value) || 0;
     const d = parseInt(imgDepth.value);
+
     const pixels = w * h;
     const bits = pixels * d;
-    const mib = bits / (8 * 1024 * 1024);
+    const bytes = bits / 8;
+    const kib = bytes / 1024;
+    const mib = kib / 1024;
+
     document.getElementById('imgPixels').textContent = pixels.toLocaleString();
     document.getElementById('imgBits').textContent = bits.toLocaleString();
+    document.getElementById('imgBytes').textContent = bytes.toLocaleString(undefined, {maximumFractionDigits: 0});
+    document.getElementById('imgKib').textContent = kib.toLocaleString(undefined, {maximumFractionDigits: 1});
     document.getElementById('imgSize').textContent = mib.toFixed(2);
 }
 [imgW, imgH, imgDepth].forEach(el => el.addEventListener('input', updateImage));
@@ -631,12 +770,16 @@ function updateAudio() {
     const rate = parseFloat(audRate.value);
     const depth = parseFloat(audDepth.value);
     const ch = parseFloat(audCh.value);
-    const bps = rate * depth * ch;
-    const total = bps * dur;
-    const mib = total / (8 * 1024 * 1024);
+
+    const bps = rate * depth * ch;      // bits per second
+    const kibps = bps / 8 / 1024;       // KiB per second
+    const total = bps * dur;            // total bits
+    const totalMib = total / 8 / 1024 / 1024;
+
     document.getElementById('audBps').textContent = bps.toLocaleString();
+    document.getElementById('audKibps').textContent = kibps.toFixed(1);
     document.getElementById('audTotal').textContent = total.toLocaleString();
-    document.getElementById('audSize').textContent = mib.toFixed(2);
+    document.getElementById('audSize').textContent = totalMib.toFixed(2);
 }
 [audDur, audRate, audDepth, audCh].forEach(el => el.addEventListener('input', updateAudio));
 updateAudio();
@@ -669,9 +812,9 @@ const QUIZ = [
     },
     {
         q: "A 1920 × 1080 image uses 24 bits per pixel. What is the uncompressed size?",
-        opts: ["≈ 2.97 MiB", "≈ 5.94 MiB", "≈ 11.88 MiB", "≈ 47.5 MiB"],
+        opts: ["≈ 2.97 MiB", "≈ 5.93 MiB", "≈ 11.88 MiB", "≈ 47.5 MiB"],
         a: 1,
-        why: "1920 × 1080 × 24 = 49,766,400 bits. ÷ 8 = 6,220,800 bytes. ÷ 1024² ≈ 5.94 MiB."
+        why: "1920 × 1080 × 24 = 49,766,400 bits → ÷ 8 = 6,220,800 bytes → ÷ 1024 = 6,075 KiB → ÷ 1024 ≈ 5.93 MiB."
     },
     {
         q: "Two audio files use the same duration and bit depth, but one has a higher sampling rate. What is the effect?",
