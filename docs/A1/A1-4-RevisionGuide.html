@@ -1,1 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.4 Revision Guide – Interpreters and Compilers</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.4rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 1.6rem;
+            color: #0b2a4a;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 5px solid #b21f1f;
+        }
+        h3 {
+            color: #1a5f87;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        p { margin-bottom: 15px; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        li { margin-bottom: 8px; }
+        
+        .key-term {
+            background: #ebf4ff;
+            border-left: 4px solid #1a5f87;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        .key-term strong { color: #0b2a4a; }
+        
+        .exam-tip {
+            background: #fff7f7;
+            border-left: 4px solid #b21f1f;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        .exam-tip strong { color: #b21f1f; }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f8fafc; }
+
+        .diagram {
+            font-family: 'Courier New', Courier, monospace;
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        .scenario-card {
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-left: 4px solid #d97706;
+            border-radius: 0 8px 8px 0;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .scenario-card strong { color: #b45309; }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.3rem; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a href="../index.html" class="back-link">← Back to A1 Unit</a>
+
+    <h1>A1.4 Revision Guide: Interpreters and Compilers</h1>
+
+    <p>This revision guide covers how source code is translated into machine code, the three main translation methods (compilers, interpreters, and JIT compilers), the supporting concepts of bytecode and virtual machines, and how to choose the right method for a given scenario.</p>
+
+    <!-- ================= THE BIG IDEA ================= -->
+    <h2>1. The Big Idea</h2>
+    <p>A computer only understands <strong>machine code</strong>—simple instructions made of 1s and 0s. When you write code in a high-level language like Python, Java, or C++, something has to translate it into machine code. There are three main ways to do this:</p>
+
+    <table>
+        <thead><tr><th>Method</th><th>What It Does</th><th>Key Characteristic</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Compiler</strong></td><td>Translates the <em>whole program</em> into machine code before it runs.</td><td>All errors found before execution; fastest run-time speed.</td></tr>
+            <tr><td><strong>Interpreter</strong></td><td>Reads the code and runs it <em>line by line</em>, translating as it goes.</td><td>Errors found during execution; slowest run-time speed.</td></tr>
+            <tr><td><strong>JIT Compiler</strong></td><td>A mix of both: starts interpreting, then compiles the <em>hot parts</em> (frequently used code) into machine code while the program is running.</td><td>Fast startup; nearly compiler-level speed after warm-up.</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================= HOW EACH METHOD WORKS ================= -->
+    <h2>2. How Each Method Works</h2>
+
+    <h3>Compiler</h3>
+    <ul>
+        <li><strong>What it does:</strong> Reads the whole program and turns it into machine code before the program starts.</li>
+        <li><strong>Errors:</strong> Found <em>before</em> you run it—the compiler checks everything first.</li>
+        <li><strong>Speed:</strong> Very fast at run time (the translation is already done).</li>
+        <li><strong>Examples:</strong> C, C++, Rust, Go.</li>
+    </ul>
+
+    <h3>Interpreter</h3>
+    <ul>
+        <li><strong>What it does:</strong> Reads the code line by line and runs each line straight away.</li>
+        <li><strong>Errors:</strong> Found <em>while</em> the program runs—you only see them when that line is reached.</li>
+        <li><strong>Speed:</strong> Slower at run time (translation happens every time).</li>
+        <li><strong>Examples:</strong> Python, Ruby, JavaScript (in the browser).</li>
+    </ul>
+
+    <h3>JIT Compiler (Just-In-Time)</h3>
+    <ul>
+        <li><strong>What it does:</strong> Starts by interpreting, then spots the parts of code that run the most and compiles those into machine code on the fly.</li>
+        <li><strong>Errors:</strong> Found early for syntax; some checks happen at run time.</li>
+        <li><strong>Speed:</strong> Nearly as fast as a compiler after a short warm-up.</li>
+        <li><strong>Examples:</strong> Java, C# (.NET), modern JavaScript (V8).</li>
+    </ul>
+
+    <!-- ================= SUPPORTING CONCEPTS ================= -->
+    <h2>3. Supporting Concepts</h2>
+
+    <h3>Bytecode</h3>
+    <ul>
+        <li><strong>What it is:</strong> A middle step between source code and machine code. Simpler than source code, but not tied to one type of computer.</li>
+        <li><strong>Why it helps:</strong> You can write it once and run it anywhere—you just need a small program (a virtual machine) to read it.</li>
+        <li><strong>Examples:</strong> Python <code>.pyc</code> files, Java <code>.class</code> files, WebAssembly.</li>
+    </ul>
+
+    <h3>Lexer &amp; Parser</h3>
+    <ul>
+        <li><strong>Lexer:</strong> Breaks your source code into small pieces called <strong>tokens</strong> (keywords, names, symbols).</li>
+        <li><strong>Parser:</strong> Arranges those tokens into a tree that shows the structure of the program.</li>
+        <li><strong>Why it matters:</strong> Both compilers and interpreters use these first steps—the difference is what happens next.</li>
+    </ul>
+
+    <h3>Virtual Machine</h3>
+    <ul>
+        <li><strong>What it is:</strong> A program that acts like a pretend computer. It reads bytecode and runs it.</li>
+        <li><strong>Why it helps:</strong> The same bytecode can run on Windows, Mac, or Linux—you just need the right VM for each one.</li>
+        <li><strong>Examples:</strong> Java Virtual Machine (JVM), Python's interpreter, the .NET runtime.</li>
+    </ul>
+
+    <!-- ================= COMPARISON TABLE ================= -->
+    <h2>4. Comparing the Methods (The Heart of A1.4.1)</h2>
+    <p>This table is the most important part of the revision guide. You must be able to compare the methods across these criteria.</p>
+
+    <table>
+        <thead><tr><th>Criterion</th><th>Compiler</th><th>Interpreter</th><th>JIT Compiler</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><strong>When are errors found?</strong></td>
+                <td>Before the program runs—the compiler checks everything first.</td>
+                <td>While the program runs—you only find errors when that line is reached.</td>
+                <td>Syntax errors found early; some issues only show up during execution.</td>
+            </tr>
+            <tr>
+                <td><strong>How long until it starts?</strong></td>
+                <td>Slow to compile (can take minutes), but instant once done.</td>
+                <td>Almost instant—no compile step at all.</td>
+                <td>Fast to start, but slows down briefly as it "warms up".</td>
+            </tr>
+            <tr>
+                <td><strong>How fast does it run?</strong></td>
+                <td><strong>Fastest</strong>—the translation is already done.</td>
+                <td><strong>Slowest</strong>—translates every line every time.</td>
+                <td>Almost as fast as a compiler once warmed up.</td>
+            </tr>
+            <tr>
+                <td><strong>Portability</strong></td>
+                <td><strong>Poor</strong>—must be recompiled for each type of computer.</td>
+                <td><strong>Excellent</strong>—the same source code runs anywhere with the right interpreter.</td>
+                <td><strong>Good</strong>—bytecode runs anywhere with a VM, though the JIT must generate machine code per platform.</td>
+            </tr>
+            <tr>
+                <td><strong>Memory use</strong></td>
+                <td>Moderate.</td>
+                <td>Small.</td>
+                <td><strong>Largest</strong>—it needs the interpreter, bytecode, and generated machine code all at once.</td>
+            </tr>
+            <tr>
+                <td><strong>Best for…</strong></td>
+                <td>Games, operating systems, anything that must run as fast as possible.</td>
+                <td>Learning, scripting, quick tests—where instant feedback matters.</td>
+                <td>Long-running, portable apps like web browsers and servers.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ================= SCENARIOS ================= -->
+    <h2>5. Which Method Fits? (Evaluate)</h2>
+    <p>The IB command term here is <strong>Evaluate</strong>—you must weigh up strengths and weaknesses and justify your choice for a given scenario.</p>
+
+    <div class="scenario-card">
+        <strong>Scenario 1: Writing a quick script to test an idea</strong><br>
+        <strong>Winner: Interpreter (e.g., Python).</strong><br>
+        No compile step—you type a line, hit run, and see the result instantly. Perfect for experimenting, notebooks, and small scripts. Slower at run time, but that doesn't matter if you're only running it once.
+    </div>
+
+    <div class="scenario-card">
+        <strong>Scenario 2: A video game physics engine</strong><br>
+        <strong>Winner: Compiler (C++ or Rust).</strong><br>
+        Every frame needs to run in a few milliseconds—speed is everything. Compiled code runs directly on the processor with no translation overhead. Not portable—you'd need a separate build for Windows, Mac, and consoles.
+    </div>
+
+    <div class="scenario-card">
+        <strong>Scenario 3: A mobile app that must run on Android and iOS</strong><br>
+        <strong>Winner: Bytecode + JIT.</strong><br>
+        Compile once to bytecode; each phone's virtual machine runs it. The JIT speeds up the parts of the app you use most. Best mix of portability and speed for mobile apps.
+    </div>
+
+    <div class="scenario-card">
+        <strong>Scenario 4: Running JavaScript in a web browser</strong><br>
+        <strong>Winner: JIT compiler.</strong><br>
+        The browser needs to start quickly (so users aren't kept waiting), but also run fast once a page is loaded. JIT gives quick startup AND good speed after a brief warm-up. If a JIT optimises something and later finds it was wrong, it can go back to interpreting—so the code stays correct.
+    </div>
+
+    <div class="scenario-card">
+        <strong>Scenario 5: A macro inside a spreadsheet file</strong><br>
+        <strong>Winner: Bytecode interpreter (in a sandbox).</strong><br>
+        Macros come from unknown sources—they need to be checked before they run. The sandbox limits what the macro can do (no deleting your files, no calling home). Speed isn't critical—safety is.
+    </div>
+
+    <!-- ================= EXAM TIPS ================= -->
+    <h2>6. Exam Tips for A1.4.1</h2>
+
+    <div class="exam-tip">
+        <strong>⚠️ Compare, Don't Just Describe:</strong> If a question says "Compare compilers and interpreters," do not write two separate descriptions. Use connecting words: "Both translate source code into machine code [similarity]. However, a compiler translates the whole program before execution, whereas an interpreter translates line by line during execution [difference]. The effect is that compiled programs run faster, but interpreted programs are more portable [consequence]."
+    </div>
+
+    <div class="exam-tip">
+        <strong>⚠️ Scenario Questions:</strong> When asked "Which translation method would be best for [scenario]?", you must:
+        <ol>
+            <li>Name the method.</li>
+            <li>Give a reason linked to the scenario (speed, portability, error detection, or memory).</li>
+            <li>Acknowledge a trade-off (what you lose by choosing that method).</li>
+        </ol>
+    </div>
+
+    <div class="key-term">
+        <strong>Quick Definitions to Memorise:</strong><br>
+        • <strong>Machine code:</strong> The 1s and 0s the CPU actually executes.<br>
+        • <strong>Source code:</strong> The human-readable code you write.<br>
+        • <strong>Bytecode:</strong> A portable middle step between source code and machine code.<br>
+        • <strong>Virtual machine:</strong> A program that reads bytecode and runs it, acting like a pretend computer.<br>
+        • <strong>Lexer:</strong> Breaks source code into tokens.<br>
+        • <strong>Parser:</strong> Arranges tokens into a tree showing structure.
+    </div>
+
+</div>
+
+</body>
+</html>
