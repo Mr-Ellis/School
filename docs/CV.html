@@ -387,61 +387,120 @@
     text-align: left;
   }
 
-  /* ---------- Print ---------- */
-  @page { size: A4; margin: 14mm 13mm; }
+  /* ==========================================================================
+     PRINT STYLESHEET - THIS IS WHERE THE MAGIC HAPPENS TO FIT IT ON 2-3 PAGES
+     ========================================================================== */
+  @page { 
+    size: A4; 
+    margin: 10mm 12mm; /* Very tight margins to save space */
+  }
 
   @media print {
-    body { background: #fff; padding: 0; font-size: 10.5pt; }
+    /* Force text to be compact and black for printing */
+    body { 
+      background: #fff; 
+      padding: 0; 
+      font-size: 9.5pt; /* Slightly smaller font for print */
+      line-height: 1.4; 
+      color: #000;
+    }
 
     .page {
       box-shadow: none;
       border-radius: 0;
       max-width: none;
       overflow: visible;
+      border: none;
     }
 
+    /* Make header simple and compact */
     header.cv-header {
       background: #fff !important;
-      padding: 0 0 1.5rem 0;
-      border-bottom: 2px solid var(--warm-dark);
-      gap: 1.5rem;
+      padding: 0 0 10px 0;
+      border-bottom: 2px solid #000;
+      gap: 15px;
+      display: flex;
+      align-items: center;
     }
 
-    h1 { color: var(--warm-dark); }
-    .subtitle { color: var(--muted); }
+    h1 { font-size: 20pt; color: #000; margin: 0; }
+    .subtitle { font-size: 11pt; color: #444; }
     
     .photo-container {
-      width: 110px;
-      height: 130px;
-      border-color: #ccc;
+      width: 80px;
+      height: 100px;
+      border: 1px solid #ccc;
       box-shadow: none;
     }
 
+    /* Hide all interactive UI elements */
     .quick-nav,
-    .actions { display: none; }
+    .actions,
+    .btn { display: none !important; }
 
     .page-inner { padding: 0; }
 
-    section { margin-bottom: 1.2rem; page-break-inside: auto; }
+    /* Compact sections */
+    section { margin-bottom: 12px; page-break-inside: auto; }
 
-    h2 { page-break-after: avoid; border-bottom: 1px solid #ccc; color: #000; }
-    h2::before { background: #ccc; }
+    h2 { 
+      font-size: 11pt; 
+      margin: 12px 0 6px 0; 
+      padding-bottom: 2px;
+      border-bottom: 1px solid #999; 
+      color: #000; 
+    }
+    h2::before { display: none; } /* Hide the dot */
 
-    h3 { page-break-after: avoid; }
+    h3 { font-size: 10pt; margin: 8px 0 2px 0; page-break-after: avoid; color: #000; }
 
-    tr, .resource-card, .job, .comp-card { page-break-inside: avoid; }
+    p, ul { 
+      margin-bottom: 6px; 
+      text-align: justify; 
+    }
+    
+    li { margin-bottom: 2px; }
 
+    /* Compact links */
     a { 
-      color: var(--ink); 
+      color: #000; 
       text-decoration: none; 
-      font-weight: bold; 
+      font-weight: normal; 
     }
 
-    .details { background: none; border: none; padding: 0; }
-    .resource-card, .comp-card { background: none; border: 1px solid #ccc; }
-    .job { border-left-color: #ccc; }
-    th { background: #f0f0f0; color: #000; border-bottom: 1px solid #999; }
-    .profile-lead { border-left-color: var(--warm-dark); }
+    /* Remove backgrounds from boxes to save ink and space */
+    .details, 
+    .resource-card, 
+    .comp-card,
+    .job { 
+      background: none; 
+      border: 1px solid #ccc; 
+      padding: 6px; 
+      margin-bottom: 8px;
+      page-break-inside: avoid; 
+    }
+    
+    .details { display: block; padding: 0; border: none; }
+    .details div { margin-bottom: 2px; }
+    .details .label { min-width: auto; margin-right: 5px; }
+    .details .wide { margin-top: 4px; }
+
+    .job { border-left: 2px solid #999; border-top: none; border-right: none; border-bottom: none; padding-left: 8px; }
+    
+    /* Compact table */
+    table { font-size: 8.5pt; }
+    th { background: #eee; color: #000; border-bottom: 1px solid #999; padding: 4px; }
+    td { padding: 4px; }
+
+    /* Keep cards side-by-side if possible */
+    .comp-grid { display: flex; gap: 10px; }
+    .comp-card { flex: 1; }
+
+    .profile-lead { border-left: 2px solid #000; padding-left: 8px; font-size: 10pt; margin-bottom: 8px; }
+    
+    /* Ensure no orphaned headings */
+    h2, h3 { page-break-after: avoid; }
+    tr, .resource-card, .comp-card { page-break-inside: avoid; }
   }
 
   @media (max-width: 700px) {
