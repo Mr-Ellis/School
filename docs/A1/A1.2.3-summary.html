@@ -215,19 +215,6 @@
         }
         .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
 
-        .extension-card {
-            background: #f1f6fc;
-            border-radius: 16px;
-            padding: 1.2rem 1.5rem;
-            margin: 0.8rem 0 0.5rem 0;
-            border-left: 4px solid #b21f1f;
-        }
-        .extension-card h4 {
-            color: #0b2a4a;
-            font-size: 1rem;
-            margin-bottom: 0.3rem;
-        }
-
         /* Plain-language explainer box */
         .plain-box {
             background: #e6f5e6;
@@ -314,13 +301,30 @@
             height: 600px;
             border: 0;
             display: block;
+            background: #0b2a4a;
         }
-        .game-embed .embed-note {
-            padding: 12px 18px;
-            background: #e4eefa;
-            font-size: 0.85rem;
-            color: #1f4b6e;
-            border-top: 1px solid #dce4ed;
+        .game-fallback {
+            padding: 18px 20px;
+            background: #fff7f7;
+            border-top: 2px solid #b21f1f;
+            font-size: 0.9rem;
+            color: #7a1f1f;
+        }
+        .game-fallback strong { color: #b21f1f; }
+        .game-fallback .fallback-btn {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            padding: 8px 22px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 10px;
+            border-bottom: none;
+        }
+        .game-fallback .fallback-btn:hover {
+            background: #0b2a4a;
+            color: #fdbb2d;
+            border-bottom: none;
         }
 
         /* Interactive tool */
@@ -405,6 +409,49 @@
             font-size: 0.85rem;
             color: #475569;
             margin-top: 10px;
+        }
+
+        /* Half-adder step cards */
+        .ha-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-left: 4px solid #1a5f87;
+            border-radius: 0 10px 10px 0;
+            padding: 12px 16px;
+            margin: 10px 0;
+        }
+        .ha-step .ha-num {
+            flex-shrink: 0;
+            width: 30px;
+            height: 30px;
+            background: #1a5f87;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .ha-step .ha-body { flex: 1; }
+        .ha-step .ha-body strong { color: #0b2a4a; }
+        .ha-step .ha-math {
+            font-family: monospace;
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 3px 10px;
+            display: inline-block;
+            margin: 3px 0;
+            color: #b21f1f;
+            font-weight: bold;
+        }
+        .ha-highlight {
+            background: #fff7f7;
+            border-left-color: #b21f1f;
         }
 
         /* Quiz */
@@ -599,24 +646,94 @@
 
     <!-- ===== WORKED EXAMPLE: HALF ADDER ===== -->
     <h2>🧮 Worked Example: The Half Adder</h2>
-    <p>The clearest demonstration of <em>why</em> gates matter is binary addition. Adding two single bits produces a <strong>sum</strong> and a <strong>carry</strong>. Two gates are all you need:</p>
 
+    <p><strong>The problem:</strong> take two single bits, A and B, add them together, and report the answer as binary. That sounds trivial, but the result of adding two bits can be <em>two</em> bits long, so we need to be careful about what "the answer" means.</p>
+
+    <h3>Step 1 — Work out what binary addition actually does</h3>
+    <p>There are only four possible sums of two single bits. Do them in denary first, then write the answer in binary:</p>
+
+    <div class="ha-step">
+        <div class="ha-num">1</div>
+        <div class="ha-body">
+            <strong>0 + 0 = 0</strong><br>
+            In binary: <span class="ha-math">0</span> → no sum bit, no carry.
+        </div>
+    </div>
+    <div class="ha-step">
+        <div class="ha-num">2</div>
+        <div class="ha-body">
+            <strong>0 + 1 = 1</strong><br>
+            In binary: <span class="ha-math">1</span> → sum bit is 1, no carry.
+        </div>
+    </div>
+    <div class="ha-step">
+        <div class="ha-num">3</div>
+        <div class="ha-body">
+            <strong>1 + 0 = 1</strong><br>
+            In binary: <span class="ha-math">1</span> → sum bit is 1, no carry.
+        </div>
+    </div>
+    <div class="ha-step ha-highlight">
+        <div class="ha-num">4</div>
+        <div class="ha-body">
+            <strong>1 + 1 = 2</strong>, and 2 in binary is <span class="ha-math">10</span>.<br>
+            There is no single binary digit for “2”. So we write <strong>0</strong> in the answer column and <strong>carry 1</strong> into the next column. Sum bit = 0, carry bit = 1.
+        </div>
+    </div>
+
+    <div class="plain-box">
+        <div class="plain-title">Why a carry is needed</div>
+        <p>You already do this in decimal. When you add 7 + 5 you do not write “12” in a single column—you write <strong>2</strong> and carry <strong>1</strong> into the tens column. Binary does exactly the same thing. The only difference is that binary runs out of digits at 1, so a carry happens far more often.</p>
+    </div>
+
+    <h3>Step 2 — Split the answer into two parts</h3>
+    <p>Because of that carry, adding two bits produces <strong>two outputs</strong>:</p>
     <ul>
-        <li><strong>Sum</strong> comes from an <strong>XOR</strong> gate. (0+0=0, 0+1=1, 1+0=1, 1+1=0 with a carry.)</li>
-        <li><strong>Carry</strong> comes from an <strong>AND</strong> gate. (Only 1+1 produces a carry of 1.)</li>
+        <li><strong>Sum</strong> — the bit that goes in the current answer column.</li>
+        <li><strong>Carry</strong> — the bit that gets added to the <em>next</em> column to the left.</li>
     </ul>
+    <p>A <strong>half adder</strong> is the simplest circuit that produces both. It needs exactly <strong>two gates</strong>: one XOR and one AND.</p>
 
+    <h3>Step 3 — See the pattern in the truth table</h3>
     <table>
-        <thead><tr><th>A</th><th>B</th><th>Sum (XOR)</th><th>Carry (AND)</th></tr></thead>
+        <thead>
+            <tr><th>A</th><th>B</th><th>A + B (denary)</th><th>A + B (binary)</th><th>Sum</th><th>Carry</th></tr>
+        </thead>
         <tbody>
-            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-            <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
-            <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
-            <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>2</td><td>10</td><td>0</td><td>1</td></tr>
         </tbody>
     </table>
 
-    <p>Chain many of these together and you have the arithmetic-logic unit (ALU) inside a processor. The point is not that the half adder is complicated—it is that <strong>the most fundamental operation a computer performs is built directly from two logic gates</strong>.</p>
+    <p>Now look at each output column on its own:</p>
+
+    <div class="ha-step">
+        <div class="ha-num">→</div>
+        <div class="ha-body">
+            <strong>The Sum column reads 0, 1, 1, 0.</strong><br>
+            That is the <strong>XOR</strong> pattern. XOR gives 1 when the inputs are <em>different</em>, and that is exactly when adding two bits produces a sum of 1 (0+1 and 1+0). When the inputs are the same, the sum is 0 (0+0 and the “write 0” case of 1+1).
+        </div>
+    </div>
+    <div class="ha-step">
+        <div class="ha-num">→</div>
+        <div class="ha-body">
+            <strong>The Carry column reads 0, 0, 0, 1.</strong><br>
+            That is the <strong>AND</strong> pattern. A carry happens only when <em>both</em> inputs are 1 — the single case of 1+1.
+        </div>
+    </div>
+
+    <h3>Step 4 — Put the two gates together</h3>
+    <p>Feed the same two inputs into both gates:</p>
+    <ul>
+        <li>A and B go into an <strong>XOR gate</strong>. Its output is the <strong>Sum</strong>.</li>
+        <li>A and B also go into an <strong>AND gate</strong>. Its output is the <strong>Carry</strong>.</li>
+    </ul>
+    <p>That is the whole half adder. Two gates, two outputs, four possible input combinations—and the truth table above falls out automatically.</p>
+
+    <h3>Why is it called “half” an adder?</h3>
+    <p>Because it cannot accept a carry <em>from the previous column</em>. When you add multi-bit numbers like 0110 + 0011, each column after the first needs to add <strong>three</strong> bits: A, B, and the carry coming in from the right. A <strong>full adder</strong> handles three inputs; the half adder handles only two. Chain a half adder for the rightmost column, then full adders for the rest, and you have a circuit that can add any two binary numbers—which is exactly how the arithmetic-logic unit inside a CPU is built.</p>
 
     <!-- ===== REAL-WORLD APPLICATIONS ===== -->
     <h2>🌍 Real-World Applications</h2>
@@ -670,20 +787,31 @@
 
     <!-- ===== EMBEDDED GAME ===== -->
     <h2>🕹️ Play: BrookeBit Caverns</h2>
-    <p>BrookeBit Caverns is a puzzle game built on logic gates. Play it directly below, or open it in a new tab if the embed does not load.</p>
+    <p>BrookeBit Caverns is a puzzle game built on logic gates. Try playing it directly below.</p>
 
     <div class="game-embed">
-        <iframe src="https://brookebit.com/caverns" title="BrookeBit Caverns logic gate puzzle game" allowfullscreen></iframe>
-        <div class="embed-note">
-            🎮 <strong>Task:</strong> As you play, note down <strong>one puzzle</strong> where you had to use an AND, OR, or NOT rule to progress. Be ready to explain which gate the puzzle was testing and what the inputs and output were.
+        <iframe
+            src="https://brookebit.com/caverns"
+            title="BrookeBit Caverns logic gate puzzle game"
+            allow="fullscreen; autoplay"
+            referrerpolicy="no-referrer-when-downgrade"
+            loading="lazy">
+        </iframe>
+        <div class="game-fallback">
+            <strong>⚠️ If the game does not appear above,</strong> the site has blocked being shown inside another page (this is a security setting on <em>brookebit.com</em>, not something this page controls). Use the button below to open it in a new tab and play there — it works perfectly.
+            <br>
+            <a class="fallback-btn" href="https://brookebit.com/caverns" target="_blank">🎮 Open BrookeBit Caverns in a new tab →</a>
         </div>
     </div>
 
-    <p style="font-size:0.85rem; color:#64748b;">If the game does not appear above, <a href="https://brookebit.com/caverns" target="_blank">open BrookeBit Caverns in a new tab</a>.</p>
+    <div class="plain-box">
+        <div class="plain-title">Task while you play</div>
+        <p>Pick <strong>one puzzle</strong> you solve. Write down: which gate the puzzle was testing, what the inputs were, and what the output had to be to progress. Be ready to explain it to the class.</p>
+    </div>
 
     <!-- ===== LOGICLY LAB ===== -->
     <h2>🔬 Logicly Lab: Build and Test Gates</h2>
-    <p>Logicly is a drag-and-drop circuit simulator. You will use it to build each gate from scratch, attach switches and a light bulb, and confirm the truth table by hand. <a href="https://logic.ly/demo/" target="_blank">Open Logicly in a new tab</a> before you begin.</p>
+    <p>Logicly is a drag-and-drop circuit simulator. Open <a href="https://logic.ly/demo/" target="_blank">Logicly in a new tab</a> and work through the three labs below. You will build each gate yourself, attach inputs and a bulb, and confirm the truth tables by hand.</p>
 
     <div class="lab-box">
         <h4>Lab 1 — Build and test a single gate</h4>
@@ -743,13 +871,11 @@
         <div class="task-row">
             <span class="task-step">1</span>
             <span class="task-desc">
-                <strong>Read &amp; Learn</strong> — Use the resources below to build your understanding of logic gates.
+                <strong>Read &amp; Learn</strong>
                 <div class="task-1-resources">
                     <span class="pill"><a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%201.2.3.pdf" target="_blank">📖 eBook (A1.2.3)</a></span>
                     <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.3-describe-the-purpose-and-use-of-logic-gates" target="_blank">🌐 CS Wiki (A1.2.3)</a></span>
                     <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vSscNo7YGP-q3FFnvy4xPAhiDlQtKa2r0512B8N-5SF2OPEibx5ds28cQ6aj_1OV1BDAONtL0i98Ees/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides (Logic Gates)</a></span>
-                    <span class="pill"><a href="https://brookebit.com/caverns" target="_blank">🎮 BrookeBit Caverns</a></span>
-                    <span class="pill"><a href="https://logic.ly/demo/" target="_blank">🔬 Logicly Simulator</a></span>
                 </div>
                 <span style="font-size:0.9rem; color:#4a6a85; display:block; margin-top:8px;">Focus on the <em>purpose</em> of each gate, not just its truth table. For each one, ask: what question is this gate asking about its inputs? Then note one place it is used.</span>
             </span>
@@ -781,21 +907,6 @@
         <h3 style="margin-top:0;">Self-Marking Quiz</h3>
         <div id="quizBody"></div>
         <p id="quizScore" style="font-weight:bold; margin-top:15px; color:#0b2a4a;">Score: 0 / 7</p>
-    </div>
-
-    <!-- ===== EXTENSION ===== -->
-    <h2>⭐ Extension Activity</h2>
-    <div class="extension-card">
-        <h4>🔍 Functional completeness</h4>
-        <p>NAND and NOR are called <em>universal gates</em> because any other gate can be built from them alone. Use Logicly to build a NOT gate using only a NAND gate. Then build an AND gate using only NAND gates. Take a screenshot of each circuit.</p>
-    </div>
-    <div class="extension-card">
-        <h4>🔍 Gates in the ALU</h4>
-        <p>Research how the arithmetic-logic unit (ALU) uses gates to add, subtract, and compare numbers. Explain why the XOR gate is essential for binary addition and why the AND gate produces the carry.</p>
-    </div>
-    <div class="extension-card">
-        <h4>🔍 Design a decision</h4>
-        <p>Invent a real-world rule that needs at least three inputs and at least two different gate types—for example, “the heating turns on if the temperature is below 18°C AND someone is home, OR if the frost setting is on.” Draw the gate chain in Logicly and write the truth table.</p>
     </div>
 
     <hr>
