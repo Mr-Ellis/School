@@ -294,6 +294,59 @@
             white-space: nowrap;
         }
 
+        /* Plain-language explainer box */
+        .plain-box {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 15px 0;
+        }
+        .plain-box .plain-title {
+            font-weight: 700;
+            color: #1a6b33;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 6px;
+        }
+        .plain-box p { margin-bottom: 8px; }
+        .plain-box p:last-child { margin-bottom: 0; }
+
+        /* Step list */
+        .steps { list-style: none; margin: 15px 0; counter-reset: step; }
+        .steps li {
+            position: relative;
+            padding: 12px 16px 12px 56px;
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            counter-increment: step;
+        }
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 14px;
+            top: 12px;
+            width: 28px;
+            height: 28px;
+            background: #1a5f87;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .steps li strong { color: #0b2a4a; }
+
+        /* BCD digit table */
+        .digit-table td { text-align: center; font-family: monospace; font-size: 0.85rem; }
+        .digit-table th { text-align: center; }
+        .digit-table .unused { background: #fdeaea; color: #9f1239; }
+
         /* Interactive Tools */
         .interactive-box {
             background: #f1f6fc;
@@ -399,10 +452,10 @@
             <tr><td><strong>Encoding</strong></td><td>An agreed rule that maps a pattern of bits to a meaning (e.g., “01000001” ↔ ‘A’). Without encoding, bits are meaningless noise.</td></tr>
             <tr><td><strong>Unsigned integer</strong></td><td>An integer that uses every bit for magnitude. An 8-bit unsigned integer holds 0 to 255.</td></tr>
             <tr><td><strong>Two’s complement</strong></td><td>The signed integer scheme used by real hardware. The most significant bit has a negative place value.</td></tr>
-            <tr><td><strong>Binary-coded decimal (BCD)</strong></td><td>Stores each decimal digit separately in 4 bits. Used in financial systems to keep money amounts exact.</td></tr>
+            <tr><td><strong>Binary-coded decimal (BCD)</strong></td><td>Stores each decimal digit separately in its own 4-bit group. Used in financial systems to keep money amounts exact.</td></tr>
             <tr><td><strong>Pixel</strong></td><td>A single dot in a digital image. Each pixel’s colour is stored as a binary value.</td></tr>
-            <tr><td><strong>Sampling rate</strong></td><td>How many audio samples are taken per second (Hz). CD audio uses 44,100 Hz.</td></tr>
-            <tr><td><strong>Bit depth</strong></td><td>The number of bits used per audio sample. CD audio uses 16 bits per sample.</td></tr>
+            <tr><td><strong>Sampling rate</strong></td><td>How many times per second the computer measures the sound wave (Hz). CD audio uses 44,100 Hz.</td></tr>
+            <tr><td><strong>Bit depth</strong></td><td>The number of bits used to store each measurement of the sound wave. CD audio uses 16 bits per sample.</td></tr>
             <tr><td><strong>Frame</strong></td><td>A single still image in a video. Video is a sequence of frames played back rapidly.</td></tr>
         </tbody>
     </table>
@@ -469,9 +522,48 @@
     <h3>Sign and magnitude (for contrast)</h3>
     <p>In sign and magnitude, the MSB is a flag (0 = positive, 1 = negative) and is <em>not</em> added to the total. The same pattern <code>1011</code> means <strong>−5</strong> in two’s complement but <strong>−3</strong> in sign and magnitude. Sign and magnitude produces two representations of zero (<code>0000</code> and <code>1000</code>) and needs separate circuits for addition and subtraction, which is why hardware does not use it.</p>
 
-    <h3>Binary-coded decimal (BCD) and fixed point</h3>
-    <p>BCD stores each decimal digit separately in 4 bits. So <code>1001 0011</code> reads as <strong>9 then 3</strong>, giving <strong>93</strong>. Money amounts that cannot be written exactly in ordinary binary stay exact in BCD, which is why financial systems use it. The cost is wasted space: 4 bits can hold 16 values, but BCD uses only 10.</p>
-    <p><strong>Fixed point</strong> places the binary point at an agreed position, so bits to the left are the integer part and bits to the right are the fractional part.</p>
+    <h3>Binary-coded decimal (BCD)</h3>
+    <p>Ordinary binary treats a number like 47 as <em>one value</em> and works out what that value is: <code>0010 1111</code>. BCD does something completely different—it stores <strong>each decimal digit separately</strong> in its own group of 4 bits.</p>
+
+    <p>So to store 47 in BCD, you encode the digit 4 and the digit 7 independently, then stick the two groups together:</p>
+
+    <div class="calc">
+        <div class="calc-title">Storing 47 in BCD</div>
+        <div><span class="step-label">Digit 4</span>4₁₀ = <code>0100</code></div>
+        <div><span class="step-label">Digit 7</span>7₁₀ = <code>0111</code></div>
+        <div><span class="step-label">Join together</span><code>0100 0111</code> → <span class="final">one byte, two digits</span></div>
+    </div>
+
+    <p>Notice this is <em>not</em> the same as ordinary binary for 47 (<code>0010 1111</code>). Both are 8 bits long, but they mean different things depending on which rule you are using. That is the encoding idea in action.</p>
+
+    <p>Because each digit needs 4 bits, and there are only ten digits (0–9), six of the sixteen possible 4-bit patterns are simply never used:</p>
+
+    <table class="digit-table">
+        <thead>
+            <tr>
+                <th>Digit</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>BCD</strong></td>
+                <td>0000</td><td>0001</td><td>0010</td><td>0011</td><td>0100</td><td>0101</td><td>0110</td><td>0111</td><td>1000</td><td>1001</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>The six unused patterns are <code>1010</code>, <code>1011</code>, <code>1100</code>, <code>1101</code>, <code>1110</code> and <code>1111</code>. They never appear in a valid BCD number.</p>
+
+    <div class="plain-box">
+        <div class="plain-title">Why would anyone use BCD?</div>
+        <p>Because some decimal fractions <strong>cannot be written exactly in ordinary binary</strong>. The number 0.1 is a good example: in binary it becomes a repeating fraction (0.0001100110011…), just like 1/3 in decimal is 0.3333… forever. A computer has to chop it off somewhere, so the stored value is very slightly wrong. Do that thousands of times in a bank's interest calculation and the pennies stop adding up.</p>
+        <p>BCD sidesteps the problem entirely. The digits 0–9 are stored as digits, so 0.10 is stored as <code>0000 . 0001 0000</code> — exactly one tenth. Nothing is approximated.</p>
+    </div>
+
+    <p><strong>The cost:</strong> BCD wastes space. Four bits can hold 16 different patterns, but BCD only ever uses 10 of them, so roughly 37% of the storage is doing nothing. It is also slower for arithmetic, because the processor has to work digit by digit and correct the result when a group goes past 9. That trade-off—bigger and slower, but exact—is why BCD is used for money and almost nothing else.</p>
+
+    <h3>Fixed point</h3>
+    <p>Fixed point places the binary point at an agreed position, so bits to the left are the integer part and bits to the right are the fractional part. If everyone agrees the point sits after the fourth bit, then <code>0011 1000</code> means 3.5. The position is fixed by convention, not stored in the data.</p>
 
     <!-- ===== CHARACTERS & STRINGS ===== -->
     <h2>🔤 Characters and Strings</h2>
@@ -502,17 +594,38 @@
     </div>
 
     <h3>Quality vs size</h3>
-    <p>More pixels (higher resolution) increases detail. More bits per pixel increases colour accuracy. Both increase the storage required. Compressed formats (PNG, JPEG) convert blocks of pixels into frequency coefficients and entropy-code them, dramatically shrinking size at the cost of CPU time (and for JPEG, some quality).</p>
+    <p><strong>More pixels</strong> (higher resolution) means more detail, because the picture is built from more, smaller dots. <strong>More bits per pixel</strong> means more possible colours: 1 bit gives just 2 (black and white), 8 bits gives 256, and 24 bits gives about 16.7 million. Both of these increase the file size, because there are simply more values to store.</p>
+
+    <p>Because a raw image is so large, almost every image you see has been <strong>compressed</strong> first. There are two ways to do this, and they make different trade-offs:</p>
+
+    <ul>
+        <li><strong>Lossless compression (PNG).</strong> The computer looks through the pixel data for repeated patterns—long runs of the same colour, for example—and stores the pattern once with a note saying “repeat this 500 times”. Nothing is thrown away, so the original image can be rebuilt <em>exactly</em>. Files get smaller, but not dramatically.</li>
+        <li><strong>Lossy compression (JPEG).</strong> The computer deliberately throws away fine detail that the human eye is unlikely to notice—subtle colour changes, especially in busy areas of the picture. This shrinks the file far more, but the original can never be recovered exactly. Compress the same photo repeatedly and the damage builds up.</li>
+    </ul>
+
+    <p>Both methods cost processing time. The computer has to do work to compress the file when saving, and work again to decompress it when opening. That is why a compressed image can take a moment longer to appear than an uncompressed one of the same size.</p>
 
     <!-- ===== AUDIO ===== -->
     <h2>🎵 Audio</h2>
-    <p>Analogue sound is a continuous wave. To store it in binary, the waveform is <strong>sampled</strong> at regular intervals and each sample is <strong>quantised</strong> into a fixed-width binary integer. This is <strong>Pulse-Code Modulation (PCM)</strong>.</p>
+    <p>Analogue sound is a continuous wave—air pressure rising and falling smoothly over time. A computer cannot store a smooth curve, because it only has bits. So it takes measurements of the wave instead, in three stages:</p>
+
+    <ol class="steps">
+        <li><strong>Sample the wave.</strong> The computer measures the height of the wave at regular intervals—thousands of times a second. Each measurement is called a <strong>sample</strong>. The number of samples taken per second is the <strong>sampling rate</strong>, measured in hertz (Hz). CD audio takes 44,100 samples every second.</li>
+        <li><strong>Round each sample.</strong> Each measurement is a precise height, but it has to be stored in a fixed number of bits, so it gets rounded to the nearest value on an agreed scale. This rounding step is called <strong>quantising</strong>. The number of steps on that scale is set by the <strong>bit depth</strong>: with 16 bits there are 65,536 possible levels to round to.</li>
+        <li><strong>Write the rounded value as binary.</strong> The rounded number is simply written out as a binary integer. 16-bit audio means each sample becomes a 16-bit number.</li>
+    </ol>
+
+    <div class="plain-box">
+        <div class="plain-title">An everyday comparison</div>
+        <p>Think of drawing a smooth curve on graph paper by plotting dots at regular intervals along it. The <strong>sampling rate</strong> is how far apart your dots are—close together captures the curve well, far apart misses the bends. The <strong>bit depth</strong> is how fine the grid lines are—a coarse grid forces you to round each dot to the nearest line, and a fine grid lets you place it precisely.</p>
+        <p>Sample, round, write as binary. That whole process is called <strong>Pulse-Code Modulation (PCM)</strong>. It is what a CD, a <code>.wav</code> file, and a landline phone call all use underneath.</p>
+    </div>
 
     <table>
         <thead><tr><th>Parameter</th><th>Meaning</th><th>CD audio value</th></tr></thead>
         <tbody>
-            <tr><td><strong>Sampling rate (fₛ)</strong></td><td>Samples taken per second. Determines temporal resolution.</td><td>44,100 Hz</td></tr>
-            <tr><td><strong>Bit depth (b)</strong></td><td>Bits per sample. Determines quantisation resolution and signal-to-noise ratio.</td><td>16 bits</td></tr>
+            <tr><td><strong>Sampling rate (fₛ)</strong></td><td>How many times per second the wave is measured. More samples means the wave is tracked more accurately.</td><td>44,100 Hz</td></tr>
+            <tr><td><strong>Bit depth (b)</strong></td><td>How many bits are used to store each measurement. More bits means finer steps, so quiet detail survives and background noise is lower.</td><td>16 bits</td></tr>
             <tr><td><strong>Channels (c)</strong></td><td>Independent audio streams (mono = 1, stereo = 2).</td><td>2</td></tr>
         </tbody>
     </table>
@@ -527,10 +640,17 @@
         <div><span class="step-label">÷ 1024 → KiB/s</span>176,400 ÷ 1024 = <span class="final">≈ 172.3 KiB/s</span></div>
     </div>
 
-    <p>Samples are stored interleaved (<code>L₀, R₀, L₁, R₁, …</code>) to maintain sample-accurate alignment.</p>
+    <p>Samples are stored interleaved (<code>L₀, R₀, L₁, R₁, …</code>) so that the left and right measurements taken at the same instant stay side by side.</p>
 
     <h3>Quality vs size</h3>
-    <p>More samples improve accuracy; more bits per sample improve precision. Higher quality requires more storage. Compressed codecs (MP3, AAC, Opus) transform blocks to frequency space and psycho-acoustically quantise, reaching <strong>90%+ savings</strong> by removing masked or inaudible components.</p>
+    <p>More samples per second tracks the wave more accurately, so higher notes are captured properly. More bits per sample gives finer steps, so quieter detail is kept. Both increase the file size, because every second contains more data.</p>
+
+    <p>Audio compression works the way image compression does, but tuned to the human ear rather than the eye:</p>
+
+    <ul>
+        <li><strong>Lossy compression (MP3, AAC).</strong> The codec analyses the sound and removes parts the ear is unlikely to notice. A classic example is <em>masking</em>: when a loud sound and a quiet sound happen at the same moment, the quiet one is often completely inaudible. Deleting it makes no noticeable difference to what you hear, but saves a lot of space. Typical savings are over 90%.</li>
+        <li><strong>Lossless compression (FLAC).</strong> Keeps every sample exactly but packs the data more efficiently, like PNG. Files are larger than MP3 but the audio is a perfect copy.</li>
+    </ul>
 
     <!-- ===== VIDEO ===== -->
     <h2>🎬 Video</h2>
@@ -538,12 +658,12 @@
 
     <h3>Frame types and compression</h3>
     <ul>
-        <li><strong>I-frames</strong> are self-contained (like a still image).</li>
-        <li><strong>P/B-frames</strong> store only the <em>differences</em> from other frames.</li>
-        <li>A <strong>codec</strong> (H.264, AV1) orchestrates block transforms, motion vectors, and entropy coding to compress the stream.</li>
+        <li><strong>I-frames</strong> are self-contained—a complete still image, stored on its own.</li>
+        <li><strong>P-frames and B-frames</strong> do not store a whole picture. They store only <em>what changed</em> since a nearby frame. In a shot of someone talking, most of the background is identical from frame to frame, so it is described once and then referenced.</li>
+        <li>A <strong>codec</strong> (H.264, AV1) is the software that does all this work. It finds repeated blocks of colour within a frame, records only the differences between frames, and then packs the result as compactly as it can.</li>
     </ul>
-    <p>The binary stream is timestamped so the playback engine reconstructs each frame in order and at the correct rate (e.g., 30 fps ≈ one frame every 33 ms).</p>
-    <p><strong>Why video files are large:</strong> many frames must be stored, audio data is included, and higher quality increases requirements.</p>
+    <p>Each frame is stamped with a timestamp, so the playback engine knows exactly when to show it—at 30 fps, that is one frame every 33 milliseconds.</p>
+    <p><strong>Why video files are large:</strong> there are many frames to store (30 or more every second), audio data is included, and higher quality increases every one of those requirements.</p>
 
     <!-- ===== WORKED EXAMPLES ===== -->
     <h2>🧮 Worked Mini-Examples</h2>
@@ -556,6 +676,11 @@
                 <td>Integer 300₁₀ as 16-bit unsigned</td>
                 <td><code>0000 0001 0010 1100₂</code> = 16 bits<br>16 ÷ 8 = 2 bytes</td>
                 <td><strong>2 bytes</strong><br><span style="font-size:0.8rem; color:#64748b;">An 8-bit unsigned integer would overflow (max 255).</span></td>
+            </tr>
+            <tr>
+                <td>Integer 47₁₀ in BCD</td>
+                <td>digit 4 = <code>0100</code><br>digit 7 = <code>0111</code><br>joined = <code>0100 0111</code> = 8 bits<br>8 ÷ 8 = 1 byte</td>
+                <td><strong>1 byte</strong><br><span style="font-size:0.8rem; color:#64748b;">Two decimal digits per byte. Plain binary 47 is <code>0010 1111</code>—different bits, same value.</span></td>
             </tr>
             <tr>
                 <td>Word “Hi” in UTF-8</td>
@@ -682,7 +807,7 @@
             <span class="task-desc">
                 <strong>Complete the Starter Activity</strong> — Work through the <strong>Explain</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.<br>
                 Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your answers in a text file.<br>
-                <strong>📌 Important:</strong> Save your work as a <strong>.txt</strong> file using the sentence frame: <em>"Integers are stored using [unsigned / two’s complement / BCD], which [explain how the bits are interpreted]. Characters are stored using [ASCII/Unicode], which assigns [what] to each symbol. Images are stored as [pixels], where each pixel uses [how many] bits for colour. Audio is stored by [sampling and quantising], where [sampling rate] and [bit depth] determine quality and size. Video is stored as [frames], and compression works by [explain I/P/B frames or codecs]."</em>
+                <strong>📌 Important:</strong> Save your work as a <strong>.txt</strong> file using the sentence frame: <em>"Integers are stored using [unsigned / two’s complement / BCD], which [explain how the bits are interpreted]. Characters are stored using [ASCII/Unicode], which assigns [what] to each symbol. Images are stored as [pixels], where each pixel uses [how many] bits for colour. Audio is stored by [sampling and rounding], where [sampling rate] and [bit depth] determine quality and size. Video is stored as [frames], and compression works by [explain I/P/B frames or codecs]."</em>
             </span>
         </div>
         <div class="task-row">
@@ -691,7 +816,7 @@
                 <strong>Deliberate Practice</strong> — Write an <strong>Explain</strong> answer to this question:<br>
                 <em>"Explain how binary is used to store data, including the mechanisms for integers, characters, images, audio, and video, and the impact on storage and retrieval."</em><br><br>
                 <strong>Sentence frame:</strong><br>
-                <em>"All data is stored as ______ because ______. Integers use ______ for unsigned values, while signed integers use ______ so that ______. Characters are encoded using ______, which maps ______ to binary patterns. Images store each ______ as a binary value, and increasing ______ or ______ increases quality but also ______. Audio is captured by ______, with ______ and ______ controlling the trade-off between quality and file size. Video is a sequence of ______, and codecs reduce size by ______. Correct retrieval depends on ______, because ______."</em>
+                <em>"All data is stored as ______ because ______. Integers use ______ for unsigned values, while signed integers use ______ so that ______. BCD stores ______, which means ______. Characters are encoded using ______, which maps ______ to binary patterns. Images store each ______ as a binary value, and increasing ______ or ______ increases quality but also ______. Audio is captured by ______, with ______ and ______ controlling the trade-off between quality and file size. Video is a sequence of ______, and codecs reduce size by ______. Correct retrieval depends on ______, because ______."</em>
             </span>
         </div>
         <div class="task-row">
@@ -703,7 +828,7 @@
     <div class="interactive-box">
         <h3 style="margin-top:0;">Self-Marking Quiz</h3>
         <div id="quizBody"></div>
-        <p id="quizScore" style="font-weight:bold; margin-top:15px; color:#0b2a4a;">Score: 0 / 6</p>
+        <p id="quizScore" style="font-weight:bold; margin-top:15px; color:#0b2a4a;">Score: 0 / 7</p>
     </div>
 
     <!-- ===== EXTENSION ===== -->
@@ -714,11 +839,11 @@
     </div>
     <div class="extension-card">
         <h4>🔍 File size trade-offs</h4>
-        <p>Choose a song you know. Calculate its size as uncompressed CD-quality PCM, showing every stage from bits to MiB. Then compare it to the actual MP3 or AAC file size and explain the difference using psychoacoustic modelling and masking.</p>
+        <p>Choose a song you know. Calculate its size as uncompressed CD-quality PCM, showing every stage from bits to MiB. Then compare it to the actual MP3 or AAC file size and explain the difference using masking—the idea that a quiet sound is inaudible when a loud one plays at the same time.</p>
     </div>
     <div class="extension-card">
         <h4>🔍 The same bits, different meanings</h4>
-        <p>The bit pattern <code>0100 0001</code> can be interpreted as the integer 65, the character ‘A’, or part of a pixel. Explain why the encoding rule is essential for retrieval, and what happens if the wrong encoding is used.</p>
+        <p>The bit pattern <code>0100 0111</code> can mean the plain binary number 71, the BCD number 47, or part of a pixel. Explain why the encoding rule is essential for retrieval, and what happens if the wrong encoding is used.</p>
     </div>
 
     <hr>
@@ -771,9 +896,9 @@ function updateAudio() {
     const depth = parseFloat(audDepth.value);
     const ch = parseFloat(audCh.value);
 
-    const bps = rate * depth * ch;      // bits per second
-    const kibps = bps / 8 / 1024;       // KiB per second
-    const total = bps * dur;            // total bits
+    const bps = rate * depth * ch;
+    const kibps = bps / 8 / 1024;
+    const total = bps * dur;
     const totalMib = total / 8 / 1024 / 1024;
 
     document.getElementById('audBps').textContent = bps.toLocaleString();
@@ -805,10 +930,16 @@ const QUIZ = [
         why: "The MSB is worth −8. 1011 = −8 + 2 + 1 = −5."
     },
     {
+        q: "How is the number 47 stored in BCD?",
+        opts: ["0010 1111", "0100 0111", "1011 1111", "0011 0101"],
+        a: 1,
+        why: "BCD stores each decimal digit separately. Digit 4 = 0100, digit 7 = 0111, so joined together: 0100 0111. (0010 1111 is plain binary for 47—a different rule.)"
+    },
+    {
         q: "Which statement best explains why BCD is used in financial systems?",
         opts: ["BCD uses less storage than ordinary binary", "BCD keeps decimal money amounts exact, avoiding binary rounding issues", "BCD is faster for multiplication than two’s complement", "BCD can represent negative numbers without a sign bit"],
         a: 1,
-        why: "Values like 0.10 cannot be written exactly in ordinary binary. BCD stores each decimal digit separately in 4 bits, so money amounts stay exact."
+        why: "Values like 0.10 cannot be written exactly in ordinary binary—they become repeating fractions. BCD stores each decimal digit separately in 4 bits, so money amounts stay exact."
     },
     {
         q: "A 1920 × 1080 image uses 24 bits per pixel. What is the uncompressed size?",
@@ -818,9 +949,9 @@ const QUIZ = [
     },
     {
         q: "Two audio files use the same duration and bit depth, but one has a higher sampling rate. What is the effect?",
-        opts: ["The higher-rate file has better temporal accuracy but is larger", "The higher-rate file is smaller because it is more efficient", "Both files are identical in size and quality", "The higher-rate file has lower bit depth automatically"],
+        opts: ["The higher-rate file tracks the wave more accurately but is larger", "The higher-rate file is smaller because it is more efficient", "Both files are identical in size and quality", "The higher-rate file has lower bit depth automatically"],
         a: 0,
-        why: "A higher sampling rate captures more samples per second, improving temporal resolution. More samples mean more data, so the file is larger."
+        why: "A higher sampling rate takes more measurements per second, so the wave is tracked more accurately. More measurements mean more data, so the file is larger."
     }
 ];
 
