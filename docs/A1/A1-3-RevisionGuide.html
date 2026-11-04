@@ -1,1 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.3 Revision Guide – System Software</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.4rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 1.6rem;
+            color: #0b2a4a;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 5px solid #b21f1f;
+        }
+        h3 {
+            color: #1a5f87;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        p { margin-bottom: 15px; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        li { margin-bottom: 8px; }
+        
+        .key-term {
+            background: #ebf4ff;
+            border-left: 4px solid #1a5f87;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        .key-term strong { color: #0b2a4a; }
+        
+        .exam-tip {
+            background: #fff7f7;
+            border-left: 4px solid #b21f1f;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        .exam-tip strong { color: #b21f1f; }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f8fafc; }
+
+        .diagram {
+            font-family: 'Courier New', Courier, monospace;
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.3rem; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a href="../index.html" class="back-link">← Back to A1 Unit</a>
+
+    <h1>A1.3 Revision Guide: System Software</h1>
+
+    <p>This revision guide covers the role and functions of an operating system, how it manages resources and schedules processes, the trade-offs between polling and interrupts, the challenges of multitasking, and the components and applications of control systems.</p>
+
+    <!-- ================= A1.3.1 ================= -->
+    <h2>1. The Role of the Operating System (A1.3.1)</h2>
+    <p>The Operating System (OS) is the fundamental software that manages hardware and software resources and provides common services for programs. It acts as an intermediary between the user and the hardware.</p>
+
+    <div class="key-term">
+        <strong>The Two Big Ideas:</strong><br>
+        • <strong>Abstraction (The How):</strong> Hiding hardware complexity behind a simple, uniform interface. A program asks the OS to "open a file" without needing to know the specific electrical commands for the disk controller.<br>
+        • <strong>Resource Management (The What):</strong> Allocating limited resources (CPU, memory, storage) safely across competing programs. The OS decides which process gets the CPU and for how long.
+    </div>
+
+    <p>These ideas are connected: <strong>The OS manages resources by abstracting the hardware.</strong> Abstraction is the mechanism; resource management is the goal.</p>
+
+    <h3>The Four Key Resources Managed</h3>
+    <table>
+        <thead><tr><th>Resource</th><th>What the OS Does</th><th>Why It Matters</th></tr></thead>
+        <tbody>
+            <tr><td><strong>CPU Management</strong></td><td>Allocates CPU time, schedules processes, handles context switching.</td><td>Ensures efficient execution and enables multitasking.</td></tr>
+            <tr><td><strong>Memory Management</strong></td><td>Handles allocation/de-allocation, manages virtual memory, enforces protection.</td><td>Extends apparent memory capacity and stops programs corrupting each other.</td></tr>
+            <tr><td><strong>Storage Management</strong></td><td>Organises data, controls access, manages the file system.</td><td>Provides reliable data storage and retrieval by name.</td></tr>
+            <tr><td><strong>Device Management</strong></td><td>Loads drivers, provides uniform interfaces, coordinates hardware.</td><td>One interface (read/write) works for files, sockets, printers, and keyboards.</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================= A1.3.2 ================= -->
+    <h2>2. The Nine Functions of an OS (A1.3.2)</h2>
+    <p>An OS's functions are the concrete services that put its resource-management role into practice. Their overarching purpose is to maintain <strong>system integrity</strong>—the state where a computer operates correctly and securely, free from corruption.</p>
+
+    <table>
+        <thead><tr><th>Function</th><th>What It Does</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Memory Management</strong></td><td>Allocates RAM, protects processes from each other, uses virtual memory when RAM is full.</td></tr>
+            <tr><td><strong>File System</strong></td><td>Organises files in a hierarchy. Handles creation, reading, writing, renaming, moving, and deleting. Enforces naming rules and permissions.</td></tr>
+            <tr><td><strong>Device Management</strong></td><td>Uses device drivers to communicate with hardware. Manages I/O using buffering, caching, and spooling. Supports Plug and Play.</td></tr>
+            <tr><td><strong>Scheduling</strong></td><td>The scheduler allocates CPU time to processes, ensuring efficient and fair use (see Section 3).</td></tr>
+            <tr><td><strong>Security</strong></td><td>Authenticates users (passwords, biometrics), enforces access control, encrypts files, audits activity, and protects against malware.</td></tr>
+            <tr><td><strong>Accounting</strong></td><td>Tracks CPU, memory, disk, and network usage. Supports quotas, performance monitoring, and billing on shared systems.</td></tr>
+            <tr><td><strong>GUI</strong></td><td>Provides windows, icons, menus, and pointers (WIMP). Handles application management, file management, and accessibility.</td></tr>
+            <tr><td><strong>Virtualisation</strong></td><td>Uses a hypervisor to run multiple virtual machines on one physical machine. Each VM has its own OS.</td></tr>
+            <tr><td><strong>Networking</strong></td><td>Establishes connections, assigns IP addresses (DHCP), implements TCP/IP, handles error checking and flow control.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Device Management Techniques</h3>
+    <table>
+        <thead><tr><th>Technique</th><th>How It Works</th><th>Why It Is Used</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Buffering</strong></td><td>Temporarily stores data in memory while it is transferred between two devices.</td><td>Manages differences in data-flow rates (e.g., slow printer vs. fast CPU).</td></tr>
+            <tr><td><strong>Caching</strong></td><td>Stores frequently accessed data in a high-speed storage area.</td><td>Reduces access time and improves system performance.</td></tr>
+            <tr><td><strong>Spooling</strong></td><td>Queues data or tasks (typically for printers) so they process sequentially at their own pace.</td><td>Lets the system work on other tasks while a slow device processes its queue.</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================= A1.3.3 ================= -->
+    <h2>3. Scheduling Approaches (A1.3.3)</h2>
+    <p>The scheduler decides which process runs next. Different algorithms make different trade-offs between responsiveness, fairness, and overhead.</p>
+
+    <table>
+        <thead><tr><th>Algorithm</th><th>How It Works</th><th>Pre-emptive?</th><th>Key Strength</th><th>Key Weakness</th></tr></thead>
+        <tbody>
+            <tr><td><strong>FCFS</strong> (First-Come, First-Served)</td><td>Processes run in the order they arrive.</td><td>No</td><td>Simple; no context-switching overhead.</td><td><strong>Convoy effect:</strong> a long process can make short ones wait a long time.</td></tr>
+            <tr><td><strong>Round Robin</strong></td><td>Each process gets a fixed time slice (quantum), then moves to the back of the queue.</td><td>Yes</td><td>Good response time for short processes; fair.</td><td><strong>Context-switching overhead</strong> if the quantum is too small.</td></tr>
+            <tr><td><strong>Priority</strong></td><td>Highest-priority process runs first.</td><td>Yes (usually)</td><td>Critical tasks get CPU immediately.</td><td><strong>Starvation:</strong> low-priority processes may never run.</td></tr>
+            <tr><td><strong>Multilevel Queue (MLQ)</strong></td><td>Processes are grouped into classes (e.g., system, interactive, background), each with its own queue and scheduling algorithm.</td><td>Yes</td><td>Flexible; different classes get appropriate treatment.</td><td>Complex; processes cannot easily move between queues.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="exam-tip">
+        <strong>⚠️ Exam Tip — Compare, Don't Describe:</strong> To get full marks on a "Compare" question, you must state a <strong>similarity</strong>, a <strong>difference</strong>, a <strong>consequence</strong>, and a <strong>trade-off</strong>. For example: "Both FCFS and Round Robin are CPU scheduling algorithms [similarity]. However, FCFS is non-pre-emptive and runs each process to completion, whereas Round Robin is pre-emptive and gives each a fixed time slice [difference]. The effect is that FCFS can cause a convoy effect, while Round Robin shares the CPU more evenly [consequence]. Round Robin pays for this with the overhead of frequent context switching [trade-off]."
+    </div>
+
+    <!-- ================= A1.3.4 ================= -->
+    <h2>4. Polling vs. Interrupts (A1.3.4)</h2>
+    <p>An OS must detect when a device needs attention. There are two fundamental strategies: <strong>Polling</strong> (the CPU repeatedly checks a status register) and <strong>Interrupt handling</strong> (the device signals the CPU asynchronously when an event occurs).</p>
+
+    <div class="key-term">
+        <strong>Polling:</strong> The CPU asks "Are you ready?" over and over.<br>
+        <strong>Interrupt:</strong> The device taps the CPU on the shoulder and says "I'm ready."
+    </div>
+
+    <table>
+        <thead><tr><th>Criterion</th><th>Polling</th><th>Interrupt Handling</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Event Frequency</strong></td><td>Suits high-rate or continuous streams (e.g., 100 Gbit/s packet capture) where an event is almost always ready.</td><td>Best for sparse or bursty events (e.g., key presses, USB hot-plug) so the CPU can sleep between arrivals.</td></tr>
+            <tr><td><strong>CPU Overhead</strong></td><td>Overhead scales with polling rate; wasted cycles when nothing happens.</td><td>None while idle; a context switch and ISR prologue on each interrupt.</td></tr>
+            <tr><td><strong>Power Source</strong></td><td>Continuous polling prevents deep sleep states—undesirable on battery-powered devices.</td><td>Allows the core to remain in low-power states until the interrupt fires; advantageous for mobile and IoT.</td></tr>
+            <tr><td><strong>Event Predictability</strong></td><td>Latency is deterministic—at most the time between successive polls. Good for hard real-time.</td><td>Latency depends on masking, priority, and ISR length. Generally low, but subject to jitter.</td></tr>
+            <tr><td><strong>Controlled Latency</strong></td><td>Minimum latency = 0 (tight loop); maximum = polling interval.</td><td>Usually low (≈ µs–tens of µs) but subject to jitter from other interrupts.</td></tr>
+            <tr><td><strong>Security Concerns</strong></td><td>Fewer chances for interrupt vector hijacking or ISR stack smashing.</td><td>Adds a privileged entry point per vector; bugs in ISRs widen the attack surface.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Real-World Choices</h3>
+    <ul>
+        <li><strong>Keyboard and mouse:</strong> Interrupts (human input is infrequent; CPU can sleep).</li>
+        <li><strong>Wi-Fi card:</strong> Hybrid (interrupt to wake, then poll while data is flowing heavily).</li>
+        <li><strong>Saving a file to a hard drive:</strong> Interrupts (CPU can do other work while the disk writes).</li>
+        <li><strong>Car's airbag system:</strong> Interrupts (must trigger immediately; polling could miss a fatal delay).</li>
+    </ul>
+
+    <!-- ================= A1.3.5 ================= -->
+    <h2>5. Multitasking & Resource Allocation (A1.3.5 HL)</h2>
+    <p>The illusion of parallelism comes from the OS switching between tasks many times a second. This creates three challenges: <strong>Task Scheduling</strong>, <strong>Resource Contention</strong>, and <strong>Deadlock</strong>.</p>
+
+    <h3>Deadlock</h3>
+    <p>Deadlock occurs when progress stops entirely because each process is waiting for a resource held by another.</p>
+    <div class="diagram">
+        P1 holds R1 ──waits for──▶ R2 held by P2<br>
+        P2 holds R2 ──waits for──▶ R1 held by P1<br>
+        Neither process can proceed.
+    </div>
+
+    <p><strong>The Four Necessary Conditions (all must hold simultaneously):</strong></p>
+    <ol>
+        <li><strong>Mutual Exclusion:</strong> A resource cannot be shared—only one process can use it at a time.</li>
+        <li><strong>Hold and Wait:</strong> A process is holding at least one resource while waiting to acquire another.</li>
+        <li><strong>No Preemption:</strong> A resource cannot be forcibly taken back—it must be released voluntarily.</li>
+        <li><strong>Circular Wait:</strong> A cycle of processes exists, each waiting for a resource held by the next.</li>
+    </ol>
+
+    <table>
+        <thead><tr><th>Strategy</th><th>How It Works</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Prevention</strong></td><td>Design the system so that one of the four conditions can never hold (e.g., impose a fixed order for resource requests).</td></tr>
+            <tr><td><strong>Avoidance</strong></td><td>The OS checks before allocating whether the allocation could lead to deadlock (e.g., Banker's algorithm).</td></tr>
+            <tr><td><strong>Detection</strong></td><td>The OS periodically checks for stuck processes and triggers recovery if a cycle is found.</td></tr>
+            <tr><td><strong>Recovery</strong></td><td>Break the cycle by aborting one or more processes, or by reallocating resources.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Synchronisation Tools</h3>
+    <table>
+        <thead><tr><th>Tool</th><th>How It Works</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Semaphores</strong></td><td>An integer variable incremented (signal) or decremented (wait) atomically. Binary (0 or 1) acts as a lock; counting (any non-negative value) manages multiple instances.</td></tr>
+            <tr><td><strong>Locks (Mutexes)</strong></td><td>Ensures only one process uses a shared resource at a time. Reader-writer locks allow many readers OR one writer.</td></tr>
+            <tr><td><strong>Monitors</strong></td><td>A container holding shared variables and the methods that operate on them. The monitor is automatically locked when a process uses its method.</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================= A1.3.6 ================= -->
+    <h2>6. Control System Components (A1.3.6 HL)</h2>
+    <p>A control system regulates or directs the behaviour of other devices. It follows an <strong>Input → Process → Output → Feedback</strong> cycle.</p>
+
+    <div class="diagram">
+        INPUT (Setpoint) ──▶ CONTROLLER (Compares & Decides) ──▶ PROCESS (The System) ──▶ OUTPUT (Actual Value)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▲&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└────────────── SENSOR (Feedback) ◀──────────────┘
+    </div>
+
+    <table>
+        <thead><tr><th>Component</th><th>Role</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Controller</strong></td><td>The "brain." Processes inputs, compares with the setpoint, and decides the action using the control algorithm.</td><td>Thermostat chip, elevator control computer.</td></tr>
+            <tr><td><strong>Sensors</strong></td><td>The "eyes and ears." Detect and measure physical quantities (temperature, pressure, light) and convert them into signals.</td><td>Temperature sensor, PIR motion sensor, soil-moisture probe.</td></tr>
+            <tr><td><strong>Actuators</strong></td><td>The "muscles." Carry out the controller's decision by physically changing something.</td><td>Motor, valve, heating element, relay.</td></tr>
+            <tr><td><strong>Transducers</strong></td><td>Energy converters. Convert one form of energy into another (e.g., physical → electrical) so the controller can read it.</td><td>Microphone (sound → electrical), pressure sensor.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Open-Loop vs. Closed-Loop</h3>
+    <table>
+        <thead><tr><th>Feature</th><th>Open-Loop</th><th>Closed-Loop</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Feedback?</strong></td><td>No—the controller never checks the result.</td><td>Yes—the output is measured and fed back.</td></tr>
+            <tr><td><strong>Accuracy</strong></td><td>Lower—errors go uncorrected.</td><td>Higher—the system self-corrects.</td></tr>
+            <tr><td><strong>Complexity</strong></td><td>Simple and cheap.</td><td>More complex (needs sensors and feedback logic).</td></tr>
+            <tr><td><strong>Example</strong></td><td>Simple toaster (runs for a fixed time).</td><td>Thermostat, cruise control, irrigation system.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>The Control Algorithm</h3>
+    <p>The set of rules the controller uses to determine the output based on input and feedback.</p>
+    <ul>
+        <li><strong>Proportional Control:</strong> Output is adjusted in direct proportion to the error. Simple but can leave a small steady-state error.</li>
+        <li><strong>PID Control:</strong> Proportional-Integral-Derivative. Considers past, present, and future errors to make precise adjustments. More complex but much more accurate.</li>
+    </ul>
+
+    <!-- ================= A1.3.7 ================= -->
+    <h2>7. Uses of Control Systems (A1.3.7 HL)</h2>
+    <p>For any real-world system, you should be able to identify the sensors, controller, actuators, and feedback loop.</p>
+
+    <table>
+        <thead><tr><th>System</th><th>Sensor(s)</th><th>Controller</th><th>Actuator(s)</th><th>Feedback</th><th>Type</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Home Thermostat</strong></td><td>Temperature sensor</td><td>Thermostat chip</td><td>Heater / AC</td><td>Re-reads room temperature</td><td>Closed-loop</td></tr>
+            <tr><td><strong>Automatic Elevator</strong></td><td>Position, floor, door sensors</td><td>Elevator control computer</td><td>Motor, door mechanism</td><td>Position and speed sensors</td><td>Closed-loop</td></tr>
+            <tr><td><strong>Autonomous Vehicle</strong></td><td>Cameras, LiDAR, radar, GPS</td><td>AI algorithms</td><td>Steering, throttle, brakes</td><td>Continuous re-scanning</td><td>Closed-loop</td></tr>
+            <tr><td><strong>Washing Machine</strong></td><td>Water-level, load-size sensors</td><td>Control chip</td><td>Water valve, drum motor, pump</td><td>Water-level sensor</td><td>Closed-loop</td></tr>
+            <tr><td><strong>Traffic Signals</strong></td><td>Induction loops, cameras, buttons</td><td>Traffic management computer</td><td>The lights themselves</td><td>Traffic volume data</td><td>Closed-loop</td></tr>
+            <tr><td><strong>Irrigation System</strong></td><td>Soil-moisture, weather sensors</td><td>Irrigation control unit</td><td>Water pumps, valves</td><td>Moisture readings</td><td>Closed-loop</td></tr>
+            <tr><td><strong>Home Security</strong></td><td>Door/window contacts, motion detectors</td><td>Security panel</td><td>Sirens, locks, notifications</td><td>Continuous state reporting</td><td>Closed-loop</td></tr>
+            <tr><td><strong>Automatic Doors</strong></td><td>Infrared motion detectors</td><td>Door controller</td><td>Door motor</td><td>Presence detection</td><td>Closed-loop</td></tr>
+            <tr><td><strong>Simple Toaster</strong></td><td>None (for control)</td><td>Timer mechanism</td><td>Heating element</td><td>None</td><td><strong>Open-loop</strong></td></tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
