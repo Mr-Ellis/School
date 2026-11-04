@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1.2.2 – How Binary Is Used to Store Data</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 { color: #0b2a4a; margin-top: 20px; margin-bottom: 10px; }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
+
+        /* Blooket starter */
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        /* Task styles */
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong { color: #1a6b33; }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        .extension-card {
+            background: #f1f6fc;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 0.8rem 0 0.5rem 0;
+            border-left: 4px solid #b21f1f;
+        }
+        .extension-card h4 {
+            color: #0b2a4a;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Interactive Tools */
+        .interactive-box {
+            background: #f1f6fc;
+            border: 1px solid #dce4ed;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .readout-row { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; }
+        .readout {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: #0b2a4a;
+            font-weight: bold;
+        }
+        .readout span {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: block;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .interactive-box input[type="range"] { width: 100%; margin: 10px 0; }
+        .interactive-box input[type="number"], .interactive-box select {
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: monospace;
+        }
+        .quiz-opt {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 8px 0;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+        .quiz-opt:hover { background: #f8fafc; border-color: #94a3b8; }
+        .quiz-opt.correct { background: #d1fae5; border-color: #059669; font-weight: bold; color: #065f46; }
+        .quiz-opt.wrong { background: #ffe4e6; border-color: #e11d48; font-weight: bold; color: #9f1239; }
+        .quiz-fb { display: none; margin-top: 10px; font-size: 0.9rem; color: #475569; }
+        .quiz-fb.show { display: block; }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A1 Unit</a>
+
+    <h1>A1.2.2 – How Binary Is Used to Store Data</h1>
+
+    <h2>📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to:</p>
+    <ul>
+        <li><strong>Explain</strong> how binary encoding is the foundation of all data storage, and how it impacts storage and retrieval</li>
+        <li>Explain the mechanisms used to store <strong>integers, characters, strings, images, audio, and video</strong> in binary form</li>
+        <li>Distinguish between <strong>storage format</strong> and <strong>interpretation</strong>—the same bits can mean different things under different encodings</li>
+        <li>Calculate the storage requirements for common data types (pixels, audio samples, frames)</li>
+    </ul>
+
+    <h2>🎯 IB Command Term: <span class="badge">Explain</span></h2>
+    <div class="command-term">
+        <strong>Explain</strong> – <em>“Give a detailed account including reasons or causes.”</em><br><br>
+        Describing that images are stored as pixels is not enough. This lesson builds the skill of <em>explaining why</em> a particular encoding is used, <em>how</em> it represents the data, and <em>what consequences</em> it has for storage size, quality, and retrieval.
+    </div>
+
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket Rush</span>
+        <span style="color:#3d5f7a;">Warm up your binary brain before we dive into data storage.</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/hack?id=68b03780ddff7a4868b8d259" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <!-- ===== KEY TERMS ===== -->
+    <h2>🔑 Key Terms</h2>
+    <table>
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Bit</strong></td><td>The smallest addressable unit of data—a single 0 or 1.</td></tr>
+            <tr><td><strong>Byte</strong></td><td>8 bits; the standard unit of storage. Can represent 256 distinct values.</td></tr>
+            <tr><td><strong>Encoding</strong></td><td>An agreed rule that maps a pattern of bits to a meaning (e.g., “01000001” ↔ ‘A’). Without encoding, bits are meaningless noise.</td></tr>
+            <tr><td><strong>Unsigned integer</strong></td><td>An integer that uses every bit for magnitude. An 8-bit unsigned integer holds 0 to 255.</td></tr>
+            <tr><td><strong>Two’s complement</strong></td><td>The signed integer scheme used by real hardware. The most significant bit has a negative place value.</td></tr>
+            <tr><td><strong>Binary-coded decimal (BCD)</strong></td><td>Stores each decimal digit separately in 4 bits. Used in financial systems to keep money amounts exact.</td></tr>
+            <tr><td><strong>Pixel</strong></td><td>A single dot in a digital image. Each pixel’s colour is stored as a binary value.</td></tr>
+            <tr><td><strong>Sampling rate</strong></td><td>How many audio samples are taken per second (Hz). CD audio uses 44,100 Hz.</td></tr>
+            <tr><td><strong>Bit depth</strong></td><td>The number of bits used per audio sample. CD audio uses 16 bits per sample.</td></tr>
+            <tr><td><strong>Frame</strong></td><td>A single still image in a video. Video is a sequence of frames played back rapidly.</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== FUNDAMENTALS ===== -->
+    <h2>📊 The Fundamentals of Binary Encoding</h2>
+    <p>Every datum in a computer—whether it looks to us like a number, a paragraph, a photograph, or a song—is ultimately just an ordered sequence of <strong>bits</strong> (0s and 1s)[reference:0]. A transistor has only two stable states (on/off), so binary is the natural language of hardware[reference:1].</p>
+
+    <p>The critical idea is that <strong>a file type is not a different kind of storage—it is a different agreed rule for reading the same 1s and 0s</strong>[reference:2]. That rule is called an <strong>encoding</strong>. Change the encoding, and the same bit pattern means something entirely different: a number, a letter, a colour, or a sound[reference:3].</p>
+
+    <table>
+        <thead><tr><th>Concept</th><th>What it means</th><th>Why it matters for storage &amp; retrieval</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Bit</strong></td><td>0 or 1.</td><td>Everything else is built from bits.</td></tr>
+            <tr><td><strong>Byte</strong></td><td>8 bits.</td><td>File sizes, memory addresses, and buses are byte-oriented[reference:4].</td></tr>
+            <tr><td><strong>Encoding rule</strong></td><td>Agreed mapping between bit patterns and abstractions.</td><td>Without the rule, the bits are meaningless noise[reference:5].</td></tr>
+            <tr><td><strong>Metadata</strong></td><td>Extra bits describing the payload (type, length, checksums).</td><td>Guarantees correct decoding and integrity on retrieval[reference:6].</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Impact on storage and retrieval</h3>
+    <ul>
+        <li><strong>Capacity:</strong> Higher-precision encoding (e.g., 24-bit colour vs 8-bit) multiplies the space required[reference:7].</li>
+        <li><strong>Throughput:</strong> Wider buses move more bits per clock, affecting how fast data can be retrieved[reference:8].</li>
+        <li><strong>Latency:</strong> Compressed encodings trade space efficiency for extra CPU time during decoding[reference:9].</li>
+        <li><strong>Compatibility:</strong> Interoperability depends on all parties agreeing on the same binary layout (endianness, character set, container format)[reference:10].</li>
+        <li><strong>Correct retrieval:</strong> If the encoding is known, binary data can be accurately reconstructed. If it is incorrect or unknown, data may be misinterpreted or corrupted[reference:11].</li>
+    </ul>
+
+    <!-- ===== INTEGERS ===== -->
+    <h2>🔢 Integers: Unsigned, Signed, and BCD</h2>
+
+    <h3>Unsigned integers</h3>
+    <p>Unsigned integers use every bit for magnitude. An 8-bit unsigned integer holds the values <strong>0 to 255</strong> (256 possible patterns, counting from 0)[reference:12].</p>
+    <p><strong>Example:</strong> <code>0011 0101₂ = 53₁₀</code>[reference:13].</p>
+
+    <h3>Signed integers: two’s complement</h3>
+    <p>Signed integers must give up one bit to record the sign. The scheme real processors use is <strong>two’s complement</strong>. The most significant bit carries a <em>negative</em> place value, while the remaining bits carry their normal positive values[reference:14].</p>
+    <ul>
+        <li>In 4 bits, the MSB is worth −8, so <code>1011 = −8 + 2 + 1 = −5</code>[reference:15].</li>
+        <li>4 bits cover −8 to +7; 8 bits cover −128 to +127[reference:16].</li>
+        <li>To negate a number: flip every bit, then add 1. (<code>13 = 00001101 → flip → 11110010 → +1 → 11110011 = −13</code>)[reference:17].</li>
+        <li>Two’s complement is used because the same adder circuit handles addition and subtraction with no extra gates[reference:18].</li>
+    </ul>
+
+    <h3>Sign and magnitude (for contrast)</h3>
+    <p>In sign and magnitude, the MSB is a flag (0 = positive, 1 = negative) and is <em>not</em> added to the total. The same pattern <code>1011</code> means <strong>−5</strong> in two’s complement but <strong>−3</strong> in sign and magnitude[reference:19]. Sign and magnitude produces two representations of zero (<code>0000</code> and <code>1000</code>) and needs separate circuits for addition and subtraction, which is why hardware does not use it[reference:20].</p>
+
+    <h3>Binary-coded decimal (BCD) and fixed point</h3>
+    <p>BCD stores each decimal digit separately in 4 bits. So <code>1001 0011</code> reads as <strong>9 then 3</strong>, giving <strong>93</strong>[reference:21]. Money amounts that cannot be written exactly in ordinary binary stay exact in BCD, which is why financial systems use it. The cost is wasted space: 4 bits can hold 16 values, but BCD uses only 10[reference:22].</p>
+    <p><strong>Fixed point</strong> places the binary point at an agreed position, so bits to the left are the integer part and bits to the right are the fractional part[reference:23].</p>
+
+    <!-- ===== CHARACTERS & STRINGS ===== -->
+    <h2>🔤 Characters and Strings</h2>
+    <p>Characters are stored as binary codes. Each character is assigned a unique binary value, allowing text to be stored and processed[reference:24]. A <strong>string</strong> is simply a sequence of characters, so it is stored as a sequence of binary codes[reference:25].</p>
+
+    <table>
+        <thead><tr><th>Encoding</th><th>What it provides</th><th>Storage layout notes</th></tr></thead>
+        <tbody>
+            <tr><td><strong>ASCII</strong></td><td>7-bit code for English letters and symbols. <code>'A' = 0x41 = 0100 0001₂</code>[reference:26].</td><td>Legacy text remains readable in UTF-8 because ASCII bytes stay unchanged[reference:27].</td></tr>
+            <tr><td><strong>Unicode (UTF-8)</strong></td><td>Assigns a code-point to every written symbol worldwide. UTF-8 encodes those points in <strong>1–4 bytes</strong>[reference:28].</td><td>Length-prefixed (<code>[len][data…]</code>) allows fast random access; null-terminated (<code>[data…][0]</code>) is C-style and requires re-scanning for length[reference:29].</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== IMAGES ===== -->
+    <h2>🖼️ Images</h2>
+    <p>A digital image is a grid of <strong>pixels</strong>. Each pixel’s colour or brightness is stored as a binary value[reference:30]. In a raw bitmap, a header records width, height, and bit-depth, followed by the pixel data[reference:31].</p>
+
+    <h3>RGB colour</h3>
+    <p>A common scheme uses <strong>24 bits per pixel</strong>: 8 bits red, 8 bits green, 8 bits blue[reference:32]. A 1920 × 1080 RGB image therefore needs:</p>
+    <p style="text-align:center; font-family:monospace; background:#f8fafc; padding:10px; border-radius:8px;">1920 × 1080 × 24 = 49,766,400 bits ≈ 5.94 MiB</p>
+
+    <h3>Quality vs size</h3>
+    <p>More pixels (higher resolution) increases detail. More bits per pixel increases colour accuracy. Both increase the storage required[reference:33]. Compressed formats (PNG, JPEG) convert blocks of pixels into frequency coefficients and entropy-code them, dramatically shrinking size at the cost of CPU time (and for JPEG, some quality)[reference:34].</p>
+
+    <!-- ===== AUDIO ===== -->
+    <h2>🎵 Audio</h2>
+    <p>Analogue sound is a continuous wave. To store it in binary, the waveform is <strong>sampled</strong> at regular intervals and each sample is <strong>quantised</strong> into a fixed-width binary integer. This is <strong>Pulse-Code Modulation (PCM)</strong>[reference:35].</p>
+
+    <table>
+        <thead><tr><th>Parameter</th><th>Meaning</th><th>CD audio value</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Sampling rate (fₛ)</strong></td><td>Samples taken per second. Determines temporal resolution[reference:36].</td><td>44,100 Hz</td></tr>
+            <tr><td><strong>Bit depth (b)</strong></td><td>Bits per sample. Determines quantisation resolution and signal-to-noise ratio[reference:37].</td><td>16 bits</td></tr>
+            <tr><td><strong>Channels (c)</strong></td><td>Independent audio streams (mono = 1, stereo = 2)[reference:38].</td><td>2</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Bits per second for CD audio</h3>
+    <p style="text-align:center; font-family:monospace; background:#f8fafc; padding:10px; border-radius:8px;">fₛ × b × c = 44,100 × 16 × 2 = 1,411,200 bit/s ≈ 176 KiB/s</p>
+    <p>Samples are stored interleaved (<code>L₀, R₀, L₁, R₁, …</code>) to maintain sample-accurate alignment[reference:39].</p>
+
+    <h3>Quality vs size</h3>
+    <p>More samples improve accuracy; more bits per sample improve precision. Higher quality requires more storage[reference:40]. Compressed codecs (MP3, AAC, Opus) transform blocks to frequency space and psycho-acoustically quantise, reaching <strong>90%+ savings</strong> by removing masked or inaudible components[reference:41][reference:42].</p>
+
+    <!-- ===== VIDEO ===== -->
+    <h2>🎬 Video</h2>
+    <p>A video file is a <strong>container</strong> plus one or more <strong>streams</strong>. The video stream is a sequence of <strong>frames</strong> (bitmaps), and audio is usually stored alongside[reference:43].</p>
+
+    <h3>Frame types and compression</h3>
+    <ul>
+        <li><strong>I-frames</strong> are self-contained (like a still image).</li>
+        <li><strong>P/B-frames</strong> store only the <em>differences</em> from other frames.</li>
+        <li>A <strong>codec</strong> (H.264, AV1) orchestrates block transforms, motion vectors, and entropy coding to compress the stream[reference:44].</li>
+    </ul>
+    <p>The binary stream is timestamped so the playback engine reconstructs each frame in order and at the correct rate (e.g., 30 fps ≈ one frame every 33 ms)[reference:45].</p>
+    <p><strong>Why video files are large:</strong> many frames must be stored, audio data is included, and higher quality increases requirements[reference:46].</p>
+
+    <!-- ===== WORKED EXAMPLES ===== -->
+    <h2>🧮 Worked Mini-Examples</h2>
+    <table>
+        <thead><tr><th>Data item</th><th>Binary view</th><th>Size implication</th></tr></thead>
+        <tbody>
+            <tr><td>Integer 300₁₀</td><td><code>0000 0001 0010 1100₂</code> (16-bit unsigned)</td><td>Needs 2 bytes; an 8-bit unsigned integer would overflow (max 255)[reference:47].</td></tr>
+            <tr><td>Word “Hi” (UTF-8)</td><td><code>0x48 0x69</code></td><td>2 bytes; UTF-16 would use 4 bytes[reference:48].</td></tr>
+            <tr><td>One pixel, RGBA (255, 128, 0, 255)</td><td><code>1111 1111 1000 0000 0000 0000 1111 1111₂</code></td><td>32 bits[reference:49].</td></tr>
+            <tr><td>0.01 s of CD audio</td><td>441 samples × 16 bits × 2 channels</td><td>≈ 17,600 bits[reference:50].</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== INTERACTIVE TOOLS ===== -->
+    <h2>🎛️ Interactive Tools</h2>
+    <p>Use these tools to explore how encoding choices affect storage size and quality.</p>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">Image Storage Calculator</h3>
+        <p style="margin-top:0; font-size:0.9rem; color:#64748b;">Adjust resolution and colour depth to see the uncompressed file size.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end;">
+            <div>
+                <label style="font-size:0.85rem; color:#64748b; display:block;">Width (px)</label>
+                <input type="number" id="imgW" value="1920" min="1" style="width:100px;">
+            </div>
+            <div>
+                <label style="font-size:0.85rem; color:#64748b; display:block;">Height (px)</label>
+                <input type="number" id="imgH" value="1080" min="1" style="width:100px;">
+            </div>
+            <div>
+                <label style="font-size:0.85rem; color:#64748b; display:block;">Colour depth</label>
+                <select id="imgDepth">
+                    <option value="1">1-bit (mono)</option>
+                    <option value="8">8-bit (indexed)</option>
+                    <option value="24" selected>24-bit (RGB)</option>
+                    <option value="32">32-bit (RGBA)</option>
+                </select>
+            </div>
+        </div>
+        <div class="readout-row">
+            <div class="readout"><span>Pixels</span><span id="imgPixels">2,073,600</span></div>
+            <div class="readout"><span>Bits</span><span id="imgBits">49,766,400</span></div>
+            <div class="readout"><span>Size (MiB)</span><span id="imgSize">5.94</span></div>
+        </div>
+    </div>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">Audio Storage Calculator</h3>
+        <p style="margin-top:0; font-size:0.9rem; color:#64748b;">Adjust duration, sample rate, bit depth, and channels.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end;">
+            <div>
+                <label style="font-size:0.85rem; color:#64748b; display:block;">Duration (s)</label>
+                <input type="number" id="audDur" value="60" min="1" style="width:90px;">
+            </div>
+            <div>
+                <label style="font-size:0.85rem; color:#64748b; display:block;">Sample rate (Hz)</label>
+                <select id="audRate">
+                    <option value="8000">8,000 (telephone)</option>
+                    <option value="22050">22,050</option>
+                    <option value="44100" selected>44,100 (CD)</option>
+                    <option value="48000">48,000</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-size:0.85rem; color:#64748b; display:block;">Bit depth</label>
+                <select id="audDepth">
+                    <option value="8">8-bit</option>
+                    <option value="16" selected>16-bit (CD)</option>
+                    <option value="24">24-bit</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-size:0.85rem; color:#64748b; display:block;">Channels</label>
+                <select id="audCh">
+                    <option value="1">Mono</option>
+                    <option value="2" selected>Stereo</option>
+                </select>
+            </div>
+        </div>
+        <div class="readout-row">
+            <div class="readout"><span>Bits per second</span><span id="audBps">1,411,200</span></div>
+            <div class="readout"><span>Total bits</span><span id="audTotal">84,672,000</span></div>
+            <div class="readout"><span>Size (MiB)</span><span id="audSize">10.10</span></div>
+        </div>
+    </div>
+
+    <!-- ===== TASKS ===== -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Learn</strong> — Use the resources below to build your understanding of how binary stores different data types.
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a1.2.2-explain-how-binary-is-used-to-store-data" target="_blank">🌐 CS Wiki (A1.2.2)</a></span>
+                    <span class="pill"><a href="https://www.revisiondojo.com/ib/ib-computer-science-new/ib-computer-science-new-a1-2-2-how-binary-is-used-to-store-data/notes" target="_blank">📝 RevisionDojo Notes</a></span>
+                    <span class="pill"><a href="https://www.computersciencecafe.com/a122-computer-fundamentals-ib.html" target="_blank">☕ CS Cafe (A1.2.2)</a></span>
+                    <span class="pill"><a href="https://github.com/Mr-Ellis/School/blob/main/docs/lessonplans/IB%20Computer%20Science/DP%20Computer%20Science_%20A%201.2.2.pdf" target="_blank">📄 Lesson Plan PDF</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85; display:block; margin-top:8px;">Focus on the <em>mechanisms</em>: how integers handle sign, how images use pixels and colour depth, how audio uses sampling and bit depth, and how video uses frames and compression. Note the impact on <strong>storage size</strong> and <strong>retrieval</strong>.</span>
+            </span>
+        </div>
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Starter Activity</strong> — Work through the <strong>Explain</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vS68jhzrdPHF4B-75hawPnzrwfKgw39aGuIEzax2mSlu3F9Rouwxe51u7Ah_61FJqIYNLfz1ZbPc3hw/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank">Lesson Starter PowerPoint</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your answers in a text file.<br>
+                <strong>📌 Important:</strong> Save your work as a <strong>.txt</strong> file using the sentence frame: <em>"Integers are stored using [unsigned / two’s complement / BCD], which [explain how the bits are interpreted]. Characters are stored using [ASCII/Unicode], which assigns [what] to each symbol. Images are stored as [pixels], where each pixel uses [how many] bits for colour. Audio is stored by [sampling and quantising], where [sampling rate] and [bit depth] determine quality and size. Video is stored as [frames], and compression works by [explain I/P/B frames or codecs]."</em>
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc">
+                <strong>Deliberate Practice</strong> — Write an <strong>Explain</strong> answer to this question:<br>
+                <em>"Explain how binary is used to store data, including the mechanisms for integers, characters, images, audio, and video, and the impact on storage and retrieval."</em><br><br>
+                <strong>Sentence frame:</strong><br>
+                <em>"All data is stored as ______ because ______. Integers use ______ for unsigned values, while signed integers use ______ so that ______. Characters are encoded using ______, which maps ______ to binary patterns. Images store each ______ as a binary value, and increasing ______ or ______ increases quality but also ______. Audio is captured by ______, with ______ and ______ controlling the trade-off between quality and file size. Video is a sequence of ______, and codecs reduce size by ______. Correct retrieval depends on ______, because ______."</em>
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">4</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/de/1069249925/a12-data-representation-and-computer-logic-flash-cards?funnelUUID=b40687c6-27ac-4a1c-ad75-7731cd27d374" target="_blank">Quizlet flashcards</a>, then try the quiz below.</span>
+        </div>
+    </div>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">Self-Marking Quiz</h3>
+        <div id="quizBody"></div>
+        <p id="quizScore" style="font-weight:bold; margin-top:15px; color:#0b2a4a;">Score: 0 / 6</p>
+    </div>
+
+    <!-- ===== EXTENSION ===== -->
+    <h2>⭐ Extension Activity</h2>
+    <div class="extension-card">
+        <h4>🔍 Why two’s complement?</h4>
+        <p>Explain why hardware uses two’s complement rather than sign and magnitude. Your answer should mention the adder circuit and the problem of two zeros.</p>
+    </div>
+    <div class="extension-card">
+        <h4>🔍 File size trade-offs</h4>
+        <p>Choose a song you know. Estimate its file size as uncompressed CD-quality PCM, then compare it to the actual MP3 or AAC file size. Explain the difference using the concepts of psychoacoustic modelling and masking.</p>
+    </div>
+    <div class="extension-card">
+        <h4>🔍 The same bits, different meanings</h4>
+        <p>The bit pattern <code>0100 0001</code> can be interpreted as the integer 65, the character ‘A’, or part of a pixel. Explain why the encoding rule is essential for retrieval, and what happens if the wrong encoding is used.</p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A1.2.1.html">← Previous: A1.2.1</a>
+        <a href="A1.2.3.html">Next: A1.2.3 →</a>
+    </div>
+
+    <div class="footer-meta">
+        A1.2.2 – How Binary Is Used to Store Data • IB Computer Science • Year 12
+    </div>
+</div>
+
+<script>
+// --- IMAGE CALCULATOR ---
+const imgW = document.getElementById('imgW');
+const imgH = document.getElementById('imgH');
+const imgDepth = document.getElementById('imgDepth');
+
+function updateImage() {
+    const w = parseInt(imgW.value) || 0;
+    const h = parseInt(imgH.value) || 0;
+    const d = parseInt(imgDepth.value);
+    const pixels = w * h;
+    const bits = pixels * d;
+    const mib = bits / (8 * 1024 * 1024);
+    document.getElementById('imgPixels').textContent = pixels.toLocaleString();
+    document.getElementById('imgBits').textContent = bits.toLocaleString();
+    document.getElementById('imgSize').textContent = mib.toFixed(2);
+}
+[imgW, imgH, imgDepth].forEach(el => el.addEventListener('input', updateImage));
+updateImage();
+
+// --- AUDIO CALCULATOR ---
+const audDur = document.getElementById('audDur');
+const audRate = document.getElementById('audRate');
+const audDepth = document.getElementById('audDepth');
+const audCh = document.getElementById('audCh');
+
+function updateAudio() {
+    const dur = parseFloat(audDur.value) || 0;
+    const rate = parseFloat(audRate.value);
+    const depth = parseFloat(audDepth.value);
+    const ch = parseFloat(audCh.value);
+    const bps = rate * depth * ch;
+    const total = bps * dur;
+    const mib = total / (8 * 1024 * 1024);
+    document.getElementById('audBps').textContent = bps.toLocaleString();
+    document.getElementById('audTotal').textContent = total.toLocaleString();
+    document.getElementById('audSize').textContent = mib.toFixed(2);
+}
+[audDur, audRate, audDepth, audCh].forEach(el => el.addEventListener('input', updateAudio));
+updateAudio();
+
+// --- QUIZ ---
+const QUIZ = [
+    {
+        q: "Why do computers use binary to store data?",
+        opts: ["Because binary is the only number system humans understand", "Because transistors have two stable states (on/off)", "Because binary files are always smaller than text files", "Because hexadecimal cannot be stored electronically"],
+        a: 1,
+        why: "Hardware is built from transistors with two stable electrical states. Two states map naturally onto two digits (0 and 1)."
+    },
+    {
+        q: "What is the range of an 8-bit unsigned integer?",
+        opts: ["−128 to +127", "0 to 255", "0 to 256", "−255 to +255"],
+        a: 1,
+        why: "Unsigned integers use every bit for magnitude. 8 bits give 256 patterns, from 0 to 255 (counting starts at 0)."
+    },
+    {
+        q: "In two’s complement, what does the bit pattern 1011 represent in denary (4-bit system)?",
+        opts: ["−3", "−5", "11", "−11"],
+        a: 1,
+        why: "The MSB is worth −8. 1011 = −8 + 2 + 1 = −5."
+    },
+    {
+        q: "Which statement best explains why BCD is used in financial systems?",
+        opts: ["BCD uses less storage than ordinary binary", "BCD keeps decimal money amounts exact, avoiding binary rounding issues", "BCD is faster for multiplication than two’s complement", "BCD can represent negative numbers without a sign bit"],
+        a: 1,
+        why: "Values like 0.10 cannot be written exactly in ordinary binary. BCD stores each decimal digit separately in 4 bits, so money amounts stay exact."
+    },
+    {
+        q: "A 1920 × 1080 image uses 24 bits per pixel. What is the uncompressed size?",
+        opts: ["≈ 2.97 MiB", "≈ 5.94 MiB", "≈ 11.88 MiB", "≈ 47.5 MiB"],
+        a: 1,
+        why: "1920 × 1080 × 24 = 49,766,400 bits. ÷ 8 = 6,220,800 bytes. ÷ 1024² ≈ 5.94 MiB."
+    },
+    {
+        q: "Two audio files use the same duration and bit depth, but one has a higher sampling rate. What is the effect?",
+        opts: ["The higher-rate file has better temporal accuracy but is larger", "The higher-rate file is smaller because it is more efficient", "Both files are identical in size and quality", "The higher-rate file has lower bit depth automatically"],
+        a: 0,
+        why: "A higher sampling rate captures more samples per second, improving temporal resolution. More samples mean more data, so the file is larger."
+    }
+];
+
+let score = 0;
+const qBody = document.getElementById('quizBody');
+
+function buildQuiz() {
+    score = 0;
+    document.getElementById('quizScore').textContent = 'Score: 0 / ' + QUIZ.length;
+    qBody.innerHTML = '';
+    QUIZ.forEach((item, qi) => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '20px';
+        div.innerHTML = `<p style="font-weight:bold; color:#0b2a4a; margin-bottom:5px;">${qi + 1}. ${item.q}</p>`;
+        const fb = document.createElement('div');
+        fb.className = 'quiz-fb';
+        item.opts.forEach((opt, oi) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-opt';
+            btn.textContent = opt;
+            btn.onclick = () => {
+                div.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+                const isRight = oi === item.a;
+                btn.classList.add(isRight ? 'correct' : 'wrong');
+                if (!isRight) {
+                    div.querySelectorAll('.quiz-opt')[item.a].classList.add('correct');
+                }
+                fb.textContent = (isRight ? '✅ Correct. ' : '❌ Not quite. ') + item.why;
+                fb.classList.add('show');
+                if (isRight) score++;
+                document.getElementById('quizScore').textContent = `Score: ${score} / ${QUIZ.length}`;
+            };
+            div.appendChild(btn);
+        });
+        div.appendChild(fb);
+        qBody.appendChild(div);
+    });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
