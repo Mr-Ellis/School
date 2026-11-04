@@ -312,52 +312,62 @@
             border-left-color: #b21f1f;
         }
 
-        /* Pattern visual */
-        .pattern-bars {
+        /* Vertical pattern visual */
+        .pattern-visual {
             background: #fff;
             border: 1px solid #dce4ed;
             border-radius: 10px;
-            padding: 16px 18px;
+            padding: 18px 14px;
             margin: 15px 0;
-        }
-        .pattern-row {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
+            justify-content: center;
         }
-        .pattern-row:last-child { margin-bottom: 0; }
-        .pattern-label {
+        .pattern-visual table {
+            border-collapse: collapse;
+            margin: 0;
+            width: auto;
+        }
+        .pattern-visual th {
+            background: #1a5f87;
+            color: #fff;
             font-family: monospace;
             font-weight: 700;
             font-size: 1rem;
-            color: #0b2a4a;
-            width: 24px;
+            padding: 8px 16px;
             text-align: center;
+            border: 1px solid #1a5f87;
+            vertical-align: top;
         }
-        .pattern-bar {
-            display: flex;
-            gap: 2px;
+        .pattern-visual th .th-note {
+            display: block;
+            font-family: Arial, sans-serif;
+            font-size: 0.65rem;
+            font-weight: 400;
+            font-style: italic;
+            opacity: 0.9;
+            margin-top: 4px;
+            letter-spacing: 0.2px;
+            text-transform: none;
         }
-        .bit {
+        .pattern-visual td {
+            padding: 4px 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+        }
+        .pattern-visual .v-bit {
             display: inline-block;
-            width: 28px;
-            height: 28px;
-            line-height: 28px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
             text-align: center;
             font-family: monospace;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             border-radius: 4px;
         }
-        .bit-0 { background: #e2e8f0; color: #475569; }
-        .bit-1 { background: #b21f1f; color: #fff; }
-        .pattern-note {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-left: auto;
-            font-style: italic;
-        }
+        .pattern-visual .v-0 { background: #e2e8f0; color: #475569; }
+        .pattern-visual .v-1 { background: #b21f1f; color: #fff; }
 
         /* Video box */
         .video-box {
@@ -470,8 +480,10 @@
             .blooket-box { flex-direction: column; align-items: flex-start; }
             .tt { font-size: 0.75rem; }
             .tt th, .tt td { padding: 6px 10px; }
-            .bit { width: 22px; height: 22px; line-height: 22px; font-size: 0.7rem; }
-            .pattern-note { font-size: 0.7rem; }
+            .pattern-visual th { padding: 6px 10px; font-size: 0.9rem; }
+            .pattern-visual th .th-note { font-size: 0.55rem; }
+            .pattern-visual .v-bit { width: 24px; height: 24px; line-height: 24px; font-size: 0.8rem; }
+            .pattern-visual td { padding: 3px 6px; }
         }
     </style>
 </head>
@@ -551,33 +563,31 @@
 
     <div class="plain-box">
         <div class="plain-title">A pattern to make the listing easy</div>
-        <p>For three inputs (A, B, C), write the columns so that <strong>each one flips at half the rate of the column to its right</strong>. The colours below show where each column changes value:</p>
+        <p>For three inputs, list the combinations so that each column changes <em>less often</em> than the column to its right. Read <strong>down</strong> each column — grey cells are 0s, red cells are 1s.</p>
 
-        <div class="pattern-bars">
-            <div class="pattern-row">
-                <span class="pattern-label">C</span>
-                <div class="pattern-bar">
-                    <span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span>
-                </div>
-                <span class="pattern-note">flips every row</span>
-            </div>
-            <div class="pattern-row">
-                <span class="pattern-label">B</span>
-                <div class="pattern-bar">
-                    <span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span><span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span>
-                </div>
-                <span class="pattern-note">flips every 2 rows</span>
-            </div>
-            <div class="pattern-row">
-                <span class="pattern-label">A</span>
-                <div class="pattern-bar">
-                    <span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-0">0</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span><span class="bit bit-1">1</span>
-                </div>
-                <span class="pattern-note">flips every 4 rows</span>
-            </div>
+        <div class="pattern-visual">
+            <table>
+                <thead>
+                    <tr>
+                        <th>A<span class="th-note">flips every 4 rows</span></th>
+                        <th>B<span class="th-note">flips every 2 rows</span></th>
+                        <th>C<span class="th-note">flips every row</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="v-bit v-0">0</span></td><td><span class="v-bit v-0">0</span></td><td><span class="v-bit v-0">0</span></td></tr>
+                    <tr><td><span class="v-bit v-0">0</span></td><td><span class="v-bit v-0">0</span></td><td><span class="v-bit v-1">1</span></td></tr>
+                    <tr><td><span class="v-bit v-0">0</span></td><td><span class="v-bit v-1">1</span></td><td><span class="v-bit v-0">0</span></td></tr>
+                    <tr><td><span class="v-bit v-0">0</span></td><td><span class="v-bit v-1">1</span></td><td><span class="v-bit v-1">1</span></td></tr>
+                    <tr><td><span class="v-bit v-1">1</span></td><td><span class="v-bit v-0">0</span></td><td><span class="v-bit v-0">0</span></td></tr>
+                    <tr><td><span class="v-bit v-1">1</span></td><td><span class="v-bit v-0">0</span></td><td><span class="v-bit v-1">1</span></td></tr>
+                    <tr><td><span class="v-bit v-1">1</span></td><td><span class="v-bit v-1">1</span></td><td><span class="v-bit v-0">0</span></td></tr>
+                    <tr><td><span class="v-bit v-1">1</span></td><td><span class="v-bit v-1">1</span></td><td><span class="v-bit v-1">1</span></td></tr>
+                </tbody>
+            </table>
         </div>
 
-        <p style="margin-top:12px;">Read across the three rows and you get every combination from 000 to 111, with no repeats.</p>
+        <p style="margin-top:12px;">Look down column A: four greys then four reds. Column B: two greys, two reds, two greys, two reds. Column C: grey, red, grey, red, all the way down. Reading <em>across</em> each row gives you a combination — 000, 001, 010, 011, 100, 101, 110, 111 — every possibility, no repeats.</p>
     </div>
 
     <!-- ===== WORKED EXAMPLE 1 ===== -->
