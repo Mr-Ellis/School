@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2.2.2 – Explain the Function of Servers (HL)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 24px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #0b2a4a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid #b21f1f;
+            padding-left: 15px;
+        }
+        h3 { color: #0b2a4a; margin-top: 20px; margin-bottom: 10px; }
+        .badge {
+            display: inline-block;
+            background: #b21f1f;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .command-term {
+            background: #ebf4ff;
+            border-left: 5px solid #0b2a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f7fafc; }
+        a {
+            color: #b21f1f;
+            text-decoration: none;
+            border-bottom: 1px dotted #b21f1f;
+        }
+        a:hover {
+            color: #0b2a4a;
+            border-bottom: 2px solid #0b2a4a;
+        }
+        hr {
+            border: 0;
+            border-top: 2px solid #e2e8f0;
+            margin: 30px 0;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lesson-nav a { border-bottom: none; font-weight: 500; }
+
+        /* Blooket starter */
+        .blooket-box {
+            background: #eef4fc;
+            border: 2px solid #b21f1f;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 10px 0 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 24px;
+        }
+        .blooket-box .blooket-btn {
+            background: #b21f1f;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            display: inline-block;
+        }
+        .blooket-box .blooket-btn a {
+            color: white;
+            border-bottom: none;
+        }
+        .blooket-box .blooket-btn a:hover { color: #fdbb2d; border-bottom: none; }
+
+        /* Task styles */
+        .task-block {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 6px 0;
+            margin: 12px 0;
+        }
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eef4;
+            gap: 12px;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-step {
+            font-weight: 700;
+            color: #0b2a4a;
+            background: #dce8f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .task-row .task-desc { flex: 1; }
+        .task-row .task-desc a { border-bottom: 1px dotted #b21f1f; }
+
+        .task-row.task-starter {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            margin: 4px 0;
+        }
+        .task-row.task-starter .task-desc strong { color: #1a6b33; }
+
+        .task-1-resources {
+            background: #f1f6fc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .task-1-resources .pill {
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #dce4ed;
+            font-size: 0.85rem;
+        }
+
+        .code-lab-link {
+            background: #1a5f87;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .code-lab-link a {
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+        .code-lab-link a:hover { border-bottom: 2px solid white; color: #fdbb2d; }
+
+        /* Plain-language explainer box */
+        .plain-box {
+            background: #e6f5e6;
+            border-left: 4px solid #2d7d46;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 15px 0;
+        }
+        .plain-box .plain-title {
+            font-weight: 700;
+            color: #1a6b33;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 6px;
+        }
+        .plain-box p { margin-bottom: 8px; }
+        .plain-box p:last-child { margin-bottom: 0; }
+
+        /* Server card grid */
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .server-card {
+            background: #f8fafc;
+            border: 1px solid #dce4ed;
+            border-radius: 12px;
+            padding: 16px 18px;
+        }
+        .server-card h4 {
+            color: #0b2a4a;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .server-card .server-tag {
+            display: inline-block;
+            background: #1a5f87;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 1px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .server-card p { font-size: 0.9rem; margin-bottom: 8px; }
+        .server-card .analogy {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-style: italic;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        /* Interactive match challenge */
+        .match-challenge {
+            background: #fff;
+            border: 2px dashed #1a5f87;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .match-challenge h4 {
+            color: #0b2a4a;
+            margin-bottom: 10px;
+        }
+        .match-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+        .match-row .match-label {
+            font-weight: 600;
+            color: #0b2a4a;
+            min-width: 160px;
+            font-size: 0.95rem;
+        }
+        .match-row select {
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-width: 180px;
+        }
+        .match-row .match-feedback {
+            font-size: 0.9rem;
+            font-weight: 600;
+            min-width: 40px;
+        }
+        .match-feedback.correct { color: #059669; }
+        .match-feedback.wrong { color: #e11d48; }
+        .match-btn {
+            background: #1a5f87;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .match-btn:hover { background: #134f75; }
+
+        /* NetworX embed */
+        .networx-embed {
+            background: #f1f6fc;
+            border: 2px solid #1a5f87;
+            border-radius: 14px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .networx-embed iframe {
+            width: 100%;
+            height: 650px;
+            border: 0;
+            display: block;
+            background: #fff;
+        }
+        .networx-embed .embed-note {
+            padding: 14px 20px;
+            background: #e4eefa;
+            font-size: 0.9rem;
+            color: #1f4b6e;
+            border-top: 1px solid #dce4ed;
+        }
+        .networx-embed .embed-note strong { color: #0b2a4a; }
+
+        /* Quiz */
+        .quiz-opt {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 8px 0;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+        .quiz-opt:hover { background: #f8fafc; border-color: #94a3b8; }
+        .quiz-opt.correct { background: #d1fae5; border-color: #059669; font-weight: bold; color: #065f46; }
+        .quiz-opt.wrong { background: #ffe4e6; border-color: #e11d48; font-weight: bold; color: #9f1239; }
+        .quiz-fb { display: none; margin-top: 10px; font-size: 0.9rem; color: #475569; }
+        .quiz-fb.show { display: block; }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            table { font-size: 0.85rem; }
+            .task-1-resources { flex-direction: column; align-items: flex-start; }
+            .blooket-box { flex-direction: column; align-items: flex-start; }
+            .server-grid { grid-template-columns: 1fr; }
+            .networx-embed iframe { height: 500px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a class="back-link" href="index.html">← Back to A2 Unit</a>
+
+    <h1>A2.2.2 – Explain the Function of Servers (HL)</h1>
+
+    <h2>📌 Learning Objective</h2>
+    <p>By the end of this lesson, you will be able to:</p>
+    <ul>
+        <li><strong>Explain</strong> the role of a server in a client-server network model</li>
+        <li><strong>Explain</strong> the specific function of six key server types: DNS, DHCP, File, Mail, Proxy, and Web</li>
+        <li>Distinguish between servers that perform similar-sounding tasks (e.g., DNS vs. DHCP)</li>
+        <li>Match a server type to a real-world scenario and justify the choice</li>
+    </ul>
+
+    <h2>🎯 IB Command Term: <span class="badge">Explain</span></h2>
+    <div class="command-term">
+        <strong>Explain</strong> – <em>“Give a detailed account including reasons or causes.”</em><br><br>
+        Naming a server is not explaining it. This lesson builds the skill of explaining <em>what problem the server solves</em>, <em>how it solves it</em>, and <em>why a network needs it</em>.
+    </div>
+
+    <div class="blooket-box">
+        <span style="font-weight:700; color:#0b2a4a;">🎮 Starter Activity – Blooket Rush</span>
+        <span style="color:#3d5f7a;">Warm up your network brain before we log in to the server room.</span>
+        <span class="blooket-btn"><a href="https://play.blooket.com/host/hack?id=68b03808da963af6c957198d" target="_blank">🚀 Launch Blooket</a></span>
+    </div>
+
+    <!-- ===== KEY TERMS ===== -->
+    <h2>🔑 Key Terms</h2>
+    <table>
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Server</strong></td><td>A computer or program that provides a service or resource to other computers (clients) across a network.</td></tr>
+            <tr><td><strong>Client</strong></td><td>A computer or program that requests a service or resource from a server.</td></tr>
+            <tr><td><strong>Client-Server Model</strong></td><td>A network architecture where one central server (or a cluster of servers) provides resources to multiple client devices.</td></tr>
+            <tr><td><strong>Protocol</strong></td><td>An agreed set of rules for communication between devices (e.g., HTTP, SMTP, DNS).</td></tr>
+            <tr><td><strong>IP Address</strong></td><td>A unique numerical address assigned to a device on a network.</td></tr>
+            <tr><td><strong>Domain Name</strong></td><td>A human-readable name for a website (e.g., google.com) that must be translated into an IP address.</td></tr>
+            <tr><td><strong>Cache</strong></td><td>A temporary storage area that keeps frequently accessed data close at hand to speed up future requests.</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== THE BIG IDEA ===== -->
+    <h2>💡 The Big Idea: Servers Solve Problems</h2>
+    <p>A server is not just a "powerful computer." It is a solution to a specific problem. If you can explain <strong>what problem the server solves</strong>, you can explain the server.</p>
+
+    <p>In the <strong>client-server model</strong>, servers have a one-to-many relationship with clients: a single server can provide resources to many clients at once [citation:7]. The server listens for requests, processes them, and sends back a response.</p>
+
+    <div class="plain-box">
+        <div class="plain-title">The one rule you must never break</div>
+        <p>A server is defined by its <strong>software</strong>, not its hardware. A regular desktop computer can become a file server simply by installing file-sharing software [citation:7]. What makes it a "file server" is the service it provides, not the size of the box.</p>
+    </div>
+
+    <!-- ===== THE SIX KEY SERVERS ===== -->
+    <h2>🔌 The Six Key Servers (HL)</h2>
+    <p>The IB syllabus requires you to know these six server types. For each one, you must explain <strong>what it does</strong> and <strong>why it is needed</strong>.</p>
+
+    <div class="server-grid">
+
+        <div class="server-card">
+            <span class="server-tag">DNS</span>
+            <h4>DNS Server</h4>
+            <p><strong>Function:</strong> Converts a human-readable domain name (like <code>google.com</code>) into the numerical IP address that computers use to find each other [citation:9].</p>
+            <p><strong>Why it is needed:</strong> Humans are good at remembering names, but computers need numbers. DNS is the translator that bridges the gap.</p>
+            <div class="analogy">Analogy: A phone book. You know the name, DNS gives you the number.</div>
+        </div>
+
+        <div class="server-card">
+            <span class="server-tag">DHCP</span>
+            <h4>DHCP Server</h4>
+            <p><strong>Function:</strong> Automatically assigns network settings to a device when it joins a network: an IP address, subnet mask, default gateway, and DNS server address [citation:9].</p>
+            <p><strong>Why it is needed:</strong> Manually configuring every device on a network would be impossible. DHCP handles it automatically, usually for a lease period.</p>
+            <div class="analogy">Analogy: A hotel receptionist. When you arrive, they give you a room key (IP address) for your stay.</div>
+        </div>
+
+        <div class="server-card">
+            <span class="server-tag">File</span>
+            <h4>File Server</h4>
+            <p><strong>Function:</strong> Centrally stores and manages shared files. It controls access permissions and handles backups for authorized users [citation:9].</p>
+            <p><strong>Why it is needed:</strong> Instead of everyone having their own copy of a file, the file lives in one place. This prevents version confusion and makes backups simple.</p>
+            <div class="analogy">Analogy: A shared filing cabinet in an office. Everyone can access the files they are allowed to see.</div>
+        </div>
+
+        <div class="server-card">
+            <span class="server-tag">Mail</span>
+            <h4>Mail Server</h4>
+            <p><strong>Function:</strong> Sends, receives, stores, and forwards email. It uses <strong>SMTP</strong> to send or relay messages, and <strong>IMAP</strong> or <strong>POP3</strong> to retrieve them [citation:9].</p>
+            <p><strong>Why it is needed:</strong> Email needs a central hub. Your mail server holds your inbox until you log in, and handles delivery to other mail servers across the internet.</p>
+            <div class="analogy">Analogy: A post office. It receives your letters, sorts them, and delivers them to the right address.</div>
+        </div>
+
+        <div class="server-card">
+            <span class="server-tag">Proxy</span>
+            <h4>Proxy Server</h4>
+            <p><strong>Function:</strong> Acts as an intermediary between clients and external servers. It can filter requests, restrict access, cache resources, log activity, and hide internal client IP addresses [citation:9].</p>
+            <p><strong>Why it is needed:</strong> It provides security and control. A school can use a proxy to block inappropriate websites, or a company can use one to monitor traffic.</p>
+            <div class="analogy">Analogy: A receptionist who screens your calls. They decide what gets through and what does not.</div>
+        </div>
+
+        <div class="server-card">
+            <span class="server-tag">Web</span>
+            <h4>Web Server</h4>
+            <p><strong>Function:</strong> Responds to HTTP or HTTPS requests from browsers by sending or generating resources such as HTML, CSS, JavaScript, and images [citation:9].</p>
+            <p><strong>Why it is needed:</strong> Every website you visit lives on a web server. The browser sends a request, and the web server sends back the page.</p>
+            <div class="analogy">Analogy: A library desk. You ask for a book (page), and the librarian (web server) fetches it for you.</div>
+        </div>
+
+    </div>
+
+    <!-- ===== THE CRITICAL DISTINCTION ===== -->
+    <h2>⚠️ The Most Common Mistake: DNS vs. DHCP</h2>
+    <p>These two servers are often confused because they both deal with IP addresses. They do completely different jobs.</p>
+
+    <table>
+        <thead><tr><th>Server</th><th>What It Does</th><th>When It Acts</th></tr></thead>
+        <tbody>
+            <tr><td><strong>DHCP</strong></td><td><strong>Gives</strong> a device its IP address and network settings.</td><td>When the device first joins the network (like when you connect to Wi-Fi).</td></tr>
+            <tr><td><strong>DNS</strong></td><td><strong>Translates</strong> a domain name into an IP address.</td><td>Every time you type a web address or click a link.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="plain-box">
+        <div class="plain-title">Remember it this way</div>
+        <p><strong>DHCP gives you your address.</strong> It is how your device gets an identity on the network.<br>
+        <strong>DNS tells you someone else's address.</strong> It is how your device finds the server it wants to talk to.</p>
+    </div>
+
+    <!-- ===== INTERACTIVE MATCH CHALLENGE ===== -->
+    <h2>🎯 Interactive Challenge: Match the Server to the Scenario</h2>
+    <p>Read each scenario and select the server that would handle it. Click "Check Answers" to see how you did.</p>
+
+    <div class="match-challenge">
+        <h4>Server Match</h4>
+
+        <div class="match-row">
+            <span class="match-label">You type "bbc.co.uk" into your browser.</span>
+            <select class="match-select" data-answer="dns">
+                <option value="" disabled selected>Choose...</option>
+                <option value="dns">DNS Server</option>
+                <option value="dhcp">DHCP Server</option>
+                <option value="file">File Server</option>
+                <option value="mail">Mail Server</option>
+                <option value="proxy">Proxy Server</option>
+                <option value="web">Web Server</option>
+            </select>
+            <span class="match-feedback"></span>
+        </div>
+
+        <div class="match-row">
+            <span class="match-label">Your laptop connects to school Wi-Fi and gets an IP address.</span>
+            <select class="match-select" data-answer="dhcp">
+                <option value="" disabled selected>Choose...</option>
+                <option value="dns">DNS Server</option>
+                <option value="dhcp">DHCP Server</option>
+                <option value="file">File Server</option>
+                <option value="mail">Mail Server</option>
+                <option value="proxy">Proxy Server</option>
+                <option value="web">Web Server</option>
+            </select>
+            <span class="match-feedback"></span>
+        </div>
+
+        <div class="match-row">
+            <span class="match-label">You save a report to a shared drive that your team can access.</span>
+            <select class="match-select" data-answer="file">
+                <option value="" disabled selected>Choose...</option>
+                <option value="dns">DNS Server</option>
+                <option value="dhcp">DHCP Server</option>
+                <option value="file">File Server</option>
+                <option value="mail">Mail Server</option>
+                <option value="proxy">Proxy Server</option>
+                <option value="web">Web Server</option>
+            </select>
+            <span class="match-feedback"></span>
+        </div>
+
+        <div class="match-row">
+            <span class="match-label">You send an email to a colleague.</span>
+            <select class="match-select" data-answer="mail">
+                <option value="" disabled selected>Choose...</option>
+                <option value="dns">DNS Server</option>
+                <option value="dhcp">DHCP Server</option>
+                <option value="file">File Server</option>
+                <option value="mail">Mail Server</option>
+                <option value="proxy">Proxy Server</option>
+                <option value="web">Web Server</option>
+            </select>
+            <span class="match-feedback"></span>
+        </div>
+
+        <div class="match-row">
+            <span class="match-label">A school blocks access to social media during lessons.</span>
+            <select class="match-select" data-answer="proxy">
+                <option value="" disabled selected>Choose...</option>
+                <option value="dns">DNS Server</option>
+                <option value="dhcp">DHCP Server</option>
+                <option value="file">File Server</option>
+                <option value="mail">Mail Server</option>
+                <option value="proxy">Proxy Server</option>
+                <option value="web">Web Server</option>
+            </select>
+            <span class="match-feedback"></span>
+        </div>
+
+        <div class="match-row">
+            <span class="match-label">You open a webpage and the HTML and images load.</span>
+            <select class="match-select" data-answer="web">
+                <option value="" disabled selected>Choose...</option>
+                <option value="dns">DNS Server</option>
+                <option value="dhcp">DHCP Server</option>
+                <option value="file">File Server</option>
+                <option value="mail">Mail Server</option>
+                <option value="proxy">Proxy Server</option>
+                <option value="web">Web Server</option>
+            </select>
+            <span class="match-feedback"></span>
+        </div>
+
+        <button class="match-btn" onclick="checkMatch()">Check Answers</button>
+        <p id="matchScore" style="font-weight:bold; margin-top:10px; color:#0b2a4a;"></p>
+    </div>
+
+    <!-- ===== NETWORX SIMULATOR ===== -->
+    <h2>🔬 Build and Test a Client-Server Network</h2>
+    <p>NetworX is a drag-and-drop network simulator. Use it to build a simple client-server network: one server in the centre, connected to multiple client PCs. Then try connecting a second server and observe how the traffic changes.</p>
+
+    <div class="networx-embed">
+        <iframe src="https://milesberry.net/networx/" title="NetworX network simulator" allowfullscreen></iframe>
+        <div class="embed-note">
+            <strong>🎮 Task:</strong> Build a network with <strong>one server</strong> and <strong>four client PCs</strong> connected to a central switch. Then answer: what happens if the server goes offline? What happens if the switch goes offline? Which failure is worse, and why?
+        </div>
+    </div>
+
+    <p style="font-size:0.85rem; color:#64748b;">If the simulator does not appear above, <a href="https://milesberry.net/networx/" target="_blank">open NetworX in a new tab</a>.</p>
+
+    <!-- ===== TASKS ===== -->
+    <h2>📖 Your Tasks</h2>
+    <div class="task-block">
+        <div class="task-row">
+            <span class="task-step">1</span>
+            <span class="task-desc">
+                <strong>Read &amp; Learn</strong> — Use the resources below to build your understanding of network servers.
+                <div class="task-1-resources">
+                    <span class="pill"><a href="https://mr-ellis.github.io/School/ebooks/DP%20Computer%20Science_%20A%202.2.2.pdf" target="_blank">📖 eBook (A2.2.2)</a></span>
+                    <span class="pill"><a href="https://faq.computersciencewiki.org/index.php/home/article/a2.2.2-describe-the-function-of-servers-hl-only" target="_blank">🌐 CS Wiki (A2.2.2)</a></span>
+                    <span class="pill"><a href="https://docs.google.com/presentation/d/e/2PACX-1vQ9phNXE3eq4y29PwxXh3lepi0ky9H1AYHf5tyvXMiPtga9wYEI6hoZWwYOby-VbtGMJDTnBCwVBRjD/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">📊 Lesson Slides</a></span>
+                </div>
+                <span style="font-size:0.9rem; color:#4a6a85; display:block; margin-top:8px;">Focus on the <em>problem each server solves</em>. For each server, ask: what would break if this server did not exist?</span>
+            </span>
+        </div>
+        <div class="task-row task-starter">
+            <span class="task-step">2</span>
+            <span class="task-desc">
+                <strong>Complete the Starter Activity</strong> — Work through the <strong>Explain</strong> questions from the <a href="https://docs.google.com/presentation/d/e/2PACX-1vQ9phNXE3eq4y29PwxXh3lepi0ky9H1AYHf5tyvXMiPtga9wYEI6hoZWwYOby-VbtGMJDTnBCwVBRjD/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank">Lesson Slides</a>.<br>
+                Use <span class="code-lab-link"><a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank">🐍 Python Code Lab</a></span> to write your answers in a text file.
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">3</span>
+            <span class="task-desc">
+                <strong>Deliberate Practice</strong> — Write an <strong>Explain</strong> answer to this question:<br>
+                <em>“Explain the function of DNS and DHCP servers, and why both are necessary for a device to connect to a network and browse the web.”</em><br><br>
+                Your answer should clearly distinguish between what each server does and when it acts.
+            </span>
+        </div>
+        <div class="task-row">
+            <span class="task-step">4</span>
+            <span class="task-desc"><strong>Plenary</strong> — Test yourself with the <a href="https://quizlet.com/pt/1009603094/a-222-describe-the-function-of-servers-hl-only-flash-cards/?i=f0i3o&x=1jqt" target="_blank">Quizlet flashcards</a>, then try the quiz below.</span>
+        </div>
+    </div>
+
+    <div class="interactive-box">
+        <h3 style="margin-top:0;">Self-Marking Quiz</h3>
+        <div id="quizBody"></div>
+        <p id="quizScore" style="font-weight:bold; margin-top:15px; color:#0b2a4a;">Score: 0 / 6</p>
+    </div>
+
+    <hr>
+
+    <div class="lesson-nav">
+        <a href="A2.2.1.html">← Previous: A2.2.1</a>
+        <a href="A2.2.3.html">Next: A2.2.3 →</a>
+    </div>
+
+    <div class="footer-meta">
+        A2.2.2 – Explain the Function of Servers (HL) • IB Computer Science • Year 12
+    </div>
+</div>
+
+<script>
+// --- MATCH CHALLENGE ---
+function checkMatch() {
+    const rows = document.querySelectorAll('.match-row');
+    let score = 0;
+    let total = rows.length;
+
+    rows.forEach(row => {
+        const select = row.querySelector('.match-select');
+        const feedback = row.querySelector('.match-feedback');
+        const answer = select.getAttribute('data-answer');
+        const choice = select.value;
+
+        if (choice === answer) {
+            score++;
+            feedback.textContent = '✅';
+            feedback.className = 'match-feedback correct';
+        } else if (choice === '') {
+            feedback.textContent = '—';
+            feedback.className = 'match-feedback';
+        } else {
+            feedback.textContent = '❌';
+            feedback.className = 'match-feedback wrong';
+        }
+    });
+
+    document.getElementById('matchScore').textContent = `You scored ${score} / ${total}.`;
+}
+
+// --- QUIZ ---
+const QUIZ = [
+    {
+        q: "What does a DNS server do?",
+        opts: ["It assigns IP addresses to new devices", "It translates domain names into IP addresses", "It stores shared files for a team", "It filters inappropriate web content"],
+        a: 1,
+        why: "DNS (Domain Name System) converts a human-readable name like google.com into the numerical IP address that computers use to locate the server."
+    },
+    {
+        q: "What does a DHCP server do?",
+        opts: ["It translates domain names into IP addresses", "It automatically assigns IP addresses and network settings to devices", "It hosts websites", "It sends and receives email"],
+        a: 1,
+        why: "DHCP (Dynamic Host Configuration Protocol) automatically configures a device with an IP address, subnet mask, gateway, and DNS server when it joins the network."
+    },
+    {
+        q: "What is the primary function of a proxy server?",
+        opts: ["To store files centrally", "To act as an intermediary that can filter and cache requests", "To translate domain names", "To send email"],
+        a: 1,
+        why: "A proxy server sits between clients and external servers. It can filter requests (blocking certain sites), cache resources, log activity, and hide client IP addresses."
+    },
+    {
+        q: "Which server would you use to retrieve your email?",
+        opts: ["Web server", "File server", "Mail server", "DHCP server"],
+        a: 2,
+        why: "A mail server handles sending (via SMTP) and retrieving (via IMAP or POP3) email messages."
+    },
+    {
+        q: "What is a common misconception about DNS servers?",
+        opts: ["They translate domain names", "They give a device its IP address", "They cache results", "They are part of the client-server model"],
+        a: 1,
+        why: "A common misconception is that DNS gives a device its IP address. In reality, DHCP assigns network settings to a device. DNS resolves names to addresses for other servers."
+    },
+    {
+        q: "Which server responds to HTTP and HTTPS requests by sending HTML, CSS, and images?",
+        opts: ["File server", "Web server", "Proxy server", "DNS server"],
+        a: 1,
+        why: "A web server is specifically designed to respond to HTTP/HTTPS requests from browsers, delivering the resources that make up a web page."
+    }
+];
+
+let score = 0;
+const qBody = document.getElementById('quizBody');
+
+function buildQuiz() {
+    score = 0;
+    document.getElementById('quizScore').textContent = 'Score: 0 / ' + QUIZ.length;
+    qBody.innerHTML = '';
+    QUIZ.forEach((item, qi) => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '20px';
+        div.innerHTML = `<p style="font-weight:bold; color:#0b2a4a; margin-bottom:5px;">${qi + 1}. ${item.q}</p>`;
+        const fb = document.createElement('div');
+        fb.className = 'quiz-fb';
+        item.opts.forEach((opt, oi) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-opt';
+            btn.textContent = opt;
+            btn.onclick = () => {
+                div.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+                const isRight = oi === item.a;
+                btn.classList.add(isRight ? 'correct' : 'wrong');
+                if (!isRight) {
+                    div.querySelectorAll('.quiz-opt')[item.a].classList.add('correct');
+                }
+                fb.textContent = (isRight ? '✅ Correct. ' : '❌ Not quite. ') + item.why;
+                fb.classList.add('show');
+                if (isRight) score++;
+                document.getElementById('quizScore').textContent = `Score: ${score} / ${QUIZ.length}`;
+            };
+            div.appendChild(btn);
+        });
+        div.appendChild(fb);
+        qBody.appendChild(div);
+    });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
