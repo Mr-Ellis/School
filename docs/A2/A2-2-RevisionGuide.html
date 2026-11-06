@@ -1,1 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2.2 Revision Guide – Network Architecture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f4fb;
+            color: #1e293b;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+        h1 {
+            font-size: 2.4rem;
+            color: #0b2a4a;
+            border-bottom: 4px solid #fdbb2d;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 1.6rem;
+            color: #0b2a4a;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 5px solid #b21f1f;
+        }
+        h3 {
+            color: #1a5f87;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        p { margin-bottom: 15px; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        li { margin-bottom: 8px; }
+        
+        .key-term {
+            background: #ebf4ff;
+            border-left: 4px solid #1a5f87;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        .key-term strong { color: #0b2a4a; }
+        
+        .exam-tip {
+            background: #fff7f7;
+            border-left: 4px solid #b21f1f;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        .exam-tip strong { color: #b21f1f; }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background: #0b2a4a;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background: #f8fafc; }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.3rem; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a href="../index.html" class="back-link">← Back to A2 Unit</a>
+
+    <h1>A2.2 Revision Guide: Network Architecture</h1>
+
+    <p>This revision guide covers the physical and logical structures of networks: the topologies that connect devices, the servers that provide services, the models that define how devices interact, and the segmentation techniques that keep networks secure and efficient.</p>
+
+    <!-- ================= A2.2.1 ================= -->
+    <h2>1. Network Topologies (A2.2.1)</h2>
+    <p>A topology is the pattern in which nodes are interconnected. It determines how fast frames move, how faults propagate, how many devices you can add, and how much it costs.</p>
+
+    <table>
+        <thead><tr><th>Factor</th><th>Star</th><th>Mesh</th><th>Hybrid</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Structure</strong></td><td>All devices connect to a single central switch/AP.</td><td>Nodes have multiple redundant paths to each other.</td><td>Stars at the edge, mesh in the backbone.</td></tr>
+            <tr><td><strong>Reliability</strong></td><td>Single point of failure at the hub.</td><td>Highest fault tolerance; no central point of failure.</td><td>Fault-tolerant core; acceptable edge risk.</td></tr>
+            <tr><td><strong>Transmission speed</strong></td><td>Sized per edge port (1 G / 2.5 G / 10 G).</td><td>Parallel links boost aggregate bandwidth.</td><td>Core can be 40 G / 100 G while edges stay modest.</td></tr>
+            <tr><td><strong>Scalability</strong></td><td>Add ports or stack another switch.</td><td>Grows quickly in cables and ports; full mesh impractical beyond small n.</td><td>Scales by adding leaves to the spine.</td></tr>
+            <tr><td><strong>Data collisions</strong></td><td>None on switched links.</td><td>None on wired; possible radio contention in wireless mesh.</td><td>Same as constituent layers.</td></tr>
+            <tr><td><strong>Cost</strong></td><td>Lowest.</td><td>Highest.</td><td>Moderate—spend where it matters.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="key-term">
+        <strong>Practical Applications:</strong><br>
+        • <strong>Star:</strong> Homes, classrooms, small offices.<br>
+        • <strong>Mesh:</strong> Campus cores, municipal wireless, data-centre fabrics.<br>
+        • <strong>Hybrid:</strong> Government campuses, enterprise data centres.
+    </div>
+
+    <!-- ================= A2.2.2 ================= -->
+    <h2>2. Network Servers (A2.2.2 HL)</h2>
+    <p>A server provides a service or resource to clients. It is defined by its software, not its hardware.</p>
+
+    <table>
+        <thead><tr><th>Server Type</th><th>Function</th><th>Why It Is Needed</th></tr></thead>
+        <tbody>
+            <tr><td><strong>DNS</strong></td><td>Translates domain names (e.g., google.com) into IP addresses.</td><td>Computers need numbers, not names.</td></tr>
+            <tr><td><strong>DHCP</strong></td><td>Automatically assigns IP addresses and network settings to devices.</td><td>Manual configuration of every device is impossible.</td></tr>
+            <tr><td><strong>File</strong></td><td>Centrally stores and manages shared files.</td><td>Prevents version confusion; simplifies backups.</td></tr>
+            <tr><td><strong>Mail</strong></td><td>Sends, receives, and stores email (SMTP, IMAP, POP3).</td><td>Email needs a central hub for storage and delivery.</td></tr>
+            <tr><td><strong>Proxy</strong></td><td>Acts as an intermediary, filtering and caching requests.</td><td>Provides security, control, and anonymity.</td></tr>
+            <tr><td><strong>Web</strong></td><td>Responds to HTTP/HTTPS requests with HTML, CSS, and images.</td><td>Every website lives on a web server.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="exam-tip">
+        <strong>⚠️ DNS vs. DHCP:</strong> DHCP <em>gives</em> a device its IP address (when it joins the network). DNS <em>translates</em> a domain name into an IP address (when you browse the web).
+    </div>
+
+    <!-- ================= A2.2.3 ================= -->
+    <h2>3. Networking Models (A2.2.3)</h2>
+    <p>The two fundamental models differ in where the data lives and who has control.</p>
+
+    <table>
+        <thead><tr><th>Dimension</th><th>Client-Server</th><th>Peer-to-Peer (P2P)</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Topology</strong></td><td>Star / tiered hierarchy</td><td>Mesh (full or partial)</td></tr>
+            <tr><td><strong>Control</strong></td><td>Central authority owns data and enforces policy.</td><td>No single point of control; rules enforced collectively.</td></tr>
+            <tr><td><strong>Scalability</strong></td><td>Vertical or horizontal scaling.</td><td>Increases organically as peers join, but discovery may bottleneck.</td></tr>
+            <tr><td><strong>Reliability</strong></td><td>High if servers are redundant; single server is SPOF.</td><td>High fault-tolerance; but depends on peers staying online.</td></tr>
+            <tr><td><strong>Security</strong></td><td>Easier to harden—central point for auth and patching.</td><td>Harder—no perimeter; trust via crypto or reputation.</td></tr>
+            <tr><td><strong>Typical Use Cases</strong></td><td>Web, email, online banking, most SaaS.</td><td>File sharing, blockchain, some VoIP/gaming.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="key-term">
+        <strong>Hybrid Architectures:</strong> Modern systems blend the models. Skype uses client-server relays for reliability but P2P signalling for discovery. Content-Delivery Networks keep masters on servers but push objects to edge peers.
+    </div>
+
+    <!-- ================= A2.2.4 ================= -->
+    <h2>4. Network Segmentation (A2.2.4)</h2>
+    <p>Segmentation splits a large network into smaller, isolated sub-networks. This limits the spread of attacks and reduces broadcast traffic.</p>
+
+    <div class="key-term">
+        <strong>Key Concepts:</strong><br>
+        • <strong>VLAN:</strong> A logical grouping of devices regardless of physical location.<br>
+        • <strong>DMZ:</strong> A buffer zone between a trusted network and the internet.<br>
+        • <strong>Broadcast Domain:</strong> The area of a network where all devices receive broadcast traffic. Segmentation reduces its size.
+    </div>
+
+    <div class="exam-tip">
+        <strong>⚠️ Why Segment?</strong> If a virus infects one VLAN, it cannot spread to other VLANs. Segmentation also improves performance by reducing the amount of broadcast traffic that devices must process.
+    </div>
+
+</div>
+
+</body>
+</html>
