@@ -558,7 +558,7 @@
         .worksheet-box h3 { color: #8a6d2b; display: flex; align-items: center; gap: 10px; }
         .worksheet-box h3 i { color: #e6a800; }
 
-        /* --- NEW RESOURCE BOXES (matching image style) --- */
+        /* --- RESOURCE BOXES --- */
         .resource-card {
             background: white;
             border-radius: 24px;
@@ -596,14 +596,68 @@
             font-size: 0.95rem;
             text-decoration: none;
             transition: 0.2s;
+            cursor: pointer;
         }
         .btn-resource:hover {
             background: #eef6fc;
             border-color: #2a6f97;
         }
         .btn-resource i { color: #2a6f97; font-size: 1.1rem; }
-        .btn-resource .ppt-icon { color: #d24726; } /* PowerPoint red */
-        .btn-resource .lock-icon-small { color: #e6a800; } /* Lock yellow */
+        .btn-resource .ppt-icon { color: #d24726; }
+        .btn-resource .lock-icon-small { color: #e6a800; }
+
+        /* Password Modal */
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .password-modal.active { display: flex; }
+        .password-box {
+            background: white;
+            border-radius: 40px;
+            padding: 2.5rem 2.8rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+        .password-box input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #d4e0ec;
+            border-radius: 60px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+        .password-box input:focus { border-color: #1f6390; }
+        .password-box .btn {
+            background: #1f6390;
+            color: white;
+            border: none;
+            padding: 0.6rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .password-box .btn:hover { background: #134f75; }
+        .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+        .modal-type-badge {
+            display: inline-block;
+            background: #0b2a4a;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-bottom: 0.8rem;
+        }
 
         .divider { margin: 2rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
@@ -616,9 +670,9 @@
             .match-grid { grid-template-columns: 1fr; }
             .blooket-checkpoint { flex-direction: column; align-items: stretch; text-align: center; }
             .blooket-checkpoint .cp-text { justify-content: center; }
+            .password-box { padding: 1.8rem; }
         }
 
-        /* Trace table styling */
         .trace-table {
             width: 100%;
             border-collapse: collapse;
@@ -647,6 +701,18 @@
 <body>
 
     <div class="container">
+
+        <!-- Password Modal -->
+        <div id="passwordModal" class="password-modal">
+          <div class="password-box">
+            <div class="modal-type-badge">🔒 Teacher Resource</div>
+            <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
+            <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter the teacher password to access this lesson plan.</p>
+            <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+            <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+            <div class="error" id="pwdError"></div>
+          </div>
+        </div>
 
         <!-- NAV -->
         <nav class="nav">
@@ -919,9 +985,7 @@
 
         </div><!-- /lesson-card -->
 
-        <!-- ============================================================== -->
-        <!-- NEW: LESSON PRESENTATION SECTION (matching image style) -->
-        <!-- ============================================================== -->
+        <!-- LESSON PRESENTATION -->
         <div class="resource-card">
             <h2><i class="fas fa-chart-bar"></i> Lesson Presentation</h2>
             <p>Use these slides to recap the lesson.</p>
@@ -930,18 +994,16 @@
             </a>
         </div>
 
-        <!-- ============================================================== -->
-        <!-- NEW: ADDITIONAL RESOURCES SECTION (matching image style) -->
-        <!-- ============================================================== -->
+        <!-- ADDITIONAL RESOURCES -->
         <div class="resource-card">
             <h2><i class="fas fa-folder-open"></i> Additional Resources</h2>
             
-            <!-- Lesson Plan (Teacher only) -->
+            <!-- Lesson Plan (Teacher only) — NOW LOCKED -->
             <div style="margin-bottom: 1rem;">
-                <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FLesson%2520Plan%25203.docx&wdOrigin=BROWSELINK" target="_blank" class="btn-resource">
+                <button onclick="openPasswordModal()" class="btn-resource" style="border: none; background: #f8fafc;">
                     <i class="fas fa-lock lock-icon-small"></i>
                     <i class="fas fa-file-word"></i> Lesson Plan (Teacher only) — click to toggle
-                </a>
+                </button>
             </div>
 
             <!-- AI Guide -->
@@ -981,7 +1043,6 @@
             const feedback = document.getElementById('fb-' + id);
             input.value = answer;
 
-            // Build the trace table HTML
             let tableHTML = `
                 <div style="margin-top:0.5rem;">
                     <p><strong>👁️ The correct answer is: ${answer}</strong></p>
@@ -1055,6 +1116,58 @@
             const el = document.getElementById(id);
             el.classList.toggle('show');
         }
+
+        // --- PASSWORD MODAL LOGIC ---
+        const TEACHER_PASSWORD = 'Password262026';
+        const LESSON_PLAN_URL = 'https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FLesson%2520Plan%25203.docx&wdOrigin=BROWSELINK';
+
+        const modal = document.getElementById('passwordModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdError = document.getElementById('pwdError');
+        const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+
+        function openPasswordModal() {
+            pwdInput.value = '';
+            pwdError.textContent = '';
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closePasswordModal() {
+            modal.classList.remove('active');
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === TEACHER_PASSWORD) {
+                window.open(LESSON_PLAN_URL, '_blank');
+                closePasswordModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closePasswordModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closePasswordModal();
+            }
+        });
     </script>
 
 </body>
