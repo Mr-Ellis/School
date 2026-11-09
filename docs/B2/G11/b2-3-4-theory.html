@@ -327,7 +327,6 @@
     .btn-green { background: #22c55e; color: white; }
     .btn-green:hover { background: #16a34a; }
 
-    /* Task 3: Assessment Box Styles */
     .task-box {
       background: #f8fafc;
       border-left: 6px solid #ef4444;
@@ -415,7 +414,13 @@
 
     <div class="card">
       <h3>The Big Idea</h3>
-      <p><strong>Modularization</strong> is the principle of breaking down a program into independent, reusable components, each responsible for a specific task. These components are typically implemented as <strong>functions</strong>, which accept inputs (parameters), perform a task, and optionally return a result. Functions enable code that is easier to read, easier to maintain, and less error-prone. Modularization also supports testing, debugging, and collaborative development by isolating functionality into clear, well-defined blocks. A critical concept in modularization is <strong>scope</strong>—specifically, understanding how data is shared (or not) between different parts of the program.</p>
+      <p>Imagine building a car. You don't forge the engine, wheels, and chassis into one solid lump of metal. You build separate components—engine, gearbox, brakes—that each do one job, and you bolt them together. If a brake pad wears out, you replace the pad, not the whole car.</p>
+      <p><strong>Modularization</strong> is that same idea applied to software. It is the <em>design philosophy</em> of breaking a large program into smaller, independent, self-contained pieces. <strong>Functions</strong> are the most common <em>tool</em> we use to implement that philosophy. In other words:</p>
+      <ul>
+        <li><strong>Modularization</strong> is the strategy or goal — "I will structure this program as separate, cooperating parts."</li>
+        <li><strong>A function</strong> is the building block — "I will write this specific part as a named block of code that takes inputs and returns an output."</li>
+      </ul>
+
       <p class="tip-box"><strong>📚 Further reading:</strong> Course companion pages 371–375. See also the <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.3.4-construct-functions-and-modularization" target="_blank" rel="noopener">Computer Science Wiki page on functions and modularization</a>.</p>
 
       <div class="analogy">
@@ -477,12 +482,32 @@ print(result)  # Output: 8</code></pre>
 
     <!-- SECTION 2 -->
     <div class="card">
-      <h3>2. Modularization: Structuring Programs into Logical Components</h3>
-      <p>Modularization refers to organizing code into separate, logically distinct units, usually through:</p>
+      <h3>2. Modularization vs. Functions: What's the Difference?</h3>
+      <p>This is one of the most commonly confused pairs of ideas, so let's be precise:</p>
+      <table>
+        <thead>
+          <tr><th>Concept</th><th>What it is</th><th>Analogy</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Modularization</strong></td>
+            <td>The <em>strategy</em> of designing a program as a set of separate, cooperating parts. It's about how you <em>structure</em> the whole system.</td>
+            <td>Deciding to build a car from an engine, gearbox, and wheels rather than one solid block.</td>
+          </tr>
+          <tr>
+            <td><strong>Function</strong></td>
+            <td>A single <em>building block</em> — one named, reusable piece of code that does a specific job.</td>
+            <td>The engine itself: one component that does one job and has a defined interface (fuel in, motion out).</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>You can use functions without really modularizing (e.g. one giant 2,000-line function that only calls small helpers for tiny tasks). Equally, a well-modularized program relies on many functions. Functions are the <em>how</em>; modularization is the <em>why</em>.</p>
+
+      <h4>Other ways to modularize besides functions</h4>
       <ul>
-        <li><strong>Functions</strong> (procedural modularity).</li>
         <li><strong>Classes and methods</strong> (object-oriented modularity).</li>
-        <li><strong>Modules and packages</strong> (file-level modularity).</li>
+        <li><strong>Modules and packages</strong> (file-level modularity — e.g. a Python <code>.py</code> file with a group of related functions).</li>
+        <li><strong>Services and microservices</strong> (large-scale, network-level modularity).</li>
       </ul>
 
       <h4>Benefits of a Modular Program</h4>
@@ -535,15 +560,41 @@ def greet():
 
 greet()  # Accesses global 'name'</code></pre>
 
-      <div class="warn-box">
-        <strong>⚠️ Modifying globals inside functions:</strong> In Python, if you assign to a global variable inside a function without declaring it <code>global</code>, Python creates a <em>new local variable</em> instead. To modify a global, you must use the <code>global</code> keyword. In Java, there is no true global scope—variables belong to classes, and <code>static</code> fields act like globals.
+      <h4>Changing a Global from Inside a Function</h4>
+      <p>Python creates a new local variable if you simply assign inside a function. To <em>change</em> the global, you must declare it with the <code>global</code> keyword. This is where beginners often go wrong:</p>
+      <pre><code>counter = 0           # global variable
+
+def increment():
+    counter = counter + 1   # ⚠️ UnboundLocalError!
+    # Python says: "I see an assignment to 'counter',
+    # so 'counter' must be local — but you're reading
+    # it before assigning it."
+
+# The correct version:
+def increment_fixed():
+    global counter          # tell Python we mean the global
+    counter = counter + 1   # now this modifies the global
+
+increment_fixed()
+print(counter)  # 1</code></pre>
+
+      <p>Without the <code>global</code> declaration, the assignment creates a brand-new local variable that shadows the global one. Inside the function, the global is inaccessible (or at least hidden). This is why the code above raises an error.</p>
+
+      <button class="reveal-btn" data-target="reveal3" aria-expanded="false">
+        <i class="fas fa-lightbulb" aria-hidden="true"></i> When would you actually <em>want</em> to modify a global inside a function?
+      </button>
+      <div id="reveal3" class="reveal-content">
+        <p>Legitimate uses are rare, but they exist:</p>
+        <ul>
+          <li><strong>Configuration flags:</strong> e.g. a global <code>DEBUG_MODE</code> that a setup function sets once at startup, then the rest of the program reads it.</li>
+          <li><strong>Counters across function calls:</strong> e.g. a global <code>total_visitors</code> that multiple request-handling functions increment.</li>
+          <li><strong>Single shared resources:</strong> a global database connection that a <code>connect()</code> function initialises, and which all other functions use.</li>
+        </ul>
+        <p>However, in modern good practice, these cases are usually better handled by passing objects around, or by using a class with attributes. Modifying globals hides dependencies and makes testing hard. So the rule of thumb is: <em>know how it works, prefer alternatives.</em></p>
       </div>
 
-      <button class="reveal-btn" data-target="reveal2" aria-expanded="false">
-        <i class="fas fa-lightbulb" aria-hidden="true"></i> Why is local scope usually safer than global scope?
-      </button>
-      <div id="reveal2" class="reveal-content">
-        <strong>💡 Think about it:</strong> Local variables are isolated: changes inside one function cannot accidentally affect another function. This reduces side effects and makes behaviour easier to predict. Global variables, by contrast, can be changed from anywhere, which makes bugs harder to trace. A good rule of thumb is to keep variables local unless they genuinely need to be shared.
+      <div class="warn-box">
+        <strong>⚠️ Why local scope is usually safer:</strong> Local variables are isolated: changes inside one function cannot accidentally affect another function. This reduces side effects and makes behaviour easier to predict. A good rule of thumb is to keep variables local unless they genuinely need to be shared.
       </div>
     </div>
 
@@ -556,20 +607,85 @@ greet()  # Accesses global 'name'</code></pre>
 
 greet("Alice")          # "Alice" is an argument</code></pre>
 
-      <h4>Pass by Value vs Pass by Reference</h4>
+      <h4>Pass by Value vs Pass by Reference — a concrete example</h4>
+      <p>This is one of the trickiest ideas in programming, so let's work through it with a real scenario you can visualise.</p>
+
+      <p>Imagine you're writing a function that's supposed to <strong>add 10 to a number</strong> that belongs to the main program.</p>
+
+      <p><strong>Pass by value</strong> works like photocopying a document and handing the copy to someone. They can scribble all over the copy — but your original is untouched.</p>
+
+      <pre><code>def add_ten(n):
+    n = n + 10        # changes only the local copy
+    print("Inside function:", n)
+
+score = 5
+add_ten(score)
+print("Outside function:", score)</code></pre>
+
+      <p>Output:</p>
+      <pre><code>Inside function: 15
+Outside function: 5</code></pre>
+
+      <p>Trace what happened:</p>
       <table>
         <thead>
-          <tr><th>Mechanism</th><th>What happens</th><th>Effect on caller's variable</th></tr>
+          <tr><th>Step</th><th>What happens</th><th><code>score</code> in main</th><th><code>n</code> inside function</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>Pass by value</strong></td><td>A copy of the argument is passed.</td><td>Original variable is unchanged.</td></tr>
-          <tr><td><strong>Pass by reference</strong></td><td>Access to the original variable is passed.</td><td>Original variable can be changed.</td></tr>
+          <tr><td>1</td><td><code>score = 5</code> in main</td><td>5</td><td>—</td></tr>
+          <tr><td>2</td><td><code>add_ten(score)</code> is called — a copy of 5 is passed</td><td>5</td><td>5 (new local copy)</td></tr>
+          <tr><td>3</td><td><code>n = n + 10</code> changes the local copy</td><td>5</td><td>15</td></tr>
+          <tr><td>4</td><td>Function ends; local <code>n</code> disappears</td><td>5</td><td>—</td></tr>
         </tbody>
       </table>
-      <p>Python uses <strong>pass by object reference</strong> (sometimes called “pass by assignment”). Immutable objects (ints, strings, tuples) behave like pass by value; mutable objects (lists, dictionaries) can be modified inside the function. Java is strictly pass by value, but for objects the value passed is the reference, so object contents can be modified.</p>
+
+      <p><strong>Pass by reference</strong> works like handing someone the <em>actual</em> document. If they change it, your copy changes too — because it's the same document.</p>
+
+      <pre><code>def add_ten(numbers):
+    numbers[0] = numbers[0] + 10
+    print("Inside function:", numbers[0])
+
+scores = [5]
+add_ten(scores)
+print("Outside function:", scores[0])</code></pre>
+
+      <p>Output:</p>
+      <pre><code>Inside function: 15
+Outside function: 15</code></pre>
+
+      <p>Trace what happened:</p>
+      <table>
+        <thead>
+          <tr><th>Step</th><th>What happens</th><th><code>scores[0]</code> in main</th><th><code>numbers[0]</code> inside function</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><code>scores = [5]</code> in main</td><td>5</td><td>—</td></tr>
+          <tr><td>2</td><td><code>add_ten(scores)</code> is called — the reference to the same list is passed</td><td>5</td><td>5 (same list!)</td></tr>
+          <tr><td>3</td><td><code>numbers[0] = numbers[0] + 10</code> changes the shared list</td><td>15</td><td>15</td></tr>
+          <tr><td>4</td><td>Function ends — but the list change persists</td><td>15</td><td>—</td></tr>
+        </tbody>
+      </table>
+
+      <div class="info-box">
+        <strong>💡 The key insight:</strong> The difference is <em>not</em> about the code you write — it's about <em>what gets passed</em>. For simple values (numbers, strings), a copy goes into the function. For complex objects (lists, dictionaries, class instances), a reference to the same object goes into the function, so changes made inside are visible outside.
+      </div>
+
+      <h4>How does this apply to Python specifically?</h4>
+      <p>Python doesn't use either term exactly — it uses <strong>pass by object reference</strong> (sometimes called "pass by assignment"). The rule is:</p>
+      <ul>
+        <li><strong>Immutable objects</strong> (integers, strings, tuples) behave like <strong>pass by value</strong>: you can't change them, so the original is safe.</li>
+        <li><strong>Mutable objects</strong> (lists, dictionaries, sets) behave like <strong>pass by reference</strong>: changes inside the function affect the original.</li>
+      </ul>
+
+      <h4>How does this apply to Java?</h4>
+      <p>Java is strictly <strong>pass by value</strong> — but for objects, the "value" being passed is a reference to the object. So:</p>
+      <ul>
+        <li>You <em>cannot</em> reassign the caller's variable (e.g. make it point to a completely new object).</li>
+        <li>But you <em>can</em> modify the <em>contents</em> of the object (e.g. change fields of an object, or elements of an array).</li>
+      </ul>
 
       <div class="tip-box">
-        <strong>📝 Exam tip:</strong> Be ready to explain the difference between pass by value and pass by reference, and to trace what happens to a variable when it is passed to a function and modified inside.
+        <strong>📝 Exam tip:</strong> Be ready to trace what happens to a variable when it is passed to a function. Ask yourself: (1) Is the data a simple value or a complex object? (2) Does the function change the value itself, or does it change the contents of an object? Use a trace table like the ones above to keep track.
       </div>
     </div>
 
