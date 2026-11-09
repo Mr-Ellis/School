@@ -112,7 +112,6 @@
       transform: translateY(-2px);
     }
     
-    /* NEW: Separate Locks (Y9 Blue, Y10 Red) */
     .lock-icons {
       position: absolute;
       top: 15px;
@@ -138,7 +137,6 @@
       color: #a13232;
       background: #fdeaea;
     }
-    /* Green when unlocked */
     .card:not(.is-y9-locked) .lock-y9 { color: #2d7d46; background: #e6f7e6; }
     .card:not(.is-y10-locked) .lock-y10 { color: #2d7d46; background: #e6f7e6; }
 
@@ -156,7 +154,7 @@
       color: #0b2a4a;
       letter-spacing: -0.2px;
       line-height: 1.3;
-      margin-right: 110px; /* Space for the locks */
+      margin-right: 110px;
     }
     .card p {
       color: #475569;
@@ -202,7 +200,6 @@
       background: #134f75 !important;
     }
 
-    /* TEACHER CONTROLS (Hidden by default) */
     .teacher-controls {
       display: none;
       margin-top: 0.4rem;
@@ -256,12 +253,10 @@
     }
     .teacher-controls .teacher-edit:hover { background: #d5dce6; }
 
-    /* When Teacher Mode is active */
     body.is-teacher .teacher-controls {
       display: flex;
     }
 
-    /* Progress bars */
     .progress-section {
       display: flex;
       flex-wrap: wrap;
@@ -395,8 +390,8 @@
     <!-- ========== NAVIGATION ========== -->
     <nav class="nav">
         <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
-        <a href="year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9</a>
-        <a href="year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
+        <a href="../year9.html"><i class="fas fa-arrow-left"></i> Back to Year 9</a>
+        <a href="../year10.html"><i class="fas fa-arrow-left"></i> Back to Year 10</a>
     </nav>
 
     <!-- ========== HEADER ========== -->
@@ -498,7 +493,7 @@
             </div>
             <p>Writing and interpreting pseudocode</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <a href="https://mr-ellis.github.io/School/Algorithm%20Design/pseudocode.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
@@ -525,7 +520,7 @@
             </div>
             <p>Linear search, bubble sort, counting, totalling, min/max</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <a href="https://mr-ellis.github.io/School/Algorithm%20Design/standard_algorithms.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
@@ -552,7 +547,7 @@
             </div>
             <p>Range, length, type, presence, format checks and verification methods</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <a href="https://mr-ellis.github.io/School/Algorithm%20Design/validation_verification.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
@@ -579,7 +574,7 @@
             </div>
             <p>Test data, dry-runs, trace tables, identifying and correcting errors</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <a href="https://mr-ellis.github.io/School/Algorithm%20Design/testing_trace_tables.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
@@ -606,7 +601,7 @@
             </div>
             <p>Writing and amending algorithms for given problems</p>
             <div class="card-actions">
-                <a href="#" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
+                <a href="https://mr-ellis.github.io/School/Algorithm%20Design/creating_refining.html" target="_blank" class="btn btn-theory"><i class="fas fa-book-open"></i> Theory</a>
             </div>
             <div class="teacher-controls">
                 <div class="cover-item">
@@ -659,20 +654,17 @@
 
 <script>
     (function() {
-        // The single Master Password used for both Teacher Mode and Lesson Plans
         const TEACHER_PASSWORD = 'Password262026';
         
         const checkboxes = document.querySelectorAll('.cover-checkbox');
-        const GRADE_PREFIX = 'algo_'; // Shared prefix for the single file
-        let currentModalMode = 'lesson'; // 'lesson' or 'teacher'
+        const GRADE_PREFIX = 'algo_';
+        let currentModalMode = 'lesson';
         let pendingPath = '';
 
-        // ---- All lessons (picked up automatically from the cards) ----
         const allLessons = Array.from(document.querySelectorAll('.card[data-lesson]')).map(c => c.dataset.lesson);
         document.getElementById('y9TotalLessons').textContent = allLessons.length;
         document.getElementById('y10TotalLessons').textContent = allLessons.length;
 
-        // ---- Track which lessons are unlocked (based on checkboxes) ----
         function getUnlockedLessons(year) {
           const unlocked = [];
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
@@ -690,7 +682,6 @@
           const y9Unlocked = getUnlockedLessons('Y9');
           const y10Unlocked = getUnlockedLessons('Y10');
           
-          // Update card lock states
           document.querySelectorAll('.card[data-lesson]').forEach(card => {
             const lesson = card.getAttribute('data-lesson');
             const checkboxes = card.querySelectorAll('.cover-checkbox');
@@ -698,7 +689,6 @@
             const y9Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y9' && cb.checked);
             const y10Checked = Array.from(checkboxes).some(cb => cb.dataset.class === 'Y10' && cb.checked);
             
-            // Update the Y9 and Y10 lock states
             if (y9Checked) {
               card.classList.remove('is-y9-locked');
             } else {
@@ -713,30 +703,26 @@
             
             const anyChecked = y9Checked || y10Checked;
 
-            // Lock/unlock the main card
             if (anyChecked) {
               card.classList.remove('locked');
             } else {
               card.classList.add('locked');
             }
             
-            // Color coding
             card.classList.remove('fully-covered', 'partially-covered');
             if (y9Checked && y10Checked) {
-              card.classList.add('fully-covered'); // Green if both years done
+              card.classList.add('fully-covered');
             } else if (anyChecked) {
-              card.classList.add('partially-covered'); // Yellow-ish if one year done
+              card.classList.add('partially-covered');
             }
           });
           
-          // Update progress bars
           document.getElementById('y9UnlockedCount').textContent = y9Unlocked.length;
           document.getElementById('y10UnlockedCount').textContent = y10Unlocked.length;
           document.getElementById('y9ProgressFill').style.width = (y9Unlocked.length / allLessons.length * 100) + '%';
           document.getElementById('y10ProgressFill').style.width = (y10Unlocked.length / allLessons.length * 100) + '%';
         }
 
-        // Restore checked states on load
         checkboxes.forEach(function(cb) {
             const lessonKey = cb.getAttribute('data-lesson');
             const classKey = cb.getAttribute('data-class');
@@ -746,14 +732,12 @@
                 cb.checked = true;
             }
 
-            // Handle changes
             cb.addEventListener('change', function() {
                 localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
                 updateUI();
             });
         });
 
-        // ---- "Toggle all" teacher edit ----
         document.querySelectorAll('.toggle-cover').forEach(function(toggle) {
           toggle.addEventListener('click', function(e) {
             e.preventDefault();
@@ -770,10 +754,8 @@
           });
         });
 
-        // Initial UI update
         updateUI();
 
-        // ---- Password Modal Logic ----
         const modal = document.getElementById('passwordModal');
         const pwdInput = document.getElementById('pwdInput');
         const pwdError = document.getElementById('pwdError');
@@ -781,7 +763,6 @@
         const modalType = document.getElementById('modalType');
         const modalText = document.getElementById('modalText');
 
-        // Updated to point to the correct lesson plan files for Algorithm Design
         const PDF_URLS = {
             'ALGO1': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/8%20Algorithm-design/Lesson%20Plan%201.docx',
             'ALGO2': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/8%20Algorithm-design/Lesson%20Plan%202.docx',
@@ -819,7 +800,6 @@
             document.body.classList.add('is-teacher');
             sessionStorage.setItem('teacherMode', 'true');
             
-            // Add a "Lock" button to exit teacher mode
             let existingBtn = document.getElementById('lockAdminBtn');
             if(!existingBtn) {
                 existingBtn = document.createElement('a');
@@ -872,13 +852,10 @@
             }
         });
 
-        // ---- INIT ----
-        // Check if teacher mode was previously active in this browser session
         if (sessionStorage.getItem('teacherMode') === 'true') {
             activateTeacherMode();
         }
 
-        // Add a small "Admin" button in the nav to enter Teacher Mode later
         let adminBtn = document.createElement('a');
         adminBtn.id = 'adminModeBtn';
         adminBtn.href = '#';
