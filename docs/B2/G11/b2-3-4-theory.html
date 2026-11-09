@@ -609,8 +609,6 @@ greet("Alice")          # "Alice" is an argument</code></pre>
       <h4>Pass by Value vs Pass by Reference — a concrete example</h4>
       <p>This is one of the trickiest ideas in programming, so let's work through it with a real scenario you can visualise.</p>
 
-      <p>Imagine you're writing a function that's supposed to <strong>add 10 to a number</strong> that belongs to the main program.</p>
-
       <p><strong>Pass by value</strong> works like photocopying a document and handing the copy to someone. They can scribble all over the copy — but your original is untouched.</p>
 
       <pre><code>def add_ten(n):
@@ -649,20 +647,22 @@ Outside function: 5</code></pre>
 
       <p><strong>Pass by reference</strong> works like handing someone the <em>actual</em> document. If they change it, your copy changes too — because it's the same document.</p>
 
-      <pre><code>def add_ten(numbers):
-    numbers[0] = numbers[0] + 10
-    print("Inside function:", numbers[0])
+      <p>To see this clearly, let's put names inside a list. Suppose we have a list of one item: <code>players = ["Alex"]</code>. The <code>[0]</code> in the code below is the <strong>index</strong> (position) of the first item — not a value. <code>players[0]</code> means "the first item in the list <code>players</code>", which is the string <code>"Alex"</code>.</p>
 
-scores = [5]
-add_ten(scores)
-print("Outside function:", scores[0])</code></pre>
+      <pre><code>def rename_player(team):
+    team[0] = "Jordan"      # index 0 = first item; we CHANGE that item
+    print("Inside function:", team[0])
+
+players = ["Alex"]
+rename_player(players)
+print("Outside function:", players[0])</code></pre>
 
       <p>Output:</p>
-      <pre><code>Inside function: 15
-Outside function: 15</code></pre>
+      <pre><code>Inside function: Jordan
+Outside function: Jordan</code></pre>
 
       <div class="info-box">
-        <strong>💡 Why does this happen?</strong> Here, <code>numbers</code> (the parameter inside the function) and <code>scores</code> (the variable in the main program) both point to <strong>the same list object</strong> in memory. When the function changes <code>numbers[0]</code>, it is changing the contents of that shared list. The variable <code>scores</code> in the main program sees the change because it is looking at the same list.
+        <strong>💡 Why does this happen?</strong> Here, <code>team</code> (the parameter inside the function) and <code>players</code> (the variable in the main program) both point to <strong>the same list object</strong> in memory. When the function does <code>team[0] = "Jordan"</code>, it is changing the contents of that shared list. The variable <code>players</code> in the main program sees the change because it is looking at the same list.
       </div>
 
       <p>Trace what happened:</p>
@@ -671,15 +671,15 @@ Outside function: 15</code></pre>
           <tr>
             <th>Step</th>
             <th>What happens</th>
-            <th><code>scores</code> (variable in main program)</th>
-            <th><code>numbers</code> (parameter/variable inside function)</th>
+            <th><code>players</code> (variable in main program)</th>
+            <th><code>team</code> (parameter/variable inside function)</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>1</td><td><code>scores = [5]</code> in main</td><td>[5]</td><td>— (does not exist yet)</td></tr>
-          <tr><td>2</td><td><code>add_ten(scores)</code> is called — a reference to the <em>same</em> list is passed to <code>numbers</code></td><td>[5]</td><td>[5] (same list object)</td></tr>
-          <tr><td>3</td><td><code>numbers[0] = numbers[0] + 10</code> changes the shared list</td><td>[15]</td><td>[15]</td></tr>
-          <tr><td>4</td><td>Function ends — but the list change persists</td><td>[15]</td><td>— (parameter gone, but list remains)</td></tr>
+          <tr><td>1</td><td><code>players = ["Alex"]</code> in main</td><td>["Alex"]</td><td>— (does not exist yet)</td></tr>
+          <tr><td>2</td><td><code>rename_player(players)</code> is called — a reference to the <em>same</em> list is passed to <code>team</code></td><td>["Alex"]</td><td>["Alex"] (same list object)</td></tr>
+          <tr><td>3</td><td><code>team[0] = "Jordan"</code> replaces the first item of the shared list</td><td>["Jordan"]</td><td>["Jordan"]</td></tr>
+          <tr><td>4</td><td>Function ends — but the list change persists</td><td>["Jordan"]</td><td>— (parameter gone, but list remains)</td></tr>
         </tbody>
       </table>
 
@@ -697,28 +697,28 @@ Outside function: 15</code></pre>
       <p>But there's a subtlety worth knowing. Even with a mutable object, if you <em>reassign the parameter name itself</em> to a brand-new object, the caller's variable is not affected. Compare these two functions:</p>
 
       <pre><code>def change_list_contents(my_list):
-    my_list[0] = 99          # modifies the SAME list object
+    my_list[0] = "Changed"   # modifies the SAME list object
     print("Inside:", my_list)
 
-scores = [5]
+scores = ["Original"]
 change_list_contents(scores)
-print("Outside:", scores)    # [99] — the original list was changed
+print("Outside:", scores)    # ["Changed"] — the original list was changed
 </code></pre>
 
       <pre><code>def replace_list(my_list):
-    my_list = [99]           # creates a NEW list, rebinds the local name
+    my_list = ["Replaced"]   # creates a NEW list, rebinds the local name
     print("Inside:", my_list)
 
-scores = [5]
+scores = ["Original"]
 replace_list(scores)
-print("Outside:", scores)    # [5] — the original list is untouched
+print("Outside:", scores)    # ["Original"] — the original list is untouched
 </code></pre>
 
       <div class="info-box">
-        <strong>💡 Why the difference?</strong> In the first function, you reach <em>into</em> the existing list and change its contents. In the second, you tell the local name <code>my_list</code> to point at a completely different list — the caller's <code>scores</code> is still pointing at the original <code>[5]</code>. So:
+        <strong>💡 Why the difference?</strong> In the first function, you reach <em>into</em> the existing list and change its contents. In the second, you tell the local name <code>my_list</code> to point at a completely different list — the caller's <code>scores</code> is still pointing at the original <code>["Original"]</code>. So:
         <ul style="margin-top:0.4rem;">
-          <li><strong>Mutating</strong> an object (e.g. <code>my_list[0] = 99</code>) affects the caller.</li>
-          <li><strong>Reassigning</strong> the parameter name (e.g. <code>my_list = [99]</code>) does <em>not</em> affect the caller.</li>
+          <li><strong>Mutating</strong> an object (e.g. <code>my_list[0] = "Changed"</code>) affects the caller.</li>
+          <li><strong>Reassigning</strong> the parameter name (e.g. <code>my_list = ["Replaced"]</code>) does <em>not</em> affect the caller.</li>
         </ul>
       </div>
 
