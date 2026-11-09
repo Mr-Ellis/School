@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.2 Lesson 4 · Testing, Gestures & Smart Solutions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .page-header h1 i { color: #2a6f97; font-size: 2rem; }
+    .page-header .sub {
+      color: #475569;
+      font-size: 1rem;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.3rem 1.4rem;
+      border-radius: 40px;
+      margin-top: 0.3rem;
+    }
+
+    .lesson-content {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.8rem 0 0.8rem 0;
+      border-left: 5px solid #2a6f97;
+      padding-left: 15px;
+    }
+    .lesson-content h2:first-of-type { margin-top: 0; }
+    .lesson-content h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.2rem 0 0.4rem 0;
+    }
+    .lesson-content p { margin-bottom: 0.6rem; }
+    .lesson-content ul, .lesson-content ol {
+      padding-left: 1.6rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content li { margin-bottom: 0.25rem; }
+
+    .objectives-box {
+      background: #eef6fc;
+      border-radius: 16px;
+      padding: 0.8rem 1.4rem;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #2a6f97;
+    }
+    .objectives-box strong { color: #0b2a4a; }
+    .objectives-box ul {
+      margin: 0.2rem 0 0 1.2rem;
+      padding-left: 0.5rem;
+    }
+    .objectives-box ul li { list-style-type: disc; font-size: 0.95rem; }
+
+    .highlight-box {
+      background: #eef6fc;
+      padding: 1rem 1.6rem;
+      border-radius: 16px;
+      border-left: 5px solid #2a6f97;
+      margin: 1rem 0;
+    }
+    .highlight-box strong { color: #0b2a4a; }
+    .highlight-box.green {
+      border-left-color: #4caf50;
+      background: #edf7ed;
+    }
+    .highlight-box.amber {
+      border-left-color: #f9a825;
+      background: #fff8e1;
+    }
+    .highlight-box.purple {
+      border-left-color: #8e24aa;
+      background: #f7edfa;
+    }
+    .highlight-box.red {
+      border-left-color: #e53935;
+      background: #ffebee;
+    }
+
+    .starter-callout {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      border: 2px solid #e65100;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .starter-callout .badge {
+      background: #e65100;
+      color: white;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .starter-callout h3 {
+      margin-top: 0;
+      color: #7a3300;
+      font-size: 1.15rem;
+    }
+    .starter-callout p { margin-bottom: 0.3rem; color: #5a2900; }
+    .starter-callout a {
+      color: #e65100;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 2px solid #e65100;
+    }
+    .starter-callout a:hover { color: #7a3300; }
+
+    .main-task {
+      background: linear-gradient(135deg, #fff8e1, #ffecb3);
+      border: 2px solid #f9a825;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .main-task .badge {
+      background: #f9a825;
+      color: #4a2c00;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .main-task h3 {
+      margin-top: 0;
+      color: #7a4b00;
+      font-size: 1.15rem;
+    }
+    .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
+
+    .lab-callout {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 2px solid #2d8f2d;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .lab-callout .badge {
+      background: #2d8f2d;
+      color: white;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .lab-callout h3 {
+      margin-top: 0;
+      color: #1b5e20;
+      font-size: 1.15rem;
+    }
+    .lab-callout p { margin-bottom: 0.3rem; color: #2e4a2e; }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .compare-table th, .compare-table td {
+      border: 1px solid #d4e3f0;
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+    }
+    .compare-table th {
+      background: #e9eff8;
+      color: #0b2a4a;
+      font-weight: 600;
+    }
+    .compare-table tr:nth-child(even) td { background: #f8fafc; }
+
+    .gesture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+    .gesture-card {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      transition: 0.25s;
+      text-align: center;
+    }
+    .gesture-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(31, 110, 156, 0.12);
+      border-color: #7bb3ff;
+    }
+    .gesture-card i {
+      font-size: 1.8rem;
+      color: #2a6f97;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+    .gesture-card h3 {
+      margin: 0.2rem 0;
+      font-size: 0.95rem;
+      display: block;
+    }
+    .gesture-card p {
+      font-size: 0.8rem;
+      color: #475569;
+      margin: 0;
+    }
+
+    .code-block {
+      background: #1e293b;
+      border-left: 5px solid #2a6f97;
+      color: #e2e8f0;
+      font-family: monospace;
+      font-size: 0.9rem;
+      padding: 1rem 1.4rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+    .code-block .kw { color: #7bb3ff; }
+    .code-block .num { color: #f9a825; }
+    .code-block .str { color: #a5d6a7; }
+    .code-block .comment { color: #94a3b8; }
+
+    .trace-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .trace-table th, .trace-table td {
+      border: 1px solid #d4e3f0;
+      padding: 0.6rem 0.8rem;
+      text-align: center;
+    }
+    .trace-table th {
+      background: #e9eff8;
+      color: #0b2a4a;
+      font-weight: 600;
+    }
+    .trace-table .yes { background: #c8e6c9; color: #1b5e20; font-weight: 600; }
+    .trace-table .no { background: #ffcdd2; color: #b71c1c; font-weight: 600; }
+
+    /* Editable test plan table */
+    .trace-table input,
+    .trace-table select,
+    .trace-table textarea {
+      width: 100%;
+      min-width: 70px;
+      padding: 0.35rem 0.5rem;
+      border: 1.5px solid #d4e3f0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: #0b2a4a;
+      background: white;
+      text-align: center;
+    }
+    .trace-table textarea {
+      min-height: 2.2rem;
+      resize: vertical;
+      text-align: left;
+    }
+    .trace-table input:focus,
+    .trace-table select:focus,
+    .trace-table textarea:focus {
+      outline: none;
+      border-color: #2a6f97;
+      box-shadow: 0 0 0 2px rgba(42, 111, 151, 0.15);
+    }
+    .trace-table select { cursor: pointer; }
+    .trace-table .saved-note {
+      font-size: 0.8rem;
+      color: #2d8f2d;
+      font-weight: 600;
+      min-height: 1.2rem;
+      margin-top: 0.4rem;
+    }
+
+    .gesture-tester {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .gesture-tester h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .gesture-tester .gesture-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 1rem 0;
+    }
+    .gesture-tester .gesture-buttons button {
+      background: #eef6fc;
+      border: 1.5px solid #d4e3f0;
+      color: #0b2a4a;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .gesture-tester .gesture-buttons button:hover {
+      background: #dbeafe;
+      border-color: #7bb3ff;
+    }
+    .gesture-tester .gesture-buttons button.active {
+      background: #2a6f97;
+      border-color: #2a6f97;
+      color: white;
+    }
+    .gesture-tester .result-box {
+      background: white;
+      border: 2px solid #d4e3f0;
+      border-radius: 12px;
+      padding: 1rem 1.4rem;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .gesture-tester .result-box .gesture-output {
+      font-size: 2rem;
+    }
+    .gesture-tester .result-box .gesture-text {
+      font-weight: 600;
+      color: #0b2a4a;
+    }
+
+    .quiz {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .quiz h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quiz .q {
+      margin: 1rem 0;
+      padding: 0.9rem 1.2rem;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #e5edf5;
+    }
+    .quiz .q p { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz .q button {
+      background: #eef6fc;
+      border: 1.5px solid #d4e3f0;
+      color: #0b2a4a;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      margin: 0.2rem 0.3rem 0.2rem 0;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+    .quiz .q button:hover { background: #dbeafe; border-color: #7bb3ff; }
+    .quiz .q button.correct { background: #c8e6c9; border-color: #2d8f2d; color: #1b5e20; font-weight: 700; }
+    .quiz .q button.incorrect { background: #ffcdd2; border-color: #e53935; color: #b71c1c; }
+    .quiz .q .answer-feedback { font-size: 0.82rem; margin-top: 0.4rem; min-height: 1.2rem; font-weight: 500; }
+    .quiz .q .answer-feedback.ok { color: #2d8f2d; }
+    .quiz .q .answer-feedback.no { color: #b71c1c; }
+
+    .resource-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      background: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid #d4e3f0;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+    .resource-bar a {
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .resource-bar a:hover { text-decoration: underline; }
+    .resource-bar .label {
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.85rem;
+    }
+
+    .keyword-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      background: #f1f6fc;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .keyword-row span {
+      background: white;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid #dce4ed;
+      font-size: 0.85rem;
+    }
+
+    .divider { margin: 2.5rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    .flowchart-img {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .flowchart-img .caption {
+      font-size: 0.85rem;
+      color: #475569;
+      margin-top: 0.5rem;
+    }
+
+    .image-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+    }
+    .image-table th, .image-table td {
+      border: 1px solid #d4e3f0;
+      padding: 0.5rem 0.7rem;
+      text-align: center;
+      vertical-align: top;
+    }
+    .image-table th {
+      background: #e9eff8;
+      color: #0b2a4a;
+      font-weight: 600;
+    }
+    .image-table .positive { background: #e8f5e9; }
+    .image-table .negative { background: #ffebee; }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
+      .lesson-content { padding: 1.2rem 1.4rem; }
+      .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
+      .main-task, .starter-callout, .lab-callout { flex-direction: column; gap: 0.6rem; }
+      .gesture-grid { grid-template-columns: 1fr 1fr; }
+      .trace-table { font-size: 0.8rem; }
+      .trace-table input, .trace-table select, .trace-table textarea { font-size: 0.78rem; padding: 0.25rem; }
+      .gesture-tester .gesture-buttons button { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+    <a href="../year7-units.html"><i class="fas fa-arrow-left"></i> Year 7 Units</a>
+    <a href="../unit7-2-decomposing-problems.html"><i class="fas fa-puzzle-piece"></i> 7.2 Decomposing problems</a>
+  </nav>
+
+  <a href="../unit7-2-decomposing-problems.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to 7.2 Decomposing problems</a>
+
+  <div class="page-header">
+    <h1><i class="fas fa-vial-circle-check"></i> Lesson 4 · Testing, Gestures &amp; Smart Solutions</h1>
+    <div class="sub"><i class="fas fa-arrow-right" style="margin-right:6px;"></i> Student's Book pages 73–78</div>
+  </div>
+
+  <div class="resource-bar">
+    <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+    <a href="https://python.microbit.org/v/2" target="_blank"><i class="fas fa-code"></i> MicroPython Editor</a>
+    <a href="https://makecode.microbit.org" target="_blank"><i class="fas fa-cubes"></i> MakeCode</a>
+    <a href="https://createai.microbit.org/" target="_blank"><i class="fas fa-lightbulb"></i> CreateAI</a>
+  </div>
+
+  <div class="lesson-content">
+
+    <div class="objectives-box">
+      <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+      <ul>
+        <li>Use sensors and gestures (shake, tilt, freefall) to trigger outputs.</li>
+        <li>Evaluate and improve programs using <strong>test plans</strong> and user feedback.</li>
+        <li>Understand why testing <strong>boundary values</strong> (e.g. exactly 10) is important.</li>
+        <li>Use <strong>debugging</strong> to find and fix errors based on test results.</li>
+        <li>Evaluate how images and sounds affect <strong>user experience</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="starter-callout">
+      <span class="badge">🔥 Starter</span>
+      <div>
+        <h3>Image &amp; Sound Sorting</h3>
+        <p>Open <strong>Worksheet 17</strong> and sort the images and sounds into <em>positive</em> and <em>negative</em> categories. Think about how each would make a user feel.</p>
+        <p><a href="#" onclick="return false;"><i class="fas fa-file-pdf"></i> Worksheet 17 (printed copy provided in class)</a></p>
+      </div>
+    </div>
+
+    <h2>🧪 Why Test?</h2>
+    <p>Writing a program is only half the job. <strong>Testing</strong> proves it works — and finds the bugs you didn't know were there.</p>
+    <ul>
+      <li>A <strong>test plan</strong> is a table of inputs, expected outputs, and actual outputs.</li>
+      <li>Test with <strong>normal values</strong>, <strong>extreme values</strong>, and <strong>boundary values</strong>.</li>
+      <li>If the actual output doesn't match the expected output, you've found a <strong>bug</strong> to debug.</li>
+    </ul>
+
+    <div class="highlight-box amber">
+      <i class="fas fa-exclamation-triangle" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Boundary values matter:</strong> If the condition is <code>light_level &lt;= 10</code>, then <code>10</code> is a boundary value. It <em>should</em> trigger the alarm. Test it! If your code says <code>light_level &lt; 10</code>, the value 10 won't trigger and the alarm will stay silent at exactly 10. That's a logic error.
+    </div>
+
+    <h2>📋 Building a Test Plan</h2>
+    <p>Complete the test plan below for this program. It reads the light level and shows a <strong>happy face</strong> if the light is less than 100, otherwise a <strong>sad face</strong>.</p>
+
+    <div class="code-block">
+      <span class="kw">from</span> microbit <span class="kw">import</span> *<br><br>
+      <span class="kw">while</span> True:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;light_level = display.read_light_level()<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> light_level &lt; <span class="num">100</span>:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.HAPPY)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">else</span>:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.SAD)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">200</span>)
+    </div>
+
+    <table class="trace-table" id="testPlanTable">
+      <thead>
+        <tr>
+          <th>Test</th>
+          <th>Input (light_level)</th>
+          <th>Expected Output</th>
+          <th>Actual Output</th>
+          <th>Pass / Fail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Normal (low light)</td>
+          <td><input type="number" min="0" max="255" placeholder="e.g. 40" data-row="low"></td>
+          <td>
+            <select data-row="low">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="low">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="low">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Boundary (exactly 100)</td>
+          <td><input type="number" min="0" max="255" placeholder="100" data-row="boundary"></td>
+          <td>
+            <select data-row="boundary">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="boundary">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="boundary">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Normal (bright light)</td>
+          <td><input type="number" min="0" max="255" placeholder="e.g. 180" data-row="bright"></td>
+          <td>
+            <select data-row="bright">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="bright">
+              <option value="">--</option>
+              <option value="Happy face">Happy face</option>
+              <option value="Sad face">Sad face</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="bright">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="saved-note" id="testPlanNote"></div>
+
+    <div class="highlight-box green">
+      <i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Check your thinking:</strong> When <code>light_level = 100</code>, the condition <code>100 &lt; 100</code> is <strong>False</strong>, so the program shows the <strong>sad face</strong>. If your expected output said "Happy face" for 100, you've spotted a common misunderstanding about strict inequalities.
+    </div>
+
+    <h2>🤸 Gestures &amp; Sensors</h2>
+    <p>The micro:bit has an <strong>accelerometer</strong> that detects movement. You can use it to trigger outputs based on gestures.</p>
+
+    <div class="gesture-grid">
+      <div class="gesture-card">
+        <i class="fas fa-arrows-rotate"></i>
+        <h3>Shake</h3>
+        <p>Shake the micro:bit</p>
+      </div>
+      <div class="gesture-card">
+        <i class="fas fa-arrow-up"></i>
+        <h3>Up / Down / Left / Right</h3>
+        <p>Tilt in that direction</p>
+      </div>
+      <div class="gesture-card">
+        <i class="fas fa-arrow-down-up-across-line"></i>
+        <h3>Face Up / Down</h3>
+        <p>Flat with display up or down</p>
+      </div>
+      <div class="gesture-card">
+        <i class="fas fa-arrow-down"></i>
+        <h3>Freefall</h3>
+        <p>Drop the micro:bit briefly</p>
+      </div>
+    </div>
+
+    <div class="gesture-tester">
+      <h3><i class="fas fa-hand-pointer" style="color:#2a6f97;"></i> Interactive Gesture Explorer</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click a gesture to see what the micro:bit would detect and which output it could trigger. This helps you plan your own smart solution.</p>
+      <div class="gesture-buttons">
+        <button data-gesture="shake"><i class="fas fa-arrows-rotate"></i> Shake</button>
+        <button data-gesture="up"><i class="fas fa-arrow-up"></i> Tilt Up</button>
+        <button data-gesture="down"><i class="fas fa-arrow-down"></i> Tilt Down</button>
+        <button data-gesture="left"><i class="fas fa-arrow-left"></i> Tilt Left</button>
+        <button data-gesture="right"><i class="fas fa-arrow-right"></i> Tilt Right</button>
+        <button data-gesture="freefall"><i class="fas fa-arrow-down"></i> Freefall</button>
+      </div>
+      <div class="result-box" id="gestureResult">
+        <span class="gesture-output">🤖</span>
+        <span class="gesture-text">Select a gesture to see the output.</span>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <span class="kw">from</span> microbit <span class="kw">import</span> *<br><br>
+      <span class="comment"># Example: shake to show a surprised face</span><br>
+      <span class="kw">while</span> True:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> accelerometer.was_gesture(<span class="str">'shake'</span>):<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.SURPRISED)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">elif</span> accelerometer.was_gesture(<span class="str">'freefall'</span>):<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.ANGRY)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">200</span>)
+    </div>
+
+    <h2>🏆 Smart Solution: Protect the Crown</h2>
+    <p>Imagine you're guarding a crown in a museum. Build a smart solution that:</p>
+    <ul>
+      <li>Sounds an alarm if the <strong>light level</strong> is below 100 (someone covered it).</li>
+      <li>Sounds an alarm if the <strong>crown is touched</strong> (motion detected).</li>
+      <li>Otherwise shows a <strong>tick or happy face</strong> to show all is well.</li>
+    </ul>
+
+    <div class="flowchart-img">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.6rem; padding: 1rem;">
+        <div style="background: #fce4ec; border: 2.5px solid #e91e63; border-radius: 50px; padding: 0.5rem 1.5rem; font-weight: 600; font-size: 0.85rem;">Start</div>
+        <div style="font-size: 1.2rem; color: #64748b;">↓</div>
+        <div style="background: #fff8e1; border: 2.5px solid #f9a825; width: 130px; height: 130px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin: 0.5rem 0;">
+          <span style="transform: rotate(-45deg); font-size: 0.65rem; font-weight: 600; text-align: center; line-height: 1.2;">Light &lt; 100<br>OR<br>motion detected?</span>
+        </div>
+        <div style="display: flex; gap: 3rem; font-size: 0.85rem; color: #64748b;">
+          <span>↓ Yes</span><span>↓ No</span>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <div style="background: #ffebee; border: 2.5px solid #e53935; border-radius: 6px; padding: 0.5rem 1rem; font-weight: 600; font-size: 0.8rem; text-align: center;">Sound<br>alarm</div>
+          <div style="background: #e8f5e9; border: 2.5px solid #2d8f2d; border-radius: 6px; padding: 0.5rem 1rem; font-weight: 600; font-size: 0.8rem; text-align: center;">Show tick /<br>happy face</div>
+        </div>
+        <div style="font-size: 1.2rem; color: #64748b;">↓</div>
+        <div style="background: #fce4ec; border: 2.5px solid #e91e63; border-radius: 50px; padding: 0.5rem 1.5rem; font-weight: 600; font-size: 0.85rem;">Stop</div>
+      </div>
+      <div class="caption">Flowchart for the crown protection smart solution.</div>
+    </div>
+
+    <div class="lab-callout">
+      <span class="badge">🔬 Micro:bit Lab</span>
+      <div>
+        <h3>Hands-On: Build Your Own Smart Solution</h3>
+        <p>In pairs, write a MicroPython program for the crown protection solution. Use <code>display.read_light_level()</code> and <code>accelerometer.was_gesture('shake')</code>. Test it with your test plan.</p>
+      </div>
+    </div>
+
+    <h3>Step 1: Write the Program</h3>
+    <div class="code-block">
+      <span class="kw">from</span> microbit <span class="kw">import</span> *<br><br>
+      <span class="kw">while</span> True:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;light_level = display.read_light_level()<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> light_level &lt; <span class="num">100</span> <span class="kw">or</span> accelerometer.was_gesture(<span class="str">'shake'</span>):<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.ANGRY)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;music.play(music.WAWAWAWAA)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">else</span>:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display.show(Image.YES)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sleep(<span class="num">200</span>)
+    </div>
+
+    <h3>Step 2: Test and Record</h3>
+    <p>Use your program to complete the test plan. Write the expected output and then test on the micro:bit.</p>
+
+    <table class="trace-table" id="crownTestTable">
+      <thead>
+        <tr>
+          <th>Test</th>
+          <th>Light Level</th>
+          <th>Gesture</th>
+          <th>Expected Output</th>
+          <th>Actual Output</th>
+          <th>Pass / Fail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Normal (bright, still)</td>
+          <td><input type="number" min="0" max="255" placeholder="e.g. 200" data-row="crown1"></td>
+          <td>
+            <select data-row="crown1">
+              <option value="">--</option>
+              <option value="None">None</option>
+              <option value="Shake">Shake</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown1">
+              <option value="">--</option>
+              <option value="Tick (YES)">Tick (YES)</option>
+              <option value="Angry + alarm">Angry + alarm</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown1">
+              <option value="">--</option>
+              <option value="Tick (YES)">Tick (YES)</option>
+              <option value="Angry + alarm">Angry + alarm</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown1">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Dark room (cover sensor)</td>
+          <td><input type="number" min="0" max="255" placeholder="e.g. 30" data-row="crown2"></td>
+          <td>
+            <select data-row="crown2">
+              <option value="">--</option>
+              <option value="None">None</option>
+              <option value="Shake">Shake</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown2">
+              <option value="">--</option>
+              <option value="Tick (YES)">Tick (YES)</option>
+              <option value="Angry + alarm">Angry + alarm</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown2">
+              <option value="">--</option>
+              <option value="Tick (YES)">Tick (YES)</option>
+              <option value="Angry + alarm">Angry + alarm</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown2">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Shake in bright light</td>
+          <td><input type="number" min="0" max="255" placeholder="e.g. 200" data-row="crown3"></td>
+          <td>
+            <select data-row="crown3">
+              <option value="">--</option>
+              <option value="None">None</option>
+              <option value="Shake">Shake</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown3">
+              <option value="">--</option>
+              <option value="Tick (YES)">Tick (YES)</option>
+              <option value="Angry + alarm">Angry + alarm</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown3">
+              <option value="">--</option>
+              <option value="Tick (YES)">Tick (YES)</option>
+              <option value="Angry + alarm">Angry + alarm</option>
+            </select>
+          </td>
+          <td>
+            <select data-row="crown3">
+              <option value="">--</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="saved-note" id="crownNote"></div>
+
+    <div class="highlight-box purple">
+      <i class="fas fa-flask" style="color:#8e24aa; margin-right:8px;"></i>
+      <strong>Debugging challenge:</strong> Suppose your program shows the happy face even when the light is dark. What could be wrong? Check: (1) is the comparison operator correct (<code>&lt;</code> not <code>&gt;</code>)? (2) is the light level being read from the right sensor? (3) are you testing with the right gesture name? Use your test plan to narrow down the bug.
+    </div>
+
+    <h2>🎨 User Experience: Images &amp; Sounds</h2>
+    <p>How your program <em>feels</em> matters as much as whether it works. A <strong>happy face</strong> and a cheerful tune make users feel good. An <strong>angry face</strong> and a harsh alarm signal danger.</p>
+
+    <table class="image-table">
+      <thead>
+        <tr>
+          <th>Positive images</th>
+          <th>Negative images</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="positive">HEART, HEART_SMALL, HAPPY, SMILE, YES, FABULOUS, TARGET, DIAMOND, RABBIT, BUTTERFLY</td>
+          <td class="negative">SAD, CONFUSED, ANGRY, ASLEEP, SURPRISED, NO, SKULL, PITCHFORK, SNAKE, SWORD</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="image-table">
+      <thead>
+        <tr>
+          <th>Positive sounds</th>
+          <th>Negative sounds</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="positive">ENTERTAINER, BIRTHDAY, WEDDING, BA_DING, JUMP_UP, POWER_UP, RINGTONE</td>
+          <td class="negative">FUNERAL, POWER_DOWN, WAWAWAWAA, PUNCHLINE, JUMP_DOWN, BADDY, CHASE</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Evaluate:</strong> Which image and sound would you choose for the crown protection alarm? Why? Write a sentence explaining your choice. Think about what the user should feel when the alarm triggers — urgency, not confusion.
+    </div>
+
+    <div class="main-task">
+      <span class="badge">⭐ Main Task</span>
+      <div>
+        <h3>📝 Worksheet 17 — Test Plans &amp; User Experience</h3>
+        <p><strong>Part 1:</strong> Complete the test plan table for the light sensor program (expected output, actual output, pass/fail).</p>
+        <p><strong>Part 2:</strong> Test three images and three sounds on the micro:bit. Decide whether each is positive or negative for the user.</p>
+        <p><strong>Part 3:</strong> Build the crown protection smart solution. Test it with at least three different inputs and record the results.</p>
+        <p style="margin-top:0.6rem;"><strong>Extension:</strong> Modify the program so it uses a <strong>different gesture</strong> (e.g. tilt left) to trigger a second output. Add a row to your test plan for this new gesture.</p>
+      </div>
+    </div>
+
+    <h2>🤖 AI Project Extension: Evaluate Your Model</h2>
+
+    <div class="highlight-box purple">
+      <i class="fas fa-calendar-check" style="color:#8e24aa; margin-right:8px;"></i>
+      <strong>This is a project-based task that continues from Lesson 3 and runs across several lessons.</strong>
+    </div>
+
+    <h3>📅 This week (in class)</h3>
+    <ul>
+      <li>Continue building your physical AI project with the materials you brought in.</li>
+      <li>Test your trained AI model with a <strong>test plan</strong>: try different movements, lighting conditions, and distances.</li>
+      <li>Record the <strong>confidence score</strong> your model outputs. Is it an integer or a float? Store it in a variable.</li>
+      <li>Use an <code>if</code> statement with a <strong>comparison operator</strong> to decide what the micro:bit does when confidence is above a threshold (e.g. <code>if confidence &gt; 80</code>).</li>
+      <li>Get <strong>user feedback</strong>: ask a classmate to try your project. What did they find confusing? What would they improve?</li>
+    </ul>
+
+    <div class="highlight-box green">
+      <i class="fas fa-box-open" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Materials reminder:</strong> Bring your build materials — elastic bands, small toys or figures, card, straws, tape, string — and anything else you need to make your project move or react.
+    </div>
+
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Continue your work:</strong> Go to <a href="https://createai.microbit.org/" target="_blank" style="color:#1f6390;">createai.microbit.org</a> to keep training and testing your AI model. In a future lesson, you will present your finished project in a <strong>show and tell</strong>.
+    </div>
+
+    <h2>✅ Summary: Test, Improve, Repeat</h2>
+    <ul>
+      <li>Use a <strong>test plan</strong> to check normal, extreme, and boundary values.</li>
+      <li>Test <strong>boundary values</strong> (like exactly 10 or exactly 100) — that's where bugs hide.</li>
+      <li>Use <strong>gestures</strong> (shake, tilt, freefall) to make programs react to movement.</li>
+      <li><strong>Debug</strong> by comparing actual output to expected output.</li>
+      <li>Choose <strong>images and sounds</strong> that make the user feel the right way.</li>
+      <li>Ask users for <strong>feedback</strong> and improve your program.</li>
+    </ul>
+
+    <div class="quiz" id="quiz">
+      <h3><i class="fas fa-circle-question" style="color:#2a6f97;"></i> Quick Self-Check</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click an answer to see if you're right. This is just for you — no marks are recorded.</p>
+
+      <div class="q" data-correct="b">
+        <p>1. What is a <strong>test plan</strong>?</p>
+        <button data-opt="a">A. A list of all the variables in a program</button>
+        <button data-opt="b">B. A table of inputs, expected outputs, and actual outputs used to check a program</button>
+        <button data-opt="c">C. A flowchart showing how a program works</button>
+        <button data-opt="d">D. A list of images and sounds in a program</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="c">
+        <p>2. For the condition <code>light_level &lt;= 10</code>, which is a <strong>boundary value</strong>?</p>
+        <button data-opt="a">A. 0</button>
+        <button data-opt="b">B. 50</button>
+        <button data-opt="c">C. 10</button>
+        <button data-opt="d">D. 200</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p>3. Which micro:bit gesture detects when the board is dropped briefly?</p>
+        <button data-opt="a">A. Freefall</button>
+        <button data-opt="b">B. Shake</button>
+        <button data-opt="c">C. Tilt up</button>
+        <button data-opt="d">D. Face down</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="d">
+        <p>4. Your program shows a happy face when it should show a sad face. What should you do first?</p>
+        <button data-opt="a">A. Delete the program and start again</button>
+        <button data-opt="b">B. Add more images to the program</button>
+        <button data-opt="c">C. Change the micro:bit battery</button>
+        <button data-opt="d">D. Compare the actual output to the expected output in your test plan to find the bug</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="b">
+        <p>5. Which of these is a <strong>negative</strong> image for a user experience?</p>
+        <button data-opt="a">A. HEART</button>
+        <button data-opt="b">B. ANGRY</button>
+        <button data-opt="c">C. SMILE</button>
+        <button data-opt="d">D. YES</button>
+        <div class="answer-feedback"></div>
+      </div>
+    </div>
+
+    <h2>🔑 Keywords</h2>
+    <div class="keyword-row">
+      <span>test plan</span>
+      <span>boundary value</span>
+      <span>debugging</span>
+      <span>accelerometer</span>
+      <span>gesture</span>
+      <span>freefall</span>
+      <span>user experience</span>
+      <span>evaluate</span>
+      <span>feedback</span>
+      <span>sensor</span>
+      <span>smart solution</span>
+      <span>MicroPython</span>
+    </div>
+
+  </div>
+
+  <hr class="divider" />
+  <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #5d7f9a; padding: 0.5rem 0; flex-wrap: wrap; gap: 0.5rem;">
+    <span><i class="fas fa-arrow-left" style="margin-right: 6px;"></i><a href="../unit7-2-decomposing-problems.html" style="color: #1f6390; text-decoration: none;">Back to 7.2 Decomposing problems</a></span>
+    <span>7.2 Lesson 4 · Testing, Gestures &amp; Smart Solutions</span>
+  </div>
+
+</div>
+
+<script>
+  // ===== GESTURE EXPLORER =====
+  (function() {
+    const buttons = document.querySelectorAll('.gesture-buttons button');
+    const resultBox = document.getElementById('gestureResult');
+    const outputIcon = resultBox.querySelector('.gesture-output');
+    const outputText = resultBox.querySelector('.gesture-text');
+
+    const gestureData = {
+      shake: { icon: '😲', text: 'Shake detected → show SURPRISED face (or trigger an alarm)' },
+      up: { icon: '⬆️', text: 'Tilt Up detected → could scroll text upwards or turn on a light' },
+      down: { icon: '⬇️', text: 'Tilt Down detected → could scroll text downwards or dim a light' },
+      left: { icon: '⬅️', text: 'Tilt Left detected → could move a character left' },
+      right: { icon: '➡️', text: 'Tilt Right detected → could move a character right' },
+      freefall: { icon: '🪂', text: 'Freefall detected → show ANGRY face (or sound an alarm)' }
+    };
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const gesture = btn.getAttribute('data-gesture');
+        const data = gestureData[gesture];
+        if (data) {
+          outputIcon.textContent = data.icon;
+          outputText.textContent = data.text;
+        }
+      });
+    });
+  })();
+
+  // ===== QUIZ =====
+  (function() {
+    const questions = document.querySelectorAll('#quiz .q');
+    questions.forEach(q => {
+      const correct = q.getAttribute('data-correct');
+      const buttons = q.querySelectorAll('button');
+      const fb = q.querySelector('.answer-feedback');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
+          const chosen = btn.getAttribute('data-opt');
+          if (chosen === correct) {
+            btn.classList.add('correct');
+            fb.textContent = '✅ Correct!';
+            fb.className = 'answer-feedback ok';
+          } else {
+            btn.classList.add('incorrect');
+            fb.textContent = '❌ Not quite. Try again.';
+            fb.className = 'answer-feedback no';
+          }
+        });
+      });
+    });
+  })();
+
+  // ===== TEST PLAN TABLE CHECKER =====
+  (function() {
+    const table = document.getElementById('testPlanTable');
+    const note = document.getElementById('testPlanNote');
+    if (!table) return;
+    const inputs = table.querySelectorAll('input, select');
+
+    function checkRow(rowKey) {
+      const readingInput = table.querySelector(`input[data-row="${rowKey}"]`);
+      const selects = table.querySelectorAll(`select[data-row="${rowKey}"]`);
+      const expectedSel = selects[0];
+      const actualSel = selects[1];
+      const passSel = selects[2];
+
+      const reading = parseInt(readingInput.value, 10);
+      if (isNaN(reading) || !expectedSel.value || !actualSel.value || !passSel.value) {
+        note.textContent = '';
+        return;
+      }
+
+      // The program is: if light < 100 -> happy, else sad
+      const expectedOutput = reading < 100 ? 'Happy face' : 'Sad face';
+      // For this exercise we assume the actual output matches the program's real behaviour
+      const actualOutput = reading < 100 ? 'Happy face' : 'Sad face';
+      const passFail = (expectedOutput === actualOutput) ? 'Pass' : 'Fail';
+
+      const expectedCorrect = expectedSel.value === expectedOutput;
+      const actualCorrect = actualSel.value === actualOutput;
+      const passCorrect = passSel.value === passFail;
+
+      if (expectedCorrect && actualCorrect && passCorrect) {
+        note.textContent = '✅ Your test plan matches the program behaviour.';
+        note.style.color = '#2d8f2d';
+      } else {
+        note.textContent = '🤔 Check the expected output and pass/fail for this reading. The program shows HAPPY when light < 100.';
+        note.style.color = '#b45309';
+      }
+    }
+
+    inputs.forEach(el => {
+      el.addEventListener('input', () => {
+        const rowKey = el.getAttribute('data-row');
+        checkRow(rowKey);
+      });
+    });
+  })();
+
+  // ===== CROWN TEST TABLE CHECKER =====
+  (function() {
+    const table = document.getElementById('crownTestTable');
+    const note = document.getElementById('crownNote');
+    if (!table) return;
+    const inputs = table.querySelectorAll('input, select');
+
+    function checkRow(rowKey) {
+      const lightInput = table.querySelector(`input[data-row="${rowKey}"]`);
+      const selects = table.querySelectorAll(`select[data-row="${rowKey}"]`);
+      const gestureSel = selects[0];
+      const expectedSel = selects[1];
+      const actualSel = selects[2];
+      const passSel = selects[3];
+
+      const light = parseInt(lightInput.value, 10);
+      if (isNaN(light) || !gestureSel.value || !expectedSel.value || !actualSel.value || !passSel.value) {
+        note.textContent = '';
+        return;
+      }
+
+      // Program: if light < 100 OR gesture == 'shake' -> Angry + alarm, else Tick
+      const alarmCondition = (light < 100) || (gestureSel.value === 'Shake');
+      const expectedOutput = alarmCondition ? 'Angry + alarm' : 'Tick (YES)';
+      const actualOutput = expectedOutput; // assume program works correctly
+      const passFail = 'Pass';
+
+      const expectedCorrect = expectedSel.value === expectedOutput;
+      const actualCorrect = actualSel.value === actualOutput;
+      const passCorrect = passSel.value === passFail;
+
+      if (expectedCorrect && actualCorrect && passCorrect) {
+        note.textContent = '✅ Your test plan matches the program behaviour.';
+        note.style.color = '#2d8f2d';
+      } else {
+        note.textContent = '🤔 Check: the alarm sounds if light < 100 OR the gesture is Shake. Otherwise the tick shows.';
+        note.style.color = '#b45309';
+      }
+    }
+
+    inputs.forEach(el => {
+      el.addEventListener('input', () => {
+        const rowKey = el.getAttribute('data-row');
+        checkRow(rowKey);
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
