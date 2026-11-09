@@ -570,6 +570,31 @@
             .blooket-checkpoint { flex-direction: column; align-items: stretch; text-align: center; }
             .blooket-checkpoint .cp-text { justify-content: center; }
         }
+
+        /* Trace table styling */
+        .trace-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .trace-table th, .trace-table td {
+            border: 1px solid #cbd5e1;
+            padding: 0.3rem 0.6rem;
+            text-align: center;
+        }
+        .trace-table th {
+            background: #e9eff8;
+            color: #0b2a4a;
+            font-weight: 600;
+        }
+        .trace-table td {
+            background: white;
+        }
+        .trace-table .highlight {
+            background: #edf7ed;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -875,7 +900,43 @@
             const input = document.getElementById(id);
             const feedback = document.getElementById('fb-' + id);
             input.value = answer;
-            feedback.textContent = '👁️ The correct answer is: ' + answer;
+
+            // Build the trace table HTML
+            let tableHTML = `
+                <div style="margin-top:0.5rem;">
+                    <p><strong>👁️ The correct answer is: ${answer}</strong></p>
+                    <p style="margin-top:0.3rem;"><strong>Trace table:</strong></p>
+                    <table class="trace-table">
+                        <tr>
+                            <th>Iteration</th>
+                            <th>Count</th>
+                            <th>Total (before)</th>
+                            <th>Total + Count</th>
+                            <th>Total (after)</th>
+                        </tr>
+                        <tr>
+                            <td>Start</td><td>—</td><td>—</td><td>—</td><td class="highlight">0</td>
+                        </tr>
+                        <tr>
+                            <td>1</td><td>1</td><td>0</td><td>0 + 1 = 1</td><td class="highlight">1</td>
+                        </tr>
+                        <tr>
+                            <td>2</td><td>2</td><td>1</td><td>1 + 2 = 3</td><td class="highlight">3</td>
+                        </tr>
+                        <tr>
+                            <td>3</td><td>3</td><td>3</td><td>3 + 3 = 6</td><td class="highlight">6</td>
+                        </tr>
+                        <tr>
+                            <td>4</td><td>4</td><td>6</td><td>6 + 4 = 10</td><td class="highlight">10</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top:0.4rem; font-size:0.85rem; color:#475569;">
+                        Final output: <strong>10</strong> (the sum of 1 + 2 + 3 + 4).
+                    </p>
+                </div>
+            `;
+
+            feedback.innerHTML = tableHTML;
             feedback.className = 'predict-feedback show reveal';
         }
 
