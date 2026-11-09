@@ -507,7 +507,6 @@ print(result)  # Output: 8</code></pre>
       <ul>
         <li><strong>Classes and methods</strong> (object-oriented modularity).</li>
         <li><strong>Modules and packages</strong> (file-level modularity — e.g. a Python <code>.py</code> file with a group of related functions).</li>
-        <li><strong>Services and microservices</strong> (large-scale, network-level modularity).</li>
       </ul>
 
       <h4>Benefits of a Modular Program</h4>
@@ -533,7 +532,7 @@ print(result)  # Output: 8</code></pre>
       <p>Each function does one thing well, and changes to one function do not affect the others.</p>
 
       <div class="info-box">
-        <strong>🔍 High cohesion, low coupling:</strong> Good modular design aims for <strong>high cohesion</strong> (each module focuses on a single, well-defined task) and <strong>low coupling</strong> (modules depend on each other as little as possible). This makes modules easier to understand, test, and replace.
+        <strong>🔍 Good modules are like good LEGO bricks:</strong> Two things make a LEGO brick great. First, it does its own job perfectly — a 2×4 brick is always a 2×4 brick, not sometimes a wheel and sometimes a window. That's <strong>high cohesion</strong>: each part has one clear purpose. Second, it connects to other pieces in a simple, standard way — you don't need special glue or tape. That's <strong>low coupling</strong>: parts fit together without being tangled up. If a single brick breaks, you swap that one brick, not the whole model. That's why modular code is easier to build, test, and fix.
       </div>
     </div>
 
@@ -626,16 +625,25 @@ print("Outside function:", score)</code></pre>
       <pre><code>Inside function: 15
 Outside function: 5</code></pre>
 
+      <div class="info-box">
+        <strong>💡 Important:</strong> In this example, <code>n</code> (the parameter inside the function) and <code>score</code> (the variable in the main program) are <strong>two completely different variables</strong>. They start with the same value (5), but when <code>n</code> changes inside the function, <code>score</code> is unaffected. This is the essence of pass by value — the function receives a copy of the value, not the original variable.
+      </div>
+
       <p>Trace what happened:</p>
       <table>
         <thead>
-          <tr><th>Step</th><th>What happens</th><th><code>score</code> in main</th><th><code>n</code> inside function</th></tr>
+          <tr>
+            <th>Step</th>
+            <th>What happens</th>
+            <th><code>score</code> (variable in main program)</th>
+            <th><code>n</code> (parameter/variable inside function)</th>
+          </tr>
         </thead>
         <tbody>
-          <tr><td>1</td><td><code>score = 5</code> in main</td><td>5</td><td>—</td></tr>
-          <tr><td>2</td><td><code>add_ten(score)</code> is called — a copy of 5 is passed</td><td>5</td><td>5 (new local copy)</td></tr>
+          <tr><td>1</td><td><code>score = 5</code> in main</td><td>5</td><td>— (does not exist yet)</td></tr>
+          <tr><td>2</td><td><code>add_ten(score)</code> is called — a copy of the value 5 is passed to <code>n</code></td><td>5</td><td>5 (new local copy)</td></tr>
           <tr><td>3</td><td><code>n = n + 10</code> changes the local copy</td><td>5</td><td>15</td></tr>
-          <tr><td>4</td><td>Function ends; local <code>n</code> disappears</td><td>5</td><td>—</td></tr>
+          <tr><td>4</td><td>Function ends; local <code>n</code> disappears</td><td>5</td><td>— (no longer exists)</td></tr>
         </tbody>
       </table>
 
@@ -653,16 +661,25 @@ print("Outside function:", scores[0])</code></pre>
       <pre><code>Inside function: 15
 Outside function: 15</code></pre>
 
+      <div class="info-box">
+        <strong>💡 Why does this happen?</strong> Here, <code>numbers</code> (the parameter inside the function) and <code>scores</code> (the variable in the main program) both point to <strong>the same list object</strong> in memory. When the function changes <code>numbers[0]</code>, it is changing the contents of that shared list. The variable <code>scores</code> in the main program sees the change because it is looking at the same list.
+      </div>
+
       <p>Trace what happened:</p>
       <table>
         <thead>
-          <tr><th>Step</th><th>What happens</th><th><code>scores[0]</code> in main</th><th><code>numbers[0]</code> inside function</th></tr>
+          <tr>
+            <th>Step</th>
+            <th>What happens</th>
+            <th><code>scores</code> (variable in main program)</th>
+            <th><code>numbers</code> (parameter/variable inside function)</th>
+          </tr>
         </thead>
         <tbody>
-          <tr><td>1</td><td><code>scores = [5]</code> in main</td><td>5</td><td>—</td></tr>
-          <tr><td>2</td><td><code>add_ten(scores)</code> is called — the reference to the same list is passed</td><td>5</td><td>5 (same list!)</td></tr>
-          <tr><td>3</td><td><code>numbers[0] = numbers[0] + 10</code> changes the shared list</td><td>15</td><td>15</td></tr>
-          <tr><td>4</td><td>Function ends — but the list change persists</td><td>15</td><td>—</td></tr>
+          <tr><td>1</td><td><code>scores = [5]</code> in main</td><td>[5]</td><td>— (does not exist yet)</td></tr>
+          <tr><td>2</td><td><code>add_ten(scores)</code> is called — a reference to the <em>same</em> list is passed to <code>numbers</code></td><td>[5]</td><td>[5] (same list object)</td></tr>
+          <tr><td>3</td><td><code>numbers[0] = numbers[0] + 10</code> changes the shared list</td><td>[15]</td><td>[15]</td></tr>
+          <tr><td>4</td><td>Function ends — but the list change persists</td><td>[15]</td><td>— (parameter gone, but list remains)</td></tr>
         </tbody>
       </table>
 
