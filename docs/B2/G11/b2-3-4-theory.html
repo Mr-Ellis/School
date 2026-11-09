@@ -694,12 +694,33 @@ Outside function: 15</code></pre>
         <li><strong>Mutable objects</strong> (lists, dictionaries, sets) behave like <strong>pass by reference</strong>: changes inside the function affect the original.</li>
       </ul>
 
-      <h4>How does this apply to Java?</h4>
-      <p>Java is strictly <strong>pass by value</strong> — but for objects, the "value" being passed is a reference to the object. So:</p>
-      <ul>
-        <li>You <em>cannot</em> reassign the caller's variable (e.g. make it point to a completely new object).</li>
-        <li>But you <em>can</em> modify the <em>contents</em> of the object (e.g. change fields of an object, or elements of an array).</li>
-      </ul>
+      <p>But there's a subtlety worth knowing. Even with a mutable object, if you <em>reassign the parameter name itself</em> to a brand-new object, the caller's variable is not affected. Compare these two functions:</p>
+
+      <pre><code>def change_list_contents(my_list):
+    my_list[0] = 99          # modifies the SAME list object
+    print("Inside:", my_list)
+
+scores = [5]
+change_list_contents(scores)
+print("Outside:", scores)    # [99] — the original list was changed
+</code></pre>
+
+      <pre><code>def replace_list(my_list):
+    my_list = [99]           # creates a NEW list, rebinds the local name
+    print("Inside:", my_list)
+
+scores = [5]
+replace_list(scores)
+print("Outside:", scores)    # [5] — the original list is untouched
+</code></pre>
+
+      <div class="info-box">
+        <strong>💡 Why the difference?</strong> In the first function, you reach <em>into</em> the existing list and change its contents. In the second, you tell the local name <code>my_list</code> to point at a completely different list — the caller's <code>scores</code> is still pointing at the original <code>[5]</code>. So:
+        <ul style="margin-top:0.4rem;">
+          <li><strong>Mutating</strong> an object (e.g. <code>my_list[0] = 99</code>) affects the caller.</li>
+          <li><strong>Reassigning</strong> the parameter name (e.g. <code>my_list = [99]</code>) does <em>not</em> affect the caller.</li>
+        </ul>
+      </div>
 
       <div class="tip-box">
         <strong>📝 Exam tip:</strong> Be ready to trace what happens to a variable when it is passed to a function. Ask yourself: (1) Is the data a simple value or a complex object? (2) Does the function change the value itself, or does it change the contents of an object? Use a trace table like the ones above to keep track.
