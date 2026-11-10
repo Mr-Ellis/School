@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8.2 Revision Guide · Pseudocode, Algorithms &amp; Radio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255, 200, 120, 0.18) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(120, 200, 255, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(200, 160, 255, 0.10) 0%, transparent 60%),
+                linear-gradient(135deg, #fef9f3 0%, #eef6fb 50%, #f5f0fc 100%);
+            color: #1a2639;
+            line-height: 1.6;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* ---------- HEADER ---------- */
+        .header {
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+            gap: 1.2rem; margin-bottom: 2.2rem;
+            background: linear-gradient(120deg, #1b3a5c 0%, #2a6f97 45%, #6a4c93 100%);
+            border-radius: 32px; padding: 1.8rem 2rem;
+            box-shadow: 0 14px 36px -10px rgba(20, 50, 90, 0.35);
+            position: relative; overflow: hidden;
+        }
+        .header::after {
+            content: ""; position: absolute; top: -50%; right: -10%;
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
+        }
+        .header-left h1 {
+            font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em;
+            color: #fff; display: flex; align-items: center; gap: 14px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .header-left h1 i { color: #ffd166; font-size: 2.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .header-left .subhead {
+            color: rgba(255,255,255,0.9); font-size: 0.98rem;
+            margin-top: 0.4rem; padding-left: 0.2rem;
+            display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+        }
+        .header-left .subhead span {
+            background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.2rem 1rem; border-radius: 40px;
+            font-size: 0.82rem; font-weight: 500; color: #fff;
+        }
+        .progress-wrap {
+            background: rgba(255,255,255,0.95); border-radius: 60px;
+            padding: 0.6rem 1.4rem 0.6rem 1rem;
+            box-shadow: 0 6px 18px rgba(0,20,40,0.12);
+            display: flex; align-items: center; gap: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.6); position: relative; z-index: 1;
+        }
+        .progress-label { font-size: 0.85rem; font-weight: 600; color: #1b3a5c; white-space: nowrap; }
+        .progress-bar-bg { width: 140px; height: 10px; background: #e2ebf5; border-radius: 20px; overflow: hidden; }
+        .progress-bar-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #ef476f, #ffd166, #06d6a0, #118ab2, #6a4c93);
+            background-size: 300% 100%; border-radius: 20px;
+            transition: width 0.4s ease;
+            animation: rainbowShift 4s linear infinite;
+        }
+        @keyframes rainbowShift { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+        .progress-pct { font-size: 0.85rem; font-weight: 700; color: #6a4c93; min-width: 36px; text-align: right; }
+
+        /* ---------- GRID ---------- */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; margin-top: 0.5rem; }
+        .card {
+            background: #fff; border-radius: 24px;
+            padding: 1.6rem 1.6rem 1.8rem 1.6rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f8;
+            transition: box-shadow 0.2s ease, transform 0.15s ease;
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+            background: var(--accent, #2a6f97); border-radius: 24px 24px 0 0;
+        }
+        .card[data-card="1"] { --accent: #ef476f; --accent-light: #fde2e8; }
+        .card[data-card="2"] { --accent: #f78c6b; --accent-light: #fde6db; }
+        .card[data-card="3"] { --accent: #ffd166; --accent-light: #fff3d6; }
+        .card[data-card="4"] { --accent: #06d6a0; --accent-light: #d9f7ec; }
+        .card[data-card="5"] { --accent: #118ab2; --accent-light: #d7eef6; }
+        .card[data-card="6"] { --accent: #e63946; --accent-light: #fbdde0; }
+        .card[data-card="7"] { --accent: #2a9d8f; --accent-light: #d8f0ec; }
+        .card[data-card="8"] { --accent: #6a4c93; --accent-light: #e8def4; }
+        .card[data-card="9"] { --accent: #ff8fab; --accent-light: #ffe2eb; }
+        .card[data-card="10"] { --accent: #457b9d; --accent-light: #dceaf2; }
+        .card[data-card="11"] { --accent: #e76f51; --accent-light: #fce4dc; }
+        .card[data-card="12"] { --accent: #2a9d8f; --accent-light: #d8f0ec; }
+        .card:hover {
+            box-shadow: 0 18px 36px -12px rgba(20,60,100,0.18), 0 2px 8px rgba(0,0,0,0.04);
+            transform: translateY(-2px);
+        }
+        .card-full { grid-column: 1 / -1; }
+
+        /* ---------- CARD HEADER / TOGGLE ---------- */
+        .card-head {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 0.8rem; cursor: pointer; user-select: none;
+            border-bottom: 2px solid #eef2f8;
+            padding-bottom: 0.6rem; margin-bottom: 1.1rem;
+        }
+        .card-head h2 {
+            font-size: 1.25rem; font-weight: 600; color: #1f3b5c;
+            display: flex; align-items: center; gap: 0.7rem;
+            margin: 0; padding: 0; border: none;
+        }
+        .card-head h2 .num {
+            background: var(--accent, #2a6f97); color: #fff;
+            font-size: 0.8rem; font-weight: 700;
+            width: 1.9rem; height: 1.9rem;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%; flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+        }
+        .card-head .toggle-icon {
+            color: #8aa2bc; font-size: 1rem;
+            transition: transform 0.25s ease; flex-shrink: 0;
+        }
+        .card.collapsed .card-head .toggle-icon { transform: rotate(-90deg); }
+        .card-body {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.25s ease;
+            max-height: 5000px; opacity: 1;
+        }
+        .card.collapsed .card-body { max-height: 0; opacity: 0; pointer-events: none; }
+
+        /* ---------- TABLES ---------- */
+        table {
+            width: 100%; border-collapse: collapse; font-size: 0.9rem;
+            margin: 0.8rem 0 0.6rem 0; border-radius: 14px;
+            overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+        th {
+            background: var(--accent-light, #e9f1f9); color: #0b2b4b;
+            font-weight: 600; text-align: left;
+            padding: 0.65rem 0.8rem; font-size: 0.83rem; letter-spacing: 0.02em;
+        }
+        td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #f1f5fa; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+
+        /* ---------- TEXT ELEMENTS ---------- */
+        h3 { font-size: 1.02rem; font-weight: 600; color: #1e3f60; margin: 1.2rem 0 0.5rem 0; }
+        h3:first-of-type { margin-top: 0.2rem; }
+        ul, ol { padding-left: 1.5rem; margin: 0.5rem 0 0.7rem 0; }
+        li { margin-bottom: 0.3rem; }
+        .note {
+            background: var(--accent-light, #eef4fa);
+            border-left: 6px solid var(--accent, #2a6f97);
+            padding: 0.9rem 1.1rem; border-radius: 12px;
+            margin: 1rem 0 0.4rem 0; font-size: 0.9rem; color: #17324d;
+        }
+        .note strong { color: #0b2b4b; }
+        code {
+            background: #f0f4f8; padding: 0.1rem 0.4rem; border-radius: 6px;
+            font-family: 'Courier New', monospace; font-size: 0.88rem;
+            color: #b5305a; font-weight: 600;
+        }
+        pre {
+            background: #1e2a3a; color: #e8eef7;
+            padding: 1rem 1.2rem; border-radius: 14px;
+            overflow-x: auto; font-family: 'Courier New', monospace;
+            font-size: 0.85rem; line-height: 1.6;
+            margin: 0.8rem 0;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+        }
+        pre .kw { color: #ff9eb5; }
+        pre .fn { color: #7ee0c0; }
+        pre .str { color: #ffd166; }
+        pre .num { color: #a8d8ff; }
+        pre .com { color: #7f9ab5; font-style: italic; }
+
+        /* ---------- SELF CHECK ---------- */
+        .self-check {
+            margin-top: 1.2rem; border-top: 1px dashed #cbddee; padding-top: 0.9rem;
+        }
+        .self-check-btn {
+            background: #f5f9fe; border: 1px solid var(--accent, #c7d9ea);
+            color: #1f4a73; font-weight: 600; font-size: 0.85rem;
+            padding: 0.4rem 1.2rem; border-radius: 40px;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: background 0.15s ease, border-color 0.15s ease;
+            font-family: inherit;
+        }
+        .self-check-btn:hover { background: var(--accent-light, #d9e6f2); border-color: var(--accent, #9bb8d4); }
+        .self-check-btn i { font-size: 0.8rem; transition: transform 0.2s ease; }
+        .self-check-btn.open i { transform: rotate(90deg); }
+        .self-check-content {
+            display: none;
+            margin-top: 0.7rem;
+            background: #f9fbfe; border-radius: 12px;
+            padding: 0.8rem 1rem; border: 1px solid var(--accent-light, #e0ecf8);
+        }
+        .self-check-content.open { display: block; }
+        .self-check-content p { font-size: 0.88rem; color: #2c3e50; margin-bottom: 0.4rem; }
+        .self-check-content p:last-child { margin-bottom: 0; }
+
+        .answer-toggle-btn {
+            background: transparent; border: 1px dashed var(--accent, #9bb8d4);
+            color: var(--accent, #1f4a73); font-weight: 600; font-size: 0.8rem;
+            padding: 0.3rem 1rem; border-radius: 40px;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
+            transition: background 0.15s ease; font-family: inherit; margin-top: 0.3rem;
+        }
+        .answer-toggle-btn:hover { background: var(--accent-light, #eef4fa); }
+        .answer-toggle-btn i { font-size: 0.75rem; transition: transform 0.2s ease; }
+        .answer-toggle-btn.open i { transform: rotate(90deg); }
+        .answer-content { display: none; margin-top: 0.4rem; }
+        .answer-content.open { display: block; }
+        .answer-content .answer { color: #1f6e43; font-weight: 600; }
+
+        /* ---------- CHECKBOX PROGRESS ---------- */
+        .card-progress {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-top: 1.2rem; padding-top: 0.8rem; border-top: 1px solid #eef4fa;
+        }
+        .card-progress label {
+            font-size: 0.78rem; font-weight: 500; color: #5d7f9a;
+            cursor: pointer; display: flex; align-items: center; gap: 0.4rem;
+        }
+        .card-progress input[type="checkbox"] {
+            width: 16px; height: 16px;
+            accent-color: var(--accent, #1f6e9c); cursor: pointer;
+        }
+
+        /* ---------- FOOTER ---------- */
+        .footer-note {
+            margin-top: 2.5rem; padding-top: 1.5rem;
+            border-top: 2px solid #d4e2f0;
+            font-size: 0.88rem; color: #3d556b;
+            text-align: center; font-style: italic;
+        }
+        .footer-note i { color: #6a4c93; margin-right: 6px; }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 800px) {
+            .grid { grid-template-columns: 1fr; gap: 1.2rem; }
+            body { padding: 1rem; }
+            .header { padding: 1.4rem 1.4rem; border-radius: 24px; }
+            .header-left h1 { font-size: 1.8rem; }
+            .header-left h1 i { font-size: 1.6rem; }
+            .progress-wrap { width: 100%; justify-content: space-between; }
+            .progress-bar-bg { flex: 1; width: auto; }
+            .card { padding: 1.2rem 1.1rem 1.4rem 1.1rem; }
+        }
+        @media (max-width: 450px) {
+            .header-left h1 { font-size: 1.5rem; flex-wrap: wrap; }
+            .progress-label { font-size: 0.72rem; }
+            .card-head h2 { font-size: 1rem; }
+            .card-head h2 .num { width: 1.5rem; height: 1.5rem; font-size: 0.68rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ========== HEADER ========== -->
+        <div class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-code-branch"></i> 8.2 Revision Guide</h1>
+                <div class="subhead">
+                    <i class="fas fa-laptop-code" style="color:#ffd166;"></i>
+                    Pseudocode · Algorithms · Radio Communication · Debugging
+                    <span>Self‑study</span>
+                </div>
+            </div>
+            <div class="progress-wrap">
+                <span class="progress-label"><i class="fas fa-tasks" style="margin-right:6px;color:#6a4c93;"></i>Progress</span>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+                <span class="progress-pct" id="progressPct">0%</span>
+            </div>
+        </div>
+
+        <!-- ========== GRID START ========== -->
+        <div class="grid">
+
+            <!-- 1. WHAT IS PSEUDOCODE? -->
+            <div class="card" data-card="1">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">1</span> The Rules of Pseudocode</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p><strong>Pseudocode</strong> is a text representation of an algorithm. It sits between human language and programming code, making it the perfect planning tool.</p>
+                    
+                    <h3>Golden rules of good pseudocode</h3>
+                    <ul>
+                        <li><strong>Short and precise:</strong> Do not write long paragraphs. Write one clear instruction per line.</li>
+                        <li><strong>Capitalised keywords:</strong> Use <code>START</code>, <code>STOP</code>, <code>INPUT</code>, <code>OUTPUT</code>, <code>IF</code>, <code>THEN</code>, <code>ELSE</code>, <code>ENDIF</code>. Always in uppercase.</li>
+                        <li><strong>Clear structure:</strong> It must begin with <code>START</code> and end with <code>STOP</code>.</li>
+                        <li><strong>Indentation matters:</strong> Just like Python, you must indent instructions that sit inside an <code>IF</code> statement.</li>
+                    </ul>
+
+                    <div class="note">
+                        <strong>Watch out:</strong> You cannot just write pseudocode "any way you like." It has strict rules (like uppercase keywords and indentation) so that other programmers can read and understand your plan without confusion.
+                    </div>
+
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> How should the words START and STOP be written in pseudocode?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> In uppercase (capital letters).</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="1"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PSEUDOCODE KEYWORDS -->
+            <div class="card" data-card="2">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">2</span> Pseudocode Keywords</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>You need to know what each pseudocode command means. Test yourself on these definitions:</p>
+                    
+                    <table>
+                        <tr><th>Keyword</th><th>What it means</th></tr>
+                        <tr><td><code>START</code> / <code>STOP</code></td><td>Specifies the beginning and the end of the pseudocode.</td></tr>
+                        <tr><td><code>INPUT</code></td><td>Asks the user to enter something.</td></tr>
+                        <tr><td><code>OUTPUT</code></td><td>Displays something on the screen (or plays a sound).</td></tr>
+                        <tr><td><code>IF...THEN</code></td><td>Starts a conditional statement (selection).</td></tr>
+                        <tr><td><code>ELSE</code></td><td>The block of code that runs if the condition is false.</td></tr>
+                        <tr><td><code>ENDIF</code></td><td>Ends the conditional statement.</td></tr>
+                    </table>
+
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which keyword is used to display or play something?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> <code>OUTPUT</code></p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="2"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. PSEUDOCODE VS MICROPYTHON VS TEST PLAN -->
+            <div class="card" data-card="3">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">3</span> Pseudocode vs. MicroPython</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>It is important to know which tool you are using. Here is how they compare:</p>
+                    
+                    <table>
+                        <tr><th>Tool</th><th>What it is used for</th></tr>
+                        <tr><td><strong>Pseudocode</strong></td><td>Used to <strong>plan</strong> the algorithm and the logical/conditional statements before you write any code.</td></tr>
+                        <tr><td><strong>MicroPython</strong></td><td>The actual <strong>code</strong> that runs on the micro:bit. Used to write the program for the device.</td></tr>
+                        <tr><td><strong>Test Plan</strong></td><td>Used to <strong>check the outputs</strong> are as expected, and to <strong>find errors</strong> that need fixing.</td></tr>
+                    </table>
+
+                    <h3>Spotting the difference</h3>
+                    <ul>
+                        <li>If you see <code>OUTPUT "Hello"</code>, that is <strong>Pseudocode</strong>.</li>
+                        <li>If you see <code>display.scroll("Hello")</code>, that is <strong>MicroPython</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4. VARIABLES & DATA TYPES -->
+            <div class="card" data-card="4">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">4</span> Variables &amp; Data Types</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>A <strong>variable</strong> is a named container that holds a value. In algorithms, variables can hold different <strong>data types</strong>:</p>
+                    
+                    <table>
+                        <tr><th>Data Type</th><th>What it stores</th></tr>
+                        <tr><td><strong>Integer</strong></td><td>A whole number (e.g. 5, 42, 100).</td></tr>
+                        <tr><td><strong>Boolean</strong></td><td>Only two possible states: TRUE or FALSE.</td></tr>
+                        <tr><td><strong>String</strong></td><td>Text (e.g. "Hello", "Password").</td></tr>
+                    </table>
+
+                    <h3>What data type is a sensor reading?</h3>
+                    <p>When you store a sensor reading (like the light level) in a variable, it is stored as an <strong>integer</strong> because it is a whole number.</p>
+
+                    <div class="note">
+                        <strong>Think about it:</strong> The output of a conditional statement is a <strong>Boolean</strong>, because it can only be one of two states: TRUE or FALSE.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. LOGICAL OPERATORS (AND/OR) -->
+            <div class="card" data-card="5">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">5</span> Logical Operators (AND / OR)</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>Logical operators combine inputs to generate an output based on rules. The two you need to know are <strong>AND</strong> and <strong>OR</strong>.</p>
+                    
+                    <h3>How they work</h3>
+                    <ul>
+                        <li><strong>AND:</strong> Activates the output only when <strong>both</strong> inputs are TRUE.</li>
+                        <li><strong>OR:</strong> Activates the output when <strong>either or both</strong> inputs are TRUE.</li>
+                    </ul>
+
+                    <table>
+                        <tr><th>Input A</th><th>Input B</th><th>A AND B</th><th>A OR B</th></tr>
+                        <tr><td>True</td><td>True</td><td style="color:#1f6e43; font-weight:bold;">True</td><td style="color:#1f6e43; font-weight:bold;">True</td></tr>
+                        <tr><td>True</td><td>False</td><td style="color:#b71c1c; font-weight:bold;">False</td><td style="color:#1f6e43; font-weight:bold;">True</td></tr>
+                        <tr><td>False</td><td>True</td><td style="color:#b71c1c; font-weight:bold;">False</td><td style="color:#1f6e43; font-weight:bold;">True</td></tr>
+                        <tr><td>False</td><td>False</td><td style="color:#b71c1c; font-weight:bold;">False</td><td style="color:#b71c1c; font-weight:bold;">False</td></tr>
+                    </table>
+
+                    <div class="note">
+                        <strong>Watch out:</strong> If you are using a logical operator, you must test <strong>all possible inputs and combinations of inputs</strong> in your test plan to make sure the logic works.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. MICROPYTHON RADIO COMMANDS -->
+            <div class="card" data-card="6">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">6</span> MicroPython Radio Commands</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>To make two micro:bits communicate, you need to know these specific MicroPython commands:</p>
+                    
+                    <table>
+                        <tr><th>Command</th><th>What it does</th></tr>
+                        <tr><td><code>radio.config(group=...)</code></td><td>Sets the micro:bit's radio channel so it only talks to devices on the same channel.</td></tr>
+                        <tr><td><code>radio.on()</code></td><td>Turns the radio function on.</td></tr>
+                        <tr><td><code>radio.send("message")</code></td><td>Sends the message signal to the other micro:bit.</td></tr>
+                        <tr><td><code>message = radio.receive()</code></td><td>Sets a variable called 'message' to receive the incoming signal.</td></tr>
+                    </table>
+
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which command sets the variable to catch an incoming signal?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> <code>radio.receive()</code></p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="6"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. PSEUDOCODE TO MICROPYTHON -->
+            <div class="card" data-card="7">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">7</span> Pseudocode to MicroPython</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>You need to be able to match pseudocode logic to its MicroPython equivalent.</p>
+                    
+                    <h3>Selection (IF statements)</h3>
+                    <ul>
+                        <li><strong>Pseudocode:</strong> <code>IF the A button is pressed THEN</code></li>
+                        <li><strong>MicroPython:</strong> <code>if button_a.is_pressed():</code></li>
+                    </ul>
+
+                    <h3>Logical OR</h3>
+                    <ul>
+                        <li><strong>Pseudocode:</strong> <code>IF the A OR B button is pressed THEN</code></li>
+                        <li><strong>MicroPython:</strong> <code>if button_a.is_pressed() or button_b.is_pressed():</code></li>
+                    </ul>
+
+                    <h3>Variables & Arithmetic</h3>
+                    <ul>
+                        <li><strong>Pseudocode:</strong> Add 3 to the value stored in 'number'</li>
+                        <li><strong>MicroPython:</strong> <code>number = number + 3</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 8. LINEAR SEARCH -->
+            <div class="card" data-card="8">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">8</span> Linear Search</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>A <strong>linear search</strong> is an algorithm that finds an item in a list by checking each item in turn, one by one, until it finds the target.</p>
+                    
+                    <h3>Key rules to remember:</h3>
+                    <ul>
+                        <li><strong>It does not require an ordered list:</strong> The list can be completely random.</li>
+                        <li><strong>It always searches in order:</strong> It starts at the first item and moves to the next (usually left to right) until the item is found.</li>
+                        <li><strong>It works on large data sets:</strong> Because it uses a program to look at each item systematically.</li>
+                        <li><strong>It doesn't check every item if it doesn't have to:</strong> It stops as soon as it finds the target.</li>
+                    </ul>
+
+                    <div class="note">
+                        <strong>Important:</strong> A computer cannot magically find an item in a data set without a program (algorithm) telling it exactly how to search.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. TEST PLANS -->
+            <div class="card" data-card="9">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">9</span> Using Test Plans</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>A <strong>test plan</strong> is used to make sure the program works as expected and to find errors that need fixing (like spelling mistakes or logic errors).</p>
+                    
+                    <h3>Rules for testing:</h3>
+                    <ul>
+                        <li>You must test <strong>multiple possible inputs</strong>, not just one.</li>
+                        <li>You can use a test plan <strong>as many times as necessary</strong> as you iterate through writing your code.</li>
+                        <li>If you use logical operators (like AND / OR), you must test <strong>all combinations</strong> of inputs to ensure the output is correct.</li>
+                    </ul>
+
+                    <div class="note">
+                        <strong>Think about it:</strong> A test plan acts as a checklist. You write down the input, what you expect to happen, and what actually happened.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. DEBUGGING -->
+            <div class="card" data-card="10">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">10</span> Debugging</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p><strong>Debugging</strong> is the process of finding and fixing errors in your code.</p>
+                    
+                    <h3>Common MicroPython errors to look for:</h3>
+                    <ul>
+                        <li><strong>Missing colons:</strong> <code>if button_a.is_pressed()</code> needs a <code>:</code> at the end.</li>
+                        <li><strong>Missing brackets:</strong> Check that every <code>(</code> has a matching <code>)</code>.</li>
+                        <li><strong>Case sensitivity:</strong> <code>Image.HAPPY</code> is correct, <code>image.happy</code> will cause an error.</li>
+                        <li><strong>Spelling:</strong> <code>display</code> not <code>diplay</code>.</li>
+                    </ul>
+
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> What is the process of finding and fixing code errors called?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> Debugging.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="10"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. KEY DEFINITIONS -->
+            <div class="card" data-card="11">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">11</span> Key Definitions</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>Make sure you can define these keywords precisely:</p>
+                    <ul>
+                        <li><strong>Pseudocode:</strong> A textual representation of an algorithm.</li>
+                        <li><strong>Boolean expression:</strong> An expression that will generate a True or False outcome.</li>
+                        <li><strong>Logical operator:</strong> An operator that combines inputs to generate an output using AND, OR or NOT.</li>
+                        <li><strong>Indented:</strong> A line of code moved in to represent code that will run if a condition is met.</li>
+                        <li><strong>Linear search:</strong> Searching for an item in a list by comparing each item in turn to the searched-for item.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 12. SUMMARY CHECKLIST -->
+            <div class="card card-full" data-card="12">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">12</span> Summary — Am I Ready?</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>Use this checklist to ensure you are fully prepared for the knowledge check:</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <h3 style="margin-top: 0;">Knowledge Checks</h3>
+                            <ul>
+                                <li>I know the rules of good pseudocode (START/STOP, indentation, uppercase).</li>
+                                <li>I can match pseudocode keywords to their meanings.</li>
+                                <li>I know the difference between Pseudocode, MicroPython, and a Test Plan.</li>
+                                <li>I know that sensor values are integers and conditional outputs are Booleans.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 style="margin-top: 0;">Skill Checks</h3>
+                            <ul>
+                                <li>I can explain how AND / OR logical operators work.</li>
+                                <li>I can match MicroPython radio commands to their descriptions.</li>
+                                <li>I know the rules of a linear search (no ordering needed, checks in turn).</li>
+                                <li>I know how to use a test plan to find and fix errors (debugging).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="note">
+                        <strong>Reminder:</strong> If you are unsure about any of these, go back to the relevant lesson or use the interactive tools on the unit page.
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="12"> I've completed my revision</label>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- GRID END -->
+
+        <div class="footer-note">
+            <i class="fas fa-book"></i> 8.2 Revision Guide · Use alongside your lesson notes and Student's Book.
+        </div>
+    </div>
+
+    <script>
+        /* ---------- EVENT DELEGATION FOR ALL TOGGLES ---------- */
+        document.addEventListener('click', function(e) {
+            // Card header toggle
+            const cardHead = e.target.closest('[data-toggle="card"]');
+            if (cardHead) {
+                const card = cardHead.closest('.card');
+                if (card) card.classList.toggle('collapsed');
+                return;
+            }
+
+            // Self-check toggle
+            const selfCheckBtn = e.target.closest('[data-toggle="self-check"]');
+            if (selfCheckBtn) {
+                const content = selfCheckBtn.parentElement.querySelector('.self-check-content');
+                if (content) {
+                    const isOpen = content.classList.contains('open');
+                    content.classList.toggle('open', !isOpen);
+                    selfCheckBtn.classList.toggle('open', !isOpen);
+                }
+                return;
+            }
+
+            // Answer toggle
+            const answerBtn = e.target.closest('[data-toggle="answer"]');
+            if (answerBtn) {
+                const content = answerBtn.parentElement.querySelector('.answer-content');
+                if (content) {
+                    const isOpen = content.classList.contains('open');
+                    content.classList.toggle('open', !isOpen);
+                    answerBtn.classList.toggle('open', !isOpen);
+                    answerBtn.innerHTML = isOpen
+                        ? '<i class="fas fa-chevron-right"></i> Show answer'
+                        : '<i class="fas fa-chevron-down"></i> Hide answer';
+                }
+                return;
+            }
+        });
+
+        /* ---------- PROGRESS TRACKING ---------- */
+        (function() {
+            const checkboxes = document.querySelectorAll('.progress-check');
+            const fill = document.getElementById('progressFill');
+            const pct = document.getElementById('progressPct');
+            const storageKey = 'revisionGuide8_2_progress';
+
+            let saved = {};
+            try { saved = JSON.parse(localStorage.getItem(storageKey)) || {}; } catch(e) { saved = {}; }
+
+            checkboxes.forEach(function(cb) {
+                const cardId = cb.getAttribute('data-card');
+                if (saved[cardId]) cb.checked = true;
+
+                cb.addEventListener('change', function() {
+                    saved[cardId] = this.checked;
+                    localStorage.setItem(storageKey, JSON.stringify(saved));
+                    updateProgress();
+                });
+            });
+
+            function updateProgress() {
+                const total = checkboxes.length;
+                const checked = document.querySelectorAll('.progress-check:checked').length;
+                const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
+                fill.style.width = percent + '%';
+                pct.textContent = percent + '%';
+            }
+
+            updateProgress();
+        })();
+    </script>
+</body>
+</html>
