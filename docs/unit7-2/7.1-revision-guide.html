@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7.2 Revision Guide · Smart Devices &amp; MicroPython</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255, 200, 120, 0.18) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(120, 200, 255, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(200, 160, 255, 0.10) 0%, transparent 60%),
+                linear-gradient(135deg, #fef9f3 0%, #eef6fb 50%, #f5f0fc 100%);
+            color: #1a2639;
+            line-height: 1.6;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* ---------- HEADER ---------- */
+        .header {
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+            gap: 1.2rem; margin-bottom: 2.2rem;
+            background: linear-gradient(120deg, #1b3a5c 0%, #2a6f97 45%, #6a4c93 100%);
+            border-radius: 32px; padding: 1.8rem 2rem;
+            box-shadow: 0 14px 36px -10px rgba(20, 50, 90, 0.35);
+            position: relative; overflow: hidden;
+        }
+        .header::after {
+            content: ""; position: absolute; top: -50%; right: -10%;
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
+        }
+        .header-left h1 {
+            font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em;
+            color: #fff; display: flex; align-items: center; gap: 14px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .header-left h1 i { color: #ffd166; font-size: 2.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .header-left .subhead {
+            color: rgba(255,255,255,0.9); font-size: 0.98rem;
+            margin-top: 0.4rem; padding-left: 0.2rem;
+            display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+        }
+        .header-left .subhead span {
+            background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.2rem 1rem; border-radius: 40px;
+            font-size: 0.82rem; font-weight: 500; color: #fff;
+        }
+        .progress-wrap {
+            background: rgba(255,255,255,0.95); border-radius: 60px;
+            padding: 0.6rem 1.4rem 0.6rem 1rem;
+            box-shadow: 0 6px 18px rgba(0,20,40,0.12);
+            display: flex; align-items: center; gap: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.6); position: relative; z-index: 1;
+        }
+        .progress-label { font-size: 0.85rem; font-weight: 600; color: #1b3a5c; white-space: nowrap; }
+        .progress-bar-bg { width: 140px; height: 10px; background: #e2ebf5; border-radius: 20px; overflow: hidden; }
+        .progress-bar-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #ef476f, #ffd166, #06d6a0, #118ab2, #6a4c93);
+            background-size: 300% 100%; border-radius: 20px;
+            transition: width 0.4s ease;
+            animation: rainbowShift 4s linear infinite;
+        }
+        @keyframes rainbowShift { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+        .progress-pct { font-size: 0.85rem; font-weight: 700; color: #6a4c93; min-width: 36px; text-align: right; }
+
+        /* ---------- GRID ---------- */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; margin-top: 0.5rem; }
+        .card {
+            background: #fff; border-radius: 24px;
+            padding: 1.6rem 1.6rem 1.8rem 1.6rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f8;
+            transition: box-shadow 0.2s ease, transform 0.15s ease;
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+            background: var(--accent, #2a6f97); border-radius: 24px 24px 0 0;
+        }
+        .card[data-card="1"] { --accent: #ef476f; --accent-light: #fde2e8; }
+        .card[data-card="2"] { --accent: #f78c6b; --accent-light: #fde6db; }
+        .card[data-card="3"] { --accent: #ffd166; --accent-light: #fff3d6; }
+        .card[data-card="4"] { --accent: #06d6a0; --accent-light: #d9f7ec; }
+        .card[data-card="5"] { --accent: #118ab2; --accent-light: #d7eef6; }
+        .card[data-card="6"] { --accent: #e63946; --accent-light: #fbdde0; }
+        .card[data-card="7"] { --accent: #2a9d8f; --accent-light: #d8f0ec; }
+        .card[data-card="8"] { --accent: #6a4c93; --accent-light: #e8def4; }
+        .card[data-card="9"] { --accent: #ff8fab; --accent-light: #ffe2eb; }
+        .card[data-card="10"] { --accent: #457b9d; --accent-light: #dceaf2; }
+        .card[data-card="11"] { --accent: #e76f51; --accent-light: #fce4dc; }
+        .card[data-card="12"] { --accent: #2a9d8f; --accent-light: #d8f0ec; }
+        .card:hover {
+            box-shadow: 0 18px 36px -12px rgba(20,60,100,0.18), 0 2px 8px rgba(0,0,0,0.04);
+            transform: translateY(-2px);
+        }
+        .card-full { grid-column: 1 / -1; }
+
+        /* ---------- CARD HEADER / TOGGLE ---------- */
+        .card-head {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 0.8rem; cursor: pointer; user-select: none;
+            border-bottom: 2px solid #eef2f8;
+            padding-bottom: 0.6rem; margin-bottom: 1.1rem;
+        }
+        .card-head h2 {
+            font-size: 1.25rem; font-weight: 600; color: #1f3b5c;
+            display: flex; align-items: center; gap: 0.7rem;
+            margin: 0; padding: 0; border: none;
+        }
+        .card-head h2 .num {
+            background: var(--accent, #2a6f97); color: #fff;
+            font-size: 0.8rem; font-weight: 700;
+            width: 1.9rem; height: 1.9rem;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%; flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+        }
+        .card-head .toggle-icon {
+            color: #8aa2bc; font-size: 1rem;
+            transition: transform 0.25s ease; flex-shrink: 0;
+        }
+        .card.collapsed .card-head .toggle-icon { transform: rotate(-90deg); }
+        .card-body {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.25s ease;
+            max-height: 5000px; opacity: 1;
+        }
+        .card.collapsed .card-body { max-height: 0; opacity: 0; pointer-events: none; }
+
+        /* ---------- TABLES ---------- */
+        table {
+            width: 100%; border-collapse: collapse; font-size: 0.9rem;
+            margin: 0.8rem 0 0.6rem 0; border-radius: 14px;
+            overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+        th {
+            background: var(--accent-light, #e9f1f9); color: #0b2b4b;
+            font-weight: 600; text-align: left;
+            padding: 0.65rem 0.8rem; font-size: 0.83rem; letter-spacing: 0.02em;
+        }
+        td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #f1f5fa; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+
+        /* ---------- TEXT ELEMENTS ---------- */
+        h3 { font-size: 1.02rem; font-weight: 600; color: #1e3f60; margin: 1.2rem 0 0.5rem 0; }
+        h3:first-of-type { margin-top: 0.2rem; }
+        ul, ol { padding-left: 1.5rem; margin: 0.5rem 0 0.7rem 0; }
+        li { margin-bottom: 0.3rem; }
+        .note {
+            background: var(--accent-light, #eef4fa);
+            border-left: 6px solid var(--accent, #2a6f97);
+            padding: 0.9rem 1.1rem; border-radius: 12px;
+            margin: 1rem 0 0.4rem 0; font-size: 0.9rem; color: #17324d;
+        }
+        .note strong { color: #0b2b4b; }
+        code {
+            background: #f0f4f8; padding: 0.1rem 0.4rem; border-radius: 6px;
+            font-family: 'Courier New', monospace; font-size: 0.88rem;
+            color: #b5305a; font-weight: 600;
+        }
+        pre {
+            background: #1e2a3a; color: #e8eef7;
+            padding: 1rem 1.2rem; border-radius: 14px;
+            overflow-x: auto; font-family: 'Courier New', monospace;
+            font-size: 0.85rem; line-height: 1.6;
+            margin: 0.8rem 0;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+        }
+        pre .kw { color: #ff9eb5; }
+        pre .fn { color: #7ee0c0; }
+        pre .str { color: #ffd166; }
+        pre .num { color: #a8d8ff; }
+        pre .com { color: #7f9ab5; font-style: italic; }
+
+        /* flow symbol inline */
+        .flow-symbol {
+            display: inline-block; vertical-align: middle;
+            width: 60px; height: 32px;
+        }
+
+        /* ---------- SELF CHECK ---------- */
+        .self-check {
+            margin-top: 1.2rem; border-top: 1px dashed #cbddee; padding-top: 0.9rem;
+        }
+        .self-check-btn {
+            background: #f5f9fe; border: 1px solid var(--accent, #c7d9ea);
+            color: #1f4a73; font-weight: 600; font-size: 0.85rem;
+            padding: 0.4rem 1.2rem; border-radius: 40px;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: background 0.15s ease, border-color 0.15s ease;
+            font-family: inherit;
+        }
+        .self-check-btn:hover { background: var(--accent-light, #d9e6f2); border-color: var(--accent, #9bb8d4); }
+        .self-check-btn i { font-size: 0.8rem; transition: transform 0.2s ease; }
+        .self-check-btn.open i { transform: rotate(90deg); }
+        .self-check-content {
+            display: none;
+            margin-top: 0.7rem;
+            background: #f9fbfe; border-radius: 12px;
+            padding: 0.8rem 1rem; border: 1px solid var(--accent-light, #e0ecf8);
+        }
+        .self-check-content.open { display: block; }
+        .self-check-content p { font-size: 0.88rem; color: #2c3e50; margin-bottom: 0.4rem; }
+        .self-check-content p:last-child { margin-bottom: 0; }
+
+        .answer-toggle-btn {
+            background: transparent; border: 1px dashed var(--accent, #9bb8d4);
+            color: var(--accent, #1f4a73); font-weight: 600; font-size: 0.8rem;
+            padding: 0.3rem 1rem; border-radius: 40px;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
+            transition: background 0.15s ease; font-family: inherit; margin-top: 0.3rem;
+        }
+        .answer-toggle-btn:hover { background: var(--accent-light, #eef4fa); }
+        .answer-toggle-btn i { font-size: 0.75rem; transition: transform 0.2s ease; }
+        .answer-toggle-btn.open i { transform: rotate(90deg); }
+        .answer-content { display: none; margin-top: 0.4rem; }
+        .answer-content.open { display: block; }
+        .answer-content .answer { color: #1f6e43; font-weight: 600; }
+
+        /* ---------- CHECKBOX PROGRESS ---------- */
+        .card-progress {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-top: 1.2rem; padding-top: 0.8rem; border-top: 1px solid #eef4fa;
+        }
+        .card-progress label {
+            font-size: 0.78rem; font-weight: 500; color: #5d7f9a;
+            cursor: pointer; display: flex; align-items: center; gap: 0.4rem;
+        }
+        .card-progress input[type="checkbox"] {
+            width: 16px; height: 16px;
+            accent-color: var(--accent, #1f6e9c); cursor: pointer;
+        }
+
+        /* ---------- FOOTER ---------- */
+        .footer-note {
+            margin-top: 2.5rem; padding-top: 1.5rem;
+            border-top: 2px solid #d4e2f0;
+            font-size: 0.88rem; color: #3d556b;
+            text-align: center; font-style: italic;
+        }
+        .footer-note i { color: #6a4c93; margin-right: 6px; }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 800px) {
+            .grid { grid-template-columns: 1fr; gap: 1.2rem; }
+            body { padding: 1rem; }
+            .header { padding: 1.4rem 1.4rem; border-radius: 24px; }
+            .header-left h1 { font-size: 1.8rem; }
+            .header-left h1 i { font-size: 1.6rem; }
+            .progress-wrap { width: 100%; justify-content: space-between; }
+            .progress-bar-bg { flex: 1; width: auto; }
+            .card { padding: 1.2rem 1.1rem 1.4rem 1.1rem; }
+        }
+        @media (max-width: 450px) {
+            .header-left h1 { font-size: 1.5rem; flex-wrap: wrap; }
+            .progress-label { font-size: 0.72rem; }
+            .card-head h2 { font-size: 1rem; }
+            .card-head h2 .num { width: 1.5rem; height: 1.5rem; font-size: 0.68rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ========== HEADER ========== -->
+        <div class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-microchip"></i> 7.2 Revision Guide</h1>
+                <div class="subhead">
+                    <i class="fas fa-laptop-code" style="color:#ffd166;"></i>
+                    Smart Devices · MicroPython · Key knowledge for the test
+                    <span>Self‑study</span>
+                </div>
+            </div>
+            <div class="progress-wrap">
+                <span class="progress-label"><i class="fas fa-tasks" style="margin-right:6px;color:#6a4c93;"></i>Progress</span>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+                <span class="progress-pct" id="progressPct">0%</span>
+            </div>
+        </div>
+
+        <!-- ========== GRID START ========== -->
+        <div class="grid">
+
+            <!-- 1. SMART DEVICES & SENSORS -->
+            <div class="card" data-card="1">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">1</span> Smart Devices &amp; Sensors</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>A <strong>smart device</strong> uses <strong>sensors</strong> to gather data from its surroundings, then uses that data to decide the correct output — often automatically.</p>
+                    <table>
+                        <tr><th>Term</th><th>Meaning</th></tr>
+                        <tr><td><strong>Smart device</strong></td><td>A device that uses sensors and is connected to other devices.</td></tr>
+                        <tr><td><strong>Sensor</strong></td><td>A device that gathers data from its surroundings to record or respond to.</td></tr>
+                        <tr><td><strong>Input</strong></td><td>Physical hardware attached to a computing device, such as a keyboard, mouse, microphone, or button.</td></tr>
+                        <tr><td><strong>Output</strong></td><td>A visible or audible outcome on the device, e.g. through the display, monitor, speakers, or headphones.</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Remember:</strong> A sensor is an <em>input</em> — it brings data <em>into</em> the system. An LED display or speaker is an <em>output</em> — it sends information <em>out</em> to the user.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Is a temperature sensor an input or an output?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> An input — it gathers data from the surroundings.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="1"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. SOFTWARE TYPES -->
+            <div class="card" data-card="2">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">2</span> Types of Software</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>Software is the programs that run on a computing device. There are three key types you need to know:</p>
+                    <table>
+                        <tr><th>Type</th><th>What it does</th><th>Examples</th></tr>
+                        <tr>
+                            <td><strong>Systems software</strong></td>
+                            <td>Runs the hardware and software — the <strong>operating system (OS)</strong>. Allows the computer's hardware to communicate with the software that is running.</td>
+                            <td>Windows, macOS, Linux, Android, iOS</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Applications software</strong></td>
+                            <td>Programs for general or specific tasks that help the user complete a task.</td>
+                            <td>Word processor, web browser, games, presentation software</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Simulator</strong></td>
+                            <td>Software to simulate a real-world application. Used for training and testing because it is safe, cheap, and repeatable.</td>
+                            <td>Flight simulator, medical simulator, military simulator</td>
+                        </tr>
+                    </table>
+                    <div class="note">
+                        <strong>Watch out:</strong> The <strong>operating system</strong> is systems software, not applications software. It is the link between the hardware and the applications.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> What type of software is a flight simulator?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> A simulator (a type of application software that copies a real-world situation).</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="2"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. FLOWCHARTS & SELECTION -->
+            <div class="card" data-card="3">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">3</span> Flowcharts &amp; Selection</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>A <strong>flowchart</strong> shows the step-by-step sequence of actions in a program. A <strong>decision diamond</strong> asks a yes/no question — this is called <strong>selection</strong>.</p>
+                    <table>
+                        <tr><th>Symbol</th><th>Name</th><th>What it shows</th></tr>
+                        <tr>
+                            <td><svg class="flow-symbol" viewBox="0 0 60 32" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="52" height="24" rx="12" ry="12" fill="#e9f1f9" stroke="#2a6f97" stroke-width="1.5"/></svg></td>
+                            <td>Terminator</td><td>Start or end</td>
+                        </tr>
+                        <tr>
+                            <td><svg class="flow-symbol" viewBox="0 0 60 32" xmlns="http://www.w3.org/2000/svg"><polygon points="6,4 54,4 46,28 2,28" fill="#e9f1f9" stroke="#2a6f97" stroke-width="1.5"/></svg></td>
+                            <td>Input / Output</td><td>Getting data in or showing a result</td>
+                        </tr>
+                        <tr>
+                            <td><svg class="flow-symbol" viewBox="0 0 60 32" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="52" height="24" fill="#e9f1f9" stroke="#2a6f97" stroke-width="1.5"/></svg></td>
+                            <td>Process</td><td>An instruction or calculation</td>
+                        </tr>
+                        <tr>
+                            <td><svg class="flow-symbol" viewBox="0 0 60 32" xmlns="http://www.w3.org/2000/svg"><polygon points="30,3 57,16 30,29 3,16" fill="#e9f1f9" stroke="#2a6f97" stroke-width="1.5"/></svg></td>
+                            <td>Decision</td><td>A yes/no question (selection)</td>
+                        </tr>
+                    </table>
+                    <div class="note">
+                        <strong>Selection logic:</strong> If a flowchart uses a decision diamond, the program follows different paths depending on the answer. In Python this is written as <code>if ... else</code>.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which flowchart symbol is used to check a condition and decide what to do?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> The decision diamond.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="3"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. COMPARISON OPERATORS -->
+            <div class="card" data-card="4">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">4</span> Comparison Operators</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>Comparison operators are used in <code>if</code> statements and flowcharts to compare values and make decisions.</p>
+                    <table>
+                        <tr><th>Operator</th><th>Meaning</th></tr>
+                        <tr><td><code>&lt;</code></td><td>Less than</td></tr>
+                        <tr><td><code>&gt;</code></td><td>Greater than</td></tr>
+                        <tr><td><code>&lt;=</code></td><td>Less than or equal to</td></tr>
+                        <tr><td><code>&gt;=</code></td><td>Greater than or equal to</td></tr>
+                        <tr><td><code>==</code></td><td>Equal to</td></tr>
+                        <tr><td><code>!=</code></td><td>Not equal to</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Watch out:</strong> <code>=</code> means "assign a value" (e.g. <code>score = 10</code>), but <code>==</code> means "is equal to" (e.g. <code>if score == 10:</code>). They are not the same.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which operator means "not equal to"?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> <code>!=</code></p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="4"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. MICROPYTHON OUTPUT COMMANDS -->
+            <div class="card" data-card="5">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">5</span> MicroPython Output Commands</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>These commands control what the micro:bit shows or plays. They are all <strong>outputs</strong>.</p>
+                    <table>
+                        <tr><th>Command</th><th>What it does</th></tr>
+                        <tr><td><code>display.show(Image.HEART)</code></td><td>Shows a single image (a heart) on the LED display.</td></tr>
+                        <tr><td><code>display.scroll("Hello")</code></td><td>Scrolls the text "Hello" across the LED display.</td></tr>
+                        <tr><td><code>sleep(1000)</code></td><td>Adds a delay of 1000 milliseconds (1 second).</td></tr>
+                        <tr><td><code>music.play(music.BADDY)</code></td><td>Plays a built-in tune.</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Sequence matters:</strong> If you want an image to stay on screen for 1 second before the next output, you must put <code>sleep(1000)</code> after the <code>display.show()</code> line.
+                    </div>
+                    <pre>display.show(Image.RABBIT)
+sleep(1000)</pre>
+                    <p>This shows a rabbit, pauses for 1 second, then moves on to the next line.</p>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which command adds a delay of 1 second?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> <code>sleep(1000)</code> — 1000 milliseconds = 1 second.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="5"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. MICROPYTHON INPUTS & SENSORS -->
+            <div class="card" data-card="6">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">6</span> MicroPython Inputs &amp; Sensors</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>These commands read data from the micro:bit's sensors. They are all <strong>inputs</strong>.</p>
+                    <table>
+                        <tr><th>Command</th><th>What it does</th></tr>
+                        <tr><td><code>pin_logo.is_touched()</code></td><td>Checks if the logo is touched.</td></tr>
+                        <tr><td><code>temperature()</code></td><td>Reads the temperature.</td></tr>
+                        <tr><td><code>microphone.current_event() == SoundEvent.LOUD</code></td><td>Checks if a loud sound was detected.</td></tr>
+                        <tr><td><code>accelerometer.was_gesture('shake')</code></td><td>Checks if the micro:bit was shaken.</td></tr>
+                        <tr><td><code>display.read_light_level()</code></td><td>Reads the light level using the LED display.</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Input vs output:</strong> A sensor command reads data <em>in</em>. A display or music command sends data <em>out</em>. If a command starts with <code>display.show</code> or <code>music.play</code>, it's an output.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Is <code>temperature()</code> an input or an output?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> An input — it reads the temperature sensor.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="6"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. IF STATEMENTS & LIGHT LEVEL EXAMPLES -->
+            <div class="card" data-card="7">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">7</span> IF Statements &amp; Light Level Examples</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>An <code>if</code> statement uses a comparison operator to decide whether to run a block of code.</p>
+                    <h3>Example: light level is greater than 70</h3>
+                    <pre><span class="kw">if</span> display.read_light_level() &gt; <span class="num">70</span>:
+    <span class="fn">display.show</span>(Image.HAPPY)</pre>
+                    <h3>Example: light level is equal to 50</h3>
+                    <pre><span class="kw">if</span> display.read_light_level() == <span class="num">50</span>:
+    <span class="fn">display.show</span>(Image.SAD)</pre>
+                    <div class="note">
+                        <strong>Watch out:</strong> <code>&gt;</code> means "greater than". <code>==</code> means "equal to". Mixing these up is a very common error. If the condition is <code>light_level &lt; 60</code>, then 60 itself is <strong>not</strong> included — the condition is false at exactly 60.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> Which operator would you use to check if the light level is exactly 50?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> <code>==</code> (equal to).</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="7"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. DATA TYPES -->
+            <div class="card" data-card="8">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">8</span> Data Types</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>Every value in a program has a <strong>data type</strong>. Choosing the right one matters — you can't do maths with text!</p>
+                    <table>
+                        <tr><th>Data type</th><th>What it stores</th><th>Example</th></tr>
+                        <tr><td><strong>String</strong></td><td>Text — letters, numbers, or symbols in quotes.</td><td><code>"Hello"</code>, <code>"Welcome to MicroPython"</code></td></tr>
+                        <tr><td><strong>Integer</strong></td><td>Whole numbers (no decimal point).</td><td><code>145</code>, <code>100</code>, <code>-5</code></td></tr>
+                        <tr><td><strong>Float / Real</strong></td><td>Numbers with a decimal point.</td><td><code>3.14</code>, <code>1.75</code></td></tr>
+                    </table>
+                    <h3>Key rules to remember</h3>
+                    <ul>
+                        <li><strong>"145"</strong> with quotes is a <strong>string</strong> — it is text, not a number.</li>
+                        <li><strong>145</strong> without quotes is an <strong>integer</strong> — it can be used in calculations.</li>
+                        <li><strong>"Hello"</strong> is a string.</li>
+                        <li><strong>"Welcome to MicroPython"</strong> is a string, not an integer.</li>
+                        <li>The result of <code>100 + 50</code> is <strong>150</strong>, which is an <strong>integer</strong>.</li>
+                    </ul>
+                    <div class="note">
+                        <strong>Why it matters:</strong> If a value is stored as a string, you cannot compare it to another number in the same way, or do arithmetic with it. You would need to convert it first using <code>int()</code> or <code>float()</code>.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> What data type is <code>"145"</code> (with quotes)?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> A string — the quotes make it text, not a number.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="8"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. TESTING & TEST PLANS -->
+            <div class="card" data-card="9">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">9</span> Testing &amp; Test Plans</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>A <strong>test plan</strong> is a structured approach to determine whether your program works as expected. It lists inputs, expected outputs, and actual outputs.</p>
+                    <table>
+                        <tr><th>Test</th><th>Input</th><th>Expected Output</th><th>Actual Output</th><th>Pass / Fail</th></tr>
+                        <tr><td>Normal</td><td>Light = 40</td><td>Happy face</td><td>Happy face</td><td>Pass</td></tr>
+                        <tr><td>Boundary</td><td>Light = 100</td><td>Sad face</td><td>Sad face</td><td>Pass</td></tr>
+                        <tr><td>Normal</td><td>Light = 180</td><td>Sad face</td><td>Sad face</td><td>Pass</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Boundary values matter:</strong> If the condition is <code>light_level &lt; 100</code>, then 100 is a boundary. At exactly 100, the condition is <strong>false</strong>. Test it to make sure your program behaves correctly.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> What is a test plan used for?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> To check a program gives the correct output for a range of inputs.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="9"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. DEBUGGING FLOWCHARTS & CODE -->
+            <div class="card" data-card="10">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">10</span> Debugging: Flowchart vs Code</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>Flowcharts are used to <strong>plan</strong> a program and to <strong>identify and fix errors</strong>. Read the flowchart top to bottom and compare each step to the code.</p>
+                    <h3>Typical errors to look for</h3>
+                    <ul>
+                        <li>The <strong>input</strong> is wrong (e.g. using a button when it should be a light sensor).</li>
+                        <li>The <strong>sequence</strong> of outputs is wrong.</li>
+                        <li>A <strong>delay</strong> (<code>sleep()</code>) is missing between outputs.</li>
+                        <li>The <strong>text or image</strong> displayed does not match the flowchart.</li>
+                    </ul>
+                    <h3>Example: light level flowchart</h3>
+                    <p>If a flowchart says: "If light level is greater than 60 → display 'Bright'; otherwise → clear screen", then:</p>
+                    <ul>
+                        <li>At light level 70, the output is "Bright".</li>
+                        <li>At light level 60, the condition <code>&gt; 60</code> is <strong>false</strong>, so the screen clears (60 is not greater than 60).</li>
+                    </ul>
+                    <div class="note">
+                        <strong>Check the boundary:</strong> <code>&gt;</code> does not include the value itself. <code>&gt;=</code> does. Always check which one the flowchart uses.
+                    </div>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> If the condition is <code>light_level &gt; 60</code>, what happens at exactly 60?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> The condition is false — the program follows the "No" path.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="10"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. KEYWORD MATCHING -->
+            <div class="card" data-card="11">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">11</span> Key Terms to Know</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr><th>Keyword</th><th>Definition</th></tr>
+                        <tr><td><strong>Smart device</strong></td><td>A device that uses sensors and is connected to other devices.</td></tr>
+                        <tr><td><strong>Sensor</strong></td><td>A device that gathers data from its surroundings to record or respond to.</td></tr>
+                        <tr><td><strong>Input</strong></td><td>Physical hardware attached to a computing device (keyboard, mouse, microphone, button).</td></tr>
+                        <tr><td><strong>Output</strong></td><td>A visible or audible outcome (display, monitor, speakers, headphones).</td></tr>
+                        <tr><td><strong>Systems software</strong></td><td>Software that runs the hardware and software — the operating system.</td></tr>
+                        <tr><td><strong>Applications software</strong></td><td>Software for general or specific tasks (typing a letter, presentations).</td></tr>
+                        <tr><td><strong>Simulator</strong></td><td>Software to simulate a real-world application (e.g. flight simulator).</td></tr>
+                        <tr><td><strong>MicroPython</strong></td><td>The version of Python used with the micro:bit.</td></tr>
+                        <tr><td><strong>Test plan</strong></td><td>A structured approach to determine whether your program works as expected.</td></tr>
+                    </table>
+                    <div class="self-check">
+                        <button class="self-check-btn" data-toggle="self-check"><i class="fas fa-chevron-right"></i> Quick self‑check</button>
+                        <div class="self-check-content">
+                            <p><strong>Q:</strong> What is the keyword for "software to simulate a real-world application"?</p>
+                            <button class="answer-toggle-btn" data-toggle="answer"><i class="fas fa-chevron-right"></i> Show answer</button>
+                            <div class="answer-content"><p><span class="answer">A:</span> Simulator.</p></div>
+                        </div>
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="11"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. SUMMARY CHECKLIST -->
+            <div class="card card-full" data-card="12">
+                <div class="card-head" data-toggle="card">
+                    <h2><span class="num">12</span> Summary — Common Errors Checklist</h2>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-body">
+                    <p>When reading or writing MicroPython code for the micro:bit, run through this checklist:</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <h3 style="margin-top: 0;">Input &amp; output checks</h3>
+                            <ul>
+                                <li>Sensor commands (e.g. <code>temperature()</code>) are <strong>inputs</strong>.</li>
+                                <li>Display and music commands are <strong>outputs</strong>.</li>
+                                <li><code>display.read_light_level()</code> is an input, not an output.</li>
+                                <li><code>display.show()</code> is an output, not an input.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 style="margin-top: 0;">Logic &amp; data checks</h3>
+                            <ul>
+                                <li>Used <code>==</code> for "equal to", not <code>=</code>.</li>
+                                <li>Used <code>&gt;</code> / <code>&lt;</code> correctly — boundaries matter.</li>
+                                <li>Text is in quotes (String), whole numbers are not (Integer).</li>
+                                <li>Added <code>sleep()</code> when a delay is needed.</li>
+                                <li>The sequence of outputs matches the flowchart.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="note">
+                        <strong>Reminder:</strong> Reading code carefully is a skill. Slow down, trace each line, and check the checklist.
+                    </div>
+                    <div class="card-progress">
+                        <label><input type="checkbox" class="progress-check" data-card="12"> I've revised this section</label>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- GRID END -->
+
+        <div class="footer-note">
+            <i class="fas fa-book"></i> 7.2 Revision Guide · Use alongside your lesson notes and Student's Book.
+        </div>
+    </div>
+
+    <script>
+        /* ---------- EVENT DELEGATION FOR ALL TOGGLES ---------- */
+        document.addEventListener('click', function(e) {
+            // Card header toggle
+            const cardHead = e.target.closest('[data-toggle="card"]');
+            if (cardHead) {
+                const card = cardHead.closest('.card');
+                if (card) card.classList.toggle('collapsed');
+                return;
+            }
+
+            // Self-check toggle
+            const selfCheckBtn = e.target.closest('[data-toggle="self-check"]');
+            if (selfCheckBtn) {
+                const content = selfCheckBtn.parentElement.querySelector('.self-check-content');
+                if (content) {
+                    const isOpen = content.classList.contains('open');
+                    content.classList.toggle('open', !isOpen);
+                    selfCheckBtn.classList.toggle('open', !isOpen);
+                }
+                return;
+            }
+
+            // Answer toggle
+            const answerBtn = e.target.closest('[data-toggle="answer"]');
+            if (answerBtn) {
+                const content = answerBtn.parentElement.querySelector('.answer-content');
+                if (content) {
+                    const isOpen = content.classList.contains('open');
+                    content.classList.toggle('open', !isOpen);
+                    answerBtn.classList.toggle('open', !isOpen);
+                    answerBtn.innerHTML = isOpen
+                        ? '<i class="fas fa-chevron-right"></i> Show answer'
+                        : '<i class="fas fa-chevron-down"></i> Hide answer';
+                }
+                return;
+            }
+        });
+
+        /* ---------- PROGRESS TRACKING ---------- */
+        (function() {
+            const checkboxes = document.querySelectorAll('.progress-check');
+            const fill = document.getElementById('progressFill');
+            const pct = document.getElementById('progressPct');
+            const storageKey = 'revisionGuide7_2_progress';
+
+            let saved = {};
+            try { saved = JSON.parse(localStorage.getItem(storageKey)) || {}; } catch(e) { saved = {}; }
+
+            checkboxes.forEach(function(cb) {
+                const cardId = cb.getAttribute('data-card');
+                if (saved[cardId]) cb.checked = true;
+
+                cb.addEventListener('change', function() {
+                    saved[cardId] = this.checked;
+                    localStorage.setItem(storageKey, JSON.stringify(saved));
+                    updateProgress();
+                });
+            });
+
+            function updateProgress() {
+                const total = checkboxes.length;
+                const checked = document.querySelectorAll('.progress-check:checked').length;
+                const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
+                fill.style.width = percent + '%';
+                pct.textContent = percent + '%';
+            }
+
+            updateProgress();
+        })();
+    </script>
+</body>
+</html>
