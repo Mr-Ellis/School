@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Topic 6 · Testing &amp; Trace Tables</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f0f4fb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            padding: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .nav {
+            background: #0b2a4a;
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .nav a {
+            color: #e6edf5;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav a:hover { color: #fff; text-decoration: underline; }
+        .nav .brand { margin-right: auto; font-weight: 600; color: white; }
+        .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .page-header h1 i { color: #2a6f97; }
+        .page-header .sub {
+            color: #475569;
+            background: #e9eff8;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .resource-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            background: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 60px;
+            border: 1px solid #d4e3f0;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+        .resource-bar .label {
+            font-weight: 600;
+            color: #0b2a4a;
+            font-size: 0.85rem;
+        }
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .tool-link:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .tool-link.primary { background: #e8f5e9; color: #2e7d32; border-color: #81c784; }
+        .tool-link.primary:hover { background: #c8e6c9; }
+        .tool-link.secondary { background: #fff3e0; color: #e65100; border-color: #ffb74d; }
+        .tool-link.secondary:hover { background: #ffe0b2; }
+        .tool-link.tertiary { background: #e3f2fd; color: #0d47a1; border-color: #90caf9; }
+        .tool-link.tertiary:hover { background: #bbdefb; }
+        .tool-link .badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.05rem 0.5rem;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.08);
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.8rem 2rem;
+            border: 1px solid #e5edf5;
+            box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+            margin-bottom: 2rem;
+        }
+
+        .lesson-card h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin: 1.4rem 0 0.6rem 0;
+            border-left: 5px solid #2a6f97;
+            padding-left: 14px;
+        }
+        .lesson-card h2:first-of-type { margin-top: 0; }
+        .lesson-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin: 1rem 0 0.3rem 0;
+        }
+        .lesson-card p { margin-bottom: 0.5rem; }
+        .lesson-card ul, .lesson-card ol { padding-left: 1.4rem; margin: 0.3rem 0 0.8rem 0; }
+        .lesson-card li { margin-bottom: 0.2rem; }
+
+        .objectives-box {
+            background: #eef6fc;
+            border-radius: 14px;
+            padding: 0.7rem 1.2rem;
+            border-left: 4px solid #2a6f97;
+            margin-bottom: 1rem;
+        }
+        .objectives-box strong { color: #0b2a4a; }
+        .objectives-box ul { margin: 0.2rem 0 0 1.2rem; }
+
+        .highlight-box {
+            background: #eef6fc;
+            padding: 0.8rem 1.4rem;
+            border-radius: 14px;
+            border-left: 5px solid #2a6f97;
+            margin: 0.8rem 0;
+        }
+        .highlight-box.orange { border-left-color: #e67e22; background: #fef6ed; }
+        .highlight-box.green { border-left-color: #4caf50; background: #edf7ed; }
+        .highlight-box.purple { border-left-color: #7b1fa2; background: #f3e5f5; }
+        .highlight-box.red { border-left-color: #d9534f; background: #fdf0ef; }
+
+        .predict-box {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1rem 1.4rem;
+            border: 1px solid #dceaf7;
+            margin: 1rem 0;
+        }
+        .predict-box .predict-label {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.4rem;
+        }
+        .predict-box .predict-label i { color: #2a6f97; }
+        .predict-box input[type="text"] {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            width: 300px;
+            margin-right: 0.5rem;
+            transition: 0.2s;
+        }
+        .predict-box input[type="text"]:focus {
+            outline: none;
+            border-color: #2a6f97;
+            box-shadow: 0 0 0 3px rgba(42,111,151,0.15);
+        }
+        .predict-box .predict-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .btn-predict {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 0.35rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-predict:hover { background: #1a3f62; }
+        .btn-predict.reveal { background: #e9eff8; color: #0b2a4a; }
+        .btn-predict.reveal:hover { background: #d4e3f0; }
+        .predict-feedback {
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .predict-feedback.show { display: block; }
+        .predict-feedback.correct { background: #dff0d8; color: #2d6a2d; border-left: 4px solid #4caf50; }
+        .predict-feedback.incorrect { background: #f8e0e0; color: #8a3a3a; border-left: 4px solid #d9534f; }
+        .predict-feedback.reveal { background: #e9eff8; color: #0b2a4a; border-left: 4px solid #2a6f97; }
+
+        .quiz-gate {
+            background: #fff8e7;
+            border: 2px solid #f0d080;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .quiz-gate h3 {
+            color: #8a6d2b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quiz-gate h3 i { color: #e6a800; }
+        .quiz-question {
+            margin: 0.8rem 0;
+            padding: 0.6rem 0.8rem;
+            background: #fffdf5;
+            border-radius: 10px;
+            border: 1px solid #f0d080;
+        }
+        .quiz-question .q-text { font-weight: 500; margin-bottom: 0.3rem; }
+        .quiz-question label {
+            display: block;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .quiz-question label:hover { background: #fef6ed; }
+        .quiz-question input[type="radio"] { margin-right: 6px; accent-color: #0b2a4a; }
+        .btn-submit-quiz {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 0.4rem 1.4rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .btn-submit-quiz:hover { background: #1a3f62; }
+        .quiz-result {
+            margin-top: 0.6rem;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 500;
+            display: none;
+        }
+        .quiz-result.show { display: block; }
+        .quiz-result.pass { background: #dff0d8; color: #2d6a2d; border-left: 4px solid #4caf50; }
+        .quiz-result.fail { background: #f8e0e0; color: #8a3a3a; border-left: 4px solid #d9534f; }
+
+        .locked-section {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .locked-section .lock-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(240,244,251,0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            border-radius: 16px;
+            border: 2px dashed #cbd5e1;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .locked-section .lock-overlay i {
+            font-size: 2.5rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        .locked-section .lock-overlay p {
+            color: #64748b;
+            font-size: 0.95rem;
+            max-width: 300px;
+        }
+        .locked-section.unlocked .lock-overlay { display: none; }
+
+        .self-check {
+            background: #edf7ed;
+            border-radius: 16px;
+            padding: 1rem 1.4rem;
+            border: 2px solid #81c784;
+            margin: 1rem 0;
+        }
+        .self-check h4 {
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-reveal {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 0.35rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        .btn-reveal:hover { background: #1b5e20; }
+        .hidden-solution { display: none; margin-top: 0.6rem; }
+        .hidden-solution.show { display: block; }
+
+        .blooket-checkpoint {
+            background: #e8f5e9;
+            border: 2px solid #81c784;
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            margin: 1.2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+        .blooket-checkpoint .cp-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: #2e7d32;
+        }
+        .blooket-checkpoint .cp-text i { font-size: 1.4rem; }
+        .btn-blooket {
+            background: #2e7d32;
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .btn-blooket:hover { background: #1b5e20; transform: translateY(-2px); }
+
+        .worksheet-box {
+            background: #fff8e7;
+            border: 2px solid #f0d080;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .worksheet-box h3 { color: #8a6d2b; display: flex; align-items: center; gap: 10px; }
+        .worksheet-box h3 i { color: #e6a800; }
+
+        /* --- RESOURCE BOXES --- */
+        .resource-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.6rem 1.8rem;
+            border: 1px solid #e5edf5;
+            box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+            margin-bottom: 1.5rem;
+        }
+        .resource-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+            padding-left: 0;
+            margin: 0 0 0.6rem 0;
+        }
+        .resource-card h2 i { color: #2a6f97; }
+        .resource-card p {
+            color: #475569;
+            margin-bottom: 1rem;
+        }
+        .btn-resource {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.6rem 1.4rem;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #0b2a4a;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .btn-resource:hover {
+            background: #eef6fc;
+            border-color: #2a6f97;
+        }
+        .btn-resource i { color: #2a6f97; font-size: 1.1rem; }
+        .btn-resource .ppt-icon { color: #d24726; }
+        .btn-resource .lock-icon-small { color: #e6a800; }
+
+        /* Password Modal */
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .password-modal.active { display: flex; }
+        .password-box {
+            background: white;
+            border-radius: 40px;
+            padding: 2.5rem 2.8rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+        .password-box input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #d4e0ec;
+            border-radius: 60px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+        .password-box input:focus { border-color: #1f6390; }
+        .password-box .btn {
+            background: #1f6390;
+            color: white;
+            border: none;
+            padding: 0.6rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .password-box .btn:hover { background: #134f75; }
+        .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+        .modal-type-badge {
+            display: inline-block;
+            background: #0b2a4a;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .divider { margin: 2rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #dceaf7;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 0.6rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .validation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .validation-table th {
+            background: #0b2a4a;
+            color: white;
+            padding: 0.5rem 0.8rem;
+            text-align: left;
+        }
+        .validation-table td {
+            padding: 0.5rem 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        .validation-table tr:nth-child(even) { background: #f8fafc; }
+
+        @media (max-width: 680px) {
+            body { padding: 0.8rem; }
+            .lesson-card { padding: 1.2rem; }
+            .page-header h1 { font-size: 1.6rem; }
+            .resource-bar { flex-direction: column; align-items: stretch; border-radius: 24px; }
+            .tool-link { justify-content: center; }
+            .blooket-checkpoint { flex-direction: column; align-items: stretch; text-align: center; }
+            .blooket-checkpoint .cp-text { justify-content: center; }
+            .password-box { padding: 1.8rem; }
+            .predict-box input[type="text"] { width: 100%; margin-bottom: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Password Modal -->
+        <div id="passwordModal" class="password-modal">
+          <div class="password-box">
+            <div class="modal-type-badge">🔒 Teacher Resource</div>
+            <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
+            <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter the teacher password to access this lesson plan.</p>
+            <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+            <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+            <div class="error" id="pwdError"></div>
+          </div>
+        </div>
+
+        <!-- NAV -->
+        <nav class="nav">
+            <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+            <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Algorithm Design</a>
+        </nav>
+
+        <!-- HEADER -->
+        <div class="page-header">
+            <h1><i class="fas fa-bug"></i> Testing &amp; Trace Tables</h1>
+            <div class="sub"><i class="fas fa-book-open" style="margin-right:6px;"></i> Topic 6 · Finding Errors &amp; Dry-Running Code</div>
+        </div>
+
+        <!-- STARTER -->
+        <div class="blooket-checkpoint">
+            <div class="cp-text"><i class="fas fa-gamepad"></i> Starter: Blooket Cafe</div>
+            <a href="https://play.blooket.com/host/cafe?id=63d2adc61c09cef355d8e601" target="_blank" class="btn-blooket">
+                <i class="fas fa-play"></i> Play Blooket
+            </a>
+        </div>
+
+        <!-- RESOURCE BAR -->
+        <div class="resource-bar">
+            <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+            <a href="https://www.thecomputersciencelab.com/pseudocode-pr" target="_blank" class="tool-link primary">
+                <i class="fas fa-laptop-code"></i> Pseudocode Practice
+            </a>
+            <a href="https://pythontutor.com/" target="_blank" class="tool-link secondary">
+                <i class="fas fa-eye"></i> Python Tutor (Visualizer)
+            </a>
+            <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FT6%2520Testing%2520and%2520trace%2520tables.pptx&wdOrigin=BROWSELINK" target="_blank" class="tool-link tertiary">
+                <i class="fas fa-file-powerpoint"></i> Lesson PowerPoint
+            </a>
+        </div>
+
+        <!-- LESSON CONTENT -->
+        <div class="lesson-card">
+
+            <!-- Objectives -->
+            <div class="objectives-box">
+                <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+                <ul>
+                    <li>Identify errors in algorithms and suggest ways to fix the errors.</li>
+                    <li>Suggest and apply suitable test data including: normal, abnormal, extreme, and boundary data.</li>
+                    <li>Be able to complete a trace table for a dry-run of an algorithm including variables, outputs, and user prompts.</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 1: STARTER -->
+            <h2>🐛 Starter: Spot the Mistakes</h2>
+            <p>Look at the following pseudocode designed to find the maximum of three numbers. There are <strong>three</strong> mistakes.</p>
+            <div class="code-block">
+                INPUT Num1<br>
+                INPUT Num2<br>
+                INPUT Num3<br>
+                MaxNum ← 0<br><br>
+                IF Num1 >= Num2 AD Num1 >= Num3 THEN<br>
+                &nbsp;&nbsp;MaxNum ← Num3<br>
+                ELSE<br>
+                &nbsp;&nbsp;IF Num2 >= Num3 THEN<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;MaxNum = Num2<br>
+                &nbsp;&nbsp;ELSE<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;MaxNum ← Num3<br>
+                &nbsp;&nbsp;ENDIF<br>
+                ENDIF<br><br>
+                OUTPUT "Max number: , maxNum
+            </div>
+            <div class="highlight-box orange">
+                <i class="fas fa-search" style="color:#e67e22; margin-right:8px;"></i>
+                <strong>Hint:</strong> Look for spelling mistakes, missing punctuation, and logic that assigns the wrong variable.
+            </div>
+
+            <!-- SECTION 2: TYPES OF ERRORS -->
+            <h2>⚠️ Types of Errors</h2>
+            <p>There are three main types of error you need to know:</p>
+
+            <h3>1. Syntax Error</h3>
+            <p>A syntax error is where the code doesn't conform to the rules of the language. The compiler doesn't know how to translate the program, so it gives the programmer an error. The program <strong>cannot run</strong> until all syntax errors are fixed.</p>
+            <ul>
+                <li><strong>Example in the starter:</strong> <code>AD</code> instead of <code>AND</code> (spelling mistake).</li>
+                <li><strong>Example in the starter:</strong> Missing closing quote in <code>"Max number: , maxNum</code>.</li>
+            </ul>
+            <div class="highlight-box red">
+                <i class="fas fa-times-circle" style="color:#d9534f; margin-right:8px;"></i>
+                <strong>Note:</strong> <code>MaxNum = Num2</code> is <em>not</em> a syntax error. It will evaluate to TRUE or FALSE and do nothing with it (it should be <code>←</code>). This is a <strong>logical error</strong>.
+            </div>
+
+            <h3>2. Logical Error</h3>
+            <p>The program will compile and run, but it won't work as the programmer intended. It gives the wrong output.</p>
+            <ul>
+                <li><strong>Example in the starter:</strong> <code>MaxNum ← Num3</code> when it should be <code>MaxNum ← Num1</code> if Num1 is the greatest. The program will give the wrong maximum number if Num1 is greatest.</li>
+            </ul>
+
+            <h3>3. Runtime Error</h3>
+            <p>The code is syntactically correct and will start running, but an error occurs while the program is running.</p>
+            <div class="code-block">
+                INPUT NumberOfCakes<br>
+                INPUT NumberOfPeople<br>
+                cakePerPerson ← NumberOfCakes / NumberOfPeople<br>
+                OUTPUT cakePerPerson, "cakes per person"
+            </div>
+            <ul>
+                <li>If cakes = 10 and people = 2 → Output: <strong>5.0 cakes per person</strong> ✅</li>
+                <li>If cakes = 20 and people = 0 → Output: <strong>ZeroDivisionError: division by zero</strong> ❌</li>
+            </ul>
+            <p>You cannot divide a number by zero. This is a runtime error — it only happens when the program is running.</p>
+
+            <!-- SECTION 3: TESTING -->
+            <h2>🧪 Testing: Types of Test Data</h2>
+            <p>It is important that programs are fully tested to find any errors that may occur. Before testing, a <strong>test plan</strong> is created. You need to know four types of test data:</p>
+
+            <div class="highlight-box green">
+                <i class="fas fa-check-circle" style="color:#2e7d32; margin-right:8px;"></i>
+                <strong>Example Program:</strong> Enter a number between 1 and 100.
+            </div>
+
+            <table class="validation-table">
+                <thead>
+                    <tr>
+                        <th>Type of Test Data</th>
+                        <th>Meaning</th>
+                        <th>Examples (for a number between 1 and 100)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Normal</strong></td>
+                        <td>Data that is typical, valid, and should be accepted.</td>
+                        <td>5 (single digit), 14 (two digits), 50</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Abnormal</strong></td>
+                        <td>Data that falls outside of what is acceptable. It should be rejected.</td>
+                        <td>-50 (negative number), 173 (too large), "hello" (wrong type)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extreme</strong></td>
+                        <td>The largest and smallest <em>acceptable</em> values.</td>
+                        <td>1 (smallest acceptable) and 100 (largest acceptable)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Boundary</strong></td>
+                        <td>The largest/smallest acceptable value <em>and</em> the corresponding smallest/largest rejected value.</td>
+                        <td>0 and 1 (either side of lower boundary), 100 and 101 (either side of upper boundary)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box orange">
+                <i class="fas fa-lightbulb" style="color:#e67e22; margin-right:8px;"></i>
+                <strong>Boundary testing</strong> is where most errors occur in programs! Always test around the edges of your conditions.
+            </div>
+
+            <!-- SECTION 4: TRACE TABLES -->
+            <h2>📋 Trace Tables: Dry-Running Code</h2>
+            <p>A <strong>trace table</strong> is used to perform a <strong>dry-run</strong> of a program on paper. You record the value of each variable as it changes. This helps you find <strong>logic errors</strong> and understand what an algorithm is doing.</p>
+            <p>Each row in the table represents each iteration of the algorithm. Variables, outputs, and user prompts are all written down.</p>
+
+            <h3>Worked Example</h3>
+            <p>Trace the following code:</p>
+            <div class="code-block">
+                Num ← 3<br>
+                N ← 0<br>
+                WHILE N < 4 DO<br>
+                &nbsp;&nbsp;Num ← Num + N<br>
+                &nbsp;&nbsp;N ← N + 1<br>
+                &nbsp;&nbsp;OUTPUT Num<br>
+                ENDWHILE
+            </div>
+
+            <table class="validation-table">
+                <thead>
+                    <tr>
+                        <th>Num</th>
+                        <th>N</th>
+                        <th>N < 4</th>
+                        <th>OUTPUT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>3</td><td>0</td><td>TRUE</td><td></td></tr>
+                    <tr><td>3</td><td>1</td><td>TRUE</td><td>3</td></tr>
+                    <tr><td>4</td><td>2</td><td>TRUE</td><td>4</td></tr>
+                    <tr><td>6</td><td>3</td><td>TRUE</td><td>6</td></tr>
+                    <tr><td>9</td><td>4</td><td>FALSE</td><td>9</td></tr>
+                </tbody>
+            </table>
+            <p><strong>Output:</strong> 3, 4, 6, 9</p>
+
+            <div class="highlight-box purple">
+                <i class="fas fa-eye" style="color:#6a1b9a; margin-right:8px;"></i>
+                <strong>Visualise it:</strong> Use <a href="https://pythontutor.com/" target="_blank" style="color:#1f6390; font-weight:600;">Python Tutor</a> to step through code line by line and watch the variables change in real time. This is the same concept as a trace table, but automated!
+            </div>
+
+            <h3>Try It Yourself</h3>
+            <div class="predict-box">
+                <div class="predict-label"><i class="fas fa-brain"></i> What is the final output of the trace above?</div>
+                <p>Based on the trace table, what values are output? (Enter as a comma-separated list.)</p>
+                <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+                    <input type="text" id="traceOutput" placeholder="e.g. 1, 2, 3..." />
+                </div>
+                <div class="predict-actions">
+                    <button class="btn-predict" onclick="checkTrace()"><i class="fas fa-check"></i> Check</button>
+                    <button class="btn-predict reveal" onclick="revealTrace()"><i class="fas fa-eye"></i> Reveal</button>
+                </div>
+                <div class="predict-feedback" id="fb-trace"></div>
+            </div>
+
+            <!-- SECTION 5: PSEUDOCODE PRACTICE -->
+            <h2>💻 Main Task 1: Pseudocode Practice</h2>
+            <p>Work through the interactive pseudocode exercises to apply your understanding of testing and trace tables.</p>
+            <div class="highlight-box purple">
+                <i class="fas fa-external-link-alt" style="color:#6a1b9a; margin-right:8px;"></i>
+                <strong>Instructions:</strong> Open the link below and complete the exercises. Focus on the sections covering errors, test data, and trace tables.
+            </div>
+            <div style="margin:1rem 0;">
+                <a href="https://www.thecomputersciencelab.com/pseudocode-pr" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#0b2a4a; color:white; padding:0.6rem 1.6rem; border-radius:40px; text-decoration:none; font-weight:500;">
+                    <i class="fas fa-laptop-code"></i> Go to Pseudocode Practice
+                </a>
+            </div>
+
+            <!-- SECTION 6: WORKSHEET -->
+            <div class="worksheet-box">
+                <h3><i class="fas fa-file-alt"></i> Main Task 2: Testing &amp; Trace Tables Worksheet</h3>
+                <p><strong>Complete Worksheet 6 on Schoolbox.</strong></p>
+                <p style="margin-top:0.3rem;">This worksheet covers trace tables, identifying errors, and understanding test data. You will complete trace tables and identify syntax, logic, and runtime errors.</p>
+                <div style="margin-top:0.8rem;">
+                    <a href="https://lms.isr-school.com/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#0b2a4a; color:white; padding:0.5rem 1.4rem; border-radius:40px; text-decoration:none; font-weight:500; font-size:0.9rem;">
+                        <i class="fas fa-external-link-alt"></i> Open Schoolbox
+                    </a>
+                </div>
+            </div>
+
+            <!-- EXTENSION -->
+            <div class="worksheet-box" style="background:#f3e5f5; border-color:#ce93d8;">
+                <h3 style="color:#6a1b9a;"><i class="fas fa-rocket" style="color:#8e24aa;"></i> Extension Task (if you finish early)</h3>
+                <p><strong>Complete the Extension worksheet on Schoolbox.</strong></p>
+                <p style="margin-top:0.3rem;">This includes completing trace tables for more complex algorithms and identifying errors in given code sections.</p>
+                <div style="margin-top:0.8rem;">
+                    <a href="https://lms.isr-school.com/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#6a1b9a; color:white; padding:0.5rem 1.4rem; border-radius:40px; text-decoration:none; font-weight:500; font-size:0.9rem;">
+                        <i class="fas fa-external-link-alt"></i> Open Extension Worksheet
+                    </a>
+                </div>
+            </div>
+
+            <!-- SECTION 7: QUIZ GATE -->
+            <div class="quiz-gate">
+                <h3><i class="fas fa-lock-open"></i> Unlock the Challenge</h3>
+                <p>Answer these three questions correctly to unlock the Challenge activity.</p>
+
+                <div class="quiz-question">
+                    <div class="q-text">1. What type of error prevents a program from compiling because the code doesn't follow the rules of the language?</div>
+                    <label><input type="radio" name="q1" value="a"> Logical error</label>
+                    <label><input type="radio" name="q1" value="b"> Syntax error</label>
+                    <label><input type="radio" name="q1" value="c"> Runtime error</label>
+                </div>
+                <div class="quiz-question">
+                    <div class="q-text">2. A program asks for a number between 1 and 100. Which of these is <strong>boundary</strong> test data?</div>
+                    <label><input type="radio" name="q2" value="a"> 50</label>
+                    <label><input type="radio" name="q2" value="b"> -50</label>
+                    <label><input type="radio" name="q2" value="c"> 0 and 1</label>
+                </div>
+                <div class="quiz-question">
+                    <div class="q-text">3. What is the main purpose of a trace table?</div>
+                    <label><input type="radio" name="q3" value="a"> To make the code run faster</label>
+                    <label><input type="radio" name="q3" value="b"> To record variable values step-by-step and find logic errors</label>
+                    <label><input type="radio" name="q3" value="c"> To automatically fix syntax errors</label>
+                </div>
+
+                <button class="btn-submit-quiz" onclick="submitQuiz()"><i class="fas fa-paper-plane"></i> Submit answers</button>
+                <div class="quiz-result" id="quizResult"></div>
+            </div>
+
+            <!-- LOCKED CHALLENGE -->
+            <div class="locked-section" id="lockedChallenge">
+                <div class="lock-overlay" id="lockOverlay">
+                    <i class="fas fa-lock"></i>
+                    <p>Complete the quiz above correctly to unlock the Challenge Yourself activity.</p>
+                </div>
+
+                <div class="challenge-box" style="background:#e8f5e9; border:2px solid #81c784; border-radius:16px; padding:1.2rem 1.5rem; margin:1.2rem 0;">
+                    <h3 style="color:#2e7d32; display:flex; align-items:center; gap:10px;"><i class="fas fa-star" style="color:#4caf50;"></i> Challenge Yourself: Complete a Trace Table</h3>
+                    <p><strong>Instructions:</strong></p>
+                    <ol style="margin-top:0.5rem;">
+                        <li>Trace the following algorithm. Assume the user enters: <code>8, 3, 6, 5, 10, 6</code>.</li>
+                        <li>Complete the trace table below.</li>
+                        <li>State the function of the algorithm.</li>
+                    </ol>
+                    <div class="code-block" style="background:#f8fafc; border:1px solid #dceaf7; padding:0.8rem; border-radius:12px; font-family:'JetBrains Mono', monospace; font-size:0.85rem; margin:0.6rem 0;">
+                        Total ← 0<br>
+                        FOR i ← 1 TO 4<br>
+                        &nbsp;&nbsp;INPUT Base<br>
+                        &nbsp;&nbsp;INPUT Height<br>
+                        &nbsp;&nbsp;x ← (Base * Height) / 2<br>
+                        &nbsp;&nbsp;Total ← Total + x<br>
+                        NEXT i<br>
+                        Result ← Total / 3<br>
+                        OUTPUT Result
+                    </div>
+
+                    <div class="self-check" style="margin-top:1rem;">
+                        <h4><i class="fas fa-check-circle"></i> Self-Check: Compare your trace</h4>
+                        <p style="font-size:0.9rem;">Once you've completed your trace table, click below to reveal the worked solution.</p>
+                        <button class="btn-reveal" onclick="toggleSolution('sol1')"><i class="fas fa-eye"></i> Reveal solution</button>
+                        <div class="hidden-solution" id="sol1">
+                            <div style="background:white; border:1px solid #dceaf7; border-radius:12px; padding:1rem; margin-top:0.5rem; font-family:'JetBrains Mono', monospace; font-size:0.85rem;">
+                                <strong>Trace Table:</strong><br>
+                                <table class="validation-table" style="margin-top:0.5rem;">
+                                    <thead>
+                                        <tr><th>Total</th><th>i</th><th>Base</th><th>Height</th><th>x</th><th>Output</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>0</td><td>1</td><td>8</td><td>3</td><td>12</td><td></td></tr>
+                                        <tr><td>12</td><td>2</td><td>6</td><td>5</td><td>15</td><td></td></tr>
+                                        <tr><td>27</td><td>3</td><td>10</td><td>6</td><td>30</td><td></td></tr>
+                                        <tr><td>57</td><td>4</td><td></td><td></td><td></td><td></td></tr>
+                                        <tr><td></td><td></td><td></td><td></td><td></td><td>57 / 3 = 19</td></tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                                <strong>Function:</strong> The algorithm calculates the area of a triangle (base × height ÷ 2) for 4 sets of inputs, adds them to a running total, and then outputs the average area (total ÷ 3).<br><br>
+                                <em>Note: The loop runs 4 times, but the user only enters 6 values because Base and Height are read in pairs: (8,3), (6,5), (10,6) — and then the loop stops after i=3 because only 6 inputs were provided. However, in the trace above, we assumed 4 full pairs would be entered. The key insight is that the algorithm computes the average area of triangles.</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#5d7f9a; padding:0.3rem 0; flex-wrap:wrap; gap:0.5rem;">
+                <span><i class="fas fa-arrow-left" style="margin-right:6px;"></i><a href="../index.html" style="color:#1f6390; text-decoration:none;">Back to Algorithm Design</a></span>
+                <span>Topic 6 · Testing &amp; Trace Tables</span>
+            </div>
+
+        </div><!-- /lesson-card -->
+
+        <!-- LESSON PRESENTATION -->
+        <div class="resource-card">
+            <h2><i class="fas fa-chart-bar"></i> Lesson Presentation</h2>
+            <p>Use these slides to recap the lesson.</p>
+            <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FT6%2520Testing%2520and%2520trace%2520tables.pptx&wdOrigin=BROWSELINK" target="_blank" class="btn-resource">
+                <i class="fas fa-file-powerpoint ppt-icon"></i> Open PowerPoint
+            </a>
+        </div>
+
+        <!-- ADDITIONAL RESOURCES -->
+        <div class="resource-card">
+            <h2><i class="fas fa-folder-open"></i> Additional Resources</h2>
+            
+            <!-- Lesson Plan (Teacher only) — NOW LOCKED -->
+            <div style="margin-bottom: 1rem;">
+                <button onclick="openPasswordModal()" class="btn-resource" style="border: none; background: #f8fafc;">
+                    <i class="fas fa-lock lock-icon-small"></i>
+                    <i class="fas fa-file-word"></i> Lesson Plan (Teacher only) — click to toggle
+                </button>
+            </div>
+
+            <!-- AI Guide -->
+            <div>
+                <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" class="btn-resource">
+                    <i class="fas fa-robot"></i> IGCSE/A-Level Computer Science Guide (ChatGPT)
+                </a>
+            </div>
+        </div>
+
+    </div><!-- /container -->
+
+    <script>
+        // --- TRACE TABLE CHECK ---
+        function checkTrace() {
+            const input = document.getElementById('traceOutput');
+            const feedback = document.getElementById('fb-trace');
+            const val = input.value.trim().replace(/\s+/g, '').replace(/,/g, ',');
+            const answer = '3,4,6,9';
+
+            if (!val) {
+                feedback.textContent = '⚠️ Type your answer first.';
+                feedback.className = 'predict-feedback show incorrect';
+                return;
+            }
+            if (val === answer) {
+                feedback.textContent = '✅ Correct! The output is 3, 4, 6, 9.';
+                feedback.className = 'predict-feedback show correct';
+            } else {
+                feedback.textContent = '❌ Not quite. Remember: the loop runs while N < 4. Try again or click Reveal.';
+                feedback.className = 'predict-feedback show incorrect';
+            }
+        }
+
+        function revealTrace() {
+            const input = document.getElementById('traceOutput');
+            const feedback = document.getElementById('fb-trace');
+            input.value = '3, 4, 6, 9';
+            feedback.innerHTML = '<strong>👁️ Correct answer: 3, 4, 6, 9</strong><br>' +
+                '<span style="font-size:0.85rem;">Explanation: Num starts at 3, N starts at 0. Each loop adds N to Num, then increments N, then outputs Num. The loop stops when N = 4.</span>';
+            feedback.className = 'predict-feedback show reveal';
+        }
+
+        // --- QUIZ LOGIC ---
+        function submitQuiz() {
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const result = document.getElementById('quizResult');
+            const lock = document.getElementById('lockedChallenge');
+            const overlay = document.getElementById('lockOverlay');
+
+            if (!q1 || !q2 || !q3) {
+                result.textContent = '⚠️ Answer all three questions first.';
+                result.className = 'quiz-result show fail';
+                return;
+            }
+
+            let score = 0;
+            if (q1.value === 'b') score++;
+            if (q2.value === 'c') score++;
+            if (q3.value === 'b') score++;
+
+            if (score === 3) {
+                result.textContent = '✅ All 3 correct! Challenge unlocked below.';
+                result.className = 'quiz-result show pass';
+                lock.classList.add('unlocked');
+                if (overlay) overlay.style.display = 'none';
+            } else {
+                result.textContent = `You got ${score} out of 3. Review the lesson and try again.`;
+                result.className = 'quiz-result show fail';
+            }
+        }
+
+        function toggleSolution(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('show');
+        }
+
+        // --- PASSWORD MODAL LOGIC ---
+        const TEACHER_PASSWORD = 'Password262026';
+        const LESSON_PLAN_URL = 'https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FLesson%2520Plan%25206.docx&wdOrigin=BROWSELINK';
+
+        const modal = document.getElementById('passwordModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdError = document.getElementById('pwdError');
+        const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+
+        function openPasswordModal() {
+            pwdInput.value = '';
+            pwdError.textContent = '';
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closePasswordModal() {
+            modal.classList.remove('active');
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === TEACHER_PASSWORD) {
+                window.open(LESSON_PLAN_URL, '_blank');
+                closePasswordModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closePasswordModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closePasswordModal();
+            }
+        });
+    </script>
+
+</body>
+</html>
