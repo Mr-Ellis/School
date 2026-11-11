@@ -74,6 +74,16 @@
         }
         .exam-tip strong { color: #b21f1f; }
 
+        .command-term {
+            background: #eef6fc;
+            border-left: 4px solid #1a5f87;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        .command-term strong { color: #0b2a4a; }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -94,6 +104,35 @@
         }
         tr:nth-child(even) { background: #f8fafc; }
 
+        /* Interactive Q&A */
+        .qa-toggle {
+            background: #e9f0fa;
+            border-radius: 40px;
+            padding: 0.4rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f4973;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            border: 1px solid #bed3ec;
+            transition: background 0.15s;
+        }
+        .qa-toggle:hover { background: #d4e3fc; }
+
+        .qa-content {
+            display: none;
+            margin-top: 0.8rem;
+            background: #f8fafc;
+            border-radius: 0.8rem;
+            padding: 1rem 1.4rem;
+            border-left: 4px solid #fdbb2d;
+            font-size: 0.95rem;
+        }
+        .qa-content.show { display: block; }
+
         @media (max-width: 640px) {
             .container { padding: 20px; }
             h1 { font-size: 1.8rem; }
@@ -111,10 +150,16 @@
 
     <h1>A2.2 Revision Guide: Network Architecture</h1>
 
-    <p>This revision guide covers the physical and logical structures of networks: the topologies that connect devices, the servers that provide services, the models that define how devices interact, and the segmentation techniques that keep networks secure and efficient.</p>
+    <p>This revision guide covers the physical and logical structures of networks: the topologies that connect devices, the servers that provide services, the models that define how devices interact, and the segmentation techniques that keep networks secure and efficient. Use the <strong>command-term boxes</strong> to understand exactly what the examiner wants, and test yourself with the <strong>hidden practice questions</strong> at the end of each section.</p>
 
     <!-- ================= A2.2.1 ================= -->
     <h2>1. Network Topologies (A2.2.1)</h2>
+
+    <div class="command-term">
+        <strong>🎯 IB Command Term: Describe</strong><br>
+        "Give a detailed account. Naming a topology is not describing it. You must describe how the nodes are connected, what happens when a link or node fails, how data moves, and where that topology is used in practice."
+    </div>
+
     <p>A topology is the pattern in which nodes are interconnected. It determines how fast frames move, how faults propagate, how many devices you can add, and how much it costs.</p>
 
     <table>
@@ -136,8 +181,25 @@
         • <strong>Hybrid:</strong> Government campuses, enterprise data centres.
     </div>
 
+    <div class="exam-tip">
+        <strong>⚠️ Exam Tip — There Is No "Best" Topology:</strong> The best topology matches the reliability, speed, scalability, and budget of the specific environment. A home Wi-Fi network and a government data centre have different requirements, so they use different topologies.
+    </div>
+
+    <h3>Practice Question</h3>
+    <p><strong>Question:</strong> A hospital's life-support monitoring system requires that every monitor keeps reporting to the central station even if one cable is cut or one switch fails. Cost is secondary to patient safety. Describe which topology would be most appropriate and why. <em>(4 marks)</em></p>
+    <button class="qa-toggle" data-target="pq1">Show answer ▼</button>
+    <div id="pq1" class="qa-content">
+        <p><strong>Answer:</strong> A <strong>mesh topology</strong> would be most appropriate. In a mesh, nodes have <strong>multiple redundant paths</strong> to one another, so if one cable is cut or one switch fails, traffic can detour around the failed component. This provides the <strong>highest fault tolerance</strong> and ensures that every monitor continues to report to the central station—no single point of failure exists. While mesh has the <strong>highest cost</strong> (due to cabling and extra ports), cost is secondary to patient safety in this scenario. A star topology would be unsuitable because the central switch is a single point of failure; if it fails, the entire monitoring system goes down.</p>
+    </div>
+
     <!-- ================= A2.2.2 ================= -->
     <h2>2. Network Servers (A2.2.2 HL)</h2>
+
+    <div class="command-term">
+        <strong>🎯 IB Command Term: Explain</strong><br>
+        "Give a detailed account including reasons or causes. Naming a server is not explaining it. You must explain what problem the server solves, how it solves it, and why a network needs it."
+    </div>
+
     <p>A server provides a service or resource to clients. It is defined by its software, not its hardware.</p>
 
     <table>
@@ -153,11 +215,30 @@
     </table>
 
     <div class="exam-tip">
-        <strong>⚠️ DNS vs. DHCP:</strong> DHCP <em>gives</em> a device its IP address (when it joins the network). DNS <em>translates</em> a domain name into an IP address (when you browse the web).
+        <strong>⚠️ Exam Tip — DNS vs. DHCP:</strong> DHCP <em>gives</em> a device its IP address (when it joins the network). DNS <em>translates</em> a domain name into an IP address (when you browse the web).
+    </div>
+
+    <div class="key-term">
+        <strong>Remember it this way:</strong><br>
+        DHCP gives you <strong>your</strong> address. It is how your device gets an identity on the network.<br>
+        DNS tells you <strong>someone else's</strong> address. It is how your device finds the server it wants to talk to.
+    </div>
+
+    <h3>Practice Question</h3>
+    <p><strong>Question:</strong> Explain the function of DNS and DHCP servers, and why both are necessary for a device to connect to a network and browse the web. <em>(4 marks)</em></p>
+    <button class="qa-toggle" data-target="pq2">Show answer ▼</button>
+    <div id="pq2" class="qa-content">
+        <p><strong>Answer:</strong> A <strong>DHCP server</strong> automatically assigns a device its <strong>IP address and network settings</strong> when it first joins the network. Without DHCP, every device would need to be configured manually, which is impractical on a large network. A <strong>DNS server</strong> translates a human-readable <strong>domain name</strong> (like google.com) into the numerical <strong>IP address</strong> that computers use to find each other. Both are necessary: DHCP gives the device its own identity on the network, and DNS allows the device to find the server it wants to communicate with. Without DHCP, the device would not have an address; without DNS, the device could not resolve the website name into an address it can connect to.</p>
     </div>
 
     <!-- ================= A2.2.3 ================= -->
     <h2>3. Networking Models (A2.2.3)</h2>
+
+    <div class="command-term">
+        <strong>🎯 IB Command Term: Compare &amp; Contrast</strong><br>
+        "Give an account of similarities and differences between two (or more) items or situations, referring to both (all) of them throughout. Do not write two separate descriptions. You must explicitly state what is similar, what is different, and what the consequences of those differences are."
+    </div>
+
     <p>The two fundamental models differ in where the data lives and who has control.</p>
 
     <table>
@@ -176,8 +257,29 @@
         <strong>Hybrid Architectures:</strong> Modern systems blend the models. Skype uses client-server relays for reliability but P2P signalling for discovery. Content-Delivery Networks keep masters on servers but push objects to edge peers.
     </div>
 
+    <div class="exam-tip">
+        <strong>⚠️ Exam Tip — Don't Write Two Separate Descriptions:</strong> The command word is <strong>Compare &amp; Contrast</strong>. You must explicitly state similarities, differences, and the consequences of those differences. A common mistake is to describe client-server fully, then describe P2P fully, without ever comparing them. Use phrases like "Both models...", "Unlike client-server, P2P...", and "This difference means that...".
+    </div>
+
+    <h3>Practice Question</h3>
+    <p><strong>Question:</strong> Compare and contrast the client-server and peer-to-peer networking models, and explain why some applications use a hybrid approach. <em>(6 marks)</em></p>
+    <button class="qa-toggle" data-target="pq3">Show answer ▼</button>
+    <div id="pq3" class="qa-content">
+        <p><strong>Answer:</strong> <strong>Similarity:</strong> Both models allow devices to share resources and communicate over a network.</p>
+        <p><strong>Difference 1 (Control):</strong> In a client-server model, a central server owns the data and enforces policy, making it easier to manage security and backups. In a peer-to-peer model, there is no single point of control; each peer acts as both client and server, so trust must be established through cryptography or reputation.</p>
+        <p><strong>Difference 2 (Reliability):</strong> A client-server network can have a single point of failure if the server goes down, whereas a P2P network is more fault-tolerant because traffic can route around failed peers—although availability depends on peers staying online.</p>
+        <p><strong>Consequence:</strong> These differences mean client-server is better for applications requiring central control and auditability (e.g., online banking), while P2P is better for applications requiring resilience and distributed cost (e.g., file sharing, blockchain).</p>
+        <p><strong>Hybrid example:</strong> Skype uses client-server relays for reliability on mobile devices but P2P signalling for discovery—combining the strengths of both models.</p>
+    </div>
+
     <!-- ================= A2.2.4 ================= -->
     <h2>4. Network Segmentation (A2.2.4)</h2>
+
+    <div class="command-term">
+        <strong>🎯 IB Command Term: Explain</strong><br>
+        "Give a detailed account including reasons or causes. Naming a VLAN is not explaining it. You must explain what problem segmentation solves, how it works, and what the consequences are for security and performance."
+    </div>
+
     <p>Segmentation splits a large network into smaller, isolated sub-networks. This limits the spread of attacks and reduces broadcast traffic.</p>
 
     <div class="key-term">
@@ -188,10 +290,56 @@
     </div>
 
     <div class="exam-tip">
-        <strong>⚠️ Why Segment?</strong> If a virus infects one VLAN, it cannot spread to other VLANs. Segmentation also improves performance by reducing the amount of broadcast traffic that devices must process.
+        <strong>⚠️ Exam Tip — Why Segment?</strong> If a virus infects one VLAN, it cannot spread to other VLANs. Segmentation also improves performance by reducing the amount of broadcast traffic that devices must process.
+    </div>
+
+    <div class="key-term">
+        <strong>The Ship Analogy:</strong> A single hull breach could sink the whole vessel. But if the ship is divided into watertight compartments (segments), a breach in one compartment only floods that section—the ship stays afloat.
+    </div>
+
+    <h3>Practice Question</h3>
+    <p><strong>Question:</strong> A company has one flat network with 500 employees. Recently, a virus infected one employee's laptop and spread to the company's customer database within minutes. Explain how network segmentation using VLANs would have limited the damage of this attack. <em>(4 marks)</em></p>
+    <button class="qa-toggle" data-target="pq4">Show answer ▼</button>
+    <div id="pq4" class="qa-content">
+        <p><strong>Answer:</strong> If the company had used VLANs, the employee's laptop would be in a separate VLAN (e.g., a general staff VLAN) to the customer database (e.g., a secure server VLAN). When the virus infected the laptop, it would only be able to spread to other devices within that same VLAN. The <strong>VLAN boundaries would act as a firewall</strong>, preventing the virus from reaching the customer database VLAN. This <strong>limits the spread of the attack</strong>, protects critical data, and gives the IT team time to isolate the infected machine. Segmentation also <strong>reduces broadcast traffic</strong>, improving overall network performance.</p>
+    </div>
+
+    <!-- ================= QUICK DEFINITIONS ================= -->
+    <h2>Quick Definitions to Memorise</h2>
+    <div class="key-term">
+        <strong>• Topology:</strong> The pattern in which nodes are interconnected.<br>
+        <strong>• Star:</strong> All devices connect to a central hub (single point of failure).<br>
+        <strong>• Mesh:</strong> Multiple redundant paths between nodes (highest fault tolerance).<br>
+        <strong>• Hybrid:</strong> Stars at the edge, mesh in the backbone (balance of cost and redundancy).<br>
+        <strong>• DNS:</strong> Translates domain names into IP addresses.<br>
+        <strong>• DHCP:</strong> Automatically assigns IP addresses and network settings.<br>
+        <strong>• VLAN:</strong> A logical grouping of devices regardless of physical location.<br>
+        <strong>• DMZ:</strong> A buffer zone between a trusted network and the internet.
     </div>
 
 </div>
 
+<script>
+    (function() {
+        const toggles = document.querySelectorAll('.qa-toggle');
+        toggles.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-target');
+                const content = document.getElementById(targetId);
+                if (!content) return;
+
+                const isVisible = content.classList.contains('show');
+                if (isVisible) {
+                    content.classList.remove('show');
+                    this.textContent = 'Show answer ▼';
+                } else {
+                    content.classList.add('show');
+                    this.textContent = 'Hide answer ▲';
+                }
+            });
+        });
+    })();
+</script>
 </body>
 </html>
