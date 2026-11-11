@@ -1,1 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.3 Lesson 1 · Transmission Methods &amp; IP / URL</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
 
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-header h1 i { color: #2a6f97; font-size: 2rem; }
+    .page-header .sub {
+      color: #475569;
+      font-size: 1rem;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.3rem 1.4rem;
+      border-radius: 40px;
+      margin-top: 0.3rem;
+    }
+
+    .lesson-content {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.8rem 0 0.8rem 0;
+      border-left: 5px solid #2a6f97;
+      padding-left: 15px;
+    }
+    .lesson-content h2:first-of-type { margin-top: 0; }
+    .lesson-content h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.2rem 0 0.4rem 0;
+    }
+    .lesson-content p { margin-bottom: 0.6rem; }
+    .lesson-content ul, .lesson-content ol {
+      padding-left: 1.6rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content li { margin-bottom: 0.25rem; }
+
+    .objectives-box {
+      background: #eef6fc;
+      border-radius: 16px;
+      padding: 0.8rem 1.4rem;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #2a6f97;
+    }
+    .objectives-box strong { color: #0b2a4a; }
+    .objectives-box ul {
+      margin: 0.2rem 0 0 1.2rem;
+      padding-left: 0.5rem;
+    }
+    .objectives-box ul li { list-style-type: disc; font-size: 0.95rem; }
+
+    .highlight-box {
+      background: #eef6fc;
+      padding: 1rem 1.6rem;
+      border-radius: 16px;
+      border-left: 5px solid #2a6f97;
+      margin: 1rem 0;
+    }
+    .highlight-box strong { color: #0b2a4a; }
+    .highlight-box.green {
+      border-left-color: #4caf50;
+      background: #edf7ed;
+    }
+    .highlight-box.amber {
+      border-left-color: #f9a825;
+      background: #fff8e1;
+    }
+    .highlight-box.purple {
+      border-left-color: #8e24aa;
+      background: #f7edfa;
+    }
+
+    /* ===== STARTER CALLOUT ===== */
+    .starter-callout {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      border: 2px solid #e65100;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .starter-callout .badge {
+      background: #e65100;
+      color: white;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .starter-callout h3 {
+      margin-top: 0;
+      color: #7a3300;
+      font-size: 1.15rem;
+    }
+    .starter-callout p { margin-bottom: 0.3rem; color: #5a2900; }
+    .starter-callout a {
+      color: #e65100;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 2px solid #e65100;
+    }
+    .starter-callout a:hover { color: #7a3300; }
+
+    /* ===== MAIN TASK CALLOUT ===== */
+    .main-task {
+      background: linear-gradient(135deg, #fff8e1, #ffecb3);
+      border: 2px solid #f9a825;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .main-task .badge {
+      background: #f9a825;
+      color: #4a2c00;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .main-task h3 {
+      margin-top: 0;
+      color: #7a4b00;
+      font-size: 1.15rem;
+    }
+    .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
+
+    /* ===== COMPARISON GRID ===== */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .compare-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #dceaf7;
+      display: flex;
+      flex-direction: column;
+    }
+    .compare-card h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+    }
+    .compare-card.wifi h3 i { color: #1e88e5; }
+    .compare-card.bt h3 i { color: #0d47a1; }
+    .compare-card.cell h3 i { color: #e65100; }
+    .compare-card ul { padding-left: 1.2rem; margin-bottom: 0; }
+    .compare-card li { font-size: 0.85rem; margin-bottom: 0.2rem; }
+
+    /* ===== INTERACTIVE MATCH GAME ===== */
+    .match-game {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .match-game h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .match-game .match-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1rem 0;
+      align-items: center;
+      min-height: 60px;
+    }
+    .match-game .match-row .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      border: 2.5px solid #b6cfe5;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+    }
+    .match-game .match-row .chip:hover { transform: translateY(-2px); border-color: #7bb3ff; }
+    .match-game .match-row .chip.selected {
+      box-shadow: 0 0 0 3px #2a6f97;
+      border-color: #2a6f97;
+    }
+
+    .match-game .drop-zone {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+    .match-game .drop-zone .slot {
+      flex: 1;
+      min-width: 130px;
+      padding: 0.7rem 1rem;
+      border: 2px dashed #b6cfe5;
+      border-radius: 12px;
+      background: white;
+      font-size: 0.82rem;
+      color: #64748b;
+      text-align: center;
+      transition: 0.2s;
+      cursor: pointer;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .match-game .drop-zone .slot:hover { border-color: #7bb3ff; background: #f0f7ff; }
+    .match-game .drop-zone .slot.correct {
+      background: #c8e6c9;
+      border-color: #2d8f2d;
+      border-style: solid;
+      color: #1b5e20;
+      font-weight: 600;
+    }
+    .match-game .drop-zone .slot.incorrect {
+      background: #ffcdd2;
+      border-color: #e53935;
+      color: #b71c1c;
+      animation: shake 0.4s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .match-game .feedback {
+      margin-top: 0.8rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+    }
+    .match-game .feedback.ok { color: #2d8f2d; }
+    .match-game .feedback.no { color: #b71c1c; }
+
+    .btn {
+      background: linear-gradient(135deg, #1f6390, #0b2a4a);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.4rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(11,42,74,0.3); }
+    .btn.secondary {
+      background: white;
+      color: #1f6390;
+      border: 2px solid #b6cfe5;
+    }
+    .btn.secondary:hover { background: #f0f7ff; box-shadow: none; }
+
+    /* ===== SELF-CHECK QUIZ ===== */
+    .quiz {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .quiz h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quiz .q {
+      margin: 1rem 0;
+      padding: 0.9rem 1.2rem;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #e5edf5;
+    }
+    .quiz .q p { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz .q button {
+      background: #eef6fc;
+      border: 1.5px solid #d4e3f0;
+      color: #0b2a4a;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      margin: 0.2rem 0.3rem 0.2rem 0;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+    .quiz .q button:hover { background: #dbeafe; border-color: #7bb3ff; }
+    .quiz .q button.correct { background: #c8e6c9; border-color: #2d8f2d; color: #1b5e20; font-weight: 700; }
+    .quiz .q button.incorrect { background: #ffcdd2; border-color: #e53935; color: #b71c1c; }
+    .quiz .q .answer-feedback { font-size: 0.82rem; margin-top: 0.4rem; min-height: 1.2rem; font-weight: 500; }
+    .quiz .q .answer-feedback.ok { color: #2d8f2d; }
+    .quiz .q .answer-feedback.no { color: #b71c1c; }
+
+    /* ===== IP VALIDATOR ===== */
+    .ip-validator {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .ip-validator h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ip-validator .ip-input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1rem 0;
+      align-items: center;
+    }
+    .ip-validator input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.7rem 1.2rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+      background: white;
+      font-family: monospace;
+    }
+    .ip-validator input[type="text"]:focus {
+      border-color: #1f6390;
+      box-shadow: 0 0 0 4px rgba(31, 99, 144, 0.15);
+    }
+    .ip-validator .ip-result {
+      font-weight: 600;
+      font-size: 0.95rem;
+      min-height: 1.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+    }
+    .ip-validator .ip-result.valid {
+      background: #c8e6c9;
+      color: #1b5e20;
+    }
+    .ip-validator .ip-result.invalid {
+      background: #ffcdd2;
+      color: #b71c1c;
+    }
+
+    .resource-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      background: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid #d4e3f0;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+    .resource-bar a {
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .resource-bar a:hover { text-decoration: underline; }
+    .resource-bar .label {
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.85rem;
+    }
+
+    .keyword-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      background: #f1f6fc;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .keyword-row span {
+      background: white;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid #dce4ed;
+      font-size: 0.85rem;
+    }
+
+    .divider { margin: 2.5rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
+      .lesson-content { padding: 1.2rem 1.4rem; }
+      .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .main-task, .starter-callout { flex-direction: column; gap: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+    <a href="../year7-units.html"><i class="fas fa-arrow-left"></i> Year 7 Units</a>
+    <a href="../unit7-3-Accessing-the-Internet.html"><i class="fas fa-globe"></i> 7.3 Accessing the Internet</a>
+  </nav>
+
+  <a href="../unit7-3-Accessing-the-Internet.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to 7.3 Accessing the Internet</a>
+
+  <!-- ===== HEADER ===== -->
+  <div class="page-header">
+    <h1><i class="fas fa-wifi"></i> Lesson 1 · Transmission Methods &amp; IP / URL</h1>
+    <div class="sub"><i class="fas fa-arrow-right" style="margin-right:6px;"></i> Student's Book pages 82–92</div>
+  </div>
+
+  <!-- ===== RESOURCE BAR ===== -->
+  <div class="resource-bar">
+    <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+    <a href="https://www.ip2location.com/demo" target="_blank"><i class="fas fa-location-dot"></i> IP2Location Demo</a>
+    <a href="https://studio.code.org/s/internet/lessons/1" target="_blank"><i class="fas fa-video"></i> Code.org: IP &amp; DNS</a>
+    <a href="https://who.is" target="_blank"><i class="fas fa-magnifying-glass"></i> Who.is Lookup</a>
+  </div>
+
+  <!-- ===== LESSON CONTENT ===== -->
+  <div class="lesson-content">
+
+    <!-- Learning Objectives -->
+    <div class="objectives-box">
+      <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+      <ul>
+        <li>Understand the main ways devices connect to the internet (<strong>Wi‑Fi, Bluetooth, cellular data</strong>).</li>
+        <li>Recognise the strengths and weaknesses of each transmission method.</li>
+        <li>Know what an <strong>IP address</strong> and a <strong>URL</strong> are, and how they are used to access web pages.</li>
+        <li>Be able to complete <strong>Worksheet 3</strong> and <strong>Worksheet 5</strong>.</li>
+      </ul>
+    </div>
+
+    <!-- ===== STARTER ===== -->
+    <div class="starter-callout">
+      <span class="badge">🔥 Starter</span>
+      <div>
+        <h3>Blooket Warm-Up</h3>
+        <p>Start with a quick <strong>Blooket</strong> game to recap key connectivity concepts from previous lessons.</p>
+        <p><a href="https://play.blooket.com/host/fish?id=691b1bbf6ffd1350300601a2" target="_blank">▶ Open Blooket Starter</a></p>
+      </div>
+    </div>
+
+    <!-- ===== GET STARTED ===== -->
+    <h2>🚀 Get started!</h2>
+    <p>There are many different methods of connecting to networks and the internet, such as using wires or <strong>wireless transmission methods</strong> to send and receive data. <strong>Bluetooth, Wi‑Fi and cellular data</strong> are always improving, so it's important to know the key differences.</p>
+    <p>Data can be transferred from one device to another wirelessly using <strong>radio waves</strong>. The most popular methods of wireless data transfer are Wi‑Fi, Bluetooth and cellular data.</p>
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Think about it:</strong> What was the last thing that you did online? How many devices that connect to the internet are in your home? What's the most unusual device that you know can connect to the internet?
+    </div>
+
+    <!-- ===== TRANSMISSION METHODS ===== -->
+    <h2>📡 Transmission Methods</h2>
+    <p>For each wireless transmission method, it is important to consider these <strong>characteristics</strong>:</p>
+    <ul>
+      <li><strong>Bandwidth</strong> — the amount of data that can be transmitted within a certain amount of time.</li>
+      <li><strong>Transmission distance</strong> — how far a signal can be sent using the transmission method.</li>
+      <li><strong>Security</strong> — how easily the transmission can be hacked.</li>
+      <li><strong>Interference</strong> — what can interrupt the signal (walls, microwaves, other radio waves).</li>
+    </ul>
+
+    <div class="compare-grid">
+      <div class="compare-card wifi">
+        <h3><i class="fas fa-wifi"></i> Wi‑Fi</h3>
+        <ul>
+          <li>Wireless connection using a router or access point.</li>
+          <li><strong>High bandwidth</strong> (fast data transfer).</li>
+          <li>Works well in homes, schools, cafes.</li>
+          <li>Can suffer from <strong>interference</strong> (walls, other devices).</li>
+          <li>Needs security (passwords).</li>
+        </ul>
+      </div>
+      <div class="compare-card bt">
+        <h3><i class="fab fa-bluetooth-b"></i> Bluetooth</h3>
+        <ul>
+          <li>Short‑range wireless connection between devices.</li>
+          <li>Good for connecting accessories (keyboard, mouse, headphones).</li>
+          <li>Secure because of short distance.</li>
+          <li><strong>Slower</strong> than Wi‑Fi or cellular.</li>
+          <li>Only works over a few metres.</li>
+        </ul>
+      </div>
+      <div class="compare-card cell">
+        <h3><i class="fas fa-tower-cell"></i> Cellular Data (4G/5G)</h3>
+        <ul>
+          <li>Uses mobile phone masts to connect devices outdoors.</li>
+          <li>Works over <strong>long distances</strong>.</li>
+          <li>Useful when away from Wi‑Fi.</li>
+          <li>Can be affected by distance from mast or obstacles.</li>
+          <li>Bandwidth lower than Wi‑Fi in some cases.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight-box amber">
+      <i class="fas fa-balance-scale" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Key comparisons:</strong> Highest bandwidth → <strong>Wi‑Fi</strong> · Longest distance → <strong>Cellular data</strong> · Most secure → <strong>Bluetooth</strong> (short range) or cellular (encrypted).
+    </div>
+
+    <!-- ===== INTERACTIVE MATCH GAME (TRANSMISSION) ===== -->
+    <div class="match-game" id="matchGame">
+      <h3><i class="fas fa-puzzle-piece" style="color:#2a6f97;"></i> Interactive: Match the Transmission Method to its Key Trait</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click a method chip below, then click the matching drop slot to place it. Get all three right to win!</p>
+
+      <div class="match-row" id="methodChips">
+        <div class="chip" data-answer="wifi">Wi‑Fi</div>
+        <div class="chip" data-answer="bt">Bluetooth</div>
+        <div class="chip" data-answer="cell">Cellular Data</div>
+      </div>
+
+      <div class="drop-zone" id="dropZone">
+        <div class="slot" data-slot="wifi"><span>Highest bandwidth</span></div>
+        <div class="slot" data-slot="cell"><span>Longest distance</span></div>
+        <div class="slot" data-slot="bt"><span>Most secure (short range)</span></div>
+      </div>
+
+      <div class="feedback" id="matchFeedback"></div>
+      <button class="btn secondary" id="resetMatch" style="margin-top:0.8rem;"><i class="fas fa-rotate-left"></i> Reset</button>
+    </div>
+
+    <!-- ===== TRANSMISSION CHARACTERISTICS ===== -->
+    <h2>🔍 Transmission Characteristics</h2>
+    <p><strong>Wireless transmission</strong> = convenient, portable, but can be blocked by interference.</p>
+    <p><strong>Wired transmission</strong> = stable, but not portable.</p>
+    <p>Devices can connect using Wi‑Fi, Bluetooth, or cellular networks. Wi‑Fi signals can be affected by <strong>interference</strong>, which causes problems with data transmission.</p>
+
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Practise:</strong> For each scenario below, identify the characteristic of the transmission method that has caused the issue.
+      <ul style="margin-top:0.4rem;">
+        <li><strong>Scenario 1:</strong> Abid uses Wi‑Fi to connect his laptop but has no password, so anybody can view his files. → <em>Security</em></li>
+        <li><strong>Scenario 2:</strong> Alyssa uses cellular data while walking around town, but her internet stops working in a supermarket. → <em>Interference</em></li>
+        <li><strong>Scenario 3:</strong> Adam connects Bluetooth headphones to his PC, but they stop working when he goes downstairs. → <em>Transmission distance</em></li>
+      </ul>
+    </div>
+
+    <!-- ===== IP ADDRESSES & URLs ===== -->
+    <h2>🌐 Accessing Web Pages: IP Addresses &amp; URLs</h2>
+
+    <h3>IP Address (Internet Protocol Address)</h3>
+    <ul>
+      <li>A <strong>unique number</strong> given to each device on a network.</li>
+      <li>Format: <strong>four numbers separated by dots</strong> (e.g. 192.168.1.20).</li>
+      <li>Each number must be between <strong>0 and 255</strong>.</li>
+      <li>Example of valid IP: <code>199.59.149.230</code></li>
+      <li>Invalid examples:
+        <ul>
+          <li><code>69.171.224</code> (only 3 numbers)</li>
+          <li><code>74.125.6556.91</code> (6556 &gt; 255)</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>URL (Uniform Resource Locator)</h3>
+    <ul>
+      <li>The "web address" we type into a browser (e.g. <code>www.google.com</code>).</li>
+      <li>A URL matches to an IP address using the <strong>Domain Name System (DNS)</strong>.</li>
+      <li>Valid URLs must have a <strong>domain name and extension</strong> (e.g. .com, .org, .co.uk).</li>
+      <li>Invalid examples: <code>www.google</code> or <code>www.com</code>.</li>
+    </ul>
+
+    <!-- ===== INTERACTIVE IP VALIDATOR ===== -->
+    <div class="ip-validator" id="ipValidator">
+      <h3><i class="fas fa-check-double" style="color:#2a6f97;"></i> Interactive: IP Address Validator</h3>
+      <p style="font-size:0.9rem; color:#475569;">Type an IP address below and check if it is valid. Remember: four numbers, separated by dots, each between 0 and 255.</p>
+
+      <div class="ip-input-row">
+        <input type="text" id="ipInput" placeholder="e.g. 192.168.1.20" />
+        <button class="btn" id="checkIpBtn"><i class="fas fa-check"></i> Check IP</button>
+      </div>
+      <div class="ip-result" id="ipResult"></div>
+
+      <p style="font-size:0.85rem; color:#64748b; margin-top:0.8rem;">Try these examples:</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.3rem;">
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('ipInput').value='199.59.149.230'; document.getElementById('checkIpBtn').click();">199.59.149.230</button>
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('ipInput').value='69.171.224'; document.getElementById('checkIpBtn').click();">69.171.224</button>
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('ipInput').value='74.125.6556.91'; document.getElementById('checkIpBtn').click();">74.125.6556.91</button>
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('ipInput').value='255.255.255.255'; document.getElementById('checkIpBtn').click();">255.255.255.255</button>
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('ipInput').value='256.21.211.20'; document.getElementById('checkIpBtn').click();">256.21.211.20</button>
+      </div>
+    </div>
+
+    <!-- ===== CLASS ACTIVITIES ===== -->
+    <h2>📝 Class Activities</h2>
+    <ul>
+      <li><strong>Worksheet 3 (Transmission methods)</strong> — Students fill in blanks about Wi‑Fi, Bluetooth, cellular networks, interference, and transmission.</li>
+      <li><strong>Worksheet 5 (IP addresses)</strong> — Students decide if given IP addresses are valid or invalid, and explain why.</li>
+    </ul>
+
+    <!-- ===== MAIN TASK ===== -->
+    <div class="main-task">
+      <span class="badge">⭐ Main Task</span>
+      <div>
+        <h3>📝 Worksheet 3 &amp; Worksheet 5 — the focus of today's lesson</h3>
+        <p>Complete <strong>Worksheet 3</strong> to review transmission methods, and <strong>Worksheet 5</strong> to practise validating IP addresses.</p>
+        <p>These are the primary assessed tasks for this lesson — everything else on this page supports them.</p>
+      </div>
+    </div>
+
+    <!-- ===== QUICK RECAP ===== -->
+    <h2>⚡ Quick Recap</h2>
+    <ul>
+      <li><strong>Wi‑Fi</strong> = fast, medium distance, needs passwords.</li>
+      <li><strong>Bluetooth</strong> = short distance, slower, secure.</li>
+      <li><strong>Cellular</strong> = long distance, outdoors, depends on mast.</li>
+      <li><strong>IP address</strong> = unique number (0–255, four parts).</li>
+      <li><strong>URL</strong> = human‑friendly web address that links to an IP.</li>
+    </ul>
+
+    <!-- ===== SELF-CHECK QUIZ ===== -->
+    <div class="quiz" id="quiz">
+      <h3><i class="fas fa-circle-question" style="color:#2a6f97;"></i> Quick Self-Check</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click an answer to see if you're right. This is just for you — no marks are recorded.</p>
+
+      <div class="q" data-correct="b">
+        <p>1. Which transmission method has the highest bandwidth?</p>
+        <button data-opt="a">A. Bluetooth</button>
+        <button data-opt="b">B. Wi‑Fi</button>
+        <button data-opt="c">C. Cellular data</button>
+        <button data-opt="d">D. Infrared</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="c">
+        <p>2. Which transmission method works over the longest distance?</p>
+        <button data-opt="a">A. Wi‑Fi</button>
+        <button data-opt="b">B. Bluetooth</button>
+        <button data-opt="c">C. Cellular data</button>
+        <button data-opt="d">D. Ethernet cable</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p>3. How many numbers are in a valid IPv4 address?</p>
+        <button data-opt="a">A. Four</button>
+        <button data-opt="b">B. Three</button>
+        <button data-opt="c">C. Five</button>
+        <button data-opt="d">D. Six</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="d">
+        <p>4. What is the maximum value for each number in an IP address?</p>
+        <button data-opt="a">A. 100</button>
+        <button data-opt="b">B. 999</button>
+        <button data-opt="c">C. 512</button>
+        <button data-opt="d">D. 255</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="b">
+        <p>5. What does DNS stand for?</p>
+        <button data-opt="a">A. Digital Network System</button>
+        <button data-opt="b">B. Domain Name System</button>
+        <button data-opt="c">C. Data Node Server</button>
+        <button data-opt="d">D. Direct Network Service</button>
+        <div class="answer-feedback"></div>
+      </div>
+    </div>
+
+    <!-- ===== KEYWORDS ===== -->
+    <h2>🔑 Keywords</h2>
+    <div class="keyword-row">
+      <span>Wi‑Fi</span>
+      <span>Bluetooth</span>
+      <span>cellular data</span>
+      <span>bandwidth</span>
+      <span>transmission distance</span>
+      <span>interference</span>
+      <span>IP address</span>
+      <span>URL</span>
+      <span>DNS</span>
+      <span>domain name</span>
+      <span>TLD</span>
+      <span>server</span>
+      <span>web browser</span>
+      <span>protocol</span>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <hr class="divider" />
+  <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #5d7f9a; padding: 0.5rem 0; flex-wrap: wrap; gap: 0.5rem;">
+    <span><i class="fas fa-arrow-left" style="margin-right: 6px;"></i><a href="../unit7-3-Accessing-the-Internet.html" style="color: #1f6390; text-decoration: none;">Back to 7.3 Accessing the Internet</a></span>
+    <span>7.3 Lesson 1 · Transmission Methods &amp; IP / URL</span>
+  </div>
+
+</div>
+
+<script>
+  // ===== MATCH GAME (TRANSMISSION) =====
+  (function() {
+    const chips = document.querySelectorAll('#methodChips .chip');
+    const slots = document.querySelectorAll('#dropZone .slot');
+    const feedback = document.getElementById('matchFeedback');
+    const resetBtn = document.getElementById('resetMatch');
+    let selectedChip = null;
+
+    function clearSelection() {
+      chips.forEach(c => c.classList.remove('selected'));
+      selectedChip = null;
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (chip.style.display === 'none') return;
+        clearSelection();
+        selectedChip = chip;
+        chip.classList.add('selected');
+      });
+    });
+
+    slots.forEach(slot => {
+      slot.addEventListener('click', () => {
+        if (slot.classList.contains('correct')) return;
+
+        if (!selectedChip) {
+          feedback.textContent = '👆 Pick a method first, then click a slot.';
+          feedback.className = 'feedback no';
+          return;
+        }
+
+        const chipAnswer = selectedChip.getAttribute('data-answer');
+        const slotAnswer = slot.getAttribute('data-slot');
+        const slotLabel = slot.querySelector('span') ? slot.querySelector('span').textContent : slot.textContent;
+        const chipLabel = selectedChip.textContent.trim();
+
+        if (chipAnswer === slotAnswer) {
+          slot.classList.add('correct');
+          slot.classList.remove('incorrect');
+          slot.innerHTML = '<span style="font-weight:700;">✅ ' + chipLabel + ' → ' + slotLabel + '</span>';
+          selectedChip.style.display = 'none';
+          clearSelection();
+          feedback.textContent = '✅ Correct!';
+          feedback.className = 'feedback ok';
+        } else {
+          slot.classList.add('incorrect');
+          feedback.textContent = '❌ Not quite — try again.';
+          feedback.className = 'feedback no';
+          setTimeout(() => slot.classList.remove('incorrect'), 800);
+          clearSelection();
+        }
+
+        const allFilled = document.querySelectorAll('#dropZone .slot.correct').length === 3;
+        if (allFilled) {
+          feedback.textContent = '🎉 All matched! Great work.';
+          feedback.className = 'feedback ok';
+        }
+      });
+    });
+
+    resetBtn.addEventListener('click', () => {
+      slots.forEach(s => {
+        s.classList.remove('correct', 'incorrect');
+        const slotKey = s.getAttribute('data-slot');
+        const label = slotKey === 'wifi' ? 'Highest bandwidth'
+          : slotKey === 'cell' ? 'Longest distance'
+          : 'Most secure (short range)';
+        s.innerHTML = '<span>' + label + '</span>';
+      });
+      chips.forEach(c => { c.style.display = ''; c.classList.remove('selected'); });
+      feedback.textContent = '';
+      clearSelection();
+    });
+  })();
+
+  // ===== IP VALIDATOR =====
+  (function() {
+    const ipInput = document.getElementById('ipInput');
+    const checkBtn = document.getElementById('checkIpBtn');
+    const resultBox = document.getElementById('ipResult');
+
+    function validateIP(ip) {
+      const parts = ip.trim().split('.');
+      if (parts.length !== 4) {
+        return { valid: false, reason: 'An IP address must have exactly four numbers separated by dots.' };
+      }
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (!/^\d+$/.test(part)) {
+          return { valid: false, reason: `Part ${i+1} ("${part}") is not a number.` };
+        }
+        const num = parseInt(part, 10);
+        if (num < 0 || num > 255) {
+          return { valid: false, reason: `Part ${i+1} (${num}) is outside the allowed range 0–255.` };
+        }
+      }
+      return { valid: true, reason: '' };
+    }
+
+    function runCheck() {
+      const ip = ipInput.value.trim();
+      if (!ip) {
+        resultBox.textContent = '⚠️ Please enter an IP address first.';
+        resultBox.className = 'ip-result invalid';
+        return;
+      }
+      const result = validateIP(ip);
+      if (result.valid) {
+        resultBox.textContent = '✅ Valid IP address: ' + ip;
+        resultBox.className = 'ip-result valid';
+      } else {
+        resultBox.textContent = '❌ Invalid IP address: ' + result.reason;
+        resultBox.className = 'ip-result invalid';
+      }
+    }
+
+    checkBtn.addEventListener('click', runCheck);
+    ipInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        runCheck();
+      }
+    });
+  })();
+
+  // ===== QUIZ =====
+  (function() {
+    const questions = document.querySelectorAll('#quiz .q');
+    questions.forEach(q => {
+      const correct = q.getAttribute('data-correct');
+      const buttons = q.querySelectorAll('button');
+      const fb = q.querySelector('.answer-feedback');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
+          const chosen = btn.getAttribute('data-opt');
+          if (chosen === correct) {
+            btn.classList.add('correct');
+            fb.textContent = '✅ Correct!';
+            fb.className = 'answer-feedback ok';
+          } else {
+            btn.classList.add('incorrect');
+            fb.textContent = '❌ Not quite. Try again.';
+            fb.className = 'answer-feedback no';
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
