@@ -1,1 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.3 Lesson 1 · Software, ASCII &amp; Binary</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
 
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-header h1 i { color: #2a6f97; font-size: 2rem; }
+    .page-header .sub {
+      color: #475569;
+      font-size: 1rem;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.3rem 1.4rem;
+      border-radius: 40px;
+      margin-top: 0.3rem;
+    }
+
+    .lesson-content {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.8rem 0 0.8rem 0;
+      border-left: 5px solid #2a6f97;
+      padding-left: 15px;
+    }
+    .lesson-content h2:first-of-type { margin-top: 0; }
+    .lesson-content h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 1.2rem 0 0.4rem 0;
+    }
+    .lesson-content p { margin-bottom: 0.6rem; }
+    .lesson-content ul, .lesson-content ol {
+      padding-left: 1.6rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content li { margin-bottom: 0.25rem; }
+
+    .objectives-box {
+      background: #eef6fc;
+      border-radius: 16px;
+      padding: 0.8rem 1.4rem;
+      margin: 0.5rem 0 1.2rem 0;
+      border-left: 4px solid #2a6f97;
+    }
+    .objectives-box strong { color: #0b2a4a; }
+    .objectives-box ul {
+      margin: 0.2rem 0 0 1.2rem;
+      padding-left: 0.5rem;
+    }
+    .objectives-box ul li { list-style-type: disc; font-size: 0.95rem; }
+
+    .highlight-box {
+      background: #eef6fc;
+      padding: 1rem 1.6rem;
+      border-radius: 16px;
+      border-left: 5px solid #2a6f97;
+      margin: 1rem 0;
+    }
+    .highlight-box strong { color: #0b2a4a; }
+    .highlight-box.green {
+      border-left-color: #4caf50;
+      background: #edf7ed;
+    }
+    .highlight-box.amber {
+      border-left-color: #f9a825;
+      background: #fff8e1;
+    }
+    .highlight-box.purple {
+      border-left-color: #8e24aa;
+      background: #f7edfa;
+    }
+
+    /* ===== STARTER CALLOUT ===== */
+    .starter-callout {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      border: 2px solid #e65100;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .starter-callout .badge {
+      background: #e65100;
+      color: white;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .starter-callout h3 {
+      margin-top: 0;
+      color: #7a3300;
+      font-size: 1.15rem;
+    }
+    .starter-callout p { margin-bottom: 0.3rem; color: #5a2900; }
+    .starter-callout a {
+      color: #e65100;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 2px solid #e65100;
+    }
+    .starter-callout a:hover { color: #7a3300; }
+
+    /* ===== MAIN TASK CALLOUT ===== */
+    .main-task {
+      background: linear-gradient(135deg, #fff8e1, #ffecb3);
+      border: 2px solid #f9a825;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .main-task .badge {
+      background: #f9a825;
+      color: #4a2c00;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .main-task h3 {
+      margin-top: 0;
+      color: #7a4b00;
+      font-size: 1.15rem;
+    }
+    .main-task p { margin-bottom: 0.3rem; color: #5a3a00; }
+
+    /* ===== COMPARISON GRID ===== */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .compare-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #dceaf7;
+      display: flex;
+      flex-direction: column;
+    }
+    .compare-card h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+    }
+    .compare-card.sys h3 i { color: #1e88e5; }
+    .compare-card.app h3 i { color: #4caf50; }
+    .compare-card ul { padding-left: 1.2rem; margin-bottom: 0; }
+    .compare-card li { font-size: 0.85rem; margin-bottom: 0.2rem; }
+
+    /* ===== INTERACTIVE MATCH GAME ===== */
+    .match-game {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .match-game h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .match-game .match-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1rem 0;
+      align-items: center;
+      min-height: 60px;
+    }
+    .match-game .match-row .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      border: 2.5px solid #b6cfe5;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+    }
+    .match-game .match-row .chip:hover { transform: translateY(-2px); border-color: #7bb3ff; }
+    .match-game .match-row .chip.selected {
+      box-shadow: 0 0 0 3px #2a6f97;
+      border-color: #2a6f97;
+    }
+
+    .match-game .drop-zone {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+    .match-game .drop-zone .slot {
+      flex: 1;
+      min-width: 130px;
+      padding: 0.7rem 1rem;
+      border: 2px dashed #b6cfe5;
+      border-radius: 12px;
+      background: white;
+      font-size: 0.82rem;
+      color: #64748b;
+      text-align: center;
+      transition: 0.2s;
+      cursor: pointer;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .match-game .drop-zone .slot:hover { border-color: #7bb3ff; background: #f0f7ff; }
+    .match-game .drop-zone .slot.correct {
+      background: #c8e6c9;
+      border-color: #2d8f2d;
+      border-style: solid;
+      color: #1b5e20;
+      font-weight: 600;
+    }
+    .match-game .drop-zone .slot.incorrect {
+      background: #ffcdd2;
+      border-color: #e53935;
+      color: #b71c1c;
+      animation: shake 0.4s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .match-game .feedback {
+      margin-top: 0.8rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+    }
+    .match-game .feedback.ok { color: #2d8f2d; }
+    .match-game .feedback.no { color: #b71c1c; }
+
+    .btn {
+      background: linear-gradient(135deg, #1f6390, #0b2a4a);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.4rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(11,42,74,0.3); }
+    .btn.secondary {
+      background: white;
+      color: #1f6390;
+      border: 2px solid #b6cfe5;
+    }
+    .btn.secondary:hover { background: #f0f7ff; box-shadow: none; }
+
+    /* ===== SELF-CHECK QUIZ ===== */
+    .quiz {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .quiz h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quiz .q {
+      margin: 1rem 0;
+      padding: 0.9rem 1.2rem;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #e5edf5;
+    }
+    .quiz .q p { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz .q button {
+      background: #eef6fc;
+      border: 1.5px solid #d4e3f0;
+      color: #0b2a4a;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      margin: 0.2rem 0.3rem 0.2rem 0;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+    .quiz .q button:hover { background: #dbeafe; border-color: #7bb3ff; }
+    .quiz .q button.correct { background: #c8e6c9; border-color: #2d8f2d; color: #1b5e20; font-weight: 700; }
+    .quiz .q button.incorrect { background: #ffcdd2; border-color: #e53935; color: #b71c1c; }
+    .quiz .q .answer-feedback { font-size: 0.82rem; margin-top: 0.4rem; min-height: 1.2rem; font-weight: 500; }
+    .quiz .q .answer-feedback.ok { color: #2d8f2d; }
+    .quiz .q .answer-feedback.no { color: #b71c1c; }
+
+    /* ===== BINARY CONVERTER ===== */
+    .binary-converter {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .binary-converter h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .binary-converter .conv-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+      align-items: center;
+    }
+    .binary-converter input[type="text"], .binary-converter input[type="number"] {
+      flex: 1;
+      min-width: 180px;
+      padding: 0.7rem 1.2rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+      background: white;
+      font-family: monospace;
+    }
+    .binary-converter input:focus {
+      border-color: #1f6390;
+      box-shadow: 0 0 0 4px rgba(31, 99, 144, 0.15);
+    }
+    .binary-converter .conv-result {
+      font-weight: 600;
+      font-size: 1.05rem;
+      min-height: 1.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      font-family: monospace;
+    }
+    .binary-converter .conv-result.valid { background: #c8e6c9; color: #1b5e20; }
+    .binary-converter .conv-result.invalid { background: #ffcdd2; color: #b71c1c; }
+
+    .resource-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      background: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid #d4e3f0;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+    .resource-bar a {
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .resource-bar a:hover { text-decoration: underline; }
+    .resource-bar .label {
+      font-weight: 600;
+      color: #0b2a4a;
+      font-size: 0.85rem;
+    }
+
+    .keyword-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      background: #f1f6fc;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .keyword-row span {
+      background: white;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid #dce4ed;
+      font-size: 0.85rem;
+    }
+
+    .divider { margin: 2.5rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .page-header h1 { font-size: 1.8rem; flex-wrap: wrap; }
+      .lesson-content { padding: 1.2rem 1.4rem; }
+      .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .main-task, .starter-callout { flex-direction: column; gap: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+    <a href="../year8-units.html"><i class="fas fa-arrow-left"></i> Year 8 Units</a>
+    <a href="../unit8-3-lets-talk-technology.html"><i class="fas fa-microchip"></i> 8.3 Let's Talk Technology</a>
+  </nav>
+
+  <a href="../unit8-3-lets-talk-technology.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to 8.3 Let's Talk Technology</a>
+
+  <!-- ===== HEADER ===== -->
+  <div class="page-header">
+    <h1><i class="fas fa-layer-group"></i> Lesson 1 · Software, ASCII &amp; Binary</h1>
+    <div class="sub"><i class="fas fa-arrow-right" style="margin-right:6px;"></i> Student's Book pages 61–68</div>
+  </div>
+
+  <!-- ===== RESOURCE BAR ===== -->
+  <div class="resource-bar">
+    <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+    <a href="https://studio.code.org/s/internet/lessons/1" target="_blank"><i class="fas fa-table"></i> ASCII Table</a>
+    <a href="https://www.rapidtables.com/convert/number/binary-to-decimal.html" target="_blank"><i class="fas fa-calculator"></i> Binary Converter</a>
+    <a href="https://games.puzzle.org/binary-game" target="_blank"><i class="fas fa-gamepad"></i> Binary Game</a>
+  </div>
+
+  <!-- ===== LESSON CONTENT ===== -->
+  <div class="lesson-content">
+
+    <!-- Learning Objectives -->
+    <div class="objectives-box">
+      <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+      <ul>
+        <li>Explain the purpose of <strong>operating systems</strong>.</li>
+        <li>Describe the purpose of <strong>utility programs</strong>.</li>
+        <li>Understand how <strong>ASCII</strong> stores text in binary.</li>
+        <li>Convert between <strong>binary (base 2) and denary (base 10)</strong> numbers.</li>
+      </ul>
+    </div>
+
+    <!-- ===== STARTER ===== -->
+    <div class="starter-callout">
+      <span class="badge">🔥 Starter</span>
+      <div>
+        <h3>Blooket Warm-Up</h3>
+        <p>Start with a quick <strong>Blooket</strong> game to recap key computing concepts from previous lessons.</p>
+        <p><a href="https://play.blooket.com/host/gold?id=691b1e483cc5b74e6fe88b49" target="_blank">▶ Open Blooket Starter</a></p>
+      </div>
+    </div>
+
+    <!-- ===== GET STARTED ===== -->
+    <h2>🚀 Get started!</h2>
+    <p>Have you ever wondered how messages are sent safely from one place to another? Think about:</p>
+    <ul>
+      <li>How are messages sent from one place to another?</li>
+      <li>How do you stop someone else reading the message?</li>
+    </ul>
+    <p>In this unit, you will look at <strong>encryption</strong> and how it is used to secure messages sent from one device to another. You'll also learn how <strong>pseudocode</strong> is used to plan the algorithms behind those messages.</p>
+    <div class="highlight-box">
+      <i class="fas fa-lightbulb" style="color:#1f6390; margin-right:8px;"></i>
+      <strong>Think about it:</strong> A sealed envelope keeps a letter private. What keeps an online message private?
+    </div>
+
+    <!-- ===== ALL ABOUT SOFTWARE ===== -->
+    <h2>💻 All About Software</h2>
+    <p>Software is the programs that run on a computing device. There are two main types:</p>
+
+    <div class="compare-grid">
+      <div class="compare-card sys">
+        <h3><i class="fas fa-cog"></i> Systems Software</h3>
+        <p>Runs the device and helps everything else work. The main example is the <strong>operating system (OS)</strong> — like Windows, macOS, Linux, Android or iOS.</p>
+        <p>The OS starts when you turn the device on and acts as the link between the hardware and the applications.</p>
+      </div>
+      <div class="compare-card app">
+        <h3><i class="fas fa-window-restore"></i> Applications Software</h3>
+        <p>Programs that help you complete a specific task. Examples include web browsers, word processors, games, and simulators.</p>
+        <p>Some applications are <strong>general-purpose</strong> (like a word processor) and some are for a <strong>specific purpose</strong> (like a flight simulator).</p>
+      </div>
+    </div>
+
+    <h3>🛠️ Utility Programs</h3>
+    <p>Utility programs are also part of systems software. They are extra tools that keep your device running smoothly. Examples include:</p>
+    <ul>
+      <li><strong>Antivirus</strong> — protects against harmful software.</li>
+      <li><strong>Firewall</strong> — blocks unauthorised access.</li>
+      <li><strong>Backup</strong> — saves copies of files.</li>
+      <li><strong>Compression</strong> — reduces file size.</li>
+    </ul>
+
+    <!-- ===== INTERACTIVE MATCH GAME (SOFTWARE) ===== -->
+    <div class="match-game" id="matchGame">
+      <h3><i class="fas fa-puzzle-piece" style="color:#2a6f97;"></i> Interactive: Match the Software to its Description</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click a software chip below, then click the matching drop slot to place it. Get all three right to win!</p>
+
+      <div class="match-row" id="softwareChips">
+        <div class="chip" data-answer="os">Operating System</div>
+        <div class="chip" data-answer="util">Utility Program</div>
+        <div class="chip" data-answer="app">Application Software</div>
+      </div>
+
+      <div class="drop-zone" id="softwareDropZone">
+        <div class="slot" data-slot="os"><span>Manages hardware and provides a user interface</span></div>
+        <div class="slot" data-slot="util"><span>Helps maintain the device (e.g. antivirus)</span></div>
+        <div class="slot" data-slot="app"><span>Helps the user complete a specific task</span></div>
+      </div>
+
+      <div class="feedback" id="softwareFeedback"></div>
+      <button class="btn secondary" id="resetSoftwareMatch" style="margin-top:0.8rem;"><i class="fas fa-rotate-left"></i> Reset</button>
+    </div>
+
+    <!-- ===== USING BINARY TO STORE TEXT ===== -->
+    <h2>🔤 Using Binary to Store Text</h2>
+    <p>Computers only understand <strong>1s and 0s (binary)</strong>. <strong>ASCII</strong> (American Standard Code for Information Interchange) gives each character its own unique binary pattern.</p>
+    <ul>
+      <li>The letter <strong>A</strong> = <code>01000001</code> in ASCII.</li>
+      <li>The letter <strong>a</strong> = <code>01100001</code> in ASCII.</li>
+      <li>ASCII makes sure all computers can share text, no matter the brand.</li>
+    </ul>
+    <div class="highlight-box amber">
+      <i class="fas fa-exclamation-triangle" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Important:</strong> The ASCII code for the number character <code>"0"</code> is <code>00110000</code>. This is different from the binary number <code>0</code>, which is <code>00000000</code>. The ASCII code represents the <em>character</em>, not the value.
+    </div>
+
+    <!-- ===== USING BINARY TO STORE NUMBERS ===== -->
+    <h2>🔢 Using Binary to Store Numbers</h2>
+    <p>Our normal number system is <strong>denary</strong> (base 10) — it uses digits 0–9. Computers use <strong>binary</strong> (base 2) — they use only 0 and 1.</p>
+    <p><strong>Place values:</strong></p>
+    <ul>
+      <li>Denary → Ones, Tens, Hundreds, Thousands (×10 each time)</li>
+      <li>Binary → 1, 2, 4, 8, 16, 32, 64, 128 (×2 each time)</li>
+    </ul>
+    <p><strong>Example:</strong> Binary <code>1011</code> = (1 × 8) + (0 × 4) + (1 × 2) + (1 × 1) = <strong>11</strong> in denary.</p>
+
+    <!-- ===== INTERACTIVE BINARY CONVERTER ===== -->
+    <div class="binary-converter" id="binaryConverter">
+      <h3><i class="fas fa-calculator" style="color:#2a6f97;"></i> Interactive: Binary ↔ Denary Converter</h3>
+      <p style="font-size:0.9rem; color:#475569;">Use the place-value method to convert between binary and denary. Try both directions!</p>
+
+      <div class="conv-row">
+        <input type="text" id="binaryInput" placeholder="Enter binary (e.g. 1011)" />
+        <button class="btn" id="toDenaryBtn"><i class="fas fa-arrow-right"></i> Binary → Denary</button>
+      </div>
+      <div class="conv-result" id="binaryResult"></div>
+
+      <div class="conv-row" style="margin-top:1rem;">
+        <input type="number" id="denaryInput" placeholder="Enter denary (e.g. 11)" min="0" max="255" />
+        <button class="btn" id="toBinaryBtn"><i class="fas fa-arrow-left"></i> Denary → Binary</button>
+      </div>
+      <div class="conv-result" id="denaryResult"></div>
+
+      <p style="font-size:0.85rem; color:#64748b; margin-top:0.8rem;">Try these examples:</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.3rem;">
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('binaryInput').value='1011'; document.getElementById('toDenaryBtn').click();">1011 → ?</button>
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('binaryInput').value='00001111'; document.getElementById('toDenaryBtn').click();">00001111 → ?</button>
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('denaryInput').value='11'; document.getElementById('toBinaryBtn').click();">11 → ?</button>
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('denaryInput').value='15'; document.getElementById('toBinaryBtn').click();">15 → ?</button>
+        <button class="btn secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="document.getElementById('denaryInput').value='176'; document.getElementById('toBinaryBtn').click();">176 → ?</button>
+      </div>
+    </div>
+
+    <!-- ===== CLASS ACTIVITIES ===== -->
+    <h2>📝 Class Activities</h2>
+    <ul>
+      <li><strong>Worksheet 1 (Software &amp; Number Systems)</strong> — Write definitions for operating system, utility program, and systems software. Name three utility programs. List four tasks that the operating system carries out. Give examples of applications software and operating systems.</li>
+      <li><strong>Binary &amp; ASCII practice</strong> — Convert your name to binary using the ASCII chart, then practise converting numbers between binary and denary using the interactive tools above.</li>
+    </ul>
+
+    <!-- ===== MAIN TASK ===== -->
+    <div class="main-task">
+      <span class="badge">⭐ Main Task</span>
+      <div>
+        <h3>📝 Worksheet 1 — the focus of today's lesson</h3>
+        <p>Complete <strong>Worksheet 1</strong> to review software, operating systems, and utility programs.</p>
+        <p><strong>Extension activity:</strong> Play the <a href="https://games.puzzle.org/binary-game" target="_blank" style="color:#1f6390;">Binary Game online</a> to practise converting binary ↔ denary in a fun way.</p>
+      </div>
+    </div>
+
+    <!-- ===== QUICK RECAP ===== -->
+    <h2>⚡ Quick Recap</h2>
+    <ul>
+      <li><strong>Operating System</strong> = manages hardware and provides a user interface (Windows, iOS, Android).</li>
+      <li><strong>Utility Program</strong> = maintains the device (antivirus, firewall, backup, compression).</li>
+      <li><strong>Application Software</strong> = helps the user complete a specific task (Word, Chrome, games).</li>
+      <li><strong>ASCII</strong> = a code that gives each character a unique binary pattern (A = 01000001).</li>
+      <li><strong>Binary</strong> = base 2, using place values 1, 2, 4, 8, 16, 32, 64, 128.</li>
+      <li><strong>Denary</strong> = base 10, our normal number system (0–9).</li>
+    </ul>
+
+    <!-- ===== SELF-CHECK QUIZ ===== -->
+    <div class="quiz" id="quiz">
+      <h3><i class="fas fa-circle-question" style="color:#2a6f97;"></i> Quick Self-Check</h3>
+      <p style="font-size:0.9rem; color:#475569;">Click an answer to see if you're right. This is just for you — no marks are recorded.</p>
+
+      <div class="q" data-correct="b">
+        <p>1. Which of these is an example of systems software?</p>
+        <button data-opt="a">A. A web browser</button>
+        <button data-opt="b">B. Windows operating system</button>
+        <button data-opt="c">C. A flight simulator</button>
+        <button data-opt="d">D. A word processor</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="c">
+        <p>2. Which utility program protects against harmful software?</p>
+        <button data-opt="a">A. Firewall</button>
+        <button data-opt="b">B. Backup</button>
+        <button data-opt="c">C. Antivirus</button>
+        <button data-opt="d">D. Compression</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p>3. What does ASCII stand for?</p>
+        <button data-opt="a">A. American Standard Code for Information Interchange</button>
+        <button data-opt="b">B. Automated System for Computer Information Exchange</button>
+        <button data-opt="c">C. Applied Standard Code for Internet Information</button>
+        <button data-opt="d">D. Advanced System for Computing Input Interchange</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="d">
+        <p>4. What is the denary value of the binary number 1011?</p>
+        <button data-opt="a">A. 9</button>
+        <button data-opt="b">B. 10</button>
+        <button data-opt="c">C. 12</button>
+        <button data-opt="d">D. 11</button>
+        <div class="answer-feedback"></div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p>5. What is the binary value of the denary number 15?</p>
+        <button data-opt="a">A. 00001111</button>
+        <button data-opt="b">B. 00011110</button>
+        <button data-opt="c">C. 11110000</button>
+        <button data-opt="d">D. 00001011</button>
+        <div class="answer-feedback"></div>
+      </div>
+    </div>
+
+    <!-- ===== KEYWORDS ===== -->
+    <h2>🔑 Keywords</h2>
+    <div class="keyword-row">
+      <span>operating system</span>
+      <span>utility program</span>
+      <span>systems software</span>
+      <span>applications software</span>
+      <span>interface</span>
+      <span>ASCII</span>
+      <span>binary</span>
+      <span>denary</span>
+      <span>base 2</span>
+      <span>base 10</span>
+      <span>bit</span>
+      <span>byte</span>
+      <span>place value</span>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <hr class="divider" />
+  <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #5d7f9a; padding: 0.5rem 0; flex-wrap: wrap; gap: 0.5rem;">
+    <span><i class="fas fa-arrow-left" style="margin-right: 6px;"></i><a href="../unit8-3-lets-talk-technology.html" style="color: #1f6390; text-decoration: none;">Back to 8.3 Let's Talk Technology</a></span>
+    <span>8.3 Lesson 1 · Software, ASCII &amp; Binary</span>
+  </div>
+
+</div>
+
+<script>
+  // ===== MATCH GAME (SOFTWARE) =====
+  (function() {
+    const chips = document.querySelectorAll('#softwareChips .chip');
+    const slots = document.querySelectorAll('#softwareDropZone .slot');
+    const feedback = document.getElementById('softwareFeedback');
+    const resetBtn = document.getElementById('resetSoftwareMatch');
+    let selectedChip = null;
+
+    function clearSelection() {
+      chips.forEach(c => c.classList.remove('selected'));
+      selectedChip = null;
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (chip.style.display === 'none') return;
+        clearSelection();
+        selectedChip = chip;
+        chip.classList.add('selected');
+      });
+    });
+
+    slots.forEach(slot => {
+      slot.addEventListener('click', () => {
+        if (slot.classList.contains('correct')) return;
+
+        if (!selectedChip) {
+          feedback.textContent = '👆 Pick a software type first, then click a slot.';
+          feedback.className = 'feedback no';
+          return;
+        }
+
+        const chipAnswer = selectedChip.getAttribute('data-answer');
+        const slotAnswer = slot.getAttribute('data-slot');
+        const slotLabel = slot.querySelector('span') ? slot.querySelector('span').textContent : slot.textContent;
+        const chipLabel = selectedChip.textContent.trim();
+
+        if (chipAnswer === slotAnswer) {
+          slot.classList.add('correct');
+          slot.classList.remove('incorrect');
+          slot.innerHTML = '<span style="font-weight:700;">✅ ' + chipLabel + ' → ' + slotLabel + '</span>';
+          selectedChip.style.display = 'none';
+          clearSelection();
+          feedback.textContent = '✅ Correct!';
+          feedback.className = 'feedback ok';
+        } else {
+          slot.classList.add('incorrect');
+          feedback.textContent = '❌ Not quite — try again.';
+          feedback.className = 'feedback no';
+          setTimeout(() => slot.classList.remove('incorrect'), 800);
+          clearSelection();
+        }
+
+        const allFilled = document.querySelectorAll('#softwareDropZone .slot.correct').length === 3;
+        if (allFilled) {
+          feedback.textContent = '🎉 All matched! Great work.';
+          feedback.className = 'feedback ok';
+        }
+      });
+    });
+
+    resetBtn.addEventListener('click', () => {
+      slots.forEach(s => {
+        s.classList.remove('correct', 'incorrect');
+        const slotKey = s.getAttribute('data-slot');
+        const label = slotKey === 'os' ? 'Manages hardware and provides a user interface'
+          : slotKey === 'util' ? 'Helps maintain the device (e.g. antivirus)'
+          : 'Helps the user complete a specific task';
+        s.innerHTML = '<span>' + label + '</span>';
+      });
+      chips.forEach(c => { c.style.display = ''; c.classList.remove('selected'); });
+      feedback.textContent = '';
+      clearSelection();
+    });
+  })();
+
+  // ===== BINARY CONVERTER =====
+  (function() {
+    const binaryInput = document.getElementById('binaryInput');
+    const denaryInput = document.getElementById('denaryInput');
+    const toDenaryBtn = document.getElementById('toDenaryBtn');
+    const toBinaryBtn = document.getElementById('toBinaryBtn');
+    const binaryResult = document.getElementById('binaryResult');
+    const denaryResult = document.getElementById('denaryResult');
+
+    // Binary → Denary
+    toDenaryBtn.addEventListener('click', () => {
+      const bin = binaryInput.value.trim();
+      if (!bin) {
+        binaryResult.textContent = '⚠️ Please enter a binary number.';
+        binaryResult.className = 'conv-result invalid';
+        return;
+      }
+      if (!/^[01]+$/.test(bin)) {
+        binaryResult.textContent = '❌ Invalid binary — only 0s and 1s allowed.';
+        binaryResult.className = 'conv-result invalid';
+        return;
+      }
+      // Place-value method
+      const padded = bin.padStart(8, '0');
+      const placeValues = [128, 64, 32, 16, 8, 4, 2, 1];
+      let total = 0;
+      const parts = [];
+      for (let i = 0; i < 8; i++) {
+        const bit = parseInt(padded[i], 10);
+        if (bit === 1) {
+          total += placeValues[i];
+          parts.push(placeValues[i]);
+        }
+      }
+      binaryResult.textContent = '✅ ' + bin + '₂ = ' + total + '₁₀' + (parts.length ? '  (add: ' + parts.join(' + ') + ')' : '');
+      binaryResult.className = 'conv-result valid';
+    });
+
+    binaryInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); toDenaryBtn.click(); }
+    });
+
+    // Denary → Binary
+    toBinaryBtn.addEventListener('click', () => {
+      const val = parseInt(denaryInput.value, 10);
+      if (isNaN(val) || denaryInput.value.trim() === '') {
+        denaryResult.textContent = '⚠️ Please enter a denary number.';
+        denaryResult.className = 'conv-result invalid';
+        return;
+      }
+      if (val < 0 || val > 255) {
+        denaryResult.textContent = '❌ Please enter a number between 0 and 255 (8-bit).';
+        denaryResult.className = 'conv-result invalid';
+        return;
+      }
+      // Divide-by-2 method
+      let n = val;
+      const remainders = [];
+      if (n === 0) remainders.push(0);
+      while (n > 0) {
+        remainders.push(n % 2);
+        n = Math.floor(n / 2);
+      }
+      const bin = remainders.reverse().join('').padStart(8, '0');
+      denaryResult.textContent = '✅ ' + val + '₁₀ = ' + bin + '₂';
+      denaryResult.className = 'conv-result valid';
+    });
+
+    denaryInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); toBinaryBtn.click(); }
+    });
+  })();
+
+  // ===== QUIZ =====
+  (function() {
+    const questions = document.querySelectorAll('#quiz .q');
+    questions.forEach(q => {
+      const correct = q.getAttribute('data-correct');
+      const buttons = q.querySelectorAll('button');
+      const fb = q.querySelector('.answer-feedback');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
+          const chosen = btn.getAttribute('data-opt');
+          if (chosen === correct) {
+            btn.classList.add('correct');
+            fb.textContent = '✅ Correct!';
+            fb.className = 'answer-feedback ok';
+          } else {
+            btn.classList.add('incorrect');
+            fb.textContent = '❌ Not quite. Try again.';
+            fb.className = 'answer-feedback no';
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
