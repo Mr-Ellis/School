@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Topic 5 · Validation &amp; Verification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f0f4fb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            padding: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .nav {
+            background: #0b2a4a;
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .nav a {
+            color: #e6edf5;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav a:hover { color: #fff; text-decoration: underline; }
+        .nav .brand { margin-right: auto; font-weight: 600; color: white; }
+        .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .page-header h1 i { color: #2a6f97; }
+        .page-header .sub {
+            color: #475569;
+            background: #e9eff8;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .resource-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            background: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 60px;
+            border: 1px solid #d4e3f0;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+        .resource-bar .label {
+            font-weight: 600;
+            color: #0b2a4a;
+            font-size: 0.85rem;
+        }
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .tool-link:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .tool-link.primary { background: #e8f5e9; color: #2e7d32; border-color: #81c784; }
+        .tool-link.primary:hover { background: #c8e6c9; }
+        .tool-link.secondary { background: #fff3e0; color: #e65100; border-color: #ffb74d; }
+        .tool-link.secondary:hover { background: #ffe0b2; }
+        .tool-link.tertiary { background: #e3f2fd; color: #0d47a1; border-color: #90caf9; }
+        .tool-link.tertiary:hover { background: #bbdefb; }
+        .tool-link .badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.05rem 0.5rem;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.08);
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.8rem 2rem;
+            border: 1px solid #e5edf5;
+            box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+            margin-bottom: 2rem;
+        }
+
+        .lesson-card h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin: 1.4rem 0 0.6rem 0;
+            border-left: 5px solid #2a6f97;
+            padding-left: 14px;
+        }
+        .lesson-card h2:first-of-type { margin-top: 0; }
+        .lesson-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin: 1rem 0 0.3rem 0;
+        }
+        .lesson-card p { margin-bottom: 0.5rem; }
+        .lesson-card ul, .lesson-card ol { padding-left: 1.4rem; margin: 0.3rem 0 0.8rem 0; }
+        .lesson-card li { margin-bottom: 0.2rem; }
+
+        .objectives-box {
+            background: #eef6fc;
+            border-radius: 14px;
+            padding: 0.7rem 1.2rem;
+            border-left: 4px solid #2a6f97;
+            margin-bottom: 1rem;
+        }
+        .objectives-box strong { color: #0b2a4a; }
+        .objectives-box ul { margin: 0.2rem 0 0 1.2rem; }
+
+        .highlight-box {
+            background: #eef6fc;
+            padding: 0.8rem 1.4rem;
+            border-radius: 14px;
+            border-left: 5px solid #2a6f97;
+            margin: 0.8rem 0;
+        }
+        .highlight-box.orange { border-left-color: #e67e22; background: #fef6ed; }
+        .highlight-box.green { border-left-color: #4caf50; background: #edf7ed; }
+        .highlight-box.purple { border-left-color: #7b1fa2; background: #f3e5f5; }
+        .highlight-box.red { border-left-color: #d9534f; background: #fdf0ef; }
+
+        .predict-box {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1rem 1.4rem;
+            border: 1px solid #dceaf7;
+            margin: 1rem 0;
+        }
+        .predict-box .predict-label {
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.4rem;
+        }
+        .predict-box .predict-label i { color: #2a6f97; }
+        .predict-box input[type="text"] {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            width: 300px;
+            margin-right: 0.5rem;
+            transition: 0.2s;
+        }
+        .predict-box input[type="text"]:focus {
+            outline: none;
+            border-color: #2a6f97;
+            box-shadow: 0 0 0 3px rgba(42,111,151,0.15);
+        }
+        .predict-box .predict-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .btn-predict {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 0.35rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-predict:hover { background: #1a3f62; }
+        .btn-predict.reveal { background: #e9eff8; color: #0b2a4a; }
+        .btn-predict.reveal:hover { background: #d4e3f0; }
+        .predict-feedback {
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .predict-feedback.show { display: block; }
+        .predict-feedback.correct { background: #dff0d8; color: #2d6a2d; border-left: 4px solid #4caf50; }
+        .predict-feedback.incorrect { background: #f8e0e0; color: #8a3a3a; border-left: 4px solid #d9534f; }
+        .predict-feedback.reveal { background: #e9eff8; color: #0b2a4a; border-left: 4px solid #2a6f97; }
+
+        .quiz-gate {
+            background: #fff8e7;
+            border: 2px solid #f0d080;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .quiz-gate h3 {
+            color: #8a6d2b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quiz-gate h3 i { color: #e6a800; }
+        .quiz-question {
+            margin: 0.8rem 0;
+            padding: 0.6rem 0.8rem;
+            background: #fffdf5;
+            border-radius: 10px;
+            border: 1px solid #f0d080;
+        }
+        .quiz-question .q-text { font-weight: 500; margin-bottom: 0.3rem; }
+        .quiz-question label {
+            display: block;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .quiz-question label:hover { background: #fef6ed; }
+        .quiz-question input[type="radio"] { margin-right: 6px; accent-color: #0b2a4a; }
+        .btn-submit-quiz {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 0.4rem 1.4rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .btn-submit-quiz:hover { background: #1a3f62; }
+        .quiz-result {
+            margin-top: 0.6rem;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 500;
+            display: none;
+        }
+        .quiz-result.show { display: block; }
+        .quiz-result.pass { background: #dff0d8; color: #2d6a2d; border-left: 4px solid #4caf50; }
+        .quiz-result.fail { background: #f8e0e0; color: #8a3a3a; border-left: 4px solid #d9534f; }
+
+        .locked-section {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .locked-section .lock-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(240,244,251,0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            border-radius: 16px;
+            border: 2px dashed #cbd5e1;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .locked-section .lock-overlay i {
+            font-size: 2.5rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        .locked-section .lock-overlay p {
+            color: #64748b;
+            font-size: 0.95rem;
+            max-width: 300px;
+        }
+        .locked-section.unlocked .lock-overlay { display: none; }
+
+        .self-check {
+            background: #edf7ed;
+            border-radius: 16px;
+            padding: 1rem 1.4rem;
+            border: 2px solid #81c784;
+            margin: 1rem 0;
+        }
+        .self-check h4 {
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-reveal {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 0.35rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        .btn-reveal:hover { background: #1b5e20; }
+        .hidden-solution { display: none; margin-top: 0.6rem; }
+        .hidden-solution.show { display: block; }
+
+        .blooket-checkpoint {
+            background: #e8f5e9;
+            border: 2px solid #81c784;
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            margin: 1.2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+        .blooket-checkpoint .cp-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: #2e7d32;
+        }
+        .blooket-checkpoint .cp-text i { font-size: 1.4rem; }
+        .btn-blooket {
+            background: #2e7d32;
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .btn-blooket:hover { background: #1b5e20; transform: translateY(-2px); }
+
+        .worksheet-box {
+            background: #fff8e7;
+            border: 2px solid #f0d080;
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.2rem 0;
+        }
+        .worksheet-box h3 { color: #8a6d2b; display: flex; align-items: center; gap: 10px; }
+        .worksheet-box h3 i { color: #e6a800; }
+
+        /* --- RESOURCE BOXES --- */
+        .resource-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.6rem 1.8rem;
+            border: 1px solid #e5edf5;
+            box-shadow: 0 4px 14px rgba(0, 20, 40, 0.04);
+            margin-bottom: 1.5rem;
+        }
+        .resource-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+            padding-left: 0;
+            margin: 0 0 0.6rem 0;
+        }
+        .resource-card h2 i { color: #2a6f97; }
+        .resource-card p {
+            color: #475569;
+            margin-bottom: 1rem;
+        }
+        .btn-resource {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.6rem 1.4rem;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #0b2a4a;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .btn-resource:hover {
+            background: #eef6fc;
+            border-color: #2a6f97;
+        }
+        .btn-resource i { color: #2a6f97; font-size: 1.1rem; }
+        .btn-resource .ppt-icon { color: #d24726; }
+        .btn-resource .lock-icon-small { color: #e6a800; }
+
+        /* Password Modal */
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .password-modal.active { display: flex; }
+        .password-box {
+            background: white;
+            border-radius: 40px;
+            padding: 2.5rem 2.8rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+        .password-box input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #d4e0ec;
+            border-radius: 60px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+        .password-box input:focus { border-color: #1f6390; }
+        .password-box .btn {
+            background: #1f6390;
+            color: white;
+            border: none;
+            padding: 0.6rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .password-box .btn:hover { background: #134f75; }
+        .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+        .modal-type-badge {
+            display: inline-block;
+            background: #0b2a4a;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .divider { margin: 2rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #dceaf7;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 0.6rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .validation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .validation-table th {
+            background: #0b2a4a;
+            color: white;
+            padding: 0.5rem 0.8rem;
+            text-align: left;
+        }
+        .validation-table td {
+            padding: 0.5rem 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        .validation-table tr:nth-child(even) { background: #f8fafc; }
+
+        @media (max-width: 680px) {
+            body { padding: 0.8rem; }
+            .lesson-card { padding: 1.2rem; }
+            .page-header h1 { font-size: 1.6rem; }
+            .resource-bar { flex-direction: column; align-items: stretch; border-radius: 24px; }
+            .tool-link { justify-content: center; }
+            .blooket-checkpoint { flex-direction: column; align-items: stretch; text-align: center; }
+            .blooket-checkpoint .cp-text { justify-content: center; }
+            .password-box { padding: 1.8rem; }
+            .predict-box input[type="text"] { width: 100%; margin-bottom: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Password Modal -->
+        <div id="passwordModal" class="password-modal">
+          <div class="password-box">
+            <div class="modal-type-badge">🔒 Teacher Resource</div>
+            <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
+            <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter the teacher password to access this lesson plan.</p>
+            <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+            <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+            <div class="error" id="pwdError"></div>
+          </div>
+        </div>
+
+        <!-- NAV -->
+        <nav class="nav">
+            <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+            <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Algorithm Design</a>
+        </nav>
+
+        <!-- HEADER -->
+        <div class="page-header">
+            <h1><i class="fas fa-shield-alt"></i> Validation &amp; Verification</h1>
+            <div class="sub"><i class="fas fa-book-open" style="margin-right:6px;"></i> Topic 5 · Keeping Data Safe &amp; Sensible</div>
+        </div>
+
+        <!-- STARTER -->
+        <div class="blooket-checkpoint">
+            <div class="cp-text"><i class="fas fa-gamepad"></i> Starter: Blooket Cafe</div>
+            <a href="https://play.blooket.com/host/cafe?id=63d2adc61c09cef355d8e601" target="_blank" class="btn-blooket">
+                <i class="fas fa-play"></i> Play Blooket
+            </a>
+        </div>
+
+        <!-- RESOURCE BAR -->
+        <div class="resource-bar">
+            <span class="label"><i class="fas fa-tools"></i> Tools:</span>
+            <a href="https://www.thecomputersciencelab.com/pseudocode-pr" target="_blank" class="tool-link primary">
+                <i class="fas fa-laptop-code"></i> Pseudocode Practice
+            </a>
+            <a href="https://www.gs1.ch/en/home/offer/barcode/check-digit-calculator-and-ean-13-barcode-generator" target="_blank" class="tool-link secondary">
+                <i class="fas fa-barcode"></i> Check Digit Calculator
+            </a>
+            <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FT5%2520Validation%2520and%2520verification.pptx&wdOrigin=BROWSELINK" target="_blank" class="tool-link tertiary">
+                <i class="fas fa-file-powerpoint"></i> Lesson PowerPoint
+            </a>
+        </div>
+
+        <!-- LESSON CONTENT -->
+        <div class="lesson-card">
+
+            <!-- Objectives -->
+            <div class="objectives-box">
+                <strong><i class="fas fa-bullseye" style="color:#1f6390; margin-right:6px;"></i> Learning Objectives:</strong>
+                <ul>
+                    <li>Understand the need for validation checks and be able to write algorithms to implement each validation check including: range check, length check, type check, presence check, format check, and check digit.</li>
+                    <li>Understand verification techniques including double-entry checks and visual checks.</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 1: STARTER -->
+            <h2>🤔 Starter: The Preposterous Age</h2>
+            <p>Look at this simple program:</p>
+            <div class="code-block">
+                INPUT age<br>
+                OUTPUT "You are", age, "years old"
+            </div>
+            <p>What is output if the user enters <strong>5</strong>, <strong>15</strong>, or <strong>215</strong>?</p>
+            <div class="highlight-box orange">
+                <i class="fas fa-exclamation-triangle" style="color:#e67e22; margin-right:8px;"></i>
+                <strong>Think:</strong> What is the problem with this program? How could it be fixed?
+            </div>
+            <p>The program will happily output <em>"You are 215 years old"</em> — which is clearly impossible. The program doesn't check that the input is <strong>reasonable</strong>. This is where <strong>validation</strong> comes in.</p>
+
+            <!-- SECTION 2: VALIDATION TYPES -->
+            <h2>🛡️ Types of Validation</h2>
+            <p><strong>Validation</strong> is checking an input to see that it is <em>realistic</em> or conforms to a set of rules. It does <strong>not</strong> guarantee the data is correct — only that it is sensible.</p>
+
+            <table class="validation-table">
+                <thead>
+                    <tr>
+                        <th>Validation Check</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Range check</strong></td>
+                        <td>Check that a value is between two values</td>
+                        <td>An age must be between 0 and 120</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Length check</strong></td>
+                        <td>Check the length of input is a given number of characters</td>
+                        <td>Password length is at least 8 characters</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Type check</strong></td>
+                        <td>Check if a value is the correct data type</td>
+                        <td>An integer is a whole number</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Presence check</strong></td>
+                        <td>Check if a value is present or not</td>
+                        <td>"y" (present) vs "" (not present)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Format check</strong></td>
+                        <td>Check the input matches a format</td>
+                        <td>Rooms are letter, number</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Check digit</strong></td>
+                        <td>A digit added to the end of a number to check it is valid</td>
+                        <td>Barcode numbers, credit card numbers</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Presence Check</h3>
+            <p>Sometimes validation simply requires that a data item is present (has been entered). For example, a required field in a form.</p>
+            <div class="code-block">
+                Consent ← FALSE<br>
+                WHILE NOT Consent DO<br>
+                &nbsp;&nbsp;OUTPUT "Do you agree with the terms and conditions?"<br>
+                &nbsp;&nbsp;INPUT Response<br>
+                &nbsp;&nbsp;IF Response = 'y' THEN<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Consent ← TRUE<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;OUTPUT "Thank you for your consent"<br>
+                &nbsp;&nbsp;ELSE<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;OUTPUT "Sorry, you must consent to use the program"<br>
+                &nbsp;&nbsp;ENDIF<br>
+                ENDWHILE
+            </div>
+
+            <h3>Length Check</h3>
+            <p>These checks are useful when a certain number of characters is required — such as for a password.</p>
+            <div class="code-block">
+                ValidNameLength ← FALSE<br>
+                Name ← ""<br>
+                WHILE NOT ValidNameLength DO<br>
+                &nbsp;&nbsp;INPUT Name<br>
+                &nbsp;&nbsp;IF LENGTH(Name) >= 8 THEN<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;ValidNameLength ← TRUE<br>
+                &nbsp;&nbsp;ENDIF<br>
+                ENDWHILE
+            </div>
+
+            <h3>Range Check</h3>
+            <p>For numbers, we can validate that they are part of a particular range. Remember: the input will first need to be converted to a number.</p>
+            <div class="code-block">
+                ValidAge ← FALSE<br>
+                Age ← 0<br>
+                WHILE NOT ValidAge DO<br>
+                &nbsp;&nbsp;INPUT Age<br>
+                &nbsp;&nbsp;IF Age >= 0 AND Age <= 120 THEN<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;ValidAge ← TRUE<br>
+                &nbsp;&nbsp;ENDIF<br>
+                ENDWHILE
+            </div>
+
+            <h3>Type Check</h3>
+            <p>A type check makes sure the data a user enters contains the correct data type. The pseudocode uses a function called <code>Type</code> that checks if a variable is of a certain data type (similar to Python's <code>isinstance</code>).</p>
+            <div class="code-block">
+                INPUT Length<br>
+                IF Type(Length, Integer) THEN<br>
+                &nbsp;&nbsp;OUTPUT "Valid number"<br>
+                ELSE<br>
+                &nbsp;&nbsp;OUTPUT "Invalid - not an integer"<br>
+                ENDIF
+            </div>
+
+            <h3>Format Check</h3>
+            <p>A string can be checked to see that it has the format that is required. Useful functions include:</p>
+            <table class="validation-table">
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>isalpha()</code></td><td>Contains letters</td></tr>
+                    <tr><td><code>isalnum()</code></td><td>Contains letters or numbers</td></tr>
+                    <tr><td><code>isdigit()</code></td><td>Contains digits</td></tr>
+                    <tr><td><code>isnumeric()</code></td><td>Contains a number</td></tr>
+                    <tr><td><code>isupper()</code></td><td>Is in uppercase</td></tr>
+                    <tr><td><code>islower()</code></td><td>Is in lowercase</td></tr>
+                </tbody>
+            </table>
+            <div class="code-block">
+                INPUT Username<br>
+                IF Username.isalpha():<br>
+                &nbsp;&nbsp;OUTPUT "Valid - all letters"<br>
+                ENDIF
+            </div>
+            <div class="highlight-box purple">
+                <i class="fas fa-external-link-alt" style="color:#6a1b9a; margin-right:8px;"></i>
+                <strong>Note:</strong> Regular expressions are usually used to check formats in real programming languages, but they are beyond the scope of this specification.
+            </div>
+
+            <h3>Check Digits</h3>
+            <p>A <strong>check digit</strong> is a digit added to the end of a number and used to check that the number is valid. This has many uses including credit card numbers and barcode numbers.</p>
+            <p><strong>Example:</strong> The number <code>48371294</code> has its check digit calculated by adding each digit, then taking the final digit of the total.</p>
+            <div class="code-block">
+                4 + 8 + 3 + 7 + 1 + 2 + 9 + 4 = 38<br>
+                Check digit = 8
+            </div>
+            <p>Once the data is input, the check digit is generated. If it doesn't match the number, the number isn't valid.</p>
+            <div class="highlight-box orange">
+                <i class="fas fa-exclamation-circle" style="color:#e67e22; margin-right:8px;"></i>
+                <strong>Important:</strong> A simple check digit (summing digits) will <em>not</em> detect a transposition error (e.g., entering 48 instead of 84). More complex algorithms like the EAN-13 barcode system <em>will</em> detect transposition errors. This is why they are used for barcodes and credit cards.
+            </div>
+
+            <!-- SECTION 3: VERIFICATION -->
+            <h2>✅ Verification: Double-Checking Data</h2>
+            <p><strong>Validation</strong> only checks that data entered is <em>reasonable</em> (and valid). It doesn't check it is <em>correct</em>.</p>
+            <p><strong>Verification</strong>, by contrast, is interested in the data being <em>correct</em>. The two techniques you need to know are:</p>
+            <ul>
+                <li><strong>Double-entry check:</strong> Entering the data twice and comparing both entries to see if they match (e.g., entering a password twice when signing up).</li>
+                <li><strong>Visual check:</strong> The user checks data already entered and confirms it is correct (e.g., reviewing an order before clicking "Place Order").</li>
+            </ul>
+
+            <div class="highlight-box green">
+                <i class="fas fa-check-circle" style="color:#2e7d32; margin-right:8px;"></i>
+                <strong>Key Difference:</strong> Validation = "Is this data sensible?" &nbsp;|&nbsp; Verification = "Is this data correct?"
+            </div>
+
+            <!-- SECTION 4: PSEUDOCODE PRACTICE -->
+            <h2>💻 Main Task 1: Pseudocode Practice</h2>
+            <p>Work through the interactive pseudocode exercises to apply your understanding of validation and verification.</p>
+            <div class="highlight-box purple">
+                <i class="fas fa-external-link-alt" style="color:#6a1b9a; margin-right:8px;"></i>
+                <strong>Instructions:</strong> Open the link below and complete the exercises. Focus on the sections covering range checks, length checks, presence checks, format checks, and check digits.
+            </div>
+            <div style="margin:1rem 0;">
+                <a href="https://www.thecomputersciencelab.com/pseudocode-pr" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#0b2a4a; color:white; padding:0.6rem 1.6rem; border-radius:40px; text-decoration:none; font-weight:500;">
+                    <i class="fas fa-laptop-code"></i> Go to Pseudocode Practice
+                </a>
+            </div>
+
+            <!-- SECTION 5: WORKSHEET -->
+            <div class="worksheet-box">
+                <h3><i class="fas fa-file-alt"></i> Main Task 2: Validation &amp; Verification Worksheet</h3>
+                <p><strong>Complete Worksheet 5 on Schoolbox.</strong></p>
+                <p style="margin-top:0.3rem;">This worksheet covers presence checks, length checks, format checks, check digits, and more. You will trace algorithms and write pseudocode.</p>
+                <div style="margin-top:0.8rem;">
+                    <a href="https://lms.isr-school.com/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#0b2a4a; color:white; padding:0.5rem 1.4rem; border-radius:40px; text-decoration:none; font-weight:500; font-size:0.9rem;">
+                        <i class="fas fa-external-link-alt"></i> Open Schoolbox
+                    </a>
+                </div>
+            </div>
+
+            <!-- EXTENSION -->
+            <div class="worksheet-box" style="background:#f3e5f5; border-color:#ce93d8;">
+                <h3 style="color:#6a1b9a;"><i class="fas fa-rocket" style="color:#8e24aa;"></i> Extension Task (if you finish early)</h3>
+                <p><strong>Complete the Extension worksheet on Schoolbox.</strong></p>
+                <p style="margin-top:0.3rem;">This includes calculating EAN-13 check digits and explaining why more complex check digit algorithms are used for barcodes and credit cards.</p>
+                <div style="margin-top:0.8rem;">
+                    <a href="https://lms.isr-school.com/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#6a1b9a; color:white; padding:0.5rem 1.4rem; border-radius:40px; text-decoration:none; font-weight:500; font-size:0.9rem;">
+                        <i class="fas fa-external-link-alt"></i> Open Extension Worksheet
+                    </a>
+                </div>
+            </div>
+
+            <!-- SECTION 6: QUIZ GATE -->
+            <div class="quiz-gate">
+                <h3><i class="fas fa-lock-open"></i> Unlock the Challenge</h3>
+                <p>Answer these three questions correctly to unlock the Challenge activity.</p>
+
+                <div class="quiz-question">
+                    <div class="q-text">1. Which validation check ensures that a value is between two limits?</div>
+                    <label><input type="radio" name="q1" value="a"> Length check</label>
+                    <label><input type="radio" name="q1" value="b"> Range check</label>
+                    <label><input type="radio" name="q1" value="c"> Presence check</label>
+                </div>
+                <div class="quiz-question">
+                    <div class="q-text">2. A user is asked to enter their password twice. What is this an example of?</div>
+                    <label><input type="radio" name="q2" value="a"> A range check</label>
+                    <label><input type="radio" name="q2" value="b"> A double-entry verification check</label>
+                    <label><input type="radio" name="q2" value="c"> A format check</label>
+                </div>
+                <div class="quiz-question">
+                    <div class="q-text">3. What is the main purpose of a check digit?</div>
+                    <label><input type="radio" name="q3" value="a"> To make the number look longer</label>
+                    <label><input type="radio" name="q3" value="b"> To check that a number has been entered correctly</label>
+                    <label><input type="radio" name="q3" value="c"> To encrypt the number</label>
+                </div>
+
+                <button class="btn-submit-quiz" onclick="submitQuiz()"><i class="fas fa-paper-plane"></i> Submit answers</button>
+                <div class="quiz-result" id="quizResult"></div>
+            </div>
+
+            <!-- LOCKED CHALLENGE -->
+            <div class="locked-section" id="lockedChallenge">
+                <div class="lock-overlay" id="lockOverlay">
+                    <i class="fas fa-lock"></i>
+                    <p>Complete the quiz above correctly to unlock the Challenge Yourself activity.</p>
+                </div>
+
+                <div class="challenge-box" style="background:#e8f5e9; border:2px solid #81c784; border-radius:16px; padding:1.2rem 1.5rem; margin:1.2rem 0;">
+                    <h3 style="color:#2e7d32; display:flex; align-items:center; gap:10px;"><i class="fas fa-star" style="color:#4caf50;"></i> Challenge Yourself: Write a Validation Program</h3>
+                    <p><strong>Instructions:</strong></p>
+                    <ol style="margin-top:0.5rem;">
+                        <li>Write a pseudocode program that asks the user to enter a <strong>username</strong>.</li>
+                        <li>The username must be <strong>all letters</strong> (use <code>isalpha()</code>).</li>
+                        <li>If the input is invalid, the program should display an error message and keep asking until a valid username is entered.</li>
+                        <li><em>Extension:</em> Once a valid username is entered, ask for a <strong>PIN</strong> that must be exactly <strong>4 digits</strong> long and contain only digits (use <code>isdigit()</code> and <code>LENGTH()</code>).</li>
+                    </ol>
+                    <div class="self-check" style="margin-top:1rem;">
+                        <h4><i class="fas fa-check-circle"></i> Self-Check: Compare your solution</h4>
+                        <p style="font-size:0.9rem;">Once you've written your program, click below to reveal a possible solution.</p>
+                        <button class="btn-reveal" onclick="toggleSolution('sol1')"><i class="fas fa-eye"></i> Reveal solution</button>
+                        <div class="hidden-solution" id="sol1">
+                            <div style="background:white; border:1px solid #dceaf7; border-radius:12px; padding:1rem; margin-top:0.5rem; font-family:'JetBrains Mono', monospace; font-size:0.85rem;">
+                                <strong>Username validation:</strong><br>
+                                ValidUsername ← FALSE<br>
+                                Username ← ""<br>
+                                WHILE NOT ValidUsername DO<br>
+                                &nbsp;&nbsp;OUTPUT "Enter username (letters only):"<br>
+                                &nbsp;&nbsp;INPUT Username<br>
+                                &nbsp;&nbsp;IF Username.isalpha() THEN<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;ValidUsername ← TRUE<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;OUTPUT "Valid username"<br>
+                                &nbsp;&nbsp;ELSE<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;OUTPUT "Invalid username - letters only please"<br>
+                                &nbsp;&nbsp;ENDIF<br>
+                                ENDWHILE<br><br>
+                                <strong>Extension - PIN validation:</strong><br>
+                                ValidPIN ← FALSE<br>
+                                PIN ← ""<br>
+                                WHILE NOT ValidPIN DO<br>
+                                &nbsp;&nbsp;OUTPUT "Enter a 4-digit PIN:"<br>
+                                &nbsp;&nbsp;INPUT PIN<br>
+                                &nbsp;&nbsp;IF LENGTH(PIN) = 4 AND PIN.isdigit() THEN<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;ValidPIN ← TRUE<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;OUTPUT "PIN accepted"<br>
+                                &nbsp;&nbsp;ELSE<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;OUTPUT "Invalid PIN - must be exactly 4 digits"<br>
+                                &nbsp;&nbsp;ENDIF<br>
+                                ENDWHILE
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#5d7f9a; padding:0.3rem 0; flex-wrap:wrap; gap:0.5rem;">
+                <span><i class="fas fa-arrow-left" style="margin-right:6px;"></i><a href="../index.html" style="color:#1f6390; text-decoration:none;">Back to Algorithm Design</a></span>
+                <span>Topic 5 · Validation &amp; Verification</span>
+            </div>
+
+        </div><!-- /lesson-card -->
+
+        <!-- LESSON PRESENTATION -->
+        <div class="resource-card">
+            <h2><i class="fas fa-chart-bar"></i> Lesson Presentation</h2>
+            <p>Use these slides to recap the lesson.</p>
+            <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FT5%2520Validation%2520and%2520verification.pptx&wdOrigin=BROWSELINK" target="_blank" class="btn-resource">
+                <i class="fas fa-file-powerpoint ppt-icon"></i> Open PowerPoint
+            </a>
+        </div>
+
+        <!-- ADDITIONAL RESOURCES -->
+        <div class="resource-card">
+            <h2><i class="fas fa-folder-open"></i> Additional Resources</h2>
+            
+            <!-- Lesson Plan (Teacher only) — NOW LOCKED -->
+            <div style="margin-bottom: 1rem;">
+                <button onclick="openPasswordModal()" class="btn-resource" style="border: none; background: #f8fafc;">
+                    <i class="fas fa-lock lock-icon-small"></i>
+                    <i class="fas fa-file-word"></i> Lesson Plan (Teacher only) — click to toggle
+                </button>
+            </div>
+
+            <!-- AI Guide -->
+            <div>
+                <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" class="btn-resource">
+                    <i class="fas fa-robot"></i> IGCSE/A-Level Computer Science Guide (ChatGPT)
+                </a>
+            </div>
+        </div>
+
+    </div><!-- /container -->
+
+    <script>
+        // --- QUIZ LOGIC ---
+        function submitQuiz() {
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const result = document.getElementById('quizResult');
+            const lock = document.getElementById('lockedChallenge');
+            const overlay = document.getElementById('lockOverlay');
+
+            if (!q1 || !q2 || !q3) {
+                result.textContent = '⚠️ Answer all three questions first.';
+                result.className = 'quiz-result show fail';
+                return;
+            }
+
+            let score = 0;
+            if (q1.value === 'b') score++;
+            if (q2.value === 'b') score++;
+            if (q3.value === 'b') score++;
+
+            if (score === 3) {
+                result.textContent = '✅ All 3 correct! Challenge unlocked below.';
+                result.className = 'quiz-result show pass';
+                lock.classList.add('unlocked');
+                if (overlay) overlay.style.display = 'none';
+            } else {
+                result.textContent = `You got ${score} out of 3. Review the lesson and try again.`;
+                result.className = 'quiz-result show fail';
+            }
+        }
+
+        function toggleSolution(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('show');
+        }
+
+        // --- PASSWORD MODAL LOGIC ---
+        const TEACHER_PASSWORD = 'Password262026';
+        const LESSON_PLAN_URL = 'https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F8%2520Algorithm-design%2FLesson%2520Plan%25205.docx&wdOrigin=BROWSELINK';
+
+        const modal = document.getElementById('passwordModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdError = document.getElementById('pwdError');
+        const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+
+        function openPasswordModal() {
+            pwdInput.value = '';
+            pwdError.textContent = '';
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closePasswordModal() {
+            modal.classList.remove('active');
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === TEACHER_PASSWORD) {
+                window.open(LESSON_PLAN_URL, '_blank');
+                closePasswordModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closePasswordModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closePasswordModal();
+            }
+        });
+    </script>
+
+</body>
+</html>
