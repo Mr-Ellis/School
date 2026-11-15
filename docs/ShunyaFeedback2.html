@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shunya · Criterion D improvement plan (target 8–9+)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f2f5f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1.5rem;
+            display: flex; flex-direction: column; align-items: center;
+            line-height: 1.65;
+            color: #1a2b3c;
+        }
+
+        .container {
+            max-width: 980px; width: 100%;
+            background: white; border-radius: 32px;
+            box-shadow: 0 15px 35px rgba(0, 20, 40, 0.10);
+            padding: 2.5rem 2.75rem; border: 1px solid #e0e7ef;
+        }
+
+        /* ---- header ---- */
+        h1 {
+            font-size: 2rem; font-weight: 700; letter-spacing: -0.02em;
+            margin-bottom: 0.3rem; color: #0b1e33;
+        }
+        .subhead {
+            color: #3c5a7a; font-size: 1.02rem; margin-bottom: 2rem;
+            padding-bottom: 1.1rem; border-bottom: 2px dashed #cddae9;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .byline {
+            font-weight: 500; background: #e8f0fe; padding: 0.25rem 1rem;
+            border-radius: 40px; font-size: 0.92rem; color: #1e4b8c;
+        }
+
+        /* ---- progress ---- */
+        .progress-wrap {
+            position: sticky; top: 8px; z-index: 20;
+            background: #ffffffdd; backdrop-filter: blur(6px);
+            border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 0.8rem 1.25rem; margin-bottom: 2rem;
+            box-shadow: 0 6px 18px rgba(0,30,60,0.06);
+        }
+        .progress-top {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; color: #0a2a44; font-size: 0.9rem; margin-bottom: 6px;
+        }
+        .progress-track { height: 12px; background: #e4edf7; border-radius: 40px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; width: 0%; border-radius: 40px;
+            background: linear-gradient(90deg, #2a6f97, #0e7a4b); transition: width 0.25s ease;
+        }
+        .progress-msg { margin-top: 6px; font-size: 0.84rem; color: #4a6785; }
+
+        /* ---- prediction ---- */
+        .prediction {
+            background: #eef4fc; border-radius: 22px; padding: 1.75rem 2rem;
+            margin-bottom: 2.5rem; border: 1px solid #c2d6ea;
+        }
+        .prediction h2 {
+            font-size: 1.3rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.75rem;
+        }
+        .band-pill {
+            background: #0a2a44; color: white; border-radius: 40px;
+            padding: 0.45rem 1.2rem; font-weight: 700; font-size: 1rem;
+            display: inline-block; margin-bottom: 1rem;
+        }
+        .prediction p { margin-bottom: 1rem; font-size: 0.98rem; color: #1e3c5c; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.25rem 0; }
+        .col-box {
+            background: white; border-radius: 18px; padding: 1.25rem 1.4rem;
+            border: 1px solid #d6e0ed;
+        }
+        .col-box h3 {
+            font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid #e0eaf4;
+        }
+        .col-box.strengths h3 { color: #0f5c34; border-bottom-color: #b8ddc6; }
+        .col-box.risks h3 { color: #8a4b00; border-bottom-color: #f0d9b8; }
+        .col-box ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .col-box li {
+            font-size: 0.92rem; padding-left: 1.7rem; position: relative;
+            line-height: 1.45; color: #2a4b6e;
+        }
+        .col-box li::before { position: absolute; left: 0; font-weight: 700; }
+        .strengths li::before { content: "✓"; color: #0f5c34; }
+        .risks li::before { content: "!"; color: #b45309; }
+        .goal-strip {
+            background: #b45309; color: white; border-radius: 40px;
+            padding: 0.55rem 1.25rem; font-weight: 600; font-size: 0.94rem;
+            display: inline-block; margin-top: 0.5rem;
+        }
+
+        /* ---- blocking issue ---- */
+        .blocking {
+            background: #fff5f5; border: 2px solid #b91c1c; border-radius: 22px;
+            padding: 1.75rem 2rem; margin-bottom: 2.5rem;
+        }
+        .blocking h2 {
+            font-size: 1.25rem; font-weight: 700; color: #991b1b; margin-bottom: 0.75rem;
+        }
+        .blocking p { font-size: 0.97rem; color: #5c1616; margin-bottom: 0.75rem; }
+        .quote {
+            background: white; border-left: 5px solid #991b1b; border-radius: 12px;
+            padding: 1rem 1.25rem; margin: 1rem 0; font-style: italic;
+            font-size: 0.95rem; color: #5c1616; line-height: 1.6;
+        }
+
+        /* ---- section headings ---- */
+        .section { margin-bottom: 3rem; }
+        .section h2 {
+            font-size: 1.5rem; font-weight: 700; color: #0a2a44;
+            margin-bottom: 0.5rem; display: flex; align-items: center; gap: 12px;
+        }
+        .badge {
+            background: #0a2a44; color: white; font-size: 0.85rem;
+            padding: 0.2rem 0.85rem; border-radius: 40px; font-weight: 500;
+        }
+        .section-lead {
+            color: #3c5a7a; font-size: 1rem; margin-bottom: 1.5rem;
+            max-width: 75ch;
+        }
+
+        /* ---- mistake cards ---- */
+        .mistake-stack { display: flex; flex-direction: column; gap: 1rem; }
+        .mistake {
+            background: #fff8f0; border: 1px solid #f0d9b8; border-radius: 18px;
+            padding: 1.25rem 1.5rem; border-left: 6px solid #d97706;
+        }
+        .mistake h3 {
+            font-size: 1rem; font-weight: 700; color: #7c2d12; margin-bottom: 0.5rem;
+        }
+        .mistake p { font-size: 0.94rem; color: #5c3a1e; line-height: 1.6; }
+        .mistake p + p { margin-top: 0.6rem; }
+        .example-strip {
+            background: white; border-radius: 10px; padding: 0.7rem 1rem;
+            margin-top: 0.65rem; font-size: 0.9rem; color: #5c3a1e;
+            border-left: 3px solid #d97706;
+        }
+        .example-strip strong { color: #7c2d12; }
+        .mistake ul { list-style: none; margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem; }
+        .mistake ul li {
+            font-size: 0.88rem; padding-left: 1.4rem; position: relative;
+            color: #0f5c34; font-weight: 500;
+        }
+        .mistake ul li::before { content: "✓"; position: absolute; left: 0; font-weight: 700; }
+
+        /* ---- rule list ---- */
+        .rule-box {
+            background: #f8fafd; border-radius: 18px; padding: 1.5rem 1.75rem;
+            border: 1px solid #d6e0ed;
+        }
+        .rule-box ol {
+            list-style: none; counter-reset: rule;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem 1.5rem;
+        }
+        .rule-box li {
+            font-size: 0.95rem; padding-left: 2.2rem; position: relative;
+            counter-increment: rule; color: #2a4b6e; line-height: 1.5;
+        }
+        .rule-box li::before {
+            content: counter(rule);
+            position: absolute; left: 0; top: 0;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: #e4edf7; color: #1e4b8c;
+            font-weight: 700; font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .rule-box li.eval-point { color: #0f5c34; font-weight: 600; }
+        .rule-box li.eval-point::before { background: #d9efe2; color: #0f5c34; }
+
+        /* ---- technique cards ---- */
+        .tech-stack { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.25rem; }
+        .tech-card {
+            background: #f8fafd; border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 1.4rem 1.75rem;
+        }
+        .tech-card-head {
+            display: flex; align-items: flex-start; gap: 14px; margin-bottom: 0.6rem;
+        }
+        .tech-num {
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.85rem;
+            width: 30px; height: 30px; min-width: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-top: 1px;
+        }
+        .tech-card h3 {
+            font-size: 1.08rem; font-weight: 700; color: #0a2a44; line-height: 1.35;
+        }
+        .tech-card p {
+            font-size: 0.94rem; color: #2a4b6e; line-height: 1.65;
+            padding-left: 44px;
+        }
+        .tech-card p + p { margin-top: 0.6rem; }
+        .tech-card .why {
+            font-size: 0.92rem; color: #0f5c34; font-weight: 500;
+            padding-left: 44px; margin-top: 0.6rem;
+        }
+        .tech-card .why::before { content: "Why this matters: "; font-weight: 700; }
+
+        /* ---- technique pills ---- */
+        .tech-pills { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; margin-bottom: 0.5rem; }
+        .pill {
+            background: white; border-radius: 40px; padding: 0.4rem 1.1rem;
+            font-weight: 500; border: 1px solid #9bb7d4; color: #113355;
+            font-size: 0.93rem; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.12s; user-select: none;
+        }
+        .pill:hover { border-color: #5b8db8; }
+        .pill.done { background: #e0f2e9; border-color: #0e7a4b; color: #0a3e28; }
+        .pill .pill-box {
+            width: 18px; height: 18px; border: 2px solid #2c5f8a; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            background: white; font-size: 0.65rem; font-weight: 700;
+        }
+        .pill.done .pill-box { background: #1b7e4b; border-color: #1b7e4b; }
+        .pill.done .pill-box::after { content: "✓"; color: white; }
+
+        /* ---- A–I ---- */
+        .ai-list { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.5rem; }
+        .ai-step {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #f8fafd; border: 1px solid #e0eaf4; border-radius: 16px;
+            padding: 1rem 1.3rem;
+        }
+        .ai-letter {
+            background: #e4edf7; color: #1e4b8c; font-weight: 700; font-size: 0.85rem;
+            width: 30px; height: 30px; min-width: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-top: 1px;
+        }
+        .ai-body { flex: 1; }
+        .ai-body h4 { font-size: 0.95rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.3rem; }
+        .ai-body p { font-size: 0.92rem; color: #2a4b6e; line-height: 1.6; }
+        .ai-body .example {
+            background: white; border-left: 3px solid #2a6f97; border-radius: 8px;
+            padding: 0.55rem 0.85rem; margin-top: 0.5rem; font-size: 0.9rem; color: #1e3c5c;
+        }
+        .ai-step.key-eval { background: #f2fbf5; border-color: #b8ddc6; }
+        .ai-step.key-eval .ai-letter { background: #d9efe2; color: #0f5c34; }
+        .ai-step.key-eval h4 { color: #0f5c34; }
+
+        /* ---- evaluation ---- */
+        .eval-section {
+            background: #f2fbf5; border: 2px solid #0e7a4b; border-radius: 22px;
+            padding: 1.75rem 2rem; margin-bottom: 2.5rem;
+        }
+        .eval-section h2 { color: #0a3e28; }
+        .eval-section .badge { background: #0e7a4b; }
+        .eval-section .section-lead { color: #1c4d33; }
+        .eval-section .rule-box { background: white; border-color: #b8ddc6; }
+        .eval-note {
+            background: white; border-radius: 14px; padding: 1.1rem 1.4rem;
+            border: 1px solid #b8ddc6; margin-top: 1.25rem; font-size: 0.94rem;
+            color: #1c4d33; line-height: 1.6;
+        }
+        .eval-note strong { color: #0a3e28; }
+
+        /* ---- test groups ---- */
+        .test-group { margin-bottom: 1.75rem; }
+        .test-group-head {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem;
+        }
+        .test-group-head h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .tag {
+            font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.7rem;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .tag-normal { background: #dcecff; color: #1b4b7a; }
+        .tag-abnormal { background: #ffe0e0; color: #8a1f1f; }
+        .tag-extreme { background: #f3e0ff; color: #5b1f8a; }
+        .test-group-desc {
+            font-size: 0.93rem; color: #3c5a7a; margin-bottom: 0.75rem;
+            max-width: 75ch;
+        }
+        .test-table {
+            width: 100%; border-collapse: collapse; font-size: 0.9rem;
+            background: white; border-radius: 14px; overflow: hidden;
+            border: 1px solid #d6e0ed;
+        }
+        .test-table th, .test-table td {
+            text-align: left; padding: 0.7rem 1rem; border-bottom: 1px solid #eaf0f7;
+        }
+        .test-table th {
+            background: #f4f8fd; color: #1e4b8c; font-weight: 600;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .test-table tr:last-child td { border-bottom: none; }
+        .test-table tr.done td { background: #f2fbf5; }
+        .test-table .tick-cell { width: 40px; }
+        .row-tick {
+            width: 22px; height: 22px; border: 2px solid #2c5f8a; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; background: white; transition: 0.12s;
+        }
+        .row-tick:hover { border-color: #1b7e4b; }
+        .test-table tr.done .row-tick { background: #1b7e4b; border-color: #1b7e4b; }
+        .test-table tr.done .row-tick::after { content: "✓"; color: white; font-size: 0.75rem; font-weight: 700; }
+        .video-flag { font-size: 0.82rem; font-weight: 600; }
+        .video-flag.yes { color: #0e7a4b; }
+        .video-flag.no { color: #9a6a00; }
+        .test-warning {
+            background: #fff5f5; border-left: 4px solid #b91c1c; border-radius: 10px;
+            padding: 0.85rem 1.15rem; margin-top: 0.75rem; font-size: 0.9rem;
+            color: #7f1d1d; line-height: 1.55;
+        }
+        .test-note {
+            background: #f6f9ff; border-left: 4px solid #2a6f97; border-radius: 10px;
+            padding: 0.85rem 1.15rem; margin-top: 0.75rem; font-size: 0.9rem;
+            color: #1e3c5c; line-height: 1.55;
+        }
+
+        /* ---- video ---- */
+        .video-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .video-item {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #f8fafd; border: 1px solid #e0eaf4; border-radius: 16px;
+            padding: 1rem 1.3rem;
+        }
+        .video-sc {
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.78rem;
+            padding: 0.25rem 0.7rem; border-radius: 30px; margin-top: 2px;
+            white-space: nowrap;
+        }
+        .video-body { flex: 1; }
+        .video-body h4 { font-size: 0.96rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.3rem; }
+        .video-body p { font-size: 0.92rem; color: #2a4b6e; line-height: 1.6; }
+        .video-item.highlight {
+            background: #fffaf0; border-color: #f0d9b8;
+        }
+        .video-item.highlight .video-sc { background: #b45309; }
+        .video-why {
+            margin-top: 0.5rem; font-size: 0.88rem; color: #8a4b00; font-weight: 500;
+        }
+        .video-note {
+            background: #f6f9ff; border-left: 4px solid #2a6f97; border-radius: 10px;
+            padding: 1rem 1.25rem; margin-top: 1.25rem; font-size: 0.93rem;
+            color: #1e3c5c; line-height: 1.6;
+        }
+
+        /* ---- prediction table ---- */
+        .pred-table {
+            width: 100%; border-collapse: collapse; font-size: 0.93rem;
+            background: white; border-radius: 14px; overflow: hidden;
+            border: 1px solid #d6e0ed;
+        }
+        .pred-table th, .pred-table td {
+            text-align: left; padding: 0.75rem 1.1rem; border-bottom: 1px solid #eaf0f7;
+        }
+        .pred-table th {
+            background: #f4f8fd; color: #1e4b8c; font-weight: 600;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .pred-table tr:last-child td { border-bottom: none; }
+        .pred-table tr:last-child td { font-weight: 700; color: #0a2a44; background: #f8fafd; }
+        .judge-pill {
+            font-size: 0.8rem; font-weight: 700; padding: 0.15rem 0.65rem;
+            border-radius: 20px; white-space: nowrap;
+        }
+        .judge-weak { background: #ffe0e0; color: #8a1f1f; }
+        .judge-ok { background: #fff0d6; color: #8a4b00; }
+        .judge-strong { background: #d9efe2; color: #0f5c34; }
+
+        /* ---- final moderator test ---- */
+        .final-test {
+            background: #0a2a44; color: white; border-radius: 24px;
+            padding: 2rem 2.25rem; margin-bottom: 2rem;
+        }
+        .final-test h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .final-test .lead { opacity: 0.9; font-size: 0.97rem; margin-bottom: 1.25rem; }
+        .final-test ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+        .final-test li {
+            padding-left: 2rem; position: relative; font-size: 0.97rem; line-height: 1.5;
+        }
+        .final-test li::before {
+            content: "☐"; position: absolute; left: 0; font-weight: 700;
+            color: #9ec9ff; font-size: 1.1rem;
+        }
+        .final-test li.current-fail::before { content: "✗"; color: #fca5a5; }
+        .final-test li.current-pass::before { content: "✓"; color: #86efac; }
+        .final-test .after {
+            margin-top: 1.25rem; font-size: 0.93rem; opacity: 0.85;
+            border-top: 1px solid #ffffff33; padding-top: 1rem; line-height: 1.6;
+        }
+
+        /* ---- email ---- */
+        .email-cta {
+            background: #eef4fc; border: 1px solid #c2d6ea; border-radius: 22px;
+            padding: 1.5rem 2rem; margin-bottom: 1.5rem;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+            gap: 1.25rem;
+        }
+        .email-cta h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .email-cta p { font-size: 0.93rem; color: #3c5a7a; margin-top: 0.25rem; max-width: 60ch; }
+        .email-cta a {
+            background: #0a2a44; color: white; font-weight: 700; text-decoration: none;
+            padding: 0.7rem 1.4rem; border-radius: 40px; font-size: 0.95rem;
+            white-space: nowrap; transition: 0.12s;
+        }
+        .email-cta a:hover { background: #1e4b8c; }
+
+        .footer {
+            margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid #cfddee;
+            font-size: 0.88rem; color: #4a6785;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .reset-btn {
+            background: none; border: 1px solid #9bb7d4; border-radius: 40px;
+            padding: 0.3rem 1rem; font-size: 0.8rem; color: #1e4b6e;
+            cursor: pointer; font-weight: 500;
+        }
+        .reset-btn:hover { background: #eef4fc; }
+
+        @media (max-width: 760px) {
+            .two-col { grid-template-columns: 1fr; }
+            .rule-box ol { grid-template-columns: 1fr; }
+            .email-cta { flex-direction: column; align-items: flex-start; }
+            .tech-card p, .tech-card .why { padding-left: 0; }
+        }
+        @media (max-width: 650px) {
+            .container { padding: 1.75rem 1.5rem; }
+            h1 { font-size: 1.65rem; }
+            .prediction { padding: 1.4rem 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Criterion D improvement plan</h1>
+    <div class="subhead">
+        <span>Predicted 7 / 12 → Target 8–9+</span>
+        <span class="byline">Shunya · Stress Management Application</span>
+    </div>
+
+    <!-- progress -->
+    <div class="progress-wrap">
+        <div class="progress-top">
+            <span>Progress</span>
+            <span id="progressCount">0 / 0</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-msg" id="progressMsg">Tick the boxes as you complete each action. Your ticks are saved in this browser.</div>
+    </div>
+
+    <!-- PREDICTION -->
+    <div class="prediction">
+        <h2>Current moderator assessment</h2>
+        <span class="band-pill">Predicted Criterion D: 7 / 12</span>
+        <p>This is very similar to the official IB exemplar that scored 7/12 rather than the stronger submissions reaching 8–9+. The application contains several genuine computational techniques and appears functional, but the biggest moderation weaknesses are:</p>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1rem; padding-left:0;">
+            <li style="padding-left:1.7rem; position:relative; font-size:0.95rem; color:#5c3a1e;"><span style="position:absolute; left:0; font-weight:700; color:#b45309;">!</span>Testing effectiveness is mostly stated rather than justified.</li>
+            <li style="padding-left:1.7rem; position:relative; font-size:0.95rem; color:#5c3a1e;"><span style="position:absolute; left:0; font-weight:700; color:#b45309;">!</span>Implementation choices are often explained but only sometimes evaluated.</li>
+            <li style="padding-left:1.7rem; position:relative; font-size:0.95rem; color:#5c3a1e;"><span style="position:absolute; left:0; font-weight:700; color:#b45309;">!</span>Functionality is demonstrated through screenshots and trace tables, but not always convincingly validated through comprehensive testing evidence.</li>
+            <li style="padding-left:1.7rem; position:relative; font-size:0.95rem; color:#5c3a1e;"><span style="position:absolute; left:0; font-weight:700; color:#b45309;">!</span>Abnormal testing exists, but extreme testing is weak.</li>
+        </ul>
+
+        <div class="two-col">
+            <div class="col-box strengths">
+                <h3>Current strengths</h3>
+                <ul>
+                    <li>Weighted scoring algorithm with configurable question weighting.</li>
+                    <li>Input validation for multiple data types and ranges.</li>
+                    <li>Persistent JSON storage of results and timestamps.</li>
+                    <li>Break-time recommendation algorithm.</li>
+                    <li>Trend analysis using pandas and historical data.</li>
+                    <li>Several implementation limitations are acknowledged.</li>
+                </ul>
+            </div>
+            <div class="col-box risks">
+                <h3>Risks preventing 8–12</h3>
+                <ul>
+                    <li>Most implementation choices are explained rather than fully evaluated.</li>
+                    <li>Very little comparison against realistic alternatives.</li>
+                    <li>Testing effectiveness is rarely justified.</li>
+                    <li>Almost no convincing extreme testing.</li>
+                    <li>No evidence the entire solution has been tested under large datasets.</li>
+                    <li>Some testing tables verify individual functions rather than complete functionality.</li>
+                    <li>No evidence that a video could independently prove every success criterion.</li>
+                </ul>
+            </div>
+        </div>
+        <span class="goal-strip">The fix is evaluation and testing evidence — not more features.</span>
+    </div>
+
+    <!-- BLOCKING ISSUE -->
+    <div class="blocking">
+        <h2>What is preventing 8–9+</h2>
+        <p>The primary issue is testing effectiveness. A likely moderator comment would be:</p>
+        <div class="quote">
+            “Appropriate techniques have been used and the product appears functional. Implementation choices are partially evaluated. However, testing effectiveness is largely described rather than justified, and evidence for extreme testing is limited.”
+        </div>
+        <p>If extreme testing evidence is added, testing effectiveness is justified with actual results, and every success criterion is demonstrated in a video, the submission has a realistic pathway into the 8–9+ band.</p>
+    </div>
+
+    <!-- MISTAKES -->
+    <div class="section">
+        <h2><span class="badge">!</span> The biggest mistakes you could make</h2>
+        <div class="mistake-stack">
+            <div class="mistake">
+                <h3>Thinking that lots of testing tables automatically score highly</h3>
+                <p>The document contains many tables. Moderators do not reward the <em>number</em> of test cases — they reward evidence that testing demonstrates functionality and reliability. A table showing an input and an output does not automatically justify the testing strategy.</p>
+                <div class="example-strip"><strong>Example:</strong> a table showing input <code>10</code> → output <code>1</code> proves that one calculation works on one input. It does not prove the algorithm is reliable, nor that the testing strategy is effective.</div>
+            </div>
+            <div class="mistake">
+                <h3>Treating explanation as evaluation</h3>
+                <p>Many sections follow the pattern “I used pandas because…”, “I used JSON because…”, “I used QTimer because…”. That is explanation. Evaluation requires an alternative, a limitation, a trade-off and a justification. Only some sections do this well.</p>
+            </div>
+            <div class="mistake">
+                <h3>Assuming invalid tests = complete testing</h3>
+                <p>The write-up focuses heavily on invalid inputs. The moderator will still ask: where are the extreme tests? Where are the large datasets? Where are the performance tests? Where is evidence the application remains reliable over time?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- THE RULE -->
+    <div class="section">
+        <h2><span class="badge">→</span> What high-scoring Criterion D looks like</h2>
+        <p class="section-lead">For every major technique, the moderator should be able to identify all eight points below. The implementation sections already achieve many of them — the gap is in points 5, 7 and 8, which are about evaluation and testing.</p>
+        <div class="rule-box">
+            <ol>
+                <li>What was used?</li>
+                <li>Why was it chosen?</li>
+                <li>What alternative was considered?</li>
+                <li>What limitation exists?</li>
+                <li class="eval-point">Why was the choice still appropriate? <em>(evaluation)</em></li>
+                <li>How was it tested?</li>
+                <li class="eval-point">Why was that testing effective? <em>(justification)</em></li>
+                <li class="eval-point">What limitations remain? <em>(evaluation of testing)</em></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- TECHNIQUES -->
+    <div class="section">
+        <h2><span class="badge">1</span> Your strongest techniques</h2>
+        <p class="section-lead">Focus Criterion D around these four features rather than the interface. Each card explains what the technique is, why it is strong moderation material, and what to make sure you cover. Tick each pill once its full A–I subsection is written.</p>
+
+        <div class="tech-pills">
+            <div class="pill" data-tick><div class="pill-box"></div>Weighted stress scoring</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Trend detection with pandas</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Input validation</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Break recommendation</div>
+        </div>
+
+        <div class="tech-stack">
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">1</div>
+                    <h3>Weighted stress scoring algorithm</h3>
+                </div>
+                <p>This is your strongest computational technique. The algorithm applies weights to questionnaire answers, normalises the values, calculates a final stress score out of 10, and prevents negative overflow. It is a genuine multi-step calculation rather than a lookup.</p>
+                <p>You already evaluate it well on simplicity, interpretability and reduced precision. Make sure that evaluation is visible in the final write-up — the trade-off between a simple, explainable formula and a more precise but opaque one is exactly what moderators reward.</p>
+                <div class="why">This is the algorithm most likely to be remembered, so it should lead the techniques section and appear early in the video.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">2</div>
+                    <h3>Trend detection algorithm</h3>
+                </div>
+                <p>Probably the most sophisticated element in the project. It loads historical data, creates a pandas dataframe, groups scores by hour, finds peak stress periods and generates recommendations from them. That is a real data-processing pipeline, not a single function.</p>
+                <p>This should be emphasised more during demonstrations. Show the prepared history data, show the grouped output, and show the recommendation that follows from it.</p>
+                <div class="why">It is the clearest example of the project doing something a simple data-entry application cannot do.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">3</div>
+                    <h3>Input validation</h3>
+                </div>
+                <p>Multiple validation stages exist: missing values, invalid ranges, invalid data types and yes/no validation. This provides a strong source of abnormal testing, which is currently one of the better-evidenced areas.</p>
+                <p>In the write-up, make the sequence of checks explicit and show what happens when each one fails, rather than listing them as features.</p>
+                <div class="why">Validation is easy to under-explain. Show the order of checks and the failure behaviour for each one.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">4</div>
+                    <h3>Break recommendation system</h3>
+                </div>
+                <p>The transformation from stress score to break duration is computational and should be treated as an algorithm in its own right. It maps a continuous score onto a discrete set of actions.</p>
+                <p>Show different stress levels producing different break durations in the video — that is a quick, clear demonstration of the mapping working across the full range.</p>
+                <div class="why">Treating this as an algorithm rather than a UI feature raises the computational quality of the write-up.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- A–I -->
+    <div class="section">
+        <h2><span class="badge">2</span> Structure for each technique</h2>
+        <p class="section-lead">Use this structure for every technique. Points F, H and I are the evaluation and justification points — those are what push a report from 7 into the 8–9+ band. The examples below use the weighted stress scoring algorithm.</p>
+
+        <div class="ai-list">
+            <div class="ai-step">
+                <div class="ai-letter">A</div>
+                <div class="ai-body">
+                    <h4>What is the technique?</h4>
+                    <p>Explain the technique in one or two sentences, independent of your project.</p>
+                    <div class="example">“Weighted scoring is an algorithm that combines multiple inputs, each with its own importance, into a single normalised score.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">B</div>
+                <div class="ai-body">
+                    <h4>How is it used in my solution?</h4>
+                    <p>Connect the technique directly to your project.</p>
+                    <div class="example">“Each questionnaire answer is multiplied by its configured weight, the weighted values are summed and normalised, and the result is presented as a stress score out of 10.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">C</div>
+                <div class="ai-body">
+                    <h4>Why did I choose it?</h4>
+                    <p>Give the computational reason, not just the user-facing benefit.</p>
+                    <div class="example">“A weighted sum keeps the calculation interpretable: each question's contribution can be explained to the user, unlike a machine-learning model.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">D</div>
+                <div class="ai-body">
+                    <h4>What alternative could I have used?</h4>
+                    <p>Name a realistic alternative and say what is wrong with it.</p>
+                    <div class="example">“A trained machine-learning model could predict stress more accurately, but it would require labelled data the project does not have, and its decisions would be opaque to the user.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">E</div>
+                <div class="ai-body">
+                    <h4>What is a limitation?</h4>
+                    <p>Every technique has one. Naming it honestly strengthens the evaluation.</p>
+                    <div class="example">“The weighting scheme is fixed at design time, so it cannot adapt to an individual user's stress patterns.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">F</div>
+                <div class="ai-body">
+                    <h4>Why is my choice still appropriate? <em>(evaluation)</em></h4>
+                    <p>Weigh the limitation against the benefit and reach a judgement.</p>
+                    <div class="example">“Although the weighting is fixed, it makes the score predictable and explainable, which matters more for a self-monitoring tool than marginal accuracy gains.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">G</div>
+                <div class="ai-body">
+                    <h4>How did I test it?</h4>
+                    <p>Describe the normal, abnormal and extreme cases you actually ran.</p>
+                    <div class="example">“I tested minimum scores, maximum scores, mixed weighted answers, and a continuous run of 10/10 responses to check the score did not overflow.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">H</div>
+                <div class="ai-body">
+                    <h4>Why was the testing effective? <em>(justification)</em></h4>
+                    <p>Explain what the tests prove — not just that they were run.</p>
+                    <div class="example">“The extreme tests proved the normalisation holds at both boundaries, and the mixed tests proved each weight affects the final score as expected.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">I</div>
+                <div class="ai-body">
+                    <h4>What does the testing NOT prove? <em>(evaluation of testing)</em></h4>
+                    <p>Name what remains unproven. This is the point most students skip.</p>
+                    <div class="example">“The tests confirm the algorithm behaves correctly on the cases I tried, but not that the score correlates with real physiological stress.”</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EVALUATION -->
+    <div class="eval-section section">
+        <h2><span class="badge">E</span> Evaluation checklist</h2>
+        <p class="section-lead">The implementation sections already explain well. Use this to confirm nothing has slipped, especially for the testing discussion.</p>
+
+        <div class="rule-box">
+            <ol>
+                <li>I discussed at least one alternative for each major technique.</li>
+                <li>I discussed the advantages of my chosen approach.</li>
+                <li>I discussed the limitations of my chosen approach.</li>
+                <li class="eval-point">I explained why the advantages outweigh the limitations.</li>
+                <li>I explained what the testing demonstrates.</li>
+                <li class="eval-point">I explained what the testing does not prove.</li>
+            </ol>
+        </div>
+
+        <div class="eval-note">
+            <strong>The quick evaluation test:</strong> if a paragraph can be rewritten as “I used X because it does Y”, it is probably explanation. If it includes an advantage, a limitation, an alternative and a trade-off, it is probably evaluation.
+        </div>
+    </div>
+
+    <!-- TESTING -->
+    <div class="section">
+        <h2><span class="badge">3</span> Testing evidence</h2>
+        <p class="section-lead">Normal and abnormal testing are already reasonably strong. Extreme testing is the largest weakness, so give it the most attention. Run each test, record the expected and actual result, and tick it once you have evidence (video or screenshot).</p>
+
+        <!-- normal -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-normal">Normal</span>
+                <h3>Expected user behaviour</h3>
+            </div>
+            <p class="test-group-desc">You already have many of these. Keep them, but make sure each one has a recorded actual result rather than just an expected one.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Feature</th><th>Test</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N1</td><td>Questionnaire</td><td>Valid questionnaire completed and submitted</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N2</td><td>Score generation</td><td>Score generated out of 10</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N3</td><td>Score storage</td><td>Score and timestamp stored correctly</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N4</td><td>Break calculation</td><td>Different stress levels produce different break durations</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N5</td><td>Trend notification</td><td>Trend recommendation generated from history</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- abnormal -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-abnormal">Abnormal</span>
+                <h3>Invalid or unexpected input</h3>
+            </div>
+            <p class="test-group-desc">Partially present in the write-up. Add explicit evidence for the cases below — the write-up discusses some of these risks but does not test them.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Test</th><th>Expected result</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A1</td><td>Missing JSON file</td><td>Graceful handling</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A2</td><td>Corrupted JSON file</td><td>Error message shown</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A3</td><td>Invalid weight values</td><td>Safe failure</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A4</td><td>Missing questionnaire data</td><td>Safe failure</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A5</td><td>Empty history file</td><td>Trend analysis still works</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A6</td><td>Text entered for a numeric field</td><td>Rejected with message</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A7</td><td>Invalid yes/no response</td><td>Rejected with message</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+            <div class="test-warning">The write-up discusses some of these risks but does not test them. Showing the system actually handling a corrupted JSON file is worth far more than a sentence saying it would.</div>
+        </div>
+
+        <!-- extreme -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-extreme">Extreme</span>
+                <h3>Boundary and stress cases · the largest weakness</h3>
+            </div>
+            <p class="test-group-desc">This is where the marks are most at risk. Almost no convincing extreme testing currently exists. Moderators expect to see evidence that the application remains reliable when the data is large.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Test</th><th>Extreme input</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E1</td><td>Score history</td><td>1,000 results</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E2</td><td>Trend detection</td><td>Large history dataset</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E3</td><td>JSON size</td><td>Very large file</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E4</td><td>Repeated testing</td><td>500 consecutive records</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E5</td><td>Maximum possible scores</td><td>Continuous 10/10 scores</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E6</td><td>Minimum possible scores</td><td>Continuous 0/10 scores</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+            <div class="test-warning">For each extreme test, record what was measured and what the result was — “the application remained responsive” is not evidence unless the response time or behaviour is shown. Capture timings and screenshots.</div>
+        </div>
+
+        <div class="test-note">
+            <strong>Additional testing video:</strong> record a short separate clip showing one normal test, one abnormal test and one extreme test in sequence, with the expected and actual result stated aloud for each. Moderators strongly reward this.
+        </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="section">
+        <h2><span class="badge">4</span> Video plan</h2>
+        <p class="section-lead">The moderator should be able to verify every success criterion from the video alone. Each step below states what to show and what the demonstration proves.</p>
+
+        <div class="video-list">
+            <div class="video-item">
+                <span class="video-sc">SC1</span>
+                <div class="video-body">
+                    <h4>Complete questionnaire</h4>
+                    <p>Show a full questionnaire being completed and submitted.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC2</span>
+                <div class="video-body">
+                    <h4>Generate stress score</h4>
+                    <p>Show the output score out of 10.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC3</span>
+                <div class="video-body">
+                    <h4>Invalid data rejected</h4>
+                    <p>Enter text in a numeric field, leave a value missing, and give an invalid yes/no response. Show each rejection.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC4</span>
+                <div class="video-body">
+                    <h4>Timestamp stored</h4>
+                    <p>Open the JSON file and show the stored timestamp alongside the score.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC5</span>
+                <div class="video-body">
+                    <h4>Different break durations</h4>
+                    <p>Generate different stress levels and show the different break durations they produce.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC6</span>
+                <div class="video-body">
+                    <h4>Timer and alarm</h4>
+                    <p>Show the timer running, allow it to reach zero, and show the alarm triggered.</p>
+                </div>
+            </div>
+            <div class="video-item highlight">
+                <span class="video-sc">SC7</span>
+                <div class="video-body">
+                    <h4>Trend recommendation</h4>
+                    <p>Use prepared history data, demonstrate peak-hour identification, and show the recommendation that follows from it.</p>
+                    <div class="video-why">This is your most sophisticated algorithm — the demonstration should make that clear by showing the intermediate steps, not just the final recommendation.</div>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC8</span>
+                <div class="video-body">
+                    <h4>Completion time</h4>
+                    <p>Measure the questionnaire completion time and demonstrate the result is produced within one minute.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-note">
+            <strong>Narration tip:</strong> for every test, state the test type, the expected result and the actual result. For example: “This is an extreme test. Expected: the trend analysis still completes with 1,000 records. Actual: it completed in under two seconds. This demonstrates that the pandas pipeline scales to realistic data volumes.” That is the language moderators reward.
+        </div>
+    </div>
+
+    <!-- PREDICTION TABLE -->
+    <div class="section">
+        <h2><span class="badge">5</span> Where you are now</h2>
+        <p class="section-lead">This is the honest moderator judgement at the moment. The target is to move every “weak” or “described” row up at least one level.</p>
+        <table class="pred-table">
+            <thead>
+                <tr><th>Area</th><th>Moderator judgment</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Functionality</td><td><span class="judge-pill judge-strong">Functional</span></td></tr>
+                <tr><td>Implementation choices</td><td><span class="judge-pill judge-ok">Explained / partly evaluated</span></td></tr>
+                <tr><td>Testing effectiveness</td><td><span class="judge-pill judge-weak">Described</span></td></tr>
+                <tr><td>Normal testing</td><td><span class="judge-pill judge-strong">Strong</span></td></tr>
+                <tr><td>Abnormal testing</td><td><span class="judge-pill judge-ok">Present</span></td></tr>
+                <tr><td>Extreme testing</td><td><span class="judge-pill judge-weak">Weak</span></td></tr>
+                <tr><td>Predicted Criterion D</td><td>7 / 12</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FINAL TEST -->
+    <div class="final-test">
+        <h2>Final moderator test</h2>
+        <p class="lead">Before submission, could a moderator confidently state each of the following? The ticks and crosses show where you stand right now.</p>
+        <ul>
+            <li class="current-pass">The solution appears fully functional.</li>
+            <li class="current-pass">Appropriate computational techniques have been used.</li>
+            <li class="current-pass">Several implementation choices are discussed.</li>
+            <li class="current-fail">Testing effectiveness has been fully justified.</li>
+            <li class="current-fail">Normal, abnormal and extreme testing are all evidenced.</li>
+            <li class="current-fail">Every success criterion has comprehensive proof.</li>
+            <li class="current-fail">The testing demonstrates reliability beyond individual examples.</li>
+        </ul>
+        <div class="after">The four crosses are the work to do. If all seven can honestly become ticks, the project is in the 8–9+ band.</div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="email-cta">
+        <div>
+            <h3>Finished your write-up and video?</h3>
+            <p>Email Mr Ellis as soon as both are complete so he can review them before submission.</p>
+        </div>
+        <a href="mailto:craig.ellis@isr-school.de?subject=Criterion%20D%20write-up%20and%20video%20finished%20%E2%80%94%20Shunya&body=Hi%20Mr%20Ellis%2C%0A%0AMy%20Criterion%20D%20write-up%20and%20video%20are%20finished.%0A%0AThanks%2C%0AShunya">
+            craig.ellis@isr-school.de
+        </a>
+    </div>
+
+    <div class="footer">
+        <span><strong>Criterion D improvement plan</strong> · Shunya · Stress Management Application · target 8–9+</span>
+        <button class="reset-btn" id="resetBtn">Reset ticks</button>
+    </div>
+</div>
+
+<script>
+(function () {
+    var STORAGE_KEY = 'shunya_critD_plan_v1';
+    var ticks = {};
+    try {
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) ticks = JSON.parse(saved) || {};
+    } catch (e) { ticks = {}; }
+
+    var allTickables = Array.prototype.slice.call(document.querySelectorAll('[data-tick]'));
+    allTickables.forEach(function (el, i) { el.dataset.tickKey = 't' + i; });
+
+    function save() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ticks)); } catch (e) {}
+    }
+
+    function updateProgress() {
+        var total = allTickables.length;
+        var done = allTickables.filter(function (el) { return ticks[el.dataset.tickKey]; }).length;
+        var pct = total ? Math.round((done / total) * 100) : 0;
+        document.getElementById('progressFill').style.width = pct + '%';
+        document.getElementById('progressCount').textContent = done + ' / ' + total;
+        var msg = document.getElementById('progressMsg');
+        if (done === 0) {
+            msg.textContent = 'Tick the boxes as you complete each action. Your ticks are saved in this browser.';
+        } else if (done === total) {
+            msg.textContent = 'Every box ticked — email Mr Ellis with your write-up and video.';
+        } else if (pct < 40) {
+            msg.textContent = 'Keep going. The priority is extreme testing evidence and justified testing effectiveness.';
+        } else if (pct < 75) {
+            msg.textContent = 'Over halfway. Make sure every extreme test has a recorded result and a timing.';
+        } else {
+            msg.textContent = 'Almost there — check the video plan and the final moderator test.';
+        }
+    }
+
+    function render() {
+        allTickables.forEach(function (el) {
+            el.classList.toggle('done', !!ticks[el.dataset.tickKey]);
+        });
+        updateProgress();
+    }
+
+    allTickables.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            if (e.target.closest('a')) return;
+            var key = el.dataset.tickKey;
+            ticks[key] = !ticks[key];
+            save();
+            render();
+        });
+        el.addEventListener('keydown', function (e) {
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); el.click(); }
+        });
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('role', 'checkbox');
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function () {
+        if (!confirm('Reset all ticks? This cannot be undone.')) return;
+        ticks = {};
+        save();
+        render();
+    });
+
+    render();
+})();
+</script>
+</body>
+</html>
