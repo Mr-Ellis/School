@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ben · Criterion D interactive tick sheet (target 10–12)</title>
+    <title>Ben · Criterion D improvement plan (target 10–12)</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -11,194 +11,180 @@
             background: #f2f5f9;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             padding: 2rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            line-height: 1.5;
+            display: flex; flex-direction: column; align-items: center;
+            line-height: 1.55;
         }
 
         .container {
-            max-width: 1050px;
-            width: 100%;
-            background: white;
-            border-radius: 32px;
+            max-width: 1000px; width: 100%;
+            background: white; border-radius: 32px;
             box-shadow: 0 15px 35px rgba(0, 20, 40, 0.12);
-            padding: 2rem 2.25rem;
-            border: 1px solid #e0e7ef;
+            padding: 2rem 2.25rem; border: 1px solid #e0e7ef;
         }
-
-        /* ---- alert ---- */
-        .alert-urgent {
-            background: #fff4e5;
-            border-left: 8px solid #d97706;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 2rem;
-            border-radius: 16px;
-        }
-        .alert-urgent p { font-weight: 500; color: #7c2d12; display: flex; gap: 12px; align-items: flex-start; }
-        .alert-urgent .icon { font-size: 1.8rem; line-height: 1; }
-        .alert-urgent strong { color: #b45309; }
 
         /* ---- header ---- */
-        h1 { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.35rem; color: #0b1e33; }
+        h1 { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.3rem; color: #0b1e33; }
         .subhead {
-            color: #3c5a7a; font-size: 1.05rem; margin-bottom: 1.5rem;
+            color: #3c5a7a; font-size: 1.05rem; margin-bottom: 1.75rem;
             padding-bottom: 1rem; border-bottom: 2px dashed #cddae9;
             display: flex; justify-content: space-between; align-items: flex-end;
             flex-wrap: wrap; gap: 10px;
         }
-        .subhead .byline {
+        .byline {
             font-weight: 500; background: #e8f0fe; padding: 0.25rem 1rem;
             border-radius: 40px; font-size: 0.95rem; color: #1e4b8c;
         }
 
-        /* ---- progress bar ---- */
-        .progress-wrap {
-            position: sticky; top: 8px; z-index: 20;
-            background: #ffffffdd; backdrop-filter: blur(6px);
-            border: 1px solid #d6e0ed; border-radius: 18px;
-            padding: 0.85rem 1.25rem; margin-bottom: 2rem;
-            box-shadow: 0 6px 18px rgba(0,30,60,0.06);
+        /* ---- prediction box ---- */
+        .prediction-box {
+            background: #eef4fc; border-radius: 20px; padding: 1.4rem 1.75rem;
+            margin-bottom: 2rem; border: 1px solid #c2d6ea; color: #0d3a5c;
         }
-        .progress-top {
-            display: flex; justify-content: space-between; align-items: center;
-            font-weight: 600; color: #0a2a44; font-size: 0.95rem; margin-bottom: 6px;
+        .prediction-box h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; color: #0a2a44; }
+        .prediction-box p { margin-bottom: 0.75rem; }
+        .band-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1rem 0; }
+        .band-card {
+            background: white; border-radius: 16px; padding: 1rem 1.25rem;
+            border: 1px solid #d6e0ed;
         }
-        .progress-track {
-            height: 14px; background: #e4edf7; border-radius: 40px; overflow: hidden;
+        .band-card h4 {
+            font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem;
+            color: #234b6e; border-bottom: 2px solid #b7cee4; padding-bottom: 0.4rem;
         }
-        .progress-fill {
-            height: 100%; width: 0%; border-radius: 40px;
-            background: linear-gradient(90deg, #2a6f97, #0e7a4b);
-            transition: width 0.25s ease;
+        .band-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+        .band-card li { padding-left: 1.6rem; position: relative; font-size: 0.95rem; }
+        .band-card li::before { position: absolute; left: 0; font-weight: 700; }
+        .strengths li::before { content: "✅"; }
+        .risks li::before { content: "⚠️"; }
+        .goal-line {
+            background: #0a2a44; color: white; border-radius: 40px;
+            padding: 0.6rem 1.2rem; font-weight: 600; font-size: 0.95rem;
+            display: inline-block; margin-top: 0.25rem;
         }
-        .progress-msg { margin-top: 6px; font-size: 0.85rem; color: #4a6785; }
 
-        /* ---- intro ---- */
-        .intro-box {
-            background: #eef4fc; border-radius: 20px; padding: 1.25rem 1.75rem;
-            margin-bottom: 2.25rem; border: 1px solid #c2d6ea; color: #0d3a5c;
-        }
-        .intro-box p { margin-bottom: 0.75rem; }
-        .intro-box ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
-        .intro-box li { padding-left: 1.8rem; position: relative; font-weight: 500; }
-        .intro-box li::before { content: "✅"; position: absolute; left: 0; }
-
-        /* ---- sections ---- */
+        /* ---- section headings ---- */
         .section { margin-bottom: 2.5rem; }
         .section h2 {
-            font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; color: #0a2a44;
+            font-size: 1.45rem; font-weight: 700; margin-bottom: 0.4rem; color: #0a2a44;
             display: flex; align-items: center; gap: 12px;
         }
-        .section h2 .section-badge {
-            background: #0a2a44; color: white; font-size: 0.95rem;
-            padding: 0.2rem 0.9rem; border-radius: 40px; font-weight: 500;
+        .section-badge {
+            background: #0a2a44; color: white; font-size: 0.9rem;
+            padding: 0.2rem 0.85rem; border-radius: 40px; font-weight: 500;
         }
         .section-intro { color: #3c5a7a; margin-bottom: 1.1rem; font-size: 0.98rem; }
 
-        /* ---- interactive check item ---- */
+        /* ---- critique cards ---- */
+        .critique-grid { display: flex; flex-direction: column; gap: 0.8rem; }
+        .critique-card {
+            background: #fff8f0; border: 1px solid #f0d9b8; border-radius: 16px;
+            padding: 0.9rem 1.25rem; border-left: 6px solid #d97706;
+        }
+        .critique-card .critique-title { font-weight: 600; color: #7c2d12; margin-bottom: 4px; }
+        .critique-card .critique-body { font-size: 0.93rem; color: #5c3a1e; }
+
+        /* ---- rule list ---- */
+        .rule-list {
+            background: #f8fafd; border-radius: 16px; padding: 1.1rem 1.5rem;
+            border: 1px solid #d6e0ed; list-style: none;
+            display: flex; flex-direction: column; gap: 0.35rem;
+        }
+        .rule-list li { padding-left: 1.8rem; position: relative; font-size: 0.97rem; }
+        .rule-list li::before { content: "→"; position: absolute; left: 0; color: #2a6f97; font-weight: 700; }
+
+        /* ---- interactive tick items ---- */
+        .check-list { display: flex; flex-direction: column; gap: 0.6rem; }
         .check-item {
-            background: #ffffff; border: 1px solid #dbe3ee; border-radius: 18px;
-            padding: 0.9rem 1.25rem; margin-bottom: 0.75rem;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.02);
+            background: #ffffff; border: 1px solid #dbe3ee; border-radius: 16px;
+            padding: 0.85rem 1.25rem; box-shadow: 0 3px 8px rgba(0,0,0,0.02);
             display: flex; align-items: flex-start; gap: 14px;
-            transition: all 0.12s ease; cursor: pointer;
+            transition: 0.12s; cursor: pointer;
         }
         .check-item:hover { border-color: #b0c6dd; box-shadow: 0 8px 18px rgba(0,30,60,0.06); }
         .check-item.done { background: #f1f9f3; border-color: #9ed3b2; }
-        .check-item.done .check-box { background: #1b7e4b; border-color: #1b7e4b; color: white; }
-        .check-item.done .check-box::after { content: "✓"; }
+        .check-item.done .check-box { background: #1b7e4b; border-color: #1b7e4b; }
+        .check-item.done .check-box::after { content: "✓"; color: white; font-size: 0.85rem; font-weight: 700; }
         .check-item.done .check-box span { display: none; }
-
         .check-box {
             width: 26px; height: 26px; min-width: 26px;
             border: 2px solid #2c5f8a; border-radius: 8px; background: white;
             margin-top: 2px; display: flex; align-items: center; justify-content: center;
-            font-size: 0.95rem; font-weight: 700; color: #1b6b4c; transition: 0.12s;
+            transition: 0.12s;
         }
-        .check-box span { color: #2c5f8a; font-size: 0.8rem; font-weight: 700; }
-
+        .check-box span { color: #2c5f8a; font-size: 0.75rem; font-weight: 700; }
         .check-content { flex: 1; }
-        .tick-label { font-weight: 600; font-size: 1rem; color: #0a1f33; }
+        .tick-label { font-weight: 600; font-size: 0.98rem; color: #0a1f33; }
         .check-item.done .tick-label { color: #0f5c34; }
 
         .example-box {
-            background: #f6f9ff; border-radius: 12px; padding: 0.7rem 0.95rem;
-            margin-top: 7px; font-size: 0.92rem; border-left: 4px solid #2a6f97; color: #1e3c5c;
+            background: #f6f9ff; border-radius: 10px; padding: 0.6rem 0.9rem;
+            margin-top: 6px; font-size: 0.9rem; border-left: 4px solid #2a6f97; color: #1e3c5c;
         }
         .label-bad { color: #b13e3e; font-weight: 600; }
         .label-good { color: #0f6e3f; font-weight: 600; }
 
-        /* ---- pills ---- */
-        .tech-pills { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; margin-top: 0.5rem; }
+        /* ---- technique pills ---- */
+        .tech-pills { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; }
         .pill {
             background: white; border-radius: 40px; padding: 0.4rem 1.1rem;
             font-weight: 500; border: 1px solid #9bb7d4; color: #113355;
-            font-size: 0.93rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            display: flex; align-items: center; gap: 8px; cursor: pointer;
-            transition: 0.12s; user-select: none;
+            font-size: 0.93rem; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.12s; user-select: none;
         }
         .pill:hover { border-color: #5b8db8; }
         .pill.done { background: #e0f2e9; border-color: #0e7a4b; color: #0a3e28; }
         .pill .pill-box {
             width: 18px; height: 18px; border: 2px solid #2c5f8a; border-radius: 5px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.7rem; font-weight: 700; color: white; background: white;
+            background: white; font-size: 0.65rem; font-weight: 700;
         }
         .pill.done .pill-box { background: #1b7e4b; border-color: #1b7e4b; }
-        .pill.done .pill-box::after { content: "✓"; }
-        .pill .pill-box span { color: #2c5f8a; font-size: 0.65rem; }
+        .pill.done .pill-box::after { content: "✓"; color: white; }
 
         /* ---- A–I structure ---- */
         .structure-step {
-            background: #f8fafd; border-radius: 16px; padding: 0.85rem 1.2rem;
-            border: 1px solid #d6e0ed; display: flex; gap: 14px; align-items: flex-start;
-            margin-bottom: 0.75rem;
+            background: #f8fafd; border-radius: 14px; padding: 0.8rem 1.15rem;
+            border: 1px solid #d6e0ed; display: flex; gap: 13px; align-items: flex-start;
+            margin-bottom: 0.65rem;
         }
         .step-letter {
-            background: #0a2a44; color: white; font-weight: 700; font-size: 0.85rem;
-            width: 28px; height: 28px; min-width: 28px; border-radius: 50%;
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.8rem;
+            width: 26px; height: 26px; min-width: 26px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; margin-top: 2px;
         }
+        .step-body { flex: 1; }
         .step-title { font-weight: 600; color: #0a1f33; }
         .step-example {
-            font-size: 0.9rem; color: #2a4b6e; background: white;
-            padding: 0.45rem 0.85rem; border-radius: 10px;
+            font-size: 0.88rem; color: #2a4b6e; background: white;
+            padding: 0.4rem 0.8rem; border-radius: 9px;
             border-left: 3px solid #2a6f97; margin-top: 4px;
         }
 
         /* ---- test plan table ---- */
         .table-wrap { overflow-x: auto; border-radius: 16px; border: 1px solid #d6e0ed; }
-        table.testplan {
-            width: 100%; border-collapse: collapse; font-size: 0.86rem; background: white;
-        }
+        table.testplan { width: 100%; border-collapse: collapse; font-size: 0.84rem; background: white; }
         table.testplan th, table.testplan td {
-            text-align: left; padding: 8px 10px; border-bottom: 1px solid #e6edf5;
-            vertical-align: top;
+            text-align: left; padding: 7px 9px; border-bottom: 1px solid #e6edf5; vertical-align: top;
         }
         table.testplan th {
-            background: #0a2a44; color: white; font-weight: 600; position: sticky; top: 0;
-            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+            background: #0a2a44; color: white; font-weight: 600;
+            font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.03em;
         }
         table.testplan tr:nth-child(even) td { background: #fafcff; }
         table.testplan tr.done td { background: #eefaf1; }
         .cat {
-            display: inline-block; font-size: 0.72rem; font-weight: 600;
-            padding: 0.1rem 0.55rem; border-radius: 20px; white-space: nowrap;
+            display: inline-block; font-size: 0.7rem; font-weight: 600;
+            padding: 0.08rem 0.5rem; border-radius: 20px; white-space: nowrap;
         }
-        .cat-correctness { background: #dcecff; color: #1b4b7a; }
-        .cat-reliability { background: #ffe6cc; color: #8a4b00; }
-        .cat-efficiency { background: #e2f0d9; color: #2f5e1e; }
         .cat-valid { background: #dcecff; color: #1b4b7a; }
         .cat-invalid { background: #ffe0e0; color: #8a1f1f; }
         .cat-extreme { background: #f3e0ff; color: #5b1f8a; }
         .vid-yes { color: #0e7a4b; font-weight: 700; }
         .vid-no { color: #9a6a00; font-weight: 600; }
         .row-tick {
-            width: 22px; height: 22px; border: 2px solid #2c5f8a; border-radius: 6px;
+            width: 20px; height: 20px; border: 2px solid #2c5f8a; border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; background: white; font-size: 0.75rem; font-weight: 700;
-            color: white; transition: 0.12s;
+            cursor: pointer; background: white; font-size: 0.7rem; font-weight: 700; color: white;
         }
         .row-tick:hover { border-color: #1b7e4b; }
         tr.done .row-tick { background: #1b7e4b; border-color: #1b7e4b; }
@@ -206,65 +192,101 @@
         tr.done .row-tick span { display: none; }
         .row-tick span { color: #2c5f8a; }
 
+        /* ---- evaluation checklist (dedicated) ---- */
+        .eval-section {
+            background: #e8f5ec; border: 2px solid #0e7a4b; border-radius: 22px;
+            padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;
+        }
+        .eval-section h2 { color: #0a3e28; }
+        .eval-section .section-badge { background: #0e7a4b; }
+        .eval-section .section-intro { color: #1c4d33; }
+        .eval-section .check-item { background: #f5fbf7; border-color: #b8ddc6; }
+        .eval-section .check-item.done { background: #d9efe2; border-color: #0e7a4b; }
+        .eval-section .check-box { border-color: #0e7a4b; }
+        .eval-section .check-box span { color: #0e7a4b; }
+        .eval-test {
+            background: white; border-radius: 14px; padding: 1rem 1.25rem;
+            border: 1px solid #b8ddc6; margin-top: 1rem; font-size: 0.95rem; color: #1c4d33;
+        }
+        .eval-test strong { color: #0a3e28; }
+
         /* ---- video timeline ---- */
         .video-step {
-            background: #f8fafd; border-radius: 14px; padding: 0.75rem 1.1rem;
+            background: #f8fafd; border-radius: 14px; padding: 0.7rem 1.1rem;
             border: 1px solid #d6e0ed; display: flex; gap: 12px; align-items: flex-start;
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.55rem;
         }
-        .video-time {
-            font-weight: 700; color: #0a2a44; font-size: 0.8rem; min-width: 72px;
-            padding-top: 2px;
-        }
-        .video-body { flex: 1; }
+        .video-time { font-weight: 700; color: #0a2a44; font-size: 0.8rem; min-width: 70px; padding-top: 2px; }
+        .video-body { flex: 1; font-size: 0.94rem; }
         .video-body strong { color: #0a1f33; }
 
-        /* ---- final checklist ---- */
-        .final-checklist {
-            background: #f8fafd; border-radius: 20px; padding: 1.25rem 1.75rem;
-            margin-top: 0.5rem; border: 1px solid #d6e0ed;
+        /* ---- final moderator test ---- */
+        .final-test {
+            background: #0a2a44; color: white; border-radius: 24px;
+            padding: 1.75rem 2rem; margin-bottom: 1.5rem;
         }
-        .final-checklist ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 1.5rem; }
-        .final-checklist li { padding-left: 1.8rem; position: relative; font-size: 0.93rem; }
-        .final-checklist li::before { content: "☐"; position: absolute; left: 0; font-weight: 700; color: #2c5f8a; }
+        .final-test h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .final-test p { opacity: 0.9; font-size: 0.97rem; margin-bottom: 1rem; }
+        .final-test ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .final-test li { padding-left: 1.9rem; position: relative; font-size: 0.97rem; }
+        .final-test li::before {
+            content: "☐"; position: absolute; left: 0; font-weight: 700; color: #9ec9ff;
+        }
+        .final-test .after-note {
+            margin-top: 1rem; font-size: 0.93rem; opacity: 0.85;
+            border-top: 1px solid #ffffff33; padding-top: 0.75rem;
+        }
 
         /* ---- email CTA ---- */
         .email-cta {
-            background: #0a2a44; color: white; border-radius: 24px;
-            padding: 1.5rem 2rem; margin: 2rem 0 1rem;
+            background: #eef4fc; border: 1px solid #c2d6ea; border-radius: 22px;
+            padding: 1.4rem 1.75rem; margin-bottom: 1.5rem;
             display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-            gap: 1rem; box-shadow: 0 10px 25px rgba(10,42,68,0.25);
+            gap: 1rem;
         }
-        .email-cta h3 { font-size: 1.3rem; font-weight: 700; }
-        .email-cta p { opacity: 0.9; font-size: 0.95rem; margin-top: 0.25rem; }
+        .email-cta h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .email-cta p { font-size: 0.93rem; color: #3c5a7a; margin-top: 0.2rem; }
         .email-cta a {
-            background: #ffffff; color: #0a2a44; font-weight: 700; text-decoration: none;
-            padding: 0.7rem 1.4rem; border-radius: 40px; font-size: 0.98rem;
+            background: #0a2a44; color: white; font-weight: 700; text-decoration: none;
+            padding: 0.65rem 1.3rem; border-radius: 40px; font-size: 0.95rem;
             white-space: nowrap; transition: 0.12s;
         }
-        .email-cta a:hover { background: #d9e8fa; transform: translateY(-1px); }
+        .email-cta a:hover { background: #1e4b8c; }
 
-        .final-advice {
-            background: #fff4e5; border-left: 8px solid #d97706;
-            padding: 1.25rem 1.5rem; margin-top: 1.25rem; border-radius: 16px;
-            color: #7c2d12; font-weight: 500;
+        /* ---- progress bar ---- */
+        .progress-wrap {
+            position: sticky; top: 8px; z-index: 20;
+            background: #ffffffdd; backdrop-filter: blur(6px);
+            border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 0.75rem 1.2rem; margin-bottom: 1.75rem;
+            box-shadow: 0 6px 18px rgba(0,30,60,0.06);
         }
+        .progress-top {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; color: #0a2a44; font-size: 0.9rem; margin-bottom: 5px;
+        }
+        .progress-track { height: 12px; background: #e4edf7; border-radius: 40px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; width: 0%; border-radius: 40px;
+            background: linear-gradient(90deg, #2a6f97, #0e7a4b); transition: width 0.25s ease;
+        }
+        .progress-msg { margin-top: 5px; font-size: 0.82rem; color: #4a6785; }
 
         .footer-note {
-            margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #cfddee;
-            font-size: 0.9rem; color: #4a6785;
+            margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid #cfddee;
+            font-size: 0.88rem; color: #4a6785;
             display: flex; justify-content: space-between; align-items: center;
             flex-wrap: wrap; gap: 10px;
         }
         .reset-btn {
             background: none; border: 1px solid #9bb7d4; border-radius: 40px;
-            padding: 0.3rem 1rem; font-size: 0.82rem; color: #1e4b6e;
-            cursor: pointer; font-weight: 500; transition: 0.12s;
+            padding: 0.28rem 1rem; font-size: 0.8rem; color: #1e4b6e;
+            cursor: pointer; font-weight: 500;
         }
         .reset-btn:hover { background: #eef4fc; }
 
         @media (max-width: 750px) {
-            .final-checklist ul { grid-template-columns: 1fr; }
+            .band-grid { grid-template-columns: 1fr; }
             .email-cta { flex-direction: column; align-items: flex-start; }
         }
         @media (max-width: 650px) {
@@ -276,372 +298,322 @@
 <body>
 <div class="container">
 
-    <!-- urgent file issue -->
-    <div class="alert-urgent">
-        <p>
-            <span class="icon">⚠️</span>
-            <span><strong>Important: I could not open the Criterion D document you uploaded.</strong><br>
-            The file may be corrupted, in an unsupported format, or missing. Please check the upload and try again — this is a serious issue that could delay feedback. Always verify that your files open correctly before submitting.</span>
-        </p>
-    </div>
-
-    <h1>🎯 Criterion D · Interactive tick sheet</h1>
+    <h1>🚀 Criterion D improvement plan</h1>
     <div class="subhead">
-        <span>Target 10–12 marks · tick every box with your own solution</span>
+        <span>Current prediction: 7–9 → Target: 10–12</span>
         <span class="byline">Ben · Typing Assistant</span>
     </div>
 
-    <!-- sticky progress -->
+    <!-- progress -->
     <div class="progress-wrap">
         <div class="progress-top">
             <span>Progress</span>
             <span id="progressCount">0 / 0</span>
         </div>
         <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="progress-msg" id="progressMsg">Tick boxes as you complete each action. Your ticks are saved in this browser.</div>
+        <div class="progress-msg" id="progressMsg">Tick the boxes as you complete each action. Your ticks are saved in this browser.</div>
     </div>
 
-    <!-- intro -->
-    <div class="intro-box">
-        <p><strong>Before you start:</strong> this is not a template to copy. It is a checklist of actions to complete using your own code and your own testing evidence.</p>
-        <p>The moderator is looking for four things:</p>
+    <!-- 1. PREDICTION -->
+    <div class="prediction-box">
+        <h3>📊 Current moderator assessment</h3>
+        <p>Based on the current code and the moderated exemplars reviewed, this project has the technical complexity needed for a high Criterion D score. Moderators do not award high marks simply because the code is advanced — they need to see <strong>functionality, evaluation, and justified testing</strong>.</p>
+        <div class="band-grid">
+            <div class="band-card">
+                <h4>Current strengths</h4>
+                <ul class="strengths">
+                    <li>Advanced algorithms</li>
+                    <li>Appropriate techniques</li>
+                    <li>Clear computational thinking</li>
+                    <li>Strong opportunities for evaluation</li>
+                </ul>
+            </div>
+            <div class="band-card">
+                <h4>Current risks</h4>
+                <ul class="risks">
+                    <li>Testing effectiveness not fully justified</li>
+                    <li>Evaluation could be deeper</li>
+                    <li>Video evidence not yet created</li>
+                    <li>Extreme testing needs stronger evidence</li>
+                </ul>
+            </div>
+        </div>
+        <span class="goal-line">🎯 Current goal: transform strong code into strong evidence.</span>
+    </div>
+
+    <!-- 2. WHAT MODERATORS CRITICISE -->
+    <div class="section">
+        <h2><span class="section-badge">★</span> What moderators frequently criticise</h2>
+        <p class="section-intro">These recurring comments appeared across the moderated exemplars. Read them before you write.</p>
+        <div class="critique-grid">
+            <div class="critique-card">
+                <div class="critique-title">❌ "The testing strategy was effective."</div>
+                <div class="critique-body">A generic statement. Explain <em>why</em> the testing demonstrates correctness, reliability or efficiency.</div>
+            </div>
+            <div class="critique-card">
+                <div class="critique-title">❌ Functionality is claimed but not shown.</div>
+                <div class="critique-body">If a feature is not demonstrated in the video, moderators may not accept that it works.</div>
+            </div>
+            <div class="critique-card">
+                <div class="critique-title">❌ Only normal testing.</div>
+                <div class="critique-body">Strong submissions include normal, abnormal <em>and</em> extreme tests.</div>
+            </div>
+            <div class="critique-card">
+                <div class="critique-title">❌ Description instead of evaluation.</div>
+                <div class="critique-body">"I used a Trie because it stores words" is description. "A Trie was selected instead of a list because… however it increases memory usage…" is evaluation.</div>
+            </div>
+            <div class="critique-card">
+                <div class="critique-title">❌ Partial functionality demonstrated.</div>
+                <div class="critique-body">Every success criterion needs to be shown working — not just the ones that happen to work easily.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. THE RULE -->
+    <div class="section">
+        <h2><span class="section-badge">→</span> The rule high-scoring students follow</h2>
+        <p class="section-intro">For every major technique, answer every question below. Missing evaluation and testing justification are two of the most common reasons projects lose marks.</p>
+        <ul class="rule-list">
+            <li>What is the technique?</li>
+            <li>How is it used?</li>
+            <li>Why was it chosen?</li>
+            <li>What alternative was considered?</li>
+            <li>What limitation exists?</li>
+            <li>Why is it still appropriate? <em>(this is evaluation)</em></li>
+            <li>How was it tested?</li>
+            <li>Why were those tests effective?</li>
+            <li>What does the testing <em>not</em> prove?</li>
+        </ul>
+    </div>
+
+    <!-- 4. TECHNIQUES -->
+    <div class="section">
+        <h2><span class="section-badge">1</span> Your techniques</h2>
+        <p class="section-intro">Do not write Criterion D about buttons, labels, colours or UI layout. Focus on the techniques that actually make the solution work. Tick each one once you've written its A–I subsection.</p>
+        <div class="tech-pills">
+            <div class="pill" data-tick><div class="pill-box"></div>Trie data structure</div>
+            <div class="pill" data-tick><div class="pill-box"></div>BK-tree approximate matching</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Levenshtein distance algorithm</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Bounded Levenshtein optimisation</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Frequency-ranked autocomplete</div>
+            <div class="pill" data-tick><div class="pill-box"></div>JSON persistence</div>
+        </div>
+    </div>
+
+    <!-- 5. A–I STRUCTURE -->
+    <div class="section">
+        <h2><span class="section-badge">2</span> Structure for each technique</h2>
+        <p class="section-intro">Use this exact structure for every technique. Point F is evaluation — that is what the top band rewards.</p>
+
+        <div class="structure-step">
+            <div class="step-letter">A</div>
+            <div class="step-body">
+                <div class="step-title">What is the technique?</div>
+                <div class="step-example">“A Trie is a tree-based data structure where each node stores a character. Words with common prefixes share branches, allowing efficient prefix searching.”</div>
+            </div>
+        </div>
+        <div class="structure-step">
+            <div class="step-letter">B</div>
+            <div class="step-body">
+                <div class="step-title">How is it used in my solution?</div>
+                <div class="step-example">“In my solution, the Trie stores all dictionary words and is used to generate autocomplete suggestions from user-entered prefixes.”</div>
+            </div>
+        </div>
+        <div class="structure-step">
+            <div class="step-letter">C</div>
+            <div class="step-body">
+                <div class="step-title">Why did I choose it?</div>
+                <div class="step-example">“I chose a Trie because autocomplete requires many prefix searches. A Trie can find matching prefixes without searching every stored word.”</div>
+            </div>
+        </div>
+        <div class="structure-step">
+            <div class="step-letter">D</div>
+            <div class="step-body">
+                <div class="step-title">What alternative could I have used?</div>
+                <div class="step-example">“An alternative would have been storing all words in a list and checking every word individually.”</div>
+            </div>
+        </div>
+        <div class="structure-step">
+            <div class="step-letter">E</div>
+            <div class="step-body">
+                <div class="step-title">What is a limitation?</div>
+                <div class="step-example">“A Trie uses more memory because each character requires a separate node.”</div>
+            </div>
+        </div>
+        <div class="structure-step">
+            <div class="step-letter">F</div>
+            <div class="step-body">
+                <div class="step-title">Why is my choice still appropriate? <em>(evaluation)</em></div>
+                <div class="step-example">“Although memory usage is higher, the increased search speed makes the Trie more appropriate for autocomplete functionality.”</div>
+            </div>
+        </div>
+        <div class="structure-step">
+            <div class="step-letter">G</div>
+            <div class="step-body">
+                <div class="step-title">How did I test it?</div>
+                <div class="step-example">“The Trie was tested using normal, abnormal and extreme input data.”</div>
+            </div>
+        </div>
+        <div class="structure-step">
+            <div class="step-letter">H</div>
+            <div class="step-body">
+                <div class="step-title">Why was the testing effective?</div>
+                <div class="step-example">“The tests demonstrated that correct suggestions were generated for valid prefixes, invalid inputs were handled safely and large data sets could still be processed successfully.”</div>
+            </div>
+        </div>
+        <div class="structure-step">
+            <div class="step-letter">I</div>
+            <div class="step-body">
+                <div class="step-title">What does the testing NOT prove?</div>
+                <div class="step-example">“The testing demonstrates that the Trie performs correctly with the current dataset but does not guarantee the same performance if millions of words were added.”</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. EVALUATION (dedicated, prominent) -->
+    <div class="eval-section section">
+        <h2><span class="section-badge">E</span> Evaluation checklist</h2>
+        <p class="section-intro">The highest-scoring submissions evaluate choices rather than simply explaining them. Tick each box once your write-up genuinely contains it.</p>
+
+        <div class="check-list">
+            <div class="check-item" data-tick>
+                <div class="check-box"><span>☐</span></div>
+                <div class="check-content">
+                    <div class="tick-label">I discussed at least one alternative solution for each technique.</div>
+                </div>
+            </div>
+            <div class="check-item" data-tick>
+                <div class="check-box"><span>☐</span></div>
+                <div class="check-content">
+                    <div class="tick-label">I discussed the advantages of my chosen approach.</div>
+                </div>
+            </div>
+            <div class="check-item" data-tick>
+                <div class="check-box"><span>☐</span></div>
+                <div class="check-content">
+                    <div class="tick-label">I discussed the limitations of my chosen approach.</div>
+                </div>
+            </div>
+            <div class="check-item" data-tick>
+                <div class="check-box"><span>☐</span></div>
+                <div class="check-content">
+                    <div class="tick-label">I explained why the advantages outweigh the limitations.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="eval-test">
+            <strong>🧪 Quick evaluation test:</strong> if your paragraph can be rewritten as “I used X because it does Y”, it is probably <em>explanation</em>. If it includes an advantage, a limitation, an alternative and a trade-off, it is probably <em>evaluation</em>.
+        </div>
+    </div>
+
+    <!-- 7. TESTING -->
+    <div class="section">
+        <h2><span class="section-badge">3</span> Testing</h2>
+        <p class="section-intro">Every major feature needs normal, abnormal and extreme testing. Avoid empty statements — justify what the tests prove and what they don't.</p>
+
+        <div class="check-list">
+            <div class="check-item" data-tick>
+                <div class="check-box"><span>✗</span></div>
+                <div class="check-content">
+                    <div class="tick-label">I have removed empty statements</div>
+                    <div class="example-box">
+                        <span class="label-bad">❌</span> “The testing was successful.”<br>
+                        <span class="label-bad">❌</span> “The testing was effective.”<br>
+                        <span class="label-bad">❌</span> “The feature worked correctly.”
+                    </div>
+                </div>
+            </div>
+            <div class="check-item" data-tick>
+                <div class="check-box"><span>✓</span></div>
+                <div class="check-content">
+                    <div class="tick-label">I have replaced them with evidence-based statements</div>
+                    <div class="example-box">
+                        <span class="label-good">✅</span> “The normal test demonstrated correct functionality.”<br>
+                        <span class="label-good">✅</span> “The abnormal test demonstrated robust handling of invalid input.”<br>
+                        <span class="label-good">✅</span> “The extreme test demonstrated acceptable performance on large datasets.”<br>
+                        <span class="label-good">✅</span> “The testing supports the reliability of the implementation because…”<br>
+                        <span class="label-good">✅</span> “A limitation of the testing remains…”
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="section-intro" style="margin-top:1.5rem;">All 21 tests below appear in your written test plan with expected and actual results. The “In video?” column shows which are demonstrated live; the rest are evidenced by screenshots. Tick each row once you have run it and recorded the result.</p>
+        <div class="table-wrap">
+            <table class="testplan">
+                <thead>
+                    <tr><th></th><th>ID</th><th>Purpose</th><th>Input</th><th>Type</th><th>Expected</th><th>SC</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T1</td><td>Prefix returns 3 suggestions in time</td><td>Type "th"</td><td><span class="cat cat-valid">Valid</span></td><td>3 suggestions within 0.5s</td><td>1</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T2</td><td>Very short prefix</td><td>Type "a"</td><td><span class="cat cat-extreme">Extreme</span></td><td>No suggestions until 2+ chars</td><td>1</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T3</td><td>Prefix with no matches</td><td>Type "zxq"</td><td><span class="cat cat-invalid">Invalid</span></td><td>No suggestions, no crash</td><td>1</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T4</td><td>Shorthand expands on completion</td><td>"tbh" + space</td><td><span class="cat cat-valid">Valid</span></td><td>→ "to be honest"</td><td>2</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T5</td><td>All 10 tokens expand</td><td>Each of the 10 tokens</td><td><span class="cat cat-valid">Valid</span></td><td>All 10 expand correctly</td><td>2</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T6</td><td>Token inside a longer word</td><td>Type "tube"</td><td><span class="cat cat-extreme">Extreme</span></td><td>Not expanded</td><td>2</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T7</td><td>Transposition error</td><td>Type "tjs"</td><td><span class="cat cat-valid">Valid</span></td><td>"this" offered as top suggestion</td><td>3</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T8</td><td>QWERTZ x/y swap</td><td>Type "yxz"</td><td><span class="cat cat-valid">Valid</span></td><td>"xyz" offered</td><td>3</td><td class="vid-no">No (screenshot)</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T9</td><td>Word too far from any known word</td><td>Type "qwrtz"</td><td><span class="cat cat-invalid">Invalid</span></td><td>No forced correction</td><td>3</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T10</td><td>Frequencies saved on exit</td><td>Close app</td><td><span class="cat cat-valid">Valid</span></td><td>JSON updated with new counts</td><td>5</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T11</td><td>Empty session</td><td>Open, close, no typing</td><td><span class="cat cat-extreme">Extreme</span></td><td>JSON unchanged, no error</td><td>5</td><td class="vid-no">No (screenshot)</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T12</td><td>Add a word to the dictionary</td><td>Add "IA", type "I"</td><td><span class="cat cat-valid">Valid</span></td><td>"IA" appears as suggestion</td><td>6</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T13</td><td>Duplicate addition</td><td>Add "IA" twice</td><td><span class="cat cat-invalid">Invalid</span></td><td>Stored once, no error</td><td>6</td><td class="vid-no">No (screenshot)</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T14</td><td>Works offline</td><td>Disable Wi-Fi</td><td><span class="cat cat-valid">Valid</span></td><td>All features still work</td><td>7</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T15</td><td>Works in Word</td><td>Type in MS Word</td><td><span class="cat cat-valid">Valid</span></td><td>Suggestions appear and inject</td><td>8</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T16</td><td>Works in Chromium browser</td><td>Type in Chromium</td><td><span class="cat cat-valid">Valid</span></td><td>Suggestions appear and inject</td><td>8</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T17</td><td>Startup time</td><td>Launch app</td><td><span class="cat cat-valid">Valid</span></td><td>Ready within 3 seconds</td><td>9</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T18</td><td>Overlay does not cover text</td><td>3 caret positions</td><td><span class="cat cat-valid">Valid</span></td><td>Overlay visible, text not obscured</td><td>10</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T19</td><td>Latency under load</td><td>Type 20 chars in a row</td><td><span class="cat cat-extreme">Extreme</span></td><td>Every suggestion under 0.5s, no dropped keys</td><td>1</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T20</td><td>Corrupt JSON on startup</td><td>Truncate data.json</td><td><span class="cat cat-invalid">Invalid</span></td><td>Starts, error logged, empty structures</td><td>5</td><td class="vid-yes">Yes</td></tr>
+                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T21</td><td>Client usability</td><td>Maxim uses tool unaided</td><td><span class="cat cat-valid">Valid</span></td><td>Completes writing task with overlay</td><td>9</td><td class="vid-no">No (screenshot)</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 8. VIDEO -->
+    <div class="section">
+        <h2><span class="section-badge">4</span> Video plan · 5 minutes maximum</h2>
+        <p class="section-intro">If it is not shown in the video, it does not exist. State the SC number and expected vs actual during each test. The narration should explain <em>why</em> the test proves the feature works, not just that it does.</p>
+
+        <div class="video-step"><div class="video-time">0:00–0:20</div><div class="video-body"><strong>Intro + launch.</strong> Client Maxim, purpose. Launch the executable, show tray icon or popup — the tool is running. <em>T17 / SC9</em></div></div>
+        <div class="video-step"><div class="video-time">0:20–0:50</div><div class="video-body"><strong>SC1 autocomplete in Word.</strong> Type "th", show overlay with 3 suggestions, point out top-ranked word. <em>T1 / SC1, SC4</em></div></div>
+        <div class="video-step"><div class="video-time">0:50–1:20</div><div class="video-body"><strong>Short prefix + no matches.</strong> Type "a" (no overlay), then "zxq" (no suggestions, no crash). <em>T2, T3 / SC1</em></div></div>
+        <div class="video-step"><div class="video-time">1:20–1:50</div><div class="video-body"><strong>Shorthand expansion.</strong> Type "tbh" + space → "to be honest". Repeat with "u" and "smth". <em>T4, T5 / SC2</em></div></div>
+        <div class="video-step"><div class="video-time">1:50–2:10</div><div class="video-body"><strong>No substring expansion.</strong> Type "tube" — show it is not expanded. <em>T6 / SC2</em></div></div>
+        <div class="video-step"><div class="video-time">2:10–2:40</div><div class="video-body"><strong>Correction behaviour.</strong> Type "tjs" → "this" offered. Type "qwrtz" → no forced correction. <em>T7, T9 / SC3</em></div></div>
+        <div class="video-step"><div class="video-time">2:40–3:10</div><div class="video-body"><strong>Cross-application.</strong> Switch to Chromium, repeat "th" and "tbh". Overlay still works. <em>T16 / SC8</em></div></div>
+        <div class="video-step"><div class="video-time">3:10–3:30</div><div class="video-body"><strong>Offline.</strong> Disable Wi-Fi, repeat one test, confirm everything works. <em>T14 / SC7</em></div></div>
+        <div class="video-step"><div class="video-time">3:30–3:50</div><div class="video-body"><strong>Dictionary addition.</strong> Add "IA", type "I", show "IA" appears. <em>T12 / SC6</em></div></div>
+        <div class="video-step"><div class="video-time">3:50–4:15</div><div class="video-body"><strong>Persistence.</strong> Show data.json after typing, point out updated frequencies, close and reopen to prove persistence. <em>T10 / SC5</em></div></div>
+        <div class="video-step"><div class="video-time">4:15–4:30</div><div class="video-body"><strong>Corrupt JSON.</strong> Truncate data.json, relaunch, show error handling. <em>T20 / SC5</em></div></div>
+        <div class="video-step"><div class="video-time">4:30–4:50</div><div class="video-body"><strong>Load test.</strong> Type 20 characters quickly — every suggestion within time limit, no dropped keystrokes. <em>T19 / SC1</em></div></div>
+        <div class="video-step"><div class="video-time">4:50–5:00</div><div class="video-body"><strong>Client feedback.</strong> State which SC passed and which needs work. <em>T21 / SC9</em></div></div>
+
+        <div class="example-box" style="margin-top:0.9rem; border-left-color:#d97706; background:#fff8f0;">
+            <strong>Not in the video — capture as screenshots:</strong> T8 (QWERTZ swap), T11 (empty session), T13 (duplicate addition), T21 (client usability / Microsoft Forms responses).
+        </div>
+
+        <div class="example-box" style="margin-top:0.9rem;">
+            <strong>Narration tip:</strong> for every test, say <em>“This is a normal/abnormal/extreme test. Expected: … Actual: … This demonstrates that …”</em> — that is what moderators reward.
+        </div>
+    </div>
+
+    <!-- 9. FINAL MODERATOR TEST -->
+    <div class="final-test">
+        <h3>🎓 Final moderator test</h3>
+        <p>Before submission, imagine a moderator reading your report. Could they confidently write all four statements below?</p>
         <ul>
             <li>The solution appears fully functional.</li>
             <li>Appropriate techniques have been used.</li>
             <li>Implementation choices have been evaluated.</li>
             <li>The effectiveness of the testing strategy has been justified.</li>
         </ul>
-        <p style="margin-top:0.75rem;">If a moderator cannot confidently say all four of those statements, reaching 10–12 becomes difficult.</p>
+        <div class="after-note">If any statement cannot honestly be ticked, the project is probably not yet in the 10–12 band.</div>
     </div>
 
-    <!-- STEP 1 -->
-    <div class="section">
-        <h2><span class="section-badge">1</span> Identify your most important techniques</h2>
-        <p class="section-intro">Do not write Criterion D about buttons, labels, colours or UI layout. Focus on the techniques that actually make the solution work. For your project, the strongest techniques are:</p>
-        <div class="tech-pills" data-group="tech">
-            <div class="pill" data-tick><div class="pill-box"><span></span></div>Trie data structure</div>
-            <div class="pill" data-tick><div class="pill-box"><span></span></div>BK-tree approximate matching</div>
-            <div class="pill" data-tick><div class="pill-box"><span></span></div>Levenshtein distance algorithm</div>
-            <div class="pill" data-tick><div class="pill-box"><span></span></div>Bounded Levenshtein optimisation</div>
-            <div class="pill" data-tick><div class="pill-box"><span></span></div>Frequency-ranked autocomplete</div>
-            <div class="pill" data-tick><div class="pill-box"><span></span></div>JSON persistence</div>
-        </div>
-    </div>
-
-    <!-- STEP 2 -->
-    <div class="section">
-        <h2><span class="section-badge">2</span> Complete this structure for every technique</h2>
-        <p class="section-intro">For each major technique, create a subsection using this structure. Point F is evaluation — that is what the top band rewards.</p>
-
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>A</span></div>
-            <div class="check-content">
-                <div class="tick-label">What is the technique?</div>
-                <div class="example-box">“A Trie is a tree-based data structure where each node stores a character. Words with common prefixes share branches, allowing efficient prefix searching.”</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>B</span></div>
-            <div class="check-content">
-                <div class="tick-label">How is it used in my solution?</div>
-                <div class="example-box">“In my solution, the Trie stores all dictionary words and is used to generate autocomplete suggestions from user-entered prefixes.”</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>C</span></div>
-            <div class="check-content">
-                <div class="tick-label">Why did I choose it?</div>
-                <div class="example-box">“I chose a Trie because autocomplete requires many prefix searches. A Trie can find matching prefixes without searching every stored word.”</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>D</span></div>
-            <div class="check-content">
-                <div class="tick-label">What alternative could I have used?</div>
-                <div class="example-box">“An alternative would have been storing all words in a list and checking every word individually.”</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>E</span></div>
-            <div class="check-content">
-                <div class="tick-label">What is a limitation?</div>
-                <div class="example-box">“A Trie uses more memory because each character requires a separate node.”</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>F</span></div>
-            <div class="check-content">
-                <div class="tick-label">Why is my choice still appropriate? <em>(evaluation)</em></div>
-                <div class="example-box">“Although memory usage is higher, the increased search speed makes the Trie more appropriate for autocomplete functionality.”</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>G</span></div>
-            <div class="check-content">
-                <div class="tick-label">How did I test it?</div>
-                <div class="example-box">“The Trie was tested using normal, abnormal and extreme input data.”</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>H</span></div>
-            <div class="check-content">
-                <div class="tick-label">Why was the testing effective?</div>
-                <div class="example-box">“The tests demonstrated that correct suggestions were generated for valid prefixes, invalid inputs were handled safely and large data sets could still be processed successfully.”</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>I</span></div>
-            <div class="check-content">
-                <div class="tick-label">What does the testing NOT prove?</div>
-                <div class="example-box">“The testing demonstrates that the Trie performs correctly with the current dataset but does not guarantee the same performance if millions of words were added.”</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- STEP 3 -->
-    <div class="section">
-        <h2><span class="section-badge">3</span> Add normal, abnormal and extreme tests</h2>
-        <p class="section-intro">Moderators repeatedly criticised missing abnormal and extreme testing. Every major feature needs all three.</p>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>N</span></div>
-            <div class="check-content">
-                <div class="tick-label">Normal test — expected user behaviour</div>
-                <div class="example-box">Input <code>"rec"</code> → expected: receive, receipt, recently.</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>A</span></div>
-            <div class="check-content">
-                <div class="tick-label">Abnormal test — incorrect or unusual input</div>
-                <div class="example-box">Input <code>@@@</code> → expected: no suggestions.</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>E</span></div>
-            <div class="check-content">
-                <div class="tick-label">Extreme test — boundary or stress case</div>
-                <div class="example-box">10,000 words → suggestions still generated correctly.</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>3</span></div>
-            <div class="check-content">
-                <div class="tick-label">Every major feature has all three tests</div>
-                <div class="example-box">Normal, abnormal and extreme — not just the happy path.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- STEP 4 -->
-    <div class="section">
-        <h2><span class="section-badge">4</span> Improve testing evaluation</h2>
-        <p class="section-intro">Many students lose marks here. Avoid statements that prove nothing.</p>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>✗</span></div>
-            <div class="check-content">
-                <div class="tick-label">I have removed empty statements</div>
-                <div class="example-box">
-                    <span class="label-bad">❌</span> “The testing was successful.”<br>
-                    <span class="label-bad">❌</span> “The testing was effective.”<br>
-                    <span class="label-bad">❌</span> “The feature worked correctly.”
-                </div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>✓</span></div>
-            <div class="check-content">
-                <div class="tick-label">I have replaced them with evidence-based statements</div>
-                <div class="example-box">
-                    <span class="label-good">✅</span> “The normal test demonstrated correct functionality.”<br>
-                    <span class="label-good">✅</span> “The abnormal test demonstrated robust handling of invalid input.”<br>
-                    <span class="label-good">✅</span> “The extreme test demonstrated acceptable performance on large datasets.”<br>
-                    <span class="label-good">✅</span> “The testing supports the reliability of the implementation because…”<br>
-                    <span class="label-good">✅</span> “A limitation of the testing remains…”
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- STEP 5 -->
-    <div class="section">
-        <h2><span class="section-badge">5</span> Use better code excerpts</h2>
-        <p class="section-intro">Only include important code. The moderator wants to see computational thinking, not the interface.</p>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>✓</span></div>
-            <div class="check-content">
-                <div class="tick-label">I have included the important algorithms</div>
-                <div class="example-box">✅ Trie insertion · Trie searching · BK-tree searching · Levenshtein calculation · Frequency ranking · JSON saving/loading</div>
-            </div>
-        </div>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>✗</span></div>
-            <div class="check-content">
-                <div class="tick-label">I have removed the non-computational code</div>
-                <div class="example-box">❌ Button creation · Window setup · Formatting code · Simple variable declarations</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- STEP 6 -->
-    <div class="section">
-        <h2><span class="section-badge">6</span> Link techniques to success criteria</h2>
-        <p class="section-intro">Make the links naturally — no need to repeat the SC text constantly.</p>
-        <div class="check-item" data-tick>
-            <div class="check-box"><span>☐</span></div>
-            <div class="check-content">
-                <div class="tick-label">Each technique is linked to its success criterion</div>
-                <div class="example-box">
-                    “The Trie contributes directly to Success Criterion 1 by enabling autocomplete suggestions.”<br>
-                    “The BK-tree contributes directly to Success Criterion 2 by allowing approximate matching and spelling correction.”<br>
-                    “JSON persistence supports Success Criterion 5 because user data remains available after restarting the application.”
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- STEP 7: TEST PLAN -->
-    <div class="section">
-        <h2><span class="section-badge">7</span> Test plan · 21 tests</h2>
-        <p class="section-intro">All 21 tests appear in the written test plan with expected and actual results. The “In video?” column shows which are demonstrated live; the rest are evidenced by screenshots. Tick each row once you have run it and recorded the result.</p>
-        <div class="table-wrap">
-            <table class="testplan">
-                <thead>
-                    <tr>
-                        <th></th><th>ID</th><th>Purpose</th><th>Input</th><th>Type</th><th>Expected</th><th>SC</th><th>Category</th><th>In video?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T1</td><td>Prefix returns 3 suggestions in time</td><td>Type "th"</td><td><span class="cat cat-valid">Valid</span></td><td>3 suggestions within 0.5s</td><td>1</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T2</td><td>Very short prefix</td><td>Type "a"</td><td><span class="cat cat-extreme">Extreme</span></td><td>No suggestions until 2+ chars</td><td>1</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T3</td><td>Prefix with no matches</td><td>Type "zxq"</td><td><span class="cat cat-invalid">Invalid</span></td><td>No suggestions, no crash</td><td>1</td><td><span class="cat cat-reliability">Reliability</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T4</td><td>Shorthand expands on completion</td><td>"tbh" + space</td><td><span class="cat cat-valid">Valid</span></td><td>→ "to be honest"</td><td>2</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T5</td><td>All 10 tokens expand</td><td>Each of the 10 tokens</td><td><span class="cat cat-valid">Valid</span></td><td>All 10 expand correctly</td><td>2</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T6</td><td>Token inside a longer word</td><td>Type "tube"</td><td><span class="cat cat-extreme">Extreme</span></td><td>Not expanded</td><td>2</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T7</td><td>Transposition error</td><td>Type "tjs"</td><td><span class="cat cat-valid">Valid</span></td><td>"this" offered as top suggestion</td><td>3</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T8</td><td>QWERTZ x/y swap</td><td>Type "yxz"</td><td><span class="cat cat-valid">Valid</span></td><td>"xyz" offered</td><td>3</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-no">No (screenshot)</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T9</td><td>Word too far from any known word</td><td>Type "qwrtz"</td><td><span class="cat cat-invalid">Invalid</span></td><td>No forced correction</td><td>3</td><td><span class="cat cat-reliability">Reliability</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T10</td><td>Frequencies saved on exit</td><td>Close app</td><td><span class="cat cat-valid">Valid</span></td><td>JSON updated with new counts</td><td>5</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T11</td><td>Empty session</td><td>Open, close, no typing</td><td><span class="cat cat-extreme">Extreme</span></td><td>JSON unchanged, no error</td><td>5</td><td><span class="cat cat-reliability">Reliability</span></td><td class="vid-no">No (screenshot)</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T12</td><td>Add a word to the dictionary</td><td>Add "IA", type "I"</td><td><span class="cat cat-valid">Valid</span></td><td>"IA" appears as suggestion</td><td>6</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T13</td><td>Duplicate addition</td><td>Add "IA" twice</td><td><span class="cat cat-invalid">Invalid</span></td><td>Stored once, no error</td><td>6</td><td><span class="cat cat-reliability">Reliability</span></td><td class="vid-no">No (screenshot)</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T14</td><td>Works offline</td><td>Disable Wi-Fi</td><td><span class="cat cat-valid">Valid</span></td><td>All features still work</td><td>7</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T15</td><td>Works in Word</td><td>Type in MS Word</td><td><span class="cat cat-valid">Valid</span></td><td>Suggestions appear and inject</td><td>8</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T16</td><td>Works in Chromium browser</td><td>Type in Chromium</td><td><span class="cat cat-valid">Valid</span></td><td>Suggestions appear and inject</td><td>8</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T17</td><td>Startup time</td><td>Launch app</td><td><span class="cat cat-valid">Valid</span></td><td>Ready within 3 seconds</td><td>9</td><td><span class="cat cat-efficiency">Efficiency</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T18</td><td>Overlay does not cover text</td><td>3 caret positions</td><td><span class="cat cat-valid">Valid</span></td><td>Overlay visible, text not obscured</td><td>10</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T19</td><td>Latency under load</td><td>Type 20 chars in a row</td><td><span class="cat cat-extreme">Extreme</span></td><td>Every suggestion under 0.5s, no dropped keys</td><td>1</td><td><span class="cat cat-efficiency">Efficiency</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T20</td><td>Corrupt JSON on startup</td><td>Truncate data.json</td><td><span class="cat cat-invalid">Invalid</span></td><td>Starts, error logged, empty structures</td><td>5</td><td><span class="cat cat-reliability">Reliability</span></td><td class="vid-yes">Yes</td></tr>
-                    <tr data-tick><td><div class="row-tick"><span></span></div></td><td>T21</td><td>Client usability</td><td>Maxim uses tool unaided</td><td><span class="cat cat-valid">Valid</span></td><td>Completes writing task with overlay</td><td>9</td><td><span class="cat cat-correctness">Correctness</span></td><td class="vid-no">No (screenshot)</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- STEP 8: VIDEO PLAN -->
-    <div class="section">
-        <h2><span class="section-badge">8</span> Video plan · 5 minutes maximum</h2>
-        <p class="section-intro">Create the video as if the moderator has never seen your report. If it is not shown in the video, it does not exist. State the SC number and expected vs actual during each test.</p>
-
-        <div class="video-step" data-tick>
-            <div class="video-time">0:00–0:20</div>
-            <div class="video-body"><strong>Intro + launch.</strong> Client Maxim, purpose. Launch the executable, show tray icon or popup — the tool is running. <em>T17 / SC9</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">0:20–0:50</div>
-            <div class="video-body"><strong>SC1 autocomplete in Word.</strong> Type "th", show overlay with 3 suggestions, point out top-ranked word. <em>T1 / SC1, SC4</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">0:50–1:20</div>
-            <div class="video-body"><strong>Short prefix + no matches.</strong> Type "a" (no overlay), then "zxq" (no suggestions, no crash). <em>T2, T3 / SC1</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">1:20–1:50</div>
-            <div class="video-body"><strong>Shorthand expansion.</strong> Type "tbh" + space → "to be honest". Repeat with "u" and "smth". <em>T4, T5 / SC2</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">1:50–2:10</div>
-            <div class="video-body"><strong>No substring expansion.</strong> Type "tube" — show it is not expanded. <em>T6 / SC2</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">2:10–2:40</div>
-            <div class="video-body"><strong>Correction behaviour.</strong> Type "tjs" → "this" offered. Type "qwrtz" → no forced correction. <em>T7, T9 / SC3</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">2:40–3:10</div>
-            <div class="video-body"><strong>Cross-application.</strong> Switch to Chromium, repeat "th" and "tbh". Overlay still works. <em>T16 / SC8</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">3:10–3:30</div>
-            <div class="video-body"><strong>Offline.</strong> Disable Wi-Fi, repeat one test, confirm everything works. <em>T14 / SC7</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">3:30–3:50</div>
-            <div class="video-body"><strong>Dictionary addition.</strong> Add "IA", type "I", show "IA" appears. <em>T12 / SC6</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">3:50–4:15</div>
-            <div class="video-body"><strong>Persistence.</strong> Show data.json after typing, point out updated frequencies, close and reopen to prove persistence. <em>T10 / SC5</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">4:15–4:30</div>
-            <div class="video-body"><strong>Corrupt JSON.</strong> Truncate data.json, relaunch, show error handling. <em>T20 / SC5</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">4:30–4:50</div>
-            <div class="video-body"><strong>Load test.</strong> Type 20 characters quickly — every suggestion within time limit, no dropped keystrokes. <em>T19 / SC1</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-        <div class="video-step" data-tick>
-            <div class="video-time">4:50–5:00</div>
-            <div class="video-body"><strong>Client feedback.</strong> State which SC passed and which needs work. <em>T21 / SC9</em></div>
-            <div class="check-box" style="margin-top:0;"><span>☐</span></div>
-        </div>
-
-        <div class="example-box" style="margin-top:1rem; border-left-color:#d97706; background:#fff8f0;">
-            <strong>Not in the video — capture as screenshots:</strong> T8 (QWERTZ swap), T11 (empty session), T13 (duplicate addition), T21 (client usability / Microsoft Forms responses).
-        </div>
-    </div>
-
-    <!-- STEP 9: FINAL CHECKLIST -->
-    <div class="section">
-        <h2><span class="section-badge">9</span> Final self-assessment</h2>
-        <p class="section-intro">Before submission, can you honestly tick every box?</p>
-        <div class="final-checklist">
-            <ul>
-                <li>Every success criterion is demonstrated.</li>
-                <li>Every feature is shown working.</li>
-                <li>Data persistence is demonstrated.</li>
-                <li>Every major technique is explained.</li>
-                <li>Every major technique is justified.</li>
-                <li>Every major technique is evaluated.</li>
-                <li>Alternatives are discussed.</li>
-                <li>Limitations are discussed.</li>
-                <li>Normal testing included.</li>
-                <li>Abnormal testing included.</li>
-                <li>Extreme testing included.</li>
-                <li>Testing effectiveness justified.</li>
-                <li>Testing limitations discussed.</li>
-                <li>Every SC shown individually in the video.</li>
-                <li>Abnormal testing shown in the video.</li>
-                <li>Extreme testing shown in the video.</li>
-                <li>Algorithm behaviour shown in the video.</li>
-                <li>Persistence shown in the video.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- EMAIL CTA -->
+    <!-- EMAIL -->
     <div class="email-cta">
         <div>
             <h3>📧 Finished your write-up and video?</h3>
@@ -652,31 +624,23 @@
         </a>
     </div>
 
-    <div class="final-advice">
-        <strong>Final advice:</strong> your code already contains techniques strong enough for a high Criterion D score, particularly the Trie, BK-tree and Levenshtein implementations. The biggest risk is not the quality of the code — it is failing to evaluate the techniques, justify testing effectiveness, include abnormal and extreme testing, and clearly demonstrate every success criterion in the video. Those were the recurring reasons strong technical projects lost marks in the moderated exemplars.
-    </div>
-
     <div class="footer-note">
-        <span><strong>📌 Criterion D interactive tick sheet — target 10–12</strong> · Ben</span>
+        <span><strong>📌 Criterion D improvement plan</strong> · Ben</span>
         <button class="reset-btn" id="resetBtn">Reset ticks</button>
     </div>
 </div>
 
 <script>
 (function () {
-    var STORAGE_KEY = 'ben_critD_ticks_v1';
+    var STORAGE_KEY = 'ben_critD_plan_v2';
     var ticks = {};
-
     try {
         var saved = localStorage.getItem(STORAGE_KEY);
         if (saved) ticks = JSON.parse(saved) || {};
     } catch (e) { ticks = {}; }
 
     var allTickables = Array.prototype.slice.call(document.querySelectorAll('[data-tick]'));
-    // Give each tickable a stable key based on its index
-    allTickables.forEach(function (el, i) {
-        el.dataset.tickKey = 't' + i;
-    });
+    allTickables.forEach(function (el, i) { el.dataset.tickKey = 't' + i; });
 
     function save() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ticks)); } catch (e) {}
@@ -684,15 +648,13 @@
 
     function updateProgress() {
         var total = allTickables.length;
-        var done = allTickables.filter(function (el) {
-            return ticks[el.dataset.tickKey];
-        }).length;
+        var done = allTickables.filter(function (el) { return ticks[el.dataset.tickKey]; }).length;
         var pct = total ? Math.round((done / total) * 100) : 0;
         document.getElementById('progressFill').style.width = pct + '%';
         document.getElementById('progressCount').textContent = done + ' / ' + total;
         var msg = document.getElementById('progressMsg');
         if (done === 0) {
-            msg.textContent = 'Tick boxes as you complete each action. Your ticks are saved in this browser.';
+            msg.textContent = 'Tick the boxes as you complete each action. Your ticks are saved in this browser.';
         } else if (done === total) {
             msg.textContent = '🎉 Every box ticked — email Mr Ellis with your write-up and video!';
         } else if (pct < 40) {
@@ -700,24 +662,19 @@
         } else if (pct < 75) {
             msg.textContent = 'Over halfway. Make sure every technique has an evaluation and a limitation.';
         } else {
-            msg.textContent = 'Almost there — check the video plan and the final self-assessment.';
+            msg.textContent = 'Almost there — check the video plan and the final moderator test.';
         }
     }
 
     function render() {
         allTickables.forEach(function (el) {
-            if (ticks[el.dataset.tickKey]) {
-                el.classList.add('done');
-            } else {
-                el.classList.remove('done');
-            }
+            el.classList.toggle('done', !!ticks[el.dataset.tickKey]);
         });
         updateProgress();
     }
 
     allTickables.forEach(function (el) {
         el.addEventListener('click', function (e) {
-            // don't toggle if user clicked a link
             if (e.target.closest('a')) return;
             var key = el.dataset.tickKey;
             ticks[key] = !ticks[key];
@@ -725,10 +682,7 @@
             render();
         });
         el.addEventListener('keydown', function (e) {
-            if (e.key === ' ' || e.key === 'Enter') {
-                e.preventDefault();
-                el.click();
-            }
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); el.click(); }
         });
         el.setAttribute('tabindex', '0');
         el.setAttribute('role', 'checkbox');
