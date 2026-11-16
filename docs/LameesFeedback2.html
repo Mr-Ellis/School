@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamees · Criterion D improvement plan (target 10–12)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f2f5f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1.5rem;
+            display: flex; flex-direction: column; align-items: center;
+            line-height: 1.65;
+            color: #1a2b3c;
+        }
+
+        .container {
+            max-width: 980px; width: 100%;
+            background: white; border-radius: 32px;
+            box-shadow: 0 15px 35px rgba(0, 20, 40, 0.10);
+            padding: 2.5rem 2.75rem; border: 1px solid #e0e7ef;
+        }
+
+        h1 {
+            font-size: 2rem; font-weight: 700; letter-spacing: -0.02em;
+            margin-bottom: 0.3rem; color: #0b1e33;
+        }
+        .subhead {
+            color: #3c5a7a; font-size: 1.02rem; margin-bottom: 2rem;
+            padding-bottom: 1.1rem; border-bottom: 2px dashed #cddae9;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .byline {
+            font-weight: 500; background: #e8f0fe; padding: 0.25rem 1rem;
+            border-radius: 40px; font-size: 0.92rem; color: #1e4b8c;
+        }
+
+        /* ---- progress ---- */
+        .progress-wrap {
+            position: sticky; top: 8px; z-index: 20;
+            background: #ffffffdd; backdrop-filter: blur(6px);
+            border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 0.8rem 1.25rem; margin-bottom: 2rem;
+            box-shadow: 0 6px 18px rgba(0,30,60,0.06);
+        }
+        .progress-top {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; color: #0a2a44; font-size: 0.9rem; margin-bottom: 6px;
+        }
+        .progress-track { height: 12px; background: #e4edf7; border-radius: 40px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; width: 0%; border-radius: 40px;
+            background: linear-gradient(90deg, #2a6f97, #0e7a4b); transition: width 0.25s ease;
+        }
+        .progress-msg { margin-top: 6px; font-size: 0.84rem; color: #4a6785; }
+
+        /* ---- prediction ---- */
+        .prediction {
+            background: #eef4fc; border-radius: 22px; padding: 1.75rem 2rem;
+            margin-bottom: 2.5rem; border: 1px solid #c2d6ea;
+        }
+        .prediction h2 {
+            font-size: 1.3rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.75rem;
+        }
+        .band-pill {
+            background: #0a2a44; color: white; border-radius: 40px;
+            padding: 0.45rem 1.2rem; font-weight: 700; font-size: 1rem;
+            display: inline-block; margin-bottom: 1rem;
+        }
+        .prediction p { margin-bottom: 1rem; font-size: 0.98rem; color: #1e3c5c; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.25rem 0; }
+        .col-box {
+            background: white; border-radius: 18px; padding: 1.25rem 1.4rem;
+            border: 1px solid #d6e0ed;
+        }
+        .col-box h3 {
+            font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid #e0eaf4;
+        }
+        .col-box.strengths h3 { color: #0f5c34; border-bottom-color: #b8ddc6; }
+        .col-box.risks h3 { color: #8a4b00; border-bottom-color: #f0d9b8; }
+        .col-box ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .col-box li {
+            font-size: 0.92rem; padding-left: 1.7rem; position: relative;
+            line-height: 1.45; color: #2a4b6e;
+        }
+        .col-box li::before { position: absolute; left: 0; font-weight: 700; }
+        .strengths li::before { content: "✓"; color: #0f5c34; }
+        .risks li::before { content: "!"; color: #b45309; }
+        .goal-strip {
+            background: #b45309; color: white; border-radius: 40px;
+            padding: 0.55rem 1.25rem; font-weight: 600; font-size: 0.94rem;
+            display: inline-block; margin-top: 0.5rem;
+        }
+
+        /* ---- standout ---- */
+        .standout {
+            background: #f2fbf5; border: 2px solid #0e7a4b; border-radius: 22px;
+            padding: 1.5rem 2rem; margin-bottom: 2.5rem;
+        }
+        .standout h2 {
+            font-size: 1.2rem; font-weight: 700; color: #0a3e28; margin-bottom: 0.6rem;
+        }
+        .standout p { font-size: 0.94rem; color: #1c4d33; margin-bottom: 0.5rem; }
+        .standout .quote {
+            background: white; border-left: 5px solid #0e7a4b; border-radius: 12px;
+            padding: 1rem 1.25rem; margin: 0.75rem 0; font-size: 0.95rem; color: #1c4d33; line-height: 1.6;
+        }
+
+        /* ---- blocking ---- */
+        .blocking {
+            background: #fff5f5; border: 2px solid #b91c1c; border-radius: 22px;
+            padding: 1.75rem 2rem; margin-bottom: 2.5rem;
+        }
+        .blocking h2 {
+            font-size: 1.25rem; font-weight: 700; color: #991b1b; margin-bottom: 0.75rem;
+        }
+        .blocking p { font-size: 0.97rem; color: #5c1616; margin-bottom: 0.75rem; }
+
+        /* ---- sections ---- */
+        .section { margin-bottom: 3rem; }
+        .section h2 {
+            font-size: 1.5rem; font-weight: 700; color: #0a2a44;
+            margin-bottom: 0.5rem; display: flex; align-items: center; gap: 12px;
+        }
+        .badge {
+            background: #0a2a44; color: white; font-size: 0.85rem;
+            padding: 0.2rem 0.85rem; border-radius: 40px; font-weight: 500;
+        }
+        .section-lead {
+            color: #3c5a7a; font-size: 1rem; margin-bottom: 1.5rem;
+            max-width: 75ch;
+        }
+
+        /* ---- rule list ---- */
+        .rule-box {
+            background: #f8fafd; border-radius: 18px; padding: 1.5rem 1.75rem;
+            border: 1px solid #d6e0ed;
+        }
+        .rule-box ol {
+            list-style: none; counter-reset: rule;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem 1.5rem;
+        }
+        .rule-box li {
+            font-size: 0.95rem; padding-left: 2.2rem; position: relative;
+            counter-increment: rule; color: #2a4b6e; line-height: 1.5;
+        }
+        .rule-box li::before {
+            content: counter(rule);
+            position: absolute; left: 0; top: 0;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: #e4edf7; color: #1e4b8c;
+            font-weight: 700; font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .rule-box li.eval-point { color: #0f5c34; font-weight: 600; }
+        .rule-box li.eval-point::before { background: #d9efe2; color: #0f5c34; }
+
+        /* ---- technique cards ---- */
+        .tech-pills { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; margin-bottom: 0.5rem; }
+        .pill {
+            background: white; border-radius: 40px; padding: 0.4rem 1.1rem;
+            font-weight: 500; border: 1px solid #9bb7d4; color: #113355;
+            font-size: 0.93rem; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.12s; user-select: none;
+        }
+        .pill:hover { border-color: #5b8db8; }
+        .pill.done { background: #e0f2e9; border-color: #0e7a4b; color: #0a3e28; }
+        .pill .pill-box {
+            width: 18px; height: 18px; border: 2px solid #2c5f8a; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            background: white; font-size: 0.65rem; font-weight: 700;
+        }
+        .pill.done .pill-box { background: #1b7e4b; border-color: #1b7e4b; }
+        .pill.done .pill-box::after { content: "✓"; color: white; }
+
+        .tech-stack { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1.25rem; }
+        .tech-card {
+            background: #f8fafd; border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 1.5rem 1.85rem;
+        }
+        .tech-card-head {
+            display: flex; align-items: flex-start; gap: 14px; margin-bottom: 0.75rem;
+        }
+        .tech-num {
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.85rem;
+            width: 30px; height: 30px; min-width: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-top: 1px;
+        }
+        .tech-card h3 {
+            font-size: 1.1rem; font-weight: 700; color: #0a2a44; line-height: 1.35;
+        }
+        .tech-card .status {
+            font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.6rem;
+            border-radius: 20px; margin-left: 8px; vertical-align: middle;
+        }
+        .status-drafted { background: #dcecff; color: #1b4b7a; }
+        .tech-card .draft-note {
+            font-size: 0.85rem; color: #1e4b8c; background: #eef4fc;
+            border-radius: 8px; padding: 0.4rem 0.8rem; margin-bottom: 0.9rem;
+            display: inline-block;
+        }
+        .tech-card h4 {
+            font-size: 0.9rem; font-weight: 700; color: #234b6e;
+            margin: 1rem 0 0.35rem;
+        }
+        .tech-card h4:first-of-type { margin-top: 0.5rem; }
+        .tech-card p {
+            font-size: 0.94rem; color: #2a4b6e; line-height: 1.7;
+            margin-bottom: 0.5rem;
+        }
+        .tech-card .why {
+            font-size: 0.92rem; color: #0f5c34; font-weight: 500;
+            margin-top: 0.9rem; padding-top: 0.75rem;
+            border-top: 1px solid #d6e0ed;
+        }
+        .tech-card .why::before { content: "Why this matters: "; font-weight: 700; }
+
+        /* ---- evaluation ---- */
+        .eval-section {
+            background: #f2fbf5; border: 2px solid #0e7a4b; border-radius: 22px;
+            padding: 1.75rem 2rem; margin-bottom: 2.5rem;
+        }
+        .eval-section h2 { color: #0a3e28; }
+        .eval-section .badge { background: #0e7a4b; }
+        .eval-section .section-lead { color: #1c4d33; }
+        .eval-section .rule-box { background: white; border-color: #b8ddc6; }
+        .eval-note {
+            background: white; border-radius: 14px; padding: 1.1rem 1.4rem;
+            border: 1px solid #b8ddc6; margin-top: 1.25rem; font-size: 0.94rem;
+            color: #1c4d33; line-height: 1.6;
+        }
+        .eval-note strong { color: #0a3e28; }
+
+        /* ---- testing ---- */
+        .test-group { margin-bottom: 2rem; }
+        .test-group-head {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem;
+        }
+        .test-group-head h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .tag {
+            font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.7rem;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .tag-normal { background: #dcecff; color: #1b4b7a; }
+        .tag-abnormal { background: #ffe0e0; color: #8a1f1f; }
+        .tag-extreme { background: #f3e0ff; color: #5b1f8a; }
+        .tag-boundary { background: #fff0d6; color: #8a4b00; }
+        .test-group-desc {
+            font-size: 0.93rem; color: #3c5a7a; margin-bottom: 0.75rem;
+            max-width: 75ch;
+        }
+        .test-table {
+            width: 100%; border-collapse: collapse; font-size: 0.89rem;
+            background: white; border-radius: 14px; overflow: hidden;
+            border: 1px solid #d6e0ed;
+        }
+        .test-table th, .test-table td {
+            text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid #eaf0f7;
+            vertical-align: top;
+        }
+        .test-table th {
+            background: #f4f8fd; color: #1e4b8c; font-weight: 600;
+            font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .test-table tr:last-child td { border-bottom: none; }
+        .test-table tr.done td { background: #f2fbf5; }
+        .test-table .tick-cell { width: 40px; }
+        .row-tick {
+            width: 22px; height: 22px; border: 2px solid #2c5f8a; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; background: white; transition: 0.12s;
+        }
+        .row-tick:hover { border-color: #1b7e4b; }
+        .test-table tr.done .row-tick { background: #1b7e4b; border-color: #1b7e4b; }
+        .test-table tr.done .row-tick::after { content: "✓"; color: white; font-size: 0.75rem; font-weight: 700; }
+        .test-framing {
+            background: #f8fafd; border: 1px solid #d6e0ed; border-radius: 16px;
+            padding: 1.1rem 1.4rem; margin-bottom: 1.75rem; font-size: 0.95rem;
+            color: #1e3c5c; line-height: 1.65;
+        }
+        .test-framing strong { color: #0a2a44; }
+        .test-note {
+            background: #f6f9ff; border-left: 4px solid #2a6f97; border-radius: 10px;
+            padding: 0.9rem 1.15rem; margin-top: 0.85rem; font-size: 0.9rem;
+            color: #1e3c5c; line-height: 1.6;
+        }
+        .test-warning {
+            background: #fff5f5; border-left: 4px solid #b91c1c; border-radius: 10px;
+            padding: 0.9rem 1.15rem; margin-top: 0.85rem; font-size: 0.9rem;
+            color: #7f1d1d; line-height: 1.6;
+        }
+
+        /* ---- video ---- */
+        .video-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .video-item {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #f8fafd; border: 1px solid #e0eaf4; border-radius: 16px;
+            padding: 1rem 1.3rem;
+        }
+        .video-sc {
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.78rem;
+            padding: 0.25rem 0.7rem; border-radius: 30px; margin-top: 2px;
+            white-space: nowrap;
+        }
+        .video-body { flex: 1; }
+        .video-body h4 { font-size: 0.96rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.3rem; }
+        .video-body p { font-size: 0.92rem; color: #2a4b6e; line-height: 1.6; }
+        .video-item.highlight { background: #fffaf0; border-color: #f0d9b8; }
+        .video-item.highlight .video-sc { background: #b45309; }
+        .video-why {
+            margin-top: 0.5rem; font-size: 0.88rem; color: #8a4b00; font-weight: 500;
+        }
+        .video-note {
+            background: #f6f9ff; border-left: 4px solid #2a6f97; border-radius: 10px;
+            padding: 1rem 1.25rem; margin-top: 1.25rem; font-size: 0.93rem;
+            color: #1e3c5c; line-height: 1.6;
+        }
+
+        /* ---- final test ---- */
+        .final-test {
+            background: #0a2a44; color: white; border-radius: 24px;
+            padding: 2rem 2.25rem; margin-bottom: 2rem;
+        }
+        .final-test h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .final-test .lead { opacity: 0.9; font-size: 0.97rem; margin-bottom: 1.25rem; }
+        .final-test ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+        .final-test li {
+            padding-left: 2rem; position: relative; font-size: 0.97rem; line-height: 1.5;
+        }
+        .final-test li::before {
+            content: "☐"; position: absolute; left: 0; font-weight: 700;
+            color: #9ec9ff; font-size: 1.1rem;
+        }
+        .final-test .after {
+            margin-top: 1.25rem; font-size: 0.93rem; opacity: 0.85;
+            border-top: 1px solid #ffffff33; padding-top: 1rem; line-height: 1.6;
+        }
+
+        /* ---- email ---- */
+        .email-cta {
+            background: #eef4fc; border: 1px solid #c2d6ea; border-radius: 22px;
+            padding: 1.5rem 2rem; margin-bottom: 1.5rem;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+            gap: 1.25rem;
+        }
+        .email-cta h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .email-cta p { font-size: 0.93rem; color: #3c5a7a; margin-top: 0.25rem; max-width: 60ch; }
+        .email-cta a {
+            background: #0a2a44; color: white; font-weight: 700; text-decoration: none;
+            padding: 0.7rem 1.4rem; border-radius: 40px; font-size: 0.95rem;
+            white-space: nowrap; transition: 0.12s;
+        }
+        .email-cta a:hover { background: #1e4b8c; }
+
+        .footer {
+            margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid #cfddee;
+            font-size: 0.88rem; color: #4a6785;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .reset-btn {
+            background: none; border: 1px solid #9bb7d4; border-radius: 40px;
+            padding: 0.3rem 1rem; font-size: 0.8rem; color: #1e4b6e;
+            cursor: pointer; font-weight: 500;
+        }
+        .reset-btn:hover { background: #eef4fc; }
+
+        @media (max-width: 760px) {
+            .two-col { grid-template-columns: 1fr; }
+            .rule-box ol { grid-template-columns: 1fr; }
+            .email-cta { flex-direction: column; align-items: flex-start; }
+        }
+        @media (max-width: 650px) {
+            .container { padding: 1.75rem 1.5rem; }
+            h1 { font-size: 1.65rem; }
+            .prediction { padding: 1.4rem 1.25rem; }
+            .tech-card { padding: 1.25rem 1.15rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Criterion D improvement plan</h1>
+    <div class="subhead">
+        <span>Predicted 8–10 / 12 → Target 10–12</span>
+        <span class="byline">Lamees · Habit Tracker</span>
+    </div>
+
+    <!-- progress -->
+    <div class="progress-wrap">
+        <div class="progress-top">
+            <span>Progress</span>
+            <span id="progressCount">0 / 0</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-msg" id="progressMsg">Tick the boxes as you complete each action. Your ticks are saved in this browser.</div>
+    </div>
+
+    <!-- PREDICTION -->
+    <div class="prediction">
+        <h2>Current moderator assessment</h2>
+        <span class="band-pill">Predicted Criterion D: 8–10 / 12</span>
+        <p>This is a much stronger project than a typical task manager. There are at least three genuinely discussable algorithms — streak calculation, trend classification and summary statistics — plus a properly designed relational database with real constraints. The risk is not the program. The risk is exactly the same as Sara's: there is enough material for the marks, but it is easy to write about the wrong things.</p>
+
+        <div class="two-col">
+            <div class="col-box strengths">
+                <h3>What is genuinely strong</h3>
+                <ul>
+                    <li>Three linked SQLite tables (habits, moods, entries) with FOREIGN KEY, UNIQUE and CHECK constraints — a real relational design.</li>
+                    <li>Streak calculation: collects completed days into a set, walks backwards day by day using date arithmetic to compute current and best streaks.</li>
+                    <li>Trend classification: compares the last 7 days with the previous 7, calculates mood change and completion change, then classifies as improving, stable or declining.</li>
+                    <li>Summary statistics: average mood and completion rate calculated from all records.</li>
+                    <li>Validation at two layers — program logic and SQL constraints — which is stronger than most projects.</li>
+                    <li>Motivational feedback generation with decision logic based on mood, completion rate and streaks.</li>
+                </ul>
+            </div>
+            <div class="col-box risks">
+                <h3>What to watch out for</h3>
+                <ul>
+                    <li>Do not write about the habit-tracker GUI. It is the least impressive part of the project.</li>
+                    <li>Do not let CRUD dominate — adding and deleting a habit is expected, not impressive.</li>
+                    <li>The computational complexity is moderate, so excellent evaluation is what will lift the mark.</li>
+                    <li>Testing evidence must be recorded, not just described.</li>
+                    <li>Each algorithm needs an alternative, a limitation and a judgement, not just a description.</li>
+                </ul>
+            </div>
+        </div>
+        <span class="goal-strip">Six technique sections, drafted for you below — plus a full testing table.</span>
+    </div>
+
+    <!-- STANDOUT -->
+    <div class="standout">
+        <h2>The three algorithms to build the write-up around</h2>
+        <p>If you write about nothing else, write about these:</p>
+        <div class="quote">
+            <strong>1. Streak calculation</strong> — set conversion, backwards iteration, date arithmetic, current vs best streak.<br>
+            <strong>2. Trend classification</strong> — two 7-day windows, two deltas, a three-way classification rule.<br>
+            <strong>3. Relational database design</strong> — three linked tables with FOREIGN KEY, UNIQUE and CHECK constraints.
+        </div>
+        <p>These are real computational decisions. Everything else on the page supports them.</p>
+    </div>
+
+    <!-- BLOCKING -->
+    <div class="blocking">
+        <h2>The one thing blocking 10–12</h2>
+        <p>The computational complexity is not enormous. There is iteration, sets, dictionaries and date arithmetic, but no tries, no graph algorithms, no machine learning. That is fine — but it means <strong>the evaluation has to be excellent</strong>.</p>
+        <p>For every technique you must show: what you chose, what else you could have chosen, what limitation your choice has, why it is still the right choice, how you tested it, why that testing proves it works, and what the testing does not prove. That last point is the one most students skip, and it is where the top band is won.</p>
+    </div>
+
+    <!-- THE RULE -->
+    <div class="section">
+        <h2><span class="badge">→</span> What high-scoring Criterion D looks like</h2>
+        <p class="section-lead">For every technique, the moderator should be able to identify all eight points. The drafted sections below follow this structure — read them against it and you will see where each point appears.</p>
+        <div class="rule-box">
+            <ol>
+                <li>What was used?</li>
+                <li>Why was it chosen?</li>
+                <li>What alternative was considered?</li>
+                <li>What limitation exists?</li>
+                <li class="eval-point">Why was the choice still appropriate? <em>(evaluation)</em></li>
+                <li>How was it tested?</li>
+                <li class="eval-point">Why was that testing effective? <em>(justification)</em></li>
+                <li class="eval-point">What limitations remain? <em>(evaluation of testing)</em></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- TECHNIQUES -->
+    <div class="section">
+        <h2><span class="badge">1</span> Your six technique sections — drafted</h2>
+        <p class="section-lead">These are written in full so you can see the standard. Read them, then adapt them to match your own code and your own wording. Do not copy them word for word — a moderator knows your code and will notice. Tick each pill once you have rewritten that section in your own words.</p>
+
+        <div class="tech-pills">
+            <div class="pill" data-tick><div class="pill-box"></div>1 · SQLite relational database design</div>
+            <div class="pill" data-tick><div class="pill-box"></div>2 · Input validation and data integrity</div>
+            <div class="pill" data-tick><div class="pill-box"></div>3 · Streak calculation</div>
+            <div class="pill" data-tick><div class="pill-box"></div>4 · Trend classification</div>
+            <div class="pill" data-tick><div class="pill-box"></div>5 · Summary statistics</div>
+            <div class="pill" data-tick><div class="pill-box"></div>6 · Motivational feedback generation</div>
+        </div>
+
+        <div class="tech-stack">
+
+            <!-- 1 -->
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">1</div>
+                    <h3>SQLite relational database design <span class="status status-drafted">drafted</span></h3>
+                </div>
+                <div class="draft-note">Rewrite in your own words and insert a screenshot of your schema.</div>
+
+                <h4>What it is</h4>
+                <p>The application stores its data in a relational SQLite database rather than a flat file. Three tables — <code>habits</code>, <code>moods</code> and <code>entries</code> — are linked by foreign keys, and the database enforces rules such as <code>UNIQUE</code> and <code>CHECK</code> constraints so that invalid records cannot be stored even if the program has a bug.</p>
+
+                <h4>How it is used</h4>
+                <p>Each habit has a row in <code>habits</code>. Each daily log entry has a row in <code>entries</code> that references a habit by foreign key and stores the completion state and mood. The <code>UNIQUE(habit, day)</code> constraint means the same habit cannot be logged twice on the same day, and the <code>CHECK</code> constraints on mood require a value between 1 and 10.</p>
+
+                <h4>Why I chose it</h4>
+                <p>The tracker needs to answer questions that span multiple days and multiple habits — streaks, trends and averages. A relational schema makes those queries short and lets the database engine do the filtering and joining, instead of loading everything into Python and looping over it.</p>
+
+                <h4>Alternative considered</h4>
+                <p>A single JSON file would have been simpler to write. However, it would have stored every habit and every entry in one flat structure, which makes streak and trend queries more fragile, and it would offer no protection against duplicate entries for the same habit and day.</p>
+
+                <h4>Limitation</h4>
+                <p>SQLite adds setup complexity. The schema has to be created before the application can run, and changing a table's structure later requires a migration rather than simply adding a key to a dictionary. It also introduces a second place where errors can occur — a constraint violation is a runtime failure the program must handle.</p>
+
+                <h4>Why it is still appropriate</h4>
+                <p>Although a JSON file would have been faster to prototype, the relational design pays for itself as soon as the program needs to answer multi-day questions. The constraints turn data-integrity rules into something the database enforces rather than something the program has to remember to check.</p>
+
+                <div class="why">A moderator sees a real schema with real constraints, not a GUI with a save button. This is the strongest technique in the project.</div>
+            </div>
+
+            <!-- 2 -->
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">2</div>
+                    <h3>Input validation and data integrity <span class="status status-drafted">drafted</span></h3>
+                </div>
+                <div class="draft-note">Rewrite in your own words and show the order of checks.</div>
+
+                <h4>What it is</h4>
+                <p>Validation is the set of checks that run before data is written, so that invalid input is rejected instead of being stored. In this application it happens at two layers: in the Python code, and in the database schema itself.</p>
+
+                <h4>How it is used</h4>
+                <p>The Python layer checks that the date is a real date, that it is not in the future, that the mood is an integer between 1 and 10, and that the habit name is a sensible length. The database layer then enforces the same rules again through <code>CHECK</code> constraints and the <code>UNIQUE(habit, day)</code> constraint, so a duplicate entry is rejected even if the Python check is bypassed.</p>
+
+                <h4>Why I chose it</h4>
+                <p>Two layers of validation mean a single mistake in the program code does not automatically corrupt the data. The Python layer gives the user a friendly error message; the database layer guarantees the invariant.</p>
+
+                <h4>Alternative considered</h4>
+                <p>Validation could have been done only in Python. That is simpler, but it means the integrity of the data depends entirely on the code being correct. Since SQLite enforces constraints for free, there was no good reason not to use them.</p>
+
+                <h4>Limitation</h4>
+                <p>The two layers duplicate some rules, so changing a rule means changing it in both places, and they can drift out of sync. The database also produces less friendly error messages than the Python layer, so the program has to catch constraint violations and translate them.</p>
+
+                <h4>Why it is still appropriate</h4>
+                <p>For a small application the duplication is minor, and the benefit — guaranteed data integrity — outweighs the maintenance cost. The Python layer handles the user experience and the database layer handles the correctness, which separates two concerns rather than tangling them.</p>
+
+                <div class="why">Multi-layer validation is stronger than the single-layer validation most students write about, because it shows you understand the difference between checking for the user and guaranteeing the data.</div>
+            </div>
+
+            <!-- 3 -->
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">3</div>
+                    <h3>Streak calculation algorithm <span class="status status-drafted">drafted</span></h3>
+                </div>
+                <div class="draft-note">Rewrite in your own words and insert a screenshot of the streak function.</div>
+
+                <h4>What it is</h4>
+                <p>A streak is the number of consecutive days on which a habit was completed. The algorithm computes two values: the current streak, counting backwards from today, and the best streak, which is the longest run anywhere in the record.</p>
+
+                <h4>How it is used</h4>
+                <p>The program first collects every day on which the habit was marked complete and converts that list into a set. It then starts at today and walks backwards one day at a time, incrementing a counter while each day is in the set and stopping at the first day that is not. The best streak is found by walking the complete sorted list of completed days once and tracking the longest consecutive run.</p>
+
+                <h4>Why I chose it</h4>
+                <p>Converting the days to a set makes each "was this day completed?" check an O(1) membership test instead of a scan through a list. The backwards walk is then O(n) in the length of the streak, which is exactly the work that needs to be done and nothing more.</p>
+
+                <h4>Alternative considered</h4>
+                <p>A list could have been used and searched each time, but every step of the backwards walk would then be a linear search, making the whole streak calculation quadratic in the number of entries. A set makes the same algorithm linear.</p>
+
+                <h4>Limitation</h4>
+                <p>The algorithm assumes that a day is either complete or not — it cannot represent a habit that was partially completed, and it treats a missed day as a hard reset. It also depends on the system clock: if the computer's date is wrong, the current streak will be wrong.</p>
+
+                <h4>Why it is still appropriate</h4>
+                <p>For a habit tracker, "completed or not" is exactly the right model, and a missed day genuinely should reset the current streak — that is what makes the streak motivating. The clock dependency is a real risk, but it is a property of the platform rather than of the algorithm.</p>
+
+                <div class="why">This is a genuine algorithm — set conversion, backwards iteration and date arithmetic — and one of the three strongest pieces of computational thinking in the project.</div>
+            </div>
+
+            <!-- 4 -->
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">4</div>
+                    <h3>Trend classification algorithm <span class="status status-drafted">drafted</span></h3>
+                </div>
+                <div class="draft-note">Rewrite in your own words and insert a screenshot of trend_description().</div>
+
+                <h4>What it is</h4>
+                <p>Trend classification compares two windows of time and reports whether the user's habits are improving, stable or declining. It is a simple form of time-series analysis, done without any external library.</p>
+
+                <h4>How it is used</h4>
+                <p>The function takes the last 7 days and the previous 7 days, and calculates two deltas: the change in average mood and the change in completion rate. It then classifies the result as improving if both deltas are positive beyond a threshold, declining if both are negative beyond a threshold, and stable otherwise.</p>
+
+                <h4>Why I chose it</h4>
+                <p>Two windows of equal length give a fair comparison, and reducing the trend to two numbers — mood change and completion change — keeps the output easy to explain to the user. It also means the classification rule is visible in the code rather than hidden inside a model.</p>
+
+                <h4>Alternative considered</h4>
+                <p>A linear regression over all recorded days would have produced a more statistically rigorous trend. However, it would require more code, it would be harder to explain in the interface, and with only a few weeks of data the regression would be dominated by noise anyway.</p>
+
+                <h4>Limitation</h4>
+                <p>The thresholds are chosen by hand rather than derived from the data, so the boundary between "stable" and "improving" is arbitrary. The comparison also ignores how much data is available — a 7-day window with only two entries is treated the same as a 7-day window with seven.</p>
+
+                <h4>Why it is still appropriate</h4>
+                <p>For a personal tracker the goal is a useful signal, not a statistically valid one, and a simple two-window comparison gives that signal with far less code and far more transparency than a regression would. The arbitrary threshold is a known cost, and it is one the user can understand.</p>
+
+                <div class="why">This is the most sophisticated piece of analysis in the project, and it deserves a full section rather than a passing mention.</div>
+            </div>
+
+            <!-- 5 -->
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">5</div>
+                    <h3>Summary statistics algorithm <span class="status status-drafted">drafted</span></h3>
+                </div>
+                <div class="draft-note">Rewrite in your own words. This is the shortest of the six sections.</div>
+
+                <h4>What it is</h4>
+                <p>Summary statistics reduce the whole record to two numbers: the average mood across all logged days and the completion rate across all logged entries. They give the user a single view of overall progress.</p>
+
+                <h4>How it is used</h4>
+                <p>The program queries the entries table, counts the completed entries and divides by the total number of entries to get the completion rate, and averages the non-null mood values to get the average mood. Both calculations are done in SQL rather than in Python.</p>
+
+                <h4>Why I chose it</h4>
+                <p>Doing the aggregation in SQL means only the two resulting numbers are moved into Python, rather than every row. It also keeps the calculation in one place instead of scattering it across the user-interface code.</p>
+
+                <h4>Alternative considered</h4>
+                <p>The averages could have been stored as columns and updated every time an entry was added. That would be faster to read, but it would introduce the risk of the stored value going stale if an entry were ever edited or deleted, and it would duplicate information the database can derive.</p>
+
+                <h4>Limitation</h4>
+                <p>An arithmetic mean gives every day equal weight, so a single unusually bad day and a single unusually good day can cancel out. The completion rate also treats every habit equally, regardless of how often it was supposed to be done.</p>
+
+                <h4>Why it is still appropriate</h4>
+                <p>For a summary display the arithmetic mean is exactly what the user expects, and recalculating it on demand means it is always consistent with the underlying data. The equal-weighting limitation is real, but a weighted average would need a scheme for deciding the weights, which would add complexity for a summary statistic.</p>
+
+                <div class="why">Not as strong as streaks or trends, but still a valid technique, and the "why not store it" discussion is genuine evaluation.</div>
+            </div>
+
+            <!-- 6 -->
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">6</div>
+                    <h3>Motivational feedback generation <span class="status status-drafted">drafted</span></h3>
+                </div>
+                <div class="draft-note">Rewrite in your own words and insert a screenshot of motivational_feedback().</div>
+
+                <h4>What it is</h4>
+                <p>Feedback generation turns the computed values — mood, completion rate and streaks — into a short message for the user. It is a rule-based decision system rather than a fixed string.</p>
+
+                <h4>How it is used</h4>
+                <p>The function takes the current streak, the completion rate and the trend classification, and selects a message based on which combination of conditions is true. A long streak with a declining trend produces a different message from a short streak with an improving trend, and the rules are arranged in priority order so that the most important condition is checked first.</p>
+
+                <h4>Why I chose it</h4>
+                <p>A rule-based approach keeps the logic visible and testable. Each rule can be checked independently, and the user can be told exactly why a message was chosen.</p>
+
+                <h4>Alternative considered</h4>
+                <p>A random selection from a pool of messages would have been simpler, but it would not respond to the user's actual data, and it would make the application feel less personal. A language model would have produced more varied feedback, but it would have introduced a dependency, a cost and a loss of control over the tone.</p>
+
+                <h4>Limitation</h4>
+                <p>The rules are hand-written, so the feedback is limited to the situations the author anticipated. It cannot recognise a pattern the author did not think of, and the priority order means a low-priority rule can be permanently masked by a high-priority one.</p>
+
+                <h4>Why it is still appropriate</h4>
+                <p>For a personal habit tracker, predictable and explainable feedback is more valuable than variety, and a rule-based system gives exactly that. The limited range of messages is a fair trade for the transparency of being able to see why each one was chosen.</p>
+
+                <div class="why">Decision logic based on three computed values is still decision logic, and it links the earlier algorithms to the user-facing outcome.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EVALUATION -->
+    <div class="eval-section section">
+        <h2><span class="badge">E</span> Evaluation checklist</h2>
+        <p class="section-lead">The drafted sections already do this. Use the checklist to confirm every section matches before you submit.</p>
+
+        <div class="rule-box">
+            <ol>
+                <li>I discussed at least one alternative for each major technique.</li>
+                <li>I discussed the advantages of my chosen approach.</li>
+                <li>I discussed the limitations of my chosen approach.</li>
+                <li class="eval-point">I explained why the advantages outweigh the limitations.</li>
+                <li>I explained what the testing demonstrates.</li>
+                <li class="eval-point">I explained what the testing does not prove.</li>
+            </ol>
+        </div>
+
+        <div class="eval-note">
+            <strong>The quick evaluation test:</strong> if a paragraph can be rewritten as "I used X because it does Y", it is probably explanation. If it includes an advantage, a limitation, an alternative and a trade-off, it is probably evaluation.
+        </div>
+    </div>
+
+    <!-- TESTING -->
+    <div class="section">
+        <h2><span class="badge">2</span> Testing table</h2>
+        <p class="section-lead">Run each test, record the actual result, and tick it once you have evidence. The table covers normal, boundary, abnormal and extreme cases. Replace the "Expected result" column with what you actually observed when you run it.</p>
+
+        <div class="test-framing">
+            <strong>Normal, boundary, abnormal and extreme testing are four different things.</strong>
+            Normal tests show the program works when used correctly. Boundary tests check the exact edges of a rule. Abnormal tests confirm invalid input is rejected safely. <strong>Extreme testing is separate: it confirms that valid input at the edge of the program's limits — long streaks, many habits, a year of entries — is still handled correctly.</strong> A report with only normal and abnormal tests has not shown that the program holds up under load.
+        </div>
+
+        <!-- normal -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-normal">Normal</span>
+                <h3>Expected user behaviour</h3>
+            </div>
+            <p class="test-group-desc">These show the system works when used correctly. Record what was actually observed, not just "Passed".</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Feature</th><th>Test</th><th>Expected result</th><th>Actual result</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T1</td><td>Habits</td><td>Add a new habit with a valid name</td><td>Habit appears in list</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T2</td><td>Entries</td><td>Log a habit as complete for today</td><td>Entry stored, habit shown complete</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T3</td><td>Mood</td><td>Enter a mood of 7</td><td>Mood stored against the entry</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T4</td><td>Streaks</td><td>Three consecutive completed days</td><td>Current streak = 3</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T5</td><td>Streaks</td><td>A break, then two more consecutive days</td><td>Current streak = 2, best streak unchanged</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T6</td><td>Trends</td><td>Last 7 days better than previous 7</td><td>Trend = improving</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T7</td><td>Trends</td><td>Last 7 days worse than previous 7</td><td>Trend = declining</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T8</td><td>Summary</td><td>Three mood values 4, 7, 10</td><td>Average mood = 7</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T9</td><td>Summary</td><td>Four entries, two completed</td><td>Completion rate = 50%</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>T10</td><td>Feedback</td><td>Long streak, improving trend</td><td>Encouraging message shown</td><td>Passed</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- boundary -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-boundary">Boundary</span>
+                <h3>Exact edges of each rule</h3>
+            </div>
+            <p class="test-group-desc">These prove the rules work at their exact thresholds. They are the strongest evidence in the table because that is where off-by-one errors live.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Feature</th><th>Test</th><th>Expected result</th><th>Actual result</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B1</td><td>Mood</td><td>Mood = 1 (lowest valid)</td><td>Accepted</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B2</td><td>Mood</td><td>Mood = 10 (highest valid)</td><td>Accepted</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B3</td><td>Streaks</td><td>Streak of exactly 1 day</td><td>Current streak = 1</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B4</td><td>Streaks</td><td>Streak broken today only</td><td>Current streak = 0, best streak retained</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B5</td><td>Trends</td><td>Both deltas exactly zero</td><td>Trend = stable</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B6</td><td>Trends</td><td>Delta exactly at the classification threshold</td><td>Classified consistently with the rule</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B7</td><td>Summary</td><td>Completion rate 0%</td><td>Displays 0%, no division error</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B8</td><td>Summary</td><td>Completion rate 100%</td><td>Displays 100%</td><td>Passed</td></tr>
+                </tbody>
+            </table>
+            <div class="test-note">B5 and B6 are the most important rows here. They prove the trend classification handles the exact point where "stable" becomes "improving" or "declining", which is where an off-by-one error would show up.</div>
+        </div>
+
+        <!-- abnormal -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-abnormal">Abnormal</span>
+                <h3>Invalid or unexpected input</h3>
+            </div>
+            <p class="test-group-desc">These prove the two-layer validation works. Record what was actually observed — the error message, the rejected insert, the blocked action.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Feature</th><th>Test</th><th>Expected result</th><th>Actual result</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A1</td><td>Mood</td><td>Mood = 0</td><td>Rejected with message</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A2</td><td>Mood</td><td>Mood = 11</td><td>Rejected with message</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A3</td><td>Mood</td><td>Mood entered as text</td><td>Rejected, no crash</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A4</td><td>Habits</td><td>Empty habit name</td><td>Rejected with message</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A5</td><td>Habits</td><td>Duplicate habit name</td><td>Rejected by UNIQUE constraint</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A6</td><td>Entries</td><td>Log the same habit twice on the same day</td><td>Rejected by UNIQUE(habit, day)</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A7</td><td>Entries</td><td>Date in the future</td><td>Rejected with message</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A8</td><td>Entries</td><td>Invalid date string</td><td>Rejected, no crash</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A9</td><td>Database</td><td>Database file missing</td><td>Program creates it or fails gracefully</td><td>Passed</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A10</td><td>Database</td><td>Corrupted database file</td><td>Error handled, no silent data loss</td><td>Passed</td></tr>
+                </tbody>
+            </table>
+            <div class="test-warning">A5 and A6 are the two to show explicitly in the video. They prove the database constraints are doing real work, not just the Python validation.</div>
+        </div>
+
+        <!-- extreme -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-extreme">Extreme</span>
+                <h3>Boundary and stress cases</h3>
+            </div>
+            <p class="test-group-desc">These push <em>valid</em> data to the edge of the program's limits. Record the measured result, not a claim.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Feature</th><th>Test</th><th>Extreme input</th><th>Measured result</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E1</td><td>Streaks</td><td>Streak of 365 consecutive days</td><td>365 days</td><td>Streak computed correctly, time recorded</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E2</td><td>Habits</td><td>Many habits</td><td>20 habits, all with entries</td><td>Summary and streaks correct, time recorded</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E3</td><td>Trends</td><td>Full year of history</td><td>365 days of entries</td><td>Trend computed correctly, time recorded</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E4</td><td>Entries</td><td>Many entries for one habit</td><td>5,000 entries</td><td>Queries remain responsive, time recorded</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E5</td><td>Streaks</td><td>Best streak spans the whole dataset</td><td>No breaks for 200 days</td><td>Current and best streak both correct</td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E6</td><td>Habits</td><td>Very long habit name</td><td>200-character name</td><td>Accepted or rejected cleanly, no truncation error</td></tr>
+                </tbody>
+            </table>
+            <div class="test-warning">Record the measured time for E1–E4. "The application remained responsive" is not evidence; "the streak calculation completed in 0.04 s over 5,000 entries" is.</div>
+        </div>
+
+        <div class="test-note">
+            <strong>Testing justification paragraph — add this under the tables:</strong> "Testing was conducted across all six techniques. Normal tests confirmed the core workflow; boundary tests confirmed the mood limits, the streak edge cases and the trend classification threshold behave correctly; abnormal tests confirmed both the Python validation layer and the database constraints reject invalid data; and extreme tests confirmed the streak and trend algorithms remain correct and fast with a full year of entries. The testing also exposed a limitation — the trend classification uses hand-chosen thresholds — which is documented rather than hidden."
+        </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="section">
+        <h2><span class="badge">3</span> Video plan</h2>
+        <p class="section-lead">The moderator should be able to verify every success criterion from the video alone. Build the video around the three algorithms — streaks, trends and the database constraints — not the habit list GUI.</p>
+
+        <div class="video-list">
+            <div class="video-item">
+                <span class="video-sc">SC1</span>
+                <div class="video-body">
+                    <h4>Database design</h4>
+                    <p>Show the three tables and the schema, including the FOREIGN KEY, UNIQUE and CHECK constraints. Point to the UNIQUE(habit, day) rule specifically.</p>
+                </div>
+            </div>
+            <div class="video-item highlight">
+                <span class="video-sc">SC2</span>
+                <div class="video-body">
+                    <h4>Streak calculation</h4>
+                    <p>Log three consecutive days, show the current streak = 3. Then break the streak and show it reset to 0 while the best streak is retained.</p>
+                    <div class="video-why">Showing the reset is as important as showing the streak — it proves the algorithm walks backwards rather than counting all completed days.</div>
+                </div>
+            </div>
+            <div class="video-item highlight">
+                <span class="video-sc">SC3</span>
+                <div class="video-body">
+                    <h4>Trend classification</h4>
+                    <p>Show a week that is better than the previous week (improving), a week that is worse (declining), and two equal weeks (stable).</p>
+                    <div class="video-why">Three cases prove the classification rule works in both directions and at zero. This is the most sophisticated algorithm in the project.</div>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC4</span>
+                <div class="video-body">
+                    <h4>Summary statistics</h4>
+                    <p>Enter three moods (4, 7, 10) and show the average = 7. Log two of four entries as complete and show the completion rate = 50%.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC5</span>
+                <div class="video-body">
+                    <h4>Validation — Python layer</h4>
+                    <p>Enter mood 0, mood 11, mood as text, and an empty habit name. Show each being rejected with a message.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC6</span>
+                <div class="video-body">
+                    <h4>Validation — database layer</h4>
+                    <p>Try to log the same habit twice on the same day, and try to add a duplicate habit name. Show the UNIQUE constraints rejecting both.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC7</span>
+                <div class="video-body">
+                    <h4>Motivational feedback</h4>
+                    <p>Show a long streak with an improving trend producing an encouraging message, and a broken streak producing a different one.</p>
+                </div>
+            </div>
+            <div class="video-item highlight">
+                <span class="video-sc">SC8</span>
+                <div class="video-body">
+                    <h4>Extreme testing</h4>
+                    <p>Load a full year of entries, run the streak and trend calculations, and state the measured time.</p>
+                    <div class="video-why">This proves the algorithms hold up with realistic data, which is the evidence most students never record.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-note">
+            <strong>Narration tip:</strong> for every test, state the test type, the expected result and the actual result. For example: "This is a boundary test. Expected: a streak broken today returns a current streak of 0 and keeps the best streak. Actual: current streak 0, best streak 3. This demonstrates that the streak algorithm distinguishes current from best correctly."
+        </div>
+    </div>
+
+    <!-- FINAL TEST -->
+    <div class="final-test">
+        <h2>Final moderator test</h2>
+        <p class="lead">Before submission, could a moderator confidently state each of the following?</p>
+        <ul>
+            <li>The solution appears fully functional.</li>
+            <li>Appropriate computational techniques have been used.</li>
+            <li>At least six techniques are discussed and evaluated.</li>
+            <li>Every technique has an alternative, a limitation and a judgement.</li>
+            <li>Normal, abnormal, boundary and extreme testing are all evidenced.</li>
+            <li>The effectiveness of testing has been justified, not just reported.</li>
+            <li>Every success criterion can be verified through the video.</li>
+        </ul>
+        <div class="after">The first two are already true. The drafted technique sections cover the third and fourth. The testing table covers the fifth and sixth. The video plan covers the seventh.</div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="email-cta">
+        <div>
+            <h3>Finished your write-up and video?</h3>
+            <p>Email Mr Ellis as soon as both are complete so he can review them before submission.</p>
+        </div>
+        <a href="mailto:craig.ellis@isr-school.de?subject=Criterion%20D%20write-up%20and%20video%20finished%20%E2%80%94%20Lamees&body=Hi%20Mr%20Ellis%2C%0A%0AMy%20Criterion%20D%20write-up%20and%20video%20are%20finished.%0A%0AThanks%2C%0ALamees">
+            craig.ellis@isr-school.de
+        </a>
+    </div>
+
+    <div class="footer">
+        <span><strong>Criterion D improvement plan</strong> · Lamees · Habit Tracker · target 10–12</span>
+        <button class="reset-btn" id="resetBtn">Reset ticks</button>
+    </div>
+</div>
+
+<script>
+(function () {
+    var STORAGE_KEY = 'lamees_critD_plan_v1';
+    var ticks = {};
+    try {
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) ticks = JSON.parse(saved) || {};
+    } catch (e) { ticks = {}; }
+
+    var allTickables = Array.prototype.slice.call(document.querySelectorAll('[data-tick]'));
+    allTickables.forEach(function (el, i) { el.dataset.tickKey = 't' + i; });
+
+    function save() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ticks)); } catch (e) {}
+    }
+
+    function updateProgress() {
+        var total = allTickables.length;
+        var done = allTickables.filter(function (el) { return ticks[el.dataset.tickKey]; }).length;
+        var pct = total ? Math.round((done / total) * 100) : 0;
+        document.getElementById('progressFill').style.width = pct + '%';
+        document.getElementById('progressCount').textContent = done + ' / ' + total;
+        var msg = document.getElementById('progressMsg');
+        if (done === 0) {
+            msg.textContent = 'Tick the boxes as you complete each action. Your ticks are saved in this browser.';
+        } else if (done === total) {
+            msg.textContent = 'Every box ticked — email Mr Ellis with your write-up and video.';
+        } else if (pct < 40) {
+            msg.textContent = 'Keep going. The priority is rewriting the six technique sections in your own words.';
+        } else if (pct < 75) {
+            msg.textContent = 'Over halfway. Make sure every test has a measured actual result, not just “Passed”.';
+        } else {
+            msg.textContent = 'Almost there — check the video plan and the final moderator test.';
+        }
+    }
+
+    function render() {
+        allTickables.forEach(function (el) {
+            el.classList.toggle('done', !!ticks[el.dataset.tickKey]);
+        });
+        updateProgress();
+    }
+
+    allTickables.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            if (e.target.closest('a')) return;
+            var key = el.dataset.tickKey;
+            ticks[key] = !ticks[key];
+            save();
+            render();
+        });
+        el.addEventListener('keydown', function (e) {
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); el.click(); }
+        });
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('role', 'checkbox');
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function () {
+        if (!confirm('Reset all ticks? This cannot be undone.')) return;
+        ticks = {};
+        save();
+        render();
+    });
+
+    render();
+})();
+</script>
+</body>
+</html>
