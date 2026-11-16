@@ -339,6 +339,12 @@
             padding: 0.85rem 1.15rem; margin-top: 0.75rem; font-size: 0.9rem;
             color: #1e3c5c; line-height: 1.55;
         }
+        .test-framing {
+            background: #f8fafd; border: 1px solid #d6e0ed; border-radius: 16px;
+            padding: 1.1rem 1.4rem; margin-bottom: 1.5rem; font-size: 0.95rem;
+            color: #1e3c5c; line-height: 1.65;
+        }
+        .test-framing strong { color: #0a2a44; }
 
         /* ---- video ---- */
         .video-list { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -470,6 +476,7 @@
                 <h3>What is holding it back</h3>
                 <ul>
                     <li>Testing justification is too thin — “51 core checks passed” is not enough on its own.</li>
+                    <li>Extreme testing is missing — nothing currently shows the program holds up under load.</li>
                     <li>Screenshots need to clearly show the filtering, classification and sorting engines.</li>
                     <li>Video evidence still needs to be recorded.</li>
                     <li>A few small grammar issues need cleaning up.</li>
@@ -495,6 +502,7 @@
         <p>The evaluation is strong. The testing justification is not yet strong enough. At the moment the write-up says:</p>
         <div class="quote-red">“51 core checks passed.”</div>
         <p>That is a result, not a justification. A moderator needs to know <em>why</em> those tests prove the technique is effective — which decision branches were exercised, which boundaries were checked, and what a failure would have looked like.</p>
+        <p>There is also no extreme testing at all. Boundary tests prove the classification thresholds are correct, but they do not show the program still works with a very large dataset, a very long input, or after many repeated operations. Adding those three tests is one of the cheapest ways to close the gap.</p>
         <p>If the testing discussion is strengthened and the video shows the three strongest engines working, the submission has a realistic pathway into the 11–12 band.</p>
     </div>
 
@@ -506,6 +514,11 @@
                 <h3>Testing justification needs to be explicit</h3>
                 <p>“51 core checks passed” is not enough on its own. Moderators want to know <em>why</em> the tests prove effectiveness. State which branches were exercised, which boundaries were checked, and what the tests demonstrate about the algorithm.</p>
                 <div class="example-strip"><strong>Instead of:</strong> “51 tests passed.”<br><strong>Write:</strong> “Testing covered normal, abnormal and boundary inputs. Classification transitions were validated at every threshold, including −2, −1, 0, 1 and 2. These tests demonstrate that each decision branch within the classification algorithm executes correctly and that all category boundaries behave as intended.”</div>
+            </div>
+            <div class="mistake">
+                <h3>Extreme testing is missing entirely</h3>
+                <p>Abnormal and boundary testing are not the same as extreme testing. Abnormal tests prove the program rejects bad input; boundary tests prove the decision thresholds are correct; extreme tests prove the program still behaves correctly when valid input is pushed to the edge of its limits — large datasets, long inputs, and repeated runs.</p>
+                <div class="example-strip"><strong>Add three extreme tests:</strong> a large dataset (1,000+ universities), a very long search input, and 100 repeated filter/classify/sort operations. Record the <em>measured</em> result for each, not a claim.</div>
             </div>
             <div class="mistake">
                 <h3>Small grammar issues</h3>
@@ -717,7 +730,12 @@
     <!-- TESTING -->
     <div class="section">
         <h2><span class="badge">3</span> Testing evidence</h2>
-        <p class="section-lead">The write-up already says “51 core checks passed”. The work now is to explain what those checks prove. Run each test, record the expected and actual result, and tick it once you have evidence (video or screenshot).</p>
+        <p class="section-lead">The write-up already says “51 core checks passed”. The work now is to explain what those checks prove, and to add extreme testing, which is currently missing entirely. Run each test, record the expected and actual result, and tick it once you have evidence (video or screenshot).</p>
+
+        <div class="test-framing">
+            <strong>Normal, abnormal, boundary and extreme testing are four different things.</strong>
+            Normal tests show the program works when used correctly. Abnormal tests confirm that invalid input is rejected safely. Boundary tests check the decision thresholds. <strong>Extreme testing is separate: it confirms that valid input at the edge of the program's limits — large datasets, long inputs and repeated runs — is still handled correctly and without unacceptable performance.</strong> A report with only abnormal and boundary tests has not shown that the program holds up under load.
+        </div>
 
         <!-- normal -->
         <div class="test-group">
@@ -788,8 +806,29 @@
             <div class="test-warning">The “no matches found” case is one to show explicitly in the video — it is a real user-facing outcome and the Math filter problem makes it easy to demonstrate.</div>
         </div>
 
+        <!-- extreme -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-extreme">Extreme</span>
+                <h3>Boundary and stress cases · currently missing</h3>
+            </div>
+            <p class="test-group-desc">This group is not in the report yet, and it is one of the things blocking 11–12. Extreme tests push <em>valid</em> input to the edge of the program's limits and show it still behaves correctly. For each one, record the <strong>measured</strong> result — “filter returned in 0.3 s over 1,000 records” — not a claim.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Test</th><th>Extreme input</th><th>Measured result</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E1</td><td>Large dataset</td><td>1,000+ universities loaded and filtered</td><td>Record filter time and confirm results correct</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E2</td><td>Long single input</td><td>Very long search string (e.g. 1,000 characters)</td><td>Handled without truncation or error</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E3</td><td>Repeated operations</td><td>100 successive filter / classify / sort runs</td><td>No degradation, no data corruption</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E4</td><td>Maximum valid score</td><td>Score at exactly the top of the valid range</td><td>Classified correctly, no overflow</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+            <div class="test-warning">Record the measured value for every extreme test. “Performance is fast” is not evidence; “filter returned in 0.3 s over 1,000 records” is. If the report currently claims “under 1.5 ms”, replace that with the measured range from E1 or E3.</div>
+        </div>
+
         <div class="test-note">
-            <strong>Additional testing video:</strong> record a short separate clip showing one normal test, one boundary test and one abnormal test in sequence, with the expected and actual result stated aloud for each. Moderators strongly reward this.
+            <strong>Additional testing video:</strong> record a short separate clip showing one normal, one boundary, one abnormal and one extreme test in sequence, with the expected and actual result stated aloud for each. Moderators strongly reward this.
         </div>
     </div>
 
@@ -842,6 +881,14 @@
                     <p>Apply a filter with no matches — the Math filter problem is ideal here — and show the “no matches found” message clearly.</p>
                 </div>
             </div>
+            <div class="video-item highlight">
+                <span class="video-sc">SC7</span>
+                <div class="video-body">
+                    <h4>Extreme testing</h4>
+                    <p>Load the 1,000+ university dataset, run the long search string, and run 100 repeated operations. State the measured time for each.</p>
+                    <div class="video-why">This is the group currently missing from the report. Showing it live is the fastest way to prove the program holds up under load.</div>
+                </div>
+            </div>
         </div>
 
         <div class="video-note">
@@ -858,7 +905,7 @@
             <li>Appropriate computational techniques have been used.</li>
             <li>Implementation choices are evaluated rather than merely described.</li>
             <li>The effectiveness of testing has been justified, not just reported.</li>
-            <li>Normal, abnormal and boundary testing are all evidenced.</li>
+            <li>Normal, abnormal, boundary and extreme testing are all evidenced.</li>
             <li>Every success criterion can be verified through the video.</li>
         </ul>
         <div class="after">The first three are already true — the evaluation in this draft is stronger than most. The next three are the work to do, and they are what move a 9–11 into an 11–12.</div>
@@ -883,7 +930,7 @@
 
 <script>
 (function () {
-    var STORAGE_KEY = 'oscar_critD_plan_v1';
+    var STORAGE_KEY = 'oscar_critD_plan_v2';
     var ticks = {};
     try {
         var saved = localStorage.getItem(STORAGE_KEY);
@@ -909,9 +956,9 @@
         } else if (done === total) {
             msg.textContent = 'Every box ticked — email Mr Ellis with your write-up and video.';
         } else if (pct < 40) {
-            msg.textContent = 'Keep going. The priority is justifying testing effectiveness and showing the three engines in the video.';
+            msg.textContent = 'Keep going. The priority is justifying testing effectiveness and adding the extreme testing group.';
         } else if (pct < 75) {
-            msg.textContent = 'Over halfway. Make sure every boundary test has a recorded result and a sentence saying what it proves.';
+            msg.textContent = 'Over halfway. Make sure every extreme test has a measured result, not a claim.';
         } else {
             msg.textContent = 'Almost there — check the video plan and the final moderator test.';
         }
