@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oscar · Criterion D improvement plan (target 11–12)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f2f5f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1.5rem;
+            display: flex; flex-direction: column; align-items: center;
+            line-height: 1.65;
+            color: #1a2b3c;
+        }
+
+        .container {
+            max-width: 980px; width: 100%;
+            background: white; border-radius: 32px;
+            box-shadow: 0 15px 35px rgba(0, 20, 40, 0.10);
+            padding: 2.5rem 2.75rem; border: 1px solid #e0e7ef;
+        }
+
+        h1 {
+            font-size: 2rem; font-weight: 700; letter-spacing: -0.02em;
+            margin-bottom: 0.3rem; color: #0b1e33;
+        }
+        .subhead {
+            color: #3c5a7a; font-size: 1.02rem; margin-bottom: 2rem;
+            padding-bottom: 1.1rem; border-bottom: 2px dashed #cddae9;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .byline {
+            font-weight: 500; background: #e8f0fe; padding: 0.25rem 1rem;
+            border-radius: 40px; font-size: 0.92rem; color: #1e4b8c;
+        }
+
+        /* ---- progress ---- */
+        .progress-wrap {
+            position: sticky; top: 8px; z-index: 20;
+            background: #ffffffdd; backdrop-filter: blur(6px);
+            border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 0.8rem 1.25rem; margin-bottom: 2rem;
+            box-shadow: 0 6px 18px rgba(0,30,60,0.06);
+        }
+        .progress-top {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; color: #0a2a44; font-size: 0.9rem; margin-bottom: 6px;
+        }
+        .progress-track { height: 12px; background: #e4edf7; border-radius: 40px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; width: 0%; border-radius: 40px;
+            background: linear-gradient(90deg, #2a6f97, #0e7a4b); transition: width 0.25s ease;
+        }
+        .progress-msg { margin-top: 6px; font-size: 0.84rem; color: #4a6785; }
+
+        /* ---- prediction ---- */
+        .prediction {
+            background: #eef4fc; border-radius: 22px; padding: 1.75rem 2rem;
+            margin-bottom: 2.5rem; border: 1px solid #c2d6ea;
+        }
+        .prediction h2 {
+            font-size: 1.3rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.75rem;
+        }
+        .band-pill {
+            background: #0a2a44; color: white; border-radius: 40px;
+            padding: 0.45rem 1.2rem; font-weight: 700; font-size: 1rem;
+            display: inline-block; margin-bottom: 1rem;
+        }
+        .prediction p { margin-bottom: 1rem; font-size: 0.98rem; color: #1e3c5c; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.25rem 0; }
+        .col-box {
+            background: white; border-radius: 18px; padding: 1.25rem 1.4rem;
+            border: 1px solid #d6e0ed;
+        }
+        .col-box h3 {
+            font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid #e0eaf4;
+        }
+        .col-box.strengths h3 { color: #0f5c34; border-bottom-color: #b8ddc6; }
+        .col-box.risks h3 { color: #8a4b00; border-bottom-color: #f0d9b8; }
+        .col-box ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .col-box li {
+            font-size: 0.92rem; padding-left: 1.7rem; position: relative;
+            line-height: 1.45; color: #2a4b6e;
+        }
+        .col-box li::before { position: absolute; left: 0; font-weight: 700; }
+        .strengths li::before { content: "✓"; color: #0f5c34; }
+        .risks li::before { content: "!"; color: #b45309; }
+        .goal-strip {
+            background: #b45309; color: white; border-radius: 40px;
+            padding: 0.55rem 1.25rem; font-weight: 600; font-size: 0.94rem;
+            display: inline-block; margin-top: 0.5rem;
+        }
+
+        /* ---- standout quote ---- */
+        .standout {
+            background: #f2fbf5; border: 2px solid #0e7a4b; border-radius: 22px;
+            padding: 1.5rem 2rem; margin-bottom: 2.5rem;
+        }
+        .standout h2 {
+            font-size: 1.2rem; font-weight: 700; color: #0a3e28; margin-bottom: 0.6rem;
+        }
+        .standout .quote {
+            background: white; border-left: 5px solid #0e7a4b; border-radius: 12px;
+            padding: 1rem 1.25rem; margin: 0.75rem 0; font-style: italic;
+            font-size: 0.95rem; color: #1c4d33; line-height: 1.6;
+        }
+        .standout p { font-size: 0.94rem; color: #1c4d33; margin-bottom: 0.5rem; }
+
+        /* ---- blocking issue ---- */
+        .blocking {
+            background: #fff5f5; border: 2px solid #b91c1c; border-radius: 22px;
+            padding: 1.75rem 2rem; margin-bottom: 2.5rem;
+        }
+        .blocking h2 {
+            font-size: 1.25rem; font-weight: 700; color: #991b1b; margin-bottom: 0.75rem;
+        }
+        .blocking p { font-size: 0.97rem; color: #5c1616; margin-bottom: 0.75rem; }
+        .quote-red {
+            background: white; border-left: 5px solid #991b1b; border-radius: 12px;
+            padding: 1rem 1.25rem; margin: 1rem 0; font-style: italic;
+            font-size: 0.95rem; color: #5c1616; line-height: 1.6;
+        }
+
+        /* ---- section headings ---- */
+        .section { margin-bottom: 3rem; }
+        .section h2 {
+            font-size: 1.5rem; font-weight: 700; color: #0a2a44;
+            margin-bottom: 0.5rem; display: flex; align-items: center; gap: 12px;
+        }
+        .badge {
+            background: #0a2a44; color: white; font-size: 0.85rem;
+            padding: 0.2rem 0.85rem; border-radius: 40px; font-weight: 500;
+        }
+        .section-lead {
+            color: #3c5a7a; font-size: 1rem; margin-bottom: 1.5rem;
+            max-width: 75ch;
+        }
+
+        /* ---- mistake cards ---- */
+        .mistake-stack { display: flex; flex-direction: column; gap: 1rem; }
+        .mistake {
+            background: #fff8f0; border: 1px solid #f0d9b8; border-radius: 18px;
+            padding: 1.25rem 1.5rem; border-left: 6px solid #d97706;
+        }
+        .mistake h3 {
+            font-size: 1rem; font-weight: 700; color: #7c2d12; margin-bottom: 0.5rem;
+        }
+        .mistake p { font-size: 0.94rem; color: #5c3a1e; line-height: 1.6; }
+        .mistake p + p { margin-top: 0.6rem; }
+        .example-strip {
+            background: white; border-radius: 10px; padding: 0.7rem 1rem;
+            margin-top: 0.65rem; font-size: 0.9rem; color: #5c3a1e;
+            border-left: 3px solid #d97706;
+        }
+        .example-strip strong { color: #7c2d12; }
+
+        /* ---- grammar fixes ---- */
+        .grammar-table {
+            width: 100%; border-collapse: collapse; font-size: 0.9rem;
+            background: white; border-radius: 14px; overflow: hidden;
+            border: 1px solid #d6e0ed;
+        }
+        .grammar-table th, .grammar-table td {
+            text-align: left; padding: 0.7rem 1rem; border-bottom: 1px solid #eaf0f7;
+        }
+        .grammar-table th {
+            background: #f4f8fd; color: #1e4b8c; font-weight: 600;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .grammar-table tr:last-child td { border-bottom: none; }
+        .grammar-table .wrong { color: #b13e3e; font-weight: 500; }
+        .grammar-table .right { color: #0f5c34; font-weight: 600; }
+
+        /* ---- rule list ---- */
+        .rule-box {
+            background: #f8fafd; border-radius: 18px; padding: 1.5rem 1.75rem;
+            border: 1px solid #d6e0ed;
+        }
+        .rule-box ol {
+            list-style: none; counter-reset: rule;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem 1.5rem;
+        }
+        .rule-box li {
+            font-size: 0.95rem; padding-left: 2.2rem; position: relative;
+            counter-increment: rule; color: #2a4b6e; line-height: 1.5;
+        }
+        .rule-box li::before {
+            content: counter(rule);
+            position: absolute; left: 0; top: 0;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: #e4edf7; color: #1e4b8c;
+            font-weight: 700; font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .rule-box li.eval-point { color: #0f5c34; font-weight: 600; }
+        .rule-box li.eval-point::before { background: #d9efe2; color: #0f5c34; }
+
+        /* ---- technique cards ---- */
+        .tech-stack { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.25rem; }
+        .tech-card {
+            background: #f8fafd; border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 1.4rem 1.75rem;
+        }
+        .tech-card-head {
+            display: flex; align-items: flex-start; gap: 14px; margin-bottom: 0.6rem;
+        }
+        .tech-num {
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.85rem;
+            width: 30px; height: 30px; min-width: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-top: 1px;
+        }
+        .tech-card h3 {
+            font-size: 1.08rem; font-weight: 700; color: #0a2a44; line-height: 1.35;
+        }
+        .tech-card p {
+            font-size: 0.94rem; color: #2a4b6e; line-height: 1.65;
+            padding-left: 44px;
+        }
+        .tech-card p + p { margin-top: 0.6rem; }
+        .tech-card .why {
+            font-size: 0.92rem; color: #0f5c34; font-weight: 500;
+            padding-left: 44px; margin-top: 0.6rem;
+        }
+        .tech-card .why::before { content: "Why this matters: "; font-weight: 700; }
+
+        /* ---- technique pills ---- */
+        .tech-pills { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; margin-bottom: 0.5rem; }
+        .pill {
+            background: white; border-radius: 40px; padding: 0.4rem 1.1rem;
+            font-weight: 500; border: 1px solid #9bb7d4; color: #113355;
+            font-size: 0.93rem; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.12s; user-select: none;
+        }
+        .pill:hover { border-color: #5b8db8; }
+        .pill.done { background: #e0f2e9; border-color: #0e7a4b; color: #0a3e28; }
+        .pill .pill-box {
+            width: 18px; height: 18px; border: 2px solid #2c5f8a; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            background: white; font-size: 0.65rem; font-weight: 700;
+        }
+        .pill.done .pill-box { background: #1b7e4b; border-color: #1b7e4b; }
+        .pill.done .pill-box::after { content: "✓"; color: white; }
+
+        /* ---- A–I ---- */
+        .ai-list { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.5rem; }
+        .ai-step {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #f8fafd; border: 1px solid #e0eaf4; border-radius: 16px;
+            padding: 1rem 1.3rem;
+        }
+        .ai-letter {
+            background: #e4edf7; color: #1e4b8c; font-weight: 700; font-size: 0.85rem;
+            width: 30px; height: 30px; min-width: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-top: 1px;
+        }
+        .ai-body { flex: 1; }
+        .ai-body h4 { font-size: 0.95rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.3rem; }
+        .ai-body p { font-size: 0.92rem; color: #2a4b6e; line-height: 1.6; }
+        .ai-body .example {
+            background: white; border-left: 3px solid #2a6f97; border-radius: 8px;
+            padding: 0.55rem 0.85rem; margin-top: 0.5rem; font-size: 0.9rem; color: #1e3c5c;
+        }
+        .ai-step.key-eval { background: #f2fbf5; border-color: #b8ddc6; }
+        .ai-step.key-eval .ai-letter { background: #d9efe2; color: #0f5c34; }
+        .ai-step.key-eval h4 { color: #0f5c34; }
+
+        /* ---- evaluation ---- */
+        .eval-section {
+            background: #f2fbf5; border: 2px solid #0e7a4b; border-radius: 22px;
+            padding: 1.75rem 2rem; margin-bottom: 2.5rem;
+        }
+        .eval-section h2 { color: #0a3e28; }
+        .eval-section .badge { background: #0e7a4b; }
+        .eval-section .section-lead { color: #1c4d33; }
+        .eval-section .rule-box { background: white; border-color: #b8ddc6; }
+        .eval-note {
+            background: white; border-radius: 14px; padding: 1.1rem 1.4rem;
+            border: 1px solid #b8ddc6; margin-top: 1.25rem; font-size: 0.94rem;
+            color: #1c4d33; line-height: 1.6;
+        }
+        .eval-note strong { color: #0a3e28; }
+
+        /* ---- test groups ---- */
+        .test-group { margin-bottom: 1.75rem; }
+        .test-group-head {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem;
+        }
+        .test-group-head h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .tag {
+            font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.7rem;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .tag-normal { background: #dcecff; color: #1b4b7a; }
+        .tag-abnormal { background: #ffe0e0; color: #8a1f1f; }
+        .tag-extreme { background: #f3e0ff; color: #5b1f8a; }
+        .tag-boundary { background: #fff0d6; color: #8a4b00; }
+        .test-group-desc {
+            font-size: 0.93rem; color: #3c5a7a; margin-bottom: 0.75rem;
+            max-width: 75ch;
+        }
+        .test-table {
+            width: 100%; border-collapse: collapse; font-size: 0.9rem;
+            background: white; border-radius: 14px; overflow: hidden;
+            border: 1px solid #d6e0ed;
+        }
+        .test-table th, .test-table td {
+            text-align: left; padding: 0.7rem 1rem; border-bottom: 1px solid #eaf0f7;
+        }
+        .test-table th {
+            background: #f4f8fd; color: #1e4b8c; font-weight: 600;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .test-table tr:last-child td { border-bottom: none; }
+        .test-table tr.done td { background: #f2fbf5; }
+        .test-table .tick-cell { width: 40px; }
+        .row-tick {
+            width: 22px; height: 22px; border: 2px solid #2c5f8a; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; background: white; transition: 0.12s;
+        }
+        .row-tick:hover { border-color: #1b7e4b; }
+        .test-table tr.done .row-tick { background: #1b7e4b; border-color: #1b7e4b; }
+        .test-table tr.done .row-tick::after { content: "✓"; color: white; font-size: 0.75rem; font-weight: 700; }
+        .video-flag { font-size: 0.82rem; font-weight: 600; }
+        .video-flag.yes { color: #0e7a4b; }
+        .video-flag.no { color: #9a6a00; }
+        .test-warning {
+            background: #fff5f5; border-left: 4px solid #b91c1c; border-radius: 10px;
+            padding: 0.85rem 1.15rem; margin-top: 0.75rem; font-size: 0.9rem;
+            color: #7f1d1d; line-height: 1.55;
+        }
+        .test-note {
+            background: #f6f9ff; border-left: 4px solid #2a6f97; border-radius: 10px;
+            padding: 0.85rem 1.15rem; margin-top: 0.75rem; font-size: 0.9rem;
+            color: #1e3c5c; line-height: 1.55;
+        }
+
+        /* ---- video ---- */
+        .video-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .video-item {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #f8fafd; border: 1px solid #e0eaf4; border-radius: 16px;
+            padding: 1rem 1.3rem;
+        }
+        .video-sc {
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.78rem;
+            padding: 0.25rem 0.7rem; border-radius: 30px; margin-top: 2px;
+            white-space: nowrap;
+        }
+        .video-body { flex: 1; }
+        .video-body h4 { font-size: 0.96rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.3rem; }
+        .video-body p { font-size: 0.92rem; color: #2a4b6e; line-height: 1.6; }
+        .video-item.highlight {
+            background: #fffaf0; border-color: #f0d9b8;
+        }
+        .video-item.highlight .video-sc { background: #b45309; }
+        .video-why {
+            margin-top: 0.5rem; font-size: 0.88rem; color: #8a4b00; font-weight: 500;
+        }
+        .video-note {
+            background: #f6f9ff; border-left: 4px solid #2a6f97; border-radius: 10px;
+            padding: 1rem 1.25rem; margin-top: 1.25rem; font-size: 0.93rem;
+            color: #1e3c5c; line-height: 1.6;
+        }
+
+        /* ---- final moderator test ---- */
+        .final-test {
+            background: #0a2a44; color: white; border-radius: 24px;
+            padding: 2rem 2.25rem; margin-bottom: 2rem;
+        }
+        .final-test h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .final-test .lead { opacity: 0.9; font-size: 0.97rem; margin-bottom: 1.25rem; }
+        .final-test ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+        .final-test li {
+            padding-left: 2rem; position: relative; font-size: 0.97rem; line-height: 1.5;
+        }
+        .final-test li::before {
+            content: "☐"; position: absolute; left: 0; font-weight: 700;
+            color: #9ec9ff; font-size: 1.1rem;
+        }
+        .final-test .after {
+            margin-top: 1.25rem; font-size: 0.93rem; opacity: 0.85;
+            border-top: 1px solid #ffffff33; padding-top: 1rem; line-height: 1.6;
+        }
+
+        /* ---- email ---- */
+        .email-cta {
+            background: #eef4fc; border: 1px solid #c2d6ea; border-radius: 22px;
+            padding: 1.5rem 2rem; margin-bottom: 1.5rem;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+            gap: 1.25rem;
+        }
+        .email-cta h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .email-cta p { font-size: 0.93rem; color: #3c5a7a; margin-top: 0.25rem; max-width: 60ch; }
+        .email-cta a {
+            background: #0a2a44; color: white; font-weight: 700; text-decoration: none;
+            padding: 0.7rem 1.4rem; border-radius: 40px; font-size: 0.95rem;
+            white-space: nowrap; transition: 0.12s;
+        }
+        .email-cta a:hover { background: #1e4b8c; }
+
+        .footer {
+            margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid #cfddee;
+            font-size: 0.88rem; color: #4a6785;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .reset-btn {
+            background: none; border: 1px solid #9bb7d4; border-radius: 40px;
+            padding: 0.3rem 1rem; font-size: 0.8rem; color: #1e4b6e;
+            cursor: pointer; font-weight: 500;
+        }
+        .reset-btn:hover { background: #eef4fc; }
+
+        @media (max-width: 760px) {
+            .two-col { grid-template-columns: 1fr; }
+            .rule-box ol { grid-template-columns: 1fr; }
+            .email-cta { flex-direction: column; align-items: flex-start; }
+            .tech-card p, .tech-card .why { padding-left: 0; }
+        }
+        @media (max-width: 650px) {
+            .container { padding: 1.75rem 1.5rem; }
+            h1 { font-size: 1.65rem; }
+            .prediction { padding: 1.4rem 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Criterion D improvement plan</h1>
+    <div class="subhead">
+        <span>Predicted 9–11 / 12 → Target 11–12</span>
+        <span class="byline">Oscar · University Recommender</span>
+    </div>
+
+    <!-- progress -->
+    <div class="progress-wrap">
+        <div class="progress-top">
+            <span>Progress</span>
+            <span id="progressCount">0 / 0</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-msg" id="progressMsg">Tick the boxes as you complete each action. Your ticks are saved in this browser.</div>
+    </div>
+
+    <!-- PREDICTION -->
+    <div class="prediction">
+        <h2>Current moderator assessment</h2>
+        <span class="band-pill">Predicted Criterion D: 9–11 / 12</span>
+        <p>This is currently the strongest written Criterion D draft among the projects reviewed, even though the underlying software is less technically complex than some others. The reason is simple: the evaluation is genuine. Limitations, trade-offs, alternatives and design decisions are discussed throughout, which is exactly what moderators reward.</p>
+
+        <div class="two-col">
+            <div class="col-box strengths">
+                <h3>What is working well</h3>
+                <ul>
+                    <li>You are actually evaluating, not just describing — the Mathematics filter problem is a perfect example.</li>
+                    <li>Trade-offs are discussed: JSON is readable and simple but lacks schema validation and indexed updates.</li>
+                    <li>Algorithmic choices are explained: filtering complexity, classification rules, sorting criteria, persistence strategy.</li>
+                    <li>The GUI does not dominate the write-up.</li>
+                    <li>You already recognise that video evidence is necessary — a mature observation many students miss.</li>
+                </ul>
+            </div>
+            <div class="col-box risks">
+                <h3>What is holding it back</h3>
+                <ul>
+                    <li>Testing justification is too thin — “51 core checks passed” is not enough on its own.</li>
+                    <li>Screenshots need to clearly show the filtering, classification and sorting engines.</li>
+                    <li>Video evidence still needs to be recorded.</li>
+                    <li>A few small grammar issues need cleaning up.</li>
+                </ul>
+            </div>
+        </div>
+        <span class="goal-strip">The fix is evidence and polish — the evaluation is already there.</span>
+    </div>
+
+    <!-- STANDOUT -->
+    <div class="standout">
+        <h2>Your biggest strength: genuine evaluation</h2>
+        <p>This sentence stood out immediately:</p>
+        <div class="quote">
+            “The current Math option returns no results because records use descriptions such as Mathematics or Statistics. Standardised field tags and membership checks would address this problem…”
+        </div>
+        <p>Most students write “My filter works.” You wrote “My filter fails in this situation and here is why.” That is moderator-friendly evaluation, and it is what separates a 9–11 draft from a 7–9 one.</p>
+    </div>
+
+    <!-- BLOCKING ISSUE -->
+    <div class="blocking">
+        <h2>The one thing blocking 11–12</h2>
+        <p>The evaluation is strong. The testing justification is not yet strong enough. At the moment the write-up says:</p>
+        <div class="quote-red">“51 core checks passed.”</div>
+        <p>That is a result, not a justification. A moderator needs to know <em>why</em> those tests prove the technique is effective — which decision branches were exercised, which boundaries were checked, and what a failure would have looked like.</p>
+        <p>If the testing discussion is strengthened and the video shows the three strongest engines working, the submission has a realistic pathway into the 11–12 band.</p>
+    </div>
+
+    <!-- MISTAKES -->
+    <div class="section">
+        <h2><span class="badge">!</span> What needs fixing</h2>
+        <div class="mistake-stack">
+            <div class="mistake">
+                <h3>Testing justification needs to be explicit</h3>
+                <p>“51 core checks passed” is not enough on its own. Moderators want to know <em>why</em> the tests prove effectiveness. State which branches were exercised, which boundaries were checked, and what the tests demonstrate about the algorithm.</p>
+                <div class="example-strip"><strong>Instead of:</strong> “51 tests passed.”<br><strong>Write:</strong> “Testing covered normal, abnormal and boundary inputs. Classification transitions were validated at every threshold, including −2, −1, 0, 1 and 2. These tests demonstrate that each decision branch within the classification algorithm executes correctly and that all category boundaries behave as intended.”</div>
+            </div>
+            <div class="mistake">
+                <h3>Small grammar issues</h3>
+                <p>A few grammar points are worth cleaning up. Small issues, but they matter for the final polish.</p>
+                <table class="grammar-table">
+                    <thead>
+                        <tr><th>Current</th><th>Should be</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="wrong">“prevent invalid scores reaching comparisons”</td><td class="right">“prevents invalid scores from reaching comparisons”</td></tr>
+                        <tr><td class="wrong">“This reduce ambiguous input”</td><td class="right">“This reduces ambiguous input”</td></tr>
+                        <tr><td class="wrong">“doesn’t provide neither”</td><td class="right">“provides neither” / “does not provide”</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mistake">
+                <h3>The GUI must not dominate the write-up</h3>
+                <p>You mostly avoid this already. Keep it that way — the filtering, classification and sorting engines are your strongest computational techniques and should be the focus of the write-up and the video.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- THE RULE -->
+    <div class="section">
+        <h2><span class="badge">→</span> What high-scoring Criterion D looks like</h2>
+        <p class="section-lead">For every major technique, the moderator should be able to identify all eight points below. You already achieve points 1 to 5 well — the gap is in points 6 to 8, which are about testing.</p>
+        <div class="rule-box">
+            <ol>
+                <li>What was used?</li>
+                <li>Why was it chosen?</li>
+                <li>What alternative was considered?</li>
+                <li>What limitation exists?</li>
+                <li class="eval-point">Why was the choice still appropriate? <em>(evaluation — already strong)</em></li>
+                <li>How was it tested?</li>
+                <li class="eval-point">Why was that testing effective? <em>(justification — the gap)</em></li>
+                <li class="eval-point">What limitations remain? <em>(evaluation of testing)</em></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- TECHNIQUES -->
+    <div class="section">
+        <h2><span class="badge">1</span> Your strongest techniques</h2>
+        <p class="section-lead">Focus Criterion D around these features rather than the GUI. Each card explains what the technique is, why it is strong moderation material, and what to make sure is covered. Tick each pill once its full A–I subsection is written.</p>
+
+        <div class="tech-pills">
+            <div class="pill" data-tick><div class="pill-box"></div>Filtering engine</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Classification engine</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Sorting engine</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Validation</div>
+            <div class="pill" data-tick><div class="pill-box"></div>JSON persistence</div>
+        </div>
+
+        <div class="tech-stack">
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">1</div>
+                    <h3>Filtering engine</h3>
+                </div>
+                <p>The filtering engine applies location, fee and language filters to the university dataset. You already evaluate it honestly: exact string comparisons create weaknesses, and the Mathematics filter returns no results because records use descriptions such as “Mathematics” or “Statistics”.</p>
+                <p>Keep that evaluation front and centre. It is the strongest paragraph in the draft because it identifies a real failure and proposes a concrete fix (standardised field tags and membership checks). Make sure the screenshot shows the filter actually failing on the Math option, not just succeeding on an easy one.</p>
+                <div class="why">Admitting the Math filter limitation and proposing a fix is exactly the kind of evaluation moderators reward.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">2</div>
+                    <h3>Classification engine</h3>
+                </div>
+                <p>The classification engine sorts universities into reach, match and safe categories based on the user's scores and the university's requirements. You already discuss the shallow-copy decision: it is currently sufficient because the data structures are simple, but it would need to change if the structures became nested.</p>
+                <p>The classification thresholds (−2, −1, 0, 1, 2) are where the strongest testing evidence lives. Make the boundary tests explicit and explain what each one proves about the decision branches.</p>
+                <div class="why">Boundary testing at every threshold is the clearest way to prove the classification algorithm is correct.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">3</div>
+                    <h3>Sorting engine</h3>
+                </div>
+                <p>The sorting engine orders universities according to the chosen criteria. You already note a real limitation: the sort does not account for university reputation or admission probability, which a user might reasonably expect.</p>
+                <p>That is a genuine evaluation point. Keep it, and explain why the current criteria were chosen despite the limitation — for example, that reputation data is subjective and admission probability would require historical data the project does not have.</p>
+                <div class="why">The reputation and admission-probability limitation is a strong evaluation point because it names what a user might expect and explains why it is absent.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">4</div>
+                    <h3>Validation</h3>
+                </div>
+                <p>Validation prevents invalid scores from reaching comparisons. This is the source of most of the abnormal testing in the project, and it is already referenced in the write-up.</p>
+                <p>In the write-up, make the order of checks explicit and show what happens when each one fails. That is the difference between describing validation and demonstrating it.</p>
+                <div class="why">Validation is easy to under-explain — the sequence of checks and the failure behaviour are what matter.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">5</div>
+                    <h3>JSON persistence</h3>
+                </div>
+                <p>Data is stored in a local JSON file. You already evaluate the trade-off: JSON is readable and simple, but it lacks schema validation and indexed updates, and reloading after every change increases file access overhead.</p>
+                <p>Keep that trade-off in the write-up. It is exactly the advantage/limitation style moderators like, and it shows you understand why the storage choice was made rather than simply describing it.</p>
+                <div class="why">The schema-validation and indexing limitations are real, and naming them shows you understand the storage choice.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- A–I -->
+    <div class="section">
+        <h2><span class="badge">2</span> Structure for each technique</h2>
+        <p class="section-lead">Use this structure for every technique. Points F, H and I are the evaluation and justification points — F is already strong, H and I are where the marks are waiting. The examples below use the classification engine.</p>
+
+        <div class="ai-list">
+            <div class="ai-step">
+                <div class="ai-letter">A</div>
+                <div class="ai-body">
+                    <h4>What is the technique?</h4>
+                    <p>Explain the technique in one or two sentences, independent of your project.</p>
+                    <div class="example">“Classification assigns each item to a category by comparing a score against a set of thresholds.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">B</div>
+                <div class="ai-body">
+                    <h4>How is it used in my solution?</h4>
+                    <p>Connect the technique directly to your project.</p>
+                    <div class="example">“Each university is classified as reach, match or safe by comparing the user's score to the university's requirement score and applying threshold rules.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">C</div>
+                <div class="ai-body">
+                    <h4>Why did I choose it?</h4>
+                    <p>Give the computational reason, not just the user-facing benefit.</p>
+                    <div class="example">“Threshold classification keeps the decision rule transparent, so the user can see exactly why a university was placed in a category.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">D</div>
+                <div class="ai-body">
+                    <h4>What alternative could I have used?</h4>
+                    <p>Name a realistic alternative and say what is wrong with it.</p>
+                    <div class="example">“A probabilistic model could estimate admission likelihood more precisely, but it would require historical admission data the project does not have.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">E</div>
+                <div class="ai-body">
+                    <h4>What is a limitation?</h4>
+                    <p>Every technique has one. Naming it honestly strengthens the evaluation.</p>
+                    <div class="example">“The classification uses a shallow copy of each record, which is currently sufficient because the data structures are simple but would need to change if the structures became nested.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">F</div>
+                <div class="ai-body">
+                    <h4>Why is my choice still appropriate? <em>(evaluation — already strong)</em></h4>
+                    <p>Weigh the limitation against the benefit and reach a judgement.</p>
+                    <div class="example">“Although the shallow copy limits future flexibility, it keeps the current implementation simple and the data structures do not yet require deep copying.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">G</div>
+                <div class="ai-body">
+                    <h4>How did I test it?</h4>
+                    <p>Describe the normal, abnormal and boundary cases you actually ran.</p>
+                    <div class="example">“I tested classification at every threshold, including −2, −1, 0, 1 and 2, plus scores far below and far above the range.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">H</div>
+                <div class="ai-body">
+                    <h4>Why was the testing effective? <em>(justification — the gap)</em></h4>
+                    <p>Explain what the tests prove — not just that they were run.</p>
+                    <div class="example">“Testing at every threshold demonstrates that each decision branch executes correctly and that category boundaries behave as intended, which is the part of the algorithm most likely to contain off-by-one errors.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">I</div>
+                <div class="ai-body">
+                    <h4>What does the testing NOT prove? <em>(evaluation of testing)</em></h4>
+                    <p>Name what remains unproven. This is the point most students skip.</p>
+                    <div class="example">“The tests confirm the classification rules behave correctly, but they do not prove that the threshold values themselves match real admission probabilities.”</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EVALUATION -->
+    <div class="eval-section section">
+        <h2><span class="badge">E</span> Evaluation checklist</h2>
+        <p class="section-lead">You already do this well. Use it to confirm nothing has slipped, especially for the testing discussion.</p>
+
+        <div class="rule-box">
+            <ol>
+                <li>I discussed at least one alternative for each major technique.</li>
+                <li>I discussed the advantages of my chosen approach.</li>
+                <li>I discussed the limitations of my chosen approach.</li>
+                <li class="eval-point">I explained why the advantages outweigh the limitations.</li>
+                <li>I explained what the testing demonstrates.</li>
+                <li class="eval-point">I explained what the testing does not prove.</li>
+            </ol>
+        </div>
+
+        <div class="eval-note">
+            <strong>The quick evaluation test:</strong> if a paragraph can be rewritten as “I used X because it does Y”, it is probably explanation. If it includes an advantage, a limitation, an alternative and a trade-off, it is probably evaluation.
+        </div>
+    </div>
+
+    <!-- TESTING -->
+    <div class="section">
+        <h2><span class="badge">3</span> Testing evidence</h2>
+        <p class="section-lead">The write-up already says “51 core checks passed”. The work now is to explain what those checks prove. Run each test, record the expected and actual result, and tick it once you have evidence (video or screenshot).</p>
+
+        <!-- normal -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-normal">Normal</span>
+                <h3>Expected user behaviour</h3>
+            </div>
+            <p class="test-group-desc">These are the tests that show the system works when used correctly. Make sure each one has a recorded actual result and a sentence saying what it proves.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Feature</th><th>Test</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N1</td><td>Filtering</td><td>Location filter returns matching universities</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N2</td><td>Filtering</td><td>Fee filter returns universities within range</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N3</td><td>Filtering</td><td>Language filter returns matching universities</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N4</td><td>Classification</td><td>Reach / match / safe assigned correctly for typical scores</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N5</td><td>Sorting</td><td>Sort by chosen criterion orders results correctly</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N6</td><td>Persistence</td><td>Add university, restart, confirm saved</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- boundary -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-boundary">Boundary</span>
+                <h3>Thresholds and edges</h3>
+            </div>
+            <p class="test-group-desc">This is where the strongest testing evidence lives. Boundary tests prove that every decision branch in the classification algorithm executes correctly.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Feature</th><th>Test</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B1</td><td>Classification</td><td>Score difference −2 falls into correct category</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B2</td><td>Classification</td><td>Score difference −1 falls into correct category</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B3</td><td>Classification</td><td>Score difference 0 falls into correct category</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B4</td><td>Classification</td><td>Score difference 1 falls into correct category</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B5</td><td>Classification</td><td>Score difference 2 falls into correct category</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B6</td><td>Classification</td><td>Score far above range still classifies safely</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>B7</td><td>Classification</td><td>Score far below range still classifies safely</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+            <div class="test-note">These boundary tests are the ones to write up explicitly. They demonstrate that every decision branch executes correctly and that the category boundaries behave as intended — which is the part of the algorithm most likely to contain errors.</div>
+        </div>
+
+        <!-- abnormal -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-abnormal">Abnormal</span>
+                <h3>Invalid or unexpected input</h3>
+            </div>
+            <p class="test-group-desc">These show the system rejects bad input safely. Several are probably already covered by the 51 core checks — make sure each one has a recorded actual result.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Test</th><th>Expected result</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A1</td><td>Invalid score entered</td><td>Rejected with a clear message</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A2</td><td>Score outside valid range</td><td>Rejected safely</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A3</td><td>Empty filter selection</td><td>Handled without error</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A4</td><td>No results match filters</td><td>“No matches found” shown clearly</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A5</td><td>Corrupted JSON file</td><td>Graceful handling, no crash</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A6</td><td>University with missing fields</td><td>Excluded or flagged safely</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+            <div class="test-warning">The “no matches found” case is one to show explicitly in the video — it is a real user-facing outcome and the Math filter problem makes it easy to demonstrate.</div>
+        </div>
+
+        <div class="test-note">
+            <strong>Additional testing video:</strong> record a short separate clip showing one normal test, one boundary test and one abnormal test in sequence, with the expected and actual result stated aloud for each. Moderators strongly reward this.
+        </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="section">
+        <h2><span class="badge">4</span> Video plan</h2>
+        <p class="section-lead">The moderator should be able to verify every success criterion from the video alone. Build the video around the filtering, classification and sorting engines — not the GUI. Each step below states what to show and what the demonstration proves.</p>
+
+        <div class="video-list">
+            <div class="video-item">
+                <span class="video-sc">SC1</span>
+                <div class="video-body">
+                    <h4>Input validation</h4>
+                    <p>Enter an invalid score and an out-of-range score, and show each being rejected safely.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC2</span>
+                <div class="video-body">
+                    <h4>Filtering</h4>
+                    <p>Apply the location filter, the fee filter and the language filter, showing each one narrowing the results correctly.</p>
+                </div>
+            </div>
+            <div class="video-item highlight">
+                <span class="video-sc">SC3</span>
+                <div class="video-body">
+                    <h4>Classification</h4>
+                    <p>Show universities being classified as reach, match and safe, and point out which threshold produced each category.</p>
+                    <div class="video-why">Show the boundary cases — the university at exactly the threshold and one just either side — so the moderator can see the decision rule working.</div>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC4</span>
+                <div class="video-body">
+                    <h4>Sorting</h4>
+                    <p>Apply each sort criterion and show the list reordering correctly.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC5</span>
+                <div class="video-body">
+                    <h4>Persistence</h4>
+                    <p>Add a university, restart the program, and confirm the addition survived the restart.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC6</span>
+                <div class="video-body">
+                    <h4>Empty results</h4>
+                    <p>Apply a filter with no matches — the Math filter problem is ideal here — and show the “no matches found” message clearly.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-note">
+            <strong>Narration tip:</strong> for every test, state the test type, the expected result and the actual result. For example: “This is a boundary test. Expected: a score difference of 1 is classified as match. Actual: it is classified as match. This demonstrates that the threshold rule executes correctly at the boundary.” That is the language moderators reward.
+        </div>
+    </div>
+
+    <!-- FINAL TEST -->
+    <div class="final-test">
+        <h2>Final moderator test</h2>
+        <p class="lead">Before submission, could a moderator confidently state each of the following?</p>
+        <ul>
+            <li>The solution appears fully functional.</li>
+            <li>Appropriate computational techniques have been used.</li>
+            <li>Implementation choices are evaluated rather than merely described.</li>
+            <li>The effectiveness of testing has been justified, not just reported.</li>
+            <li>Normal, abnormal and boundary testing are all evidenced.</li>
+            <li>Every success criterion can be verified through the video.</li>
+        </ul>
+        <div class="after">The first three are already true — the evaluation in this draft is stronger than most. The next three are the work to do, and they are what move a 9–11 into an 11–12.</div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="email-cta">
+        <div>
+            <h3>Finished your write-up and video?</h3>
+            <p>Email Mr Ellis as soon as both are complete so he can review them before submission.</p>
+        </div>
+        <a href="mailto:craig.ellis@isr-school.de?subject=Criterion%20D%20write-up%20and%20video%20finished%20%E2%80%94%20Oscar&body=Hi%20Mr%20Ellis%2C%0A%0AMy%20Criterion%20D%20write-up%20and%20video%20are%20finished.%0A%0AThanks%2C%0AOscar">
+            craig.ellis@isr-school.de
+        </a>
+    </div>
+
+    <div class="footer">
+        <span><strong>Criterion D improvement plan</strong> · Oscar · University Recommender · target 11–12</span>
+        <button class="reset-btn" id="resetBtn">Reset ticks</button>
+    </div>
+</div>
+
+<script>
+(function () {
+    var STORAGE_KEY = 'oscar_critD_plan_v1';
+    var ticks = {};
+    try {
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) ticks = JSON.parse(saved) || {};
+    } catch (e) { ticks = {}; }
+
+    var allTickables = Array.prototype.slice.call(document.querySelectorAll('[data-tick]'));
+    allTickables.forEach(function (el, i) { el.dataset.tickKey = 't' + i; });
+
+    function save() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ticks)); } catch (e) {}
+    }
+
+    function updateProgress() {
+        var total = allTickables.length;
+        var done = allTickables.filter(function (el) { return ticks[el.dataset.tickKey]; }).length;
+        var pct = total ? Math.round((done / total) * 100) : 0;
+        document.getElementById('progressFill').style.width = pct + '%';
+        document.getElementById('progressCount').textContent = done + ' / ' + total;
+        var msg = document.getElementById('progressMsg');
+        if (done === 0) {
+            msg.textContent = 'Tick the boxes as you complete each action. Your ticks are saved in this browser.';
+        } else if (done === total) {
+            msg.textContent = 'Every box ticked — email Mr Ellis with your write-up and video.';
+        } else if (pct < 40) {
+            msg.textContent = 'Keep going. The priority is justifying testing effectiveness and showing the three engines in the video.';
+        } else if (pct < 75) {
+            msg.textContent = 'Over halfway. Make sure every boundary test has a recorded result and a sentence saying what it proves.';
+        } else {
+            msg.textContent = 'Almost there — check the video plan and the final moderator test.';
+        }
+    }
+
+    function render() {
+        allTickables.forEach(function (el) {
+            el.classList.toggle('done', !!ticks[el.dataset.tickKey]);
+        });
+        updateProgress();
+    }
+
+    allTickables.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            if (e.target.closest('a')) return;
+            var key = el.dataset.tickKey;
+            ticks[key] = !ticks[key];
+            save();
+            render();
+        });
+        el.addEventListener('keydown', function (e) {
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); el.click(); }
+        });
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('role', 'checkbox');
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function () {
+        if (!confirm('Reset all ticks? This cannot be undone.')) return;
+        ticks = {};
+        save();
+        render();
+    });
+
+    render();
+})();
+</script>
+</body>
+</html>
