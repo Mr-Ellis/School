@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucas · Criterion D improvement plan (target 11–12)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f2f5f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1.5rem;
+            display: flex; flex-direction: column; align-items: center;
+            line-height: 1.65;
+            color: #1a2b3c;
+        }
+
+        .container {
+            max-width: 980px; width: 100%;
+            background: white; border-radius: 32px;
+            box-shadow: 0 15px 35px rgba(0, 20, 40, 0.10);
+            padding: 2.5rem 2.75rem; border: 1px solid #e0e7ef;
+        }
+
+        h1 {
+            font-size: 2rem; font-weight: 700; letter-spacing: -0.02em;
+            margin-bottom: 0.3rem; color: #0b1e33;
+        }
+        .subhead {
+            color: #3c5a7a; font-size: 1.02rem; margin-bottom: 2rem;
+            padding-bottom: 1.1rem; border-bottom: 2px dashed #cddae9;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .byline {
+            font-weight: 500; background: #e8f0fe; padding: 0.25rem 1rem;
+            border-radius: 40px; font-size: 0.92rem; color: #1e4b8c;
+        }
+
+        /* ---- progress ---- */
+        .progress-wrap {
+            position: sticky; top: 8px; z-index: 20;
+            background: #ffffffdd; backdrop-filter: blur(6px);
+            border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 0.8rem 1.25rem; margin-bottom: 2rem;
+            box-shadow: 0 6px 18px rgba(0,30,60,0.06);
+        }
+        .progress-top {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; color: #0a2a44; font-size: 0.9rem; margin-bottom: 6px;
+        }
+        .progress-track { height: 12px; background: #e4edf7; border-radius: 40px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; width: 0%; border-radius: 40px;
+            background: linear-gradient(90deg, #2a6f97, #0e7a4b); transition: width 0.25s ease;
+        }
+        .progress-msg { margin-top: 6px; font-size: 0.84rem; color: #4a6785; }
+
+        /* ---- prediction ---- */
+        .prediction {
+            background: #eef4fc; border-radius: 22px; padding: 1.75rem 2rem;
+            margin-bottom: 2.5rem; border: 1px solid #c2d6ea;
+        }
+        .prediction h2 {
+            font-size: 1.3rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.75rem;
+        }
+        .band-pill {
+            background: #0a2a44; color: white; border-radius: 40px;
+            padding: 0.45rem 1.2rem; font-weight: 700; font-size: 1rem;
+            display: inline-block; margin-bottom: 1rem;
+        }
+        .prediction p { margin-bottom: 1rem; font-size: 0.98rem; color: #1e3c5c; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.25rem 0; }
+        .col-box {
+            background: white; border-radius: 18px; padding: 1.25rem 1.4rem;
+            border: 1px solid #d6e0ed;
+        }
+        .col-box h3 {
+            font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid #e0eaf4;
+        }
+        .col-box.strengths h3 { color: #0f5c34; border-bottom-color: #b8ddc6; }
+        .col-box.risks h3 { color: #8a4b00; border-bottom-color: #f0d9b8; }
+        .col-box ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .col-box li {
+            font-size: 0.92rem; padding-left: 1.7rem; position: relative;
+            line-height: 1.45; color: #2a4b6e;
+        }
+        .col-box li::before { position: absolute; left: 0; font-weight: 700; }
+        .strengths li::before { content: "✓"; color: #0f5c34; }
+        .risks li::before { content: "!"; color: #b45309; }
+        .goal-strip {
+            background: #b45309; color: white; border-radius: 40px;
+            padding: 0.55rem 1.25rem; font-weight: 600; font-size: 0.94rem;
+            display: inline-block; margin-top: 0.5rem;
+        }
+
+        /* ---- blocking issue ---- */
+        .blocking {
+            background: #fff5f5; border: 2px solid #b91c1c; border-radius: 22px;
+            padding: 1.75rem 2rem; margin-bottom: 2.5rem;
+        }
+        .blocking h2 {
+            font-size: 1.25rem; font-weight: 700; color: #991b1b; margin-bottom: 0.75rem;
+        }
+        .blocking p { font-size: 0.97rem; color: #5c1616; margin-bottom: 0.75rem; }
+        .quote {
+            background: white; border-left: 5px solid #991b1b; border-radius: 12px;
+            padding: 1rem 1.25rem; margin: 1rem 0; font-style: italic;
+            font-size: 0.95rem; color: #5c1616; line-height: 1.6;
+        }
+
+        /* ---- section headings ---- */
+        .section { margin-bottom: 3rem; }
+        .section h2 {
+            font-size: 1.5rem; font-weight: 700; color: #0a2a44;
+            margin-bottom: 0.5rem; display: flex; align-items: center; gap: 12px;
+        }
+        .badge {
+            background: #0a2a44; color: white; font-size: 0.85rem;
+            padding: 0.2rem 0.85rem; border-radius: 40px; font-weight: 500;
+        }
+        .section-lead {
+            color: #3c5a7a; font-size: 1rem; margin-bottom: 1.5rem;
+            max-width: 75ch;
+        }
+
+        /* ---- mistake cards ---- */
+        .mistake-stack { display: flex; flex-direction: column; gap: 1rem; }
+        .mistake {
+            background: #fff8f0; border: 1px solid #f0d9b8; border-radius: 18px;
+            padding: 1.25rem 1.5rem; border-left: 6px solid #d97706;
+        }
+        .mistake h3 {
+            font-size: 1rem; font-weight: 700; color: #7c2d12; margin-bottom: 0.5rem;
+        }
+        .mistake p { font-size: 0.94rem; color: #5c3a1e; line-height: 1.6; }
+        .mistake p + p { margin-top: 0.6rem; }
+        .example-strip {
+            background: white; border-radius: 10px; padding: 0.7rem 1rem;
+            margin-top: 0.65rem; font-size: 0.9rem; color: #5c3a1e;
+            border-left: 3px solid #d97706;
+        }
+        .example-strip strong { color: #7c2d12; }
+        .jargon-list { list-style:none; display:flex; flex-wrap:wrap; gap:0.4rem 0.7rem; margin-top:0.6rem; }
+        .jargon-list li {
+            font-size: 0.82rem; background: #fff0d6; color: #8a4b00;
+            padding: 0.15rem 0.65rem; border-radius: 20px; font-weight: 500;
+        }
+
+        /* ---- rule list ---- */
+        .rule-box {
+            background: #f8fafd; border-radius: 18px; padding: 1.5rem 1.75rem;
+            border: 1px solid #d6e0ed;
+        }
+        .rule-box ol {
+            list-style: none; counter-reset: rule;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem 1.5rem;
+        }
+        .rule-box li {
+            font-size: 0.95rem; padding-left: 2.2rem; position: relative;
+            counter-increment: rule; color: #2a4b6e; line-height: 1.5;
+        }
+        .rule-box li::before {
+            content: counter(rule);
+            position: absolute; left: 0; top: 0;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: #e4edf7; color: #1e4b8c;
+            font-weight: 700; font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .rule-box li.eval-point { color: #0f5c34; font-weight: 600; }
+        .rule-box li.eval-point::before { background: #d9efe2; color: #0f5c34; }
+
+        /* ---- technique cards ---- */
+        .tech-stack { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.25rem; }
+        .tech-card {
+            background: #f8fafd; border: 1px solid #d6e0ed; border-radius: 18px;
+            padding: 1.4rem 1.75rem;
+        }
+        .tech-card-head {
+            display: flex; align-items: flex-start; gap: 14px; margin-bottom: 0.6rem;
+        }
+        .tech-num {
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.85rem;
+            width: 30px; height: 30px; min-width: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-top: 1px;
+        }
+        .tech-card h3 {
+            font-size: 1.08rem; font-weight: 700; color: #0a2a44; line-height: 1.35;
+        }
+        .tech-card p {
+            font-size: 0.94rem; color: #2a4b6e; line-height: 1.65;
+            padding-left: 44px;
+        }
+        .tech-card p + p { margin-top: 0.6rem; }
+        .tech-card .why {
+            font-size: 0.92rem; color: #0f5c34; font-weight: 500;
+            padding-left: 44px; margin-top: 0.6rem;
+        }
+        .tech-card .why::before { content: "Why this matters: "; font-weight: 700; }
+
+        /* ---- technique pills ---- */
+        .tech-pills { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; margin-bottom: 0.5rem; }
+        .pill {
+            background: white; border-radius: 40px; padding: 0.4rem 1.1rem;
+            font-weight: 500; border: 1px solid #9bb7d4; color: #113355;
+            font-size: 0.93rem; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.12s; user-select: none;
+        }
+        .pill:hover { border-color: #5b8db8; }
+        .pill.done { background: #e0f2e9; border-color: #0e7a4b; color: #0a3e28; }
+        .pill .pill-box {
+            width: 18px; height: 18px; border: 2px solid #2c5f8a; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            background: white; font-size: 0.65rem; font-weight: 700;
+        }
+        .pill.done .pill-box { background: #1b7e4b; border-color: #1b7e4b; }
+        .pill.done .pill-box::after { content: "✓"; color: white; }
+
+        /* ---- A–I ---- */
+        .ai-list { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.5rem; }
+        .ai-step {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #f8fafd; border: 1px solid #e0eaf4; border-radius: 16px;
+            padding: 1rem 1.3rem;
+        }
+        .ai-letter {
+            background: #e4edf7; color: #1e4b8c; font-weight: 700; font-size: 0.85rem;
+            width: 30px; height: 30px; min-width: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-top: 1px;
+        }
+        .ai-body { flex: 1; }
+        .ai-body h4 { font-size: 0.95rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.3rem; }
+        .ai-body p { font-size: 0.92rem; color: #2a4b6e; line-height: 1.6; }
+        .ai-body .example {
+            background: white; border-left: 3px solid #2a6f97; border-radius: 8px;
+            padding: 0.55rem 0.85rem; margin-top: 0.5rem; font-size: 0.9rem; color: #1e3c5c;
+        }
+        .ai-step.key-eval { background: #f2fbf5; border-color: #b8ddc6; }
+        .ai-step.key-eval .ai-letter { background: #d9efe2; color: #0f5c34; }
+        .ai-step.key-eval h4 { color: #0f5c34; }
+
+        /* ---- evaluation ---- */
+        .eval-section {
+            background: #f2fbf5; border: 2px solid #0e7a4b; border-radius: 22px;
+            padding: 1.75rem 2rem; margin-bottom: 2.5rem;
+        }
+        .eval-section h2 { color: #0a3e28; }
+        .eval-section .badge { background: #0e7a4b; }
+        .eval-section .section-lead { color: #1c4d33; }
+        .eval-section .rule-box { background: white; border-color: #b8ddc6; }
+        .eval-note {
+            background: white; border-radius: 14px; padding: 1.1rem 1.4rem;
+            border: 1px solid #b8ddc6; margin-top: 1.25rem; font-size: 0.94rem;
+            color: #1c4d33; line-height: 1.6;
+        }
+        .eval-note strong { color: #0a3e28; }
+
+        /* ---- test groups ---- */
+        .test-group { margin-bottom: 1.75rem; }
+        .test-group-head {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem;
+        }
+        .test-group-head h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .tag {
+            font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.7rem;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .tag-normal { background: #dcecff; color: #1b4b7a; }
+        .tag-abnormal { background: #ffe0e0; color: #8a1f1f; }
+        .tag-extreme { background: #f3e0ff; color: #5b1f8a; }
+        .test-group-desc {
+            font-size: 0.93rem; color: #3c5a7a; margin-bottom: 0.75rem;
+            max-width: 75ch;
+        }
+        .test-table {
+            width: 100%; border-collapse: collapse; font-size: 0.9rem;
+            background: white; border-radius: 14px; overflow: hidden;
+            border: 1px solid #d6e0ed;
+        }
+        .test-table th, .test-table td {
+            text-align: left; padding: 0.7rem 1rem; border-bottom: 1px solid #eaf0f7;
+        }
+        .test-table th {
+            background: #f4f8fd; color: #1e4b8c; font-weight: 600;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .test-table tr:last-child td { border-bottom: none; }
+        .test-table tr.done td { background: #f2fbf5; }
+        .test-table .tick-cell { width: 40px; }
+        .row-tick {
+            width: 22px; height: 22px; border: 2px solid #2c5f8a; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; background: white; transition: 0.12s;
+        }
+        .row-tick:hover { border-color: #1b7e4b; }
+        .test-table tr.done .row-tick { background: #1b7e4b; border-color: #1b7e4b; }
+        .test-table tr.done .row-tick::after { content: "✓"; color: white; font-size: 0.75rem; font-weight: 700; }
+        .video-flag { font-size: 0.82rem; font-weight: 600; }
+        .video-flag.yes { color: #0e7a4b; }
+        .video-flag.no { color: #9a6a00; }
+        .test-warning {
+            background: #fff5f5; border-left: 4px solid #b91c1c; border-radius: 10px;
+            padding: 0.85rem 1.15rem; margin-top: 0.75rem; font-size: 0.9rem;
+            color: #7f1d1d; line-height: 1.55;
+        }
+        .test-note {
+            background: #f6f9ff; border-left: 4px solid #2a6f97; border-radius: 10px;
+            padding: 0.85rem 1.15rem; margin-top: 0.75rem; font-size: 0.9rem;
+            color: #1e3c5c; line-height: 1.55;
+        }
+
+        /* ---- video ---- */
+        .video-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .video-item {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #f8fafd; border: 1px solid #e0eaf4; border-radius: 16px;
+            padding: 1rem 1.3rem;
+        }
+        .video-sc {
+            background: #0a2a44; color: white; font-weight: 700; font-size: 0.78rem;
+            padding: 0.25rem 0.7rem; border-radius: 30px; margin-top: 2px;
+            white-space: nowrap;
+        }
+        .video-body { flex: 1; }
+        .video-body h4 { font-size: 0.96rem; font-weight: 700; color: #0a2a44; margin-bottom: 0.3rem; }
+        .video-body p { font-size: 0.92rem; color: #2a4b6e; line-height: 1.6; }
+        .video-item.highlight {
+            background: #fffaf0; border-color: #f0d9b8;
+        }
+        .video-item.highlight .video-sc { background: #b45309; }
+        .video-why {
+            margin-top: 0.5rem; font-size: 0.88rem; color: #8a4b00; font-weight: 500;
+        }
+        .video-note {
+            background: #f6f9ff; border-left: 4px solid #2a6f97; border-radius: 10px;
+            padding: 1rem 1.25rem; margin-top: 1.25rem; font-size: 0.93rem;
+            color: #1e3c5c; line-height: 1.6;
+        }
+
+        /* ---- final moderator test ---- */
+        .final-test {
+            background: #0a2a44; color: white; border-radius: 24px;
+            padding: 2rem 2.25rem; margin-bottom: 2rem;
+        }
+        .final-test h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .final-test .lead { opacity: 0.9; font-size: 0.97rem; margin-bottom: 1.25rem; }
+        .final-test ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+        .final-test li {
+            padding-left: 2rem; position: relative; font-size: 0.97rem; line-height: 1.5;
+        }
+        .final-test li::before {
+            content: "☐"; position: absolute; left: 0; font-weight: 700;
+            color: #9ec9ff; font-size: 1.1rem;
+        }
+        .final-test .after {
+            margin-top: 1.25rem; font-size: 0.93rem; opacity: 0.85;
+            border-top: 1px solid #ffffff33; padding-top: 1rem; line-height: 1.6;
+        }
+
+        /* ---- email ---- */
+        .email-cta {
+            background: #eef4fc; border: 1px solid #c2d6ea; border-radius: 22px;
+            padding: 1.5rem 2rem; margin-bottom: 1.5rem;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+            gap: 1.25rem;
+        }
+        .email-cta h3 { font-size: 1.15rem; font-weight: 700; color: #0a2a44; }
+        .email-cta p { font-size: 0.93rem; color: #3c5a7a; margin-top: 0.25rem; max-width: 60ch; }
+        .email-cta a {
+            background: #0a2a44; color: white; font-weight: 700; text-decoration: none;
+            padding: 0.7rem 1.4rem; border-radius: 40px; font-size: 0.95rem;
+            white-space: nowrap; transition: 0.12s;
+        }
+        .email-cta a:hover { background: #1e4b8c; }
+
+        .footer {
+            margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid #cfddee;
+            font-size: 0.88rem; color: #4a6785;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .reset-btn {
+            background: none; border: 1px solid #9bb7d4; border-radius: 40px;
+            padding: 0.3rem 1rem; font-size: 0.8rem; color: #1e4b6e;
+            cursor: pointer; font-weight: 500;
+        }
+        .reset-btn:hover { background: #eef4fc; }
+
+        @media (max-width: 760px) {
+            .two-col { grid-template-columns: 1fr; }
+            .rule-box ol { grid-template-columns: 1fr; }
+            .email-cta { flex-direction: column; align-items: flex-start; }
+            .tech-card p, .tech-card .why { padding-left: 0; }
+        }
+        @media (max-width: 650px) {
+            .container { padding: 1.75rem 1.5rem; }
+            h1 { font-size: 1.65rem; }
+            .prediction { padding: 1.4rem 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Criterion D improvement plan</h1>
+    <div class="subhead">
+        <span>Predicted 9–11 / 12 → Target 11–12</span>
+        <span class="byline">Lucas · Password Strength Analyser</span>
+    </div>
+
+    <!-- progress -->
+    <div class="progress-wrap">
+        <div class="progress-top">
+            <span>Progress</span>
+            <span id="progressCount">0 / 0</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-msg" id="progressMsg">Tick the boxes as you complete each action. Your ticks are saved in this browser.</div>
+    </div>
+
+    <!-- PREDICTION -->
+    <div class="prediction">
+        <h2>Current moderator assessment</h2>
+        <span class="band-pill">Predicted Criterion D: 9–11 / 12</span>
+        <p>This is not automatically a 12, but it is operating much closer to the top band than most projects. The write-up is built on real computational techniques rather than interface design, and evaluation is actually present rather than merely promised. The remaining work is about tightening the language, replacing absolute claims with evidence, and justifying testing effectiveness explicitly.</p>
+
+        <div class="two-col">
+            <div class="col-box strengths">
+                <h3>What is working well</h3>
+                <ul>
+                    <li>Real computational techniques: entropy calculation, brute-force modelling, hash-based breach detection, regex pattern detection, sequence detection, penalty engine, boundary validation.</li>
+                    <li>Evaluation is genuinely present: justification, alternatives, limitations and trade-offs appear throughout.</li>
+                    <li>Excellent code choice: pattern engines, cracking model, entropy engine and lookup architecture rather than buttons and labels.</li>
+                    <li>Strong linkage between code and explanations, with screenshots, justification and testing references.</li>
+                </ul>
+            </div>
+            <div class="col-box risks">
+                <h3>What is holding it back</h3>
+                <ul>
+                    <li>The language is becoming too computer-science heavy for the audience.</li>
+                    <li>Several performance claims look overconfident and are not backed by rigorous evidence.</li>
+                    <li>Testing effectiveness is referenced but not always explained.</li>
+                    <li>Some theoretical claims use absolute wording (“perfectly demonstrating”).</li>
+                </ul>
+            </div>
+        </div>
+        <span class="goal-strip">The fix is clarity and evidence — not more jargon.</span>
+    </div>
+
+    <!-- BLOCKING ISSUE -->
+    <div class="blocking">
+        <h2>The one thing blocking 11–12</h2>
+        <p>The write-up repeatedly says “proven by Test T01”, “approved through Test T06”, “confirmed by Test T12”, but does not always explain <em>why</em> those tests prove the technique is effective. That is probably the single biggest opportunity to push toward 11–12.</p>
+        <div class="quote">
+            “The implementation is strong, the techniques are genuine, and evaluation is present. However, testing effectiveness is referenced rather than justified, and some performance claims are stated with more certainty than the evidence supports.”
+        </div>
+        <p>If the testing discussion is strengthened, the jargon is reduced, and the absolute claims are replaced with evidence-based ones, the submission has a realistic pathway into the 11–12 band.</p>
+    </div>
+
+    <!-- MISTAKES -->
+    <div class="section">
+        <h2><span class="badge">!</span> The biggest mistakes you could make</h2>
+        <div class="mistake-stack">
+            <div class="mistake">
+                <h3>Letting the language become too computer-science heavy</h3>
+                <p>This is the largest issue. Some passages use terms that sound impressive but make the paragraph harder to follow than the implementation actually is. Moderators reward clear technical explanation more than advanced-sounding terminology. Ask yourself: could the client understand this paragraph? If the answer is “probably not”, simplify it.</p>
+                <p>Examples of terms that need justifying or simplifying:</p>
+                <ul class="jargon-list">
+                    <li>hardware performance counters (TSC, HPET)</li>
+                    <li>GIL contention</li>
+                    <li>B-tree latency</li>
+                    <li>deterministic finite automata</li>
+                    <li>open addressing hash tables</li>
+                </ul>
+            </div>
+            <div class="mistake">
+                <h3>Making performance claims that look overconfident</h3>
+                <p>Statements like “under 1.5 ms”, “under 5 ms” and “O(1) lookup &lt;0.05 ms” sound precise, but the code does not appear to provide rigorous evidence for every exact value. Moderators generally prefer an honest measured range to a claimed guarantee.</p>
+                <div class="example-strip"><strong>Instead of:</strong> “This will always be less than 5 ms.”<br><strong>Write:</strong> “Testing showed average latency between X and Y ms over N runs.”</div>
+            </div>
+            <div class="mistake">
+                <h3>Using absolute wording for theoretical claims</h3>
+                <p>Nothing in IB moderation is really “perfect”. Safer wording — “effectively demonstrates”, “provides evidence that”, “strongly suggests” — is both more accurate and more convincing to a moderator.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- THE RULE -->
+    <div class="section">
+        <h2><span class="badge">→</span> What high-scoring Criterion D looks like</h2>
+        <p class="section-lead">For every major technique, the moderator should be able to identify all eight points below. The implementation sections already achieve most of them — the gap is in points 6 to 8, which are about testing.</p>
+        <div class="rule-box">
+            <ol>
+                <li>What was used?</li>
+                <li>Why was it chosen?</li>
+                <li>What alternative was considered?</li>
+                <li>What limitation exists?</li>
+                <li class="eval-point">Why was the choice still appropriate? <em>(evaluation)</em></li>
+                <li>How was it tested?</li>
+                <li class="eval-point">Why was that testing effective? <em>(justification)</em></li>
+                <li class="eval-point">What limitations remain? <em>(evaluation of testing)</em></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- TECHNIQUES -->
+    <div class="section">
+        <h2><span class="badge">1</span> Your strongest techniques</h2>
+        <p class="section-lead">Focus Criterion D around these features rather than the interface. Each card explains what the technique is, why it is strong moderation material, and what to make sure you cover. Tick each pill once its full A–I subsection is written.</p>
+
+        <div class="tech-pills">
+            <div class="pill" data-tick><div class="pill-box"></div>Entropy calculation</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Brute-force cracking model</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Hash-based breach detection</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Regex pattern detection</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Sequence detection</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Penalty engine</div>
+            <div class="pill" data-tick><div class="pill-box"></div>Boundary validation</div>
+        </div>
+
+        <div class="tech-stack">
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">1</div>
+                    <h3>Entropy calculation</h3>
+                </div>
+                <p>The entropy engine implements the formula E = L × log₂(R), calculating password entropy from length and character-set size in the <code>calculate_entropy()</code> function. This is a genuine mathematical model, not a lookup table.</p>
+                <p>The write-up already discusses the limitation — entropy assumes randomness and therefore needs correction mechanisms for predictable passwords. Keep that discussion, and make sure the correction mechanisms are explained as part of the same technique rather than as a separate feature.</p>
+                <div class="why">This is the clearest example of the project applying a mathematical model rather than pattern-matching alone.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">2</div>
+                    <h3>Brute-force cracking model</h3>
+                </div>
+                <p>The cracking model estimates how long a password would take to crack under a given guess rate. It turns entropy into a user-facing estimate and is the part of the system most likely to be questioned, so the assumptions need to be explicit.</p>
+                <p>Make sure the write-up states the guess rate used, why that rate was chosen, and what a realistic alternative would be. That is the evaluation the moderator is looking for.</p>
+                <div class="why">The cracking model is where evaluation matters most — the assumptions are the technique.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">3</div>
+                    <h3>Hash-based breach detection</h3>
+                </div>
+                <p>Breach detection uses a Python set of hashed passwords and looks up the candidate password's hash in constant time. The write-up already notes the trade-off: local breach datasets improve privacy but cannot remain fully up to date, and set lookups are faster but consume memory.</p>
+                <p>Keep both halves of that trade-off explicit. They are exactly the kind of evaluation moderators reward.</p>
+                <div class="why">The privacy-versus-recency trade-off is a real design decision, not a description of what a set is.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">4</div>
+                    <h3>Regex pattern detection</h3>
+                </div>
+                <p>Repeat detection uses the regular expression <code>r'(.)\1{2,}'</code> to find repeated character sequences. Keyboard-walk and sequence detection use sliding-window analysis rather than regex alone.</p>
+                <p>The write-up already notes that QWERTY detection excludes other keyboard layouts. That is a good limitation — keep it, and explain why the exclusion was acceptable for the intended users.</p>
+                <div class="why">The layout limitation is a strong evaluation point; the detection method itself is the technique.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">5</div>
+                    <h3>Sequence detection</h3>
+                </div>
+                <p>Sequence recognition detects keyboard walks, alphabet sequences and number sequences using sliding-window analysis. It is one of the more complex pieces of pattern logic in the project.</p>
+                <p>Show this in the video with a passphrase that contains a recognisable sequence and one that does not — the contrast makes the algorithm visible.</p>
+                <div class="why">Sequence detection is the technique most likely to be under-explained in the write-up and most impressive when demonstrated.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">6</div>
+                    <h3>Penalty engine</h3>
+                </div>
+                <p>The penalty engine applies deductions to the raw entropy score for detected weaknesses. It is the part of the system that turns independent detection results into a single judgement.</p>
+                <p>Make sure the write-up explains how the penalties combine — whether they are additive, capped, or weighted — and why that combination was chosen over the alternatives.</p>
+                <div class="why">The combination rule is a genuine design decision; describing it as “penalties are applied” is not.</div>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-card-head">
+                    <div class="tech-num">7</div>
+                    <h3>Boundary validation</h3>
+                </div>
+                <p>Boundary validation checks that inputs fall within expected ranges before they are used by the rest of the pipeline. It is the source of most of the abnormal testing in the project.</p>
+                <p>In the write-up, make the order of checks explicit and show what happens when each one fails. That is the difference between describing validation and demonstrating it.</p>
+                <div class="why">Validation is easy to under-explain — the sequence of checks and the failure behaviour are what matter.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- A–I -->
+    <div class="section">
+        <h2><span class="badge">2</span> Structure for each technique</h2>
+        <p class="section-lead">Use this structure for every technique. Points F, H and I are the evaluation and justification points — those are what push a report from 9–11 into 11–12. The examples below use the hash-based breach detection technique.</p>
+
+        <div class="ai-list">
+            <div class="ai-step">
+                <div class="ai-letter">A</div>
+                <div class="ai-body">
+                    <h4>What is the technique?</h4>
+                    <p>Explain the technique in one or two sentences, independent of your project.</p>
+                    <div class="example">“Hash-based breach detection stores known breached passwords as hashes in a set, so a candidate password can be checked in constant time without storing the plaintext passwords.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">B</div>
+                <div class="ai-body">
+                    <h4>How is it used in my solution?</h4>
+                    <p>Connect the technique directly to your project.</p>
+                    <div class="example">“When a password is entered, its hash is looked up in the local breach set; if it is found, the password is flagged as compromised.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">C</div>
+                <div class="ai-body">
+                    <h4>Why did I choose it?</h4>
+                    <p>Give the computational reason, not just the user-facing benefit.</p>
+                    <div class="example">“A set lookup is O(1) on average, so checking against a large breach list does not slow the analysis down.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">D</div>
+                <div class="ai-body">
+                    <h4>What alternative could I have used?</h4>
+                    <p>Name a realistic alternative and say what is wrong with it.</p>
+                    <div class="example">“A live online breach API would be more up to date, but it would require a network connection and would send the password to a third party.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">E</div>
+                <div class="ai-body">
+                    <h4>What is a limitation?</h4>
+                    <p>Every technique has one. Naming it honestly strengthens the evaluation.</p>
+                    <div class="example">“The local dataset cannot remain fully up to date, and the set consumes memory proportional to the number of stored hashes.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">F</div>
+                <div class="ai-body">
+                    <h4>Why is my choice still appropriate? <em>(evaluation)</em></h4>
+                    <p>Weigh the limitation against the benefit and reach a judgement.</p>
+                    <div class="example">“Although the dataset cannot be perfectly current, local hashing keeps passwords private and the memory cost is acceptable for the intended dataset size.”</div>
+                </div>
+            </div>
+            <div class="ai-step">
+                <div class="ai-letter">G</div>
+                <div class="ai-body">
+                    <h4>How did I test it?</h4>
+                    <p>Describe the normal, abnormal and extreme cases you actually ran.</p>
+                    <div class="example">“I tested a known breached password, a known safe password, an empty input, and a lookup against a breach set of 10,000 hashes.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">H</div>
+                <div class="ai-body">
+                    <h4>Why was the testing effective? <em>(justification)</em></h4>
+                    <p>Explain what the tests prove — not just that they were run.</p>
+                    <div class="example">“The normal tests confirmed known-breach and known-safe passwords are classified correctly, and the extreme test showed the lookup remained fast with a large breach set, which supports the O(1) design claim.”</div>
+                </div>
+            </div>
+            <div class="ai-step key-eval">
+                <div class="ai-letter">I</div>
+                <div class="ai-body">
+                    <h4>What does the testing NOT prove? <em>(evaluation of testing)</em></h4>
+                    <p>Name what remains unproven. This is the point most students skip.</p>
+                    <div class="example">“The tests confirm the lookup works on the dataset I used, but they do not prove the system would detect a password that has been breached since the dataset was last updated.”</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EVALUATION -->
+    <div class="eval-section section">
+        <h2><span class="badge">E</span> Evaluation checklist</h2>
+        <p class="section-lead">The implementation sections already evaluate well. Use this to confirm nothing has slipped, especially for the testing discussion.</p>
+
+        <div class="rule-box">
+            <ol>
+                <li>I discussed at least one alternative for each major technique.</li>
+                <li>I discussed the advantages of my chosen approach.</li>
+                <li>I discussed the limitations of my chosen approach.</li>
+                <li class="eval-point">I explained why the advantages outweigh the limitations.</li>
+                <li>I explained what the testing demonstrates.</li>
+                <li class="eval-point">I explained what the testing does not prove.</li>
+            </ol>
+        </div>
+
+        <div class="eval-note">
+            <strong>The quick evaluation test:</strong> if a paragraph can be rewritten as “I used X because it does Y”, it is probably explanation. If it includes an advantage, a limitation, an alternative and a trade-off, it is probably evaluation.
+        </div>
+    </div>
+
+    <!-- TESTING -->
+    <div class="section">
+        <h2><span class="badge">3</span> Testing evidence</h2>
+        <p class="section-lead">The write-up already references specific tests (T01, T06, T12). The work now is to explain what each test proves, and to add explicit extreme testing where it is currently thin. Run each test, record the expected and actual result, and tick it once you have evidence (video or screenshot).</p>
+
+        <!-- normal -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-normal">Normal</span>
+                <h3>Expected user behaviour</h3>
+            </div>
+            <p class="test-group-desc">These are the tests that show the system works when used correctly. Make sure each one has a recorded actual result and a sentence saying what it proves.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Feature</th><th>Test</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N1</td><td>Entropy calculation</td><td>Known password produces expected entropy value</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N2</td><td>Breach detection</td><td>Known breached password is flagged</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N3</td><td>Breach detection</td><td>Known safe password is not flagged</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N4</td><td>Pattern detection</td><td>Password containing "1234" is penalised</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N5</td><td>Sequence detection</td><td>Keyboard walk "qwerty" is detected</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N6</td><td>Penalty engine</td><td>Weak password receives a lower score than a strong one</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>N7</td><td>Cracking model</td><td>Estimated crack time increases with entropy</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- abnormal -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-abnormal">Abnormal</span>
+                <h3>Invalid or unexpected input</h3>
+            </div>
+            <p class="test-group-desc">These show the system rejects bad input safely. Several are probably already referenced in the write-up — make sure each one has a recorded actual result.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Test</th><th>Expected result</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A1</td><td>Empty password</td><td>Rejected with a clear message</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A2</td><td>Password over maximum length</td><td>Rejected or truncated safely</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A3</td><td>Non-string input</td><td>Rejected without crashing</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A4</td><td>Unicode / emoji password</td><td>Handled without error</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A5</td><td>Missing breach dataset</td><td>Graceful fallback, no crash</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>A6</td><td>Corrupted breach dataset</td><td>Error handled, analysis continues</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+            <div class="test-warning">The write-up already references some of these tests. The gap is explaining <em>what each failure proves</em> — for example, that the boundary validation stops invalid input before it reaches the entropy calculation.</div>
+        </div>
+
+        <!-- extreme -->
+        <div class="test-group">
+            <div class="test-group-head">
+                <span class="tag tag-extreme">Extreme</span>
+                <h3>Boundary and stress cases</h3>
+            </div>
+            <p class="test-group-desc">This is where the performance claims need evidence. For each test, record the measured value rather than a claimed guarantee.</p>
+            <table class="test-table">
+                <thead>
+                    <tr><th class="tick-cell"></th><th>ID</th><th>Test</th><th>Extreme input</th><th>In video?</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E1</td><td>Very long password</td><td>1,000 characters</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E2</td><td>Large breach set</td><td>100,000 hashes</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E3</td><td>Repeated analyses</td><td>1,000 consecutive passwords</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E4</td><td>Maximum entropy case</td><td>Random 64-character mixed password</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E5</td><td>Minimum entropy case</td><td>Single repeated character</td><td><span class="video-flag yes">Yes</span></td></tr>
+                    <tr data-tick><td class="tick-cell"><div class="row-tick"></div></td><td>E6</td><td>Latency under load</td><td>100 analyses in sequence</td><td><span class="video-flag yes">Yes</span></td></tr>
+                </tbody>
+            </table>
+            <div class="test-warning">For each extreme test, record the measured value and the range — “average latency was 2.1 ms over 100 runs” is evidence; “latency is under 5 ms” is a claim. Replace any absolute performance statement in the write-up with the measured range.</div>
+        </div>
+
+        <div class="test-note">
+            <strong>Additional testing video:</strong> record a short separate clip showing one normal test, one abnormal test and one extreme test in sequence, with the expected and actual result stated aloud for each. Moderators strongly reward this.
+        </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="section">
+        <h2><span class="badge">4</span> Video plan</h2>
+        <p class="section-lead">The moderator should be able to verify every success criterion from the video alone. Build the video around the algorithms — entropy, cracking model, breach detection, sequence detection and the penalty engine — not the interface.</p>
+
+        <div class="video-list">
+            <div class="video-item">
+                <span class="video-sc">SC1</span>
+                <div class="video-body">
+                    <h4>Entropy calculation</h4>
+                    <p>Enter a known password and show the computed entropy value. Say the formula and the length and character-set values used.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC2</span>
+                <div class="video-body">
+                    <h4>Cracking model</h4>
+                    <p>Show the estimated crack time for a weak password and a strong one, and state the guess rate assumed.</p>
+                </div>
+            </div>
+            <div class="video-item highlight">
+                <span class="video-sc">SC3</span>
+                <div class="video-body">
+                    <h4>Breach detection</h4>
+                    <p>Show a known breached password being flagged and a known safe password being accepted.</p>
+                    <div class="video-why">Show the hash lookup working on both a match and a non-match — that proves the lookup, not just the output.</div>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC4</span>
+                <div class="video-body">
+                    <h4>Regex repeat detection</h4>
+                    <p>Enter a password with three or more repeated characters and show the penalty applied.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC5</span>
+                <div class="video-body">
+                    <h4>Sequence detection</h4>
+                    <p>Enter a password containing "qwerty" or "1234" and show the sequence detected and penalised.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC6</span>
+                <div class="video-body">
+                    <h4>Penalty engine</h4>
+                    <p>Compare two passwords with similar entropy but different detected weaknesses, and show the final scores diverge.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC7</span>
+                <div class="video-body">
+                    <h4>Boundary validation</h4>
+                    <p>Enter empty input, over-length input and non-string input, and show each being rejected safely.</p>
+                </div>
+            </div>
+            <div class="video-item">
+                <span class="video-sc">SC8</span>
+                <div class="video-body">
+                    <h4>Extreme testing</h4>
+                    <p>Run the large breach set and the 100-analysis sequence, and state the measured latency range rather than a claimed guarantee.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-note">
+            <strong>Narration tip:</strong> for every test, state the test type, the expected result and the actual result. For example: “This is an extreme test. Expected: the lookup remains fast with 100,000 hashes. Actual: average latency was 2.1 ms over 100 runs. This supports the O(1) design claim.” That is the language moderators reward.
+        </div>
+    </div>
+
+    <!-- FINAL TEST -->
+    <div class="final-test">
+        <h2>Final moderator test</h2>
+        <p class="lead">Before submission, could a moderator confidently state each of the following?</p>
+        <ul>
+            <li>The solution appears fully functional.</li>
+            <li>Appropriate computational techniques have been used.</li>
+            <li>Implementation choices are evaluated rather than merely described.</li>
+            <li>The effectiveness of testing has been justified, not just referenced.</li>
+            <li>Normal, abnormal and extreme testing are all evidenced.</li>
+            <li>Performance claims are backed by measured evidence.</li>
+            <li>Every success criterion can be verified through the video.</li>
+        </ul>
+        <div class="after">The first two are already true. The next five are the work to do — they are what move a 9–11 into an 11–12.</div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="email-cta">
+        <div>
+            <h3>Finished your write-up and video?</h3>
+            <p>Email Mr Ellis as soon as both are complete so he can review them before submission.</p>
+        </div>
+        <a href="mailto:craig.ellis@isr-school.de?subject=Criterion%20D%20write-up%20and%20video%20finished%20%E2%80%94%20Lucas&body=Hi%20Mr%20Ellis%2C%0A%0AMy%20Criterion%20D%20write-up%20and%20video%20are%20finished.%0A%0AThanks%2C%0ALucas">
+            craig.ellis@isr-school.de
+        </a>
+    </div>
+
+    <div class="footer">
+        <span><strong>Criterion D improvement plan</strong> · Lucas · Password Strength Analyser · target 11–12</span>
+        <button class="reset-btn" id="resetBtn">Reset ticks</button>
+    </div>
+</div>
+
+<script>
+(function () {
+    var STORAGE_KEY = 'lucas_critD_plan_v1';
+    var ticks = {};
+    try {
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) ticks = JSON.parse(saved) || {};
+    } catch (e) { ticks = {}; }
+
+    var allTickables = Array.prototype.slice.call(document.querySelectorAll('[data-tick]'));
+    allTickables.forEach(function (el, i) { el.dataset.tickKey = 't' + i; });
+
+    function save() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ticks)); } catch (e) {}
+    }
+
+    function updateProgress() {
+        var total = allTickables.length;
+        var done = allTickables.filter(function (el) { return ticks[el.dataset.tickKey]; }).length;
+        var pct = total ? Math.round((done / total) * 100) : 0;
+        document.getElementById('progressFill').style.width = pct + '%';
+        document.getElementById('progressCount').textContent = done + ' / ' + total;
+        var msg = document.getElementById('progressMsg');
+        if (done === 0) {
+            msg.textContent = 'Tick the boxes as you complete each action. Your ticks are saved in this browser.';
+        } else if (done === total) {
+            msg.textContent = 'Every box ticked — email Mr Ellis with your write-up and video.';
+        } else if (pct < 40) {
+            msg.textContent = 'Keep going. The priority is justifying testing effectiveness and replacing absolute claims with measured evidence.';
+        } else if (pct < 75) {
+            msg.textContent = 'Over halfway. Make sure every performance claim has a measured range behind it.';
+        } else {
+            msg.textContent = 'Almost there — check the video plan and the final moderator test.';
+        }
+    }
+
+    function render() {
+        allTickables.forEach(function (el) {
+            el.classList.toggle('done', !!ticks[el.dataset.tickKey]);
+        });
+        updateProgress();
+    }
+
+    allTickables.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            if (e.target.closest('a')) return;
+            var key = el.dataset.tickKey;
+            ticks[key] = !ticks[key];
+            save();
+            render();
+        });
+        el.addEventListener('keydown', function (e) {
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); el.click(); }
+        });
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('role', 'checkbox');
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function () {
+        if (!confirm('Reset all ticks? This cannot be undone.')) return;
+        ticks = {};
+        save();
+        render();
+    });
+
+    render();
+})();
+</script>
+</body>
+</html>
