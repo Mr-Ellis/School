@@ -141,48 +141,6 @@
             max-width: 75ch;
         }
 
-        /* ---- mistake cards ---- */
-        .mistake-stack { display: flex; flex-direction: column; gap: 1rem; }
-        .mistake {
-            background: #fff8f0; border: 1px solid #f0d9b8; border-radius: 18px;
-            padding: 1.25rem 1.5rem; border-left: 6px solid #d97706;
-        }
-        .mistake h3 {
-            font-size: 1rem; font-weight: 700; color: #7c2d12; margin-bottom: 0.5rem;
-        }
-        .mistake p { font-size: 0.94rem; color: #5c3a1e; line-height: 1.6; }
-        .mistake p + p { margin-top: 0.6rem; }
-        .example-strip {
-            background: white; border-radius: 10px; padding: 0.7rem 1rem;
-            margin-top: 0.65rem; font-size: 0.9rem; color: #5c3a1e;
-            border-left: 3px solid #d97706;
-        }
-        .example-strip strong { color: #7c2d12; }
-
-        /* ---- rule list ---- */
-        .rule-box {
-            background: #f8fafd; border-radius: 18px; padding: 1.5rem 1.75rem;
-            border: 1px solid #d6e0ed;
-        }
-        .rule-box ol {
-            list-style: none; counter-reset: rule;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem 1.5rem;
-        }
-        .rule-box li {
-            font-size: 0.95rem; padding-left: 2.2rem; position: relative;
-            counter-increment: rule; color: #2a4b6e; line-height: 1.5;
-        }
-        .rule-box li::before {
-            content: counter(rule);
-            position: absolute; left: 0; top: 0;
-            width: 24px; height: 24px; border-radius: 50%;
-            background: #e4edf7; color: #1e4b8c;
-            font-weight: 700; font-size: 0.8rem;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .rule-box li.eval-point { color: #0f5c34; font-weight: 600; }
-        .rule-box li.eval-point::before { background: #d9efe2; color: #0f5c34; }
-
         /* ---- technique cards ---- */
         .tech-stack { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.25rem; }
         .tech-card {
@@ -209,6 +167,7 @@
         }
         .status-written { background: #d9efe2; color: #0f5c34; }
         .status-missing { background: #ffe0e0; color: #8a1f1f; }
+        .status-optional { background: #fff0d6; color: #8a4b00; }
         .tech-card p {
             font-size: 0.94rem; color: #2a4b6e; line-height: 1.65;
             padding-left: 44px;
@@ -219,6 +178,30 @@
             padding-left: 44px; margin-top: 0.6rem;
         }
         .tech-card .why::before { content: "Why this matters: "; font-weight: 700; }
+
+        /* ---- CRUD definition box ---- */
+        .crud-box {
+            background: #eef4fc; border: 1px solid #c2d6ea; border-radius: 14px;
+            padding: 1rem 1.3rem; margin: 0.75rem 0 0.5rem 44px;
+            font-size: 0.92rem; color: #1e3c5c; line-height: 1.6;
+        }
+        .crud-box strong {
+            display: block; font-size: 0.95rem; color: #0a2a44; margin-bottom: 0.4rem;
+        }
+        .crud-list {
+            list-style: none; display: grid;
+            grid-template-columns: auto 1fr; gap: 0.35rem 0.8rem;
+            margin: 0.5rem 0 0;
+        }
+        .crud-list li { display: contents; }
+        .crud-list .letter {
+            font-weight: 700; color: #0a2a44; text-align: right;
+        }
+        .crud-list .desc { color: #2a4b6e; }
+        .crud-example {
+            margin-top: 0.6rem; font-size: 0.88rem; color: #0f5c34; font-weight: 500;
+        }
+        .crud-example::before { content: "In your IB Tracker: "; font-weight: 700; }
 
         /* ---- technique pills ---- */
         .tech-pills { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; margin-bottom: 0.5rem; }
@@ -422,6 +405,7 @@
             .rule-box ol { grid-template-columns: 1fr; }
             .email-cta { flex-direction: column; align-items: flex-start; }
             .tech-card p, .tech-card .why { padding-left: 0; }
+            .crud-box { margin-left: 0; }
         }
         @media (max-width: 650px) {
             .container { padding: 1.75rem 1.5rem; }
@@ -596,10 +580,22 @@
             <div class="tech-card">
                 <div class="tech-card-head">
                     <div class="tech-num">7</div>
-                    <h3>Assessment management (CRUD) <span class="status status-missing">optional — add if space allows</span></h3>
+                    <h3>Assessment management (CRUD) <span class="status status-optional">optional — add if space allows</span></h3>
                 </div>
-                <p>Adding, editing and deleting assessments is the core user workflow. If you have room, a short section on the CRUD operations — and the persistence write that follows each one — completes the picture.</p>
-                <div class="why">Useful but not essential — the three sections above are the priority.</div>
+
+                <div class="crud-box">
+                    <strong>What does CRUD stand for?</strong>
+                    <ul class="crud-list">
+                        <li><span class="letter">C</span><span class="desc"><strong>Create</strong> — add a new record</span></li>
+                        <li><span class="letter">R</span><span class="desc"><strong>Read</strong> — view or retrieve existing records</span></li>
+                        <li><span class="letter">U</span><span class="desc"><strong>Update</strong> — edit an existing record</span></li>
+                        <li><span class="letter">D</span><span class="desc"><strong>Delete</strong> — remove a record</span></li>
+                    </ul>
+                    <div class="crud-example">Create = add an assessment (T4); Read = view all six subjects (T20); Update = edit 75 → 85 (T18); Delete = remove an assessment (T19).</div>
+                </div>
+
+                <p>Adding, editing and deleting assessments is the core user workflow, and each operation triggers an immediate JSON write. If you have room, a short section on the CRUD operations — and the persistence write that follows each one — completes the picture.</p>
+                <div class="why">Useful but not essential — the three sections above are the priority. CRUD alone is not impressive, because every data-driven app has it; what matters is what happens after each operation (the persistence write, the recalculation, the grade re-mapping).</div>
             </div>
         </div>
     </div>
@@ -920,7 +916,7 @@
 
 <script>
 (function () {
-    var STORAGE_KEY = 'sara_critD_plan_v1';
+    var STORAGE_KEY = 'sara_critD_plan_v2';
     var ticks = {};
     try {
         var saved = localStorage.getItem(STORAGE_KEY);
