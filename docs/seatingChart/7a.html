@@ -100,6 +100,7 @@
             display: flex;
             gap: 0.75rem;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .toolbar-right {
@@ -138,6 +139,13 @@
             border-color: #eea236;
         }
         .btn-spin:hover { background: #ec971f; border-color: #d58512; }
+
+        .btn-random {
+            background: #8e44ad;
+            color: white;
+            border-color: #7d3c98;
+        }
+        .btn-random:hover { background: #6c3483; border-color: #5b2c6f; }
 
         /* Random Name Display */
         .random-display {
@@ -364,19 +372,46 @@
         .bot-10 { top: 85%; left: 77.5%; width: 7%; }
         .bot-11 { top: 85%; left: 85%; width: 7%; }
 
+        /* LANDSCAPE PRINT STYLES */
+        @page {
+            size: landscape;
+            margin: 1cm;
+        }
         @media print {
-            body { background: white; height: auto; overflow: visible; padding: 0; }
-            .chart-container { box-shadow: none; padding: 0; max-width: none; height: auto; }
-            .toolbar, .room-badge, .class-selector { display: none !important; }
+            body { 
+                background: white; 
+                height: auto; 
+                overflow: visible; 
+                padding: 0; 
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .chart-container { 
+                box-shadow: none; 
+                padding: 0; 
+                max-width: none; 
+                height: 100vh; 
+                border-radius: 0;
+            }
+            .toolbar, .room-badge, .class-selector, .random-display { display: none !important; }
             header { border-bottom: 2px solid #000; margin-bottom: 10px; }
-            h1 { color: #000; }
-            .room-layout { border: 2px solid #000; background: none; height: 800px; }
-            .desk { box-shadow: none; border: 1px solid #000; background: white !important; color: black !important; }
+            h1 { color: #000; font-size: 1.2rem; }
+            .room-layout { 
+                border: 2px solid #000; 
+                background: none; 
+                height: 90vh; /* Take up remaining page height */
+                page-break-inside: avoid;
+            }
+            .desk { 
+                box-shadow: none; 
+                border: 1px solid #000; 
+                background: white !important; 
+                color: black !important; 
+            }
             .desk-label { color: #000; }
-            .student-name { color: #000; font-size: 1rem; }
+            .student-name { color: #000; font-size: 0.9rem; }
             .empty-desk { border: 1px dashed #000; }
             .whiteboard, .door, .door-arc { border-color: #000; color: #000; background: white; }
-            .random-display { display: none !important; }
         }
     </style>
 </head>
@@ -390,6 +425,7 @@
                     <option value="7a">Class 7A</option>
                     <option value="7b">Class 7B</option>
                     <option value="7c">Class 7C</option>
+                    <option value="7d">Class 7D</option>
                 </optgroup>
                 <optgroup label="Year 8">
                     <option value="8a">Class 8A</option>
@@ -419,6 +455,7 @@
 
     <div class="toolbar">
         <div class="toolbar-left">
+            <button class="btn btn-random" id="randomizeBtn" title="Randomize all seats">🔀 Randomize All</button>
             <button class="btn btn-spin" id="spinBtn">🎲 Random Student</button>
             <div class="random-display" id="randomDisplay">
                 <span>👉</span> <span id="randomNameText">Name</span>
@@ -439,28 +476,25 @@
 </div>
 
 <script>
-    // --- DATA ---
-    // Since I don't have the actual names for the other 15 classes, 
-    // I have generated placeholder names for them. 
-    // To edit the names, just change the strings in the arrays below!
-    
     const CLASS_DATA = {
         "7a": ["Anirudh Anandasundararaman", "Batu Boylu", "Mila Chen", "Charles Dingendorf", "Iris Ho", "Alisa Hu", "Philian Kampmann", "Don Li", "Liam Langensiepen", "Junchi Liu", "Felicia Ljungqvist", "Kaan Özcan", "Mert Öztürk", "Kai Penka", "Maximilian Schmidt", "Mirtó Simiantonakis", "Max Sun", "Constantin Volberg", "Joshua Wagenfeld", "Anqing Xiang", "Joan Yan", "Minghan Ye", "Qianyu Zhan", "Emma Zhang"],
-        "7b": ["Student A1", "Student A2", "Student A3", "Student A4", "Student A5", "Student A6", "Student A7", "Student A8", "Student A9", "Student A10", "Student A11", "Student A12", "Student A13", "Student A14", "Student A15", "Student A16", "Student A17", "Student A18", "Student A19", "Student A20", "Student A21", "Student A22", "Student A23", "Student A24"],
-        "7c": ["Student B1", "Student B2", "Student B3", "Student B4", "Student B5", "Student B6", "Student B7", "Student B8", "Student B9", "Student B10", "Student B11", "Student B12", "Student B13", "Student B14", "Student B15", "Student B16", "Student B17", "Student B18", "Student B19", "Student B20", "Student B21", "Student B22", "Student B23", "Student B24"],
-        "8a": ["Student C1", "Student C2", "Student C3", "Student C4", "Student C5", "Student C6", "Student C7", "Student C8", "Student C9", "Student C10", "Student C11", "Student C12", "Student C13", "Student C14", "Student C15", "Student C16", "Student C17", "Student C18", "Student C19", "Student C20", "Student C21", "Student C22", "Student C23", "Student C24"],
-        "8b": ["Student D1", "Student D2", "Student D3", "Student D4", "Student D5", "Student D6", "Student D7", "Student D8", "Student D9", "Student D10", "Student D11", "Student D12", "Student D13", "Student D14", "Student D15", "Student D16", "Student D17", "Student D18", "Student D19", "Student D20", "Student D21", "Student D22", "Student D23", "Student D24"],
-        "8c": ["Student E1", "Student E2", "Student E3", "Student E4", "Student E5", "Student E6", "Student E7", "Student E8", "Student E9", "Student E10", "Student E11", "Student E12", "Student E13", "Student E14", "Student E15", "Student E16", "Student E17", "Student E18", "Student E19", "Student E20", "Student E21", "Student E22", "Student E23", "Student E24"],
-        "9a": ["Student F1", "Student F2", "Student F3", "Student F4", "Student F5", "Student F6", "Student F7", "Student F8", "Student F9", "Student F10", "Student F11", "Student F12", "Student F13", "Student F14", "Student F15", "Student F16", "Student F17", "Student F18", "Student F19", "Student F20", "Student F21", "Student F22", "Student F23", "Student F24"],
-        "9b": ["Student G1", "Student G2", "Student G3", "Student G4", "Student G5", "Student G6", "Student G7", "Student G8", "Student G9", "Student G10", "Student G11", "Student G12", "Student G13", "Student G14", "Student G15", "Student G16", "Student G17", "Student G18", "Student G19", "Student G20", "Student G21", "Student G22", "Student G23", "Student G24"],
-        "9c": ["Student H1", "Student H2", "Student H3", "Student H4", "Student H5", "Student H6", "Student H7", "Student H8", "Student H9", "Student H10", "Student H11", "Student H12", "Student H13", "Student H14", "Student H15", "Student H16", "Student H17", "Student H18", "Student H19", "Student H20", "Student H21", "Student H22", "Student H23", "Student H24"],
-        "10": ["Student I1", "Student I2", "Student I3", "Student I4", "Student I5", "Student I6", "Student I7", "Student I8", "Student I9", "Student I10", "Student I11", "Student I12", "Student I13", "Student I14", "Student I15", "Student I16", "Student I17", "Student I18", "Student I19", "Student I20", "Student I21", "Student I22", "Student I23", "Student I24"],
-        "11sl": ["Student J1", "Student J2", "Student J3", "Student J4", "Student J5", "Student J6", "Student J7", "Student J8", "Student J9", "Student J10", "Student J11", "Student J12", "Student J13", "Student J14", "Student J15", "Student J16", "Student J17", "Student J18", "Student J19", "Student J20", "Student J21", "Student J22", "Student J23", "Student J24"],
-        "11hl": ["Student K1", "Student K2", "Student K3", "Student K4", "Student K5", "Student K6", "Student K7", "Student K8", "Student K9", "Student K10", "Student K11", "Student K12", "Student K13", "Student K14", "Student K15", "Student K16", "Student K17", "Student K18", "Student K19", "Student K20", "Student K21", "Student K22", "Student K23", "Student K24"],
-        "12sl": ["Student L1", "Student L2", "Student L3", "Student L4", "Student L5", "Student L6", "Student L7", "Student L8", "Student L9", "Student L10", "Student L11", "Student L12", "Student L13", "Student L14", "Student L15", "Student L16", "Student L17", "Student L18", "Student L19", "Student L20", "Student L21", "Student L22", "Student L23", "Student L24"],
-        "12hl": ["Student M1", "Student M2", "Student M3", "Student M4", "Student M5", "Student M6", "Student M7", "Student M8", "Student M9", "Student M10", "Student M11", "Student M12", "Student M13", "Student M14", "Student M15", "Student M16", "Student M17", "Student M18", "Student M19", "Student M20", "Student M21", "Student M22", "Student M23", "Student M24"]
+        "7b": ["Vincent Auris", "Silas Björn Baier", "Nora Busch", "Aarohi Chaudhary", "Zhuoyi Chen", "Valeria Drews", "Sascha Furukawa", "Lilly Kampmann", "Sebastian Liesenhoff", "Natalia-Spiridoula Merkou", "Junis Meyer-Hetling", "Alisa Pelaez Herzog", "Leonard Schmidt", "Julius Schmitz", "Shahan Shemirani", "Aayan Swain", "Tsubasa Tsumura", "Henry Vaubel", "Kai Xing", "Lizzy Xu", "Vivian Yang", "Aika Yoshida", "Elias Enhao Yu"],
+        "7c": ["Mirac Akgül", "Carla Andree", "Ben Branopolski", "Amber Bui", "Selina Destani", "Elizabeth Eggert", "Melike Erol", "Freya Gao", "Alessandra Geiger", "Garciano Hauke", "Xuanya Huang", "Constantin Joisten", "Martin Krauß", "Lizzy Liang", "Aniego Gabrian Meierhans", "Shogo Nagase", "Yuto Ojio", "Demir Oruc", "Leonard Pütz", "Milena-Angelina Schratz", "Nianzu Shang", "Filippos Simiantonakis", "Tiana Tabibi", "Benjamin Tuchscher", "Sisheng Wang", "Mitsuki Yoshida"],
+        "7d": ["Biremnur Acikel", "Demastion Berisha", "Anna Caldwell", "Maya Dornscheidt", "Clara Finkenstädt", "Hannah Glunz", "Noé Hauke", "Neil Jain", "Shuma Kobayashi", "Jun Nakamura", "Riko Nara", "Joshua Philips", "Vikram Raja", "Shogo Sakamoto", "Jasper Sroka", "Lina Türkyilmaz", "Yojuro Ushiyama", "Lucas Wang Machuca", "Jakob Weishaupt", "Chuwei Xi", "Anya Zhang", "Sinuo Zhang"],
+        "8a": ["Bayülgen, Ela", "Berisha, Rialda", "Cai, You (Leo)", "Cengic, Amna", "Chen, Yitong", "Cubukcu, Emir", "de Vries, Milo", "Destani, Dona", "Dornscheidt, Fiona", "Dresen, Greta", "Endermann, Julius", "Geiger, Luca", "Härter, Mia", "Heinzen, Cameron", "Kontizas, Nicolas", "Kranefuss, Eliza", "Middelhoff, Yannik", "Qi, Shengrui", "Reinartz, Stella", "Schäfer, Leopold", "Schmidt, Leonard", "Stephany, Samuel", "Wang, Selina", "Williams, Emma", "Wu, Ella", "Yao, Wenxuan", "Zhao, Yuxin (Olivia)"],
+        "8b": ["Atila, Anisa", "Böttge, Lukas", "Dombrovsky, Damian", "Dückers, Max", "Habel, Christopher", "Habel, Joshua", "Hocke, Anna", "Hünig, Ada", "Ilgün, Sare", "Janßen, Joshua-David", "Jobst, Phil", "Mausberg, Lea", "Middendorf, Anna", "Penka, Angelina", "Schneider, Romy", "Schutter, Tim", "Tian, Hulinjia", "Uyar, Defne", "Viehmann, Vijeya", "Wei, Peter", "Yadav, Ashvika", "Yin, Xixi", "Zhang, Tian He", "Zhou, Shulin"],
+        "8c": ["Atila, Almina", "Boldt, Oliver", "Chen, Wei-Wei", "Erdem, Meryem", "Frischemeier, Luis", "Hodos, Daniel", "Huang, Ziqi", "Johnen, Levi", "Kobayashi, Misa", "Kreißl, Lianna", "Masom Zadeh, Schilan", "Miura, Soshi", "Paszkot, Natalia", "Piskin, Kivanc", "Qu, Chenyang", "Saleh, Rania", "Schmidt, Amely", "Senthil Kumar, Raghav", "Steinwascher, Bruno", "Tscherkowski, Hannah", "Uono, Leo", "Wei, Chenlong", "Xiao, Dazhuang", "Xu, Ziping", "Yamaji, Nanaka"],
+        "9a": ["Abu-Khalaf, Amina", "Bai, Zhijun", "Borghei, Elina", "Cao, Zhihan", "Cengic, Faris", "Dahl Nielsen, Andreas", "Han, Yuexi Cecilia", "Hunig, Noam", "Jiang, Haozhe", "Kheir, Nina", "Kodama, Kou", "Li, Haoke", "Li, Mingxuan", "Ma, Yijia", "McGowan, Wilfred", "Müller-Stüler, Ida", "Nakamura, Shunri", "Oner, Suden", "Peng, Noemie", "Sakamoto, Kohei", "Schaar, Lena-Marie", "Schutter, Lukas", "Solontcova, Sofiia", "Suksur, Elis", "Tiwari, Yash", "Türkoral, Milas", "Xu, Luca Xu Rui", "Zhang, Mulan", "Zhu, Pauline"],
+        "9b": ["Andree, Liam", "Brebenaru, Alessia", "Cai, Ruoyu (Chloe)", "Chen, Louis", "Chen, Yihan", "Chitakana, Pavan Preetham", "Erven, Carl", "Griffin, Ava", "Hafner, Niccolò", "Hohn, Simon", "Kadantsev, Sofia", "Kong, Xiaotian", "Kuchler, Paul", "Liu, Ziyu (Joanna)", "Masom Zadeh, Schiba", "Mofatteh, Mohammad Amin", "Mohan Kumar, Akshara", "Rolston, Vaibhav", "Shang, Ziqin", "Suzuki, Sara", "Tan, Yawen", "Ünal, Neva", "Wagner, Leonhard", "Wang, Yiyun (Vini)", "Xu, Tina", "Zhou, Lingzhi (Steven)"],
+        "9c": ["Ada, Zeynep", "Cimrin, Tolga", "Eggert, Alice", "Erven, Ludwig", "Griffin, Zoe", "Ho, Benjamin", "Hofmann, Linya", "Hu, Emma Yuehan", "Karthik, Arjun", "Manabi, Hani", "Min, Emily", "Nordhoff, Leni", "Nunes de Araújo, Raicky", "Olmez, Beren", "Otten, Amelie", "Peng, Zekai", "Salehin, Kian", "Schachner-Blume, Leopold", "Seiwert, Soha", "Slavutsky, Eliah", "Soares, Arthur", "Steinvorth, José Daniel", "Sun, Bella", "Tian, Ruihao", "Wang, Mian", "Wang, Yiyang"],
+        "10": ["Siddarth Dandaboina", "Brent Furukawa", "Felix Guan", "Suyi He", "Felix Hirse", "Angela Jia", "Shaurya Joshi", "Krish Khanna", "Liam Kreißl", "Tianlin Mao", "Iori Nakamura", "Chitrakhya Pal", "Baihan Ren", "Luc Stadelmann Quezada", "Kevin Yang", "Yui Lam Yi"],
+        "11sl": ["Marcell Komar", "Pedro Vieira Arsenio"],
+        "11hl": ["Pedro Vieira Arsenio"],
+        "12sl": ["Derinsu Dincer", "Ben Etz", "Fanqihang Zhang", "Lucas Brocker", "Lamees Saleh Saeed", "Demir Cetinkaya", "Zhuo Er Sun", "Shunya Furuta"],
+        "12hl": ["Fanqihang Zhang", "Lucas Brocker", "Lamees Saleh Saeed", "Demir Cetinkaya", "Zhuo Er Sun", "Shunya Furuta"]
     };
 
+    // Format Names: First Name + Last Initial
     function formatName(fullName) {
         const parts = fullName.trim().split(/\s+/);
         return parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : parts[0];
@@ -603,6 +637,15 @@
         document.getElementById('randomDisplay').style.display = 'none';
     }
 
+    // Fisher-Yates shuffle
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     function init() {
         currentClass = document.getElementById('classSelector').value;
         layout = loadLayout(currentClass);
@@ -611,14 +654,49 @@
         document.getElementById('classSelector').addEventListener('change', (e) => {
             currentClass = e.target.value;
             layout = loadLayout(currentClass);
-            history = []; // Clear undo history on class switch
+            history = []; 
             selectedIndex = null;
             document.getElementById('randomDisplay').style.display = 'none';
             renderGrid();
         });
 
+        document.getElementById('randomizeBtn').addEventListener('click', () => {
+            if (!confirm('Randomly assign all students to new seats for this class?')) return;
+            
+            history.push(JSON.parse(JSON.stringify(layout)));
+            
+            const currentStudents = layout.filter(d => d.student).map(d => d.student);
+            const shuffledStudents = shuffleArray([...currentStudents]);
+            
+            // Define seating priority
+            const isSmallGroup = ['11sl', '11hl', '12sl', '12hl'].includes(currentClass);
+            const middlePositions = ['mid-1', 'mid-2', 'mid-3', 'mid-4', 'mid-5', 'mid-6'];
+            const outsidePositions = [
+                'top-1', 'top-2', 'top-3', 'top-4', 'top-5', 'top-6', 'top-7', 'top-8', 'top-9', 'top-10',
+                'bot-1', 'bot-2', 'bot-3', 'bot-4', 'bot-5', 'bot-6', 'bot-7', 'bot-8', 'bot-9', 'bot-10', 'bot-11',
+                'right-1', 'right-2', 'right-3'
+            ];
+
+            let availablePositions = isSmallGroup ? [...middlePositions, ...outsidePositions] : [...outsidePositions, ...middlePositions];
+            
+            // Clear all desks
+            layout.forEach(d => d.student = null);
+
+            // Assign shuffled students to the prioritized positions
+            shuffledStudents.forEach((studentName, index) => {
+                if (index < availablePositions.length) {
+                    const targetPos = availablePositions[index];
+                    const desk = layout.find(d => d.pos === targetPos);
+                    if (desk) desk.student = studentName;
+                }
+            });
+
+            saveState();
+            renderGrid();
+        });
+
         document.getElementById('resetBtn').addEventListener('click', () => {
-            if (confirm('Reset all students to original layout for this class? Unsaved changes will be lost.')) {
+            if (confirm('Reset all students to original alphabetical layout for this class?')) {
                 history.push(JSON.parse(JSON.stringify(layout)));
                 layout = getDefaultLayout(currentClass);
                 saveState();
