@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB Computer Science IA: Criterion E Guide</title>
+    <style>
+        :root {
+            --primary: #1a237e; /* Deep Blue */
+            --secondary: #283593;
+            --success: #2e7d32; /* Green for 4/4 */
+            --warning: #f57f17; /* Amber for 2/4 */
+            --danger: #c62828;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #555;
+            font-weight: 300;
+        }
+
+        /* Rubric / Checklist Sections */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 5px solid #ccc;
+        }
+
+        .card.fail {
+            border-top-color: var(--warning);
+        }
+
+        .card.success {
+            border-top-color: var(--success);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checklist {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .checklist.fail li::before {
+            content: "✗";
+            color: var(--warning);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .checklist.success li::before {
+            content: "✓";
+            color: var(--success);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Worked Example Section */
+        .worked-example {
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .example-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .version-box {
+            padding: 20px;
+            border-radius: 8px;
+            background: #fafafa;
+            border-left: 5px solid #ccc;
+        }
+
+        .version-box.bad {
+            border-left-color: var(--warning);
+            background: #fffdf7;
+        }
+
+        .version-box.good {
+            border-left-color: var(--success);
+            background: #f1f8e9;
+        }
+
+        .version-label {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .version-label.bad { color: var(--warning); }
+        .version-label.good { color: var(--success); }
+
+        blockquote {
+            font-style: italic;
+            background: #fff;
+            padding: 15px;
+            border-left: 3px solid #ccc;
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        .annotation {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+        }
+
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 0 3px;
+            font-weight: bold;
+        }
+
+        /* Rules Callout */
+        .rules-callout {
+            background: #e8eaf6;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--primary);
+            margin-bottom: 40px;
+        }
+
+        .rules-callout h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .checklist-grid, .comparison-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Criterion E: Evaluation</h1>
+        <div class="subtitle">How to move from a 2/4 (Descriptive) to a 4/4 (Critical)</div>
+    </header>
+
+    <div class="rules-callout">
+        <h4>⚠️ The Golden Rules of Criterion E</h4>
+        <ul>
+            <li><strong>No Cosmetic Improvements:</strong> "Better UI", "More colors", or "Prettier interface" will <strong>not</strong> get you marks.</li>
+            <li><strong>No Missing Functionality:</strong> If your success criteria said "Save data" and you didn't do it, you cannot list "Implement saving" as a future improvement. That is a failure to meet the original criteria.</li>
+            <li><strong>Evidence Required:</strong> You must refer to specific testing evidence (from your video or user feedback).</li>
+        </ul>
+    </div>
+
+    <div class="checklist-grid">
+        <div class="card fail">
+            <h3>❌ The 2/4 Profile</h3>
+            <p><em>"Descriptive"</em></p>
+            <ul class="checklist fail">
+                <li>States that success criteria were "met" generically.</li>
+                <li>Describes <em>what</em> the code does, not <em>how well</em> it works.</li>
+                <li>Improvements are vague or cosmetic (e.g., "Add a better menu").</li>
+                <li>No reference to testing evidence.</li>
+                <li>Ignores limitations or bugs.</li>
+            </ul>
+        </div>
+
+        <div class="card success">
+            <h3>✅ The 4/4 Profile</h3>
+            <p><em>"Critical & Justified"</em></p>
+            <ul class="checklist success">
+                <li>Evaluates <strong>every</strong> criterion individually.</li>
+                <li>Discusses the <strong>extent</strong> to which it was met (e.g., "Met in normal use, but fails when...").</li>
+                <li>Identifies specific limitations discovered during testing.</li>
+                <li>Improvements are <strong>actionable</strong> and <strong>justified</strong> by limitations.</li>
+                <li>Uses evidence from the video/documentation.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="worked-example">
+        <div class="example-header">
+            <h2>Worked Example</h2>
+            <span style="background: #eee; padding: 5px 10px; border-radius: 4px; font-size: 0.9em;">Context: Example 7 (Trip Organizer)</span>
+        </div>
+
+        <p>Let's look at how a student might evaluate <strong>Success Criterion 4: Search for a student to find the room/bus allocation</strong>.</p>
+
+        <div class="comparison-container">
+            <!-- 2/4 Version -->
+            <div class="version-box bad">
+                <span class="version-label bad">Why this is a 2/4</span>
+                <blockquote>
+                    "Success criterion 4 was achieved. The user can type a name into the search box and the program will find the student. The search works well and shows the bus and room number. To improve this, I could make the search box bigger and add a more colorful button so it is easier to see."
+                </blockquote>
+                <div class="annotation">
+                    <strong>Moderator Analysis:</strong>
+                    <ul>
+                        <li><strong>Descriptive:</strong> Just says "it works."</li>
+                        <li><strong>No Evidence:</strong> Doesn't mention what happened during testing (e.g., did it fail for any names?).</li>
+                        <li><strong>Bad Improvement:</strong> "Bigger box" and "colorful button" are cosmetic. They do not address a functional issue.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4/4 Version -->
+            <div class="version-box good">
+                <span class="version-label good">Why this is a 4/4</span>
+                <blockquote>
+                    "Success criterion 4 was partially achieved. During testing, the search function correctly located students (e.g., Victoria and Stella) and displayed their bus/room numbers. However, testing also revealed a limitation: the search requires an <strong>exact match</strong> of the name. If the user types 'Vic' instead of 'Victoria', the search returns an error message.<br><br>
+                    <strong>Improvement:</strong> I would implement 'fuzzy searching' or a dropdown menu. This would address the issue of spelling mistakes or partial names, which is a likely scenario for a teacher using the app under time pressure. This justifies the improvement because it makes the tool more robust for real-world use."
+                </blockquote>
+                <div class="annotation">
+                    <strong>Moderator Analysis:</strong>
+                    <ul>
+                        <li><strong>Critical:</strong> Acknowledges it works, but notes the specific limitation (exact match).</li>
+                        <li><strong>Evidence:</strong> References specific test cases (Victoria, Stella).</li>
+                        <li><strong>Justified Improvement:</strong> The "fuzzy search" improvement is actionable and directly solves the limitation identified. It is not cosmetic.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rules-callout" style="background: #fff3e0; border-left-color: #ff9800;">
+        <h4>📝 The "So What?" Test</h4>
+        <p>When writing your evaluation, ask yourself: <strong>"So what?"</strong></p>
+        <ul>
+            <li><em>"The search function works."</em> → So what? <br> <em>"The search function works, but it is slow with large datasets."</em></li>
+            <li><em>"I will add a save button."</em> → So what? <br> <em>"If the app crashes, data is lost. I will add auto-save."</em></li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
