@@ -399,7 +399,7 @@
             .room-layout { 
                 border: 2px solid #000; 
                 background: none; 
-                height: 90vh; /* Take up remaining page height */
+                height: 90vh; 
                 page-break-inside: avoid;
             }
             .desk { 
@@ -496,8 +496,22 @@
 
     // Format Names: First Name + Last Initial
     function formatName(fullName) {
-        const parts = fullName.trim().split(/\s+/);
-        return parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : parts[0];
+        const name = fullName.trim();
+        if (name.includes(',')) {
+            // Handle "Surname, First Name" format
+            const parts = name.split(',');
+            const firstName = parts[1].trim();
+            const lastName = parts[0].trim();
+            // If first name has multiple words, keep them all together
+            return `${firstName} ${lastName.charAt(0)}.`;
+        } else {
+            // Handle "First Name Surname" format
+            const parts = name.split(/\s+/);
+            if (parts.length > 1) {
+                return `${parts[0]} ${parts[parts.length - 1][0]}.`;
+            }
+            return parts[0];
+        }
     }
 
     const DESKS = [
@@ -637,7 +651,6 @@
         document.getElementById('randomDisplay').style.display = 'none';
     }
 
-    // Fisher-Yates shuffle
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -668,7 +681,6 @@
             const currentStudents = layout.filter(d => d.student).map(d => d.student);
             const shuffledStudents = shuffleArray([...currentStudents]);
             
-            // Define seating priority
             const isSmallGroup = ['11sl', '11hl', '12sl', '12hl'].includes(currentClass);
             const middlePositions = ['mid-1', 'mid-2', 'mid-3', 'mid-4', 'mid-5', 'mid-6'];
             const outsidePositions = [
@@ -679,10 +691,8 @@
 
             let availablePositions = isSmallGroup ? [...middlePositions, ...outsidePositions] : [...outsidePositions, ...middlePositions];
             
-            // Clear all desks
             layout.forEach(d => d.student = null);
 
-            // Assign shuffled students to the prioritized positions
             shuffledStudents.forEach((studentName, index) => {
                 if (index < availablePositions.length) {
                     const targetPos = availablePositions[index];
