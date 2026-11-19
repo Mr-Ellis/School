@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro:bit Hackathon - Idea Board</title>
+    <style>
+        :root {
+            --primary: #0f172a; /* Deep Navy */
+            --accent: #ef4444; /* Bright Red */
+            --bg: #f8fafc; /* Off-white */
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --easy: #10b981;
+            --medium: #f59e0b;
+            --hard: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            border-bottom: 6px solid var(--accent);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* The Rule Banner */
+        .rule-banner {
+            background: white;
+            border-left: 8px solid var(--accent);
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .rule-banner h2 {
+            color: var(--accent);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .rule-banner p {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Idea Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            border-top: 4px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        /* Complexity Borders */
+        .card.easy { border-top-color: var(--easy); }
+        .card.medium { border-top-color: var(--medium); }
+        .card.hard { border-top-color: var(--hard); }
+
+        .card h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag.easy { background: #d1fae5; color: #065f46; }
+        .tag.medium { background: #fef3c7; color: #92400e; }
+        .tag.hard { background: #fee2e2; color: #991b1b; }
+
+        .card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .card .tech {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--primary);
+            background: var(--bg);
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        /* Group Selection Section */
+        .selection-section {
+            margin-top: 4rem;
+            background: var(--primary);
+            color: white;
+            padding: 3rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .selection-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .selection-section p {
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+        }
+
+        .groups-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .group-btn {
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            border: 2px solid white;
+        }
+
+        .group-btn:hover {
+            background: transparent;
+            color: white;
+        }
+
+        .group-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Footer / Help Section */
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .help-box {
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 1.5rem;
+            border-radius: 8px;
+            color: #1e3a8a;
+        }
+
+        .help-box h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .email-link {
+            color: var(--accent);
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .email-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>The "One Rule" Hackathon</h1>
+        <p>Junior Challenge: Choose a technology, find the mechanism, and build a working browser version.</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- The Rule Banner -->
+        <div class="rule-banner">
+            <h2>The One Rule</h2>
+            <p>"A first-time user, with no help from your team, has to understand your idea within two minutes of opening your project."</p>
+        </div>
+
+        <h2 style="margin-bottom: 1.5rem; color: var(--primary);">20 Micro:bit Ideas (Or Pitch Your Own!)</h2>
+        <p style="margin-bottom: 2rem; color: var(--text-muted);">These ideas are categorized by complexity. Remember, you are not limited to this list—if you have a brilliant idea that fits the rule, go for it!</p>
+
+        <!-- The Grid of Ideas -->
+        <div class="grid">
+            
+            <!-- Easy Ideas -->
+            <div class="card easy">
+                <span class="tag easy">Easy</span>
+                <h3>1. The "Ghost" Touchscreen</h3>
+                <p>Explain how phones detect touch. User touches a foil wire connected to the Micro:bit, and the browser shows a glowing ripple on a virtual phone screen.</p>
+                <div class="tech">Tech: Capacitance | Time: 2-3 hrs</div>
+            </div>
+
+            <div class="card easy">
+                <span class="tag easy">Easy</span>
+                <h3>2. The Automatic Door</h3>
+                <p>Explain supermarket door sensors. Move the Micro:bit closer to the receiver, and the browser's sliding glass doors open with a "Welcome" sound.</p>
+                <div class="tech">Tech: Proximity/Radio | Time: 2-3 hrs</div>
+            </div>
+
+            <div class="card easy">
+                <span class="tag easy">Easy</span>
+                <h3>3. The "Magic" Light Switch</h3>
+                <p>Explain automatic streetlights. Shine a flashlight on the Micro:bit LED grid, and the browser simulates a dark street lighting up.</p>
+                <div class="tech">Tech: Photoresistor | Time: 2 hrs</div>
+            </div>
+
+            <div class="card easy">
+                <span class="tag easy">Easy</span>
+                <h3>4. The Seesaw Balance</h3>
+                <p>Explain torque and center of mass. Tilt the Micro:bit left or right, and a seesaw on the browser tilts, sliding a character off.</p>
+                <div class="tech">Tech: Accelerometer | Time: 2 hrs</div>
+            </div>
+
+            <div class="card easy">
+                <span class="tag easy">Easy</span>
+                <h3>5. The "Invisible" Barcode</h3>
+                <p>Explain light reflection. Wave the Micro:bit over a printed barcode. The browser logs "1"s and "0"s and reveals a grocery price tag.</p>
+                <div class="tech">Tech: Light Sensor | Time: 3 hrs</div>
+            </div>
+
+            <div class="card easy">
+                <span class="tag easy">Easy</span>
+                <h3>6. The "Hot" Mug</h3>
+                <p>Explain thermistors. Pinch the Micro:bit temperature sensor. The browser shows a mug steaming and a digital temperature gauge rising.</p>
+                <div class="tech">Tech: Temp Sensor | Time: 1-2 hrs</div>
+            </div>
+
+            <div class="card easy">
+                <span class="tag easy">Easy</span>
+                <h3>7. The "Wobble" Alarm</h3>
+                <p>Explain car anti-theft systems. Shake the Micro:bit, and the browser shows a car alarm flashing with a "TILT DETECTED" warning.</p>
+                <div class="tech">Tech: Accelerometer | Time: 2 hrs</div>
+            </div>
+
+            <div class="card easy">
+                <span class="tag easy">Easy</span>
+                <h3>8. The "Secret" Knocking Code</h3>
+                <p>Explain smart door locks. Tap the Micro:bit touch pins in a specific pattern. The browser lock only opens if the sequence matches.</p>
+                <div class="tech">Tech: Touch Pins | Time: 3 hrs</div>
+            </div>
+
+            <!-- Medium Ideas -->
+            <div class="card medium">
+                <span class="tag medium">Medium</span>
+                <h3>9. The "Muscle" Servo Walker</h3>
+                <p>Explain how human muscles move. A browser slider controls a Micro:bit servo motor attached to a cardboard leg, while the screen shows muscle fibers stretching.</p>
+                <div class="tech">Tech: Servo Motor | Time: 4-5 hrs</div>
+            </div>
+
+            <div class="card medium">
+                <span class="tag medium">Medium</span>
+                <h3>10. Anti-Lock Brakes (ABS)</h3>
+                <p>Explain kinetic friction. Press a browser button. The Micro:bit pulses a wheel, and the browser shows a car stopping smoothly vs. skidding.</p>
+                <div class="tech">Tech: Servo + Accelerometer | Time: 4-5 hrs</div>
+            </div>
+
+            <div class="card medium">
+                <span class="tag medium">Medium</span>
+                <h3>11. The "Heartbeat" Pulse</h3>
+                <p>Explain smartwatch health sensors. Cover the Micro:bit LED with your finger. The browser shows a beating heart animation synced to the sensor.</p>
+                <div class="tech">Tech: Light + LED | Time: 4 hrs</div>
+            </div>
+
+            <div class="card medium">
+                <span class="tag medium">Medium</span>
+                <h3>12. The "Wind" Turbine</h3>
+                <p>Explain kinetic energy. Blow on a pinwheel attached to a sensor. The browser shows a turbine spinning and a battery charging bar.</p>
+                <div class="tech">Tech: Accelerometer + Servo | Time: 5 hrs</div>
+            </div>
+
+            <div class="card medium">
+                <span class="tag medium">Medium</span>
+                <h3>13. The "Earthquake" Detector</h3>
+                <p>Explain seismographs. Shake the Micro:bit at different intensities. The browser shows a Richter scale and a simulated building shaking.</p>
+                <div class="tech">Tech: Accelerometer | Time: 4 hrs</div>
+            </div>
+
+            <div class="card medium">
+                <span class="tag medium">Medium</span>
+                <h3>14. Smart Plant Watering</h3>
+                <p>Explain soil conductivity. Dip Micro:bit pins in wet vs. dry soil. The browser shows a plant wilting or perking up with water droplets.</p>
+                <div class="tech">Tech: Moisture Sensor | Time: 4-5 hrs</div>
+            </div>
+
+            <div class="card medium">
+                <span class="tag medium">Medium</span>
+                <h3>15. Motion Security Light</h3>
+                <p>Explain PIR sensors. Wave your hand in front of the sensor. The browser shows a dark room lighting up and a "MOTION DETECTED" alert.</p>
+                <div class="tech">Tech: PIR Sensor | Time: 4 hrs</div>
+            </div>
+
+            <div class="card medium">
+                <span class="tag medium">Medium</span>
+                <h3>16. The "Speed" Radar Gun</h3>
+                <p>Explain the Doppler effect. Move an object toward an ultrasonic sensor. The browser calculates speed and gives a speeding car a ticket.</p>
+                <div class="tech">Tech: Ultrasonic Sensor | Time: 5 hrs</div>
+            </div>
+
+            <!-- Hard Ideas -->
+            <div class="card hard">
+                <span class="tag hard">Hard</span>
+                <h3>17. "Gesture" TV Remote</h3>
+                <p>Explain pattern recognition. Teach the Micro:bit three gestures (tilt left, right, shake) to control a smart TV menu on the browser.</p>
+                <div class="tech">Tech: Accelerometer + ML | Time: 8+ hrs</div>
+            </div>
+
+            <div class="card hard">
+                <span class="tag hard">Hard</span>
+                <h3>18. The "Lie Detector"</h3>
+                <p>Explain polygraphs. Hold the Micro:bit while answering questions. A browser needle jumps based on combined touch, temperature, and motion data.</p>
+                <div class="tech">Tech: Multi-Sensor | Time: 8+ hrs</div>
+            </div>
+
+            <div class="card hard">
+                <span class="tag hard">Hard</span>
+                <h3>19. Self-Driving Car Sim</h3>
+                <p>Explain autonomous vehicles. Use two Micro:bits (car + remote). The browser shows a top-down road where the car avoids obstacles.</p>
+                <div class="tech">Tech: Ultrasonic + Radio | Time: 10+ hrs</div>
+            </div>
+
+            <div class="card hard">
+                <span class="tag hard">Hard</span>
+                <h3>20. Smart Home Hub</h3>
+                <p>Explain sensor fusion. A browser dashboard shows a house where light controls lights, temp controls AC, and motion controls security.</p>
+                <div class="tech">Tech: Multi-Sensor + Web | Time: 12+ hrs</div>
+            </div>
+
+        </div>
+
+        <!-- Group Selection Section -->
+        <div class="selection-section" id="select">
+            <h2>Ready to Lock in Your Idea?</h2>
+            <p>Discuss with your team, pick one of the ideas above (or pitch your own), and click your group name to email Mr. Ellis.</p>
+            
+            <div class="groups-container">
+                <!-- Email links with pre-filled subjects and bodies -->
+                <a href="mailto:craig.ellis@isr-school.de?subject=Hackathon%20Idea%20Selection%20-%20Ctrl%20CV&body=Hi%20Mr.%20Ellis,%0D%0A%0D%0AThe%20group%20Ctrl%20CV%20has%20selected%20the%20following%20idea%20for%20the%20Hackathon:%0D%0A%0D%0AIdea%20Number/Name:%20%0D%0AWhy%20we%20chose%20it:%20%0D%0A%0D%0A(Optional:%20If%20we%20are%20pitching%20our%20own%20idea,%20we%20will%20describe%20it%20here)%0D%0A%0D%0AThanks!" class="group-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Group: Ctrl CV
+                </a>
+                
+                <a href="mailto:craig.ellis@isr-school.de?subject=Hackathon%20Idea%20Selection%20-%20Jane%20Road&body=Hi%20Mr.%20Ellis,%0D%0A%0D%0AThe%20group%20Jane%20Road%20has%20selected%20the%20following%20idea%20for%20the%20Hackathon:%0D%0A%0D%0AIdea%20Number/Name:%20%0D%0AWhy%20we%20chose%20it:%20%0D%0A%0D%0A(Optional:%20If%20we%20are%20pitching%20our%20own%20idea,%20we%20will%20describe%20it%20here)%0D%0A%0D%0AThanks!" class="group-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Group: Jane Road
+                </a>
+                
+                <a href="mailto:craig.ellis@isr-school.de?subject=Hackathon%20Idea%20Selection%20-%20The%20Hack%20Prospects&body=Hi%20Mr.%20Ellis,%0D%0A%0D%0AThe%20group%20The%20Hack%20Prospects%20has%20selected%20the%20following%20idea%20for%20the%20Hackathon:%0D%0A%0D%0AIdea%20Number/Name:%20%0D%0AWhy%20we%20chose%20it:%20%0D%0A%0D%0A(Optional:%20If%20we%20are%20pitching%20our%20own%20idea,%20we%20will%20describe%20it%20here)%0D%0A%0D%0AThanks!" class="group-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Group: The Hack Prospects
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer / Help Section -->
+    <footer>
+        <div class="help-box">
+            <h3>💡 Need help with the Browser part?</h3>
+            <p>Don't worry if you aren't sure how to build the webpage. <strong>Mr. Ellis can help your team set up GitHub Pages and create the basic HTML/CSS structure</strong> for your interactive demonstrations. Just ask!</p>
+        </div>
+        <p style="color: var(--text-muted);">Questions or ready to submit? Contact:</p>
+        <a href="mailto:craig.ellis@isr-school.de" class="email-link">craig.ellis@isr-school.de</a>
+    </footer>
+
+</body>
+</html>
