@@ -70,21 +70,43 @@
             flex-shrink: 0;
         }
 
-        .reset-btn {
-            background: white;
+        .instructions {
+            font-weight: 500;
+            color: #4a6a8a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
             border: 1px solid #b8cee4;
-            color: #1f4a7a;
-            padding: 0.4rem 1rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 40px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .reset-btn:hover {
-            background: #1f4a7a;
-            color: white;
+        .btn-reset {
+            background: white;
+            color: #1f4a7a;
         }
+        .btn-reset:hover { background: #1f4a7a; color: white; }
+
+        .btn-set {
+            background: #2a6b9e;
+            color: white;
+            border-color: #2a6b9e;
+        }
+        .btn-set:hover { background: #1f4a7a; border-color: #1f4a7a; }
 
         /* The physical room representation */
         .room-layout {
@@ -101,21 +123,57 @@
             overflow: hidden;
         }
 
-        /* Front of room indicator */
-        .front-indicator {
+        /* Room Elements */
+        .whiteboard {
             position: absolute;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
             background: #e2eaf3;
             color: #5a7a9a;
-            padding: 0.2rem 2rem;
+            padding: 0.3rem 4rem;
             border-radius: 0 0 10px 10px;
             font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
             z-index: 10;
+            border: 1px solid #d0dfee;
+            border-top: none;
+        }
+
+        .door {
+            position: absolute;
+            bottom: 0;
+            left: 2%;
+            width: 80px;
+            height: 8px;
+            background: #a0b8d0;
+            border-radius: 5px 5px 0 0;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .door::before {
+            content: 'DOOR';
+            font-size: 0.55rem;
+            color: white;
+            font-weight: 800;
+            margin-bottom: 1px;
+        }
+        .door-arc {
+            position: absolute;
+            bottom: 0;
+            left: 2%;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 1px dashed #a0b8d0;
+            border-bottom: none;
+            border-right: none;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .desk {
@@ -134,9 +192,9 @@
             user-select: none;
             transition: transform 0.1s, box-shadow 0.1s;
             aspect-ratio: 1.6 / 1;
-            /* Base size, will be overridden by specific classes */
             width: 8%; 
             transform: translate(-50%, -50%);
+            z-index: 5;
         }
 
         .desk:active {
@@ -157,7 +215,7 @@
         }
 
         .desk-label {
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             color: #6c8199;
             text-transform: uppercase;
             font-weight: 700;
@@ -171,7 +229,7 @@
 
         .student-name {
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #1c3a5c;
             line-height: 1.1;
             word-break: break-word;
@@ -199,51 +257,47 @@
         }
 
         /* =========================================
-           EXACT PHYSICAL POSITIONING (Using % coordinates)
+           EXACT PHYSICAL POSITIONING 
            ========================================= */
 
         /* --- TOP ROW (10 desks) --- */
-        /* The screenshot shows a gap on the far left, then a cluster of 2, then a long row of 8 */
-        .top-1  { top: 10%; left: 15%; width: 7%; }
-        .top-2  { top: 10%; left: 23%; width: 7%; }
+        .top-1  { top: 18%; left: 15%; width: 7.5%; }
+        .top-2  { top: 18%; left: 24%; width: 7.5%; }
         
-        .top-3  { top: 10%; left: 38%; width: 6%; }
-        .top-4  { top: 10%; left: 45%; width: 6%; }
-        .top-5  { top: 10%; left: 52%; width: 6%; }
-        .top-6  { top: 10%; left: 59%; width: 6%; }
-        .top-7  { top: 10%; left: 66%; width: 6%; }
-        .top-8  { top: 10%; left: 73%; width: 6%; }
-        .top-9  { top: 10%; left: 80%; width: 6%; }
-        .top-10 { top: 10%; left: 87%; width: 6%; }
+        .top-3  { top: 18%; left: 36%; width: 6.5%; }
+        .top-4  { top: 18%; left: 43%; width: 6.5%; }
+        .top-5  { top: 18%; left: 50%; width: 6.5%; }
+        .top-6  { top: 18%; left: 57%; width: 6.5%; }
+        .top-7  { top: 18%; left: 64%; width: 6.5%; }
+        .top-8  { top: 18%; left: 71%; width: 6.5%; }
+        .top-9  { top: 18%; left: 78%; width: 6.5%; }
+        .top-10 { top: 18%; left: 85%; width: 6.5%; }
 
         /* --- RIGHT COLUMN (3 desks) --- */
-        /* Far right edge, vertically stacked */
-        .right-1 { top: 25%; left: 92%; width: 8%; }
-        .right-2 { top: 45%; left: 92%; width: 8%; }
-        .right-3 { top: 65%; left: 92%; width: 8%; }
+        .right-1 { top: 35%; left: 92%; width: 8.5%; }
+        .right-2 { top: 55%; left: 92%; width: 8.5%; }
+        .right-3 { top: 75%; left: 92%; width: 8.5%; }
 
-        /* --- MIDDLE ISLAND (6 desks: 2 rows of 3) --- */
-        /* Centered in the room */
-        .mid-1 { top: 35%; left: 42%; width: 8%; }
-        .mid-2 { top: 35%; left: 52%; width: 8%; }
-        .mid-3 { top: 35%; left: 62%; width: 8%; }
+        /* --- MIDDLE ISLAND (6 desks) --- */
+        .mid-1 { top: 40%; left: 42%; width: 8%; }
+        .mid-2 { top: 40%; left: 51%; width: 8%; }
+        .mid-3 { top: 40%; left: 60%; width: 8%; }
         
-        .mid-4 { top: 55%; left: 42%; width: 8%; }
-        .mid-5 { top: 55%; left: 52%; width: 8%; }
-        .mid-6 { top: 55%; left: 62%; width: 8%; }
+        .mid-4 { top: 60%; left: 42%; width: 8%; }
+        .mid-5 { top: 60%; left: 51%; width: 8%; }
+        .mid-6 { top: 60%; left: 60%; width: 8%; }
 
         /* --- BOTTOM ROW (11 desks) --- */
-        /* Spans the whole width */
-        .bot-1  { top: 85%; left: 5%; width: 7%; }
-        .bot-2  { top: 85%; left: 13%; width: 7%; }
-        .bot-3  { top: 85%; left: 21%; width: 7%; }
-        .bot-4  { top: 85%; left: 29%; width: 7%; }
-        .bot-5  { top: 85%; left: 37%; width: 7%; }
-        .bot-6  { top: 85%; left: 45%; width: 7%; }
-        .bot-7  { top: 85%; left: 53%; width: 7%; }
-        .bot-8  { top: 85%; left: 61%; width: 7%; }
-        .bot-9  { top: 85%; left: 69%; width: 7%; }
-        .bot-10 { top: 85%; left: 77%; width: 7%; }
+        .bot-1  { top: 85%; left: 10%; width: 7%; }
+        .bot-2  { top: 85%; left: 17.5%; width: 7%; }
+        .bot-3  { top: 85%; left: 25%; width: 7%; }
+        .bot-4  { top: 85%; left: 32.5%; width: 7%; }
+        .bot-5  { top: 85%; left: 40%; width: 7%; }
+        .bot-6  { top: 85%; left: 47.5%; width: 7%; }
+        .bot-7  { top: 85%; left: 55%; width: 7%; }
+        .bot-8  { top: 85%; left: 62.5%; width: 7%; }
+        .bot-9  { top: 85%; left: 70%; width: 7%; }
+        .bot-10 { top: 85%; left: 77.5%; width: 7%; }
         .bot-11 { top: 85%; left: 85%; width: 7%; }
 
     </style>
@@ -256,13 +310,20 @@
     </header>
 
     <div class="toolbar">
-        <div style="font-weight: 500; color: #4a6a8a;">🖱️ Drag and drop to rearrange</div>
-        <button class="reset-btn" id="resetBtn">↻ Reset Layout</button>
+        <div class="instructions">🖱️ Drag to arrange, then click <strong>Set Layout</strong> to save.</div>
+        <div class="btn-group">
+            <button class="btn btn-reset" id="resetBtn">↻ Reset Layout</button>
+            <button class="btn btn-set" id="setBtn">💾 Set Layout</button>
+        </div>
     </div>
 
     <div class="room-layout" id="seatingGrid">
-        <div class="front-indicator">Front of Room / Whiteboard</div>
-        <!-- Generated via JS -->
+        <!-- Room Features -->
+        <div class="whiteboard">Whiteboard / Front of Room</div>
+        <div class="door">Door</div>
+        <div class="door-arc"></div>
+        
+        <!-- Desks are generated via JS -->
     </div>
 </div>
 
@@ -344,14 +405,18 @@
         { id: 'ISR-45', pos: 'mid-6', zone: 'zone-middle' },
     ];
 
-    const STORAGE_KEY = 'room2051_seating_v5';
+    const STORAGE_KEY = 'room2051_seating_v6';
+    
+    // We keep a copy of the "active" layout and a copy of the "saved" layout
+    let layout = [];
+    let savedLayout = null;
 
-    function getInitialLayout() {
+    // Fill order: Top (10), Bottom (11), Right (3). Total = 24. 
+    // Middle (6) is left empty.
+    function getDefaultLayout() {
         const names = RAW_STUDENTS.map(formatName);
-        const layout = DESKS.map(d => ({ ...d, student: null })); 
+        const defaultLayout = DESKS.map(d => ({ ...d, student: null })); 
 
-        // Fill order: Top (10), Bottom (11), Right (3). Total = 24. 
-        // Middle (6) is left empty, as requested.
         const fillOrder = [
             'top-1', 'top-2', 'top-3', 'top-4', 'top-5', 'top-6', 'top-7', 'top-8', 'top-9', 'top-10',
             'bot-1', 'bot-2', 'bot-3', 'bot-4', 'bot-5', 'bot-6', 'bot-7', 'bot-8', 'bot-9', 'bot-10', 'bot-11',
@@ -362,7 +427,7 @@
         let nameIndex = 0;
         fillOrder.forEach(pos => {
             if (nameIndex < names.length) {
-                const desk = layout.find(d => d.pos === pos);
+                const desk = defaultLayout.find(d => d.pos === pos);
                 if (desk) {
                     desk.student = names[nameIndex];
                     nameIndex++;
@@ -370,12 +435,11 @@
             }
         });
 
-        return layout;
+        return defaultLayout;
     }
 
-    let layout = [];
-
-    function loadLayout() {
+    // Load from localStorage if it exists, otherwise use default
+    function loadInitialLayout() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             try {
@@ -383,25 +447,19 @@
                 if (parsed.length === DESKS.length) {
                     const isValid = parsed.every((p, i) => p.pos === DESKS[i].pos);
                     if (isValid) {
-                        layout = parsed;
-                        return;
+                        return parsed;
                     }
                 }
             } catch (e) { /* ignore */ }
         }
-        layout = getInitialLayout();
-        saveLayout();
-    }
-
-    function saveLayout() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+        return getDefaultLayout();
     }
 
     let draggedIndex = null;
 
     function renderGrid() {
         const grid = document.getElementById('seatingGrid');
-        // Keep the front indicator, remove only desks
+        // Keep the room features, remove only existing desks
         const desks = grid.querySelectorAll('.desk');
         desks.forEach(d => d.remove());
 
@@ -452,7 +510,8 @@
                 layout[draggedIndex].student = layout[index].student;
                 layout[index].student = temp;
 
-                saveLayout();
+                // Note: We do NOT save to localStorage here automatically.
+                // We only re-render the visual grid.
                 renderGrid();
             });
 
@@ -461,13 +520,25 @@
     }
 
     function init() {
-        loadLayout();
+        // Load saved layout (or default)
+        layout = loadInitialLayout();
+        // Keep a copy of this layout so "Reset" goes back to the last SAVED state
+        savedLayout = JSON.parse(JSON.stringify(layout)); 
         renderGrid();
 
+        // --- BUTTON HANDLERS ---
+        
+        // SET BUTTON: Save current visual layout to localStorage
+        document.getElementById('setBtn').addEventListener('click', () => {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+            savedLayout = JSON.parse(JSON.stringify(layout)); // update the rollback point
+            alert('Layout saved successfully! It will persist on your next visit.');
+        });
+
+        // RESET BUTTON: Revert to the last SAVED state
         document.getElementById('resetBtn').addEventListener('click', () => {
-            if (confirm('Reset all students to original layout?')) {
-                layout = getInitialLayout();
-                saveLayout();
+            if (confirm('Discard unsaved changes and revert to the last saved layout?')) {
+                layout = JSON.parse(JSON.stringify(savedLayout));
                 renderGrid();
             }
         });
