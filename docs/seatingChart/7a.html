@@ -17,16 +17,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Force full viewport height */
-            overflow: hidden; /* Prevent scrolling */
+            height: 100vh; 
+            overflow: hidden; /* Prevents scrolling */
             padding: 1rem;
         }
 
         .chart-container {
             width: 100%;
-            max-width: 1800px;
+            max-width: 1600px;
             height: 100%;
-            max-height: 1000px;
+            max-height: 900px;
             background: white;
             border-radius: 1rem;
             box-shadow: 0 10px 30px rgba(0, 20, 40, 0.1);
@@ -46,7 +46,7 @@
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: #0b2b4a;
             display: flex;
             align-items: center;
@@ -57,19 +57,44 @@
             background: #e3edf7;
             padding: 0.4rem 1rem;
             border-radius: 40px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 600;
             color: #1f4a7a;
         }
 
-        /* Grid Layout System */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .reset-btn {
+            background: white;
+            border: 1px solid #b8cee4;
+            color: #1f4a7a;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #1f4a7a;
+            color: white;
+        }
+
+        /* 
+           Layout Grid: 16 columns, 6 rows.
+           We use a compact grid to closely match the physical map.
+        */
         .room-layout {
             flex-grow: 1;
             display: grid;
-            /* 16 columns, 8 rows to map out the exact static locations */
             grid-template-columns: repeat(16, 1fr);
-            grid-template-rows: repeat(8, 1fr);
-            gap: 0.75rem;
+            grid-template-rows: auto 1fr 1fr 1fr auto; /* Tighter middle spacing */
+            gap: 0.8rem;
             background: #fafcff;
             border: 2px dashed #d0dfee;
             border-radius: 0.75rem;
@@ -77,42 +102,64 @@
                 linear-gradient(#f0f5fa 1px, transparent 1px),
                 linear-gradient(90deg, #f0f5fa 1px, transparent 1px);
             background-size: 20px 20px;
-            padding: 1rem;
-            min-height: 0; /* Crucial for flex child to not overflow */
+            padding: 1.2rem;
+            min-height: 0; 
         }
 
         .desk {
             background: white;
             border: 1px solid #b8cee4;
-            border-radius: 6px;
-            padding: 0.4rem;
+            border-radius: 8px;
+            padding: 0.5rem;
             text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            overflow: hidden;
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.1s, box-shadow 0.1s;
+            position: relative;
+        }
+
+        .desk:active {
+            cursor: grabbing;
+        }
+
+        .desk.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .desk.drag-over {
+            border: 2px dashed #2a6b9e;
+            background: #e9f2fc;
+            transform: scale(1.02);
         }
 
         .desk-label {
-            font-size: 0.55rem;
-            color: #7a8fa6;
+            font-size: 0.6rem;
+            color: #6c8199;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 700;
             margin-bottom: 0.2rem;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            letter-spacing: 0.5px;
         }
 
         .student-name {
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #1c3a5c;
-            line-height: 1.1;
+            line-height: 1.2;
             word-break: break-word;
         }
+
+        /* Color Coding Zones */
+        .zone-top-left { background: #f0f7ff; border-color: #a8c6e8; }
+        .zone-top-right { background: #f4fdf4; border-color: #a8e8b0; }
+        .zone-bottom { background: #fffaf0; border-color: #e8d8a8; }
+        .zone-middle { background: #fdf4ff; border-color: #d8a8e8; }
+        .zone-right-col { background: #f0f4f8; border-color: #b0c0d0; }
 
         .empty-desk {
             background: #f4f7fa;
@@ -124,51 +171,52 @@
             color: #9bb1c7;
             font-weight: 500;
             font-style: italic;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
 
         /* =========================================
-           POSITIONING BASED ON SCREENSHOT
+           POSITIONING MAPPING
            ========================================= */
 
-        /* Top Left (2 screens) */
-        .grid-pos-1  { grid-column: 1 / 3; grid-row: 1 / 2; }
-        .grid-pos-2  { grid-column: 3 / 5; grid-row: 1 / 2; }
+        /* --- TOP ROW (10 desks) --- */
+        /* We squeeze 10 desks into the top row using fractional grid */
+        .top-row-1  { grid-column: 1 / 2.6; grid-row: 1 / 2; }
+        .top-row-2  { grid-column: 2.6 / 4.2; grid-row: 1 / 2; }
+        .top-row-3  { grid-column: 4.2 / 5.8; grid-row: 1 / 2; }
+        .top-row-4  { grid-column: 5.8 / 7.4; grid-row: 1 / 2; }
+        .top-row-5  { grid-column: 7.4 / 9; grid-row: 1 / 2; }
+        .top-row-6  { grid-column: 9 / 10.6; grid-row: 1 / 2; }
+        .top-row-7  { grid-column: 10.6 / 12.2; grid-row: 1 / 2; }
+        .top-row-8  { grid-column: 12.2 / 13.8; grid-row: 1 / 2; }
+        .top-row-9  { grid-column: 13.8 / 15.4; grid-row: 1 / 2; }
+        .top-row-10 { grid-column: 15.4 / 17; grid-row: 1 / 2; }
 
-        /* Top Right Long Row (7 screens) */
-        .grid-pos-3  { grid-column: 6 / 8; grid-row: 1 / 2; }
-        .grid-pos-4  { grid-column: 8 / 10; grid-row: 1 / 2; }
-        .grid-pos-5  { grid-column: 10 / 12; grid-row: 1 / 2; }
-        .grid-pos-6  { grid-column: 12 / 14; grid-row: 1 / 2; }
-        .grid-pos-7  { grid-column: 14 / 16; grid-row: 1 / 2; }
-        .grid-pos-8  { grid-column: 16 / 18; grid-row: 1 / 2; } /* Spans into virtual 18th col */
-        .grid-pos-9  { grid-column: 18 / 20; grid-row: 1 / 2; } /* Spans into virtual 20th col */
+        /* --- RIGHT COLUMN (3 desks) --- */
+        .right-col-1 { grid-column: 15.4 / 17; grid-row: 2 / 3; }
+        .right-col-2 { grid-column: 15.4 / 17; grid-row: 3 / 4; }
+        .right-col-3 { grid-column: 15.4 / 17; grid-row: 4 / 5; }
 
-        /* Right Column (3 screens) */
-        .grid-pos-10 { grid-column: 18 / 20; grid-row: 3 / 4; }
-        .grid-pos-11 { grid-column: 18 / 20; grid-row: 5 / 6; }
-        .grid-pos-12 { grid-column: 18 / 20; grid-row: 7 / 8; }
+        /* --- MIDDLE ISLAND (6 desks: 2 rows of 3) --- */
+        .mid-1 { grid-column: 7 / 9; grid-row: 2 / 3; }
+        .mid-2 { grid-column: 9 / 11; grid-row: 2 / 3; }
+        .mid-3 { grid-column: 11 / 13; grid-row: 2 / 3; }
 
-        /* Center Island (6 screens - 2 rows of 3) */
-        .grid-pos-13 { grid-column: 8 / 10; grid-row: 3 / 4; }
-        .grid-pos-14 { grid-column: 10 / 12; grid-row: 3 / 4; }
-        .grid-pos-15 { grid-column: 12 / 14; grid-row: 3 / 4; }
-        
-        .grid-pos-16 { grid-column: 8 / 10; grid-row: 5 / 6; }
-        .grid-pos-17 { grid-column: 10 / 12; grid-row: 5 / 6; }
-        .grid-pos-18 { grid-column: 12 / 14; grid-row: 5 / 6; }
+        .mid-4 { grid-column: 7 / 9; grid-row: 3 / 4; }
+        .mid-5 { grid-column: 9 / 11; grid-row: 3 / 4; }
+        .mid-6 { grid-column: 11 / 13; grid-row: 3 / 4; }
 
-        /* Bottom Long Row (10 screens) */
-        .grid-pos-19 { grid-column: 1 / 3; grid-row: 8 / 9; }
-        .grid-pos-20 { grid-column: 3 / 5; grid-row: 8 / 9; }
-        .grid-pos-21 { grid-column: 5 / 7; grid-row: 8 / 9; }
-        .grid-pos-22 { grid-column: 7 / 9; grid-row: 8 / 9; }
-        .grid-pos-23 { grid-column: 9 / 11; grid-row: 8 / 9; }
-        .grid-pos-24 { grid-column: 11 / 13; grid-row: 8 / 9; }
-        .grid-pos-25 { grid-column: 13 / 15; grid-row: 8 / 9; }
-        .grid-pos-26 { grid-column: 15 / 17; grid-row: 8 / 9; }
-        .grid-pos-27 { grid-column: 17 / 19; grid-row: 8 / 9; }
-        .grid-pos-28 { grid-column: 19 / 21; grid-row: 8 / 9; }
+        /* --- BOTTOM ROW (11 desks) --- */
+        .bot-row-1  { grid-column: 1 / 2.45; grid-row: 5 / 6; }
+        .bot-row-2  { grid-column: 2.45 / 3.9; grid-row: 5 / 6; }
+        .bot-row-3  { grid-column: 3.9 / 5.35; grid-row: 5 / 6; }
+        .bot-row-4  { grid-column: 5.35 / 6.8; grid-row: 5 / 6; }
+        .bot-row-5  { grid-column: 6.8 / 8.25; grid-row: 5 / 6; }
+        .bot-row-6  { grid-column: 8.25 / 9.7; grid-row: 5 / 6; }
+        .bot-row-7  { grid-column: 9.7 / 11.15; grid-row: 5 / 6; }
+        .bot-row-8  { grid-column: 11.15 / 12.6; grid-row: 5 / 6; }
+        .bot-row-9  { grid-column: 12.6 / 14.05; grid-row: 5 / 6; }
+        .bot-row-10 { grid-column: 14.05 / 15.5; grid-row: 5 / 6; }
+        .bot-row-11 { grid-column: 15.5 / 17; grid-row: 5 / 6; }
 
     </style>
 </head>
@@ -179,135 +227,233 @@
         <span class="room-badge">🚪 Room 2051</span>
     </header>
 
-    <div class="room-layout">
-        
-        <!-- ================= TOP LEFT ================= -->
-        <div class="desk grid-pos-1">
-            <div class="desk-label">ISR-2051-01</div>
-            <div class="student-name">Anirudh Anandasundararaman</div>
-        </div>
-        <div class="desk grid-pos-2">
-            <div class="desk-label">ISR-2051-02</div>
-            <div class="student-name">Batu Boylu</div>
-        </div>
+    <div class="toolbar">
+        <div style="font-weight: 500; color: #4a6a8a;">🖱️ Drag and drop to rearrange</div>
+        <button class="reset-btn" id="resetBtn">↻ Reset Layout</button>
+    </div>
 
-        <!-- ================= TOP RIGHT ROW ================= -->
-        <div class="desk grid-pos-3">
-            <div class="desk-label">ISR-2051-04</div>
-            <div class="student-name">Mila Chen</div>
-        </div>
-        <div class="desk grid-pos-4">
-            <div class="desk-label">ISR-2051-13</div>
-            <div class="student-name">Charles Dingendorf</div>
-        </div>
-        <div class="desk grid-pos-5">
-            <div class="desk-label">ISR-2051-06</div>
-            <div class="student-name">Iris Ho</div>
-        </div>
-        <div class="desk grid-pos-6">
-            <div class="desk-label">ISR-2051-07</div>
-            <div class="student-name">Alisa Hu</div>
-        </div>
-        <div class="desk grid-pos-7">
-            <div class="desk-label">ISR-2051-08</div>
-            <div class="student-name">Philian Kampmann</div>
-        </div>
-        <div class="desk grid-pos-8">
-            <div class="desk-label">ISR-2051-09</div>
-            <div class="student-name">Don Li</div>
-        </div>
-        <div class="desk grid-pos-9">
-            <div class="desk-label">ISR-2051-05</div>
-            <div class="student-name">Liam Langensiepen</div>
-        </div>
-
-        <!-- ================= RIGHT COLUMN ================= -->
-        <div class="desk grid-pos-10">
-            <div class="desk-label">ISR-2051-11</div>
-            <div class="student-name">Junchi Liu</div>
-        </div>
-        <div class="desk grid-pos-11">
-            <div class="desk-label">ISR-2051-12</div>
-            <div class="student-name">Felicia Ljungqvist</div>
-        </div>
-        <div class="desk grid-pos-12">
-            <div class="desk-label">ISR-2051-10</div>
-            <div class="student-name">Kaan Özcan</div>
-        </div>
-
-        <!-- ================= CENTER ISLAND ================= -->
-        <!-- Row 1 -->
-        <div class="desk grid-pos-13">
-            <div class="desk-label">ISR-2051-REFER</div>
-            <div class="student-name">Mert Öztürk</div>
-        </div>
-        <div class="desk grid-pos-14">
-            <div class="desk-label">ISR-0009-01</div>
-            <div class="student-name">Kai Penka</div>
-        </div>
-        <div class="desk grid-pos-15">
-            <div class="desk-label">ISR-2052-64</div>
-            <div class="student-name">Maximilian Schmidt</div>
-        </div>
-        <!-- Row 2 -->
-        <div class="desk grid-pos-16">
-            <div class="desk-label">DESKTOP-JG1744S</div>
-            <div class="student-name">Mirtó Simiantonakis</div>
-        </div>
-        <div class="desk grid-pos-17">
-            <div class="desk-label">ISR-2051-REFER2</div>
-            <div class="student-name">Max Sun</div>
-        </div>
-        <div class="desk grid-pos-18">
-            <div class="desk-label">ISR-2051-16</div>
-            <div class="student-name">Constantin Volberg</div>
-        </div>
-
-        <!-- ================= BOTTOM ROW ================= -->
-        <div class="desk grid-pos-19">
-            <div class="desk-label">ISR-2051-REFERD</div>
-            <div class="student-name">Joshua Wagenfeld</div>
-        </div>
-        <div class="desk grid-pos-20">
-            <div class="desk-label">ISR-2052-63</div>
-            <div class="student-name">Anqing Xiang</div>
-        </div>
-        <div class="desk grid-pos-21">
-            <div class="desk-label">ISR-2051-27</div>
-            <div class="student-name">Joan Yan</div>
-        </div>
-        <div class="desk grid-pos-22">
-            <div class="desk-label">ISR-2051-28</div>
-            <div class="student-name">Minghan Ye</div>
-        </div>
-        <div class="desk grid-pos-23">
-            <div class="desk-label">ISR-2051-29</div>
-            <div class="student-name">Qianyu Zhan</div>
-        </div>
-        <div class="desk grid-pos-24">
-            <div class="desk-label">ISR-2051-30</div>
-            <div class="student-name">Emma Zhang</div>
-        </div>
-        
-        <!-- Remaining empty bottom desks -->
-        <div class="desk empty-desk grid-pos-25">
-            <div class="desk-label">ISR-2051-23</div>
-            <div class="student-name">Empty</div>
-        </div>
-        <div class="desk empty-desk grid-pos-26">
-            <div class="desk-label">ISR-2051-22</div>
-            <div class="student-name">Empty</div>
-        </div>
-        <div class="desk empty-desk grid-pos-27">
-            <div class="desk-label">ISR-2051-21</div>
-            <div class="student-name">Empty</div>
-        </div>
-        <div class="desk empty-desk grid-pos-28">
-            <div class="desk-label">ISR-2051-20</div>
-            <div class="student-name">Empty</div>
-        </div>
-        
+    <div class="room-layout" id="seatingGrid">
+        <!-- Generated via JS -->
     </div>
 </div>
+
+<script>
+    // Original 24 Students List
+    const RAW_STUDENTS = [
+        "Anirudh Anandasundararaman",
+        "Batu Boylu",
+        "Mila Chen",
+        "Charles Dingendorf",
+        "Iris Ho",
+        "Alisa Hu",
+        "Philian Kampmann",
+        "Don Li",
+        "Liam Langensiepen",
+        "Junchi Liu",
+        "Felicia Ljungqvist",
+        "Kaan Özcan",
+        "Mert Öztürk",
+        "Kai Penka",
+        "Maximilian Schmidt",
+        "Mirtó Simiantonakis",
+        "Max Sun",
+        "Constantin Volberg",
+        "Joshua Wagenfeld",
+        "Anqing Xiang",
+        "Joan Yan",
+        "Minghan Ye",
+        "Qianyu Zhan",
+        "Emma Zhang"
+    ];
+
+    // Format Names: First Name + Last Initial
+    function formatName(fullName) {
+        const parts = fullName.trim().split(/\s+/);
+        if (parts.length > 1) {
+            return `${parts[0]} ${parts[parts.length - 1][0]}.`;
+        }
+        return parts[0];
+    }
+
+    // Map Computer Layout to Zones
+    // We need 24 filled spots out of 30 total.
+    // We fill Top Left (2), Top Right (8), Bottom (11), Right Col (3) = 24.
+    // Middle (6) and Bottom extra (2) remain empty.
+    
+    const DESKS = [
+        // TOP ROW (10 desks)
+        { id: 'ISR-01', pos: 'top-row-1', zone: 'zone-top-left' },
+        { id: 'ISR-02', pos: 'top-row-2', zone: 'zone-top-left' },
+        { id: 'ISR-04', pos: 'top-row-3', zone: 'zone-top-right' },
+        { id: 'ISR-13', pos: 'top-row-4', zone: 'zone-top-right' },
+        { id: 'ISR-06', pos: 'top-row-5', zone: 'zone-top-right' },
+        { id: 'ISR-07', pos: 'top-row-6', zone: 'zone-top-right' },
+        { id: 'ISR-08', pos: 'top-row-7', zone: 'zone-top-right' },
+        { id: 'ISR-09', pos: 'top-row-8', zone: 'zone-top-right' },
+        { id: 'ISR-05', pos: 'top-row-9', zone: 'zone-top-right' },
+        { id: 'ISR-03', pos: 'top-row-10', zone: 'zone-top-right' },
+
+        // RIGHT COLUMN (3 desks)
+        { id: 'ISR-11', pos: 'right-col-1', zone: 'zone-right-col' },
+        { id: 'ISR-12', pos: 'right-col-2', zone: 'zone-right-col' },
+        { id: 'ISR-10', pos: 'right-col-3', zone: 'zone-right-col' },
+
+        // BOTTOM ROW (11 desks)
+        { id: 'ISR-27', pos: 'bot-row-1', zone: 'zone-bottom' },
+        { id: 'ISR-28', pos: 'bot-row-2', zone: 'zone-bottom' },
+        { id: 'ISR-29', pos: 'bot-row-3', zone: 'zone-bottom' },
+        { id: 'ISR-30', pos: 'bot-row-4', zone: 'zone-bottom' },
+        { id: 'ISR-31', pos: 'bot-row-5', zone: 'zone-bottom' },
+        { id: 'ISR-32', pos: 'bot-row-6', zone: 'zone-bottom' },
+        { id: 'ISR-33', pos: 'bot-row-7', zone: 'zone-bottom' },
+        { id: 'ISR-34', pos: 'bot-row-8', zone: 'zone-bottom' },
+        { id: 'ISR-35', pos: 'bot-row-9', zone: 'zone-bottom' },
+        { id: 'ISR-36', pos: 'bot-row-10', zone: 'zone-bottom' },
+        { id: 'ISR-37', pos: 'bot-row-11', zone: 'zone-bottom' },
+
+        // MIDDLE ISLAND (6 desks)
+        { id: 'ISR-40', pos: 'mid-1', zone: 'zone-middle' },
+        { id: 'ISR-41', pos: 'mid-2', zone: 'zone-middle' },
+        { id: 'ISR-42', pos: 'mid-3', zone: 'zone-middle' },
+        { id: 'ISR-43', pos: 'mid-4', zone: 'zone-middle' },
+        { id: 'ISR-44', pos: 'mid-5', zone: 'zone-middle' },
+        { id: 'ISR-45', pos: 'mid-6', zone: 'zone-middle' },
+    ];
+
+    const STORAGE_KEY = 'room2051_seating_v3';
+
+    // Initial generation: Fill outer ring first, then middle.
+    function getInitialLayout() {
+        const names = RAW_STUDENTS.map(formatName);
+        const layout = DESKS.map(d => ({ ...d, student: null })); // start all empty
+
+        // Define fill order: Top Left, Top Right, Bottom, Right Col, Middle
+        const fillOrder = [
+            'top-row-1', 'top-row-2',
+            'top-row-3', 'top-row-4', 'top-row-5', 'top-row-6', 'top-row-7', 'top-row-8', 'top-row-9', 'top-row-10',
+            'bot-row-1', 'bot-row-2', 'bot-row-3', 'bot-row-4', 'bot-row-5', 'bot-row-6', 'bot-row-7', 'bot-row-8', 'bot-row-9', 'bot-row-10', 'bot-row-11',
+            'right-col-1', 'right-col-2', 'right-col-3',
+            'mid-1', 'mid-2', 'mid-3', 'mid-4', 'mid-5', 'mid-6'
+        ];
+
+        let nameIndex = 0;
+        fillOrder.forEach(pos => {
+            if (nameIndex < names.length) {
+                const desk = layout.find(d => d.pos === pos);
+                if (desk) {
+                    desk.student = names[nameIndex];
+                    nameIndex++;
+                }
+            }
+        });
+
+        return layout;
+    }
+
+    let layout = [];
+
+    // Load from storage or initialize
+    function loadLayout() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // Sanity check to ensure it matches our current desk count/ids
+                if (parsed.length === DESKS.length) {
+                    // Also ensure property 'pos' matches, in case I changed the grid mapping
+                    const isValid = parsed.every((p, i) => p.pos === DESKS[i].pos);
+                    if (isValid) {
+                        layout = parsed;
+                        return;
+                    }
+                }
+            } catch (e) { /* ignore */ }
+        }
+        layout = getInitialLayout();
+        saveLayout();
+    }
+
+    function saveLayout() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+    }
+
+    // Drag state
+    let draggedIndex = null;
+
+    function renderGrid() {
+        const grid = document.getElementById('seatingGrid');
+        grid.innerHTML = '';
+
+        layout.forEach((desk, index) => {
+            const el = document.createElement('div');
+            el.className = `desk ${desk.zone} ${desk.pos}`;
+            if (!desk.student) el.classList.add('empty-desk');
+            el.dataset.index = index;
+            el.draggable = true;
+
+            el.innerHTML = `
+                <div class="desk-label">${desk.id}</div>
+                <div class="student-name">${desk.student || 'Empty'}</div>
+            `;
+
+            // Drag events
+            el.addEventListener('dragstart', (e) => {
+                draggedIndex = index;
+                el.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', index);
+            });
+
+            el.addEventListener('dragend', () => {
+                el.classList.remove('dragging');
+                document.querySelectorAll('.desk').forEach(d => d.classList.remove('drag-over'));
+                draggedIndex = null;
+            });
+
+            el.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Necessary to allow dropping
+                if (draggedIndex !== index) {
+                    el.classList.add('drag-over');
+                }
+            });
+
+            el.addEventListener('dragleave', () => {
+                el.classList.remove('drag-over');
+            });
+
+            el.addEventListener('drop', (e) => {
+                e.preventDefault();
+                el.classList.remove('drag-over');
+                
+                if (draggedIndex === null || draggedIndex === index) return;
+
+                // Swap the student names, not the desk IDs/Zones
+                const temp = layout[draggedIndex].student;
+                layout[draggedIndex].student = layout[index].student;
+                layout[index].student = temp;
+
+                saveLayout();
+                renderGrid();
+            });
+
+            grid.appendChild(el);
+        });
+    }
+
+    function init() {
+        loadLayout();
+        renderGrid();
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            if (confirm('Reset all students to original layout?')) {
+                layout = getInitialLayout();
+                saveLayout();
+                renderGrid();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
