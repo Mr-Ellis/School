@@ -68,45 +68,72 @@
             align-items: center;
             margin-bottom: 1rem;
             flex-shrink: 0;
-        }
-
-        .instructions {
-            font-weight: 500;
-            color: #4a6a8a;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-group {
-            display: flex;
+            flex-wrap: wrap;
             gap: 1rem;
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 0.75rem;
         }
 
         .btn {
             border: 1px solid #b8cee4;
-            padding: 0.5rem 1.2rem;
+            padding: 0.5rem 1rem;
             border-radius: 40px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-reset {
+            gap: 0.4rem;
+            font-size: 0.9rem;
             background: white;
             color: #1f4a7a;
         }
-        .btn-reset:hover { background: #1f4a7a; color: white; }
 
-        .btn-set {
+        .btn:hover { background: #e3edf7; }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-primary {
             background: #2a6b9e;
             color: white;
             border-color: #2a6b9e;
         }
-        .btn-set:hover { background: #1f4a7a; border-color: #1f4a7a; }
+        .btn-primary:hover { background: #1f4a7a; border-color: #1f4a7a; }
+
+        .btn-spin {
+            background: #f0ad4e;
+            color: white;
+            border-color: #eea236;
+        }
+        .btn-spin:hover { background: #ec971f; border-color: #d58512; }
+
+        /* Random Name Display */
+        .random-display {
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 1px solid #ffeeba;
+            display: none; /* Hidden by default */
+            align-items: center;
+            gap: 0.5rem;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
         /* The physical room representation */
         .room-layout {
@@ -126,52 +153,58 @@
         /* Room Elements */
         .whiteboard {
             position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
             background: #e2eaf3;
             color: #5a7a9a;
-            padding: 0.3rem 4rem;
-            border-radius: 0 0 10px 10px;
-            font-size: 0.75rem;
+            width: 25px; /* Vertical thickness */
+            height: 60%;
+            border-radius: 0 10px 10px 0;
+            font-size: 0.65rem;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
             z-index: 10;
             border: 1px solid #d0dfee;
-            border-top: none;
+            border-left: none;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 0;
         }
 
         .door {
             position: absolute;
-            bottom: 0;
-            left: 2%;
+            top: 0;
+            left: 5%;
             width: 80px;
-            height: 8px;
+            height: 25px;
             background: #a0b8d0;
-            border-radius: 5px 5px 0 0;
+            border-radius: 0 0 5px 5px;
             z-index: 10;
             display: flex;
             justify-content: center;
-            align-items: flex-end;
+            align-items: center;
         }
         .door::before {
             content: 'DOOR';
             font-size: 0.55rem;
             color: white;
             font-weight: 800;
-            margin-bottom: 1px;
         }
         .door-arc {
             position: absolute;
-            bottom: 0;
-            left: 2%;
+            top: 0;
+            left: 5%;
             width: 80px;
             height: 80px;
             border-radius: 50%;
             border: 1px dashed #a0b8d0;
-            border-bottom: none;
-            border-right: none;
+            border-top: none;
+            border-left: none;
             pointer-events: none;
             z-index: 1;
         }
@@ -188,7 +221,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: grab;
+            cursor: pointer;
             user-select: none;
             transition: transform 0.1s, box-shadow 0.1s;
             aspect-ratio: 1.6 / 1;
@@ -197,8 +230,14 @@
             z-index: 5;
         }
 
-        .desk:active {
-            cursor: grabbing;
+        .desk:hover {
+            border-color: #2a6b9e;
+            box-shadow: 0 4px 12px rgba(42, 107, 158, 0.2);
+        }
+
+        .desk.selected {
+            border: 2px solid #2a6b9e;
+            box-shadow: 0 0 0 3px rgba(42, 107, 158, 0.3);
         }
 
         .desk.dragging {
@@ -212,6 +251,18 @@
             background: #e9f2fc;
             transform: translate(-50%, -50%) scale(1.05);
             z-index: 50;
+        }
+
+        /* Random Winner Highlight */
+        .desk.winner {
+            animation: winnerPulse 1.5s infinite alternate;
+            border-color: #f0ad4e;
+            z-index: 20;
+        }
+
+        @keyframes winnerPulse {
+            from { box-shadow: 0 0 0 0 rgba(240, 173, 78, 0.7); }
+            to { box-shadow: 0 0 0 10px rgba(240, 173, 78, 0); }
         }
 
         .desk-label {
@@ -259,11 +310,8 @@
         /* =========================================
            EXACT PHYSICAL POSITIONING 
            ========================================= */
-
-        /* --- TOP ROW (10 desks) --- */
         .top-1  { top: 18%; left: 15%; width: 7.5%; }
         .top-2  { top: 18%; left: 24%; width: 7.5%; }
-        
         .top-3  { top: 18%; left: 36%; width: 6.5%; }
         .top-4  { top: 18%; left: 43%; width: 6.5%; }
         .top-5  { top: 18%; left: 50%; width: 6.5%; }
@@ -273,21 +321,17 @@
         .top-9  { top: 18%; left: 78%; width: 6.5%; }
         .top-10 { top: 18%; left: 85%; width: 6.5%; }
 
-        /* --- RIGHT COLUMN (3 desks) --- */
         .right-1 { top: 35%; left: 92%; width: 8.5%; }
         .right-2 { top: 55%; left: 92%; width: 8.5%; }
         .right-3 { top: 75%; left: 92%; width: 8.5%; }
 
-        /* --- MIDDLE ISLAND (6 desks) --- */
         .mid-1 { top: 40%; left: 42%; width: 8%; }
         .mid-2 { top: 40%; left: 51%; width: 8%; }
         .mid-3 { top: 40%; left: 60%; width: 8%; }
-        
         .mid-4 { top: 60%; left: 42%; width: 8%; }
         .mid-5 { top: 60%; left: 51%; width: 8%; }
         .mid-6 { top: 60%; left: 60%; width: 8%; }
 
-        /* --- BOTTOM ROW (11 desks) --- */
         .bot-1  { top: 85%; left: 10%; width: 7%; }
         .bot-2  { top: 85%; left: 17.5%; width: 7%; }
         .bot-3  { top: 85%; left: 25%; width: 7%; }
@@ -300,6 +344,30 @@
         .bot-10 { top: 85%; left: 77.5%; width: 7%; }
         .bot-11 { top: 85%; left: 85%; width: 7%; }
 
+        /* PRINT STYLES */
+        @media print {
+            body { background: white; height: auto; overflow: visible; padding: 0; }
+            .chart-container { box-shadow: none; padding: 0; max-width: none; height: auto; }
+            .toolbar, .room-badge { display: none !important; }
+            header { border-bottom: 2px solid #000; margin-bottom: 10px; }
+            h1 { color: #000; }
+            .room-layout { 
+                border: 2px solid #000; 
+                background: none; 
+                height: 800px; /* Force height for print */
+            }
+            .desk {
+                box-shadow: none;
+                border: 1px solid #000;
+                background: white !important;
+                color: black !important;
+            }
+            .desk-label { color: #000; }
+            .student-name { color: #000; font-size: 1rem; }
+            .empty-desk { border: 1px dashed #000; }
+            .whiteboard, .door, .door-arc { border-color: #000; color: #000; background: white; }
+            .random-display { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -310,18 +378,24 @@
     </header>
 
     <div class="toolbar">
-        <div class="instructions">🖱️ Drag to arrange, then click <strong>Set Layout</strong> to save.</div>
-        <div class="btn-group">
-            <button class="btn btn-reset" id="resetBtn">↻ Reset Layout</button>
-            <button class="btn btn-set" id="setBtn">💾 Set Layout</button>
+        <div class="toolbar-left">
+            <button class="btn btn-spin" id="spinBtn">🎲 Random Student</button>
+            <div class="random-display" id="randomDisplay">
+                <span>👉</span> <span id="randomNameText">Name</span>
+            </div>
+        </div>
+        <div class="toolbar-right">
+            <button class="btn" id="undoBtn" title="Undo last move">↶ Undo</button>
+            <button class="btn" id="printBtn" title="Print Chart">🖨️ Print</button>
+            <button class="btn btn-primary" id="resetBtn" title="Reset to default">↻ Reset</button>
         </div>
     </div>
 
     <div class="room-layout" id="seatingGrid">
         <!-- Room Features -->
-        <div class="whiteboard">Whiteboard / Front of Room</div>
-        <div class="door">Door</div>
+        <div class="door"></div>
         <div class="door-arc"></div>
+        <div class="whiteboard">Whiteboard</div>
         
         <!-- Desks are generated via JS -->
     </div>
@@ -329,44 +403,19 @@
 
 <script>
     const RAW_STUDENTS = [
-        "Anirudh Anandasundararaman",
-        "Batu Boylu",
-        "Mila Chen",
-        "Charles Dingendorf",
-        "Iris Ho",
-        "Alisa Hu",
-        "Philian Kampmann",
-        "Don Li",
-        "Liam Langensiepen",
-        "Junchi Liu",
-        "Felicia Ljungqvist",
-        "Kaan Özcan",
-        "Mert Öztürk",
-        "Kai Penka",
-        "Maximilian Schmidt",
-        "Mirtó Simiantonakis",
-        "Max Sun",
-        "Constantin Volberg",
-        "Joshua Wagenfeld",
-        "Anqing Xiang",
-        "Joan Yan",
-        "Minghan Ye",
-        "Qianyu Zhan",
-        "Emma Zhang"
+        "Anirudh Anandasundararaman", "Batu Boylu", "Mila Chen", "Charles Dingendorf",
+        "Iris Ho", "Alisa Hu", "Philian Kampmann", "Don Li", "Liam Langensiepen",
+        "Junchi Liu", "Felicia Ljungqvist", "Kaan Özcan", "Mert Öztürk", "Kai Penka",
+        "Maximilian Schmidt", "Mirtó Simiantonakis", "Max Sun", "Constantin Volberg",
+        "Joshua Wagenfeld", "Anqing Xiang", "Joan Yan", "Minghan Ye", "Qianyu Zhan", "Emma Zhang"
     ];
 
-    // Format Names: First Name + Last Initial
     function formatName(fullName) {
         const parts = fullName.trim().split(/\s+/);
-        if (parts.length > 1) {
-            return `${parts[0]} ${parts[parts.length - 1][0]}.`;
-        }
-        return parts[0];
+        return parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : parts[0];
     }
 
-    // Exact physical mapping based on screenshot
     const DESKS = [
-        // TOP ROW (10 desks)
         { id: 'ISR-01', pos: 'top-1', zone: 'zone-top-left' },
         { id: 'ISR-02', pos: 'top-2', zone: 'zone-top-left' },
         { id: 'ISR-04', pos: 'top-3', zone: 'zone-top-right' },
@@ -378,12 +427,10 @@
         { id: 'ISR-05', pos: 'top-9', zone: 'zone-top-right' },
         { id: 'ISR-03', pos: 'top-10', zone: 'zone-top-right' },
 
-        // RIGHT COLUMN (3 desks)
         { id: 'ISR-11', pos: 'right-1', zone: 'zone-right-col' },
         { id: 'ISR-12', pos: 'right-2', zone: 'zone-right-col' },
         { id: 'ISR-10', pos: 'right-3', zone: 'zone-right-col' },
 
-        // BOTTOM ROW (11 desks)
         { id: 'ISR-27', pos: 'bot-1', zone: 'zone-bottom' },
         { id: 'ISR-28', pos: 'bot-2', zone: 'zone-bottom' },
         { id: 'ISR-29', pos: 'bot-3', zone: 'zone-bottom' },
@@ -396,70 +443,57 @@
         { id: 'ISR-36', pos: 'bot-10', zone: 'zone-bottom' },
         { id: 'ISR-37', pos: 'bot-11', zone: 'zone-bottom' },
 
-        // MIDDLE ISLAND (6 desks)
         { id: 'ISR-40', pos: 'mid-1', zone: 'zone-middle' },
         { id: 'ISR-41', pos: 'mid-2', zone: 'zone-middle' },
         { id: 'ISR-42', pos: 'mid-3', zone: 'zone-middle' },
         { id: 'ISR-43', pos: 'mid-4', zone: 'zone-middle' },
         { id: 'ISR-44', pos: 'mid-5', zone: 'zone-middle' },
-        { id: 'ISR-45', pos: 'mid-6', zone: 'zone-middle' },
+        { id: 'ISR-45', pos: 'mid-6', zone: 'zone-middle' }
     ];
 
-    const STORAGE_KEY = 'room2051_seating_v6';
-    
-    // We keep a copy of the "active" layout and a copy of the "saved" layout
+    const STORAGE_KEY = 'room2051_seating_v7';
     let layout = [];
-    let savedLayout = null;
+    let history = []; // For Undo
+    let selectedIndex = null;
 
-    // Fill order: Top (10), Bottom (11), Right (3). Total = 24. 
-    // Middle (6) is left empty.
     function getDefaultLayout() {
         const names = RAW_STUDENTS.map(formatName);
         const defaultLayout = DESKS.map(d => ({ ...d, student: null })); 
-
         const fillOrder = [
             'top-1', 'top-2', 'top-3', 'top-4', 'top-5', 'top-6', 'top-7', 'top-8', 'top-9', 'top-10',
             'bot-1', 'bot-2', 'bot-3', 'bot-4', 'bot-5', 'bot-6', 'bot-7', 'bot-8', 'bot-9', 'bot-10', 'bot-11',
             'right-1', 'right-2', 'right-3',
             'mid-1', 'mid-2', 'mid-3', 'mid-4', 'mid-5', 'mid-6'
         ];
-
         let nameIndex = 0;
         fillOrder.forEach(pos => {
             if (nameIndex < names.length) {
                 const desk = defaultLayout.find(d => d.pos === pos);
-                if (desk) {
-                    desk.student = names[nameIndex];
-                    nameIndex++;
-                }
+                if (desk) { desk.student = names[nameIndex++]; }
             }
         });
-
         return defaultLayout;
     }
 
-    // Load from localStorage if it exists, otherwise use default
-    function loadInitialLayout() {
+    function loadLayout() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
-                if (parsed.length === DESKS.length) {
-                    const isValid = parsed.every((p, i) => p.pos === DESKS[i].pos);
-                    if (isValid) {
-                        return parsed;
-                    }
+                if (parsed.length === DESKS.length && parsed.every((p, i) => p.pos === DESKS[i].pos)) {
+                    return parsed;
                 }
-            } catch (e) { /* ignore */ }
+            } catch (e) {}
         }
         return getDefaultLayout();
     }
 
-    let draggedIndex = null;
+    function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+    }
 
     function renderGrid() {
         const grid = document.getElementById('seatingGrid');
-        // Keep the room features, remove only existing desks
         const desks = grid.querySelectorAll('.desk');
         desks.forEach(d => d.remove());
 
@@ -467,6 +501,8 @@
             const el = document.createElement('div');
             el.className = `desk ${desk.zone} ${desk.pos}`;
             if (!desk.student) el.classList.add('empty-desk');
+            if (selectedIndex === index) el.classList.add('selected');
+            
             el.dataset.index = index;
             el.draggable = true;
 
@@ -475,72 +511,132 @@
                 <div class="student-name">${desk.student || 'Empty'}</div>
             `;
 
+            // Drag Events
             el.addEventListener('dragstart', (e) => {
-                draggedIndex = index;
+                if(selectedIndex !== null) {
+                    // If dragging while something is selected, clear selection
+                    document.querySelectorAll('.desk').forEach(d => d.classList.remove('selected'));
+                    selectedIndex = null;
+                }
                 el.classList.add('dragging');
-                e.dataTransfer.effectAllowed = 'move';
                 e.dataTransfer.setData('text/plain', index);
             });
 
             el.addEventListener('dragend', () => {
                 el.classList.remove('dragging');
                 document.querySelectorAll('.desk').forEach(d => d.classList.remove('drag-over'));
-                draggedIndex = null;
             });
 
             el.addEventListener('dragover', (e) => {
                 e.preventDefault(); 
-                if (draggedIndex !== index) {
-                    el.classList.add('drag-over');
-                }
+                el.classList.add('drag-over');
             });
 
-            el.addEventListener('dragleave', () => {
-                el.classList.remove('drag-over');
-            });
+            el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
 
             el.addEventListener('drop', (e) => {
                 e.preventDefault();
                 el.classList.remove('drag-over');
-                
-                if (draggedIndex === null || draggedIndex === index) return;
+                const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                const toIndex = index;
+                if (fromIndex === toIndex) return;
 
-                // Swap
-                const temp = layout[draggedIndex].student;
-                layout[draggedIndex].student = layout[index].student;
-                layout[index].student = temp;
+                history.push(JSON.parse(JSON.stringify(layout))); // Save history
+                swapStudents(fromIndex, toIndex);
+            });
 
-                // Note: We do NOT save to localStorage here automatically.
-                // We only re-render the visual grid.
-                renderGrid();
+            // Click-to-Swap Events
+            el.addEventListener('click', () => {
+                if (selectedIndex === null) {
+                    // Select first
+                    selectedIndex = index;
+                    renderGrid();
+                } else {
+                    // Swap with selected
+                    if (selectedIndex === index) {
+                        // Deselect if clicking the same one
+                        selectedIndex = null;
+                        renderGrid();
+                    } else {
+                        history.push(JSON.parse(JSON.stringify(layout))); // Save history
+                        swapStudents(selectedIndex, index);
+                        selectedIndex = null;
+                    }
+                }
             });
 
             grid.appendChild(el);
         });
     }
 
+    function swapStudents(fromIdx, toIdx) {
+        const temp = layout[fromIdx].student;
+        layout[fromIdx].student = layout[toIdx].student;
+        layout[toIdx].student = temp;
+        
+        saveState();
+        renderGrid();
+        document.getElementById('randomDisplay').style.display = 'none'; // Hide picker on swap
+    }
+
     function init() {
-        // Load saved layout (or default)
-        layout = loadInitialLayout();
-        // Keep a copy of this layout so "Reset" goes back to the last SAVED state
-        savedLayout = JSON.parse(JSON.stringify(layout)); 
+        layout = loadLayout();
         renderGrid();
 
-        // --- BUTTON HANDLERS ---
-        
-        // SET BUTTON: Save current visual layout to localStorage
-        document.getElementById('setBtn').addEventListener('click', () => {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
-            savedLayout = JSON.parse(JSON.stringify(layout)); // update the rollback point
-            alert('Layout saved successfully! It will persist on your next visit.');
-        });
-
-        // RESET BUTTON: Revert to the last SAVED state
+        // BUTTONS
         document.getElementById('resetBtn').addEventListener('click', () => {
-            if (confirm('Discard unsaved changes and revert to the last saved layout?')) {
-                layout = JSON.parse(JSON.stringify(savedLayout));
+            if (confirm('Reset all students to original layout? Unsaved changes will be lost.')) {
+                history.push(JSON.parse(JSON.stringify(layout)));
+                layout = getDefaultLayout();
+                saveState();
+                selectedIndex = null;
                 renderGrid();
             }
+        });
+
+        document.getElementById('undoBtn').addEventListener('click', () => {
+            if (history.length > 0) {
+                layout = history.pop();
+                saveState();
+                selectedIndex = null;
+                renderGrid();
+            } else {
+                alert('Nothing to undo.');
+            }
+        });
+
+        document.getElementById('printBtn').addEventListener('click', () => {
+            window.print();
+        });
+
+        // RANDOM SPINNER
+        document.getElementById('spinBtn').addEventListener('click', () => {
+            const populatedIndices = layout.map((d, i) => d.student ? i : null).filter(i => i !== null);
+            if (populatedIndices.length === 0) return;
+
+            // Clear previous winner
+            document.querySelectorAll('.desk').forEach(d => d.classList.remove('winner'));
+
+            // Pick random
+            const randomIdx = populatedIndices[Math.floor(Math.random() * populatedIndices.length)];
+            const studentName = layout[randomIdx].student;
+
+            // Highlight DOM element
+            const deskEl = document.querySelector(`.desk[data-index="${randomIdx}"]`);
+            if (deskEl) {
+                deskEl.classList.add('winner');
+                deskEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // Show display
+            const display = document.getElementById('randomDisplay');
+            document.getElementById('randomNameText').innerText = studentName;
+            display.style.display = 'flex';
+
+            // Auto-clear highlight after 4 seconds
+            setTimeout(() => {
+                if(deskEl) deskEl.classList.remove('winner');
+            }, 4000);
         });
     }
 
