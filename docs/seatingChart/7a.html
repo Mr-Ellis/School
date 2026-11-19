@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room 2051 · Class 7A Seating Chart</title>
+    <title>Room 2051 · Seating Chart System</title>
     <style>
         * {
             box-sizing: border-box;
@@ -45,12 +45,36 @@
             flex-shrink: 0;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
         h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #0b2b4a;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .class-selector {
+            font-size: 1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 2px solid #b8cee4;
+            color: #1f4a7a;
+            font-weight: 600;
+            background: #f4f8fc;
+            cursor: pointer;
+            outline: none;
+            transition: 0.2s;
+        }
+        .class-selector:focus, .class-selector:hover {
+            border-color: #2a6b9e;
+            background: white;
         }
 
         .room-badge {
@@ -124,7 +148,7 @@
             font-weight: 700;
             font-size: 1.1rem;
             border: 1px solid #ffeeba;
-            display: none; /* Hidden by default */
+            display: none; 
             align-items: center;
             gap: 0.5rem;
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -158,7 +182,7 @@
             transform: translateY(-50%);
             background: #e2eaf3;
             color: #5a7a9a;
-            width: 25px; /* Vertical thickness */
+            width: 25px;
             height: 60%;
             border-radius: 0 10px 10px 0;
             font-size: 0.65rem;
@@ -253,7 +277,6 @@
             z-index: 50;
         }
 
-        /* Random Winner Highlight */
         .desk.winner {
             animation: winnerPulse 1.5s infinite alternate;
             border-color: #f0ad4e;
@@ -287,7 +310,6 @@
             width: 100%;
         }
 
-        /* Color Coding Zones */
         .zone-top-left { background: #f0f7ff; border-color: #a8c6e8; }
         .zone-top-right { background: #f4fdf4; border-color: #a8e8b0; }
         .zone-bottom { background: #fffaf0; border-color: #e8d8a8; }
@@ -307,9 +329,7 @@
             font-size: 0.75rem;
         }
 
-        /* =========================================
-           EXACT PHYSICAL POSITIONING 
-           ========================================= */
+        /* POSITIONING */
         .top-1  { top: 18%; left: 15%; width: 7.5%; }
         .top-2  { top: 18%; left: 24%; width: 7.5%; }
         .top-3  { top: 18%; left: 36%; width: 6.5%; }
@@ -344,24 +364,14 @@
         .bot-10 { top: 85%; left: 77.5%; width: 7%; }
         .bot-11 { top: 85%; left: 85%; width: 7%; }
 
-        /* PRINT STYLES */
         @media print {
             body { background: white; height: auto; overflow: visible; padding: 0; }
             .chart-container { box-shadow: none; padding: 0; max-width: none; height: auto; }
-            .toolbar, .room-badge { display: none !important; }
+            .toolbar, .room-badge, .class-selector { display: none !important; }
             header { border-bottom: 2px solid #000; margin-bottom: 10px; }
             h1 { color: #000; }
-            .room-layout { 
-                border: 2px solid #000; 
-                background: none; 
-                height: 800px; /* Force height for print */
-            }
-            .desk {
-                box-shadow: none;
-                border: 1px solid #000;
-                background: white !important;
-                color: black !important;
-            }
+            .room-layout { border: 2px solid #000; background: none; height: 800px; }
+            .desk { box-shadow: none; border: 1px solid #000; background: white !important; color: black !important; }
             .desk-label { color: #000; }
             .student-name { color: #000; font-size: 1rem; }
             .empty-desk { border: 1px dashed #000; }
@@ -373,7 +383,37 @@
 <body>
 <div class="chart-container">
     <header>
-        <h1>🍎 Class 7A · Seating Chart</h1>
+        <div class="header-left">
+            <h1>🍎 Seating Chart</h1>
+            <select class="class-selector" id="classSelector">
+                <optgroup label="Year 7">
+                    <option value="7a">Class 7A</option>
+                    <option value="7b">Class 7B</option>
+                    <option value="7c">Class 7C</option>
+                </optgroup>
+                <optgroup label="Year 8">
+                    <option value="8a">Class 8A</option>
+                    <option value="8b">Class 8B</option>
+                    <option value="8c">Class 8C</option>
+                </optgroup>
+                <optgroup label="Year 9">
+                    <option value="9a">Class 9A</option>
+                    <option value="9b">Class 9B</option>
+                    <option value="9c">Class 9C</option>
+                </optgroup>
+                <optgroup label="Year 10">
+                    <option value="10">Class 10</option>
+                </optgroup>
+                <optgroup label="Year 11">
+                    <option value="11sl">Class 11SL</option>
+                    <option value="11hl">Class 11HL</option>
+                </optgroup>
+                <optgroup label="Year 12">
+                    <option value="12sl">Class 12SL</option>
+                    <option value="12hl">Class 12HL</option>
+                </optgroup>
+            </select>
+        </div>
         <span class="room-badge">🚪 Room 2051</span>
     </header>
 
@@ -392,23 +432,34 @@
     </div>
 
     <div class="room-layout" id="seatingGrid">
-        <!-- Room Features -->
         <div class="door"></div>
         <div class="door-arc"></div>
         <div class="whiteboard">Whiteboard</div>
-        
-        <!-- Desks are generated via JS -->
     </div>
 </div>
 
 <script>
-    const RAW_STUDENTS = [
-        "Anirudh Anandasundararaman", "Batu Boylu", "Mila Chen", "Charles Dingendorf",
-        "Iris Ho", "Alisa Hu", "Philian Kampmann", "Don Li", "Liam Langensiepen",
-        "Junchi Liu", "Felicia Ljungqvist", "Kaan Özcan", "Mert Öztürk", "Kai Penka",
-        "Maximilian Schmidt", "Mirtó Simiantonakis", "Max Sun", "Constantin Volberg",
-        "Joshua Wagenfeld", "Anqing Xiang", "Joan Yan", "Minghan Ye", "Qianyu Zhan", "Emma Zhang"
-    ];
+    // --- DATA ---
+    // Since I don't have the actual names for the other 15 classes, 
+    // I have generated placeholder names for them. 
+    // To edit the names, just change the strings in the arrays below!
+    
+    const CLASS_DATA = {
+        "7a": ["Anirudh Anandasundararaman", "Batu Boylu", "Mila Chen", "Charles Dingendorf", "Iris Ho", "Alisa Hu", "Philian Kampmann", "Don Li", "Liam Langensiepen", "Junchi Liu", "Felicia Ljungqvist", "Kaan Özcan", "Mert Öztürk", "Kai Penka", "Maximilian Schmidt", "Mirtó Simiantonakis", "Max Sun", "Constantin Volberg", "Joshua Wagenfeld", "Anqing Xiang", "Joan Yan", "Minghan Ye", "Qianyu Zhan", "Emma Zhang"],
+        "7b": ["Student A1", "Student A2", "Student A3", "Student A4", "Student A5", "Student A6", "Student A7", "Student A8", "Student A9", "Student A10", "Student A11", "Student A12", "Student A13", "Student A14", "Student A15", "Student A16", "Student A17", "Student A18", "Student A19", "Student A20", "Student A21", "Student A22", "Student A23", "Student A24"],
+        "7c": ["Student B1", "Student B2", "Student B3", "Student B4", "Student B5", "Student B6", "Student B7", "Student B8", "Student B9", "Student B10", "Student B11", "Student B12", "Student B13", "Student B14", "Student B15", "Student B16", "Student B17", "Student B18", "Student B19", "Student B20", "Student B21", "Student B22", "Student B23", "Student B24"],
+        "8a": ["Student C1", "Student C2", "Student C3", "Student C4", "Student C5", "Student C6", "Student C7", "Student C8", "Student C9", "Student C10", "Student C11", "Student C12", "Student C13", "Student C14", "Student C15", "Student C16", "Student C17", "Student C18", "Student C19", "Student C20", "Student C21", "Student C22", "Student C23", "Student C24"],
+        "8b": ["Student D1", "Student D2", "Student D3", "Student D4", "Student D5", "Student D6", "Student D7", "Student D8", "Student D9", "Student D10", "Student D11", "Student D12", "Student D13", "Student D14", "Student D15", "Student D16", "Student D17", "Student D18", "Student D19", "Student D20", "Student D21", "Student D22", "Student D23", "Student D24"],
+        "8c": ["Student E1", "Student E2", "Student E3", "Student E4", "Student E5", "Student E6", "Student E7", "Student E8", "Student E9", "Student E10", "Student E11", "Student E12", "Student E13", "Student E14", "Student E15", "Student E16", "Student E17", "Student E18", "Student E19", "Student E20", "Student E21", "Student E22", "Student E23", "Student E24"],
+        "9a": ["Student F1", "Student F2", "Student F3", "Student F4", "Student F5", "Student F6", "Student F7", "Student F8", "Student F9", "Student F10", "Student F11", "Student F12", "Student F13", "Student F14", "Student F15", "Student F16", "Student F17", "Student F18", "Student F19", "Student F20", "Student F21", "Student F22", "Student F23", "Student F24"],
+        "9b": ["Student G1", "Student G2", "Student G3", "Student G4", "Student G5", "Student G6", "Student G7", "Student G8", "Student G9", "Student G10", "Student G11", "Student G12", "Student G13", "Student G14", "Student G15", "Student G16", "Student G17", "Student G18", "Student G19", "Student G20", "Student G21", "Student G22", "Student G23", "Student G24"],
+        "9c": ["Student H1", "Student H2", "Student H3", "Student H4", "Student H5", "Student H6", "Student H7", "Student H8", "Student H9", "Student H10", "Student H11", "Student H12", "Student H13", "Student H14", "Student H15", "Student H16", "Student H17", "Student H18", "Student H19", "Student H20", "Student H21", "Student H22", "Student H23", "Student H24"],
+        "10": ["Student I1", "Student I2", "Student I3", "Student I4", "Student I5", "Student I6", "Student I7", "Student I8", "Student I9", "Student I10", "Student I11", "Student I12", "Student I13", "Student I14", "Student I15", "Student I16", "Student I17", "Student I18", "Student I19", "Student I20", "Student I21", "Student I22", "Student I23", "Student I24"],
+        "11sl": ["Student J1", "Student J2", "Student J3", "Student J4", "Student J5", "Student J6", "Student J7", "Student J8", "Student J9", "Student J10", "Student J11", "Student J12", "Student J13", "Student J14", "Student J15", "Student J16", "Student J17", "Student J18", "Student J19", "Student J20", "Student J21", "Student J22", "Student J23", "Student J24"],
+        "11hl": ["Student K1", "Student K2", "Student K3", "Student K4", "Student K5", "Student K6", "Student K7", "Student K8", "Student K9", "Student K10", "Student K11", "Student K12", "Student K13", "Student K14", "Student K15", "Student K16", "Student K17", "Student K18", "Student K19", "Student K20", "Student K21", "Student K22", "Student K23", "Student K24"],
+        "12sl": ["Student L1", "Student L2", "Student L3", "Student L4", "Student L5", "Student L6", "Student L7", "Student L8", "Student L9", "Student L10", "Student L11", "Student L12", "Student L13", "Student L14", "Student L15", "Student L16", "Student L17", "Student L18", "Student L19", "Student L20", "Student L21", "Student L22", "Student L23", "Student L24"],
+        "12hl": ["Student M1", "Student M2", "Student M3", "Student M4", "Student M5", "Student M6", "Student M7", "Student M8", "Student M9", "Student M10", "Student M11", "Student M12", "Student M13", "Student M14", "Student M15", "Student M16", "Student M17", "Student M18", "Student M19", "Student M20", "Student M21", "Student M22", "Student M23", "Student M24"]
+    };
 
     function formatName(fullName) {
         const parts = fullName.trim().split(/\s+/);
@@ -416,48 +467,33 @@
     }
 
     const DESKS = [
-        { id: 'ISR-01', pos: 'top-1', zone: 'zone-top-left' },
-        { id: 'ISR-02', pos: 'top-2', zone: 'zone-top-left' },
-        { id: 'ISR-04', pos: 'top-3', zone: 'zone-top-right' },
-        { id: 'ISR-13', pos: 'top-4', zone: 'zone-top-right' },
-        { id: 'ISR-06', pos: 'top-5', zone: 'zone-top-right' },
-        { id: 'ISR-07', pos: 'top-6', zone: 'zone-top-right' },
-        { id: 'ISR-08', pos: 'top-7', zone: 'zone-top-right' },
-        { id: 'ISR-09', pos: 'top-8', zone: 'zone-top-right' },
-        { id: 'ISR-05', pos: 'top-9', zone: 'zone-top-right' },
-        { id: 'ISR-03', pos: 'top-10', zone: 'zone-top-right' },
-
-        { id: 'ISR-11', pos: 'right-1', zone: 'zone-right-col' },
-        { id: 'ISR-12', pos: 'right-2', zone: 'zone-right-col' },
+        { id: 'ISR-01', pos: 'top-1', zone: 'zone-top-left' }, { id: 'ISR-02', pos: 'top-2', zone: 'zone-top-left' },
+        { id: 'ISR-04', pos: 'top-3', zone: 'zone-top-right' }, { id: 'ISR-13', pos: 'top-4', zone: 'zone-top-right' },
+        { id: 'ISR-06', pos: 'top-5', zone: 'zone-top-right' }, { id: 'ISR-07', pos: 'top-6', zone: 'zone-top-right' },
+        { id: 'ISR-08', pos: 'top-7', zone: 'zone-top-right' }, { id: 'ISR-09', pos: 'top-8', zone: 'zone-top-right' },
+        { id: 'ISR-05', pos: 'top-9', zone: 'zone-top-right' }, { id: 'ISR-03', pos: 'top-10', zone: 'zone-top-right' },
+        { id: 'ISR-11', pos: 'right-1', zone: 'zone-right-col' }, { id: 'ISR-12', pos: 'right-2', zone: 'zone-right-col' },
         { id: 'ISR-10', pos: 'right-3', zone: 'zone-right-col' },
-
-        { id: 'ISR-27', pos: 'bot-1', zone: 'zone-bottom' },
-        { id: 'ISR-28', pos: 'bot-2', zone: 'zone-bottom' },
-        { id: 'ISR-29', pos: 'bot-3', zone: 'zone-bottom' },
-        { id: 'ISR-30', pos: 'bot-4', zone: 'zone-bottom' },
-        { id: 'ISR-31', pos: 'bot-5', zone: 'zone-bottom' },
-        { id: 'ISR-32', pos: 'bot-6', zone: 'zone-bottom' },
-        { id: 'ISR-33', pos: 'bot-7', zone: 'zone-bottom' },
-        { id: 'ISR-34', pos: 'bot-8', zone: 'zone-bottom' },
-        { id: 'ISR-35', pos: 'bot-9', zone: 'zone-bottom' },
-        { id: 'ISR-36', pos: 'bot-10', zone: 'zone-bottom' },
+        { id: 'ISR-27', pos: 'bot-1', zone: 'zone-bottom' }, { id: 'ISR-28', pos: 'bot-2', zone: 'zone-bottom' },
+        { id: 'ISR-29', pos: 'bot-3', zone: 'zone-bottom' }, { id: 'ISR-30', pos: 'bot-4', zone: 'zone-bottom' },
+        { id: 'ISR-31', pos: 'bot-5', zone: 'zone-bottom' }, { id: 'ISR-32', pos: 'bot-6', zone: 'zone-bottom' },
+        { id: 'ISR-33', pos: 'bot-7', zone: 'zone-bottom' }, { id: 'ISR-34', pos: 'bot-8', zone: 'zone-bottom' },
+        { id: 'ISR-35', pos: 'bot-9', zone: 'zone-bottom' }, { id: 'ISR-36', pos: 'bot-10', zone: 'zone-bottom' },
         { id: 'ISR-37', pos: 'bot-11', zone: 'zone-bottom' },
-
-        { id: 'ISR-40', pos: 'mid-1', zone: 'zone-middle' },
-        { id: 'ISR-41', pos: 'mid-2', zone: 'zone-middle' },
-        { id: 'ISR-42', pos: 'mid-3', zone: 'zone-middle' },
-        { id: 'ISR-43', pos: 'mid-4', zone: 'zone-middle' },
-        { id: 'ISR-44', pos: 'mid-5', zone: 'zone-middle' },
-        { id: 'ISR-45', pos: 'mid-6', zone: 'zone-middle' }
+        { id: 'ISR-40', pos: 'mid-1', zone: 'zone-middle' }, { id: 'ISR-41', pos: 'mid-2', zone: 'zone-middle' },
+        { id: 'ISR-42', pos: 'mid-3', zone: 'zone-middle' }, { id: 'ISR-43', pos: 'mid-4', zone: 'zone-middle' },
+        { id: 'ISR-44', pos: 'mid-5', zone: 'zone-middle' }, { id: 'ISR-45', pos: 'mid-6', zone: 'zone-middle' }
     ];
 
-    const STORAGE_KEY = 'room2051_seating_v7';
+    const STORAGE_KEY_PREFIX = 'room2051_seating_';
+    let currentClass = '7a';
     let layout = [];
-    let history = []; // For Undo
+    let history = []; 
     let selectedIndex = null;
 
-    function getDefaultLayout() {
-        const names = RAW_STUDENTS.map(formatName);
+    function getDefaultLayout(className) {
+        const rawNames = CLASS_DATA[className] || [];
+        const names = rawNames.map(formatName);
         const defaultLayout = DESKS.map(d => ({ ...d, student: null })); 
         const fillOrder = [
             'top-1', 'top-2', 'top-3', 'top-4', 'top-5', 'top-6', 'top-7', 'top-8', 'top-9', 'top-10',
@@ -475,8 +511,8 @@
         return defaultLayout;
     }
 
-    function loadLayout() {
-        const saved = localStorage.getItem(STORAGE_KEY);
+    function loadLayout(className) {
+        const saved = localStorage.getItem(STORAGE_KEY_PREFIX + className);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
@@ -485,11 +521,11 @@
                 }
             } catch (e) {}
         }
-        return getDefaultLayout();
+        return getDefaultLayout(className);
     }
 
     function saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+        localStorage.setItem(STORAGE_KEY_PREFIX + currentClass, JSON.stringify(layout));
     }
 
     function renderGrid() {
@@ -511,10 +547,8 @@
                 <div class="student-name">${desk.student || 'Empty'}</div>
             `;
 
-            // Drag Events
             el.addEventListener('dragstart', (e) => {
                 if(selectedIndex !== null) {
-                    // If dragging while something is selected, clear selection
                     document.querySelectorAll('.desk').forEach(d => d.classList.remove('selected'));
                     selectedIndex = null;
                 }
@@ -527,11 +561,7 @@
                 document.querySelectorAll('.desk').forEach(d => d.classList.remove('drag-over'));
             });
 
-            el.addEventListener('dragover', (e) => {
-                e.preventDefault(); 
-                el.classList.add('drag-over');
-            });
-
+            el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('drag-over'); });
             el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
 
             el.addEventListener('drop', (e) => {
@@ -540,25 +570,20 @@
                 const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
                 const toIndex = index;
                 if (fromIndex === toIndex) return;
-
-                history.push(JSON.parse(JSON.stringify(layout))); // Save history
+                history.push(JSON.parse(JSON.stringify(layout))); 
                 swapStudents(fromIndex, toIndex);
             });
 
-            // Click-to-Swap Events
             el.addEventListener('click', () => {
                 if (selectedIndex === null) {
-                    // Select first
                     selectedIndex = index;
                     renderGrid();
                 } else {
-                    // Swap with selected
                     if (selectedIndex === index) {
-                        // Deselect if clicking the same one
                         selectedIndex = null;
                         renderGrid();
                     } else {
-                        history.push(JSON.parse(JSON.stringify(layout))); // Save history
+                        history.push(JSON.parse(JSON.stringify(layout))); 
                         swapStudents(selectedIndex, index);
                         selectedIndex = null;
                     }
@@ -573,21 +598,29 @@
         const temp = layout[fromIdx].student;
         layout[fromIdx].student = layout[toIdx].student;
         layout[toIdx].student = temp;
-        
         saveState();
         renderGrid();
-        document.getElementById('randomDisplay').style.display = 'none'; // Hide picker on swap
+        document.getElementById('randomDisplay').style.display = 'none';
     }
 
     function init() {
-        layout = loadLayout();
+        currentClass = document.getElementById('classSelector').value;
+        layout = loadLayout(currentClass);
         renderGrid();
 
-        // BUTTONS
+        document.getElementById('classSelector').addEventListener('change', (e) => {
+            currentClass = e.target.value;
+            layout = loadLayout(currentClass);
+            history = []; // Clear undo history on class switch
+            selectedIndex = null;
+            document.getElementById('randomDisplay').style.display = 'none';
+            renderGrid();
+        });
+
         document.getElementById('resetBtn').addEventListener('click', () => {
-            if (confirm('Reset all students to original layout? Unsaved changes will be lost.')) {
+            if (confirm('Reset all students to original layout for this class? Unsaved changes will be lost.')) {
                 history.push(JSON.parse(JSON.stringify(layout)));
-                layout = getDefaultLayout();
+                layout = getDefaultLayout(currentClass);
                 saveState();
                 selectedIndex = null;
                 renderGrid();
@@ -609,34 +642,25 @@
             window.print();
         });
 
-        // RANDOM SPINNER
         document.getElementById('spinBtn').addEventListener('click', () => {
             const populatedIndices = layout.map((d, i) => d.student ? i : null).filter(i => i !== null);
             if (populatedIndices.length === 0) return;
 
-            // Clear previous winner
             document.querySelectorAll('.desk').forEach(d => d.classList.remove('winner'));
-
-            // Pick random
             const randomIdx = populatedIndices[Math.floor(Math.random() * populatedIndices.length)];
             const studentName = layout[randomIdx].student;
-
-            // Highlight DOM element
             const deskEl = document.querySelector(`.desk[data-index="${randomIdx}"]`);
+            
             if (deskEl) {
                 deskEl.classList.add('winner');
                 deskEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
-            // Show display
             const display = document.getElementById('randomDisplay');
             document.getElementById('randomNameText').innerText = studentName;
             display.style.display = 'flex';
 
-            // Auto-clear highlight after 4 seconds
-            setTimeout(() => {
-                if(deskEl) deskEl.classList.remove('winner');
-            }, 4000);
+            setTimeout(() => { if(deskEl) deskEl.classList.remove('winner'); }, 4000);
         });
     }
 
