@@ -14,6 +14,9 @@
             --text-muted: #64748b;
             --code-bg: #1e293b;
             --code-text: #e2e8f0;
+            --input-color: #3b82f6;
+            --process-color: #f59e0b;
+            --output-color: #10b981;
         }
 
         * {
@@ -57,6 +60,25 @@
             padding: 2rem 1rem;
         }
 
+        .requirement-banner {
+            background: #fef2f2;
+            border: 2px solid #fca5a5;
+            border-left: 8px solid #ef4444;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            color: #7f1d1d;
+        }
+
+        .requirement-banner h2 {
+            color: #991b1b;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .step-card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -86,6 +108,7 @@
             border-radius: 6px;
             font-weight: bold;
             font-size: 1.1rem;
+            flex-shrink: 0;
         }
 
         .step-card p {
@@ -99,14 +122,6 @@
 
         .step-card li {
             margin-bottom: 0.5rem;
-        }
-
-        .highlight {
-            background: #fef2f2;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            color: #991b1b;
-            font-weight: bold;
         }
 
         /* Code Block Styling */
@@ -194,6 +209,13 @@
 
     <div class="container">
 
+        <!-- Design Requirement -->
+        <div class="requirement-banner">
+            <h2>⚠️ CRITICAL DESIGN REQUIREMENT</h2>
+            <p><strong>Your webpage must work perfectly on its own.</strong> The judges will look at your webpage before or after they see your physical Micro:bit. If the webpage requires the Micro:bit to be plugged in just to show the animation, you will fail the "One Rule."</p>
+            <p>Your webpage needs a <strong>"Demo Mode"</strong> (a simple button click that runs the animation). The physical Micro:bit is a <em>bonus</em> that triggers the same animation when connected.</p>
+        </div>
+
         <!-- Phase 1 -->
         <div class="step-card">
             <h2><span class="step-num">1</span> Set Up GitHub & Your Webpage</h2>
@@ -210,8 +232,8 @@
 
         <!-- Phase 2 -->
         <div class="step-card">
-            <h2><span class="step-num">2</span> The Webpage Boilerplate Code</h2>
-            <p>Below is the complete, working code for your interactive barcode scanner demo. It includes the CSS styling, the "laser" animation, the binary output, and the final price reveal.</p>
+            <h2><span class="step-num">2</span> The Webpage Boilerplate Code (With Demo Mode)</h2>
+            <p>Below is the complete code. It includes a <strong>"Start Scan (Demo Mode)"</strong> button that allows the page to work perfectly without any hardware connected.</p>
             
             <div class="note">
                 <strong>How to use this:</strong> Click the <strong>Copy Code</strong> button below, then paste it directly into your <code>index.html</code> file on GitHub.
@@ -229,7 +251,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #0f172a; /* Dark theme for contrast */
+            background-color: #0f172a;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -240,7 +262,7 @@
             overflow: hidden;
         }
 
-        .title {
+        h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
             text-align: center;
@@ -254,32 +276,137 @@
             max-width: 600px;
         }
 
-        .scanner-container {
-            position: relative;
-            width: 400px;
-            height: 150px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
-        }
-
-        /* Fake Barcode CSS */
-        .barcode {
+        /* --- The Input / Process / Output Layout --- */
+        .flow-container {
             display: flex;
-            height: 100%;
-            width: 100%;
             align-items: center;
-            justify-content: space-around;
-            padding: 10px;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 30px;
         }
 
-        .bar {
-            height: 80%;
-            background: #000;
+        .box {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            flex: 1;
+            min-height: 200px;
+            border-top: 4px solid;
         }
 
-        /* The Laser Line */
+        .box h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            color: #94a3b8;
+        }
+
+        .box.input-box { border-top-color: #3b82f6; } /* Blue */
+        .box.process-box { border-top-color: #f59e0b; } /* Orange */
+        .box.output-box { border-top-color: #10b981; } /* Green */
+
+        .arrow {
+            font-size: 2rem;
+            color: #475569;
+            font-weight: bold;
+        }
+
+        /* INPUT VISUALS */
+        .sensor-visual {
+            width: 80px;
+            height: 80px;
+            background: #334155;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            width: 60px;
+            height: 60px;
+        }
+        .led {
+            background: #475569;
+            border-radius: 2px;
+        }
+        .led.active { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+        
+        .light-meter {
+            width: 100%;
+            height: 20px;
+            background: #334155;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .light-fill {
+            height: 100%;
+            width: 50%;
+            background: #facc15;
+            transition: width 0.1s;
+        }
+
+        /* PROCESS VISUALS */
+        .binary {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2rem;
+            letter-spacing: 5px;
+            color: #f59e0b;
+            min-height: 40px;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        /* OUTPUT VISUALS */
+        .result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #10b981;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .barcode-img {
+            width: 100%;
+            height: 80px;
+            background: repeating-linear-gradient(
+                90deg,
+                #fff,
+                #fff 4px,
+                #000 4px,
+                #000 8px,
+                #fff 8px,
+                #fff 10px,
+                #000 10px,
+                #000 18px
+            );
+            margin-bottom: 15px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
         .laser {
             position: absolute;
             top: 0;
@@ -289,7 +416,6 @@
             background: red;
             box-shadow: 0 0 15px 5px rgba(255, 0, 0, 0.8);
             opacity: 0;
-            transition: opacity 0.2s;
         }
 
         .scanning .laser {
@@ -303,37 +429,13 @@
             100% { left: 0; }
         }
 
-        .output-container {
-            margin-top: 30px;
+        /* CONTROLS */
+        .controls {
+            margin-top: 20px;
             text-align: center;
-            height: 120px;
-        }
-
-        .binary {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 2rem;
-            letter-spacing: 5px;
-            color: #ef4444;
-            margin-bottom: 20px;
-            min-height: 40px;
-        }
-
-        .result {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #10b981;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .result.show {
-            opacity: 1;
-            transform: scale(1);
         }
 
         .btn {
-            margin-top: 20px;
             padding: 15px 40px;
             font-size: 1.2rem;
             font-weight: bold;
@@ -349,67 +451,121 @@
         .btn:hover {
             background-color: #dc2626;
         }
+        
+        .status-text {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .flow-container {
+                flex-direction: column;
+            }
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
     &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
 
-    &lt;h1 class="title"&gt;The Invisible Barcode Scanner&lt;/h1&gt;
-    &lt;p class="subtitle"&gt;How does a machine read a piece of paper? Black bars absorb light; white gaps reflect it back to a sensor.&lt;/p&gt;
+    &lt;h1&gt;The Invisible Barcode Scanner&lt;/h1&gt;
+    &lt;p class="subtitle"&gt;Watch how analog light is converted into digital data in real-time.&lt;/p&gt;
 
-    &lt;div class="scanner-container" id="scanner"&gt;
-        &lt;div class="laser"&gt;&lt;/div&gt;
-        &lt;div class="barcode" id="barcode-display"&gt;
-            &lt;!-- Barcode bars will be generated by JS --&gt;
+    &lt;div class="flow-container"&gt;
+        
+        &lt;!-- INPUT --&gt;
+        &lt;div class="box input-box"&gt;
+            &lt;h3&gt;1. Input (Sensor)&lt;/h3&gt;
+            &lt;div class="sensor-visual" id="scanner"&gt;
+                &lt;div class="sensor-grid"&gt;
+                    &lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;
+                    &lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;
+                    &lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;
+                    &lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;
+                    &lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;&lt;div class="led"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="light-meter"&gt;
+                &lt;div class="light-fill" id="light-fill"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;p style="font-size: 0.8rem; margin-top: 8px; color: #64748b;"&gt;Light Level&lt;/p&gt;
         &lt;/div&gt;
+
+        &lt;div class="arrow"&gt;➔&lt;/div&gt;
+
+        &lt;!-- PROCESS --&gt;
+        &lt;div class="box process-box"&gt;
+            &lt;h3&gt;2. Process (Binary)&lt;/h3&gt;
+            &lt;div class="binary" id="binary-display"&gt;&lt;/div&gt;
+            &lt;p style="font-size: 0.8rem; margin-top: 8px; color: #64748b;"&gt;Analog to Digital&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="arrow"&gt;➔&lt;/div&gt;
+
+        &lt;!-- OUTPUT --&gt;
+        &lt;div class="box output-box"&gt;
+            &lt;h3&gt;3. Output (Result)&lt;/h3&gt;
+            &lt;div class="barcode-img"&gt;
+                &lt;div class="laser"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="result" id="result-display"&gt;Product Found: Apple Juice - $2.99&lt;/div&gt;
+        &lt;/div&gt;
+
     &lt;/div&gt;
 
-    &lt;div class="output-container"&gt;
-        &lt;div class="binary" id="binary-display"&gt;&lt;/div&gt;
-        &lt;div class="result" id="result-display"&gt;Product Found: Apple Juice - $2.99&lt;/div&gt;
+    &lt;div class="controls"&gt;
+        &lt;button class="btn" onclick="startScan()" id="scanBtn"&gt;Start Scan (Demo Mode)&lt;/button&gt;
+        &lt;div class="status-text" id="status-text"&gt;No hardware connected. Running in Demo Mode.&lt;/div&gt;
     &lt;/div&gt;
-
-    &lt;button class="btn" onclick="startScan()" id="scanBtn"&gt;Start Scan&lt;/button&gt;
 
     &lt;script&gt;
-        // 1. Generate a random-looking barcode on the screen
-        const barcodeDisplay = document.getElementById('barcode-display');
-        const barWidths = [4, 2, 6, 2, 4, 8, 2, 4, 2, 6, 4, 2, 8, 2, 4, 6, 2, 4, 2, 8, 2, 4, 6, 2, 4, 2, 8, 4, 2, 6];
-        
-        barWidths.forEach(width =&gt; {
-            const bar = document.createElement('div');
-            bar.className = 'bar';
-            bar.style.width = width + 'px';
-            barcodeDisplay.appendChild(bar);
-        });
-
-        // 2. The Scanning Logic
         let isScanning = false;
+        const leds = document.querySelectorAll('.led');
+        const lightFill = document.getElementById('light-fill');
+        const binaryDisplay = document.getElementById('binary-display');
+        const resultDisplay = document.getElementById('result-display');
+        const scanner = document.getElementById('scanner');
+        const scanBtn = document.getElementById('scanBtn');
+        const statusText = document.getElementById('status-text');
 
         function startScan() {
             if (isScanning) return;
             isScanning = true;
-
-            const scanner = document.getElementById('scanner');
-            const binaryDisplay = document.getElementById('binary-display');
-            const resultDisplay = document.getElementById('result-display');
-            const scanBtn = document.getElementById('scanBtn');
 
             // Reset UI
             scanner.classList.add('scanning');
             resultDisplay.classList.remove('show');
             binaryDisplay.innerHTML = '';
             scanBtn.innerText = "Scanning...";
+            statusText.innerText = "Processing data...";
             
             let binaryString = "";
             let iterations = 0;
             
             // Simulate reading the light levels (1s and 0s)
             const interval = setInterval(() =&gt; {
-                // Randomly generate 1 or 0 to simulate the black/white reflection
-                const bit = Math.random() &gt; 0.5 ? "1" : "0";
+                // 1. INPUT: Randomly simulate light level (0-100)
+                const lightLevel = Math.random() * 100;
+                
+                // Update Light Meter
+                lightFill.style.width = lightLevel + "%";
+                
+                // Update LEDs (turn some red based on light level)
+                leds.forEach(led =&gt; {
+                    if (Math.random() &gt; 0.5) {
+                        led.classList.add('active');
+                    } else {
+                        led.classList.remove('active');
+                    }
+                });
+
+                // 2. PROCESS: Convert to binary (High light = 1, Low light = 0)
+                const bit = lightLevel &gt; 50 ? "1" : "0";
                 binaryString += bit;
                 
-                // Keep the display looking neat
                 if (binaryString.length &gt; 16) {
                     binaryString = binaryString.slice(1);
                 }
@@ -417,20 +573,23 @@
                 binaryDisplay.innerText = binaryString;
                 iterations++;
 
-                // Stop after 1.5 seconds (when the laser animation finishes)
+                // 3. OUTPUT: Stop and reveal
                 if (iterations &gt; 30) {
                     clearInterval(interval);
                     scanner.classList.remove('scanning');
                     scanBtn.innerText = "Scan Complete";
                     
-                    // Show the final result
                     setTimeout(() =&gt; {
                         resultDisplay.classList.add('show');
                         scanBtn.innerText = "Scan Again";
+                        statusText.innerText = "Scan complete. Ready for next input.";
+                        // Reset visuals
+                        lightFill.style.width = "0%";
+                        leds.forEach(led =&gt; led.classList.remove('active'));
                         isScanning = false;
                     }, 300);
                 }
-            }, 50); // Update every 50ms
+            }, 50);
         }
     &lt;/script&gt;
 &lt;/body&gt;
@@ -440,19 +599,19 @@
 
         <!-- Phase 3 -->
         <div class="step-card">
-            <h2><span class="step-num">3</span> Using DeepSeek to Customize It</h2>
+            <h2><span class="step-num">3</span> Customize It with DeepSeek</h2>
             <p>You don't need to write code from scratch. If you want to change the colors, add a different product, or make the design cooler, use DeepSeek (or another AI) to write the code for you.</p>
             
             <p><strong>Copy and paste this prompt into DeepSeek:</strong></p>
 
             <div class="prompt-box">
-                "I have a working HTML/JS page for a barcode scanner hackathon project. The current page has a red laser animation, a binary code output (1s and 0s), and a final product reveal. I want to customize it. 
+                "I have a working HTML/JS page for a barcode scanner hackathon project. The page clearly shows Input, Process, and Output. I want to customize it. 
                 <br><br>
                 1. Change the product from 'Apple Juice - $2.99' to '[INSERT YOUR PRODUCT HERE]'.
                 <br>
-                2. Change the background color to [INSERT COLOR].
+                2. Add a fun sound effect or a flashing animation when the product is found.
                 <br>
-                3. Add a fun sound effect or a flashing animation when the product is found.
+                3. Make the 'Process' binary text look like it is being typed out rapidly.
                 <br><br>
                 Please provide the updated complete `index.html` code."
             </div>
@@ -462,24 +621,25 @@
         <!-- Phase 4 -->
         <div class="step-card">
             <h2><span class="step-num">4</span> The 2-Minute Pitch (What to say)</h2>
-            <p>When you present to the judges, do not just show the code. Tell a story:</p>
+            <p>When you present to the judges, use the visual layout of your webpage to guide your story:</p>
             <ul>
                 <li><strong>0:00 - 0:20 (The Hook):</strong> <em>"Every day, we scan items at the grocery store without thinking. But how does a machine read a piece of paper? Today, we are going to show you the invisible science behind the barcode."</em></li>
-                <li><strong>0:20 - 0:50 (The Mechanism):</strong> <em>"A barcode scanner is just a light sensor. Black bars absorb light, and white gaps reflect it. By sliding our physical Micro:bit over a printed barcode, we are capturing that exact reflection."</em></li>
-                <li><strong>0:50 - 1:20 (The Demo):</strong> <em>"Watch the screen. As I physically slide the Micro:bit (Input), the webpage translates the light changes into binary 1s and 0s (Output). This is exactly how the computer reads the price."</em></li>
-                <li><strong>1:20 - 1:40 (The Aha Moment):</strong> <em>"The 'magic' is that the webpage is reacting in real-time to the physical world. Analog light becomes digital data instantly."</em></li>
+                <li><strong>0:20 - 0:50 (The Mechanism):</strong> <em>"A barcode scanner is just a light sensor. Black bars absorb light, and white gaps reflect it. On the left side of our screen, you can see the Input: the raw light level. As we slide our physical Micro:bit over a printed barcode, we are capturing that exact reflection."</em></li>
+                <li><strong>0:50 - 1:20 (The Demo):</strong> <em>"Watch the middle section. This is the Process. The computer translates the analog light changes into digital binary 1s and 0s in real-time. It's translating physics into code."</em></li>
+                <li><strong>1:20 - 1:40 (The Aha Moment):</strong> <em>"Finally, the Output. Once the computer recognizes the pattern, it reveals the price. The 'magic' is that the webpage is reacting in real-time to the physical world."</em></li>
                 <li><strong>1:40 - 2:00 (Conclusion):</strong> <em>"By understanding these invisible mechanisms, we understand the technology we use every day. Thank you."</em></li>
             </ul>
         </div>
 
         <!-- Phase 5 -->
         <div class="step-card">
-            <h2><span class="step-num">5</span> Connecting the Physical Micro:bit</h2>
-            <p>To connect the physical Micro:bit to your webpage, you will use MakeCode and the Web Serial feature. If you get stuck on this part, ask Mr. Ellis for help!</p>
+            <h2><span class="step-num">5</span> Connecting the Physical Micro:bit (The Bonus)</h2>
+            <p>Your page works without the hardware. Now, let's make it work <em>with</em> the hardware. You will use MakeCode and the Web Serial feature.</p>
             <ol>
                 <li><strong>MakeCode Code:</strong> Write a simple program in MakeCode that continuously sends the light level to the serial port: <code>serial.writeValue("light", input.lightLevel())</code>.</li>
-                <li><strong>Plug it in:</strong> Connect the Micro:bit to the laptop running the webpage via USB.</li>
-                <li><strong>The Integration:</strong> Instead of just clicking a "Start Scan" button, modify the JavaScript in your <code>index.html</code> to listen for the serial data. When the light level drops (simulating the black bar of the barcode), trigger the laser animation and output a "1". When the light level is high, output a "0".</li>
+                <li><strong>Plug it in:</strong> Connect the Micro:bit to the laptop via USB.</li>
+                <li><strong>Check the Port:</strong> You cannot just open the HTML file from your computer's hard drive for Web Serial to work. You must open the <strong>live GitHub Pages URL</strong> (the `https://...` link).</li>
+                <li><strong>The Integration:</strong> Modify the JavaScript in your <code>index.html</code> to listen for the serial data. Instead of `Math.random()`, use the actual light level from the Micro:bit to update the light meter and generate the binary.</li>
             </ol>
         </div>
 
@@ -491,14 +651,12 @@
 
     <script>
         function copyCode() {
-            // Get the text from the pre element
             const codeText = document.getElementById('html-code').innerText;
             
-            // Use the Clipboard API to copy
             navigator.clipboard.writeText(codeText).then(() => {
                 const btn = document.querySelector('.copy-btn');
                 btn.innerText = "Copied!";
-                btn.style.background = "#10b981"; // Green
+                btn.style.background = "#10b981";
                 btn.style.borderColor = "#10b981";
                 
                 setTimeout(() => {
