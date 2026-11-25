@@ -250,14 +250,6 @@
       background: #134f75 !important;
     }
 
-    .btn-green {
-      background: #2d7d46 !important;
-      color: #fff !important;
-    }
-    .btn-green:hover {
-      background: #1f5f34 !important;
-    }
-
     .btn-locked {
       background: #e8dfd0 !important;
       color: #6a4e2e !important;
@@ -448,47 +440,7 @@
     .cycle-step .cycle-detail { font-size: 0.75rem; color: #475569; margin-top: 0.3rem; }
     .cycle-arrow { font-size: 1.5rem; color: #1f6390; }
 
-    .lms-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 1rem 0;
-      align-items: center;
-    }
-    .lms-controls button {
-      background: #1a5f87;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .lms-controls button:hover { background: #134f75; }
-    .lms-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .lms-controls button.reset-btn { background: #b13a3a; }
-    .lms-controls button.reset-btn:hover { background: #8f2a2a; }
-    .lms-display {
-      background: #0b2a4a;
-      color: #e6edf5;
-      padding: 1.2rem;
-      border-radius: 16px;
-      font-family: 'Courier New', monospace;
-      margin: 1rem 0;
-    }
-    .lms-display .lms-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.3rem 0;
-      border-bottom: 1px solid #1e3a5f;
-    }
-    .lms-display .lms-row:last-child { border-bottom: none; }
-    .lms-display .lms-label { color: #7bb3ff; font-weight: 600; }
-    .lms-display .lms-value { color: #f5b342; font-weight: 700; }
-    .lms-display .lms-status { color: #4ade80; font-weight: 600; margin-top: 0.5rem; display: block; }
-
+    /* Quiz & Drag-Drop Styles */
     .quiz-box {
       background: #f8fafc;
       border-radius: 16px;
@@ -513,6 +465,39 @@
     .quiz-option.incorrect { border-color: #b13a3a; background: #fde8e8; }
     .quiz-feedback { margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; min-height: 1.2rem; }
 
+    /* Matching Game */
+    .match-game { margin-top: 1rem; }
+    .match-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; }
+    .match-desc { flex: 1; font-size: 0.9rem; color: #475569; background: #fff; padding: 0.8rem; border-radius: 8px; border: 1px solid #e5edf5; }
+    .match-dropzone {
+      width: 200px;
+      min-height: 44px;
+      border: 2px dashed #cbddee;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #6b7f8f;
+      background: #f8fafc;
+      transition: 0.2s;
+    }
+    .match-dropzone.dragover { border-color: #1f6390; background: #e9eff8; }
+    .match-dropzone.filled { border: 2px solid #1f6390; background: #dceaf7; color: #0b2a4a; }
+    .match-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; padding: 1rem; background: #f0f4fb; border-radius: 12px; }
+    .draggable-item {
+      padding: 0.5rem 1rem;
+      background: #1a5f87;
+      color: white;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: grab;
+      user-select: none;
+    }
+    .draggable-item:active { cursor: grabbing; }
+
     @media (max-width: 680px) {
       body { padding: 1rem; }
       .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
@@ -525,6 +510,8 @@
       .lesson-content .device-grid { grid-template-columns: 1fr; }
       .cycle-container { flex-direction: column; }
       .cycle-arrow { transform: rotate(90deg); }
+      .match-row { flex-direction: column; align-items: stretch; }
+      .match-dropzone { width: 100%; }
     }
   </style>
 </head>
@@ -559,7 +546,14 @@
         Year 9 · Hardware · The brain of the computer
     </div>
 
-    <!-- ========== LESSON 1 CONTENT ========== -->
+    <!-- ========== STARTER ACTIVITY (MOVED TO TOP) ========== -->
+    <div class="activity-box" style="margin-top: 1.5rem;">
+        <strong>🎯 Starter Activity – Blooket Quiz</strong>
+        <p>Test your knowledge of CPU architecture! Click the link below to join the live quiz.</p>
+        <a href="https://play.blooket.com/host?id=63d2ad0e9ab102e328064ad6" target="_blank" class="btn"><i class="fas fa-rocket"></i> Launch Blooket Quiz</a>
+    </div>
+
+    <!-- ========== LESSON CONTENT ========== -->
     <div class="lesson-content">
 
         <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
@@ -569,87 +563,63 @@
             <li>Understand common CPU components including: ALU, Control Unit, Registers</li>
         </ul>
 
+        <h4>🏗️ 3.1.1 The Components of a CPU</h4>
+        <p>The Central Processing Unit (CPU) is the hardware that executes software instructions. It is made up of several key parts that work together to process data.</p>
+        
         <div class="key-point">
-            <strong>💡 Key Fact:</strong> The CPU processes instructions and data that are input into a computer, so that the results can be output. It is often called the "brain" of the computer.
+            <strong>1. The Control Unit (CU)</strong><br>
+            Think of the CU as the manager of the CPU.<br>
+            • It sends control signals to other parts of the computer to tell them what to do.<br>
+            • It manages the flow of data so that instructions happen in the correct order.
+        </div>
+        <div class="key-point">
+            <strong>2. The Arithmetic Logic Unit (ALU)</strong><br>
+            The ALU is the calculator. It handles two types of operations:<br>
+            • <strong>Arithmetic:</strong> Addition, subtraction, multiplication, and division.<br>
+            • <strong>Logic:</strong> Comparisons such as "Is A greater than B?" and logical gates like AND, OR, and NOT.
         </div>
 
-        <h4>🏗️ The Main Components of a Computer</h4>
-        <p>Every computer system, from a smartphone to a games console, follows the same basic block diagram. The CPU is the central component that processes everything.</p>
-        <div style="display: flex; justify-content: center; margin: 1rem 0;">
-            <div style="text-align: center;">
-                <div style="background: #c0392b; color: white; padding: 0.8rem 2rem; border-radius: 12px; font-weight: 700; margin-bottom: 0.5rem;">MAIN MEMORY</div>
-                <div style="display: flex; justify-content: center; gap: 1rem; align-items: center;">
-                    <div style="background: #c0392b; color: white; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700;">INPUT DEVICES</div>
-                    <div style="font-size: 1.5rem; color: #c0392b;">→</div>
-                    <div style="background: #f5b342; color: #0b2a4a; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700;">CPU</div>
-                    <div style="font-size: 1.5rem; color: #c0392b;">→</div>
-                    <div style="background: #c0392b; color: white; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700;">OUTPUT DEVICES</div>
-                </div>
-                <div style="background: #c0392b; color: white; padding: 0.8rem 2rem; border-radius: 12px; font-weight: 700; margin-top: 0.5rem;">SECONDARY STORAGE</div>
-            </div>
-        </div>
-
-        <h4>🧠 Stored Program Concept & Von Neumann Architecture</h4>
-        <p>Before 1943, computers stored only data in memory. Programs were input one instruction at a time using switches or punch cards. Mathematician <strong>John von Neumann</strong> introduced the idea of storing <strong>both program instructions and data</strong> in the same memory. This is still how computers work today!</p>
+        <h4>📋 3. The Registers (Internal Memory)</h4>
+        <p>Registers are super-fast, tiny storage locations inside the CPU. For your exam, you need to know these four:</p>
         <ul>
-            <li><strong>Von Neumann architecture:</strong> Program instructions and data share a common memory (RAM)</li>
-            <li>The CPU accesses both instructions and data from the same RAM</li>
-            <li>Memory addresses 0-7 might store a mix of program instructions and data</li>
+            <li><strong>Program Counter (PC):</strong> The "Address Pointer." It always holds the address of the very next instruction to be processed.</li>
+            <li><strong>Memory Address Register (MAR):</strong> Holds the address of the data currently being read or written.</li>
+            <li><strong>Memory Data Register (MDR):</strong> Holds the actual data or instruction that was just fetched from memory.</li>
+            <li><strong>Accumulator (ACC):</strong> The "Storage Bin." It holds the result of whatever calculation the ALU just finished.</li>
         </ul>
 
-        <h4>🔧 Components of the CPU</h4>
+        <h4>🚌 How they work together: The "Buses"</h4>
+        <p>Data doesn't just float around; it travels on "highways" called Buses:</p>
         <div class="device-grid">
             <div class="device-card">
-                <h5>Control Unit (CU)</h5>
-                <p>Coordinates and controls all activities in the CPU. Decodes instructions and sends control signals. Receives signals from the system clock.</p>
-                <span class="tag">Decodes</span>
-                <span class="tag">Controls</span>
+                <h5>Address Bus</h5>
+                <p>Carries signals relating to addresses between the CPU and Memory. (It only goes one way).</p>
+                <span class="tag">Unidirectional</span>
             </div>
             <div class="device-card">
-                <h5>Arithmetic Logic Unit (ALU)</h5>
-                <p>Carries out arithmetic operations (add, subtract) and logical operations (AND, OR, NOT).</p>
-                <span class="tag">Calculates</span>
-                <span class="tag">Compares</span>
+                <h5>Data Bus</h5>
+                <p>Sends the actual data and instructions between the CPU and Memory. (This goes both ways).</p>
+                <span class="tag">Bidirectional</span>
             </div>
             <div class="device-card">
-                <h5>Registers</h5>
-                <p>Very fast memory locations inside the CPU. Each has a specific job during the fetch-execute cycle.</p>
-                <span class="tag">Fast storage</span>
+                <h5>Control Bus</h5>
+                <p>Carries command signals from the Control Unit to all other components.</p>
+                <span class="tag">Bidirectional</span>
             </div>
         </div>
 
-        <h4>📋 Registers in the CPU</h4>
-        <p>Click on a register to see its value change as we simulate the fetch-execute cycle:</p>
-        <div class="reg-grid" id="regGrid">
-            <div class="reg-card" data-reg="PC">
-                <div class="reg-name">PC</div>
-                <div class="reg-desc">Program Counter</div>
-                <div class="reg-value" id="val-PC">05</div>
-            </div>
-            <div class="reg-card" data-reg="MAR">
-                <div class="reg-name">MAR</div>
-                <div class="reg-desc">Memory Address Register</div>
-                <div class="reg-value" id="val-MAR">--</div>
-            </div>
-            <div class="reg-card" data-reg="MDR">
-                <div class="reg-name">MDR</div>
-                <div class="reg-desc">Memory Data Register</div>
-                <div class="reg-value" id="val-MDR">--</div>
-            </div>
-            <div class="reg-card" data-reg="CIR">
-                <div class="reg-name">CIR</div>
-                <div class="reg-desc">Current Instruction Register</div>
-                <div class="reg-value" id="val-CIR">--</div>
-            </div>
-            <div class="reg-card" data-reg="ACC">
-                <div class="reg-name">ACC</div>
-                <div class="reg-desc">Accumulator</div>
-                <div class="reg-value" id="val-ACC">10</div>
-            </div>
+        <div class="key-point" style="background: #fffbeb; border-left-color: #f5b342;">
+            <strong>💡 Study Tip for the Exam:</strong><br>
+            <strong>Common Mistake:</strong> Students often confuse the MAR and the MDR.<br>
+            The <strong>MAR</strong> is the "Map" (where the data is).<br>
+            The <strong>MDR</strong> is the "Box" (what is actually inside).
         </div>
+
+        <hr style="border: 0; height: 1px; background: #e5edf5; margin: 2rem 0;">
 
         <h4>🔄 Fetch – Decode – Execute Cycle</h4>
-        <p>The CPU repeats this cycle billions of times per second. Watch the animation to see the stages:</p>
+        <p>The CPU repeats this cycle billions of times per second. Click the button to watch how the registers change during the process:</p>
+        
         <div class="cycle-container" id="cycleContainer">
             <div class="cycle-step" id="step-fetch">
                 <span class="cycle-icon">📥</span>
@@ -669,49 +639,90 @@
                 <div class="cycle-detail">Carry out the instruction</div>
             </div>
         </div>
-        <button class="btn btn-theory" id="cycleBtn" style="margin-top: 0.5rem;"><i class="fas fa-play"></i> Animate Cycle</button>
-
-        <!-- ===== LITTLE MAN COMPUTER ===== -->
-        <h4>💻 Little Man Computer Simulator</h4>
-        <p>Use the buttons below to step through a simple program. Watch how the registers and memory change!</p>
-        <div class="lms-display" id="lmsDisplay">
-            <div class="lms-row"><span class="lms-label">PC (Program Counter):</span> <span class="lms-value" id="lms-pc">0</span></div>
-            <div class="lms-row"><span class="lms-label">MAR (Memory Address Register):</span> <span class="lms-value" id="lms-mar">0</span></div>
-            <div class="lms-row"><span class="lms-label">MDR (Memory Data Register):</span> <span class="lms-value" id="lms-mdr">0</span></div>
-            <div class="lms-row"><span class="lms-label">CIR (Current Instruction Register):</span> <span class="lms-value" id="lms-cir">000</span></div>
-            <div class="lms-row"><span class="lms-label">ACC (Accumulator):</span> <span class="lms-value" id="lms-acc">0</span></div>
-            <span class="lms-status" id="lms-status">Ready. Press "Micro-step" to begin.</span>
-        </div>
-        <div class="lms-controls">
-            <button id="lmsStepBtn"><i class="fas fa-forward"></i> Micro-step</button>
-            <button id="lmsResetBtn" class="reset-btn"><i class="fas fa-undo"></i> Reset</button>
+        <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-theory" id="cycleBtn"><i class="fas fa-play"></i> Animate Cycle</button>
+            <button class="btn" id="cycleResetBtn" style="background:#b13a3a; color: white;"><i class="fas fa-undo"></i> Reset</button>
         </div>
 
-        <!-- ===== STARTER ACTIVITY ===== -->
-        <div class="activity-box">
-            <strong>🎯 Starter Activity – Blooket Quiz</strong>
-            <p>Test your knowledge of CPU architecture! Click the link below to join the live quiz.</p>
-            <a href="https://play.blooket.com/host/cafe?id=63d2ad299ab102e328064ad9" target="_blank" class="btn"><i class="fas fa-rocket"></i> Launch Blooket Quiz</a>
-        </div>
-
-        <!-- ===== QUICK CHECK QUIZ ===== -->
-        <div class="activity-box" style="border-color: #2d7d46;">
-            <strong>✅ Quick Check – Which Register?</strong>
-            <div class="quiz-box" id="quizBox">
-                <p>Which register holds the address of the next instruction to be fetched?</p>
-                <div class="quiz-option" data-correct="false">MAR (Memory Address Register)</div>
-                <div class="quiz-option" data-correct="true">PC (Program Counter)</div>
-                <div class="quiz-option" data-correct="false">MDR (Memory Data Register)</div>
-                <div class="quiz-option" data-correct="false">CIR (Current Instruction Register)</div>
-                <div class="quiz-feedback" id="quizFeedback"></div>
+        <h4>📋 Interactive Registers</h4>
+        <p>Watch these values update as you click "Animate Cycle" above!</p>
+        <div class="reg-grid" id="regGrid">
+            <div class="reg-card" data-reg="PC">
+                <div class="reg-name">PC</div>
+                <div class="reg-desc">Program Counter</div>
+                <div class="reg-value" id="val-PC">--</div>
+            </div>
+            <div class="reg-card" data-reg="MAR">
+                <div class="reg-name">MAR</div>
+                <div class="reg-desc">Memory Address Register</div>
+                <div class="reg-value" id="val-MAR">--</div>
+            </div>
+            <div class="reg-card" data-reg="MDR">
+                <div class="reg-name">MDR</div>
+                <div class="reg-desc">Memory Data Register</div>
+                <div class="reg-value" id="val-MDR">--</div>
+            </div>
+            <div class="reg-card" data-reg="CIR">
+                <div class="reg-name">CIR</div>
+                <div class="reg-desc">Current Instruction Register</div>
+                <div class="reg-value" id="val-CIR">--</div>
+            </div>
+            <div class="reg-card" data-reg="ACC">
+                <div class="reg-name">ACC</div>
+                <div class="reg-desc">Accumulator</div>
+                <div class="reg-value" id="val-ACC">--</div>
             </div>
         </div>
 
-        <!-- ===== DEMONSTRATION ===== -->
-        <div class="activity-box" style="border-color: #b8943e;">
-            <strong>👨‍🏫 Teacher Demonstration – The Computer Science Lab</strong>
-            <p>Your teacher will show you how the CPU works using the interactive lab. Follow along and ask questions!</p>
-            <a href="https://www.thecomputersciencelab.com/chapter-3-hardware" target="_blank" class="btn"><i class="fas fa-chalkboard-teacher"></i> View Lab</a>
+        <!-- ===== INTERACTIVE EXERCISE: MATCHING ===== -->
+        <hr style="border: 0; height: 1px; background: #e5edf5; margin: 2rem 0;">
+        <h4>🧩 Activity 1: Match the Register</h4>
+        <p>Drag the correct register name from the bank into the empty box next to its description.</p>
+        
+        <div class="match-game">
+            <div class="match-bank" id="matchBank">
+                <div class="draggable-item" draggable="true" data-match="PC">Program Counter (PC)</div>
+                <div class="draggable-item" draggable="true" data-match="ALU">Arithmetic Logic Unit (ALU)</div>
+                <div class="draggable-item" draggable="true" data-match="MAR">Memory Address Register (MAR)</div>
+                <div class="draggable-item" draggable="true" data-match="MDR">Memory Data Register (MDR)</div>
+                <div class="draggable-item" draggable="true" data-match="CU">Control Unit (CU)</div>
+                <div class="draggable-item" draggable="true" data-match="ACC">Accumulator (ACC)</div>
+                <div class="draggable-item" draggable="true" data-match="CIR">Current Instruction Register (CIR)</div>
+            </div>
+
+            <div class="match-row">
+                <div class="match-desc">A register that stores the instruction that is currently being decoded and executed.</div>
+                <div class="match-dropzone" data-answer="CIR"></div>
+            </div>
+            <div class="match-row">
+                <div class="match-desc">A register used to store the intermediate results of mathematical or logical operations carried out by the ALU.</div>
+                <div class="match-dropzone" data-answer="ACC"></div>
+            </div>
+            <div class="match-row">
+                <div class="match-desc">Controls the flow of data through the CPU and coordinates the activities of the other components using control signals.</div>
+                <div class="match-dropzone" data-answer="CU"></div>
+            </div>
+            <div class="match-row">
+                <div class="match-desc">Performs all mathematical calculations (addition, subtraction) and logical operations (AND, OR, NOT) and comparisons.</div>
+                <div class="match-dropzone" data-answer="ALU"></div>
+            </div>
+            <div class="match-row">
+                <div class="match-desc">A register that holds the address of the current instruction or data being read from or written to memory.</div>
+                <div class="match-dropzone" data-answer="MAR"></div>
+            </div>
+            <div class="match-row">
+                <div class="match-desc">A register that holds the address of the next instruction to be fetched from memory.</div>
+                <div class="match-dropzone" data-answer="PC"></div>
+            </div>
+            <div class="match-row">
+                <div class="match-desc">A register that holds the actual data or instruction that has just been fetched from memory or is waiting to be written to memory.</div>
+                <div class="match-dropzone" data-answer="MDR"></div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem;">
+            <button class="btn btn-theory" id="checkMatchBtn"><i class="fas fa-check"></i> Check Answers</button>
+            <button class="btn" id="resetMatchBtn" style="background:#6b7f8f; color: white;"><i class="fas fa-undo"></i> Reset</button>
+            <span id="matchFeedback" style="margin-left: 1rem; font-weight: 600;"></span>
         </div>
 
     </div>
@@ -768,7 +779,6 @@
             <li>Example: "Holds the result of a calculation" → ACC</li>
             <li>Justify your answer by explaining the register's purpose.</li>
         </ul>
-        <p style="font-size:0.85rem; color:#475569; margin-top:0.3rem;"><i class="fas fa-lightbulb" style="color:#f5b342;"></i> Alternative: Use the Penalty Shootout game to practice definitions!</p>
 
     </div>
 
@@ -778,7 +788,6 @@
     </div>
 
     <div class="card-grid">
-
         <!-- Lesson Plan (Teacher only) -->
         <div class="card">
             <div class="card-header">
@@ -796,17 +805,6 @@
             </div>
         </div>
 
-        <!-- Penalty Shootout -->
-        <div class="card">
-            <div class="card-header">
-                <h4>⚽ Penalty Shootout</h4>
-            </div>
-            <p>Definition game for CPU architecture and registers.</p>
-            <div class="card-actions">
-                <a href="https://jamesabela.github.io/reading/penalties.html?set=editor/samples/igcse-computing-architecture.json" target="_blank" class="btn btn-green"><i class="fas fa-gamepad"></i> Play Game</a>
-            </div>
-        </div>
-
         <!-- StudyThis Revision -->
         <div class="card">
             <div class="card-header">
@@ -817,7 +815,6 @@
                 <a href="https://studythis.co.uk/revision/computer_architecture.html" target="_blank" class="btn btn-theory"><i class="fas fa-book"></i> Revision Notes</a>
             </div>
         </div>
-
     </div>
 
     <hr class="divider-light">
@@ -944,34 +941,77 @@
             }
         });
 
-        // ========== CYCLE ANIMATION ==========
+        // ========== CYCLE ANIMATION & INTERACTIVE REGISTERS ==========
         const cycleBtn = document.getElementById('cycleBtn');
+        const cycleResetBtn = document.getElementById('cycleResetBtn');
         const stepFetch = document.getElementById('step-fetch');
         const stepDecode = document.getElementById('step-decode');
         const stepExecute = document.getElementById('step-execute');
+        
+        const valPC = document.getElementById('val-PC');
+        const valMAR = document.getElementById('val-MAR');
+        const valMDR = document.getElementById('val-MDR');
+        const valCIR = document.getElementById('val-CIR');
+        const valACC = document.getElementById('val-ACC');
+
         let cycleTimers = [];
 
         function resetCycle() {
             cycleTimers.forEach(t => clearTimeout(t));
             cycleTimers = [];
             [stepFetch, stepDecode, stepExecute].forEach(s => s.classList.remove('active'));
+            valPC.textContent = '--';
+            valMAR.textContent = '--';
+            valMDR.textContent = '--';
+            valCIR.textContent = '--';
+            valACC.textContent = '--';
+            
+            // Remove active highlight from reg cards
+            document.querySelectorAll('.reg-card').forEach(c => c.classList.remove('active'));
         }
 
         cycleBtn.addEventListener('click', function() {
             resetCycle();
+            
+            // Step 1: Fetch
             stepFetch.classList.add('active');
+            valPC.textContent = '05';
             cycleTimers.push(setTimeout(() => {
-                stepDecode.classList.add('active');
+                valMAR.textContent = '05';
+                document.querySelector('.reg-card[data-reg="PC"]').classList.add('active');
+                document.querySelector('.reg-card[data-reg="MAR"]').classList.add('active');
+            }, 600));
+
+            cycleTimers.push(setTimeout(() => {
+                valMDR.textContent = '120';
+                valPC.textContent = '06';
+                document.querySelector('.reg-card[data-reg="MDR"]').classList.add('active');
             }, 1200));
+
+            // Step 2: Decode
             cycleTimers.push(setTimeout(() => {
+                stepFetch.classList.remove('active');
+                stepDecode.classList.add('active');
+                valCIR.textContent = '120';
+                document.querySelector('.reg-card[data-reg="CIR"]').classList.add('active');
+            }, 2000));
+
+            // Step 3: Execute
+            cycleTimers.push(setTimeout(() => {
+                stepDecode.classList.remove('active');
                 stepExecute.classList.add('active');
-            }, 2400));
+                valACC.textContent = '10';
+                document.querySelector('.reg-card[data-reg="ACC"]').classList.add('active');
+            }, 3200));
+
             cycleTimers.push(setTimeout(() => {
                 resetCycle();
-            }, 4000));
+            }, 5000));
         });
 
-        // ========== REGISTER HIGHLIGHT ==========
+        cycleResetBtn.addEventListener('click', resetCycle);
+
+        // ========== REGISTER HIGHLIGHT ON CLICK ==========
         document.querySelectorAll('.reg-card').forEach(card => {
             card.addEventListener('click', function() {
                 document.querySelectorAll('.reg-card').forEach(c => c.classList.remove('active'));
@@ -979,168 +1019,109 @@
             });
         });
 
-        // ========== QUIZ ==========
-        document.querySelectorAll('.quiz-option').forEach(opt => {
-            opt.addEventListener('click', function() {
-                const isCorrect = this.getAttribute('data-correct') === 'true';
-                const feedback = document.getElementById('quizFeedback');
-                document.querySelectorAll('.quiz-option').forEach(o => {
-                    o.classList.remove('correct', 'incorrect');
-                });
-                if (isCorrect) {
-                    this.classList.add('correct');
-                    feedback.textContent = '✅ Correct! The Program Counter (PC) holds the address of the next instruction.';
-                    feedback.style.color = '#2d7d46';
-                } else {
-                    this.classList.add('incorrect');
-                    feedback.textContent = '❌ Not quite. Think about which register "counts" through the program.';
-                    feedback.style.color = '#b13a3a';
+        // ========== INTERACTIVE MATCHING GAME ==========
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropzones = document.querySelectorAll('.match-dropzone');
+        const checkMatchBtn = document.getElementById('checkMatchBtn');
+        const resetMatchBtn = document.getElementById('resetMatchBtn');
+        const matchFeedback = document.getElementById('matchFeedback');
+        const matchBank = document.getElementById('matchBank');
+        
+        let draggedItem = null;
+
+        // Drag events for items
+        draggables.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedItem = item;
+                e.dataTransfer.effectAllowed = 'move';
+                setTimeout(() => item.style.opacity = '0.5', 0);
+            });
+            item.addEventListener('dragend', () => {
+                draggedItem = null;
+                item.style.opacity = '1';
+            });
+        });
+
+        // Drop events for zones
+        dropzones.forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('dragover');
+            });
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('dragover');
+            });
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('dragover');
+                if (draggedItem) {
+                    // If zone already has an item, move it back to bank
+                    if (zone.children.length > 0) {
+                        matchBank.appendChild(zone.children[0]);
+                    }
+                    zone.appendChild(draggedItem);
+                    zone.classList.add('filled');
+                    draggedItem = null;
                 }
             });
         });
 
-        // ========== LITTLE MAN COMPUTER SIMULATOR ==========
-        const lmsPc = document.getElementById('lms-pc');
-        const lmsMar = document.getElementById('lms-mar');
-        const lmsMdr = document.getElementById('lms-mdr');
-        const lmsCir = document.getElementById('lms-cir');
-        const lmsAcc = document.getElementById('lms-acc');
-        const lmsStatus = document.getElementById('lms-status');
-        const lmsStepBtn = document.getElementById('lmsStepBtn');
-        const lmsResetBtn = document.getElementById('lmsResetBtn');
-
-        // Simple program: LDA 5, ADD 6, STA 7, OUT, HLT
-        // Memory: 0: 505, 1: 106, 2: 307, 3: 902, 4: 000, 5: 10, 6: 15, 7: 0
-        const memory = [505, 106, 307, 902, 0, 10, 15, 0];
-        let lmsState = {
-            pc: 0,
-            mar: 0,
-            mdr: 0,
-            cir: '000',
-            acc: 0,
-            halted: false,
-            step: 0
-        };
-
-        function updateLmsDisplay() {
-            lmsPc.textContent = lmsState.pc;
-            lmsMar.textContent = lmsState.mar;
-            lmsMdr.textContent = lmsState.mdr;
-            lmsCir.textContent = lmsState.cir;
-            lmsAcc.textContent = lmsState.acc;
-        }
-
-        function resetLms() {
-            lmsState = {
-                pc: 0,
-                mar: 0,
-                mdr: 0,
-                cir: '000',
-                acc: 0,
-                halted: false,
-                step: 0
-            };
-            lmsStatus.textContent = 'Ready. Press "Micro-step" to begin.';
-            lmsStatus.style.color = '#4ade80';
-            updateLmsDisplay();
-            // Update register cards
-            document.getElementById('val-PC').textContent = '00';
-            document.getElementById('val-MAR').textContent = '--';
-            document.getElementById('val-MDR').textContent = '--';
-            document.getElementById('val-CIR').textContent = '--';
-            document.getElementById('val-ACC').textContent = '0';
-        }
-
-        function microStep() {
-            if (lmsState.halted) {
-                lmsStatus.textContent = 'Program halted. Press Reset to run again.';
-                lmsStatus.style.color = '#f5b342';
-                return;
-            }
-
-            const step = lmsState.step;
-            const pc = lmsState.pc;
-
-            // Fetch stage
-            if (step === 0) {
-                // Copy PC to MAR
-                lmsState.mar = pc;
-                lmsStatus.textContent = 'FETCH: PC → MAR (address ' + pc + ')';
-                lmsState.step = 1;
-            } else if (step === 1) {
-                // Read memory at MAR into MDR
-                lmsState.mdr = memory[lmsState.mar] || 0;
-                lmsStatus.textContent = 'FETCH: Memory[MAR] → MDR (value ' + lmsState.mdr + ')';
-                lmsState.step = 2;
-            } else if (step === 2) {
-                // Increment PC
-                lmsState.pc = pc + 1;
-                lmsStatus.textContent = 'FETCH: PC incremented to ' + lmsState.pc;
-                lmsState.step = 3;
-            } else if (step === 3) {
-                // Copy MDR to CIR
-                lmsState.cir = String(lmsState.mdr).padStart(3, '0');
-                lmsStatus.textContent = 'FETCH: MDR → CIR (instruction ' + lmsState.cir + ')';
-                lmsState.step = 4;
-            } else if (step === 4) {
-                // Decode
-                const opcode = Math.floor(lmsState.mdr / 100);
-                const operand = lmsState.mdr % 100;
-                if (opcode === 5) {
-                    lmsStatus.textContent = 'DECODE: LDA ' + operand + ' (Load accumulator)';
-                } else if (opcode === 1) {
-                    lmsStatus.textContent = 'DECODE: ADD ' + operand + ' (Add to accumulator)';
-                } else if (opcode === 3) {
-                    lmsStatus.textContent = 'DECODE: STA ' + operand + ' (Store accumulator)';
-                } else if (opcode === 9 && operand === 2) {
-                    lmsStatus.textContent = 'DECODE: OUT (Output accumulator)';
-                } else if (opcode === 0 && operand === 0) {
-                    lmsStatus.textContent = 'DECODE: HLT (Halt program)';
-                } else {
-                    lmsStatus.textContent = 'DECODE: Unknown instruction';
+        // Allow dragging back out of dropzones (optional, but good for UX)
+        dropzones.forEach(zone => {
+            zone.addEventListener('dragstart', (e) => {
+                if(e.target.classList.contains('draggable-item')) {
+                    draggedItem = e.target;
                 }
-                lmsState.step = 5;
+            });
+        });
+
+        // Check answers
+        checkMatchBtn.addEventListener('click', () => {
+            let correct = 0;
+            let total = dropzones.length;
+            
+            dropzones.forEach(zone => {
+                const expected = zone.getAttribute('data-answer');
+                const item = zone.querySelector('.draggable-item');
+                
+                if (item && item.getAttribute('data-match') === expected) {
+                    zone.style.borderColor = '#2d7d46';
+                    zone.style.background = '#e6f7e6';
+                    correct++;
+                } else {
+                    zone.style.borderColor = '#b13a3a';
+                    zone.style.background = '#fde8e8';
+                }
+            });
+
+            if (correct === total) {
+                matchFeedback.textContent = `✅ Perfect! ${correct}/${total} correct.`;
+                matchFeedback.style.color = '#2d7d46';
             } else {
-                // Execute
-                const opcode = Math.floor(lmsState.mdr / 100);
-                const operand = lmsState.mdr % 100;
-
-                if (opcode === 5) { // LDA
-                    lmsState.acc = memory[operand] || 0;
-                    lmsStatus.textContent = 'EXECUTE: ACC = ' + lmsState.acc + ' (loaded from address ' + operand + ')';
-                } else if (opcode === 1) { // ADD
-                    const val = memory[operand] || 0;
-                    lmsState.acc = lmsState.acc + val;
-                    lmsStatus.textContent = 'EXECUTE: ACC = ' + lmsState.acc + ' (added ' + val + ' from address ' + operand + ')';
-                } else if (opcode === 3) { // STA
-                    memory[operand] = lmsState.acc;
-                    lmsStatus.textContent = 'EXECUTE: Memory[' + operand + '] = ' + lmsState.acc + ' (stored accumulator)';
-                } else if (opcode === 9 && operand === 2) { // OUT
-                    lmsStatus.textContent = 'EXECUTE: Output = ' + lmsState.acc;
-                } else if (opcode === 0 && operand === 0) { // HLT
-                    lmsState.halted = true;
-                    lmsStatus.textContent = 'EXECUTE: Program halted. Final ACC = ' + lmsState.acc;
-                    lmsStatus.style.color = '#f5b342';
-                } else {
-                    lmsStatus.textContent = 'EXECUTE: Unknown instruction';
-                }
-                lmsState.step = 0;
+                matchFeedback.textContent = `❌ ${correct}/${total} correct. Try again!`;
+                matchFeedback.style.color = '#b13a3a';
             }
+        });
 
-            updateLmsDisplay();
-            // Update register cards
-            document.getElementById('val-PC').textContent = String(lmsState.pc).padStart(2, '0');
-            document.getElementById('val-MAR').textContent = String(lmsState.mar).padStart(2, '0');
-            document.getElementById('val-MDR').textContent = String(lmsState.mdr).padStart(3, '0');
-            document.getElementById('val-CIR').textContent = lmsState.cir;
-            document.getElementById('val-ACC').textContent = lmsState.acc;
-        }
-
-        lmsStepBtn.addEventListener('click', microStep);
-        lmsResetBtn.addEventListener('click', resetLms);
-
-        // Initialize
-        resetLms();
+        // Reset match game
+        resetMatchBtn.addEventListener('click', () => {
+            // Move all items back to bank
+            dropzones.forEach(zone => {
+                const item = zone.querySelector('.draggable-item');
+                if (item) {
+                    matchBank.appendChild(item);
+                }
+                zone.classList.remove('filled');
+                zone.style.borderColor = '';
+                zone.style.background = '';
+                zone.style.borderStyle = 'dashed';
+            });
+            // Reset bank items styling
+            matchBank.querySelectorAll('.draggable-item').forEach(item => {
+                item.style.opacity = '1';
+            });
+            matchFeedback.textContent = '';
+        });
 
     })();
 </script>
