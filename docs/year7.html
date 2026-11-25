@@ -605,7 +605,8 @@
     <script>
         (function() {
             // ========== PASSWORD PROTECTION ==========
-            const CORRECT_PASSWORD = 'password123';
+            // Updated password for Year 7
+            const CORRECT_PASSWORD = 'cs07923';
 
             const overlay = document.getElementById('passwordOverlay');
             const passwordInput = document.getElementById('passwordInput');
@@ -643,13 +644,9 @@
             }
 
             // ========== UNIT COMPLETION CHECKER ==========
-            // Progress in unit pages is stored as: year7_covered_<LESSONKEY>_<CLASS>
-            // e.g. year7_covered_Y7U1L1_7A = "true"
-            // A unit is complete when ALL its lesson/class keys are "true".
             const GRADE_PREFIX = 'year7_covered_';
 
             function checkUnitCompletion(unitKey) {
-                // Look through localStorage for keys starting with year7_covered_<unitKey>
                 let foundAny = false;
                 let allTrue = true;
 
@@ -664,7 +661,6 @@
                     }
                 }
 
-                // Unit is complete only if at least one matching key exists AND all are true
                 return foundAny && allTrue;
             }
 
@@ -690,13 +686,8 @@
                 });
             }
 
-            // Initial paint
             updateAllUnitCards();
-
-            // Refresh when returning to this tab (e.g. after ticking checkboxes on a unit page)
             window.addEventListener('focus', updateAllUnitCards);
-
-            // Refresh when another tab updates localStorage
             window.addEventListener('storage', function(e) {
                 if (e.key && e.key.startsWith(GRADE_PREFIX)) {
                     updateAllUnitCards();
