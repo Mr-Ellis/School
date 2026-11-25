@@ -545,6 +545,7 @@
       gap: 0.3rem;
       margin-top: 0.6rem;
       flex-wrap: wrap;
+      justify-content: space-between;
     }
     .binary-tool .bit-box {
       width: 36px;
@@ -563,32 +564,91 @@
     .binary-tool .bit-box.msb { border-color: #e53935; background: #ffebee; }
     .binary-tool .bit-box.lsb { border-color: #4caf50; background: #edf7ed; }
 
-    /* ===== TRUTH TABLE ===== */
-    .truth-table-wrapper {
-      overflow-x: auto;
-      margin: 1rem 0;
+    /* ===== TRUTH TABLE BUILDER ===== */
+    .truth-builder {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
     }
-    .truth-table {
+    .truth-builder h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .gate-selector {
+      display: flex;
+      gap: 0.8rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    .gate-btn {
+      padding: 0.6rem 1.4rem;
+      border-radius: 30px;
+      border: 2px solid #b6cfe5;
+      background: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #0b2a4a;
+    }
+    .gate-btn:hover { border-color: #7bb3ff; background: #f0f7ff; }
+    .gate-btn.active {
+      background: #1f6390;
+      color: white;
+      border-color: #1f6390;
+    }
+    .truth-builder table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 0.8rem;
       font-size: 0.9rem;
-      min-width: 300px;
     }
-    .truth-table th, .truth-table td {
+    .truth-builder th, .truth-builder td {
       border: 1px solid #dceaf7;
-      padding: 0.6rem 1rem;
+      padding: 0.6rem;
       text-align: center;
     }
-    .truth-table th {
+    .truth-builder th {
       background: #eef6fc;
       font-weight: 600;
       color: #0b2a4a;
     }
-    .truth-table td {
+    .truth-builder td button {
+      padding: 0.3rem 1rem;
+      border-radius: 8px;
+      border: 2px solid #b6cfe5;
       background: white;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      min-width: 50px;
+      color: #0b2a4a;
     }
-    .truth-table tr:hover td { background: #f8fafc; }
-    .truth-table .out { font-weight: 700; color: #1f6390; }
+    .truth-builder td button:hover { border-color: #7bb3ff; background: #f0f7ff; }
+    .truth-builder td button.correct {
+      background: #c8e6c9;
+      border-color: #2d8f2d;
+      color: #1b5e20;
+    }
+    .truth-builder td button.incorrect {
+      background: #ffcdd2;
+      border-color: #e53935;
+      color: #b71c1c;
+      animation: shake 0.4s;
+    }
+    .truth-builder .builder-feedback {
+      margin-top: 0.8rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+    }
+    .truth-builder .builder-feedback.ok { color: #2d8f2d; }
+    .truth-builder .builder-feedback.no { color: #b71c1c; }
 
     @media (max-width: 680px) {
       body { padding: 1rem; }
@@ -692,19 +752,50 @@
     </div>
 
     <h3>Method 2: Place-Value</h3>
-    <p>Write the place-value headings: <strong>128, 64, 32, 16, 8, 4, 2, 1</strong>. Subtract the largest possible value without going negative. Place a 1 if you subtract, 0 if you don't.</p>
+    <p>Write the place-value headings from left to right: <strong>128, 64, 32, 16, 8, 4, 2, 1</strong>. Start from the left (128) and work your way right. At each step, ask: "Can I subtract this place value from my number?" If yes, write <strong>1</strong> and subtract it. If no, write <strong>0</strong> and move on.</p>
 
     <div class="highlight-box purple">
       <i class="fas fa-table" style="color:#8e24aa; margin-right:8px;"></i>
       <strong>Example: Convert 94 to binary using place-value</strong>
-      <div class="truth-table-wrapper" style="margin-top:0.6rem;">
-        <table class="truth-table">
-          <tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr>
-          <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+      <div style="overflow-x:auto; margin-top:0.8rem;">
+        <table style="width:100%; border-collapse:collapse; text-align:center; font-size:0.9rem;">
+          <tr style="background:#eef6fc; font-weight:600;">
+            <th style="border:1px solid #dceaf7; padding:0.6rem;">128</th>
+            <th style="border:1px solid #dceaf7; padding:0.6rem;">64</th>
+            <th style="border:1px solid #dceaf7; padding:0.6rem;">32</th>
+            <th style="border:1px solid #dceaf7; padding:0.6rem;">16</th>
+            <th style="border:1px solid #dceaf7; padding:0.6rem;">8</th>
+            <th style="border:1px solid #dceaf7; padding:0.6rem;">4</th>
+            <th style="border:1px solid #dceaf7; padding:0.6rem;">2</th>
+            <th style="border:1px solid #dceaf7; padding:0.6rem;">1</th>
+          </tr>
+          <tr>
+            <td style="border:1px solid #dceaf7; padding:0.6rem;">0</td>
+            <td style="border:1px solid #dceaf7; padding:0.6rem;">1</td>
+            <td style="border:1px solid #dceaf7; padding:0.6rem;">0</td>
+            <td style="border:1px solid #dceaf7; padding:0.6rem;">1</td>
+            <td style="border:1px solid #dceaf7; padding:0.6rem;">1</td>
+            <td style="border:1px solid #dceaf7; padding:0.6rem;">1</td>
+            <td style="border:1px solid #dceaf7; padding:0.6rem;">1</td>
+            <td style="border:1px solid #dceaf7; padding:0.6rem;">0</td>
+          </tr>
         </table>
       </div>
-      <p style="margin-top:0.4rem;">94 − 64 = 30 → 94 − 16 = 14 → 94 − 8 = 6 → 94 − 4 = 2 → 94 − 2 = 0</p>
-      <p>Result: <strong>01011110</strong> (same as Method 1!)</p>
+      <div style="margin-top:0.8rem; font-size:0.9rem;">
+        <p><strong>Step-by-step:</strong></p>
+        <ul style="margin-top:0.2rem;">
+          <li>Start with <strong>94</strong>.</li>
+          <li>Can we subtract 128? <strong>No</strong> → write 0.</li>
+          <li>Can we subtract 64? <strong>Yes</strong> → write 1. 94 − 64 = <strong>30</strong>.</li>
+          <li>Can we subtract 32? <strong>No</strong> → write 0.</li>
+          <li>Can we subtract 16? <strong>Yes</strong> → write 1. 30 − 16 = <strong>14</strong>.</li>
+          <li>Can we subtract 8? <strong>Yes</strong> → write 1. 14 − 8 = <strong>6</strong>.</li>
+          <li>Can we subtract 4? <strong>Yes</strong> → write 1. 6 − 4 = <strong>2</strong>.</li>
+          <li>Can we subtract 2? <strong>Yes</strong> → write 1. 2 − 2 = <strong>0</strong>.</li>
+          <li>Can we subtract 1? <strong>No</strong> → write 0.</li>
+        </ul>
+        <p style="margin-top:0.4rem;">Result: <strong>01011110</strong> (same as Method 1!)</p>
+      </div>
     </div>
 
     <p><strong>Important:</strong> Always write your answers as <strong>8-bit numbers</strong> (e.g., <code>00001010</code>).</p>
@@ -712,7 +803,7 @@
     <!-- ===== INTERACTIVE: BINARY CONVERTER ===== -->
     <div class="binary-tool" id="binaryConverter">
       <h3><i class="fas fa-calculator" style="color:#2a6f97;"></i> Interactive: Denary to Binary Converter</h3>
-      <p style="font-size:0.9rem; color:#475569;">Enter a denary number (0–255) below and see its 8-bit binary representation. The <strong>MSB</strong> is highlighted in red, and the <strong>LSB</strong> in green.</p>
+      <p style="font-size:0.9rem; color:#475569;">Enter a denary number (0–255) below and see its 8-bit binary representation. The <strong>MSB</strong> is highlighted in red (leftmost), and the <strong>LSB</strong> in green (rightmost).</p>
 
       <div class="input-row">
         <input type="number" id="denaryInput" min="0" max="255" value="94" placeholder="Enter a number (0–255)">
@@ -772,65 +863,23 @@
       </div>
     </div>
 
-    <h3>Truth Tables</h3>
-    <p>A truth table shows all possible input combinations and the corresponding output.</p>
+    <!-- ===== INTERACTIVE: TRUTH TABLE BUILDER ===== -->
+    <div class="truth-builder" id="truthBuilder">
+      <h3><i class="fas fa-table" style="color:#2a6f97;"></i> Interactive: Truth Table Builder</h3>
+      <p style="font-size:0.9rem; color:#475569;">Select a logic gate below, then click the output buttons to fill in the truth table. Click again to toggle between 0 and 1. Get them all right to complete the table!</p>
 
-    <div class="compare-grid">
-      <div>
-        <h4 style="text-align:center; margin-bottom:0.4rem;">NOT Gate</h4>
-        <div class="truth-table-wrapper">
-          <table class="truth-table">
-            <tr><th>Input</th><th>Output</th></tr>
-            <tr><td>0</td><td class="out">1</td></tr>
-            <tr><td>1</td><td class="out">0</td></tr>
-          </table>
-        </div>
-      </div>
-      <div>
-        <h4 style="text-align:center; margin-bottom:0.4rem;">AND Gate</h4>
-        <div class="truth-table-wrapper">
-          <table class="truth-table">
-            <tr><th>A</th><th>B</th><th>Output</th></tr>
-            <tr><td>0</td><td>0</td><td class="out">0</td></tr>
-            <tr><td>0</td><td>1</td><td class="out">0</td></tr>
-            <tr><td>1</td><td>0</td><td class="out">0</td></tr>
-            <tr><td>1</td><td>1</td><td class="out">1</td></tr>
-          </table>
-        </div>
-      </div>
-      <div>
-        <h4 style="text-align:center; margin-bottom:0.4rem;">OR Gate</h4>
-        <div class="truth-table-wrapper">
-          <table class="truth-table">
-            <tr><th>A</th><th>B</th><th>Output</th></tr>
-            <tr><td>0</td><td>0</td><td class="out">0</td></tr>
-            <tr><td>0</td><td>1</td><td class="out">1</td></tr>
-            <tr><td>1</td><td>0</td><td class="out">1</td></tr>
-            <tr><td>1</td><td>1</td><td class="out">1</td></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== INTERACTIVE: LOGIC GATE QUIZ ===== -->
-    <div class="match-game" id="logicMatchGame">
-      <h3><i class="fas fa-puzzle-piece" style="color:#2a6f97;"></i> Interactive: Match the Logic Gate to its Rule</h3>
-      <p style="font-size:0.9rem; color:#475569;">Click a gate chip, then click the matching rule slot. Get all three right to win!</p>
-
-      <div class="match-row" id="logicChips">
-        <div class="chip" data-answer="not">NOT</div>
-        <div class="chip" data-answer="and">AND</div>
-        <div class="chip" data-answer="or">OR</div>
+      <div class="gate-selector">
+        <button class="gate-btn active" data-gate="and">AND Gate</button>
+        <button class="gate-btn" data-gate="or">OR Gate</button>
+        <button class="gate-btn" data-gate="not">NOT Gate</button>
       </div>
 
-      <div class="drop-zone" id="logicDropZone">
-        <div class="slot" data-slot="not"><span>Reverses the input (1→0, 0→1)</span></div>
-        <div class="slot" data-slot="and"><span>Outputs 1 only if both inputs are 1</span></div>
-        <div class="slot" data-slot="or"><span>Outputs 1 if at least one input is 1</span></div>
+      <div id="truthTableContainer">
+        <!-- Table will be generated by JavaScript -->
       </div>
 
-      <div class="feedback" id="logicMatchFeedback"></div>
-      <button class="btn secondary" id="resetLogicMatch" style="margin-top:0.8rem;"><i class="fas fa-rotate-left"></i> Reset</button>
+      <div class="builder-feedback" id="builderFeedback"></div>
+      <button class="btn secondary" id="resetTruth" style="margin-top:0.8rem;"><i class="fas fa-rotate-left"></i> Reset Table</button>
     </div>
 
     <!-- ===== CLASS ACTIVITIES ===== -->
@@ -838,7 +887,7 @@
     <ul>
       <li><strong>Worksheet 2</strong> — Complete the tasks on binary conversion, MSB/LSB, and logic gates.</li>
       <li><strong>Binary Converter Practice</strong> — Use the interactive tool above to convert numbers like 50, 100, and 200.</li>
-      <li><strong>Truth Table Practice</strong> — Copy and complete truth tables for AND, OR, and NOT gates.</li>
+      <li><strong>Truth Table Builder</strong> — Use the interactive tool above to test yourself on AND, OR, and NOT gates.</li>
     </ul>
 
     <!-- ===== MAIN TASK ===== -->
@@ -1000,8 +1049,130 @@
       }
     });
 
-    // Initial conversion
     convert();
+  })();
+
+  // ===== TRUTH TABLE BUILDER =====
+  (function() {
+    const container = document.getElementById('truthTableContainer');
+    const feedback = document.getElementById('builderFeedback');
+    const resetBtn = document.getElementById('resetTruth');
+    const gateBtns = document.querySelectorAll('.gate-btn');
+    let currentGate = 'and';
+
+    const gates = {
+      and: {
+        label: 'AND',
+        inputs: ['A', 'B'],
+        rows: [
+          { a: 0, b: 0, out: 0 },
+          { a: 0, b: 1, out: 0 },
+          { a: 1, b: 0, out: 0 },
+          { a: 1, b: 1, out: 1 }
+        ]
+      },
+      or: {
+        label: 'OR',
+        inputs: ['A', 'B'],
+        rows: [
+          { a: 0, b: 0, out: 0 },
+          { a: 0, b: 1, out: 1 },
+          { a: 1, b: 0, out: 1 },
+          { a: 1, b: 1, out: 1 }
+        ]
+      },
+      not: {
+        label: 'NOT',
+        inputs: ['A'],
+        rows: [
+          { a: 0, out: 1 },
+          { a: 1, out: 0 }
+        ]
+      }
+    };
+
+    function buildTable(gate) {
+      const data = gates[gate];
+      const headers = data.inputs.concat(['Output']);
+      let html = '<table><tr>';
+      headers.forEach(h => { html += `<th>${h}</th>`; });
+      html += '</tr>';
+
+      data.rows.forEach((row, rowIndex) => {
+        html += '<tr>';
+        data.inputs.forEach(inp => {
+          html += `<td>${row[inp.toLowerCase()]}</td>`;
+        });
+        html += `<td><button class="out-btn" data-row="${rowIndex}" data-correct="${row.out}">?</button></td>`;
+        html += '</tr>';
+      });
+      html += '</table>';
+      container.innerHTML = html;
+
+      container.querySelectorAll('.out-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (this.classList.contains('correct')) return;
+          let val = this.textContent;
+          if (val === '?') val = '0';
+          else if (val === '0') val = '1';
+          else val = '0';
+          this.textContent = val;
+          checkTable();
+        });
+      });
+    }
+
+    function checkTable() {
+      const btns = container.querySelectorAll('.out-btn');
+      let allCorrect = true;
+      let allFilled = true;
+      btns.forEach(btn => {
+        if (btn.textContent === '?') {
+          allFilled = false;
+          allCorrect = false;
+          return;
+        }
+        const correct = btn.getAttribute('data-correct');
+        if (btn.textContent === correct) {
+          btn.classList.add('correct');
+          btn.classList.remove('incorrect');
+        } else {
+          btn.classList.add('incorrect');
+          btn.classList.remove('correct');
+          allCorrect = false;
+        }
+      });
+
+      if (allCorrect && allFilled) {
+        feedback.textContent = '🎉 All correct! Great work!';
+        feedback.className = 'builder-feedback ok';
+      } else if (!allFilled) {
+        feedback.textContent = '👆 Click the buttons to fill in the outputs.';
+        feedback.className = 'builder-feedback';
+      } else {
+        feedback.textContent = '❌ Some answers are incorrect. Try again!';
+        feedback.className = 'builder-feedback no';
+      }
+    }
+
+    gateBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        gateBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentGate = this.getAttribute('data-gate');
+        buildTable(currentGate);
+        feedback.textContent = '';
+        feedback.className = 'builder-feedback';
+      });
+    });
+
+    resetBtn.addEventListener('click', () => {
+      buildTable(currentGate);
+      feedback.textContent = '';
+      feedback.className = 'builder-feedback';
+    });
+
+    buildTable('and');
   })();
 
   // ===== LOGIC GATE MATCH GAME =====
