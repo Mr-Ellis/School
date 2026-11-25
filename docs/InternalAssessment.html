@@ -277,7 +277,8 @@
       cursor: default;
       text-decoration: none;
       color: inherit;
-      display: block;
+      display: flex;
+      flex-direction: column;
     }
     .criteria-card:hover {
       border-color: #b6d0e8;
@@ -376,9 +377,9 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      margin-top: 0.8rem;
-      border-top: 1px solid #e8eff6;
+      margin-top: auto; /* Push to bottom */
       padding-top: 0.9rem;
+      border-top: 1px solid #e8eff6;
       justify-content: space-between;
       align-items: center;
       position: relative;
@@ -475,7 +476,7 @@
     .criteria-card.c-e { border-left-color: #b45309; }
     .criteria-card.c-ref { border-left-color: #fdbb2d; }
 
-    /* ===== MARK BANDS DISCLOSURE ===== */
+    /* ===== MARK BANDS BUTTON ===== */
     .markbands-toggle {
       display: flex;
       align-items: center;
@@ -503,61 +504,143 @@
       transform: translateY(-1px);
       box-shadow: 0 6px 8px -1px rgba(245, 158, 11, 0.5), 0 3px 5px -1px rgba(245, 158, 11, 0.3);
     }
-    .markbands-toggle .chev { transition: transform 0.2s; font-size: 0.7rem; }
-    .markbands-toggle.open .chev { transform: rotate(90deg); }
 
-    .markbands-panel {
+    /* ===== MARK BANDS MODAL (POP-OUT) ===== */
+    .markbands-modal {
       display: none;
-      margin-top: 0.7rem;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid #e0e8f0;
-      font-size: 0.78rem;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(11, 42, 74, 0.85);
+      backdrop-filter: blur(8px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 2rem;
     }
-    .markbands-panel.open { display: block; }
+    .markbands-modal.active { display: flex; }
 
-    .markband {
-      padding: 0.6rem 0.9rem;
-      border-left: 4px solid #cbd5e1;
-      background: #fafcfe;
+    .markbands-modal-content {
+      background: #ffffff;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 700px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      position: relative;
+      animation: slideUp 0.3s ease-out;
     }
-    .markband + .markband { border-top: 1px solid #eef2f6; }
-    .markband h5 {
-      font-size: 0.78rem;
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .markbands-modal-header {
+      background: #0b2a4a;
+      color: white;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 4px solid #fdbb2d;
+    }
+    .markbands-modal-header h3 {
+      font-size: 1.2rem;
       font-weight: 700;
-      margin-bottom: 0.25rem;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
+      margin: 0;
+      color: #fff;
+    }
+    .markbands-modal-header h3 i { color: #fdbb2d; }
+    
+    .markbands-modal-close {
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+      padding: 0.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .markbands-modal-close:hover { color: #ffffff; transform: scale(1.1); }
+
+    .markbands-modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      font-size: 0.88rem;
+    }
+
+    /* Custom scrollbar for modal */
+    .markbands-modal-body::-webkit-scrollbar { width: 8px; }
+    .markbands-modal-body::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+    .markbands-modal-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .markbands-modal-body::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .mb-intro {
+      color: #475569;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+    }
+
+    .markband {
+      padding: 0.8rem 1rem;
+      border-left: 5px solid #cbd5e1;
+      background: #f8fafc;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 0.8rem;
+    }
+    .markband h5 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .markband ul { list-style: none; padding: 0; margin: 0; }
     .markband ul li {
-      padding: 0.08rem 0;
+      padding: 0.15rem 0;
       display: flex;
       align-items: flex-start;
-      gap: 6px;
-      font-size: 0.76rem;
+      gap: 8px;
       color: #334155;
+      font-size: 0.85rem;
     }
-    .markband ul li .yes { color: #1f7b4d; font-weight: 700; }
-    .markband ul li .no  { color: #b13a3a; font-weight: 700; }
+    .markband ul li .yes { color: #1f7b4d; font-weight: 800; }
+    .markband ul li .no  { color: #b13a3a; font-weight: 800; }
 
-    .markband.b2 { border-left-color: #f59e0b; }
-    .markband.b2 h5 { color: #a8691b; }
-    .markband.b3 { border-left-color: #1a5f87; }
-    .markband.b3 h5 { color: #13416b; }
-    .markband.b4 { border-left-color: #2d7d46; }
-    .markband.b4 h5 { color: #1f6b3a; }
+    /* Band color coding inside modal */
+    .markband.b2 { border-left-color: #f59e0b; background: #fffbeb; }
+    .markband.b2 h5 { color: #b45309; }
+    .markband.b3 { border-left-color: #1a5f87; background: #f0f9ff; }
+    .markband.b3 h5 { color: #0369a1; }
+    .markband.b4 { border-left-color: #2d7d46; background: #f0fdf4; }
+    .markband.b4 h5 { color: #15803d; }
 
+    /* The Ultimate Rule Strip inside modal */
     .ultimate-rule {
-      padding: 0.65rem 0.9rem;
+      padding: 0.8rem 1rem;
       background: #0b2a4a;
       color: #e6edf5;
-      font-size: 0.76rem;
+      font-size: 0.85rem;
       line-height: 1.5;
-      border-top: 2px solid #fdbb2d;
+      border-radius: 8px;
+      margin-top: 1rem;
+      border-left: 5px solid #fdbb2d;
     }
-    .ultimate-rule strong { color: #fdbb2d; display: block; margin-bottom: 0.2rem; font-size: 0.8rem; }
+    .ultimate-rule strong { color: #fdbb2d; display: block; margin-bottom: 0.3rem; font-size: 0.9rem; }
 
     /* ===== TIMELINE ===== */
     .section-head {
@@ -716,6 +799,11 @@
       .criteria-card .criteria-letter { font-size: 2rem; }
       .top-quick-links { justify-content: center; }
       .top-quick-links a { width: 100%; justify-content: center; }
+      
+      .markbands-modal { padding: 1rem; }
+      .markbands-modal-content { max-height: 95vh; }
+      .markbands-modal-header { padding: 1rem; }
+      .markbands-modal-body { padding: 1rem; }
     }
   </style>
 </head>
@@ -782,7 +870,7 @@
   <div class="info-banner">
     <i class="fas fa-info-circle"></i>
     <div>
-      <strong>Why is the gold button so important?</strong> The official rubric is just the starting point. The <strong>Moderator Mark Bands</strong> below are derived directly from official IB examiner reports and moderated examples. They reveal exactly what separates a 3 from a 4, or a 4 from a 5, and show the specific things moderators look for. <em>Read these before you start writing.</em>
+      <strong>Why is the gold button so important?</strong> The official rubric is just the starting point. The <strong>Moderator Mark Bands</strong> are derived directly from official IB examiner reports and moderated examples. They reveal exactly what separates a 3 from a 4, or a 4 from a 5, and show the specific things moderators look for. <em>Read these before you start writing.</em>
     </div>
   </div>
 
@@ -823,49 +911,59 @@
         <li><i class="fas fa-check-circle"></i> <strong>Computational Context</strong> — justify <em>why</em> each technology solves the problem</li>
       </ul>
 
-      <button class="markbands-toggle" data-target="mb-A" aria-expanded="false">
-        <span class="chev">▶</span> ⭐ Moderator Mark Bands (Must Read)
+      <button class="markbands-toggle" data-target="modal-A">
+        <span>⭐</span> Moderator Mark Bands (Must Read)
       </button>
-      <div class="markbands-panel" id="mb-A">
-        <div class="markband b2">
-          <h5>To Reach 2/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Describe a problem</li>
-            <li><span class="yes">✔</span> State some success criteria</li>
-            <li><span class="yes">✔</span> Mention tools/language</li>
-            <li><span class="no">✘</span> Requirements may be unclear</li>
-            <li><span class="no">✘</span> Context may be weak</li>
-            <li><span class="no">✘</span> Stakeholder may be underdeveloped</li>
-          </ul>
-        </div>
-        <div class="markband b3">
-          <h5>To Reach 3/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Clear stakeholder</li>
-            <li><span class="yes">✔</span> Clear problem</li>
-            <li><span class="yes">✔</span> Some measurable requirements</li>
-            <li><span class="yes">✔</span> Mostly appropriate success criteria</li>
-            <li><span class="yes">✔</span> Some explanation of technology choices</li>
-            <li><span class="no">✘</span> But <strong>one strand is still noticeably weak</strong> — e.g. vague criteria, too few criteria, generic computational context</li>
-          </ul>
-        </div>
-        <div class="markband b4">
-          <h5>To Reach 4/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Real stakeholder &amp; real need</li>
-            <li><span class="yes">✔</span> Several measurable requirements</li>
-            <li><span class="yes">✔</span> Success criteria define a <em>complete</em> solution</li>
-            <li><span class="yes">✔</span> All criteria testable</li>
-            <li><span class="yes">✔</span> Technologies explicitly justified</li>
-            <li><span class="yes">✔</span> Every technology linked to solving part of the problem</li>
-            <li style="margin-top:0.3rem; font-size:0.73rem; color:#475569;">
-              <span class="no">✘</span> <em>"I chose Python because I know Python."</em><br>
-              <span class="yes">✔</span> <em>"I chose Python because Pygame provides collision detection, game loops and event handling required for the Flappy Bird mechanics."</em>
-            </li>
-          </ul>
-        </div>
-        <div class="ultimate-rule">
-          <strong>⚡ Ultimate Criterion A rule:</strong> The difference between 3/4 and 4/4 is usually <em>not</em> the success criteria — it's whether the <strong>problem scenario and computational context</strong> are convincing, specific, and clearly connected to the solution.
+      <!-- MODAL A -->
+      <div id="modal-A" class="markbands-modal">
+        <div class="markbands-modal-content">
+          <div class="markbands-modal-header">
+            <h3><i class="fas fa-star"></i> Criterion A: Moderator Mark Bands</h3>
+            <button class="markbands-modal-close">&times;</button>
+          </div>
+          <div class="markbands-modal-body">
+            <p class="mb-intro">These boundaries are derived from official moderated examples. Moderators look for specific evidence in the <strong>Problem Scenario</strong>, <strong>Success Criteria</strong>, and <strong>Computational Context</strong>.</p>
+            <div class="markband b2">
+              <h5>To Reach 2/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Describe a problem</li>
+                <li><span class="yes">✔</span> State some success criteria</li>
+                <li><span class="yes">✔</span> Mention tools/language</li>
+                <li><span class="no">✘</span> Requirements may be unclear</li>
+                <li><span class="no">✘</span> Context may be weak</li>
+                <li><span class="no">✘</span> Stakeholder may be underdeveloped</li>
+              </ul>
+            </div>
+            <div class="markband b3">
+              <h5>To Reach 3/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Clear stakeholder</li>
+                <li><span class="yes">✔</span> Clear problem</li>
+                <li><span class="yes">✔</span> Some measurable requirements</li>
+                <li><span class="yes">✔</span> Mostly appropriate success criteria</li>
+                <li><span class="yes">✔</span> Some explanation of technology choices</li>
+                <li><span class="no">✘</span> But <strong>one strand is still noticeably weak</strong> — e.g. vague criteria, too few criteria, generic computational context</li>
+              </ul>
+            </div>
+            <div class="markband b4">
+              <h5>To Reach 4/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Real stakeholder &amp; real need</li>
+                <li><span class="yes">✔</span> Several measurable requirements</li>
+                <li><span class="yes">✔</span> Success criteria define a <em>complete</em> solution</li>
+                <li><span class="yes">✔</span> All criteria testable</li>
+                <li><span class="yes">✔</span> Technologies explicitly justified</li>
+                <li><span class="yes">✔</span> Every technology linked to solving part of the problem</li>
+                <li style="margin-top:0.3rem; font-size:0.83rem; color:#475569;">
+                  <span class="no">✘</span> <em>"I chose Python because I know Python."</em><br>
+                  <span class="yes">✔</span> <em>"I chose Python because Pygame provides collision detection, game loops and event handling required for the Flappy Bird mechanics."</em>
+                </li>
+              </ul>
+            </div>
+            <div class="ultimate-rule">
+              <strong>⚡ Ultimate Criterion A rule:</strong> The difference between 3/4 and 4/4 is usually <em>not</em> the success criteria — it's whether the <strong>problem scenario and computational context</strong> are convincing, specific, and clearly connected to the solution.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -903,39 +1001,49 @@
         <li><i class="fas fa-check-circle"></i> Must be <strong>consistent with Criterion A</strong></li>
       </ul>
 
-      <button class="markbands-toggle" data-target="mb-B" aria-expanded="false">
-        <span class="chev">▶</span> ⭐ Moderator Mark Bands (Must Read)
+      <button class="markbands-toggle" data-target="modal-B">
+        <span>⭐</span> Moderator Mark Bands (Must Read)
       </button>
-      <div class="markbands-panel" id="mb-B">
-        <div class="markband b2">
-          <h5>To Reach 2/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Some decomposition shown</li>
-            <li><span class="yes">✔</span> A basic plan exists</li>
-            <li><span class="no">✘</span> Plan may not clearly address success criteria</li>
-            <li><span class="no">✘</span> Decomposition may be shallow or generic</li>
-          </ul>
-        </div>
-        <div class="markband b3">
-          <h5>To Reach 3/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Clear decomposition of the problem</li>
-            <li><span class="yes">✔</span> Plan addresses most success criteria</li>
-            <li><span class="yes">✔</span> Reasonable timeline / task breakdown</li>
-            <li><span class="no">✘</span> But one area is noticeably weak — e.g. plan is generic, or decomposition misses a component</li>
-          </ul>
-        </div>
-        <div class="markband b4">
-          <h5>To Reach 4/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Thorough decomposition with clear diagrams</li>
-            <li><span class="yes">✔</span> Plan explicitly maps to <em>each</em> success criterion</li>
-            <li><span class="yes">✔</span> Realistic timeline with dependencies</li>
-            <li><span class="yes">✔</span> Plan is consistent with Criterion A</li>
-          </ul>
-        </div>
-        <div class="ultimate-rule">
-          <strong>⚡ Ultimate Criterion B rule:</strong> Your plan must map back to the success criteria — moderators check this explicitly. A generic GANTT that doesn't reference your specific criteria won't reach the top band.
+      <!-- MODAL B -->
+      <div id="modal-B" class="markbands-modal">
+        <div class="markbands-modal-content">
+          <div class="markbands-modal-header">
+            <h3><i class="fas fa-star"></i> Criterion B: Moderator Mark Bands</h3>
+            <button class="markbands-modal-close">&times;</button>
+          </div>
+          <div class="markbands-modal-body">
+            <p class="mb-intro">Your planning must explicitly reference the success criteria defined in Criterion A. Moderators look for a clear mapping between the problem decomposition and the timeline.</p>
+            <div class="markband b2">
+              <h5>To Reach 2/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Some decomposition shown</li>
+                <li><span class="yes">✔</span> A basic plan exists</li>
+                <li><span class="no">✘</span> Plan may not clearly address success criteria</li>
+                <li><span class="no">✘</span> Decomposition may be shallow or generic</li>
+              </ul>
+            </div>
+            <div class="markband b3">
+              <h5>To Reach 3/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Clear decomposition of the problem</li>
+                <li><span class="yes">✔</span> Plan addresses most success criteria</li>
+                <li><span class="yes">✔</span> Reasonable timeline / task breakdown</li>
+                <li><span class="no">✘</span> But one area is noticeably weak — e.g. plan is generic, or decomposition misses a component</li>
+              </ul>
+            </div>
+            <div class="markband b4">
+              <h5>To Reach 4/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Thorough decomposition with clear diagrams</li>
+                <li><span class="yes">✔</span> Plan explicitly maps to <em>each</em> success criterion</li>
+                <li><span class="yes">✔</span> Realistic timeline with dependencies</li>
+                <li><span class="yes">✔</span> Plan is consistent with Criterion A</li>
+              </ul>
+            </div>
+            <div class="ultimate-rule">
+              <strong>⚡ Ultimate Criterion B rule:</strong> Your plan must map back to the success criteria — moderators check this explicitly. A generic GANTT that doesn't reference your specific criteria won't reach the top band.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -973,63 +1081,73 @@
         <li><i class="fas fa-check-circle"></i> <strong>Testing Strategy</strong> — success criteria, expected outcomes, valid/extreme/invalid data</li>
       </ul>
 
-      <button class="markbands-toggle" data-target="mb-C" aria-expanded="false">
-        <span class="chev">▶</span> ⭐ Moderator Mark Bands (Must Read)
+      <button class="markbands-toggle" data-target="modal-C">
+        <span>⭐</span> Moderator Mark Bands (Must Read)
       </button>
-      <div class="markbands-panel" id="mb-C">
-        <div class="markband b2">
-          <h5>To Reach 1–2/6</h5>
-          <ul>
-            <li><span class="yes">✔</span> One simplistic diagram</li>
-            <li><span class="yes">✔</span> Little algorithmic detail</li>
-            <li><span class="no">✘</span> No structured testing</li>
-            <li><span class="no">✘</span> Major parts of the solution undocumented</li>
-            <li><span class="no">✘</span> A programmer could not understand how the solution works</li>
-          </ul>
-        </div>
-        <div class="markband b3">
-          <h5>To Reach 3/6</h5>
-          <ul>
-            <li><span class="yes">✔</span> System model is minimal (often one diagram)</li>
-            <li><span class="yes">✔</span> Functional algorithms may exist but coverage is limited</li>
-            <li><span class="no">✘</span> Testing is demonstration-oriented, no structural testing</li>
-            <li><span class="no">✘</span> No valid/extreme/invalid test data</li>
-          </ul>
-        </div>
-        <div class="markband b3">
-          <h5>To Reach 4/6</h5>
-          <ul>
-            <li><span class="yes">✔</span> Multiple diagrams present</li>
-            <li><span class="yes">✔</span> UI and/or UML may be present</li>
-            <li><span class="yes">✔</span> Algorithms mostly functional</li>
-            <li><span class="yes">✔</span> Testing aligned with success criteria</li>
-            <li><span class="no">✘</span> Important omissions remain — e.g. missing UI design, incomplete algorithms, weak structural testing</li>
-            <li><span class="no">✘</span> Often does not consider extreme or abnormal data</li>
-          </ul>
-        </div>
-        <div class="markband b4">
-          <h5>To Reach 5/6</h5>
-          <ul>
-            <li><span class="yes">✔</span> UI designs, UML, architecture, data structures, storage structures</li>
-            <li><span class="yes">✔</span> Major system components documented</li>
-            <li><span class="yes">✔</span> Clear, detailed algorithms supporting major functionality</li>
-            <li><span class="yes">✔</span> Testing aligned with success criteria and expected outcomes</li>
-            <li><span class="no">✘</span> Some weaknesses remain — e.g. missing file interactions, incomplete modelling, testing limitations</li>
-          </ul>
-        </div>
-        <div class="markband b4">
-          <h5>To Reach 6/6</h5>
-          <ul>
-            <li><span class="yes">✔</span> Comprehensive system model — no significant omissions</li>
-            <li><span class="yes">✔</span> Every major feature represented algorithmically</li>
-            <li><span class="yes">✔</span> Direct relationship between algorithms and system components</li>
-            <li><span class="yes">✔</span> Functional and structural testing</li>
-            <li><span class="yes">✔</span> Valid, extreme and invalid data with expected outcomes</li>
-            <li><span class="yes">✔</span> A competent programmer could reconstruct the solution from Criterion C alone</li>
-          </ul>
-        </div>
-        <div class="ultimate-rule">
-          <strong>⚡ Ultimate Criterion C rule:</strong> Criterion C is judged more by <em>omissions</em> than by volume. A 15-page Criterion C can still receive 4/6 if important parts are missing. Testing is the most common reason students lose marks — a demonstration script is not a testing strategy.
+      <!-- MODAL C -->
+      <div id="modal-C" class="markbands-modal">
+        <div class="markbands-modal-content">
+          <div class="markbands-modal-header">
+            <h3><i class="fas fa-star"></i> Criterion C: Moderator Mark Bands</h3>
+            <button class="markbands-modal-close">&times;</button>
+          </div>
+          <div class="markbands-modal-body">
+            <p class="mb-intro">Criterion C is judged by <em>omissions</em>, not volume. A 15-page document can still score 4/6 if UI design, UML, or extreme/invalid testing data is missing.</p>
+            <div class="markband b2">
+              <h5>To Reach 1–2/6</h5>
+              <ul>
+                <li><span class="yes">✔</span> One simplistic diagram</li>
+                <li><span class="yes">✔</span> Little algorithmic detail</li>
+                <li><span class="no">✘</span> No structured testing</li>
+                <li><span class="no">✘</span> Major parts of the solution undocumented</li>
+                <li><span class="no">✘</span> A programmer could not understand how the solution works</li>
+              </ul>
+            </div>
+            <div class="markband b3">
+              <h5>To Reach 3/6</h5>
+              <ul>
+                <li><span class="yes">✔</span> System model is minimal (often one diagram)</li>
+                <li><span class="yes">✔</span> Functional algorithms may exist but coverage is limited</li>
+                <li><span class="no">✘</span> Testing is demonstration-oriented, no structural testing</li>
+                <li><span class="no">✘</span> No valid/extreme/invalid test data</li>
+              </ul>
+            </div>
+            <div class="markband b3">
+              <h5>To Reach 4/6</h5>
+              <ul>
+                <li><span class="yes">✔</span> Multiple diagrams present</li>
+                <li><span class="yes">✔</span> UI and/or UML may be present</li>
+                <li><span class="yes">✔</span> Algorithms mostly functional</li>
+                <li><span class="yes">✔</span> Testing aligned with success criteria</li>
+                <li><span class="no">✘</span> Important omissions remain — e.g. missing UI design, incomplete algorithms, weak structural testing</li>
+                <li><span class="no">✘</span> Often does not consider extreme or abnormal data</li>
+              </ul>
+            </div>
+            <div class="markband b4">
+              <h5>To Reach 5/6</h5>
+              <ul>
+                <li><span class="yes">✔</span> UI designs, UML, architecture, data structures, storage structures</li>
+                <li><span class="yes">✔</span> Major system components documented</li>
+                <li><span class="yes">✔</span> Clear, detailed algorithms supporting major functionality</li>
+                <li><span class="yes">✔</span> Testing aligned with success criteria and expected outcomes</li>
+                <li><span class="no">✘</span> Some weaknesses remain — e.g. missing file interactions, incomplete modelling, testing limitations</li>
+              </ul>
+            </div>
+            <div class="markband b4">
+              <h5>To Reach 6/6</h5>
+              <ul>
+                <li><span class="yes">✔</span> Comprehensive system model — no significant omissions</li>
+                <li><span class="yes">✔</span> Every major feature represented algorithmically</li>
+                <li><span class="yes">✔</span> Direct relationship between algorithms and system components</li>
+                <li><span class="yes">✔</span> Functional and structural testing</li>
+                <li><span class="yes">✔</span> Valid, extreme and invalid data with expected outcomes</li>
+                <li><span class="yes">✔</span> A competent programmer could reconstruct the solution from Criterion C alone</li>
+              </ul>
+            </div>
+            <div class="ultimate-rule">
+              <strong>⚡ Ultimate Criterion C rule:</strong> Criterion C is judged more by <em>omissions</em> than by volume. A 15-page Criterion C can still receive 4/6 if important parts are missing. Testing is the most common reason students lose marks — a demonstration script is not a testing strategy.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1067,42 +1185,65 @@
         <li><i class="fas fa-check-circle"></i> <strong>Evaluate &amp; justify</strong> implementation choices and testing strategy</li>
       </ul>
 
-      <button class="markbands-toggle" data-target="mb-D" aria-expanded="false">
-        <span class="chev">▶</span> ⭐ Moderator Mark Bands (Must Read)
+      <button class="markbands-toggle" data-target="modal-D">
+        <span>⭐</span> Moderator Mark Bands (Must Read)
       </button>
-      <div class="markbands-panel" id="mb-D">
-        <div class="markband b2">
-          <h5>To Reach the Lower Bands</h5>
-          <ul>
-            <li><span class="yes">✔</span> Some working code</li>
-            <li><span class="no">✘</span> Product may not fully function</li>
-            <li><span class="no">✘</span> Techniques listed but not justified</li>
-            <li><span class="no">✘</span> Little or no testing evidence</li>
-            <li><span class="no">✘</span> Video evidence missing or incomplete</li>
-          </ul>
-        </div>
-        <div class="markband b3">
-          <h5>To Reach the Middle Bands</h5>
-          <ul>
-            <li><span class="yes">✔</span> Product mostly functional</li>
-            <li><span class="yes">✔</span> Appropriate techniques used</li>
-            <li><span class="yes">✔</span> Some justification of choices</li>
-            <li><span class="yes">✔</span> Basic testing evidenced</li>
-            <li><span class="no">✘</span> But one area is weak — e.g. incomplete video, shallow justification, testing doesn't show response to issues</li>
-          </ul>
-        </div>
-        <div class="markband b4">
-          <h5>To Reach the Top Bands</h5>
-          <ul>
-            <li><span class="yes">✔</span> Fully functional product with clear video evidence</li>
-            <li><span class="yes">✔</span> Appropriate, well-justified techniques</li>
-            <li><span class="yes">✔</span> Testing shows you <em>responded</em> to issues</li>
-            <li><span class="yes">✔</span> Implementation choices explicitly evaluated</li>
-            <li><span class="yes">✔</span> Every success criterion demonstrably met</li>
-          </ul>
-        </div>
-        <div class="ultimate-rule">
-          <strong>⚡ Ultimate Criterion D rule:</strong> The product must actually <em>work</em> — video evidence is mandatory. Techniques must be justified, not just listed. A technically impressive product with weak documentation still scores poorly.
+      <!-- MODAL D -->
+      <div id="modal-D" class="markbands-modal">
+        <div class="markbands-modal-content">
+          <div class="markbands-modal-header">
+            <h3><i class="fas fa-star"></i> Criterion D: Moderator Mark Bands</h3>
+            <button class="markbands-modal-close">&times;</button>
+          </div>
+          <div class="markbands-modal-body">
+            <p class="mb-intro">Criterion D is worth 12 marks — the highest weighting in the IA. Moderators require video evidence that the product functions, and written justification for <em>why</em> specific techniques were used.</p>
+            
+            <div class="markband b2">
+              <h5>To Reach 1–3 / 12</h5>
+              <ul>
+                <li><span class="yes">✔</span> Some working code</li>
+                <li><span class="no">✘</span> Product may not fully function</li>
+                <li><span class="no">✘</span> Techniques listed but not justified</li>
+                <li><span class="no">✘</span> Little or no testing evidence</li>
+                <li><span class="no">✘</span> Video evidence missing or incomplete</li>
+              </ul>
+            </div>
+            
+            <div class="markband b3">
+              <h5>To Reach 4–6 / 12</h5>
+              <ul>
+                <li><span class="yes">✔</span> Product mostly functional</li>
+                <li><span class="yes">✔</span> Appropriate techniques used</li>
+                <li><span class="yes">✔</span> Some justification of choices</li>
+                <li><span class="no">✘</span> But one area is weak — e.g. incomplete video, shallow justification, testing doesn't show response to issues</li>
+              </ul>
+            </div>
+
+            <div class="markband b3">
+              <h5>To Reach 7–9 / 12</h5>
+              <ul>
+                <li><span class="yes">✔</span> Fully functional product with clear video evidence</li>
+                <li><span class="yes">✔</span> Techniques are well-justified</li>
+                <li><span class="yes">✔</span> Testing shows you <em>responded</em> to issues</li>
+                <li><span class="no">✘</span> Minor issues remain — e.g. one success criterion not fully demonstrated, or some testing lacks depth</li>
+              </ul>
+            </div>
+
+            <div class="markband b4">
+              <h5>To Reach 10–12 / 12</h5>
+              <ul>
+                <li><span class="yes">✔</span> Fully functional, robust product</li>
+                <li><span class="yes">✔</span> All success criteria demonstrably met in video</li>
+                <li><span class="yes">✔</span> Implementation choices explicitly evaluated and justified</li>
+                <li><span class="yes">✔</span> Thorough testing evidence showing iteration</li>
+                <li><span class="yes">✔</span> Complex techniques used effectively</li>
+              </ul>
+            </div>
+            
+            <div class="ultimate-rule">
+              <strong>⚡ Ultimate Criterion D rule:</strong> The product must actually <em>work</em> — video evidence is mandatory. Techniques must be justified, not just listed. A technically impressive product with weak documentation still scores poorly.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1140,40 +1281,50 @@
         <li><i class="fas fa-check-circle"></i> Must be <strong>consistent with Criterion A</strong></li>
       </ul>
 
-      <button class="markbands-toggle" data-target="mb-E" aria-expanded="false">
-        <span class="chev">▶</span> ⭐ Moderator Mark Bands (Must Read)
+      <button class="markbands-toggle" data-target="modal-E">
+        <span>⭐</span> Moderator Mark Bands (Must Read)
       </button>
-      <div class="markbands-panel" id="mb-E">
-        <div class="markband b2">
-          <h5>To Reach 2/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Some evaluation of the product</li>
-            <li><span class="yes">✔</span> Some improvements suggested</li>
-            <li><span class="no">✘</span> Evaluation may be vague or general</li>
-            <li><span class="no">✘</span> May not reference success criteria directly</li>
-            <li><span class="no">✘</span> Improvements may not be justified</li>
-          </ul>
-        </div>
-        <div class="markband b3">
-          <h5>To Reach 3/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Clear evaluation against most success criteria</li>
-            <li><span class="yes">✔</span> Improvements identified with some justification</li>
-            <li><span class="yes">✔</span> Generally consistent with Criterion A</li>
-            <li><span class="no">✘</span> But one area is weak — e.g. some criteria not addressed, justification shallow, or limited evidence</li>
-          </ul>
-        </div>
-        <div class="markband b4">
-          <h5>To Reach 4/4</h5>
-          <ul>
-            <li><span class="yes">✔</span> Criterion-by-criterion evaluation with specific evidence</li>
-            <li><span class="yes">✔</span> Improvements clearly justified with expected impact</li>
-            <li><span class="yes">✔</span> Fully consistent with Criterion A</li>
-            <li><span class="yes">✔</span> Honest about limitations and what would be done differently</li>
-          </ul>
-        </div>
-        <div class="ultimate-rule">
-          <strong>⚡ Ultimate Criterion E rule:</strong> A vague "it went well" evaluation scores low. Moderators look for criterion-by-criterion analysis with specific evidence. Improvements must be justified — not just a wish list. Consistency with Criterion A is checked explicitly.
+      <!-- MODAL E -->
+      <div id="modal-E" class="markbands-modal">
+        <div class="markbands-modal-content">
+          <div class="markbands-modal-header">
+            <h3><i class="fas fa-star"></i> Criterion E: Moderator Mark Bands</h3>
+            <button class="markbands-modal-close">&times;</button>
+          </div>
+          <div class="markbands-modal-body">
+            <p class="mb-intro">Evaluation is not a summary of what you did. It is a criterion-by-criterion analysis of whether the final product met the success criteria, followed by justified improvements.</p>
+            <div class="markband b2">
+              <h5>To Reach 2/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Some evaluation of the product</li>
+                <li><span class="yes">✔</span> Some improvements suggested</li>
+                <li><span class="no">✘</span> Evaluation may be vague or general</li>
+                <li><span class="no">✘</span> May not reference success criteria directly</li>
+                <li><span class="no">✘</span> Improvements may not be justified</li>
+              </ul>
+            </div>
+            <div class="markband b3">
+              <h5>To Reach 3/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Clear evaluation against most success criteria</li>
+                <li><span class="yes">✔</span> Improvements identified with some justification</li>
+                <li><span class="yes">✔</span> Generally consistent with Criterion A</li>
+                <li><span class="no">✘</span> But one area is weak — e.g. some criteria not addressed, justification shallow, or limited evidence</li>
+              </ul>
+            </div>
+            <div class="markband b4">
+              <h5>To Reach 4/4</h5>
+              <ul>
+                <li><span class="yes">✔</span> Criterion-by-criterion evaluation with specific evidence</li>
+                <li><span class="yes">✔</span> Improvements clearly justified with expected impact</li>
+                <li><span class="yes">✔</span> Fully consistent with Criterion A</li>
+                <li><span class="yes">✔</span> Honest about limitations and what would be done differently</li>
+              </ul>
+            </div>
+            <div class="ultimate-rule">
+              <strong>⚡ Ultimate Criterion E rule:</strong> A vague "it went well" evaluation scores low. Moderators look for criterion-by-criterion analysis with specific evidence. Improvements must be justified — not just a wish list. Consistency with Criterion A is checked explicitly.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1364,30 +1515,52 @@
       });
     });
 
-    // Mark-bands disclosure
-    document.querySelectorAll('.markbands-toggle').forEach(function(btn) {
+    // ---- Mark Bands Modals ----
+    const markbandsModals = document.querySelectorAll('.markbands-modal');
+    const markbandsToggles = document.querySelectorAll('.markbands-toggle');
+    const markbandsCloses = document.querySelectorAll('.markbands-modal-close');
+
+    function openMarkbandModal(id) {
+      const modal = document.getElementById(id);
+      if(modal) modal.classList.add('active');
+    }
+    
+    function closeMarkbandModal(modal) {
+      modal.classList.remove('active');
+    }
+
+    markbandsToggles.forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
-        const panel = document.getElementById(this.dataset.target);
-        const open = panel.classList.toggle('open');
-        this.classList.toggle('open', open);
-        this.setAttribute('aria-expanded', open ? 'true' : 'false');
+        openMarkbandModal(this.dataset.target);
+      });
+    });
+
+    markbandsCloses.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        closeMarkbandModal(this.closest('.markbands-modal'));
+      });
+    });
+
+    markbandsModals.forEach(function(modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) closeMarkbandModal(this);
       });
     });
 
     // ---- Password Modal ----
-    const modal = document.getElementById('passwordModal');
+    const pwdModal = document.getElementById('passwordModal');
     const pwdInput = document.getElementById('pwdInput');
     const pwdError = document.getElementById('pwdError');
     const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
 
-    function openModal() {
-      modal.classList.add('active');
+    function openPwdModal() {
+      pwdModal.classList.add('active');
       pwdInput.value = '';
       pwdError.textContent = '';
       pwdInput.focus();
     }
-    function closeModal() { modal.classList.remove('active'); }
+    function closePwdModal() { pwdModal.classList.remove('active'); }
 
     function activateTeacherMode() {
       document.body.classList.add('is-teacher');
@@ -1412,7 +1585,7 @@
       const entered = pwdInput.value.trim();
       if (entered === TEACHER_PASSWORD) {
         activateTeacherMode();
-        closeModal();
+        closePwdModal();
       } else {
         pwdError.textContent = '❌ Incorrect password. Try again.';
         pwdInput.value = '';
@@ -1424,12 +1597,19 @@
       if (e.key === 'Enter') { e.preventDefault(); pwdSubmitBtn.click(); }
     });
 
-    modal.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+    pwdModal.addEventListener('click', function(e) { if (e.target === this) closePwdModal(); });
+    
+    // Close modals on Escape
+    document.addEventListener('keydown', function(e) { 
+      if (e.key === 'Escape') {
+        closePwdModal();
+        markbandsModals.forEach(function(modal) { closeMarkbandModal(modal); });
+      }
+    });
 
     document.getElementById('adminModeBtn').addEventListener('click', function(e) {
       e.preventDefault();
-      openModal();
+      openPwdModal();
     });
 
     updateUI();
