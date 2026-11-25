@@ -496,6 +496,111 @@
 
     .divider { margin: 2.5rem 0 0.5rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
 
+    /* ===== EXTENSION TASKS ===== */
+    .extension-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+    .extension-card {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 16px;
+      padding: 1.2rem 1.4rem;
+      transition: 0.2s;
+    }
+    .extension-card:hover {
+      border-color: #7bb3ff;
+      box-shadow: 0 4px 14px rgba(31, 99, 144, 0.1);
+    }
+    .extension-card h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .extension-card h4 i { color: #2a6f97; }
+    .extension-card p { font-size: 0.85rem; color: #475569; margin-bottom: 0.6rem; }
+    .extension-card a {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1f6390;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .extension-card a:hover { text-decoration: underline; }
+
+    /* ===== SCAVENGER HUNT ===== */
+    .scavenger-hunt {
+      background: #f8fafc;
+      border: 1px solid #dceaf7;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .scavenger-hunt h3 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hunt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin: 1rem 0;
+    }
+    .hunt-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.7rem 1rem;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e5edf5;
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+    }
+    .hunt-item:hover { border-color: #7bb3ff; background: #f0f7ff; }
+    .hunt-item.checked {
+      background: #edf7ed;
+      border-color: #4caf50;
+    }
+    .hunt-item .check-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #b6cfe5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: transparent;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+    .hunt-item.checked .check-icon {
+      background: #4caf50;
+      border-color: #4caf50;
+      color: white;
+    }
+    .hunt-item .hunt-text { font-size: 0.9rem; color: #1e293b; }
+    .hunt-item.checked .hunt-text { text-decoration: line-through; color: #64748b; }
+    .hunt-feedback {
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-height: 1.4rem;
+      margin-top: 0.4rem;
+    }
+    .hunt-feedback.ok { color: #2d8f2d; }
+
     @media (max-width: 680px) {
       body { padding: 1rem; }
       .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
@@ -505,6 +610,7 @@
       .resource-bar { flex-direction: column; align-items: flex-start; border-radius: 24px; }
       .compare-grid { grid-template-columns: 1fr; }
       .main-task, .starter-callout { flex-direction: column; gap: 0.6rem; }
+      .extension-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -582,6 +688,16 @@
       <li><strong>Example:</strong> Input <code>142.250.80.110</code> → Domain: <code>google.com</code> → Location: Mountain View, USA</li>
     </ul>
 
+    <div class="highlight-box amber">
+      <i class="fas fa-comments" style="color:#b45309; margin-right:8px;"></i>
+      <strong>Discussion Questions:</strong>
+      <ul style="margin-top:0.4rem;">
+        <li>What would happen if DNS stopped working? How would you access your favourite websites?</li>
+        <li>Why is it important that DNS servers are fast and reliable?</li>
+        <li>Can you think of any security risks associated with DNS? (Hint: what if a hacker changed the DNS records?)</li>
+      </ul>
+    </div>
+
     <!-- ===== WEB BROWSER COMPONENTS ===== -->
     <h2>🖥️ Web Browser Components</h2>
     <p>Familiarise yourself with the key parts of a web browser:</p>
@@ -611,6 +727,46 @@
     <div class="highlight-box green">
       <i class="fas fa-check-circle" style="color:#2d8f2d; margin-right:8px;"></i>
       <strong>Quick Check:</strong> Can you spot these parts in your browser right now? Open a new tab and see if you can find the address bar, the padlock, and the refresh button.
+    </div>
+
+    <!-- ===== INTERACTIVE: BROWSER SCAVENGER HUNT ===== -->
+    <div class="scavenger-hunt" id="scavengerHunt">
+      <h3><i class="fas fa-binoculars" style="color:#2a6f97;"></i> Interactive: Browser Scavenger Hunt</h3>
+      <p style="font-size:0.9rem; color:#475569;">Open a browser tab and tick off each item as you find it. Can you find them all?</p>
+
+      <div class="hunt-list" id="huntList">
+        <div class="hunt-item" data-item="address">
+          <div class="check-icon"><i class="fas fa-check"></i></div>
+          <span class="hunt-text">Find the <strong>address bar</strong> (where you type URLs).</span>
+        </div>
+        <div class="hunt-item" data-item="back">
+          <div class="check-icon"><i class="fas fa-check"></i></div>
+          <span class="hunt-text">Find the <strong>back button</strong> (arrow pointing left).</span>
+        </div>
+        <div class="hunt-item" data-item="forward">
+          <div class="check-icon"><i class="fas fa-check"></i></div>
+          <span class="hunt-text">Find the <strong>forward button</strong> (arrow pointing right).</span>
+        </div>
+        <div class="hunt-item" data-item="refresh">
+          <div class="check-icon"><i class="fas fa-check"></i></div>
+          <span class="hunt-text">Find the <strong>refresh button</strong> (circular arrow).</span>
+        </div>
+        <div class="hunt-item" data-item="padlock">
+          <div class="check-icon"><i class="fas fa-check"></i></div>
+          <span class="hunt-text">Find the <strong>padlock icon</strong> in the address bar (if the site is secure).</span>
+        </div>
+        <div class="hunt-item" data-item="https">
+          <div class="check-icon"><i class="fas fa-check"></i></div>
+          <span class="hunt-text">Find a website with <strong>https://</strong> in the URL.</span>
+        </div>
+        <div class="hunt-item" data-item="insecure">
+          <div class="check-icon"><i class="fas fa-check"></i></div>
+          <span class="hunt-text">Find a website with <strong>http://</strong> (insecure) — try <code>http://neverssl.com</code>.</span>
+        </div>
+      </div>
+
+      <div class="hunt-feedback" id="huntFeedback"></div>
+      <button class="btn secondary" id="resetHunt" style="margin-top:0.8rem;"><i class="fas fa-rotate-left"></i> Reset Hunt</button>
     </div>
 
     <!-- ===== SECURE WEBSITES & SSL/TLS ===== -->
@@ -683,6 +839,48 @@
         <p>Complete <strong>Worksheet 2</strong> to review DNS, browser components, and SSL/TLS. Use the interactive tools above to help you.</p>
         <p>These are the primary assessed tasks for this lesson — everything else on this page supports them.</p>
       </div>
+    </div>
+
+    <!-- ===== EXTENSION TASKS ===== -->
+    <h2>🚀 Extension Tasks</h2>
+    <p>Finished early? Try these extension activities to deepen your understanding. All resources are from the <strong>Mr. Ellis School useful resources</strong> page.</p>
+
+    <div class="extension-grid">
+      <div class="extension-card">
+        <h4><i class="fas fa-robot"></i> Explore AI</h4>
+        <p>Explore AI through interactive stations — create, question, play, and understand.</p>
+        <a href="https://mr-ellis.github.io/School/" target="_blank">Open resource <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="extension-card">
+        <h4><i class="fas fa-gamepad"></i> Coding Games</h4>
+        <p>Build retro-style arcade games with blocks or JavaScript, then share them.</p>
+        <a href="https://mr-ellis.github.io/School/" target="_blank">Open resource <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="extension-card">
+        <h4><i class="fas fa-cubes"></i> Creative Projects</h4>
+        <p>Browse millions of creative projects made by the Scratch community.</p>
+        <a href="https://mr-ellis.github.io/School/" target="_blank">Open resource <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="extension-card">
+        <h4><i class="fas fa-keyboard"></i> Typing Skills</h4>
+        <p>Free keyboard and mouse games for ages 4–12.</p>
+        <a href="https://mr-ellis.github.io/School/" target="_blank">Open resource <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="extension-card">
+        <h4><i class="fas fa-puzzle-piece"></i> Python Practice</h4>
+        <p>Fill-in-the-blank Python exercises for beginners.</p>
+        <a href="https://mr-ellis.github.io/School/" target="_blank">Open resource <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="extension-card">
+        <h4><i class="fas fa-database"></i> Database Design</h4>
+        <p>Build a database, design a template, and print your own cards.</p>
+        <a href="https://mr-ellis.github.io/School/" target="_blank">Open resource <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="highlight-box green">
+      <i class="fas fa-lightbulb" style="color:#2d8f2d; margin-right:8px;"></i>
+      <strong>Extension Discussion:</strong> After trying one of the resources above, discuss with a partner: How does the activity you chose connect to what we have learned about the internet, DNS, or security?
     </div>
 
     <!-- ===== QUICK RECAP ===== -->
@@ -854,6 +1052,41 @@
       chips.forEach(c => { c.style.display = ''; c.classList.remove('selected'); });
       feedback.textContent = '';
       clearSelection();
+    });
+  })();
+
+  // ===== BROWSER SCAVENGER HUNT =====
+  (function() {
+    const items = document.querySelectorAll('#huntList .hunt-item');
+    const feedback = document.getElementById('huntFeedback');
+    const resetBtn = document.getElementById('resetHunt');
+
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('checked');
+        updateFeedback();
+      });
+    });
+
+    function updateFeedback() {
+      const checked = document.querySelectorAll('#huntList .hunt-item.checked').length;
+      const total = items.length;
+      if (checked === total) {
+        feedback.textContent = '🎉 Amazing! You found everything in the browser!';
+        feedback.className = 'hunt-feedback ok';
+      } else if (checked > 0) {
+        feedback.textContent = `✅ ${checked} of ${total} found. Keep hunting!`;
+        feedback.className = 'hunt-feedback ok';
+      } else {
+        feedback.textContent = '';
+        feedback.className = 'hunt-feedback';
+      }
+    }
+
+    resetBtn.addEventListener('click', () => {
+      items.forEach(item => item.classList.remove('checked'));
+      feedback.textContent = '';
+      feedback.className = 'hunt-feedback';
     });
   })();
 
