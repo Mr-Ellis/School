@@ -1,1 +1,1172 @@
-yy
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1 & 2 · CPU Architecture</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .nav {
+      background: #0b2a4a;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.8rem;
+      margin-bottom: 2.8rem;
+      box-shadow: 0 8px 20px rgba(0,20,40,0.08);
+    }
+    .nav a {
+      color: #e6edf5;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav a i { font-size: 0.9rem; opacity: 0.7; }
+    .nav a:hover { color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+    .nav .brand {
+      margin-right: auto;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+    .nav .brand i { margin-right: 8px; color: #7bb3ff; }
+
+    .main-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .main-title i { color: #2a6f97; font-size: 2.2rem; }
+    .subhead {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      border-left: 4px solid #2a6f97;
+      padding-left: 1.2rem;
+      font-weight: 400;
+      background: #e9eff8;
+      display: inline-block;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+    }
+
+    .section-head {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin: 2.8rem 0 1.5rem 0;
+      padding-bottom: 0.25rem;
+      border-bottom: 4px solid #cbddee;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-head i { color: #1f6390; font-size: 1.8rem; width: 2.2rem; }
+
+    .lesson-content {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2.2rem;
+      margin-top: 1.5rem;
+      border: 1px solid #e5edf5;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+    }
+    .lesson-content h3 {
+      color: #0b2a4a;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lesson-content h3 i { color: #1f6390; }
+    .lesson-content h4 {
+      color: #1f6390;
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.5rem 0;
+    }
+    .lesson-content .key-point {
+      background: #e9eff8;
+      border-left: 4px solid #1f6390;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      margin: 0.8rem 0;
+    }
+    .lesson-content .key-point strong { color: #0b2a4a; }
+    .lesson-content ul {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .lesson-content ul li { margin-bottom: 0.3rem; }
+    .lesson-content .device-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 1rem 0;
+    }
+    .lesson-content .device-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e5edf5;
+    }
+    .lesson-content .device-card h5 {
+      color: #0b2a4a;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+    .lesson-content .device-card p {
+      font-size: 0.9rem;
+      color: #475569;
+      margin: 0;
+    }
+    .lesson-content .device-card .tag {
+      display: inline-block;
+      background: #dceaf7;
+      font-size: 0.6rem;
+      font-weight: 600;
+      padding: 0.1rem 0.6rem;
+      border-radius: 20px;
+      color: #13416b;
+      margin-top: 0.3rem;
+    }
+
+    .activity-box {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+      border: 2px solid #1f6390;
+      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.06);
+    }
+    .activity-box strong { color: #0b2a4a; }
+    .activity-box .btn {
+      display: inline-block;
+      background: #1a5f87;
+      color: white;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 0.3rem;
+    }
+    .activity-box .btn:hover { background: #134f75; }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.6rem 1.5rem 1.8rem;
+      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04), 0 1px 3px rgba(0,0,0,0.02);
+      border: 1px solid #e5edf5;
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { border-color: #b6d0e8; box-shadow: 0 12px 28px rgba(0, 32, 64, 0.06); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    .card-header h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+
+    .card p {
+      color: #475569;
+      font-size: 0.9rem;
+      margin: 0.4rem 0 0.6rem 0;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+      align-items: center;
+      border-top: 1px solid #e8eff6;
+      padding-top: 0.9rem;
+    }
+    .card-actions .btn {
+      background: #ecf3fa;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #13416b;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .card-actions .btn i { font-size: 0.8rem; }
+    .card-actions .btn:hover { background: #d6e4f2; border-color: #b6cfe5; }
+
+    .btn-theory {
+      background: #1a5f87 !important;
+      color: #fff !important;
+    }
+    .btn-theory:hover {
+      background: #134f75 !important;
+    }
+
+    .btn-locked {
+      background: #e8dfd0 !important;
+      color: #6a4e2e !important;
+      cursor: pointer;
+    }
+    .btn-locked i { color: #b8943e; }
+
+    .card-highlight {
+      border: 2px solid #f5b342;
+      background: #ffffff;
+      position: relative;
+    }
+    .card-highlight::after {
+      content: "⭐ Key Tool";
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: #f5b342;
+      color: #0b2a4a;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    .card-highlight:hover { border-color: #e09d2a; }
+
+    .cover-section {
+      margin-top: 0.4rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid #eef2f6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .cover-section input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #0b2a4a;
+      cursor: pointer;
+    }
+    .cover-section label {
+      cursor: pointer;
+      font-weight: 500;
+      color: #0b2a4a;
+    }
+    .cover-section .teacher-badge {
+      font-size: 0.65rem;
+      background: #cbd5e1;
+      color: #334155;
+      padding: 1px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .cover-section .teacher-edit {
+      font-size: 0.75rem;
+      color: #6b7f8f;
+      background: #edf2f7;
+      padding: 2px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+      margin-left: 6px;
+    }
+    .cover-section .teacher-edit:hover { background: #d5dce6; }
+
+    .divider-light { margin: 2.2rem 0 0.2rem; border: 0; height: 1px; background: linear-gradient(to right, #d4e0ec, transparent); }
+
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .password-modal.active { display: flex; }
+    .password-box {
+      background: white;
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .password-box h3 { margin-bottom: 1rem; color: #0b2a4a; }
+    .password-box input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #d4e0ec;
+      border-radius: 60px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    .password-box input:focus { border-color: #1f6390; }
+    .password-box .btn {
+      background: #1f6390;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-box .btn:hover { background: #134f75; }
+    .password-box .error { color: #b13a3a; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5rem; }
+
+    /* Interactive Styles */
+    .reg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .reg-card {
+      background: #f8fafc;
+      border: 2px solid #cbddee;
+      border-radius: 16px;
+      padding: 1rem;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    .reg-card:hover {
+      border-color: #1f6390;
+      box-shadow: 0 4px 12px rgba(31, 99, 144, 0.15);
+    }
+    .reg-card .reg-name {
+      font-weight: 700;
+      color: #0b2a4a;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    .reg-card .reg-desc {
+      font-size: 0.8rem;
+      color: #475569;
+    }
+    .reg-card .reg-value {
+      font-family: 'Courier New', monospace;
+      background: #1e293b;
+      color: #7bb3ff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: inline-block;
+      min-width: 60px;
+    }
+    .reg-card.active {
+      border-color: #f5b342;
+      background: #fffbeb;
+    }
+
+    .cycle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .cycle-step {
+      background: #e9eff8;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      min-width: 120px;
+      transition: 0.4s;
+      opacity: 0.4;
+      border: 2px solid transparent;
+    }
+    .cycle-step.active {
+      opacity: 1;
+      border-color: #1f6390;
+      background: #dceaf7;
+      box-shadow: 0 4px 12px rgba(31, 99, 144, 0.2);
+    }
+    .cycle-step .cycle-icon { font-size: 1.8rem; display: block; margin-bottom: 0.3rem; }
+    .cycle-step .cycle-label { font-weight: 700; color: #0b2a4a; font-size: 0.9rem; }
+    .cycle-step .cycle-detail { font-size: 0.75rem; color: #475569; margin-top: 0.3rem; }
+    .cycle-arrow { font-size: 1.5rem; color: #1f6390; }
+
+    /* CPU Diagram Game */
+    .cpu-game-container {
+      position: relative;
+      max-width: 500px;
+      margin: 2rem auto;
+      background: #f8fafc;
+      border: 4px solid #1e293b;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+    .cpu-diagram {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      background: #f1f5f9;
+      border: 2px solid #94a3b8;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .cpu-part {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #475569;
+      background: #e2e8f0;
+      border: 2px solid #94a3b8;
+      border-radius: 4px;
+      padding: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    /* Positioning of fixed parts */
+    .part-alu { top: 20px; left: 20px; width: 80px; height: 120px; background: #cbd5e1; }
+    .part-cu { bottom: 20px; left: 40%; width: 80px; height: 100px; background: #cbd5e1; }
+    .part-sr { top: 20px; left: 45%; width: 60px; height: 40px; background: #cbd5e1; }
+    
+    /* Dropzones for registers */
+    .dropzone-container {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .dropzone-container span {
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+    .cpu-dropzone {
+      width: 100px;
+      height: 40px;
+      background: #fff;
+      border: 2px dashed #cbd5e1;
+      border-radius: 4px;
+      transition: 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .cpu-dropzone.dragover { background: #e0f2fe; border-color: #0ea5e9; }
+    .cpu-dropzone.correct { background: #dcfce7; border-color: #22c55e; border-style: solid; }
+    .cpu-dropzone.incorrect { background: #fee2e2; border-color: #ef4444; border-style: solid; }
+    .cpu-dropzone .draggable-item { width: 90%; height: 30px; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; padding: 0; }
+
+    /* Specific positions */
+    .zone-pc { top: 80px; right: 20px; }
+    .zone-mar { bottom: 20px; right: 20px; }
+    .zone-mdr { bottom: 20px; left: 20px; }
+    .zone-cir { top: 20px; left: 120px; }
+    .zone-acc { top: 140px; left: 20px; }
+
+    .match-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      padding: 1rem;
+      background: #f0f4fb;
+      border-radius: 12px;
+      min-height: 60px;
+      margin-top: 1rem;
+    }
+    .draggable-item {
+      padding: 0.5rem 1rem;
+      background: #1a5f87;
+      color: white;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: grab;
+      user-select: none;
+    }
+    .draggable-item:active { cursor: grabbing; }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .nav { flex-direction: column; align-items: flex-start; border-radius: 30px; gap: 0.6rem; }
+      .nav .brand { margin-right: 0; }
+      .main-title { font-size: 2rem; flex-wrap: wrap; }
+      .card-grid { grid-template-columns: 1fr; }
+      .password-box { padding: 1.8rem; }
+      .lesson-content { padding: 1.2rem; }
+      .activity-box { padding: 1rem; }
+      .lesson-content .device-grid { grid-template-columns: 1fr; }
+      .cycle-container { flex-direction: column; }
+      .cycle-arrow { transform: rotate(90deg); }
+      .cpu-game-container { padding: 1rem; }
+      .cpu-diagram { height: 300px; }
+      .part-alu { width: 60px; height: 80px; }
+      .part-cu { width: 60px; height: 80px; }
+      .part-sr { display: none; }
+      .cpu-dropzone { width: 80px; height: 30px; }
+      .zone-cir { left: 90px; }
+      .zone-pc { top: 60px; right: 10px; }
+      .zone-mar { bottom: 10px; right: 10px; }
+      .zone-mdr { bottom: 10px; left: 10px; }
+      .zone-acc { top: 100px; left: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+      <div class="password-box">
+        <h3><i class="fas fa-lock" style="color:#1f6390;"></i> Protected Resource</h3>
+        <p style="color:#3b5f7a; margin-bottom:1.2rem;">Enter password to access lesson plan</p>
+        <input type="password" id="pwdInput" placeholder="password" autocomplete="off">
+        <button class="btn" id="pwdSubmitBtn"><i class="fas fa-key"></i> Unlock</button>
+        <div class="error" id="pwdError"></div>
+      </div>
+    </div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="nav">
+        <span class="brand"><i class="fas fa-graduation-cap"></i> IGCSE CompSci</span>
+        <a href="../hardware-year9.html"><i class="fas fa-arrow-left"></i> Back to Hardware</a>
+        <a href="../year9.html"><i class="fas fa-arrow-left"></i> Year 9</a>
+    </nav>
+
+    <!-- ========== HEADER ========== -->
+    <div class="main-title">
+        <i class="fas fa-microchip"></i> CPU Architecture
+    </div>
+    <div class="subhead">
+        <i class="fas fa-check-circle" style="color:#1f7b4d; margin-right: 6px;"></i> 
+        Year 9 · Hardware · The brain of the computer
+    </div>
+
+    <!-- ========== STARTER ACTIVITY ========== -->
+    <div class="activity-box" style="margin-top: 1.5rem;">
+        <strong>🎯 Starter Activity – Blooket Quiz</strong>
+        <p>Test your knowledge of CPU architecture! Click the link below to join the live quiz.</p>
+        <a href="https://play.blooket.com/host?id=63d2ad0e9ab102e328064ad6" target="_blank" class="btn"><i class="fas fa-rocket"></i> Launch Blooket Quiz</a>
+    </div>
+
+    <!-- ========== LESSON CONTENT ========== -->
+    <div class="lesson-content">
+
+        <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
+        <ul>
+            <li>Understand the role of the CPU and the fetch-execute cycle</li>
+            <li>Understand the following registers in the Von Neumann architecture: MAR, MDR, CIR, PC, Accumulator</li>
+            <li>Understand common CPU components including: ALU, Control Unit, Registers</li>
+        </ul>
+
+        <h4>🏗️ 3.1.1 The Components of a CPU</h4>
+        <p>The Central Processing Unit (CPU) is the hardware that executes software instructions. It is made up of several key parts that work together to process data.</p>
+        
+        <div class="key-point">
+            <strong>1. The Control Unit (CU)</strong><br>
+            Think of the CU as the manager of the CPU.<br>
+            • It sends control signals to other parts of the computer to tell them what to do.<br>
+            • It manages the flow of data so that instructions happen in the correct order.
+        </div>
+        <div class="key-point">
+            <strong>2. The Arithmetic Logic Unit (ALU)</strong><br>
+            The ALU is the calculator. It handles two types of operations:<br>
+            • <strong>Arithmetic:</strong> Addition, subtraction, multiplication, and division.<br>
+            • <strong>Logic:</strong> Comparisons such as "Is A greater than B?" and logical gates like AND, OR, and NOT.
+        </div>
+
+        <h4>📋 3. The Registers (Internal Memory)</h4>
+        <p>Registers are super-fast, tiny storage locations inside the CPU. For your exam, you need to know these four:</p>
+        <ul>
+            <li><strong>Program Counter (PC):</strong> The "Address Pointer." It always holds the address of the very next instruction to be processed.</li>
+            <li><strong>Memory Address Register (MAR):</strong> Holds the address of the data currently being read or written.</li>
+            <li><strong>Memory Data Register (MDR):</strong> Holds the actual data or instruction that was just fetched from memory.</li>
+            <li><strong>Accumulator (ACC):</strong> The "Storage Bin." It holds the result of whatever calculation the ALU just finished.</li>
+        </ul>
+
+        <h4>🚌 How they work together: The "Buses"</h4>
+        <p>Data doesn't just float around; it travels on "highways" called Buses:</p>
+        <div class="device-grid">
+            <div class="device-card">
+                <h5>Address Bus</h5>
+                <p>Carries signals relating to addresses between the CPU and Memory. (It only goes one way).</p>
+                <span class="tag">Unidirectional</span>
+            </div>
+            <div class="device-card">
+                <h5>Data Bus</h5>
+                <p>Sends the actual data and instructions between the CPU and Memory. (This goes both ways).</p>
+                <span class="tag">Bidirectional</span>
+            </div>
+            <div class="device-card">
+                <h5>Control Bus</h5>
+                <p>Carries command signals from the Control Unit to all other components.</p>
+                <span class="tag">Bidirectional</span>
+            </div>
+        </div>
+
+        <div class="key-point" style="background: #fffbeb; border-left-color: #f5b342;">
+            <strong>💡 Study Tip for the Exam:</strong><br>
+            <strong>Common Mistake:</strong> Students often confuse the MAR and the MDR.<br>
+            The <strong>MAR</strong> is the "Map" (where the data is).<br>
+            The <strong>MDR</strong> is the "Box" (what is actually inside).
+        </div>
+
+        <hr style="border: 0; height: 1px; background: #e5edf5; margin: 2rem 0;">
+
+        <h4>🔄 Fetch – Decode – Execute Cycle</h4>
+        <p>The CPU repeats this cycle billions of times per second. Click the button to watch how the registers change during the process:</p>
+        
+        <div class="cycle-container" id="cycleContainer">
+            <div class="cycle-step" id="step-fetch">
+                <span class="cycle-icon">📥</span>
+                <div class="cycle-label">FETCH</div>
+                <div class="cycle-detail">Get instruction from memory</div>
+            </div>
+            <div class="cycle-arrow">→</div>
+            <div class="cycle-step" id="step-decode">
+                <span class="cycle-icon">🔍</span>
+                <div class="cycle-label">DECODE</div>
+                <div class="cycle-detail">Work out what it means</div>
+            </div>
+            <div class="cycle-arrow">→</div>
+            <div class="cycle-step" id="step-execute">
+                <span class="cycle-icon">⚡</span>
+                <div class="cycle-label">EXECUTE</div>
+                <div class="cycle-detail">Carry out the instruction</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-theory" id="cycleBtn"><i class="fas fa-play"></i> Animate Cycle</button>
+            <button class="btn" id="cycleResetBtn" style="background:#b13a3a; color: white;"><i class="fas fa-undo"></i> Reset</button>
+        </div>
+
+        <h4>📋 Interactive Registers</h4>
+        <p>Watch these values update as you click "Animate Cycle" above!</p>
+        <div class="reg-grid" id="regGrid">
+            <div class="reg-card" data-reg="PC">
+                <div class="reg-name">PC</div>
+                <div class="reg-desc">Program Counter</div>
+                <div class="reg-value" id="val-PC">--</div>
+            </div>
+            <div class="reg-card" data-reg="MAR">
+                <div class="reg-name">MAR</div>
+                <div class="reg-desc">Memory Address Register</div>
+                <div class="reg-value" id="val-MAR">--</div>
+            </div>
+            <div class="reg-card" data-reg="MDR">
+                <div class="reg-name">MDR</div>
+                <div class="reg-desc">Memory Data Register</div>
+                <div class="reg-value" id="val-MDR">--</div>
+            </div>
+            <div class="reg-card" data-reg="CIR">
+                <div class="reg-name">CIR</div>
+                <div class="reg-desc">Current Instruction Register</div>
+                <div class="reg-value" id="val-CIR">--</div>
+            </div>
+            <div class="reg-card" data-reg="ACC">
+                <div class="reg-name">ACC</div>
+                <div class="reg-desc">Accumulator</div>
+                <div class="reg-value" id="val-ACC">--</div>
+            </div>
+        </div>
+
+        <!-- ===== INTERACTIVE EXERCISE: CPU DIAGRAM LABELING ===== -->
+        <hr style="border: 0; height: 1px; background: #e5edf5; margin: 2rem 0;">
+        <h4>🧩 Activity: Label the CPU Diagram</h4>
+        <p>Drag the names from the bank into the correct empty boxes on the CPU diagram below.</p>
+        
+        <div class="match-game">
+            <div class="match-bank" id="matchBank">
+                <div class="draggable-item" draggable="true" data-match="PC">PC</div>
+                <div class="draggable-item" draggable="true" data-match="MAR">MAR</div>
+                <div class="draggable-item" draggable="true" data-match="MDR">MDR</div>
+                <div class="draggable-item" draggable="true" data-match="CIR">CIR</div>
+                <div class="draggable-item" draggable="true" data-match="ACC">ACC</div>
+            </div>
+
+            <div class="cpu-game-container">
+                <div class="cpu-diagram">
+                    <!-- Fixed Parts -->
+                    <div class="cpu-part part-alu">ALU</div>
+                    <div class="cpu-part part-cu">CU</div>
+                    <div class="cpu-part part-sr">SR</div>
+                    
+                    <!-- Dropzones -->
+                    <div class="dropzone-container zone-acc">
+                        <span>Accumulator</span>
+                        <div class="cpu-dropzone" data-answer="ACC"></div>
+                    </div>
+                    <div class="dropzone-container zone-cir">
+                        <span>Current Instruction</span>
+                        <div class="cpu-dropzone" data-answer="CIR"></div>
+                    </div>
+                    <div class="dropzone-container zone-pc">
+                        <span>Program Counter</span>
+                        <div class="cpu-dropzone" data-answer="PC"></div>
+                    </div>
+                    <div class="dropzone-container zone-mdr">
+                        <span>Data Register</span>
+                        <div class="cpu-dropzone" data-answer="MDR"></div>
+                    </div>
+                    <div class="dropzone-container zone-mar">
+                        <span>Address Register</span>
+                        <div class="cpu-dropzone" data-answer="MAR"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 1rem; text-align: center;">
+            <button class="btn btn-theory" id="checkMatchBtn"><i class="fas fa-check"></i> Check Answers</button>
+            <button class="btn" id="resetMatchBtn" style="background:#6b7f8f; color: white;"><i class="fas fa-undo"></i> Reset</button>
+            <span id="matchFeedback" style="margin-left: 1rem; font-weight: 600;"></span>
+        </div>
+
+    </div>
+
+    <!-- ========== KEY TOOLS CARDS ========== -->
+    <div class="card-grid" style="margin-top: 0.5rem;">
+
+        <!-- Lesson Presentation – KEY TOOL -->
+        <div class="card card-highlight">
+            <div class="card-header">
+                <h4>📊 Lesson Presentation</h4>
+            </div>
+            <p>Slides for the lesson – T1 CPU Architecture.</p>
+            <div class="card-actions">
+                <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2FMr-Ellis%2FSchool%2Frefs%2Fheads%2Fmain%2Fdocs%2FResources%2FIGCSE%2520Computer%2520Science%2F3%2520Architecture-storage%2FT1%2520CPU%2520architecture.pptx&wdOrigin=BROWSELINK" target="_blank" class="btn btn-theory"><i class="fas fa-desktop"></i> Open Slides</a>
+            </div>
+        </div>
+
+        <!-- AI Guide – KEY TOOL -->
+        <div class="card card-highlight">
+            <div class="card-header">
+                <h4>🤖 AI Guide</h4>
+            </div>
+            <p><strong>Your personal tutor!</strong> Ask the AI any question about CPU architecture or computer science.</p>
+            <div class="card-actions">
+                <a href="https://chatgpt.com/g/g-hyr9cmYPE-igcse-a-level-computer-science-guide" target="_blank" class="btn btn-theory"><i class="fas fa-robot"></i> Open AI Guide</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== WORKSHEET & EXTENSIONS ========== -->
+    <div class="lesson-content" style="margin-top: 1.5rem;">
+
+        <!-- ===== WORKSHEET ===== -->
+        <div class="activity-box" style="border-color: #2d7d46;">
+            <strong>📝 Worksheet – CPU Architecture</strong>
+            <p>Follow the instructions in the lesson presentation to complete the worksheet on <strong>Schoolbox</strong>.</p>
+        </div>
+
+        <!-- ===== EXTENSION TASKS ===== -->
+        <h4>⭐ Extension Tasks</h4>
+        <ul>
+            <li><strong>Challenge 1:</strong> Research the Harvard architecture. How does it differ from Von Neumann architecture? Why might it be used?</li>
+            <li><strong>Challenge 2:</strong> Create a comparison table showing the strengths and weaknesses of having more CPU cores vs. higher clock speed.</li>
+            <li><strong>Challenge 3:</strong> Design a poster explaining how the fetch-decode-execute cycle works, including labelled diagrams of the registers.</li>
+        </ul>
+
+        <!-- ===== PLENARY ===== -->
+        <h4>🔁 Plenary – Register Race</h4>
+        <ul>
+            <li>Your teacher will call out a job. You must identify the correct register.</li>
+            <li>Example: "Holds the address of the next instruction" → PC</li>
+            <li>Example: "Holds the result of a calculation" → ACC</li>
+            <li>Justify your answer by explaining the register's purpose.</li>
+        </ul>
+
+        <div class="activity-box" style="border-color: #f5b342; background: #fffbeb; margin-top: 2rem;">
+            <strong>🏆 Finished Everything?</strong>
+            <p>If you have completed both the main worksheet and the extension worksheet, you may choose any of the activities on the homepage.</p>
+            <a href="https://mr-ellis.github.io/School/" target="_blank" class="btn" style="background:#f5b342; color: #0b2a4a;"><i class="fas fa-home"></i> Go to Homepage Resources</a>
+        </div>
+
+    </div>
+
+    <!-- ========== ADDITIONAL RESOURCES ========== -->
+    <div class="section-head">
+        <i class="fas fa-tools"></i> Additional Resources
+    </div>
+
+    <div class="card-grid">
+        <!-- Lesson Plan (Teacher only) -->
+        <div class="card">
+            <div class="card-header">
+                <h4>📋 Lesson Plan <span style="font-size:0.7rem; color:#6b7f8f; font-weight:400;">(Teacher only)</span></h4>
+            </div>
+            <p>Full lesson plan with starter, activities, and plenary.</p>
+            <div class="card-actions">
+                <button class="btn btn-locked unlock-btn" data-lesson="ARCH1"><i class="fas fa-lock"></i> Open Lesson Plan</button>
+            </div>
+            <div class="cover-section">
+                <input type="checkbox" class="cover-checkbox" data-lesson="ARCH1" id="cover-ARCH1">
+                <label for="cover-ARCH1">✓ Lesson delivered</label>
+                <span class="teacher-badge">Teacher only</span>
+                <span class="teacher-edit toggle-cover" data-lesson="ARCH1">(toggle)</span>
+            </div>
+        </div>
+
+        <!-- StudyThis Revision -->
+        <div class="card">
+            <div class="card-header">
+                <h4>📚 StudyThis Revision</h4>
+            </div>
+            <p>Revision notes for topic 3.1 Computer Architecture.</p>
+            <div class="card-actions">
+                <a href="https://studythis.co.uk/revision/computer_architecture.html" target="_blank" class="btn btn-theory"><i class="fas fa-book"></i> Revision Notes</a>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider-light">
+    <div style="display: flex; justify-content: flex-end; font-size: 0.8rem; color: #5d7f9a; padding: 0.8rem 0;">
+        <i class="fas fa-save" style="margin-right: 8px;"></i> progress saved automatically in your browser
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== COVER CHECKBOXES ==========
+        const checkboxes = document.querySelectorAll('.cover-checkbox');
+        const GRADE_PREFIX = 'year9_';
+
+        checkboxes.forEach(function(cb) {
+            const lessonKey = cb.getAttribute('data-lesson');
+            const storageKey = GRADE_PREFIX + 'covered_' + lessonKey;
+            const card = cb.closest('.card');
+
+            if (localStorage.getItem(storageKey) === 'true') {
+                cb.checked = true;
+                if (card) card.style.background = '#e6f7e6';
+            }
+
+            const toggleSpan = document.querySelector('.toggle-cover[data-lesson="' + lessonKey + '"]');
+            if (toggleSpan) {
+                toggleSpan.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isChecked = !cb.checked;
+                    cb.checked = isChecked;
+                    localStorage.setItem(storageKey, isChecked ? 'true' : 'false');
+                    if (card) {
+                        if (isChecked) {
+                            card.style.background = '#e6f7e6';
+                        } else {
+                            card.style.background = '';
+                        }
+                    }
+                });
+            }
+
+            cb.addEventListener('change', function() {
+                localStorage.setItem(storageKey, this.checked ? 'true' : 'false');
+                if (card) {
+                    if (this.checked) {
+                        card.style.background = '#e6f7e6';
+                    } else {
+                        card.style.background = '';
+                    }
+                }
+            });
+        });
+
+        // ========== PASSWORD PROTECTION ==========
+        const modal = document.getElementById('passwordModal');
+        const pwdInput = document.getElementById('pwdInput');
+        const pwdError = document.getElementById('pwdError');
+        const pwdSubmitBtn = document.getElementById('pwdSubmitBtn');
+        let pendingPath = '';
+
+        const PDF_URLS = {
+            'ARCH1': 'https://mr-ellis.github.io/School/Resources/IGCSE%20Computer%20Science/3%20Architecture-storage/Lesson%20Plan%201.docx'
+        };
+
+        function openModal(path) {
+            pendingPath = path;
+            pwdInput.value = '';
+            pwdError.textContent = '';
+            modal.classList.add('active');
+            pwdInput.focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            pendingPath = '';
+        }
+
+        function attemptUnlock() {
+            const entered = pwdInput.value.trim();
+            if (entered === 'teacher') {
+                if (pendingPath) {
+                    window.open(pendingPath, '_blank');
+                }
+                closeModal();
+            } else {
+                pwdError.textContent = '❌ Incorrect password. Try again.';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        document.querySelectorAll('.unlock-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const lesson = this.getAttribute('data-lesson');
+                const url = PDF_URLS[lesson];
+                if (url) {
+                    openModal(url);
+                } else {
+                    alert('No lesson plan found.');
+                }
+            });
+        });
+
+        pwdSubmitBtn.addEventListener('click', attemptUnlock);
+        pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                attemptUnlock();
+            }
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // ========== CYCLE ANIMATION & INTERACTIVE REGISTERS ==========
+        const cycleBtn = document.getElementById('cycleBtn');
+        const cycleResetBtn = document.getElementById('cycleResetBtn');
+        const stepFetch = document.getElementById('step-fetch');
+        const stepDecode = document.getElementById('step-decode');
+        const stepExecute = document.getElementById('step-execute');
+        
+        const valPC = document.getElementById('val-PC');
+        const valMAR = document.getElementById('val-MAR');
+        const valMDR = document.getElementById('val-MDR');
+        const valCIR = document.getElementById('val-CIR');
+        const valACC = document.getElementById('val-ACC');
+
+        let cycleTimers = [];
+
+        function resetCycle() {
+            cycleTimers.forEach(t => clearTimeout(t));
+            cycleTimers = [];
+            [stepFetch, stepDecode, stepExecute].forEach(s => s.classList.remove('active'));
+            valPC.textContent = '--';
+            valMAR.textContent = '--';
+            valMDR.textContent = '--';
+            valCIR.textContent = '--';
+            valACC.textContent = '--';
+            
+            // Remove active highlight from reg cards
+            document.querySelectorAll('.reg-card').forEach(c => c.classList.remove('active'));
+        }
+
+        cycleBtn.addEventListener('click', function() {
+            resetCycle();
+            
+            // Step 1: Fetch
+            stepFetch.classList.add('active');
+            valPC.textContent = '05';
+            cycleTimers.push(setTimeout(() => {
+                valMAR.textContent = '05';
+                document.querySelector('.reg-card[data-reg="PC"]').classList.add('active');
+                document.querySelector('.reg-card[data-reg="MAR"]').classList.add('active');
+            }, 600));
+
+            cycleTimers.push(setTimeout(() => {
+                valMDR.textContent = '120';
+                valPC.textContent = '06';
+                document.querySelector('.reg-card[data-reg="MDR"]').classList.add('active');
+            }, 1200));
+
+            // Step 2: Decode
+            cycleTimers.push(setTimeout(() => {
+                stepFetch.classList.remove('active');
+                stepDecode.classList.add('active');
+                valCIR.textContent = '120';
+                document.querySelector('.reg-card[data-reg="CIR"]').classList.add('active');
+            }, 2000));
+
+            // Step 3: Execute
+            cycleTimers.push(setTimeout(() => {
+                stepDecode.classList.remove('active');
+                stepExecute.classList.add('active');
+                valACC.textContent = '10';
+                document.querySelector('.reg-card[data-reg="ACC"]').classList.add('active');
+            }, 3200));
+
+            cycleTimers.push(setTimeout(() => {
+                resetCycle();
+            }, 5000));
+        });
+
+        cycleResetBtn.addEventListener('click', resetCycle);
+
+        // ========== REGISTER HIGHLIGHT ON CLICK ==========
+        document.querySelectorAll('.reg-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.reg-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // ========== CPU DIAGRAM DRAG AND DROP GAME ==========
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropzones = document.querySelectorAll('.cpu-dropzone');
+        const checkMatchBtn = document.getElementById('checkMatchBtn');
+        const resetMatchBtn = document.getElementById('resetMatchBtn');
+        const matchFeedback = document.getElementById('matchFeedback');
+        const matchBank = document.getElementById('matchBank');
+        
+        let draggedItem = null;
+
+        // Drag events for items
+        draggables.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedItem = item;
+                e.dataTransfer.effectAllowed = 'move';
+                setTimeout(() => item.style.opacity = '0.5', 0);
+            });
+            item.addEventListener('dragend', () => {
+                draggedItem = null;
+                item.style.opacity = '1';
+            });
+        });
+
+        // Drop events for zones
+        dropzones.forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('dragover');
+            });
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('dragover');
+            });
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('dragover');
+                if (draggedItem) {
+                    // If zone already has an item, move it back to bank
+                    if (zone.children.length > 0) {
+                        matchBank.appendChild(zone.children[0]);
+                    }
+                    zone.appendChild(draggedItem);
+                    draggedItem = null;
+                }
+            });
+        });
+
+        // Check answers
+        checkMatchBtn.addEventListener('click', () => {
+            let correct = 0;
+            let total = dropzones.length;
+            
+            dropzones.forEach(zone => {
+                const expected = zone.getAttribute('data-answer');
+                const item = zone.querySelector('.draggable-item');
+                
+                if (item && item.getAttribute('data-match') === expected) {
+                    zone.classList.add('correct');
+                    zone.classList.remove('incorrect');
+                    correct++;
+                } else {
+                    zone.classList.add('incorrect');
+                    zone.classList.remove('correct');
+                }
+            });
+
+            if (correct === total) {
+                matchFeedback.textContent = `✅ Perfect! ${correct}/${total} correct.`;
+                matchFeedback.style.color = '#2d7d46';
+            } else {
+                matchFeedback.textContent = `❌ ${correct}/${total} correct. Try again!`;
+                matchFeedback.style.color = '#b13a3a';
+            }
+        });
+
+        // Reset match game
+        resetMatchBtn.addEventListener('click', () => {
+            // Move all items back to bank
+            dropzones.forEach(zone => {
+                const item = zone.querySelector('.draggable-item');
+                if (item) {
+                    matchBank.appendChild(item);
+                }
+                zone.classList.remove('correct', 'incorrect');
+            });
+            // Reset bank items styling
+            matchBank.querySelectorAll('.draggable-item').forEach(item => {
+                item.style.opacity = '1';
+            });
+            matchFeedback.textContent = '';
+        });
+
+    })();
+</script>
+
+</body>
+</html>
