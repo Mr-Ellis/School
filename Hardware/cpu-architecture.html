@@ -440,52 +440,91 @@
     .cycle-step .cycle-detail { font-size: 0.75rem; color: #475569; margin-top: 0.3rem; }
     .cycle-arrow { font-size: 1.5rem; color: #1f6390; }
 
-    /* Quiz & Drag-Drop Styles */
-    .quiz-box {
+    /* CPU Diagram Game */
+    .cpu-game-container {
+      position: relative;
+      max-width: 500px;
+      margin: 2rem auto;
       background: #f8fafc;
-      border-radius: 16px;
-      padding: 1.2rem;
-      margin: 1rem 0;
-      border: 1px solid #e5edf5;
-    }
-    .quiz-box p { font-weight: 600; color: #0b2a4a; margin-bottom: 0.8rem; }
-    .quiz-option {
-      display: block;
-      padding: 0.6rem 1rem;
-      margin: 0.3rem 0;
-      background: white;
-      border: 2px solid #e5edf5;
+      border: 4px solid #1e293b;
       border-radius: 12px;
-      cursor: pointer;
-      transition: 0.2s;
-      font-size: 0.9rem;
+      padding: 2rem;
+      text-align: center;
     }
-    .quiz-option:hover { border-color: #1f6390; background: #f0f4fb; }
-    .quiz-option.correct { border-color: #2d7d46; background: #e6f7e6; }
-    .quiz-option.incorrect { border-color: #b13a3a; background: #fde8e8; }
-    .quiz-feedback { margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; min-height: 1.2rem; }
-
-    /* Matching Game */
-    .match-game { margin-top: 1rem; }
-    .match-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; }
-    .match-desc { flex: 1; font-size: 0.9rem; color: #475569; background: #fff; padding: 0.8rem; border-radius: 8px; border: 1px solid #e5edf5; }
-    .match-dropzone {
-      width: 200px;
-      min-height: 44px;
-      border: 2px dashed #cbddee;
+    .cpu-diagram {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      background: #f1f5f9;
+      border: 2px solid #94a3b8;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #6b7f8f;
-      background: #f8fafc;
-      transition: 0.2s;
+      margin-bottom: 1rem;
     }
-    .match-dropzone.dragover { border-color: #1f6390; background: #e9eff8; }
-    .match-dropzone.filled { border: 2px solid #1f6390; background: #dceaf7; color: #0b2a4a; }
-    .match-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; padding: 1rem; background: #f0f4fb; border-radius: 12px; }
+    .cpu-part {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #475569;
+      background: #e2e8f0;
+      border: 2px solid #94a3b8;
+      border-radius: 4px;
+      padding: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    /* Positioning of fixed parts */
+    .part-alu { top: 20px; left: 20px; width: 80px; height: 120px; background: #cbd5e1; }
+    .part-cu { bottom: 20px; left: 40%; width: 80px; height: 100px; background: #cbd5e1; }
+    .part-sr { top: 20px; left: 45%; width: 60px; height: 40px; background: #cbd5e1; }
+    
+    /* Dropzones for registers */
+    .dropzone-container {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .dropzone-container span {
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+    .cpu-dropzone {
+      width: 100px;
+      height: 40px;
+      background: #fff;
+      border: 2px dashed #cbd5e1;
+      border-radius: 4px;
+      transition: 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .cpu-dropzone.dragover { background: #e0f2fe; border-color: #0ea5e9; }
+    .cpu-dropzone.correct { background: #dcfce7; border-color: #22c55e; border-style: solid; }
+    .cpu-dropzone.incorrect { background: #fee2e2; border-color: #ef4444; border-style: solid; }
+    .cpu-dropzone .draggable-item { width: 90%; height: 30px; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; padding: 0; }
+
+    /* Specific positions */
+    .zone-pc { top: 80px; right: 20px; }
+    .zone-mar { bottom: 20px; right: 20px; }
+    .zone-mdr { bottom: 20px; left: 20px; }
+    .zone-cir { top: 20px; left: 120px; }
+    .zone-acc { top: 140px; left: 20px; }
+
+    .match-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      padding: 1rem;
+      background: #f0f4fb;
+      border-radius: 12px;
+      min-height: 60px;
+      margin-top: 1rem;
+    }
     .draggable-item {
       padding: 0.5rem 1rem;
       background: #1a5f87;
@@ -510,8 +549,17 @@
       .lesson-content .device-grid { grid-template-columns: 1fr; }
       .cycle-container { flex-direction: column; }
       .cycle-arrow { transform: rotate(90deg); }
-      .match-row { flex-direction: column; align-items: stretch; }
-      .match-dropzone { width: 100%; }
+      .cpu-game-container { padding: 1rem; }
+      .cpu-diagram { height: 300px; }
+      .part-alu { width: 60px; height: 80px; }
+      .part-cu { width: 60px; height: 80px; }
+      .part-sr { display: none; }
+      .cpu-dropzone { width: 80px; height: 30px; }
+      .zone-cir { left: 90px; }
+      .zone-pc { top: 60px; right: 10px; }
+      .zone-mar { bottom: 10px; right: 10px; }
+      .zone-mdr { bottom: 10px; left: 10px; }
+      .zone-acc { top: 100px; left: 10px; }
     }
   </style>
 </head>
@@ -546,7 +594,7 @@
         Year 9 · Hardware · The brain of the computer
     </div>
 
-    <!-- ========== STARTER ACTIVITY (MOVED TO TOP) ========== -->
+    <!-- ========== STARTER ACTIVITY ========== -->
     <div class="activity-box" style="margin-top: 1.5rem;">
         <strong>🎯 Starter Activity – Blooket Quiz</strong>
         <p>Test your knowledge of CPU architecture! Click the link below to join the live quiz.</p>
@@ -674,52 +722,53 @@
             </div>
         </div>
 
-        <!-- ===== INTERACTIVE EXERCISE: MATCHING ===== -->
+        <!-- ===== INTERACTIVE EXERCISE: CPU DIAGRAM LABELING ===== -->
         <hr style="border: 0; height: 1px; background: #e5edf5; margin: 2rem 0;">
-        <h4>🧩 Activity 1: Match the Register</h4>
-        <p>Drag the correct register name from the bank into the empty box next to its description.</p>
+        <h4>🧩 Activity: Label the CPU Diagram</h4>
+        <p>Drag the names from the bank into the correct empty boxes on the CPU diagram below.</p>
         
         <div class="match-game">
             <div class="match-bank" id="matchBank">
-                <div class="draggable-item" draggable="true" data-match="PC">Program Counter (PC)</div>
-                <div class="draggable-item" draggable="true" data-match="ALU">Arithmetic Logic Unit (ALU)</div>
-                <div class="draggable-item" draggable="true" data-match="MAR">Memory Address Register (MAR)</div>
-                <div class="draggable-item" draggable="true" data-match="MDR">Memory Data Register (MDR)</div>
-                <div class="draggable-item" draggable="true" data-match="CU">Control Unit (CU)</div>
-                <div class="draggable-item" draggable="true" data-match="ACC">Accumulator (ACC)</div>
-                <div class="draggable-item" draggable="true" data-match="CIR">Current Instruction Register (CIR)</div>
+                <div class="draggable-item" draggable="true" data-match="PC">PC</div>
+                <div class="draggable-item" draggable="true" data-match="MAR">MAR</div>
+                <div class="draggable-item" draggable="true" data-match="MDR">MDR</div>
+                <div class="draggable-item" draggable="true" data-match="CIR">CIR</div>
+                <div class="draggable-item" draggable="true" data-match="ACC">ACC</div>
             </div>
 
-            <div class="match-row">
-                <div class="match-desc">A register that stores the instruction that is currently being decoded and executed.</div>
-                <div class="match-dropzone" data-answer="CIR"></div>
-            </div>
-            <div class="match-row">
-                <div class="match-desc">A register used to store the intermediate results of mathematical or logical operations carried out by the ALU.</div>
-                <div class="match-dropzone" data-answer="ACC"></div>
-            </div>
-            <div class="match-row">
-                <div class="match-desc">Controls the flow of data through the CPU and coordinates the activities of the other components using control signals.</div>
-                <div class="match-dropzone" data-answer="CU"></div>
-            </div>
-            <div class="match-row">
-                <div class="match-desc">Performs all mathematical calculations (addition, subtraction) and logical operations (AND, OR, NOT) and comparisons.</div>
-                <div class="match-dropzone" data-answer="ALU"></div>
-            </div>
-            <div class="match-row">
-                <div class="match-desc">A register that holds the address of the current instruction or data being read from or written to memory.</div>
-                <div class="match-dropzone" data-answer="MAR"></div>
-            </div>
-            <div class="match-row">
-                <div class="match-desc">A register that holds the address of the next instruction to be fetched from memory.</div>
-                <div class="match-dropzone" data-answer="PC"></div>
-            </div>
-            <div class="match-row">
-                <div class="match-desc">A register that holds the actual data or instruction that has just been fetched from memory or is waiting to be written to memory.</div>
-                <div class="match-dropzone" data-answer="MDR"></div>
+            <div class="cpu-game-container">
+                <div class="cpu-diagram">
+                    <!-- Fixed Parts -->
+                    <div class="cpu-part part-alu">ALU</div>
+                    <div class="cpu-part part-cu">CU</div>
+                    <div class="cpu-part part-sr">SR</div>
+                    
+                    <!-- Dropzones -->
+                    <div class="dropzone-container zone-acc">
+                        <span>Accumulator</span>
+                        <div class="cpu-dropzone" data-answer="ACC"></div>
+                    </div>
+                    <div class="dropzone-container zone-cir">
+                        <span>Current Instruction</span>
+                        <div class="cpu-dropzone" data-answer="CIR"></div>
+                    </div>
+                    <div class="dropzone-container zone-pc">
+                        <span>Program Counter</span>
+                        <div class="cpu-dropzone" data-answer="PC"></div>
+                    </div>
+                    <div class="dropzone-container zone-mdr">
+                        <span>Data Register</span>
+                        <div class="cpu-dropzone" data-answer="MDR"></div>
+                    </div>
+                    <div class="dropzone-container zone-mar">
+                        <span>Address Register</span>
+                        <div class="cpu-dropzone" data-answer="MAR"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div style="margin-top: 1rem;">
+        
+        <div style="margin-top: 1rem; text-align: center;">
             <button class="btn btn-theory" id="checkMatchBtn"><i class="fas fa-check"></i> Check Answers</button>
             <button class="btn" id="resetMatchBtn" style="background:#6b7f8f; color: white;"><i class="fas fa-undo"></i> Reset</button>
             <span id="matchFeedback" style="margin-left: 1rem; font-weight: 600;"></span>
@@ -779,6 +828,12 @@
             <li>Example: "Holds the result of a calculation" → ACC</li>
             <li>Justify your answer by explaining the register's purpose.</li>
         </ul>
+
+        <div class="activity-box" style="border-color: #f5b342; background: #fffbeb; margin-top: 2rem;">
+            <strong>🏆 Finished Everything?</strong>
+            <p>If you have completed both the main worksheet and the extension worksheet, you may choose any of the activities on the homepage.</p>
+            <a href="https://mr-ellis.github.io/School/" target="_blank" class="btn" style="background:#f5b342; color: #0b2a4a;"><i class="fas fa-home"></i> Go to Homepage Resources</a>
+        </div>
 
     </div>
 
@@ -1019,9 +1074,9 @@
             });
         });
 
-        // ========== INTERACTIVE MATCHING GAME ==========
+        // ========== CPU DIAGRAM DRAG AND DROP GAME ==========
         const draggables = document.querySelectorAll('.draggable-item');
-        const dropzones = document.querySelectorAll('.match-dropzone');
+        const dropzones = document.querySelectorAll('.cpu-dropzone');
         const checkMatchBtn = document.getElementById('checkMatchBtn');
         const resetMatchBtn = document.getElementById('resetMatchBtn');
         const matchFeedback = document.getElementById('matchFeedback');
@@ -1060,17 +1115,7 @@
                         matchBank.appendChild(zone.children[0]);
                     }
                     zone.appendChild(draggedItem);
-                    zone.classList.add('filled');
                     draggedItem = null;
-                }
-            });
-        });
-
-        // Allow dragging back out of dropzones (optional, but good for UX)
-        dropzones.forEach(zone => {
-            zone.addEventListener('dragstart', (e) => {
-                if(e.target.classList.contains('draggable-item')) {
-                    draggedItem = e.target;
                 }
             });
         });
@@ -1085,12 +1130,12 @@
                 const item = zone.querySelector('.draggable-item');
                 
                 if (item && item.getAttribute('data-match') === expected) {
-                    zone.style.borderColor = '#2d7d46';
-                    zone.style.background = '#e6f7e6';
+                    zone.classList.add('correct');
+                    zone.classList.remove('incorrect');
                     correct++;
                 } else {
-                    zone.style.borderColor = '#b13a3a';
-                    zone.style.background = '#fde8e8';
+                    zone.classList.add('incorrect');
+                    zone.classList.remove('correct');
                 }
             });
 
@@ -1111,10 +1156,7 @@
                 if (item) {
                     matchBank.appendChild(item);
                 }
-                zone.classList.remove('filled');
-                zone.style.borderColor = '';
-                zone.style.background = '';
-                zone.style.borderStyle = 'dashed';
+                zone.classList.remove('correct', 'incorrect');
             });
             // Reset bank items styling
             matchBank.querySelectorAll('.draggable-item').forEach(item => {
