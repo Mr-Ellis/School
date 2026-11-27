@@ -1,1 +1,977 @@
-ff
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2.4.1 – Efficiency & Big O Notation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1rem 0 0.4rem;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+    }
+
+    .tip-box {
+      background: #fff8e7;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .tip-box strong { color: #8a6d1f; }
+
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
+    .info-box {
+      background: #e8f4fd;
+      border-left: 5px solid #2a6f97;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .info-box strong { color: #1a5f87; }
+
+    .success-box {
+      background: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .success-box strong { color: #2e7d32; }
+
+    .objectives-box {
+      background: linear-gradient(135deg, #0b2a4a 0%, #1f4b6e 100%);
+      border-radius: 1.2rem;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem;
+      color: white;
+      box-shadow: 0 8px 20px rgba(11, 42, 74, 0.15);
+    }
+    .objectives-box h3 {
+      color: #fdbb2d;
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .objectives-box ul { padding-left: 1.5rem; margin-top: 0.8rem; }
+    .objectives-box li { margin-bottom: 0.5rem; color: #e6edf5; font-size: 0.95rem; }
+    .objectives-box li::marker { color: #fdbb2d; }
+
+    .reveal-btn {
+      background: #e9f0fa;
+      border: 1px solid #bed3ec;
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1f4973;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.8rem;
+      transition: background 0.15s;
+    }
+    .reveal-btn:hover { background: #d4e3fc; }
+    .reveal-btn i { font-size: 0.8rem; }
+
+    .reveal-content {
+      display: none;
+      margin-top: 0.8rem;
+      background: white;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      border-left: 4px solid #ffc857;
+      font-size: 0.95rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .reveal-content.show { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quiz-q {
+      background: #fff;
+      border-radius: 0.8rem;
+      padding: 1.2rem 1.4rem;
+      margin: 0.8rem 0;
+      border: 1px solid #d0ddeb;
+    }
+    .quiz-q p { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz-opts { display: flex; flex-direction: column; gap: 0.5rem; }
+    .quiz-opt {
+      background: #f0f4fb;
+      border: 2px solid #d0ddeb;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      text-align: left;
+    }
+    .quiz-opt:hover { border-color: #1a5f87; background: #e3eef8; }
+    .quiz-opt.correct { border-color: #4caf50; background: #e8f5e9; }
+    .quiz-opt.incorrect { border-color: #c62828; background: #fdeaea; }
+    .quiz-opt:disabled { cursor: default; opacity: 0.85; }
+    .quiz-fb { margin-top: 0.6rem; font-size: 0.85rem; font-weight: 600; min-height: 1.2rem; }
+    .quiz-fb.good { color: #2e7d32; }
+    .quiz-fb.bad { color: #c62828; }
+
+    .match-game {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .match-col { display: flex; flex-direction: column; gap: 0.5rem; }
+    .match-item {
+      background: #f0f4fb;
+      border: 2px solid #d0ddeb;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      text-align: left;
+    }
+    .match-item:hover { border-color: #1a5f87; background: #e3eef8; }
+    .match-item.selected { border-color: #1a5f87; background: #d4e3fc; box-shadow: 0 0 0 3px rgba(26,95,135,0.15); }
+    .match-item.matched { border-color: #4caf50; background: #e8f5e9; cursor: default; opacity: 0.75; }
+    .match-item.matched:hover { border-color: #4caf50; background: #e8f5e9; }
+    .match-item.incorrect {
+      border-color: #c62828 !important;
+      background: #fdeaea !important;
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .match-feedback { margin-top: 1rem; font-weight: 600; font-size: 0.9rem; min-height: 1.4rem; }
+    .match-feedback.good { color: #2e7d32; }
+    .match-feedback.bad { color: #c62828; }
+
+    code {
+      background: #eef2f7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #b21f1f;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0.8rem 0;
+    }
+
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.95rem; }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { background: #0b2a4a; color: #fff; font-weight: 600; }
+
+    tr:nth-child(even) td { background: #f7fafc; }
+
+    ul, ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+    li { margin-bottom: 0.3rem; }
+
+    .analogy {
+      background: #eef6ff;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #2c4b6e;
+      border-left: 4px solid #2a6f97;
+    }
+
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-blooket { background: #1a5f87; color: white; }
+    .btn-blooket:hover { background: #134f75; }
+    .btn-presentation { background: #d97706; color: white; }
+    .btn-presentation:hover { background: #b45309; }
+    .btn-wiki { background: #2d8f2d; color: white; }
+    .btn-wiki:hover { background: #1f6b1f; }
+    .btn-ebook { background: #dc2626; color: white; }
+    .btn-ebook:hover { background: #b91c1c; }
+    .btn-juice { background: #ea580c; color: white; }
+    .btn-juice:hover { background: #c2410c; }
+    .btn-dojo { background: #7c3aed; color: white; }
+    .btn-dojo:hover { background: #6d28d9; }
+    .btn-parsons { background: #0f766e; color: white; }
+    .btn-parsons:hover { background: #115e59; }
+    .btn-green { background: #22c55e; color: white; }
+    .btn-green:hover { background: #16a34a; }
+    .btn-quizlet { background: #4255ff; color: white; }
+    .btn-quizlet:hover { background: #2b3ac7; }
+
+    .task-box {
+      background: #f8fafc;
+      border-left: 6px solid #ef4444;
+      border-radius: 0.8rem;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .task-box h4 {
+      font-size: 1.3rem;
+      color: #1e3a8a;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .task-box .task-subtitle {
+      font-weight: 600;
+      color: #475569;
+      margin-top: 0.5rem;
+    }
+    .task-box ol {
+      margin-top: 1rem;
+      padding-left: 1.5rem;
+    }
+    .task-box li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; flex-wrap: wrap; }
+      .button-grid { flex-direction: column; }
+      .match-game { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+
+    <a href="../B2-Programming.html" class="back-link">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to B2 Programming
+    </a>
+
+    <h1>⚡ B2.4.1 – Efficiency &amp; Big O Notation</h1>
+
+    <!-- LEARNING OBJECTIVES -->
+    <div class="objectives-box">
+      <h3><i class="fas fa-bullseye" aria-hidden="true"></i> Learning Objectives</h3>
+      <ul>
+        <li>Define <strong>algorithm efficiency</strong> and explain why it matters for scalability.</li>
+        <li>Describe <strong>Big O notation</strong> as a way to classify an algorithm's growth rate.</li>
+        <li>Analyse specific algorithms by calculating their <strong>Big O</strong> time complexity.</li>
+        <li>Compare common complexity classes: <strong>O(1), O(log n), O(n), O(n log n), O(n²)</strong>.</li>
+      </ul>
+    </div>
+
+    <!-- STARTER ACTIVITY -->
+    <h2>🎯 Starter Activity</h2>
+
+    <div class="card">
+      <h3>🎮 Blooket Quiz</h3>
+      <p>Test your prior knowledge of algorithms and efficiency with this Blooket quiz.</p>
+      <div class="button-grid">
+        <a href="https://play.blooket.com/host/brawl?id=68b03a08ddff7a4868b8d294" target="_blank" rel="noopener" class="btn btn-blooket">
+          <i class="fas fa-gamepad" aria-hidden="true"></i> Play Blooket
+        </a>
+        <a href="https://quizlet.com/de/1069247474/b24-programming-algorithms-flash-cards/?funnelUUID=1deef595-7bbf-48d7-8162-a8d7af04b9a3" target="_blank" rel="noopener" class="btn btn-quizlet">
+          <i class="fas fa-layer-group" aria-hidden="true"></i> Quizlet Flashcards
+        </a>
+      </div>
+    </div>
+
+    <!-- LESSON CONTENT -->
+    <h2>📖 Lesson Content</h2>
+
+    <div class="card">
+      <h3>The Big Idea</h3>
+      <p>Imagine two delivery drivers going to the same city. One takes a direct motorway route; the other drives through every small town on the way. Both arrive eventually — but the first driver gets there in a fraction of the time. In computing, the <em>route</em> is the algorithm, and <strong>efficiency</strong> is about how well that route scales as the journey gets longer.</p>
+      <p><strong>Big O notation</strong> is the language we use to describe how an algorithm's running time (or memory use) grows as the input size increases. It doesn't tell us the exact number of seconds — it tells us the <em>shape</em> of the growth curve. This is crucial for <strong>scalability</strong>: an algorithm that feels instant on 100 items might grind to a halt on 10 million.</p>
+
+      <p class="tip-box"><strong>📚 Further reading:</strong> Course companion pages 386–390. See also the <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.4.1-describe-the-efficiency-of-specific-algorithms-by-calculating-their-big-o-notation-to-analyse-their-scalability" target="_blank" rel="noopener">Computer Science Wiki page on Big O notation</a>.</p>
+
+      <div class="analogy">
+        💡 Think of Big O like classifying vehicles by top speed: O(1) is a rocket (instant, regardless of distance), O(log n) is a bullet train (very fast, barely slows as distance grows), O(n) is a car (time grows in direct proportion to distance), and O(n²) is a bicycle that gets slower and slower the further you go. We care about the <em>class</em> of vehicle, not the exact speedometer reading.
+      </div>
+
+      <div class="button-grid">
+        <a href="https://docs.google.com/presentation/d/e/2PACX-1vTzBBfqHPlr7Z8LtCY3Xj9CBwPoBExyEZRxZAvIzQ4i3nFNaXqNT6oh3IBQP63IhUSviwdrhl0R1Gq5/pub?start=false&loop=false&delayms=3000&slide=id.p" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> Lesson Presentation
+        </a>
+        <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.4.1-describe-the-efficiency-of-specific-algorithms-by-calculating-their-big-o-notation-to-analyse-their-scalability" target="_blank" rel="noopener" class="btn btn-wiki">
+          <i class="fas fa-book-open" aria-hidden="true"></i> Wiki: Big O Notation
+        </a>
+        <a href="https://mr-ellis.github.io/School/lessonplans/IB%20Computer%20Science/ebooks/DP%20Computer%20Science_%20B%202.4.1.pdf" target="_blank" rel="noopener" class="btn btn-ebook">
+          <i class="fas fa-file-pdf" aria-hidden="true"></i> Course eBook (PDF)
+        </a>
+      </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="card">
+      <h3>1. What is Algorithm Efficiency?</h3>
+      <p><strong>Efficiency</strong> is a measure of the resources an algorithm consumes — primarily <strong>time</strong> (how many operations it performs) and <strong>space</strong> (how much memory it uses). When we analyse efficiency, we are not measuring wall-clock seconds (which depend on hardware, programming language, and compiler), but rather the <em>number of basic operations</em> as a function of input size <code>n</code>.</p>
+
+      <h4>Why not just time it with a stopwatch?</h4>
+      <ul>
+        <li>A faster computer would make the same algorithm look better — that tells us nothing about the algorithm itself.</li>
+        <li>Small inputs hide inefficiencies; an O(n²) algorithm may beat an O(n log n) one for n = 10, but lose catastrophically for n = 1,000,000.</li>
+        <li>We need a <strong>hardware-independent</strong> way to compare algorithms and predict their <strong>scalability</strong>.</li>
+      </ul>
+
+      <h4>Time Complexity vs Space Complexity</h4>
+      <table>
+        <thead>
+          <tr><th>Measure</th><th>What it describes</th><th>Example question</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Time complexity</strong></td><td>How the number of operations grows with input size</td><td>How many comparisons does a linear search make in the worst case?</td></tr>
+          <tr><td><strong>Space complexity</strong></td><td>How the memory usage grows with input size</td><td>How much extra array space does merge sort need?</td></tr>
+        </tbody>
+      </table>
+
+      <button class="reveal-btn" data-target="reveal1" aria-expanded="false">
+        <i class="fas fa-lightbulb" aria-hidden="true"></i> Why does scalability matter in the real world?
+      </button>
+      <div id="reveal1" class="reveal-content">
+        <strong>💡 Think about it:</strong> Google processes billions of searches per day. If the search algorithm were O(n) in the number of web pages, adding more pages would slow it down proportionally — unacceptable. Algorithms must be designed to scale. Similarly, a social network's "friend recommendation" algorithm that is O(n²) may work for a small user base but become impossibly slow when millions of users join. Big O lets engineers predict these problems <em>before</em> they deploy.
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="card">
+      <h3>2. Big O Notation: The Language of Growth</h3>
+      <p><strong>Big O notation</strong> describes the <em>upper bound</em> on an algorithm's growth rate — that is, the worst-case scenario as input size <code>n</code> becomes very large. Formally, we say <code>f(n) = O(g(n))</code> if there exist constants <code>c</code> and <code>n₀</code> such that <code>f(n) ≤ c · g(n)</code> for all <code>n ≥ n₀</code>. In practice, this means we drop constants and lower-order terms.</p>
+
+      <h4>The simplification rules</h4>
+      <ul>
+        <li><strong>Drop constants:</strong> <code>O(3n)</code> → <code>O(n)</code>; <code>O(0.5n²)</code> → <code>O(n²)</code>.</li>
+        <li><strong>Keep only the dominant term:</strong> <code>O(n² + n + 5)</code> → <code>O(n²)</code>.</li>
+        <li><strong>Ignore the base of logarithms:</strong> <code>O(log₂ n)</code> and <code>O(log₁₀ n)</code> are both written <code>O(log n)</code>.</li>
+      </ul>
+
+      <p>Why? Because as <code>n</code> gets huge, the highest-order term dominates everything else. For n = 1,000,000, <code>n²</code> is a trillion while <code>n</code> is a million — the linear term is negligible in comparison.</p>
+
+      <div class="info-box">
+        <strong>🔍 Big O is about the worst case:</strong> When we say "linear search is O(n)", we mean that in the worst case (the item is last or absent), it examines every element. Big O gives us a guarantee: "this algorithm will never be slower than this class."
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="card">
+      <h3>3. The Common Complexity Classes</h3>
+      <p>Here are the complexity classes you need to know, ordered from most efficient to least efficient:</p>
+
+      <table>
+        <thead>
+          <tr><th>Notation</th><th>Name</th><th>Intuition</th><th>Typical example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>O(1)</code></td><td>Constant</td><td>Same time regardless of input size</td><td>Accessing an array element by index: <code>arr[5]</code></td></tr>
+          <tr><td><code>O(log n)</code></td><td>Logarithmic</td><td>Halving the problem each step</td><td>Binary search on a sorted array</td></tr>
+          <tr><td><code>O(n)</code></td><td>Linear</td><td>Time grows proportionally to input</td><td>Linear search; summing an array</td></tr>
+          <tr><td><code>O(n log n)</code></td><td>Linearithmic</td><td>Slightly worse than linear</td><td>Merge sort, quicksort (average)</td></tr>
+          <tr><td><code>O(n²)</code></td><td>Quadratic</td><td>Time grows with the square of input</td><td>Bubble sort, selection sort, insertion sort</td></tr>
+          <tr><td><code>O(2ⁿ)</code></td><td>Exponential</td><td>Doubles with each added element</td><td>Naive recursive Fibonacci; brute-force subset problems</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Visualising the growth</h4>
+      <p>The table below shows roughly how many operations each class performs for increasing input sizes. Notice how quickly O(n²) and O(2ⁿ) explode:</p>
+
+      <table>
+        <thead>
+          <tr><th>n</th><th>O(1)</th><th>O(log n)</th><th>O(n)</th><th>O(n log n)</th><th>O(n²)</th><th>O(2ⁿ)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>10</td><td>1</td><td>~3</td><td>10</td><td>~33</td><td>100</td><td>1,024</td></tr>
+          <tr><td>100</td><td>1</td><td>~7</td><td>100</td><td>~664</td><td>10,000</td><td>~1.27 × 10³⁰</td></tr>
+          <tr><td>1,000</td><td>1</td><td>~10</td><td>1,000</td><td>~9,966</td><td>1,000,000</td><td>astronomical</td></tr>
+          <tr><td>1,000,000</td><td>1</td><td>~20</td><td>1,000,000</td><td>~19,931,569</td><td>10¹²</td><td>unimaginable</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box">
+        <strong>⚠️ Watch out:</strong> An O(n²) algorithm may be faster than an O(n log n) algorithm for <em>tiny</em> inputs (because of smaller constants). Big O describes asymptotic behaviour — how it scales as n → ∞. For small n, the constants can matter. This is why real-world sorting libraries sometimes use insertion sort for tiny subarrays and quicksort for large ones.
+      </div>
+
+      <button class="reveal-btn" data-target="reveal3" aria-expanded="false">
+        <i class="fas fa-lightbulb" aria-hidden="true"></i> What does O(log n) actually mean in plain English?
+      </button>
+      <div id="reveal3" class="reveal-content">
+        <p><strong>💡 Think about it:</strong> A logarithm asks "how many times can I divide n by 2 before I get to 1?" For n = 1,000,000, that's about 20. So an O(log n) algorithm does roughly 20 steps for a million items. That's why binary search is so powerful: each comparison eliminates half the remaining possibilities. Doubling the input size adds only <em>one</em> extra step — that's extraordinary scalability.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="card">
+      <h3>4. Analysing Specific Algorithms</h3>
+
+      <h4>Linear Search — O(n)</h4>
+      <p>Linear search checks each element from the start until it finds the target (or reaches the end). In the worst case, it examines every element once.</p>
+      <pre><code>def linear_search(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i
+    return -1</code></pre>
+      <p><strong>Analysis:</strong> The loop runs at most <code>n</code> times, and each iteration does a constant amount of work. Total: <strong>O(n)</strong>.</p>
+
+      <h4>Binary Search — O(log n)</h4>
+      <p>Binary search works on a <em>sorted</em> array. It compares the target with the middle element, then discards the half that cannot contain the target. Each step halves the search space.</p>
+      <pre><code>def binary_search(arr, target):
+    low, high = 0, len(arr) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1</code></pre>
+      <p><strong>Analysis:</strong> After <code>k</code> iterations, the remaining search space has size <code>n / 2ᵏ</code>. The loop stops when <code>n / 2ᵏ ≤ 1</code>, i.e. <code>k ≈ log₂ n</code>. Total: <strong>O(log n)</strong>.</p>
+
+      <div class="info-box">
+        <strong>💡 The power of halving:</strong> For an array of 1,000,000 sorted items, linear search needs up to 1,000,000 comparisons. Binary search needs at most 20. That's a 50,000× improvement — a direct consequence of moving from O(n) to O(log n).
+      </div>
+
+      <h4>Bubble Sort — O(n²)</h4>
+      <p>Bubble sort repeatedly steps through the list, compares adjacent pairs, and swaps them if they're in the wrong order. It repeats this until no swaps are needed.</p>
+      <pre><code>def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(n - 1 - i):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]</code></pre>
+      <p><strong>Analysis:</strong> The outer loop runs <code>n</code> times. The inner loop runs roughly <code>n</code> times for each outer iteration. Total comparisons ≈ <code>n · n = n²</code>. Total: <strong>O(n²)</strong>.</p>
+
+      <h4>Merge Sort — O(n log n)</h4>
+      <p>Merge sort divides the array in half, recursively sorts each half, and then merges the sorted halves together. The dividing takes <code>log n</code> levels, and each level does <code>O(n)</code> work to merge.</p>
+      <pre><code>def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    return merge(left, right)   # merge is O(n)</code></pre>
+      <p><strong>Analysis:</strong> There are <code>log n</code> levels of recursion, and at each level the total work across all subproblems is <code>O(n)</code>. Total: <strong>O(n log n)</strong>.</p>
+
+      <h4>Summary table</h4>
+      <table>
+        <thead>
+          <tr><th>Algorithm</th><th>Best case</th><th>Worst case</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Linear search</td><td>O(1)</td><td>O(n)</td><td>Worst case examines all elements</td></tr>
+          <tr><td>Binary search</td><td>O(1)</td><td>O(log n)</td><td>Halves search space each step</td></tr>
+          <tr><td>Bubble sort</td><td>O(n)</td><td>O(n²)</td><td>Nested loops; best case already sorted</td></tr>
+          <tr><td>Merge sort</td><td>O(n log n)</td><td>O(n log n)</td><td>Consistent divide-and-conquer</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="card">
+      <h3>5. Calculating Big O: A Step-by-Step Guide</h3>
+      <p>When asked to calculate the Big O of a piece of code, follow these steps:</p>
+      <ol>
+        <li><strong>Identify the loops:</strong> How many times does each loop run relative to <code>n</code>?</li>
+        <li><strong>Nested loops multiply:</strong> A loop inside a loop gives O(n × n) = O(n²).</li>
+        <li><strong>Sequential loops add:</strong> Two separate loops give O(n + n) = O(2n) → drop constants → O(n).</li>
+        <li><strong>Drop constants and lower-order terms:</strong> O(3n² + 5n + 7) → O(n²).</li>
+        <li><strong>Halving loops are logarithmic:</strong> If a loop variable doubles/halves each iteration, it's O(log n).</li>
+      </ol>
+
+      <h4>Worked example</h4>
+      <pre><code>def example(arr):
+    n = len(arr)
+    total = 0
+    for i in range(n):          # loop 1: O(n)
+        total += arr[i]
+    for j in range(n):          # loop 2: O(n)
+        for k in range(n):      # nested inside loop 2: O(n)
+            total += arr[j] * arr[k]
+    return total</code></pre>
+      <p><strong>Analysis:</strong> Loop 1 contributes O(n). The nested loops contribute O(n²). Total: O(n + n²) → dominant term is n² → <strong>O(n²)</strong>.</p>
+
+      <div class="tip-box">
+        <strong>📝 Exam tip:</strong> Always look for nested loops first — they're the most common source of O(n²). If you see a loop where the counter is halved (<code>i = i / 2</code> or <code>i *= 2</code>), that's a strong sign of O(log n). If the algorithm divides the problem and processes both halves, think O(n log n).
+      </div>
+    </div>
+
+    <!-- INTERACTIVE: SPOT THE COMPLEXITY -->
+    <div class="card">
+      <h3>🔍 Interactive: What's the Big O?</h3>
+      <p>Read the code below. What is its worst-case time complexity? Click the option you think is correct.</p>
+
+      <div class="quiz-q">
+        <pre><code>def mystery(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(n):
+            print(arr[i], arr[j])</code></pre>
+        <p>What is the time complexity?</p>
+        <div class="quiz-opts" data-answer="c">
+          <button class="quiz-opt" data-opt="a">O(1)</button>
+          <button class="quiz-opt" data-opt="b">O(n)</button>
+          <button class="quiz-opt" data-opt="c">O(n²)</button>
+          <button class="quiz-opt" data-opt="d">O(log n)</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz-q">
+        <pre><code>def mystery2(n):
+    count = 0
+    while n > 1:
+        n = n // 2
+        count += 1
+    return count</code></pre>
+        <p>What is the time complexity?</p>
+        <div class="quiz-opts" data-answer="b">
+          <button class="quiz-opt" data-opt="a">O(1)</button>
+          <button class="quiz-opt" data-opt="b">O(log n)</button>
+          <button class="quiz-opt" data-opt="c">O(n)</button>
+          <button class="quiz-opt" data-opt="d">O(n²)</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz-q">
+        <pre><code>def mystery3(arr):
+    first = arr[0]
+    return first * 2</code></pre>
+        <p>What is the time complexity?</p>
+        <div class="quiz-opts" data-answer="a">
+          <button class="quiz-opt" data-opt="a">O(1)</button>
+          <button class="quiz-opt" data-opt="b">O(n)</button>
+          <button class="quiz-opt" data-opt="c">O(log n)</button>
+          <button class="quiz-opt" data-opt="d">O(n log n)</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE: MATCHING GAME -->
+    <div class="card">
+      <h3>🧩 Interactive: Match the Complexity Class</h3>
+      <p>Click a complexity class on the left, then click its matching description or example on the right.</p>
+
+      <div class="match-game">
+        <div class="match-col" id="matchTerms">
+          <button class="match-item" data-key="o1">O(1)</button>
+          <button class="match-item" data-key="ologn">O(log n)</button>
+          <button class="match-item" data-key="on">O(n)</button>
+          <button class="match-item" data-key="onlogn">O(n log n)</button>
+          <button class="match-item" data-key="on2">O(n²)</button>
+          <button class="match-item" data-key="o2n">O(2ⁿ)</button>
+          <button class="match-item" data-key="bigo">Big O notation</button>
+          <button class="match-item" data-key="scalability">Scalability</button>
+        </div>
+        <div class="match-col" id="matchDefs">
+          <button class="match-item" data-key="on2">Quadratic — bubble sort, nested loops</button>
+          <button class="match-item" data-key="o1">Constant — array index access</button>
+          <button class="match-item" data-key="ologn">Logarithmic — binary search, halving each step</button>
+          <button class="match-item" data-key="bigo">Describes the upper bound on an algorithm's growth rate</button>
+          <button class="match-item" data-key="on">Linear — linear search, summing an array</button>
+          <button class="match-item" data-key="o2n">Exponential — naive recursive Fibonacci</button>
+          <button class="match-item" data-key="scalability">How well an algorithm handles growing input sizes</button>
+          <button class="match-item" data-key="onlogn">Linearithmic — merge sort, divide-and-conquer sorts</button>
+        </div>
+      </div>
+      <div class="match-feedback" aria-live="polite"></div>
+    </div>
+
+    <!-- EXAM-STYLE PRACTICE -->
+    <div class="card">
+      <h3>📝 Exam-Style Practice</h3>
+      <p>Answer these in full sentences. Then reveal the model answers to check your work.</p>
+
+      <h4>Question 1 (2 marks)</h4>
+      <p>Define the term <strong>Big O notation</strong> and explain what it is used for.</p>
+      <button class="reveal-btn" data-target="ans1"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
+      <div id="ans1" class="reveal-content">
+        Big O notation is a mathematical notation used to describe the upper bound on the growth rate of an algorithm's time or space complexity as the input size increases. It is used to compare algorithms independently of hardware and to predict how well an algorithm will scale for large inputs.
+      </div>
+
+      <h4>Question 2 (3 marks)</h4>
+      <p>Explain why an O(log n) algorithm is considered more efficient than an O(n) algorithm. Use an example to support your answer.</p>
+      <button class="reveal-btn" data-target="ans2"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
+      <div id="ans2" class="reveal-content">
+        An O(log n) algorithm's running time grows very slowly as input size increases, because it typically halves the problem at each step. An O(n) algorithm's time grows in direct proportion to the input. For example, for 1,000,000 items, a linear search (O(n)) needs up to 1,000,000 comparisons, while binary search (O(log n)) needs at most about 20. Doubling the input size adds only one extra step for O(log n), but doubles the work for O(n).
+      </div>
+
+      <h4>Question 3 (4 marks)</h4>
+      <p>Analyse the time complexity of the following algorithm and justify your answer:</p>
+      <pre><code>def find_pairs(arr):
+    n = len(arr)
+    count = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            if arr[i] == arr[j]:
+                count += 1
+    return count</code></pre>
+      <button class="reveal-btn" data-target="ans3"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
+      <div id="ans3" class="reveal-content">
+        <p>The algorithm has two nested loops. The outer loop runs <code>n</code> times. The inner loop runs from <code>i + 1</code> to <code>n - 1</code>, which is roughly <code>n/2</code> iterations on average. The total number of comparisons is <code>n × (n - 1) / 2</code>, which is proportional to <code>n²</code>. Therefore, the time complexity is <strong>O(n²)</strong>.</p>
+        <p>Marks: 1 for identifying nested loops; 1 for explaining the inner loop runs roughly n times for each outer iteration; 1 for stating total operations ≈ n²/2; 1 for simplifying to O(n²) by dropping constants.</p>
+      </div>
+
+      <h4>Question 4 (3 marks)</h4>
+      <p>Explain the difference between <strong>time complexity</strong> and <strong>space complexity</strong>. Give one example of each from an algorithm you have studied.</p>
+      <button class="reveal-btn" data-target="ans4"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
+      <div id="ans4" class="reveal-content">
+        Time complexity measures how the number of operations grows with input size; space complexity measures how memory usage grows. Example of time complexity: bubble sort has O(n²) time complexity because of its nested loops. Example of space complexity: merge sort has O(n) space complexity because it creates temporary arrays during merging, while bubble sort has O(1) space complexity because it sorts in place.
+      </div>
+    </div>
+
+    <!-- MAIN TASK / ASSESSMENT -->
+    <h2>📊 Task: Assessment</h2>
+
+    <div class="task-box">
+      <h4><i class="fas fa-laptop-code" aria-hidden="true"></i> Task: Assessment</h4>
+      <p class="task-subtitle">B2.4 Question Slides – Written Assessment</p>
+      <p>Review the B2.4 question slides. For each question, write your answers using the Python Copy tool below.</p>
+      
+      <p style="margin-top: 1rem;"><strong>Instructions:</strong></p>
+      <ol>
+        <li>Open the <strong>B2.4 Question Slides</strong> link below.</li>
+        <li>Work through each question on the slides.</li>
+        <li>Write your answers using the <strong>Python Copy</strong> tool.</li>
+        <li>Save your work as a <code>.txt</code> file and submit to <strong>Schoolbox</strong>.</li>
+      </ol>
+
+      <div class="button-grid" style="margin-top:1.5rem;">
+        <a href="https://docs.google.com/presentation/d/e/2PACX-1vThO0Xhu19VEI4SB2Fsh_YJ9pCKmvtbEofui_2H5lD4ciByGVx5O91a-odV13XS4OnS37rUkW-JReq4/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener" class="btn btn-blooket">
+          <i class="fas fa-file-alt" aria-hidden="true"></i> B2.4 Question Slides
+        </a>
+        <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener" class="btn btn-green">
+          <i class="fas fa-laptop-code" aria-hidden="true"></i> Python Copy Tool
+        </a>
+      </div>
+    </div>
+
+    <!-- EXTENSION TASK -->
+    <div class="card">
+      <h3>🚀 Extension: Parsons Game</h3>
+      <p>Put scrambled Python into the right order, collect stars, and light the path to the Robot Citadel.</p>
+      <div class="button-grid">
+        <a href="https://jamesabela.github.io/jsfun/parsonsgame.html" target="_blank" rel="noopener" class="btn btn-parsons">
+          <i class="fas fa-puzzle-piece" aria-hidden="true"></i> Parsons Game
+        </a>
+      </div>
+    </div>
+
+    <!-- JUICEMIND PRACTICE -->
+    <h2>🧃 JuiceMind Practice</h2>
+
+    <div class="card">
+      <h3>Practise Your Algorithm Analysis</h3>
+      <p>Work through the quizzes below to reinforce Big O notation, algorithm efficiency, and scalability.</p>
+      <div class="button-grid">
+        <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/1/quizId/explore&class=intro-python&unitNumber=3&topicNumber=1&quizNumber=2?tab=curriculum" target="_blank" rel="noopener" class="btn btn-juice">
+          <i class="fas fa-flask" aria-hidden="true"></i> JuiceMind Topic 1
+        </a>
+        <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/2/quizId/explore&class=intro-python&unitNumber=3&topicNumber=2&quizNumber=2?tab=curriculum" target="_blank" rel="noopener" class="btn btn-juice">
+          <i class="fas fa-flask" aria-hidden="true"></i> JuiceMind Topic 2
+        </a>
+      </div>
+    </div>
+
+    <!-- REVISIONDOJO -->
+    <h2>🧠 RevisionDojo "Teach the AI"</h2>
+
+    <div class="card">
+      <h3>Consolidate Your Understanding</h3>
+      <p>Explain what you have learned about Big O notation and algorithm efficiency to the AI. Teaching a concept in your own words is one of the most effective ways to consolidate your understanding.</p>
+      <div class="button-grid">
+        <a href="https://www.revisiondojo.com/teach-jojo?subjectId=292&classroomId=7d9d7fc0-cf13-42eb-a277-77d2b675cb6a" target="_blank" rel="noopener" class="btn btn-dojo">
+          <i class="fas fa-robot" aria-hidden="true"></i> Teach the AI
+        </a>
+      </div>
+    </div>
+
+    <!-- PLENARY -->
+    <h2>🧠 Plenary</h2>
+
+    <div class="card">
+      <h3>Quick Check</h3>
+      <div class="quiz-q">
+        <p>Which of these is the most efficient time complexity?</p>
+        <div class="quiz-opts" data-answer="a">
+          <button class="quiz-opt" data-opt="a">O(1)</button>
+          <button class="quiz-opt" data-opt="b">O(n)</button>
+          <button class="quiz-opt" data-opt="c">O(n²)</button>
+          <button class="quiz-opt" data-opt="d">O(log n)</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p>Binary search has a time complexity of:</p>
+        <div class="quiz-opts" data-answer="c">
+          <button class="quiz-opt" data-opt="a">O(1)</button>
+          <button class="quiz-opt" data-opt="b">O(n)</button>
+          <button class="quiz-opt" data-opt="c">O(log n)</button>
+          <button class="quiz-opt" data-opt="d">O(n²)</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz-q">
+        <p>What is the time complexity of an algorithm with two nested loops, each running n times?</p>
+        <div class="quiz-opts" data-answer="b">
+          <button class="quiz-opt" data-opt="a">O(n)</button>
+          <button class="quiz-opt" data-opt="b">O(n²)</button>
+          <button class="quiz-opt" data-opt="c">O(log n)</button>
+          <button class="quiz-opt" data-opt="d">O(n log n)</button>
+        </div>
+        <div class="quiz-fb" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <p>B2.4.1 – Efficiency &amp; Big O Notation · Programming Unit B2</p>
+      <p><i class="fas fa-lightbulb" aria-hidden="true"></i> Remember: Big O doesn't tell you the exact time — it tells you how the time grows. Choose the right class of algorithm for the scale you need.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // ---- Reveal buttons ----
+    document.querySelectorAll('.reveal-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.getAttribute('data-target'));
+        if (!target) return;
+        var isOpen = target.classList.toggle('show');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+
+    // ---- Multiple-choice quiz handler ----
+    document.querySelectorAll('.quiz-q').forEach(function (q) {
+      var opts = q.querySelector('.quiz-opts');
+      if (!opts) return;
+      var answer = opts.getAttribute('data-answer');
+      var fb = q.querySelector('.quiz-fb');
+      var buttons = q.querySelectorAll('.quiz-opt');
+
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (b.disabled) return;
+          var chosen = b.getAttribute('data-opt');
+          buttons.forEach(function (other) {
+            other.disabled = true;
+            if (other.getAttribute('data-opt') === answer) {
+              other.classList.add('correct');
+            }
+          });
+          if (chosen === answer) {
+            b.classList.add('correct');
+            fb.textContent = '✅ Correct! Well done.';
+            fb.className = 'quiz-fb good';
+          } else {
+            b.classList.add('incorrect');
+            fb.textContent = '❌ Not quite — the correct answer is highlighted in green.';
+            fb.className = 'quiz-fb bad';
+          }
+        });
+      });
+    });
+
+    // ---- Matching game ----
+    (function () {
+      var terms = document.querySelectorAll('#matchTerms .match-item');
+      var defs = document.querySelectorAll('#matchDefs .match-item');
+      var feedback = document.querySelector('.match-feedback');
+      var selectedTerm = null;
+      var matchedCount = 0;
+      var totalPairs = terms.length;
+
+      function clearSelection() {
+        terms.forEach(function (t) { t.classList.remove('selected'); });
+        selectedTerm = null;
+      }
+
+      terms.forEach(function (term) {
+        term.addEventListener('click', function () {
+          if (term.classList.contains('matched')) return;
+          clearSelection();
+          selectedTerm = term;
+          term.classList.add('selected');
+        });
+      });
+
+      defs.forEach(function (def) {
+        def.addEventListener('click', function () {
+          if (def.classList.contains('matched')) return;
+          if (!selectedTerm) {
+            feedback.textContent = '👈 Pick a term on the left first.';
+            feedback.className = 'match-feedback bad';
+            return;
+          }
+          var termKey = selectedTerm.getAttribute('data-key');
+          var defKey = def.getAttribute('data-key');
+
+          if (termKey === defKey) {
+            selectedTerm.classList.remove('selected');
+            selectedTerm.classList.add('matched');
+            def.classList.add('matched');
+            matchedCount++;
+            feedback.textContent = '✅ Correct match!';
+            feedback.className = 'match-feedback good';
+            selectedTerm = null;
+            if (matchedCount === totalPairs) {
+              feedback.textContent = '🎉 All pairs matched — excellent work!';
+              feedback.className = 'match-feedback good';
+            }
+          } else {
+            def.classList.add('incorrect');
+            feedback.textContent = '❌ That\'s not the right match — try again.';
+            feedback.className = 'match-feedback bad';
+            var wrongDef = def;
+            setTimeout(function () {
+              wrongDef.classList.remove('incorrect');
+            }, 400);
+            clearSelection();
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
