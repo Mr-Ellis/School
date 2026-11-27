@@ -1,1 +1,650 @@
-ss
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2.4.1 – Big O Lab Session</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f3f6fc;
+      color: #1e2b3c;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .guide-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid #d9e2ef;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1f6390;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      transition: 0.2s;
+    }
+    .back-link:hover { color: #0b2a4a; text-decoration: underline; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 4px solid #ffc857;
+      padding-bottom: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a3e6b;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.75rem;
+      border-left: 6px solid #ffc857;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #214a7a;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    .card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+    }
+
+    .tip-box {
+      background: #fff8e7;
+      border-left: 5px solid #ffc857;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .tip-box strong { color: #8a6d1f; }
+
+    .warn-box {
+      background: #fdeaea;
+      border-left: 5px solid #c62828;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .warn-box strong { color: #a13232; }
+
+    .info-box {
+      background: #e8f4fd;
+      border-left: 5px solid #2a6f97;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .info-box strong { color: #1a5f87; }
+
+    .success-box {
+      background: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .success-box strong { color: #2e7d32; }
+
+    .objectives-box {
+      background: linear-gradient(135deg, #0b2a4a 0%, #1f4b6e 100%);
+      border-radius: 1.2rem;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0 2rem;
+      color: white;
+      box-shadow: 0 8px 20px rgba(11, 42, 74, 0.15);
+    }
+    .objectives-box h3 {
+      color: #fdbb2d;
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .objectives-box ul { padding-left: 1.5rem; margin-top: 0.8rem; }
+    .objectives-box li { margin-bottom: 0.5rem; color: #e6edf5; font-size: 0.95rem; }
+    .objectives-box li::marker { color: #fdbb2d; }
+
+    .challenge {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0;
+      border: 1px solid #d0ddeb;
+      border-left: 5px solid #1a5f87;
+    }
+    .challenge h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0a2a4a;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .challenge-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.8rem;
+      height: 1.8rem;
+      background: #1a5f87;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    code {
+      background: #eef2f7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #b21f1f;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0.8rem 0;
+    }
+
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+    /* Embedded IDE */
+    .ide-wrapper {
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 14px rgba(11, 42, 74, 0.08);
+      margin-top: 1rem;
+      background: #1e293b;
+    }
+    .ide-wrapper iframe {
+      display: block;
+      width: 100%;
+      height: 520px;
+      border: none;
+    }
+    .ide-fallback {
+      padding: 1rem 1.4rem;
+      background: #fff8e7;
+      border-top: 1px solid #e8d9a8;
+      font-size: 0.9rem;
+      color: #6b5518;
+    }
+    .ide-fallback a { color: #1a5f87; font-weight: 600; }
+
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-python { background: #db2777; color: white; }
+    .btn-python:hover { background: #be185d; }
+    .btn-presentation { background: #d97706; color: white; }
+    .btn-presentation:hover { background: #b45309; }
+    .btn-juice { background: #ea580c; color: white; }
+    .btn-juice:hover { background: #c2410c; }
+    .btn-learn { background: #2a6f97; color: white; }
+    .btn-learn:hover { background: #1a5f87; }
+
+    /* Reveal Button Styles */
+    .reveal-btn {
+      background: #e9f0fa;
+      border: 1px solid #bed3ec;
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1f4973;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.8rem;
+      transition: background 0.15s;
+    }
+    .reveal-btn:hover { background: #d4e3fc; }
+    .reveal-btn i { font-size: 0.8rem; }
+
+    .reveal-content {
+      display: none;
+      margin-top: 0.8rem;
+      background: #f8fafc;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      border-left: 4px solid #ffc857;
+      font-size: 0.95rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .reveal-content.show { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed #b8cee8;
+      font-size: 0.9rem;
+      color: #4b6a8b;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .guide-container { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; flex-wrap: wrap; }
+      .button-grid { flex-direction: column; }
+      .ide-wrapper iframe { height: 420px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-container">
+
+    <a href="../b2-4-1-theory.html" class="back-link">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to B2.4.1 Theory
+    </a>
+
+    <h1>⚡ B2.4.1 – Big O Lab Session</h1>
+
+    <!-- LAB OBJECTIVES -->
+    <div class="objectives-box">
+      <h3><i class="fas fa-bullseye" aria-hidden="true"></i> Lab Objectives</h3>
+      <ul>
+        <li>Analyse simple Python functions and identify their Big O time complexity.</li>
+        <li>Distinguish between O(1), O(log n), O(n), O(n log n), and O(n²) by examining loop structures.</li>
+        <li>Predict how an algorithm's runtime scales as input size grows.</li>
+        <li>Write code that demonstrates different complexity classes in action.</li>
+        <li>Explain the difference between constant, linear, logarithmic, and quadratic growth.</li>
+      </ul>
+    </div>
+
+    <!-- MAIN ACTIVITY -->
+    <h2>💻 Main Activity</h2>
+
+    <div class="card">
+      <h3>📝 Complete Your Theory Assessment</h3>
+      <p class="tip-box"><strong>📌 Reminder:</strong> If you haven't finished the assessment from the Theory lesson, complete it now. If you have already completed the assessment, move on to the practical coding activity below.</p>
+      <div class="button-grid">
+        <a href="https://docs.google.com/presentation/d/e/2PACX-1vThO0Xhu19VEI4SB2Fsh_YJ9pCKmvtbEofui_2H5lD4ciByGVx5O91a-odV13XS4OnS37rUkW-JReq4/pub?start=false&loop=false&delayms=3000&slide=id.g3ab61963dd6_0_93" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-file-alt" aria-hidden="true"></i> View Theory Assessment
+        </a>
+      </div>
+    </div>
+
+    <!-- REFERENCE & EXTRA PRACTICE -->
+    <h2>📚 Reference &amp; Extra Practice</h2>
+
+    <div class="card">
+      <h3>Use These Alongside the Lab Challenges</h3>
+      <p>Read the Big O reference before you start Challenge 1, and use the Parsons game and Blooket quiz for extra practice.</p>
+      <div class="button-grid">
+        <a href="https://jamesabela.github.io/jsfun/pythonmanual.html#big-o" target="_blank" rel="noopener" class="btn btn-learn">
+          <i class="fas fa-book-open" aria-hidden="true"></i> Big O Reference (Python Manual)
+        </a>
+        <a href="https://jamesabela.github.io/jsfun/parsonsgame.html" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-puzzle-piece" aria-hidden="true"></i> Parsons Game
+        </a>
+        <a href="https://play.blooket.com/host/brawl?id=68b03a08ddff7a4868b8d294" target="_blank" rel="noopener" class="btn btn-python">
+          <i class="fas fa-gamepad" aria-hidden="true"></i> Blooket Quiz
+        </a>
+      </div>
+      <p class="tip-box"><strong>📌 Tip:</strong> The Big O section of the Python Manual explains constant, logarithmic, linear, and quadratic growth with code examples. Do the Parsons game after Challenge 4, then the Blooket quiz at the end of the lab.</p>
+    </div>
+
+    <!-- PYTHON CODE LAB (EMBEDDED) -->
+    <h2>🐍 Python Code Lab — Your IDE</h2>
+
+    <div class="card">
+      <h3>Write, Run, and Step Through Your Code</h3>
+      <p class="info-box"><strong>💡 How to use it:</strong> Write your code in the editor below, click <strong>Run</strong> to execute it, or use <strong>Step</strong> to trace through the program line by line. Watch how the number of operations changes as you increase the input size.</p>
+
+      <div class="ide-wrapper">
+        <iframe
+          src="https://jamesabela.github.io/jsfun/pythoncopy?blank"
+          title="Python Code Lab — interactive IDE"
+          loading="lazy"
+          allow="clipboard-read; clipboard-write"
+        ></iframe>
+        <div class="ide-fallback">
+          <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+          If the IDE doesn't load inside the page, open it in a new tab:
+          <a href="https://jamesabela.github.io/jsfun/pythoncopy?blank" target="_blank" rel="noopener">Python Code Lab →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CODING CHALLENGES -->
+    <h2>🧪 Coding Challenges</h2>
+
+    <div class="card">
+      <div class="warn-box" style="margin-top: 0;">
+        <strong>⚠️ Important:</strong> Try to write and run the code yourself <em>before</em> revealing the answer. Struggle is part of the learning process!
+      </div>
+
+      <p>Work through these challenges in order. Each one focuses on a different Big O complexity class. Write your code in the Python Code Lab above.</p>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">1</span> O(1) — Constant Time</h4>
+        <p>Write a function called <code>get_first_element</code> that takes a list and returns the first element. This is O(1) because it does one step regardless of list size.</p>
+        <p><strong>What to do:</strong> Access the element at index 0 and return it. Call the function with a list of 3 items and a list of 1000 items (you can create a large list with <code>list(range(1000))</code>). Notice that the function does the same amount of work both times.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> <code>get_first_element([10, 20, 30])</code> returns <code>10</code>. <code>get_first_element(list(range(1000)))</code> returns <code>0</code>.</p>
+        
+        <button class="reveal-btn" data-target="ans1" aria-expanded="false">
+          <i class="fas fa-lock" aria-hidden="true"></i> Try it first! Click to reveal answer
+        </button>
+        <div id="ans1" class="reveal-content">
+          <pre><code>def get_first_element(items):
+    """Returns the first item in the list. This is O(1)."""
+    return items[0]
+
+print(get_first_element([10, 20, 30]))
+print(get_first_element(list(range(1000))))</code></pre>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">2</span> O(n) — Linear Time</h4>
+        <p>Write a function called <code>find_max</code> that takes a list of numbers and returns the largest value. This is O(n) because it must check every element once.</p>
+        <p><strong>What to do:</strong> Start with the first element as the maximum. Loop through the list. If you find a bigger number, update the maximum. Return the maximum at the end.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> <code>find_max([3, 7, 2, 9, 1])</code> returns <code>9</code>. <code>find_max([-5, -2, -10])</code> returns <code>-2</code>.</p>
+        
+        <button class="reveal-btn" data-target="ans2" aria-expanded="false">
+          <i class="fas fa-lock" aria-hidden="true"></i> Try it first! Click to reveal answer
+        </button>
+        <div id="ans2" class="reveal-content">
+          <pre><code>def find_max(numbers):
+    """Returns the largest number. This is O(n)."""
+    if not numbers:
+        return None
+    maximum = numbers[0]
+    for num in numbers:
+        if num > maximum:
+            maximum = num
+    return maximum
+
+print(find_max([3, 7, 2, 9, 1]))
+print(find_max([-5, -2, -10]))</code></pre>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">3</span> O(n²) — Quadratic Time</h4>
+        <p>Write a function called <code>count_pairs</code> that takes a list and counts how many pairs of elements have the same value. This is O(n²) because it uses two nested loops.</p>
+        <p><strong>What to do:</strong> Use an outer loop to pick each element, and an inner loop to compare it with every later element. If they match, increment a counter. Return the count.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> <code>count_pairs([1, 2, 2, 3, 3, 3])</code> returns <code>4</code> (one pair of 2s, three pairs of 3s). <code>count_pairs([1, 2, 3])</code> returns <code>0</code>.</p>
+        
+        <button class="reveal-btn" data-target="ans3" aria-expanded="false">
+          <i class="fas fa-lock" aria-hidden="true"></i> Try it first! Click to reveal answer
+        </button>
+        <div id="ans3" class="reveal-content">
+          <pre><code>def count_pairs(items):
+    """Counts pairs with the same value. This is O(n²)."""
+    count = 0
+    n = len(items)
+    for i in range(n):
+        for j in range(i + 1, n):
+            if items[i] == items[j]:
+                count += 1
+    return count
+
+print(count_pairs([1, 2, 2, 3, 3, 3]))
+print(count_pairs([1, 2, 3]))</code></pre>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">4</span> O(log n) — Logarithmic Time</h4>
+        <p>Write a function called <code>count_halvings</code> that takes a number <code>n</code> and counts how many times you can divide it by 2 before it reaches 1 or less. This is O(log n) because the loop variable halves each iteration.</p>
+        <p><strong>What to do:</strong> Use a <code>while</code> loop that continues while <code>n > 1</code>. Inside the loop, divide <code>n</code> by 2 using integer division (<code>//</code>) and increment a counter. Return the counter.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> <code>count_halvings(8)</code> returns <code>3</code> (8→4→2→1). <code>count_halvings(1000)</code> returns <code>9</code> (because 2⁹ = 512, 2¹⁰ = 1024).</p>
+        
+        <button class="reveal-btn" data-target="ans4" aria-expanded="false">
+          <i class="fas fa-lock" aria-hidden="true"></i> Try it first! Click to reveal answer
+        </button>
+        <div id="ans4" class="reveal-content">
+          <pre><code>def count_halvings(n):
+    """Counts how many times n can be halved. This is O(log n)."""
+    count = 0
+    while n > 1:
+        n = n // 2
+        count += 1
+    return count
+
+print(count_halvings(8))
+print(count_halvings(1000))</code></pre>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">5</span> Compare Growth Rates</h4>
+        <p>Write a program that compares how many operations O(n) and O(n²) algorithms perform for increasing values of n. This will help you see why Big O matters for large inputs.</p>
+        <p><strong>What to do:</strong> For each n in <code>[10, 100, 1000]</code>, calculate <code>n</code> (linear operations) and <code>n * n</code> (quadratic operations). Print a formatted line showing both values. Notice how quickly the quadratic number grows.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> For n=1000, linear is 1000 and quadratic is 1,000,000 — a 1000× difference.</p>
+        
+        <button class="reveal-btn" data-target="ans5" aria-expanded="false">
+          <i class="fas fa-lock" aria-hidden="true"></i> Try it first! Click to reveal answer
+        </button>
+        <div id="ans5" class="reveal-content">
+          <pre><code>for n in [10, 100, 1000]:
+    linear_ops = n
+    quadratic_ops = n * n
+    print(f"n={n:5}: O(n) = {linear_ops:8}, O(n²) = {quadratic_ops:10}")</code></pre>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">6</span> Spot the Complexity</h4>
+        <p>Look at the following function and determine its Big O. Then write it in the IDE and test it with a small list to confirm it works.</p>
+        <pre><code>def print_all_pairs(items):
+    n = len(items)
+    for i in range(n):
+        for j in range(n):
+            print(items[i], items[j])</code></pre>
+        <p><strong>What to do:</strong> First, decide the Big O by examining the loops. Then run the function with <code>["A", "B"]</code> and count the output lines. You should see 4 lines (2 × 2). Try with 3 items — you should see 9 lines (3 × 3).</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> You correctly identify this as <strong>O(n²)</strong> and explain that the nested loops cause n × n operations.</p>
+        
+        <button class="reveal-btn" data-target="ans6" aria-expanded="false">
+          <i class="fas fa-lock" aria-hidden="true"></i> Try it first! Click to reveal answer
+        </button>
+        <div id="ans6" class="reveal-content">
+          <p><strong>Answer:</strong> This is <strong>O(n²)</strong>. The outer loop runs <code>n</code> times, and for each outer iteration, the inner loop runs <code>n</code> times. Total operations = <code>n × n = n²</code>.</p>
+          <pre><code>def print_all_pairs(items):
+    n = len(items)
+    for i in range(n):
+        for j in range(n):
+            print(items[i], items[j])
+
+print_all_pairs(["A", "B"])
+print("---")
+print_all_pairs(["A", "B", "C"])</code></pre>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <h4><span class="challenge-num">7</span> Binary Search Preview</h4>
+        <p>Here is a binary search function. It has O(log n) complexity because it halves the search space each step. Run it and observe how few steps it takes even for a large list.</p>
+        <pre><code>def binary_search(sorted_list, target):
+    low = 0
+    high = len(sorted_list) - 1
+    steps = 0
+    while low <= high:
+        steps += 1
+        mid = (low + high) // 2
+        if sorted_list[mid] == target:
+            return mid, steps
+        elif sorted_list[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1, steps
+
+numbers = list(range(1000))
+index, steps = binary_search(numbers, 750)
+print(f"Found at index {index} in {steps} steps")</code></pre>
+        <p><strong>What to do:</strong> Run the code. Notice that for 1000 items, it takes only about 10 steps. Change the target to 999 and run again — the step count should be similar. This demonstrates why O(log n) is so powerful.</p>
+        <p class="success-box"><strong>✅ Success criteria:</strong> The output shows the index and a step count of around 10, proving that binary search is much faster than checking every item (which would take up to 1000 steps).</p>
+        
+        <button class="reveal-btn" data-target="ans7" aria-expanded="false">
+          <i class="fas fa-lock" aria-hidden="true"></i> Try it first! Click to reveal answer
+        </button>
+        <div id="ans7" class="reveal-content">
+          <p><strong>Explanation:</strong> Binary search works on sorted data. It checks the middle, then discards the half that cannot contain the target. For 1000 items, 2¹⁰ = 1024, so it takes at most 10 steps. That's why binary search is O(log n) and vastly outperforms linear search for large sorted lists.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIG O GROWTH VISUALIZER (STATIC TABLE) -->
+    <h2>📈 Big O Growth — Quick Reference</h2>
+
+    <div class="card">
+      <h3>How the Number of Operations Grows</h3>
+      <p>This table shows roughly how many operations each complexity class performs for different input sizes. Notice how O(n²) explodes as n grows.</p>
+
+      <table>
+        <thead>
+          <tr><th>n</th><th>O(1)</th><th>O(log n)</th><th>O(n)</th><th>O(n²)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>10</td><td>1</td><td>~3</td><td>10</td><td>100</td></tr>
+          <tr><td>100</td><td>1</td><td>~7</td><td>100</td><td>10,000</td></tr>
+          <tr><td>1,000</td><td>1</td><td>~10</td><td>1,000</td><td>1,000,000</td></tr>
+          <tr><td>10,000</td><td>1</td><td>~13</td><td>10,000</td><td>100,000,000</td></tr>
+        </tbody>
+      </table>
+
+      <div class="info-box">
+        <strong>💡 Key insight:</strong> For n=10,000, an O(n²) algorithm does 100 million operations while an O(n) algorithm does just 10,000. That's a 10,000× difference! This is why choosing the right algorithm matters for large data.
+      </div>
+    </div>
+
+    <!-- PARSONS GAME -->
+    <h2>🧩 Parsons Game — Turn Code into Adventure</h2>
+
+    <div class="card">
+      <h3>Practise Code Ordering</h3>
+      <p>Put scrambled Python into the right order, collect stars, and light the path to the Robot Citadel. Use this to practise the order of function definitions, loops, and return statements before you attempt the challenges above.</p>
+      <div class="button-grid">
+        <a href="https://jamesabela.github.io/jsfun/parsonsgame.html" target="_blank" rel="noopener" class="btn btn-presentation">
+          <i class="fas fa-puzzle-piece" aria-hidden="true"></i> Open Parsons Game
+        </a>
+      </div>
+    </div>
+
+    <!-- BLOOKET QUIZ -->
+    <h2>🎮 Blooket Quiz</h2>
+
+    <div class="card">
+      <h3>Test Your Big O Knowledge</h3>
+      <p>Complete the Blooket quiz after you finish the coding challenges to reinforce Big O notation, complexity classes, and algorithm efficiency.</p>
+      <div class="button-grid">
+        <a href="https://play.blooket.com/host/brawl?id=68b03a08ddff7a4868b8d294" target="_blank" rel="noopener" class="btn btn-python">
+          <i class="fas fa-gamepad" aria-hidden="true"></i> Play Blooket
+        </a>
+      </div>
+    </div>
+
+    <!-- KEY TAKEAWAY -->
+    <h2>💡 Key Takeaway</h2>
+
+    <div class="card">
+      <p><em>"Big O notation describes how an algorithm's work grows as the input gets bigger. O(1) is constant — same work every time. O(log n) is logarithmic — each step halves the problem. O(n) is linear — work grows with input size. O(n²) is quadratic — work grows with the square of input size. By analysing loops, you can predict how your code will perform at scale."</em></p>
+    </div>
+
+    <div class="footer-note">
+      <p>B2.4.1 – Big O Lab Session · Programming Unit B2</p>
+      <p><i class="fas fa-lightbulb" aria-hidden="true"></i> Test every function with different input sizes to see how the number of operations changes.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // ---- Reveal buttons logic ----
+    document.querySelectorAll('.reveal-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.getAttribute('data-target'));
+        if (!target) return;
+        
+        var isOpen = target.classList.toggle('show');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        
+        // Update the icon and text based on state
+        var icon = btn.querySelector('i');
+        if (isOpen) {
+          icon.className = 'fas fa-unlock';
+          icon.style.color = '#4caf50';
+          btn.style.borderColor = '#4caf50';
+          btn.style.backgroundColor = '#e8f5e9';
+        } else {
+          icon.className = 'fas fa-lock';
+          icon.style.color = '';
+          btn.style.borderColor = '';
+          btn.style.backgroundColor = '';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
