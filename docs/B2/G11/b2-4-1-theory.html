@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>B2.4.1 – Efficiency & Big O Notation</title>
+  <title>B2.4.1 – Big O Notation</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -385,16 +385,16 @@
       <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to B2 Programming
     </a>
 
-    <h1>⚡ B2.4.1 – Efficiency &amp; Big O Notation</h1>
+    <h1>⚡ B2.4.1 – Big O Notation (Simplified)</h1>
 
     <!-- LEARNING OBJECTIVES -->
     <div class="objectives-box">
       <h3><i class="fas fa-bullseye" aria-hidden="true"></i> Learning Objectives</h3>
       <ul>
-        <li>Define <strong>algorithm efficiency</strong> and explain why it matters for scalability.</li>
-        <li>Describe <strong>Big O notation</strong> as a way to classify an algorithm's growth rate.</li>
-        <li>Analyse specific algorithms by calculating their <strong>Big O</strong> time complexity.</li>
-        <li>Compare common complexity classes: <strong>O(1), O(log n), O(n), O(n log n), O(n²)</strong>.</li>
+        <li>Explain what <strong>algorithm efficiency</strong> means in simple terms.</li>
+        <li>Describe <strong>Big O notation</strong> as a way to describe how an algorithm's work grows.</li>
+        <li>Identify the Big O of simple algorithms by looking at their loops.</li>
+        <li>Compare common Big O classes: <strong>O(1), O(log n), O(n), O(n log n), O(n²)</strong>.</li>
       </ul>
     </div>
 
@@ -418,14 +418,18 @@
     <h2>📖 Lesson Content</h2>
 
     <div class="card">
-      <h3>The Big Idea</h3>
-      <p>Imagine two delivery drivers going to the same city. One takes a direct motorway route; the other drives through every small town on the way. Both arrive eventually — but the first driver gets there in a fraction of the time. In computing, the <em>route</em> is the algorithm, and <strong>efficiency</strong> is about how well that route scales as the journey gets longer.</p>
-      <p><strong>Big O notation</strong> is the language we use to describe how an algorithm's running time (or memory use) grows as the input size increases. It doesn't tell us the exact number of seconds — it tells us the <em>shape</em> of the growth curve. This is crucial for <strong>scalability</strong>: an algorithm that feels instant on 100 items might grind to a halt on 10 million.</p>
+      <h3>The Big Idea (in plain English)</h3>
+      <p>Imagine you have two ways to find a word in a dictionary:</p>
+      <ul>
+        <li><strong>Way 1:</strong> Start at page 1 and check every single word until you find it.</li>
+        <li><strong>Way 2:</strong> Open the book to the middle, decide if your word is before or after, and keep halving.</li>
+      </ul>
+      <p>Both ways work. But Way 2 is <em>much</em> faster for a big dictionary. <strong>Big O notation</strong> is simply a way to describe <em>how much slower</em> an algorithm gets as the amount of data grows.</p>
 
       <p class="tip-box"><strong>📚 Further reading:</strong> Course companion pages 386–390. See also the <a href="https://faq.computersciencewiki.org/index.php/home/article/b2.4.1-describe-the-efficiency-of-specific-algorithms-by-calculating-their-big-o-notation-to-analyse-their-scalability" target="_blank" rel="noopener">Computer Science Wiki page on Big O notation</a>.</p>
 
       <div class="analogy">
-        💡 Think of Big O like classifying vehicles by top speed: O(1) is a rocket (instant, regardless of distance), O(log n) is a bullet train (very fast, barely slows as distance grows), O(n) is a car (time grows in direct proportion to distance), and O(n²) is a bicycle that gets slower and slower the further you go. We care about the <em>class</em> of vehicle, not the exact speedometer reading.
+        💡 <strong>Simple analogy:</strong> Big O is like describing how tired you'll get doing a job. O(1) = "same effort no matter how big the job". O(n) = "twice the work if there's twice the data". O(n²) = "four times the work if there's twice the data". We don't care about exact seconds — just the <em>pattern</em>.
       </div>
 
       <div class="button-grid">
@@ -444,205 +448,199 @@
     <!-- SECTION 1 -->
     <div class="card">
       <h3>1. What is Algorithm Efficiency?</h3>
-      <p><strong>Efficiency</strong> is a measure of the resources an algorithm consumes — primarily <strong>time</strong> (how many operations it performs) and <strong>space</strong> (how much memory it uses). When we analyse efficiency, we are not measuring wall-clock seconds (which depend on hardware, programming language, and compiler), but rather the <em>number of basic operations</em> as a function of input size <code>n</code>.</p>
+      <p><strong>Efficiency</strong> means how much <em>work</em> an algorithm does as the amount of data grows. We usually care about <strong>time</strong> (how many steps it takes) but sometimes also <strong>space</strong> (how much memory it uses).</p>
 
-      <h4>Why not just time it with a stopwatch?</h4>
+      <p>We don't measure efficiency with a stopwatch — because a faster computer would make any algorithm look good. Instead, we count <strong>steps</strong> as a function of input size <code>n</code>.</p>
+
+      <h4>Why does this matter?</h4>
       <ul>
-        <li>A faster computer would make the same algorithm look better — that tells us nothing about the algorithm itself.</li>
-        <li>Small inputs hide inefficiencies; an O(n²) algorithm may beat an O(n log n) one for n = 10, but lose catastrophically for n = 1,000,000.</li>
-        <li>We need a <strong>hardware-independent</strong> way to compare algorithms and predict their <strong>scalability</strong>.</li>
+        <li>A slow algorithm might be fine for 100 items but unusable for 1,000,000 items.</li>
+        <li>Big O helps us <strong>predict</strong> whether an algorithm will still work when the data grows.</li>
       </ul>
 
-      <h4>Time Complexity vs Space Complexity</h4>
-      <table>
-        <thead>
-          <tr><th>Measure</th><th>What it describes</th><th>Example question</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Time complexity</strong></td><td>How the number of operations grows with input size</td><td>How many comparisons does a linear search make in the worst case?</td></tr>
-          <tr><td><strong>Space complexity</strong></td><td>How the memory usage grows with input size</td><td>How much extra array space does merge sort need?</td></tr>
-        </tbody>
-      </table>
+      <div class="info-box">
+        <strong>🔍 Key idea:</strong> Big O is about <strong>scalability</strong> — how well an algorithm handles bigger and bigger inputs.
+      </div>
 
       <button class="reveal-btn" data-target="reveal1" aria-expanded="false">
-        <i class="fas fa-lightbulb" aria-hidden="true"></i> Why does scalability matter in the real world?
+        <i class="fas fa-lightbulb" aria-hidden="true"></i> Why can't we just time the algorithm with a stopwatch?
       </button>
       <div id="reveal1" class="reveal-content">
-        <strong>💡 Think about it:</strong> Google processes billions of searches per day. If the search algorithm were O(n) in the number of web pages, adding more pages would slow it down proportionally — unacceptable. Algorithms must be designed to scale. Similarly, a social network's "friend recommendation" algorithm that is O(n²) may work for a small user base but become impossibly slow when millions of users join. Big O lets engineers predict these problems <em>before</em> they deploy.
+        <strong>💡 Think about it:</strong> If you run the same algorithm on a super-fast computer vs. an old laptop, the stopwatch times will be completely different — but the algorithm itself hasn't changed. Also, small inputs can hide big problems. A stopwatch doesn't tell you what happens when the data gets 1,000× bigger. Big O gives you a hardware-independent way to compare.
       </div>
     </div>
 
     <!-- SECTION 2 -->
     <div class="card">
-      <h3>2. Big O Notation: The Language of Growth</h3>
-      <p><strong>Big O notation</strong> describes the <em>upper bound</em> on an algorithm's growth rate — that is, the worst-case scenario as input size <code>n</code> becomes very large. Formally, we say <code>f(n) = O(g(n))</code> if there exist constants <code>c</code> and <code>n₀</code> such that <code>f(n) ≤ c · g(n)</code> for all <code>n ≥ n₀</code>. In practice, this means we drop constants and lower-order terms.</p>
+      <h3>2. Big O Notation in Simple Terms</h3>
+      <p><strong>Big O notation</strong> describes the <em>worst-case</em> growth rate of an algorithm. It answers the question: <em>"As the input gets really big, how does the number of steps grow?"</em></p>
 
-      <h4>The simplification rules</h4>
-      <ul>
-        <li><strong>Drop constants:</strong> <code>O(3n)</code> → <code>O(n)</code>; <code>O(0.5n²)</code> → <code>O(n²)</code>.</li>
-        <li><strong>Keep only the dominant term:</strong> <code>O(n² + n + 5)</code> → <code>O(n²)</code>.</li>
-        <li><strong>Ignore the base of logarithms:</strong> <code>O(log₂ n)</code> and <code>O(log₁₀ n)</code> are both written <code>O(log n)</code>.</li>
-      </ul>
+      <p>We write it like this: <code>O(n)</code>, <code>O(n²)</code>, <code>O(log n)</code>, etc.</p>
 
-      <p>Why? Because as <code>n</code> gets huge, the highest-order term dominates everything else. For n = 1,000,000, <code>n²</code> is a trillion while <code>n</code> is a million — the linear term is negligible in comparison.</p>
+      <h4>Two simple rules</h4>
+      <ol>
+        <li><strong>Drop constants.</strong> <code>O(3n)</code> becomes <code>O(n)</code>. <code>O(2n²)</code> becomes <code>O(n²)</code>. We only care about the <em>pattern</em>, not exact numbers.</li>
+        <li><strong>Keep only the biggest term.</strong> <code>O(n² + n + 5)</code> becomes <code>O(n²)</code>. When n is huge, the n² term completely dominates.</li>
+      </ol>
 
-      <div class="info-box">
-        <strong>🔍 Big O is about the worst case:</strong> When we say "linear search is O(n)", we mean that in the worst case (the item is last or absent), it examines every element. Big O gives us a guarantee: "this algorithm will never be slower than this class."
+      <div class="tip-box">
+        <strong>📝 Simple rule of thumb:</strong> Big O tells you the <em>shape</em> of the growth curve, not the exact height. Two different algorithms can both be O(n) even if one does 10 steps per item and the other does 2 — they both grow linearly.
       </div>
     </div>
 
     <!-- SECTION 3 -->
     <div class="card">
-      <h3>3. The Common Complexity Classes</h3>
-      <p>Here are the complexity classes you need to know, ordered from most efficient to least efficient:</p>
+      <h3>3. The Main Big O Classes (You Need to Know These)</h3>
 
       <table>
         <thead>
-          <tr><th>Notation</th><th>Name</th><th>Intuition</th><th>Typical example</th></tr>
+          <tr><th>Big O</th><th>Name</th><th>Simple meaning</th><th>Everyday example</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>O(1)</code></td><td>Constant</td><td>Same time regardless of input size</td><td>Accessing an array element by index: <code>arr[5]</code></td></tr>
-          <tr><td><code>O(log n)</code></td><td>Logarithmic</td><td>Halving the problem each step</td><td>Binary search on a sorted array</td></tr>
-          <tr><td><code>O(n)</code></td><td>Linear</td><td>Time grows proportionally to input</td><td>Linear search; summing an array</td></tr>
-          <tr><td><code>O(n log n)</code></td><td>Linearithmic</td><td>Slightly worse than linear</td><td>Merge sort, quicksort (average)</td></tr>
-          <tr><td><code>O(n²)</code></td><td>Quadratic</td><td>Time grows with the square of input</td><td>Bubble sort, selection sort, insertion sort</td></tr>
-          <tr><td><code>O(2ⁿ)</code></td><td>Exponential</td><td>Doubles with each added element</td><td>Naive recursive Fibonacci; brute-force subset problems</td></tr>
+          <tr>
+            <td><code>O(1)</code></td>
+            <td>Constant</td>
+            <td>Same number of steps no matter how big the data is.</td>
+            <td>Looking up a value by its index: <code>arr[5]</code></td>
+          </tr>
+          <tr>
+            <td><code>O(log n)</code></td>
+            <td>Logarithmic</td>
+            <td>Each step cuts the remaining work in half.</td>
+            <td>Binary search in a sorted list</td>
+          </tr>
+          <tr>
+            <td><code>O(n)</code></td>
+            <td>Linear</td>
+            <td>Twice the data = roughly twice the steps.</td>
+            <td>Checking every item in a list once (linear search)</td>
+          </tr>
+          <tr>
+            <td><code>O(n log n)</code></td>
+            <td>Linearithmic</td>
+            <td>A bit worse than linear — common for good sorting algorithms.</td>
+            <td>Merge sort</td>
+          </tr>
+          <tr>
+            <td><code>O(n²)</code></td>
+            <td>Quadratic</td>
+            <td>Twice the data = roughly four times the steps.</td>
+            <td>Bubble sort; two nested loops</td>
+          </tr>
         </tbody>
       </table>
 
-      <h4>Visualising the growth</h4>
-      <p>The table below shows roughly how many operations each class performs for increasing input sizes. Notice how quickly O(n²) and O(2ⁿ) explode:</p>
-
+      <h4>How the work grows (rough numbers)</h4>
       <table>
         <thead>
-          <tr><th>n</th><th>O(1)</th><th>O(log n)</th><th>O(n)</th><th>O(n log n)</th><th>O(n²)</th><th>O(2ⁿ)</th></tr>
+          <tr><th>Input size (n)</th><th>O(1)</th><th>O(log n)</th><th>O(n)</th><th>O(n²)</th></tr>
         </thead>
         <tbody>
-          <tr><td>10</td><td>1</td><td>~3</td><td>10</td><td>~33</td><td>100</td><td>1,024</td></tr>
-          <tr><td>100</td><td>1</td><td>~7</td><td>100</td><td>~664</td><td>10,000</td><td>~1.27 × 10³⁰</td></tr>
-          <tr><td>1,000</td><td>1</td><td>~10</td><td>1,000</td><td>~9,966</td><td>1,000,000</td><td>astronomical</td></tr>
-          <tr><td>1,000,000</td><td>1</td><td>~20</td><td>1,000,000</td><td>~19,931,569</td><td>10¹²</td><td>unimaginable</td></tr>
+          <tr><td>10</td><td>1</td><td>~3</td><td>10</td><td>100</td></tr>
+          <tr><td>100</td><td>1</td><td>~7</td><td>100</td><td>10,000</td></tr>
+          <tr><td>1,000</td><td>1</td><td>~10</td><td>1,000</td><td>1,000,000</td></tr>
+          <tr><td>1,000,000</td><td>1</td><td>~20</td><td>1,000,000</td><td>10¹²</td></tr>
         </tbody>
       </table>
 
       <div class="warn-box">
-        <strong>⚠️ Watch out:</strong> An O(n²) algorithm may be faster than an O(n log n) algorithm for <em>tiny</em> inputs (because of smaller constants). Big O describes asymptotic behaviour — how it scales as n → ∞. For small n, the constants can matter. This is why real-world sorting libraries sometimes use insertion sort for tiny subarrays and quicksort for large ones.
+        <strong>⚠️ Common student mistake:</strong> Don't think "O(n²) is always slow". For <em>tiny</em> inputs, an O(n²) algorithm can actually be faster than an O(n log n) one because it has less overhead. Big O describes the <em>trend</em> as data gets large. Also, don't confuse <strong>O(log n)</strong> with <strong>O(n log n)</strong> — they are very different!
       </div>
 
       <button class="reveal-btn" data-target="reveal3" aria-expanded="false">
-        <i class="fas fa-lightbulb" aria-hidden="true"></i> What does O(log n) actually mean in plain English?
+        <i class="fas fa-lightbulb" aria-hidden="true"></i> What does O(log n) really mean?
       </button>
       <div id="reveal3" class="reveal-content">
-        <p><strong>💡 Think about it:</strong> A logarithm asks "how many times can I divide n by 2 before I get to 1?" For n = 1,000,000, that's about 20. So an O(log n) algorithm does roughly 20 steps for a million items. That's why binary search is so powerful: each comparison eliminates half the remaining possibilities. Doubling the input size adds only <em>one</em> extra step — that's extraordinary scalability.</p>
+        <p><strong>💡 Simple explanation:</strong> Log n means "how many times can I cut the data in half before I'm left with 1?" For 1,000,000 items, that's about 20 cuts. So an O(log n) algorithm does about 20 steps for a million items. Doubling the data only adds <em>one</em> more step. That's why binary search is so powerful.</p>
       </div>
     </div>
 
     <!-- SECTION 4 -->
     <div class="card">
-      <h3>4. Analysing Specific Algorithms</h3>
+      <h3>4. How to Spot the Big O (Step-by-Step)</h3>
+      <p>When you see a piece of code, follow these simple steps:</p>
+      <ol>
+        <li><strong>No loops?</strong> → It's <code>O(1)</code> (constant).</li>
+        <li><strong>One loop that runs n times?</strong> → It's <code>O(n)</code> (linear).</li>
+        <li><strong>One loop where the counter halves each time?</strong> → It's <code>O(log n)</code>.</li>
+        <li><strong>Two loops one after another (not nested)?</strong> → O(n + n) = <code>O(n)</code>.</li>
+        <li><strong>Two <em>nested</em> loops, each running n times?</strong> → It's <code>O(n²)</code> (quadratic).</li>
+      </ol>
 
-      <h4>Linear Search — O(n)</h4>
-      <p>Linear search checks each element from the start until it finds the target (or reaches the end). In the worst case, it examines every element once.</p>
-      <pre><code>def linear_search(arr, target):
-    for i in range(len(arr)):
-        if arr[i] == target:
-            return i
-    return -1</code></pre>
-      <p><strong>Analysis:</strong> The loop runs at most <code>n</code> times, and each iteration does a constant amount of work. Total: <strong>O(n)</strong>.</p>
+      <h4>Examples</h4>
 
-      <h4>Binary Search — O(log n)</h4>
-      <p>Binary search works on a <em>sorted</em> array. It compares the target with the middle element, then discards the half that cannot contain the target. Each step halves the search space.</p>
-      <pre><code>def binary_search(arr, target):
-    low, high = 0, len(arr) - 1
-    while low <= high:
-        mid = (low + high) // 2
-        if arr[mid] == target:
-            return mid
-        elif arr[mid] < target:
-            low = mid + 1
-        else:
-            high = mid - 1
-    return -1</code></pre>
-      <p><strong>Analysis:</strong> After <code>k</code> iterations, the remaining search space has size <code>n / 2ᵏ</code>. The loop stops when <code>n / 2ᵏ ≤ 1</code>, i.e. <code>k ≈ log₂ n</code>. Total: <strong>O(log n)</strong>.</p>
+      <p><strong>Example A — O(1)</strong> (no loops)</p>
+      <pre><code>def first_item(arr):
+    return arr[0]</code></pre>
+      <p>Just one step. <strong>O(1)</strong>.</p>
 
-      <div class="info-box">
-        <strong>💡 The power of halving:</strong> For an array of 1,000,000 sorted items, linear search needs up to 1,000,000 comparisons. Binary search needs at most 20. That's a 50,000× improvement — a direct consequence of moving from O(n) to O(log n).
+      <p><strong>Example B — O(n)</strong> (one loop)</p>
+      <pre><code>def sum_all(arr):
+    total = 0
+    for x in arr:      # runs n times
+        total += x
+    return total</code></pre>
+      <p>One loop over n items. <strong>O(n)</strong>.</p>
+
+      <p><strong>Example C — O(n²)</strong> (nested loops)</p>
+      <pre><code>def print_pairs(arr):
+    for i in range(len(arr)):        # runs n times
+        for j in range(len(arr)):    # runs n times for EACH i
+            print(arr[i], arr[j])</code></pre>
+      <p>For each of the n outer iterations, the inner loop runs n times → n × n = <strong>O(n²)</strong>.</p>
+
+      <p><strong>Example D — O(log n)</strong> (halving loop)</p>
+      <pre><code>def count_halvings(n):
+    count = 0
+    while n > 1:
+        n = n // 2      # n halves each time
+        count += 1
+    return count</code></pre>
+      <p>n gets halved each step, so the loop runs about log₂(n) times. <strong>O(log n)</strong>.</p>
+
+      <div class="success-box">
+        <strong>✅ Quick checklist for calculating Big O:</strong>
+        <ol style="margin:0.4rem 0 0;">
+          <li>Look for loops.</li>
+          <li>Nested loops → multiply the complexities.</li>
+          <li>Loops side-by-side → add, then keep the biggest term.</li>
+          <li>No loops → O(1).</li>
+          <li>Loop that halves → O(log n).</li>
+          <li>Drop constants and small terms.</li>
+        </ol>
       </div>
-
-      <h4>Bubble Sort — O(n²)</h4>
-      <p>Bubble sort repeatedly steps through the list, compares adjacent pairs, and swaps them if they're in the wrong order. It repeats this until no swaps are needed.</p>
-      <pre><code>def bubble_sort(arr):
-    n = len(arr)
-    for i in range(n):
-        for j in range(n - 1 - i):
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]</code></pre>
-      <p><strong>Analysis:</strong> The outer loop runs <code>n</code> times. The inner loop runs roughly <code>n</code> times for each outer iteration. Total comparisons ≈ <code>n · n = n²</code>. Total: <strong>O(n²)</strong>.</p>
-
-      <h4>Merge Sort — O(n log n)</h4>
-      <p>Merge sort divides the array in half, recursively sorts each half, and then merges the sorted halves together. The dividing takes <code>log n</code> levels, and each level does <code>O(n)</code> work to merge.</p>
-      <pre><code>def merge_sort(arr):
-    if len(arr) <= 1:
-        return arr
-    mid = len(arr) // 2
-    left = merge_sort(arr[:mid])
-    right = merge_sort(arr[mid:])
-    return merge(left, right)   # merge is O(n)</code></pre>
-      <p><strong>Analysis:</strong> There are <code>log n</code> levels of recursion, and at each level the total work across all subproblems is <code>O(n)</code>. Total: <strong>O(n log n)</strong>.</p>
-
-      <h4>Summary table</h4>
-      <table>
-        <thead>
-          <tr><th>Algorithm</th><th>Best case</th><th>Worst case</th><th>Why</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Linear search</td><td>O(1)</td><td>O(n)</td><td>Worst case examines all elements</td></tr>
-          <tr><td>Binary search</td><td>O(1)</td><td>O(log n)</td><td>Halves search space each step</td></tr>
-          <tr><td>Bubble sort</td><td>O(n)</td><td>O(n²)</td><td>Nested loops; best case already sorted</td></tr>
-          <tr><td>Merge sort</td><td>O(n log n)</td><td>O(n log n)</td><td>Consistent divide-and-conquer</td></tr>
-        </tbody>
-      </table>
     </div>
 
     <!-- SECTION 5 -->
     <div class="card">
-      <h3>5. Calculating Big O: A Step-by-Step Guide</h3>
-      <p>When asked to calculate the Big O of a piece of code, follow these steps:</p>
-      <ol>
-        <li><strong>Identify the loops:</strong> How many times does each loop run relative to <code>n</code>?</li>
-        <li><strong>Nested loops multiply:</strong> A loop inside a loop gives O(n × n) = O(n²).</li>
-        <li><strong>Sequential loops add:</strong> Two separate loops give O(n + n) = O(2n) → drop constants → O(n).</li>
-        <li><strong>Drop constants and lower-order terms:</strong> O(3n² + 5n + 7) → O(n²).</li>
-        <li><strong>Halving loops are logarithmic:</strong> If a loop variable doubles/halves each iteration, it's O(log n).</li>
-      </ol>
+      <h3>5. Common Algorithms and Their Big O</h3>
 
-      <h4>Worked example</h4>
-      <pre><code>def example(arr):
-    n = len(arr)
-    total = 0
-    for i in range(n):          # loop 1: O(n)
-        total += arr[i]
-    for j in range(n):          # loop 2: O(n)
-        for k in range(n):      # nested inside loop 2: O(n)
-            total += arr[j] * arr[k]
-    return total</code></pre>
-      <p><strong>Analysis:</strong> Loop 1 contributes O(n). The nested loops contribute O(n²). Total: O(n + n²) → dominant term is n² → <strong>O(n²)</strong>.</p>
+      <table>
+        <thead>
+          <tr><th>Algorithm</th><th>Big O (worst case)</th><th>Why?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Linear search</td><td><code>O(n)</code></td><td>Checks every item in the worst case.</td></tr>
+          <tr><td>Binary search</td><td><code>O(log n)</code></td><td>Halves the search space each step (must be sorted).</td></tr>
+          <tr><td>Bubble sort</td><td><code>O(n²)</code></td><td>Two nested loops.</td></tr>
+          <tr><td>Merge sort</td><td><code>O(n log n)</code></td><td>Divides the list log n times, and each level takes O(n) to merge.</td></tr>
+        </tbody>
+      </table>
 
-      <div class="tip-box">
-        <strong>📝 Exam tip:</strong> Always look for nested loops first — they're the most common source of O(n²). If you see a loop where the counter is halved (<code>i = i / 2</code> or <code>i *= 2</code>), that's a strong sign of O(log n). If the algorithm divides the problem and processes both halves, think O(n log n).
+      <div class="info-box">
+        <strong>🔍 Remember:</strong> Binary search only works on a <strong>sorted</strong> list. If the list isn't sorted, you have to sort it first — and sorting takes at least O(n log n) in the best case. So binary search is only fast if the data is already sorted.
       </div>
     </div>
 
     <!-- INTERACTIVE: SPOT THE COMPLEXITY -->
     <div class="card">
       <h3>🔍 Interactive: What's the Big O?</h3>
-      <p>Read the code below. What is its worst-case time complexity? Click the option you think is correct.</p>
+      <p>Read the code and click the correct Big O.</p>
 
       <div class="quiz-q">
         <pre><code>def mystery(arr):
-    n = len(arr)
-    for i in range(n):
-        for j in range(n):
+    for i in range(len(arr)):
+        for j in range(len(arr)):
             print(arr[i], arr[j])</code></pre>
         <p>What is the time complexity?</p>
         <div class="quiz-opts" data-answer="c">
@@ -688,29 +686,27 @@
 
     <!-- INTERACTIVE: MATCHING GAME -->
     <div class="card">
-      <h3>🧩 Interactive: Match the Complexity Class</h3>
-      <p>Click a complexity class on the left, then click its matching description or example on the right.</p>
+      <h3>🧩 Interactive: Match the Big O</h3>
+      <p>Click a Big O on the left, then click its matching description on the right.</p>
 
       <div class="match-game">
         <div class="match-col" id="matchTerms">
           <button class="match-item" data-key="o1">O(1)</button>
           <button class="match-item" data-key="ologn">O(log n)</button>
           <button class="match-item" data-key="on">O(n)</button>
-          <button class="match-item" data-key="onlogn">O(n log n)</button>
           <button class="match-item" data-key="on2">O(n²)</button>
-          <button class="match-item" data-key="o2n">O(2ⁿ)</button>
+          <button class="match-item" data-key="onlogn">O(n log n)</button>
           <button class="match-item" data-key="bigo">Big O notation</button>
           <button class="match-item" data-key="scalability">Scalability</button>
         </div>
         <div class="match-col" id="matchDefs">
-          <button class="match-item" data-key="on2">Quadratic — bubble sort, nested loops</button>
-          <button class="match-item" data-key="o1">Constant — array index access</button>
-          <button class="match-item" data-key="ologn">Logarithmic — binary search, halving each step</button>
-          <button class="match-item" data-key="bigo">Describes the upper bound on an algorithm's growth rate</button>
-          <button class="match-item" data-key="on">Linear — linear search, summing an array</button>
-          <button class="match-item" data-key="o2n">Exponential — naive recursive Fibonacci</button>
-          <button class="match-item" data-key="scalability">How well an algorithm handles growing input sizes</button>
-          <button class="match-item" data-key="onlogn">Linearithmic — merge sort, divide-and-conquer sorts</button>
+          <button class="match-item" data-key="on">Linear — one loop over n items</button>
+          <button class="match-item" data-key="o1">Constant — no loops, same work every time</button>
+          <button class="match-item" data-key="on2">Quadratic — two nested loops</button>
+          <button class="match-item" data-key="bigo">Describes how an algorithm's work grows</button>
+          <button class="match-item" data-key="ologn">Logarithmic — keeps halving the data (binary search)</button>
+          <button class="match-item" data-key="scalability">How well an algorithm handles bigger inputs</button>
+          <button class="match-item" data-key="onlogn">Linearithmic — merge sort, divide-and-conquer</button>
         </div>
       </div>
       <div class="match-feedback" aria-live="polite"></div>
@@ -725,37 +721,36 @@
       <p>Define the term <strong>Big O notation</strong> and explain what it is used for.</p>
       <button class="reveal-btn" data-target="ans1"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
       <div id="ans1" class="reveal-content">
-        Big O notation is a mathematical notation used to describe the upper bound on the growth rate of an algorithm's time or space complexity as the input size increases. It is used to compare algorithms independently of hardware and to predict how well an algorithm will scale for large inputs.
+        Big O notation is a way of describing how the number of steps an algorithm takes grows as the input size increases. It is used to compare algorithms and to predict whether an algorithm will still work well with large amounts of data.
       </div>
 
-      <h4>Question 2 (3 marks)</h4>
-      <p>Explain why an O(log n) algorithm is considered more efficient than an O(n) algorithm. Use an example to support your answer.</p>
+      <h4>Question 2 (2 marks)</h4>
+      <p>Explain why an O(log n) algorithm is faster than an O(n) algorithm for large inputs.</p>
       <button class="reveal-btn" data-target="ans2"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
       <div id="ans2" class="reveal-content">
-        An O(log n) algorithm's running time grows very slowly as input size increases, because it typically halves the problem at each step. An O(n) algorithm's time grows in direct proportion to the input. For example, for 1,000,000 items, a linear search (O(n)) needs up to 1,000,000 comparisons, while binary search (O(log n)) needs at most about 20. Doubling the input size adds only one extra step for O(log n), but doubles the work for O(n).
+        An O(log n) algorithm cuts the problem in half at each step, so the number of steps grows very slowly. An O(n) algorithm checks each item one by one, so the number of steps grows directly with the input size. For example, for 1,000,000 items, O(log n) takes about 20 steps while O(n) takes up to 1,000,000 steps.
       </div>
 
-      <h4>Question 3 (4 marks)</h4>
-      <p>Analyse the time complexity of the following algorithm and justify your answer:</p>
-      <pre><code>def find_pairs(arr):
-    n = len(arr)
+      <h4>Question 3 (3 marks)</h4>
+      <p>Look at the code below and state its time complexity. Explain your answer.</p>
+      <pre><code>def find_duplicates(arr):
     count = 0
-    for i in range(n):
-        for j in range(i + 1, n):
+    for i in range(len(arr)):
+        for j in range(i + 1, len(arr)):
             if arr[i] == arr[j]:
                 count += 1
     return count</code></pre>
       <button class="reveal-btn" data-target="ans3"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
       <div id="ans3" class="reveal-content">
-        <p>The algorithm has two nested loops. The outer loop runs <code>n</code> times. The inner loop runs from <code>i + 1</code> to <code>n - 1</code>, which is roughly <code>n/2</code> iterations on average. The total number of comparisons is <code>n × (n - 1) / 2</code>, which is proportional to <code>n²</code>. Therefore, the time complexity is <strong>O(n²)</strong>.</p>
-        <p>Marks: 1 for identifying nested loops; 1 for explaining the inner loop runs roughly n times for each outer iteration; 1 for stating total operations ≈ n²/2; 1 for simplifying to O(n²) by dropping constants.</p>
+        <p>The time complexity is <strong>O(n²)</strong>. There are two nested loops. The outer loop runs n times. For each outer iteration, the inner loop runs roughly n times. So the total number of comparisons is about n × n = n². We drop constants, so it is O(n²).</p>
+        <p>Marks: 1 for stating O(n²); 1 for identifying two nested loops; 1 for explaining that the inner loop runs about n times for each outer iteration.</p>
       </div>
 
-      <h4>Question 4 (3 marks)</h4>
-      <p>Explain the difference between <strong>time complexity</strong> and <strong>space complexity</strong>. Give one example of each from an algorithm you have studied.</p>
+      <h4>Question 4 (2 marks)</h4>
+      <p>Explain the difference between <strong>O(1)</strong> and <strong>O(n)</strong> using a simple example.</p>
       <button class="reveal-btn" data-target="ans4"><i class="fas fa-eye" aria-hidden="true"></i> Show model answer</button>
       <div id="ans4" class="reveal-content">
-        Time complexity measures how the number of operations grows with input size; space complexity measures how memory usage grows. Example of time complexity: bubble sort has O(n²) time complexity because of its nested loops. Example of space complexity: merge sort has O(n) space complexity because it creates temporary arrays during merging, while bubble sort has O(1) space complexity because it sorts in place.
+        O(1) means the algorithm does the same amount of work no matter how big the input is. For example, accessing <code>arr[0]</code> takes one step whether the array has 10 items or 10 million. O(n) means the work grows with the input size. For example, a linear search might have to check every item, so an array with 10 items takes up to 10 steps, and an array with 1,000 items takes up to 1,000 steps.
       </div>
     </div>
 
@@ -801,7 +796,7 @@
 
     <div class="card">
       <h3>Practise Your Algorithm Analysis</h3>
-      <p>Work through the quizzes below to reinforce Big O notation, algorithm efficiency, and scalability.</p>
+      <p>Work through the quizzes below to reinforce Big O notation and algorithm efficiency.</p>
       <div class="button-grid">
         <a href="https://play.juicemind.com/dashboard/explore/class/intro-python/unitNumber/3/topicNumber/1/quizId/explore&class=intro-python&unitNumber=3&topicNumber=1&quizNumber=2?tab=curriculum" target="_blank" rel="noopener" class="btn btn-juice">
           <i class="fas fa-flask" aria-hidden="true"></i> JuiceMind Topic 1
@@ -817,7 +812,7 @@
 
     <div class="card">
       <h3>Consolidate Your Understanding</h3>
-      <p>Explain what you have learned about Big O notation and algorithm efficiency to the AI. Teaching a concept in your own words is one of the most effective ways to consolidate your understanding.</p>
+      <p>Explain what you have learned about Big O notation to the AI. Teaching a concept in your own words is one of the most effective ways to consolidate your understanding.</p>
       <div class="button-grid">
         <a href="https://www.revisiondojo.com/teach-jojo?subjectId=292&classroomId=7d9d7fc0-cf13-42eb-a277-77d2b675cb6a" target="_blank" rel="noopener" class="btn btn-dojo">
           <i class="fas fa-robot" aria-hidden="true"></i> Teach the AI
@@ -831,7 +826,7 @@
     <div class="card">
       <h3>Quick Check</h3>
       <div class="quiz-q">
-        <p>Which of these is the most efficient time complexity?</p>
+        <p>Which Big O is the most efficient?</p>
         <div class="quiz-opts" data-answer="a">
           <button class="quiz-opt" data-opt="a">O(1)</button>
           <button class="quiz-opt" data-opt="b">O(n)</button>
@@ -853,20 +848,20 @@
       </div>
 
       <div class="quiz-q">
-        <p>What is the time complexity of an algorithm with two nested loops, each running n times?</p>
+        <p>What is the time complexity of two nested loops, each running n times?</p>
         <div class="quiz-opts" data-answer="b">
           <button class="quiz-opt" data-opt="a">O(n)</button>
           <button class="quiz-opt" data-opt="b">O(n²)</button>
           <button class="quiz-opt" data-opt="c">O(log n)</button>
-          <button class="quiz-opt" data-opt="d">O(n log n)</button>
+          <button class="quiz-opt" data-opt="d">O(1)</button>
         </div>
         <div class="quiz-fb" aria-live="polite"></div>
       </div>
     </div>
 
     <div class="footer-note">
-      <p>B2.4.1 – Efficiency &amp; Big O Notation · Programming Unit B2</p>
-      <p><i class="fas fa-lightbulb" aria-hidden="true"></i> Remember: Big O doesn't tell you the exact time — it tells you how the time grows. Choose the right class of algorithm for the scale you need.</p>
+      <p>B2.4.1 – Big O Notation (Simplified) · Programming Unit B2</p>
+      <p><i class="fas fa-lightbulb" aria-hidden="true"></i> Remember: Big O describes the <em>pattern</em> of growth — not exact seconds. Focus on the loops and how they scale.</p>
     </div>
 
   </div>
